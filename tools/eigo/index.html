@@ -463,7 +463,7 @@ function renderApp(){
     // 声選択（女の子/男の子）
     var voiceRow=mkDiv("display:flex;align-items:center;gap:8px;margin-bottom:"+(T?14:10)+"px;");
     voiceRow.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#888;white-space:nowrap;flex-shrink:0;","🎤 こえ"));
-    [["girl","👧 女の子"],["boy","👦 男の子"]].forEach(function(pair){
+    [["girl","🌸 リリー"],["boy","🎸 トム"]].forEach(function(pair){
       var active=voiceGender===pair[0];
       var b=mkBtn(
         "flex:1;padding:"+(T?"8px 4px":"7px 4px")+";border-radius:12px;border:2px solid "+(active?"#f093fb":"#e0d7ff")+";background:"+(active?"linear-gradient(135deg,#f093fb,#764ba2)":"#f8f6ff")+";color:"+(active?"#fff":"#888")+";font-size:"+(T?15:13)+"px;font-weight:900;cursor:pointer;",
