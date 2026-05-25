@@ -847,6 +847,12 @@ function renderApp(){
   );
   footer.appendChild(reloadBtn);
   app.appendChild(footer);
+
+  // コピーライトフッター
+  var cpFooter=mkDiv("text-align:center;padding:20px 0 8px;max-width:"+maxW+"px;");
+  cpFooter.appendChild(mkTxt("p","color:rgba(255,255,255,0.4);font-size:"+(T?12:11)+"px;line-height:2;","© 2026 BEETLE 合同会社"));
+  cpFooter.appendChild(mkTxt("p","color:rgba(255,255,255,0.35);font-size:"+(T?11:10)+"px;line-height:1.6;","音声: Web Speech API ／ 画像よみとり: OCR.space"));
+  app.appendChild(cpFooter);
 }
 
 // ===== 初期化 =====
