@@ -138,7 +138,7 @@ function getEnVoices(){
   var vs=window.speechSynthesis.getVoices();
   return vs.filter(function(v){return v.lang.indexOf("en")===0;});
 }
-var FEMALE_NAMES=["samantha","kate","victoria","karen","moira","fiona","tessa","allison","ava","susan","zoe","serena"];
+var FEMALE_NAMES=["samantha","kate","victoria","karen","moira","fiona","tessa","allison","ava","susan","zoe","serena","zira","hazel","linda","eva","aria","jenny","natasha","libby","mia","sonia","nicky"];
 function isFemaleVoice(v){var n=v.name.toLowerCase();return FEMALE_NAMES.some(function(fn){return n.indexOf(fn)>=0;});}
 function getVoice(){
   var vs=window.speechSynthesis.getVoices().filter(function(v){return v.lang.indexOf("en")===0;});
