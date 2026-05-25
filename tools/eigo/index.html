@@ -107,7 +107,7 @@ var rate = 1.0;
 var voiceGender = "girl";
 var currentIdx = null;
 var doneIdxs = {};
-var history = [];
+var historyList = [];
 var tab = "practice";
 var isSpeaking = false;
 var cancelFlag = false;
@@ -130,8 +130,8 @@ function initSlots(){
 initSlots();
 
 // ===== ストレージ =====
-function saveHistory(){try{localStorage.setItem("eigoHistory",JSON.stringify(history));}catch(e){}}
-function loadHistory(){try{var d=localStorage.getItem("eigoHistory");if(d)history=JSON.parse(d);}catch(e){}}
+function saveHistory(){try{localStorage.setItem("eigoHistory",JSON.stringify(historyList));}catch(e){}}
+function loadHistory(){try{var d=localStorage.getItem("eigoHistory");if(d)historyList=JSON.parse(d);}catch(e){}}
 
 // ===== 音声 =====
 function getEnVoices(){
@@ -242,8 +242,8 @@ function quickAddSentence(si){
 function saveEntry(){
   var words=slots.filter(function(s){return s.trim();});
   if(!words.length)return;
-  history.unshift({id:Date.now(),words:words,mode:mode,savedAt:Date.now()});
-  if(history.length>20)history.length=20;
+  historyList.unshift({id:Date.now(),words:words,mode:mode,savedAt:Date.now()});
+  if(historyList.length>20)historyList.length=20;
   saveHistory();renderApp();
   var el=document.getElementById("saveMsg");
   if(el){el.textContent="保存しました！✅";el.style.animation="popIn 0.3s ease";}
@@ -252,7 +252,7 @@ function saveEntry(){
 }
 function loadEntry(id){
   var entry=null;
-  for(var i=0;i<history.length;i++){if(history[i].id===id){entry=history[i];break;}}
+  for(var i=0;i<historyList.length;i++){if(historyList[i].id===id){entry=historyList[i];break;}}
   if(!entry)return;
   var n=slotCount();
   slots=entry.words.slice(0,n);
@@ -261,7 +261,7 @@ function loadEntry(id){
   tab="practice";renderApp();
 }
 function deleteEntry(id){
-  history=history.filter(function(e){return e.id!==id;});
+  historyList=historyList.filter(function(e){return e.id!==id;});
   saveHistory();renderApp();
 }
 function fmtDate(ts){
@@ -540,14 +540,14 @@ function renderApp(){
     var hCard=mk("div");hCard.className="card";
     hCard.style.cssText="padding:"+(T?"26px 22px":"20px 16px")+";max-width:"+maxW+"px;";
 
-    if(history.length===0){
+    if(historyList.length===0){
       hCard.appendChild(mkTxt("div","text-align:center;padding:"+(T?50:36)+"px 0 10px;color:#bbb;font-size:"+(T?52:42)+"px;","📭"));
       hCard.appendChild(mkTxt("p","text-align:center;color:#bbb;font-size:"+(T?17:14)+"px;font-weight:700;margin-bottom:8px;","まだ保存していないよ"));
       hCard.appendChild(mkTxt("p","text-align:center;color:#bbb;font-size:"+(T?14:12)+"px;","れんしゅうして💾を押してね！"));
     } else {
-      hCard.appendChild(mkTxt("div","text-align:center;color:#888;font-size:"+(T?13:11)+"px;margin-bottom:12px;",history.length+"件保存中（最大20件）"));
+      hCard.appendChild(mkTxt("div","text-align:center;color:#888;font-size:"+(T?13:11)+"px;margin-bottom:12px;",historyList.length+"件保存中（最大20件）"));
       var hw=mk("div");hw.className="hist-wrap";
-      history.forEach(function(entry,hi){
+      historyList.forEach(function(entry,hi){
         var item=mkDiv("background:#f8f6ff;border-radius:16px;padding:"+(T?14:12)+"px;border:2px solid #e0d7ff;");
 
         var top=mkDiv("display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:5px;");
