@@ -84,7 +84,7 @@ var APP_VERSION = "2.6";
 var OCR_SPACE_KEY = "K81919831188957";
 var MAX_WORD_LEN = 60;
 var MAX_SENT_LEN = 200;
-var MAX_HISTORY = 20;
+var MAX_HISTORY = 50;
 var OCR_DAILY_LIMIT = 20;
 var COLORS = ["#FF6B6B","#FF9F43","#FECA57","#48DBFB","#FF9FF3","#54A0FF","#5F27CD","#1DD1A1"];
 var SAMPLE_WORDS = [
@@ -131,6 +131,7 @@ function pickRandomWords(n){
 
 // ===== 状態 =====
 var slots = [];
+var slotMeta = [];
 var mode = "word";
 var rate = 1.0;
 var selectedVoiceURI = null;
@@ -274,8 +275,8 @@ function spawnStars(){
 
 // ===== アクション =====
 function switchTab(t){tab=t;renderApp();}
-function switchMode(m){stopAll();slots=[];ocrMode=false;initSlots();doneIdxs={};mode=m;renderApp();}
-function clearAll(){stopAll();slots=[];ocrMode=false;initSlots();doneIdxs={};renderApp();}
+function switchMode(m){stopAll();slots=[];slotMeta=[];ocrMode=false;initSlots();doneIdxs={};mode=m;renderApp();}
+function clearAll(){stopAll();slots=[];slotMeta=[];ocrMode=false;initSlots();doneIdxs={};renderApp();}
 
 function switchRate(r){rate=r;renderApp();}
 var STOP_WORDS={the:1,a:1,an:1,and:1,or:1,but:1,so:1,yet:1,nor:1,for:1,
@@ -363,11 +364,17 @@ function triggerOcr(){
 }
 function updateSlot(idx,val){
   slots[idx]=sanitize(val,mode==="sentence"?MAX_SENT_LEN:MAX_WORD_LEN);
+  slotMeta[idx]=null;
   delete doneIdxs[idx];
 }
 function quickAddWord(wi){
   var ei=-1;for(var i=0;i<slots.length;i++){if(!slots[i].trim()){ei=i;break;}}
-  if(ei>=0){slots[ei]=SAMPLE_WORDS[wi].word;renderApp();}
+  if(ei>=0){
+    var item=SAMPLE_WORDS[wi];
+    slots[ei]=item.word;
+    slotMeta[ei]={emoji:item.emoji,ja:item.ja};
+    renderApp();
+  }
 }
 function quickAddSentence(si){
   var ei=-1;for(var i=0;i<slots.length;i++){if(!slots[i].trim()){ei=i;break;}}
@@ -377,7 +384,7 @@ function saveEntry(){
   var words=slots.filter(function(s){return s.trim();});
   if(!words.length)return;
   historyList.unshift({id:Date.now(),words:words,mode:mode,savedAt:Date.now()});
-  if(historyList.length>20)historyList.length=20;
+  if(historyList.length>MAX_HISTORY)historyList.length=MAX_HISTORY;
   saveHistory();renderApp();
   var el=document.getElementById("saveMsg");
   if(el){el.textContent="保存しました！✅";el.style.animation="popIn 0.3s ease";}
@@ -391,7 +398,7 @@ function loadEntry(id){
   var n=slotCount();
   slots=entry.words.slice(0,n);
   while(slots.length<n)slots.push("");
-  doneIdxs={};if(entry.mode)mode=entry.mode;
+  doneIdxs={};slotMeta=[];if(entry.mode)mode=entry.mode;
   tab="practice";renderApp();
 }
 function deleteEntry(id){
@@ -555,7 +562,7 @@ function renderApp(){
         inp.maxLength=isSentence?MAX_SENT_LEN:MAX_WORD_LEN;
         inp.value=val;
         inp.placeholder=ph[i]||"";
-        inp.style.cssText="flex:1;min-width:0;font-size:"+(isSentence?(T?16:14):(T?18:16))+"px;font-weight:700;padding:"+(T?"11px 12px":"9px 10px")+";border-radius:12px;border:3px solid "+borderC+";background:"+bgC+";color:#4a3f8f;"+(isActive?"animation:glow 0.8s ease-in-out infinite;":"")+(isSentence?"line-height:1.5;":"letter-spacing:0.5px;");
+        inp.style.cssText="width:100%;font-size:"+(isSentence?(T?16:14):(T?18:16))+"px;font-weight:700;padding:"+(T?"11px 12px":"9px 10px")+";border-radius:12px;border:3px solid "+borderC+";background:"+bgC+";color:#4a3f8f;"+(isActive?"animation:glow 0.8s ease-in-out infinite;":"")+(isSentence?"line-height:1.5;":"letter-spacing:0.5px;");
 
         // 🔊ボタン（先に生成してinpのイベントから参照できるようにする）
         var spk=mk("button");
@@ -574,7 +581,15 @@ function renderApp(){
           s.addEventListener("click",function(){speakOne(ii);});
         })(i,spk);
 
-        row.appendChild(inp);
+        var inputWrap=mkDiv("flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;");
+        inputWrap.appendChild(inp);
+        if((isActive||isDone)&&slotMeta[i]){
+          var mDiv=mkDiv("display:flex;align-items:center;gap:5px;padding-left:6px;");
+          mDiv.appendChild(mkTxt("span","font-size:"+(T?18:15)+"px;line-height:1;",slotMeta[i].emoji));
+          mDiv.appendChild(mkTxt("span","font-size:"+(T?13:11)+"px;font-weight:700;color:#764ba2;",slotMeta[i].ja));
+          inputWrap.appendChild(mDiv);
+        }
+        row.appendChild(inputWrap);
         row.appendChild(spk);
 
         slotWrap.appendChild(row);
@@ -708,7 +723,7 @@ function renderApp(){
       hCard.appendChild(mkTxt("p","text-align:center;color:#bbb;font-size:"+(T?17:14)+"px;font-weight:700;margin-bottom:8px;","まだ保存していないよ"));
       hCard.appendChild(mkTxt("p","text-align:center;color:#bbb;font-size:"+(T?14:12)+"px;","れんしゅうして💾を押してね！"));
     } else {
-      hCard.appendChild(mkTxt("div","text-align:center;color:#888;font-size:"+(T?13:11)+"px;margin-bottom:4px;",historyList.length+"件保存中（最大20件）"));
+      hCard.appendChild(mkTxt("div","text-align:center;color:#888;font-size:"+(T?13:11)+"px;margin-bottom:4px;",historyList.length+"件保存中（最大50件）"));
       hCard.appendChild(mkTxt("div","text-align:center;color:#bbb;font-size:"+(T?11:10)+"px;margin-bottom:12px;","📱 このブラウザに保存されます。ブラウザのデータ消去・プライベートモードでは消えます。"));
       var hw=mk("div");hw.className="hist-wrap";
       historyList.forEach(function(entry,hi){
@@ -764,12 +779,14 @@ function renderApp(){
     sugWords.forEach(function(w,wi){
       var cell=mkDiv("background:"+COLORS[wi%8]+"33;border:2px solid "+COLORS[wi%8]+"66;border-radius:12px;padding:"+(T?"9px 6px":"7px 4px")+";text-align:center;cursor:pointer;");
       cell.appendChild(mkTxt("div","font-size:"+(T?16:14)+"px;font-weight:700;color:#fff;",w));
-      cell.addEventListener("click",(function(word){return function(){
+      cell.addEventListener("click",(function(w2){return function(){
         var n=slotCount();
-        slots=word;doneIdxs={};mode="word";
-        while(slots.length<n)slots.push("");
-        tab="practice";renderApp();
-      };})(sugWords));
+        if(slots.length<n)while(slots.length<n)slots.push("");
+        var ei=-1;for(var i=0;i<slots.length;i++){if(!slots[i].trim()){ei=i;break;}}
+        if(ei<0)ei=0;
+        slots[ei]=w2;slotMeta[ei]=null;
+        doneIdxs={};mode="word";tab="practice";renderApp();
+      };})(w));
       sugGrid.appendChild(cell);
     });
     sugPanel.appendChild(sugGrid);

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="えいごよんで！— 小学生向け英語発音練習ツール。単語や英文を入れて、まとめて読んでもらおう！">
-<title>えいごよんで！— 英語発音練習ツール</title>
+<meta name="description" content="英単語・英文を入力するだけでネイティブ発音で読み上げ。写真から単語の自動取り込みも可能。小学生向け完全無料の英語発音練習ツール。インストール不要・登録不要。">
+<title>えいごよんで！| 小学生向け英語発音練習ツール【完全無料】</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -255,6 +255,73 @@ footer{
 footer a{color:rgba(255,255,255,0.55);text-decoration:none;}
 footer a:hover{color:#fff;}
 
+/* ===== 保護者ペインポイント ===== */
+.pain-section{
+  margin-bottom:48px;
+  animation:fadeUp .6s .1s ease both;
+}
+.pain-bubble{
+  display:flex;
+  align-items:flex-end;
+  gap:12px;
+  margin-bottom:20px;
+}
+.pain-child-icon{font-size:48px;flex-shrink:0;}
+.pain-speech{
+  background:rgba(255,255,255,0.95);
+  color:#333;
+  border-radius:20px 20px 20px 4px;
+  padding:14px 18px;
+  font-size:clamp(14px,3.5vw,16px);
+  font-weight:700;
+  line-height:1.5;
+  box-shadow:0 4px 16px rgba(0,0,0,0.12);
+  position:relative;
+}
+.pain-speech-label{
+  display:block;
+  font-size:11px;
+  color:#999;
+  font-weight:500;
+  margin-bottom:4px;
+}
+.pain-parent{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  background:rgba(0,0,0,0.15);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:16px;
+}
+.pain-parent-icon{font-size:36px;flex-shrink:0;margin-top:2px;}
+.pain-parent-text{
+  font-size:clamp(13px,3vw,15px);
+  color:rgba(255,255,255,0.92);
+  line-height:1.8;
+}
+.pain-parent-text strong{color:#fff;}
+.pain-solution{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  background:rgba(255,255,255,0.2);
+  border:2px solid rgba(255,255,255,0.5);
+  border-radius:20px;
+  padding:20px;
+}
+.pain-solution-icon{font-size:36px;flex-shrink:0;margin-top:2px;}
+.pain-solution-text{
+  font-size:clamp(14px,3.5vw,16px);
+  color:#fff;
+  line-height:1.8;
+}
+.pain-solution-text strong{
+  font-size:clamp(16px,4vw,19px);
+  display:block;
+  margin-bottom:4px;
+}
+
 /* ===== スマホ調整 ===== */
 @media(min-width:480px){
   .features{gap:20px;}
@@ -279,12 +346,40 @@ footer a:hover{color:#fff;}
     <span class="hero-emoji">🔤</span>
     <h1 class="hero-title">えいごよんで！</h1>
     <p class="hero-sub">
-      単語や英文を入れるだけで、<br>
-      <strong>ネイティブっぽい発音</strong>で読んでくれる！<br>
-      小学生のための英語発音れんしゅうツール🎉
+      英単語・英文を入れるだけで、<br>
+      <strong>ネイティブの発音</strong>で読み上げ！<br>
+      <strong>小学生向け・完全無料</strong>の英語発音練習ツール🎉
     </p>
     <a class="cta-btn" href="index.html">▶️ アプリを使う（無料）</a>
     <span class="arrow-down">↓</span>
+  </section>
+
+  <!-- 保護者向けペインポイント -->
+  <section class="pain-section">
+    <div class="pain-bubble">
+      <span class="pain-child-icon">👧</span>
+      <div class="pain-speech">
+        <span class="pain-speech-label">こどもから…</span>
+        「ママ、この単語なんて読むの？」
+      </div>
+    </div>
+    <div class="pain-parent">
+      <span class="pain-parent-icon">😰</span>
+      <p class="pain-parent-text">
+        こどもには小さいうちから英語を学ばせたい。<br>
+        でも、宿題の単語を聞かれたとき——<br>
+        <strong>自分のカタコト発音で教えていいものか…</strong><br>
+        と悩んだことはありませんか？
+      </p>
+    </div>
+    <div class="pain-solution">
+      <span class="pain-solution-icon">✨</span>
+      <p class="pain-solution-text">
+        <strong>このアプリなら一発解決！</strong><br>
+        単語を入力するだけで、ネイティブの発音がすぐ聞ける。<br>
+        英語に自信がなくても大丈夫。
+      </p>
+    </div>
   </section>
 
   <!-- 特徴 -->
@@ -300,6 +395,7 @@ footer a:hover{color:#fff;}
           英単語を自動で読み取ってスロットに入れてくれるよ。
         </div>
         <span class="feature-tag">📸 カメラ対応</span>
+        <span class="feature-tag">📆 1日20回まで</span>
       </div>
     </div>
 
@@ -323,7 +419,7 @@ footer a:hover{color:#fff;}
           よく使う単語セットは💾ボタンで保存できる。<br>
           履歴から呼び出してすぐ練習再開！
         </div>
-        <span class="feature-tag">📚 最大20セット</span>
+        <span class="feature-tag">📚 最大50セット</span>
       </div>
     </div>
 
