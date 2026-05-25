@@ -82,6 +82,9 @@ textarea{resize:none;}
 // ===== 定数 =====
 var APP_VERSION = "2.6";
 var OCR_SPACE_KEY = "K81919831188957";
+var MAX_WORD_LEN = 60;
+var MAX_SENT_LEN = 200;
+var MAX_HISTORY = 20;
 var COLORS = ["#FF6B6B","#FF9F43","#FECA57","#48DBFB","#FF9FF3","#54A0FF","#5F27CD","#1DD1A1"];
 var SAMPLE_WORDS = [
   {word:"apple",   emoji:"🍎",ja:"りんご"},
@@ -157,7 +160,32 @@ initSlots();
 
 // ===== ストレージ =====
 function saveHistory(){try{localStorage.setItem("eigoHistory",JSON.stringify(historyList));}catch(e){}}
-function loadHistory(){try{var d=localStorage.getItem("eigoHistory");if(d)historyList=JSON.parse(d);}catch(e){}}
+function sanitize(val,maxLen){
+  return String(val)
+    .replace(/[<>&"'`]/g,"")   // XSS起因文字を除去
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g,"") // 制御文字除去
+    .slice(0,maxLen);
+}
+function loadHistory(){
+  try{
+    var d=localStorage.getItem("eigoHistory");
+    if(!d)return;
+    var parsed=JSON.parse(d);
+    if(!Array.isArray(parsed))return;
+    historyList=parsed.filter(function(e){
+      return e&&typeof e.id==="number"&&Array.isArray(e.words)&&e.words.length>0;
+    }).map(function(e){
+      return {
+        id:e.id,
+        mode:e.mode==="sentence"?"sentence":"word",
+        savedAt:typeof e.savedAt==="number"?e.savedAt:e.id,
+        words:e.words.slice(0,MAX_HISTORY).map(function(w){
+          return sanitize(String(w),MAX_SENT_LEN);
+        }).filter(function(w){return w.trim().length>0;})
+      };
+    }).filter(function(e){return e.words.length>0;});
+  }catch(e){}
+}
 
 // ===== 音声 =====
 function getEnVoices(){
@@ -312,7 +340,10 @@ function triggerOcr(){
   };
   inp.click();
 }
-function updateSlot(idx,val){slots[idx]=val;delete doneIdxs[idx];}
+function updateSlot(idx,val){
+  slots[idx]=sanitize(val,mode==="sentence"?MAX_SENT_LEN:MAX_WORD_LEN);
+  delete doneIdxs[idx];
+}
 function quickAddWord(wi){
   var ei=-1;for(var i=0;i<slots.length;i++){if(!slots[i].trim()){ei=i;break;}}
   if(ei>=0){slots[ei]=SAMPLE_WORDS[wi].word;renderApp();}
@@ -500,6 +531,7 @@ function renderApp(){
           inp=mk("input");inp.type="text";
         }
         inp.className="slot-input";
+        inp.maxLength=isSentence?MAX_SENT_LEN:MAX_WORD_LEN;
         inp.value=val;
         inp.placeholder=ph[i]||"";
         inp.style.cssText="flex:1;min-width:0;font-size:"+(isSentence?(T?16:14):(T?18:16))+"px;font-weight:700;padding:"+(T?"11px 12px":"9px 10px")+";border-radius:12px;border:3px solid "+borderC+";background:"+bgC+";color:#4a3f8f;"+(isActive?"animation:glow 0.8s ease-in-out infinite;":"")+(isSentence?"line-height:1.5;":"letter-spacing:0.5px;");
