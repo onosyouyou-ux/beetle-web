@@ -129,6 +129,38 @@ function pickRandomWords(n){
   return result;
 }
 
+// ===== 声のフレンドリー名 =====
+var FRIENDLY_FEMALE=["Emily","Sarah","Emma","Olivia","Sophie","Jessica","Amy","Grace","Lily","Mia"];
+var FRIENDLY_MALE=["Mike","James","Jack","Tom","Ryan","Noah","Leo","Max","Sam","Alex"];
+var FEMALE_KWORDS=["female","zira","hazel","aria","jenny","samantha","karen","moira","tessa","fiona","victoria","ava","allison","susan"];
+var MALE_KWORDS=["male","david","mark","guy","eric","fred","daniel"];
+function voiceGender(v){
+  var n=(v.name+" "+v.voiceURI).toLowerCase();
+  for(var i=0;i<FEMALE_KWORDS.length;i++){if(n.indexOf(FEMALE_KWORDS[i])>=0)return "f";}
+  for(var i=0;i<MALE_KWORDS.length;i++){if(n.indexOf(MALE_KWORDS[i])>=0)return "m";}
+  return "u";
+}
+function langFlag(lang){
+  if(/en.?US/i.test(lang))return "🇺🇸";
+  if(/en.?GB/i.test(lang))return "🇬🇧";
+  if(/en.?AU/i.test(lang))return "🇦🇺";
+  if(/en.?IN/i.test(lang))return "🇮🇳";
+  if(/en.?CA/i.test(lang))return "🇨🇦";
+  return "🌎";
+}
+function buildVoiceMap(voices){
+  var map={};var fCnt=0,mCnt=0;
+  voices.forEach(function(v){
+    var g=voiceGender(v);
+    var lbl;
+    if(g==="f"){lbl=FRIENDLY_FEMALE[fCnt%FRIENDLY_FEMALE.length]+" "+langFlag(v.lang);fCnt++;}
+    else if(g==="m"){lbl=FRIENDLY_MALE[mCnt%FRIENDLY_MALE.length]+" "+langFlag(v.lang);mCnt++;}
+    else{lbl=langFlag(v.lang)+" "+v.name.replace(/Microsoft /,"").replace(/ \(.*\)/,"").slice(0,14);}
+    map[v.voiceURI]={label:lbl,gender:g};
+  });
+  return map;
+}
+
 // ===== 状態 =====
 var slots = [];
 var slotMeta = [];
@@ -347,15 +379,15 @@ function triggerOcr(){
         .then(function(r){return r.json();})
         .then(function(data){
           if(data.IsErroredOnProcessing||!data.ParsedResults||!data.ParsedResults.length){
-            ocrLoading=false;renderApp();alert("読み取りに失敗しました");return;
+            ocrLoading=false;renderApp();alert("よみとりにしっぱいしました");return;
           }
           var text=data.ParsedResults.map(function(r){return r.ParsedText;}).join(" ");
           var words=extractWords(text);
-          if(!words.length){ocrLoading=false;renderApp();alert("英単語が見つかりませんでした");return;}
+          if(!words.length){ocrLoading=false;renderApp();alert("えいたんごがみつかりませんでした");return;}
           recordOcrUsage();
           slots=words;doneIdxs={};ocrMode=true;ocrLoading=false;renderApp();
         })
-        .catch(function(){ocrLoading=false;renderApp();alert("通信に失敗しました");});
+        .catch(function(){ocrLoading=false;renderApp();alert("つうしんにしっぱいしました");});
       });
     };
     reader.readAsDataURL(file);
@@ -387,7 +419,7 @@ function saveEntry(){
   if(historyList.length>MAX_HISTORY)historyList.length=MAX_HISTORY;
   saveHistory();renderApp();
   var el=document.getElementById("saveMsg");
-  if(el){el.textContent="保存しました！✅";el.style.animation="popIn 0.3s ease";}
+  if(el){el.textContent="ほぞんしました！✅";el.style.animation="popIn 0.3s ease";}
   if(saveMsgTimer)clearTimeout(saveMsgTimer);
   saveMsgTimer=setTimeout(function(){var e=document.getElementById("saveMsg");if(e)e.textContent="";},2000);
 }
@@ -458,12 +490,12 @@ function renderApp(){
   var titleDiv=mkDiv("text-align:center;margin-bottom:"+(T?18:12)+"px;"+mw);
   titleDiv.appendChild(mkTxt("div","font-size:"+(T?52:38)+"px;","🔤"));
   titleDiv.appendChild(mkTxt("h1","color:#fff;font-size:"+(T?32:22)+"px;font-weight:900;margin:4px 0;text-shadow:0 4px 14px rgba(0,0,0,0.3);","えいご よんで！"));
-  titleDiv.appendChild(mkTxt("p","color:rgba(255,255,255,0.85);font-size:"+(T?15:12)+"px;","単語や英文を入れて、まとめて読んでもらおう！"));
+  titleDiv.appendChild(mkTxt("p","color:rgba(255,255,255,0.85);font-size:"+(T?15:12)+"px;","たんごやえいぶんをいれて、まとめてよんでもらおう！"));
   app.appendChild(titleDiv);
 
   // ---- タブ ----
   var tabBar=mkDiv("display:flex;gap:5px;background:rgba(0,0,0,0.2);border-radius:18px;padding:4px;margin-bottom:10px;"+mw);
-  [["practice","📝 れんしゅう"],["history","📚 履歴"]].forEach(function(pair){
+  [["practice","📝 れんしゅう"],["history","📚 りれき"]].forEach(function(pair){
     var active=tab===pair[0];
     var b=mkBtn(
       "flex:1;padding:"+(T?11:9)+"px;border-radius:13px;border:none;background:"+(active?"rgba(255,255,255,0.95)":"transparent")+";color:"+(active?"#764ba2":"rgba(255,255,255,0.8)")+";font-weight:900;font-size:"+(T?16:14)+"px;cursor:pointer;",
@@ -477,7 +509,7 @@ function renderApp(){
   if(tab==="practice"){
     // ---- モード切替 ----
     var modeBar=mkDiv("display:flex;gap:8px;margin-bottom:10px;"+mw);
-    [["word","🔤 単語モード"],["sentence","📖 英文モード"]].forEach(function(pair){
+    [["word","🔤 たんごモード"],["sentence","📖 えいぶんモード"]].forEach(function(pair){
       var active=mode===pair[0];
       var b=mkBtn(
         "flex:1;padding:"+(T?12:9)+"px;border-radius:16px;border:none;background:"+(active?"rgba(255,255,255,0.95)":"rgba(255,255,255,0.2)")+";color:"+(active?"#764ba2":"rgba(255,255,255,0.9)")+";font-weight:900;font-size:"+(T?15:13)+"px;cursor:pointer;box-shadow:"+(active?"0 4px 14px rgba(0,0,0,0.15)":"none")+";",
@@ -492,7 +524,7 @@ function renderApp(){
     var ocrRow=mkDiv(mw+"margin-bottom:10px;");
     var ocrBtnEl=mkBtn(
       "width:100%;padding:"+(T?"10px":"9px")+";border-radius:16px;border:2px solid rgba(255,255,255,0.35);background:"+(ocrLoading?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.15)")+";color:rgba(255,255,255,0.95);font-size:"+(T?14:13)+"px;font-weight:700;cursor:"+(ocrLoading?"not-allowed":"pointer")+";letter-spacing:0.3px;",
-      ocrLoading?"🔍 よみとり中...":(ocrRemaining()>0?"📷 写真から英単語を取り込む（残り"+ocrRemaining()+"回/日）":"📷 本日の上限に達しました（"+OCR_DAILY_LIMIT+"回/日）"),
+      ocrLoading?"🔍 よみとりちゅう...":(ocrRemaining()>0?"📷 しゃしんからえいたんごをとりこむ（のこり"+ocrRemaining()+"かい/日）":"📷 きょうのじょうげんにたっしました（"+OCR_DAILY_LIMIT+"かい/日）"),
       function(){if(!ocrLoading)triggerOcr();}
     );
     ocrBtnEl.disabled=ocrLoading;
@@ -515,8 +547,8 @@ function renderApp(){
     // OCRモード表示
     if(ocrMode){
       var ocrTag=mkDiv("display:flex;align-items:center;justify-content:space-between;margin-bottom:"+(T?12:10)+"px;");
-      ocrTag.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#764ba2;font-weight:700;","📷 写真から "+n+" 語を取り込みました"));
-      var ocrClearBtn=mkBtn("font-size:"+(T?12:11)+"px;color:#aaa;background:none;border:none;cursor:pointer;padding:0;","× 通常モードに戻る",function(){clearAll();});
+      ocrTag.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#764ba2;font-weight:700;","📷 しゃしんから "+n+" ごをとりこみました"));
+      var ocrClearBtn=mkBtn("font-size:"+(T?12:11)+"px;color:#aaa;background:none;border:none;cursor:pointer;padding:0;","× ふつうにもどる",function(){clearAll();});
       ocrTag.appendChild(ocrClearBtn);
       card.appendChild(ocrTag);
     }
@@ -614,7 +646,8 @@ function renderApp(){
     // 声選択パネル
     var enVoices=getEnVoices();
     var currentVoice=getVoice();
-    var currentVoiceName=currentVoice?currentVoice.name:"（自動）";
+    var vMap=buildVoiceMap(enVoices);
+    var currentVoiceName=currentVoice?(vMap[currentVoice.voiceURI]||{label:"（じどう）"}).label:"（じどう）";
     var voiceHeaderRow=mkDiv("display:flex;align-items:center;gap:8px;margin-bottom:"+(voicePickerOpen?6:(T?14:10))+"px;");
     voiceHeaderRow.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#888;white-space:nowrap;flex-shrink:0;","🎤 こえ"));
     var voiceToggleBtn=mkBtn(
@@ -628,26 +661,35 @@ function renderApp(){
     card.appendChild(voiceHeaderRow);
 
     if(voicePickerOpen){
-      var voiceGrid=mkDiv("display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:"+(T?14:10)+"px;max-height:260px;overflow-y:auto;padding:2px;");
-      enVoices.forEach(function(voice,vi){
-        var isSelected=voice.voiceURI===selectedVoiceURI||(selectedVoiceURI===null&&vi===0);
-        var cell=mkDiv("display:flex;align-items:center;gap:5px;padding:7px 8px;border-radius:10px;border:2px solid "+(isSelected?"#764ba2":"#e0d7ff")+";background:"+(isSelected?"#f0ebff":"#faf9ff")+";cursor:pointer;min-width:0;");
-        var nameEl=mkTxt("span","flex:1;font-size:"+(T?11:10)+"px;font-weight:700;color:"+(isSelected?"#764ba2":"#555")+";overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;",voice.name.replace(/Microsoft /,"").replace(/ \(.*\)/,""));
-        var langEl=mkTxt("span","font-size:"+(T?9:9)+"px;color:#aaa;flex-shrink:0;",voice.lang);
-        var tryBtn=mk("button");
-        tryBtn.textContent="🔊";
-        tryBtn.style.cssText="flex-shrink:0;width:24px;height:24px;border-radius:6px;border:none;background:rgba(118,75,162,0.12);cursor:pointer;font-size:12px;padding:0;";
-        (function(v){
-          tryBtn.addEventListener("click",function(e){e.stopPropagation();sampleVoice(v);});
-          cell.addEventListener("click",function(){selectVoice(v.voiceURI);});
-        })(voice);
-        cell.appendChild(nameEl);
-        cell.appendChild(langEl);
-        cell.appendChild(tryBtn);
-        voiceGrid.appendChild(cell);
-      });
+      var voiceGrid=mkDiv("display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:"+(T?14:10)+"px;max-height:280px;overflow-y:auto;padding:2px;");
+      var femaleVs=enVoices.filter(function(v){return vMap[v.voiceURI].gender==="f";});
+      var maleVs=enVoices.filter(function(v){return vMap[v.voiceURI].gender==="m";});
+      var otherVs=enVoices.filter(function(v){return vMap[v.voiceURI].gender==="u";});
+      function renderVGroup(vlist,header){
+        if(!vlist.length)return;
+        voiceGrid.appendChild(mkTxt("div","grid-column:1/-1;font-size:"+(T?12:11)+"px;font-weight:900;color:#764ba2;padding:6px 2px 2px;",header));
+        vlist.forEach(function(voice,vi){
+          var isSelected=voice.voiceURI===selectedVoiceURI||(selectedVoiceURI===null&&voice===enVoices[0]);
+          var lbl=vMap[voice.voiceURI].label;
+          var cell=mkDiv("display:flex;align-items:center;gap:5px;padding:8px 8px;border-radius:10px;border:2px solid "+(isSelected?"#764ba2":"#e0d7ff")+";background:"+(isSelected?"#f0ebff":"#faf9ff")+";cursor:pointer;min-width:0;");
+          var nameEl=mkTxt("span","flex:1;font-size:"+(T?12:11)+"px;font-weight:700;color:"+(isSelected?"#764ba2":"#555")+";overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;",lbl);
+          var tryBtn=mk("button");
+          tryBtn.textContent="🔊";
+          tryBtn.style.cssText="flex-shrink:0;width:24px;height:24px;border-radius:6px;border:none;background:rgba(118,75,162,0.12);cursor:pointer;font-size:12px;padding:0;";
+          (function(v){
+            tryBtn.addEventListener("click",function(e){e.stopPropagation();sampleVoice(v);});
+            cell.addEventListener("click",function(){selectVoice(v.voiceURI);});
+          })(voice);
+          cell.appendChild(nameEl);
+          cell.appendChild(tryBtn);
+          voiceGrid.appendChild(cell);
+        });
+      }
+      renderVGroup(femaleVs,"👧 おんなのこ");
+      renderVGroup(maleVs,"👦 おとこのこ");
+      renderVGroup(otherVs,"🌍 その他");
       if(enVoices.length===0){
-        voiceGrid.appendChild(mkTxt("div","grid-column:1/-1;text-align:center;color:#bbb;font-size:12px;padding:12px;","音声が読み込まれていません。少し待ってから再度開いてください。"));
+        voiceGrid.appendChild(mkTxt("div","grid-column:1/-1;text-align:center;color:#bbb;font-size:12px;padding:12px;","こえがよみこまれていません。すこしまってからまたひらいてね。"));
       }
       card.appendChild(voiceGrid);
     }
@@ -685,7 +727,7 @@ function renderApp(){
     // ---- サンプルパネル ----
     var panel=mkDiv("background:rgba(255,255,255,0.15);border-radius:20px;padding:"+(T?"18px":"14px 12px")+";"+mw);
     panel.appendChild(mkTxt("div","text-align:center;color:rgba(255,255,255,0.9);font-size:"+(T?14:12)+"px;margin-bottom:10px;font-weight:700;",
-      isSentence?"── サンプル英文（タップして追加）──":"── よく使う単語 ──"));
+      isSentence?"── サンプルえいぶん（タップしてついか）──":"── よくつかうたんご ──"));
 
     if(isSentence){
       var sg=mk("div");sg.className="sent-wrap";
@@ -720,11 +762,11 @@ function renderApp(){
 
     if(historyList.length===0){
       hCard.appendChild(mkTxt("div","text-align:center;padding:"+(T?50:36)+"px 0 10px;color:#bbb;font-size:"+(T?52:42)+"px;","📭"));
-      hCard.appendChild(mkTxt("p","text-align:center;color:#bbb;font-size:"+(T?17:14)+"px;font-weight:700;margin-bottom:8px;","まだ保存していないよ"));
+      hCard.appendChild(mkTxt("p","text-align:center;color:#bbb;font-size:"+(T?17:14)+"px;font-weight:700;margin-bottom:8px;","まだほぞんしていないよ"));
       hCard.appendChild(mkTxt("p","text-align:center;color:#bbb;font-size:"+(T?14:12)+"px;","れんしゅうして💾を押してね！"));
     } else {
-      hCard.appendChild(mkTxt("div","text-align:center;color:#888;font-size:"+(T?13:11)+"px;margin-bottom:4px;",historyList.length+"件保存中（最大50件）"));
-      hCard.appendChild(mkTxt("div","text-align:center;color:#bbb;font-size:"+(T?11:10)+"px;margin-bottom:12px;","📱 このブラウザに保存されます。ブラウザのデータ消去・プライベートモードでは消えます。"));
+      hCard.appendChild(mkTxt("div","text-align:center;color:#888;font-size:"+(T?13:11)+"px;margin-bottom:4px;",historyList.length+"こほぞんしてあるよ（さいだい50こ）"));
+      hCard.appendChild(mkTxt("div","text-align:center;color:#bbb;font-size:"+(T?11:10)+"px;margin-bottom:12px;","📱 このブラウザにほぞんされます。ブラウザのデータをけしたり、プライベートモードではきえます。"));
       var hw=mk("div");hw.className="hist-wrap";
       historyList.forEach(function(entry,hi){
         var item=mkDiv("background:#f8f6ff;border-radius:16px;padding:"+(T?14:12)+"px;border:2px solid #e0d7ff;");
@@ -732,7 +774,7 @@ function renderApp(){
         var top=mkDiv("display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:5px;");
         var left=mkDiv("display:flex;align-items:center;gap:5px;");
         var modeTag=mkTxt("span","font-size:"+(T?11:10)+"px;background:"+(entry.mode==="sentence"?"#e8f4ff":"#f0e8ff")+";color:"+(entry.mode==="sentence"?"#4a90d9":"#764ba2")+";border-radius:7px;padding:2px 7px;font-weight:700;",
-          entry.mode==="sentence"?"📖 英文":"🔤 単語");
+          entry.mode==="sentence"?"📖 えいぶん":"🔤 たんご");
         var dateEl=mkTxt("span","font-size:"+(T?11:10)+"px;color:#aaa;","🕐 "+fmtDate(entry.savedAt));
         left.appendChild(modeTag);left.appendChild(dateEl);
 
@@ -767,7 +809,7 @@ function renderApp(){
     var sugWords=pickRandomWords(T?6:3);
     var sugPanel=mkDiv("background:rgba(255,255,255,0.15);border-radius:20px;padding:"+(T?"18px":"14px 12px")+";width:100%;max-width:"+maxW+"px;margin-top:12px;");
     var sugHead=mkDiv("display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;");
-    sugHead.appendChild(mkTxt("div","color:rgba(255,255,255,0.9);font-size:"+(T?14:12)+"px;font-weight:700;","🎲 きょうのおすすめ単語"));
+    sugHead.appendChild(mkTxt("div","color:rgba(255,255,255,0.9);font-size:"+(T?14:12)+"px;font-weight:700;","🎲 きょうのおすすめたんご"));
     var shuffleBtn=mkBtn(
       "font-size:"+(T?12:11)+"px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);border-radius:99px;padding:4px 12px;color:#fff;cursor:pointer;",
       "🔀 シャッフル",function(){renderApp();}
