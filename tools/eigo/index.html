@@ -99,6 +99,31 @@ var SAMPLE_SENTENCES = [
   "I like cats.","This is a pen.","How are you?",
   "I am happy today.","Let's play together!","Good morning!"
 ];
+var POPULAR_WORDS = [
+  // どうぶつ
+  "rabbit","tiger","lion","bear","horse","cow","pig","sheep","duck","frog","monkey","giraffe","zebra","wolf","deer","owl","eagle","whale","dolphin","penguin",
+  // たべもの
+  "bread","rice","egg","milk","cake","pizza","salad","soup","cookie","candy","cheese","butter","honey","lemon","cherry","peach","melon","corn","carrot","onion",
+  // からだ
+  "head","eye","ear","nose","mouth","hand","foot","arm","leg","hair","face","back","shoulder","knee","finger","tooth","heart","voice","brain","skin",
+  // がっこう
+  "pencil","ruler","eraser","notebook","desk","chair","teacher","lesson","class","score","answer","question","library","science","music","art","gym","lunch","recess","grade",
+  // しぜん
+  "sun","moon","star","sky","cloud","rain","snow","wind","flower","tree","mountain","river","ocean","beach","forest","field","island","desert","volcano","rainbow",
+  // きもち・ようす
+  "happy","sad","angry","scared","excited","tired","hungry","sleepy","funny","brave","kind","gentle","clever","silly","noisy","quiet","warm","cool","soft","hard",
+  // うごき
+  "jump","swim","sing","dance","read","write","draw","paint","laugh","cry","think","dream","grow","shine","fly","climb","throw","catch","kick","push"
+];
+function pickRandomWords(n){
+  var pool=POPULAR_WORDS.slice();
+  var result=[];
+  for(var i=0;i<n&&pool.length;i++){
+    var idx=Math.floor(Math.random()*pool.length);
+    result.push(pool.splice(idx,1)[0]);
+  }
+  return result;
+}
 
 // ===== 状態 =====
 var slots = [];
@@ -669,6 +694,45 @@ function renderApp(){
       hCard.appendChild(hw);
     }
     app.appendChild(hCard);
+
+    // ---- おすすめ単語セクション ----
+    var sugWords=pickRandomWords(T?6:3);
+    var sugPanel=mkDiv("background:rgba(255,255,255,0.15);border-radius:20px;padding:"+(T?"18px":"14px 12px")+";width:100%;max-width:"+maxW+"px;margin-top:12px;");
+    var sugHead=mkDiv("display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;");
+    sugHead.appendChild(mkTxt("div","color:rgba(255,255,255,0.9);font-size:"+(T?14:12)+"px;font-weight:700;","🎲 きょうのおすすめ単語"));
+    var shuffleBtn=mkBtn(
+      "font-size:"+(T?12:11)+"px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);border-radius:99px;padding:4px 12px;color:#fff;cursor:pointer;",
+      "🔀 シャッフル",function(){renderApp();}
+    );
+    sugHead.appendChild(shuffleBtn);
+    sugPanel.appendChild(sugHead);
+
+    var sugGrid=mkDiv("display:grid;grid-template-columns:repeat("+(T?3:3)+",1fr);gap:8px;margin-bottom:12px;");
+    sugWords.forEach(function(w,wi){
+      var cell=mkDiv("background:"+COLORS[wi%8]+"33;border:2px solid "+COLORS[wi%8]+"66;border-radius:12px;padding:"+(T?"9px 6px":"7px 4px")+";text-align:center;cursor:pointer;");
+      cell.appendChild(mkTxt("div","font-size:"+(T?16:14)+"px;font-weight:700;color:#fff;",w));
+      cell.addEventListener("click",(function(word){return function(){
+        var n=slotCount();
+        slots=word;doneIdxs={};mode="word";
+        while(slots.length<n)slots.push("");
+        tab="practice";renderApp();
+      };})(sugWords));
+      sugGrid.appendChild(cell);
+    });
+    sugPanel.appendChild(sugGrid);
+
+    var useAllBtn=mkBtn(
+      "width:100%;padding:"+(T?"10px":"9px")+";border-radius:14px;border:none;background:rgba(255,255,255,0.9);color:#764ba2;font-size:"+(T?14:13)+"px;font-weight:900;cursor:pointer;",
+      "▶️ このセットでれんしゅうする",
+      function(){
+        var n=slotCount();
+        slots=sugWords.slice(0,n);
+        while(slots.length<n)slots.push("");
+        doneIdxs={};mode="word";tab="practice";renderApp();
+      }
+    );
+    sugPanel.appendChild(useAllBtn);
+    app.appendChild(sugPanel);
   }
 
   // フッター（バージョン表示 + リロードボタン）
