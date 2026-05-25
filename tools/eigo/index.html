@@ -104,7 +104,8 @@ var SAMPLE_SENTENCES = [
 var slots = [];
 var mode = "word";
 var rate = 1.0;
-var voiceGender = "girl";
+var selectedVoiceURI = null;
+var voicePickerOpen = false;
 var currentIdx = null;
 var doneIdxs = {};
 var historyList = [];
@@ -135,20 +136,23 @@ function loadHistory(){try{var d=localStorage.getItem("eigoHistory");if(d)histor
 
 // ===== 音声 =====
 function getEnVoices(){
-  var vs=window.speechSynthesis.getVoices();
-  return vs.filter(function(v){return v.lang.indexOf("en")===0;});
+  return window.speechSynthesis.getVoices().filter(function(v){return v.lang.indexOf("en")===0;});
 }
-var FEMALE_NAMES=["samantha","kate","victoria","karen","moira","fiona","tessa","allison","ava","susan","zoe","serena","zira","hazel","linda","eva","aria","jenny","natasha","libby","mia","sonia","nicky"];
-function isFemaleVoice(v){var n=v.name.toLowerCase();return FEMALE_NAMES.some(function(fn){return n.indexOf(fn)>=0;});}
 function getVoice(){
-  var vs=window.speechSynthesis.getVoices().filter(function(v){return v.lang.indexOf("en")===0;});
-  if(voiceGender==="girl"){
-    for(var i=0;i<vs.length;i++){if(isFemaleVoice(vs[i]))return vs[i];}
-  } else {
-    for(var i=0;i<vs.length;i++){if(!isFemaleVoice(vs[i]))return vs[i];}
+  var vs=getEnVoices();
+  if(selectedVoiceURI){
+    for(var i=0;i<vs.length;i++){if(vs[i].voiceURI===selectedVoiceURI)return vs[i];}
   }
   return vs[0]||null;
 }
+function sampleVoice(voice){
+  window.speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance("Hello! Nice to meet you!");
+  u.voice=voice;u.lang=voice.lang;u.rate=rate;u.pitch=1.0;
+  window.speechSynthesis.speak(u);
+}
+function selectVoice(uri){selectedVoiceURI=uri;voicePickerOpen=false;renderApp();}
+function toggleVoicePicker(){voicePickerOpen=!voicePickerOpen;renderApp();}
 function speakWord(text,idx){
   return new Promise(function(resolve){
     var u=new SpeechSynthesisUtterance(text.trim());
@@ -203,7 +207,7 @@ function spawnStars(){
 function switchTab(t){tab=t;renderApp();}
 function switchMode(m){stopAll();slots=[];ocrMode=false;initSlots();doneIdxs={};mode=m;renderApp();}
 function clearAll(){stopAll();slots=[];ocrMode=false;initSlots();doneIdxs={};renderApp();}
-function switchGender(g){voiceGender=g;renderApp();}
+
 function switchRate(r){rate=r;renderApp();}
 function triggerOcr(){
   var inp=mk("input");inp.type="file";inp.accept="image/*";
@@ -460,19 +464,46 @@ function renderApp(){
     });
     card.appendChild(speedRow);
 
-    // 声選択（女の子/男の子）
-    var voiceRow=mkDiv("display:flex;align-items:center;gap:8px;margin-bottom:"+(T?14:10)+"px;");
-    voiceRow.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#888;white-space:nowrap;flex-shrink:0;","🎤 こえ"));
-    [["girl","🌸 リリー"],["boy","🎸 トム"]].forEach(function(pair){
-      var active=voiceGender===pair[0];
-      var b=mkBtn(
-        "flex:1;padding:"+(T?"8px 4px":"7px 4px")+";border-radius:12px;border:2px solid "+(active?"#f093fb":"#e0d7ff")+";background:"+(active?"linear-gradient(135deg,#f093fb,#764ba2)":"#f8f6ff")+";color:"+(active?"#fff":"#888")+";font-size:"+(T?15:13)+"px;font-weight:900;cursor:pointer;",
-        pair[1],
-        (function(g){return function(){switchGender(g);};})(pair[0])
-      );
-      voiceRow.appendChild(b);
-    });
-    card.appendChild(voiceRow);
+    // 声選択パネル
+    var enVoices=getEnVoices();
+    var currentVoice=getVoice();
+    var currentVoiceName=currentVoice?currentVoice.name:"（自動）";
+    var voiceHeaderRow=mkDiv("display:flex;align-items:center;gap:8px;margin-bottom:"+(voicePickerOpen?6:(T?14:10))+"px;");
+    voiceHeaderRow.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#888;white-space:nowrap;flex-shrink:0;","🎤 こえ"));
+    var voiceToggleBtn=mkBtn(
+      "flex:1;padding:"+(T?"8px 12px":"7px 10px")+";border-radius:12px;border:2px solid #e0d7ff;background:#f8f6ff;color:#764ba2;font-size:"+(T?13:12)+"px;font-weight:700;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;",
+      "","",function(){toggleVoicePicker();}
+    );
+    var vnSpan=mk("span");vnSpan.textContent=currentVoiceName;vnSpan.style.cssText="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;font-size:"+(T?12:11)+"px;";
+    var arrowSpan=mk("span");arrowSpan.textContent=voicePickerOpen?"▲":"▼";arrowSpan.style.cssText="flex-shrink:0;margin-left:6px;font-size:10px;color:#aaa;";
+    voiceToggleBtn.appendChild(vnSpan);voiceToggleBtn.appendChild(arrowSpan);
+    voiceHeaderRow.appendChild(voiceToggleBtn);
+    card.appendChild(voiceHeaderRow);
+
+    if(voicePickerOpen){
+      var voiceGrid=mkDiv("display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:"+(T?14:10)+"px;max-height:260px;overflow-y:auto;padding:2px;");
+      enVoices.forEach(function(voice,vi){
+        var isSelected=voice.voiceURI===selectedVoiceURI||(selectedVoiceURI===null&&vi===0);
+        var cell=mkDiv("display:flex;align-items:center;gap:5px;padding:7px 8px;border-radius:10px;border:2px solid "+(isSelected?"#764ba2":"#e0d7ff")+";background:"+(isSelected?"#f0ebff":"#faf9ff")+";cursor:pointer;min-width:0;");
+        var nameEl=mkTxt("span","flex:1;font-size:"+(T?11:10)+"px;font-weight:700;color:"+(isSelected?"#764ba2":"#555")+";overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;",voice.name.replace(/Microsoft /,"").replace(/ \(.*\)/,""));
+        var langEl=mkTxt("span","font-size:"+(T?9:9)+"px;color:#aaa;flex-shrink:0;",voice.lang);
+        var tryBtn=mk("button");
+        tryBtn.textContent="🔊";
+        tryBtn.style.cssText="flex-shrink:0;width:24px;height:24px;border-radius:6px;border:none;background:rgba(118,75,162,0.12);cursor:pointer;font-size:12px;padding:0;";
+        (function(v){
+          tryBtn.addEventListener("click",function(e){e.stopPropagation();sampleVoice(v);});
+          cell.addEventListener("click",function(){selectVoice(v.voiceURI);});
+        })(voice);
+        cell.appendChild(nameEl);
+        cell.appendChild(langEl);
+        cell.appendChild(tryBtn);
+        voiceGrid.appendChild(cell);
+      });
+      if(enVoices.length===0){
+        voiceGrid.appendChild(mkTxt("div","grid-column:1/-1;text-align:center;color:#bbb;font-size:12px;padding:12px;","音声が読み込まれていません。少し待ってから再度開いてください。"));
+      }
+      card.appendChild(voiceGrid);
+    }
 
     // アクションボタン行
     var btnRow=mkDiv("display:flex;gap:7px;");
