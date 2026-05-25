@@ -209,13 +209,29 @@ function switchMode(m){stopAll();slots=[];ocrMode=false;initSlots();doneIdxs={};
 function clearAll(){stopAll();slots=[];ocrMode=false;initSlots();doneIdxs={};renderApp();}
 
 function switchRate(r){rate=r;renderApp();}
+var STOP_WORDS={the:1,a:1,an:1,and:1,or:1,but:1,so:1,yet:1,nor:1,for:1,
+  is:1,are:1,was:1,were:1,be:1,been:1,being:1,have:1,has:1,had:1,
+  do:1,does:1,did:1,will:1,would:1,could:1,should:1,may:1,might:1,
+  shall:1,can:1,must:1,need:1,get:1,got:1,
+  in:1,on:1,at:1,to:1,of:1,with:1,by:1,from:1,up:1,out:1,
+  about:1,into:1,through:1,before:1,after:1,above:1,below:1,
+  between:1,among:1,against:1,during:1,without:1,within:1,
+  i:1,you:1,he:1,she:1,it:1,we:1,they:1,me:1,him:1,her:1,
+  us:1,them:1,my:1,your:1,his:1,its:1,our:1,their:1,
+  this:1,that:1,these:1,those:1,here:1,there:1,
+  not:1,no:1,yes:1,as:1,all:1,also:1,just:1,very:1,too:1,
+  more:1,most:1,than:1,then:1,when:1,where:1,how:1,what:1,
+  which:1,who:1,whom:1,whose:1,if:1,because:1,although:1,
+  while:1,since:1,unless:1,until:1,though:1,
+  one:1,two:1,three:1,any:1,some:1,each:1,every:1,both:1,
+  such:1,own:1,same:1,other:1,like:1};
 function extractWords(text){
   var seen={};
   return text
     .replace(/[^a-zA-Z\s]/g," ")
     .split(/\s+/)
     .filter(function(w){return /^[a-zA-Z]{3,}$/.test(w);})
-    .filter(function(w){var lw=w.toLowerCase();if(seen[lw])return false;seen[lw]=true;return true;})
+    .filter(function(w){var lw=w.toLowerCase();if(STOP_WORDS[lw])return false;if(seen[lw])return false;seen[lw]=true;return true;})
     .map(function(w){return w.toLowerCase();})
     .slice(0,20);
 }
