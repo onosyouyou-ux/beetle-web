@@ -209,6 +209,45 @@ function switchMode(m){stopAll();slots=[];ocrMode=false;initSlots();doneIdxs={};
 function clearAll(){stopAll();slots=[];ocrMode=false;initSlots();doneIdxs={};renderApp();}
 
 function switchRate(r){rate=r;renderApp();}
+function preprocessForOcr(dataURL,callback){
+  var img=new Image();
+  img.onload=function(){
+    try{
+      // 小さい画像は拡大（Tesseractは大きい画像の方が精度が高い）
+      var maxDim=Math.max(img.width,img.height);
+      var scale=maxDim<1200?Math.min(3,1200/maxDim):1;
+      var canvas=document.createElement('canvas');
+      canvas.width=Math.round(img.width*scale);
+      canvas.height=Math.round(img.height*scale);
+      var ctx=canvas.getContext('2d');
+      ctx.fillStyle='#fff';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+
+      var id=ctx.getImageData(0,0,canvas.width,canvas.height);
+      var d=id.data,len=d.length;
+
+      // グレースケール化 & コントラスト最大値最小値を計算
+      var grays=new Uint8Array(len/4);
+      var lo=255,hi=0;
+      for(var i=0,j=0;i<len;i+=4,j++){
+        var g=Math.round(0.299*d[i]+0.587*d[i+1]+0.114*d[i+2]);
+        grays[j]=g;if(g<lo)lo=g;if(g>hi)hi=g;
+      }
+      // コントラストストレッチ（ヒストグラム正規化）＋少し強調
+      var range=Math.max(hi-lo,1);
+      for(var i=0,j=0;i<len;i+=4,j++){
+        var g=Math.round((grays[j]-lo)/range*255);
+        g=g<128?Math.max(0,g-15):Math.min(255,g+15);
+        d[i]=d[i+1]=d[i+2]=g;
+      }
+      ctx.putImageData(id,0,0);
+      callback(canvas.toDataURL('image/png'));
+    }catch(e){callback(dataURL);}
+  };
+  img.onerror=function(){callback(dataURL);};
+  img.src=dataURL;
+}
 function triggerOcr(){
   var inp=mk("input");inp.type="file";inp.accept="image/*";
   inp.onchange=function(e){
@@ -216,19 +255,23 @@ function triggerOcr(){
     ocrLoading=true;renderApp();
     var reader=new FileReader();
     reader.onload=function(ev){
-      Tesseract.recognize(ev.target.result,"eng",{logger:function(){}})
-        .then(function(r){
-          var seen={};
-          var words=r.data.text
-            .split(/[^a-zA-Z]+/)
-            .filter(function(w){return /^[a-zA-Z]{2,}$/.test(w);})
-            .filter(function(w){var lw=w.toLowerCase();if(seen[lw])return false;seen[lw]=true;return true;})
-            .map(function(w){return w.toLowerCase();})
-            .slice(0,20);
-          if(!words.length){ocrLoading=false;renderApp();alert("英単語が見つかりませんでした");return;}
-          slots=words;doneIdxs={};ocrMode=true;ocrLoading=false;renderApp();
-        })
-        .catch(function(){ocrLoading=false;renderApp();alert("読み取りに失敗しました");});
+      preprocessForOcr(ev.target.result,function(processed){
+        Tesseract.recognize(processed,"eng",{logger:function(){}})
+          .then(function(r){
+            var seen={};
+            var words=r.data.text
+              .replace(/[^a-zA-Z\s\-']/g," ")
+              .split(/\s+/)
+              .map(function(w){return w.replace(/^[^a-zA-Z]+|[^a-zA-Z]+$/g,"");})
+              .filter(function(w){return /^[a-zA-Z]{2,}$/.test(w);})
+              .filter(function(w){var lw=w.toLowerCase();if(seen[lw])return false;seen[lw]=true;return true;})
+              .map(function(w){return w.toLowerCase();})
+              .slice(0,20);
+            if(!words.length){ocrLoading=false;renderApp();alert("英単語が見つかりませんでした");return;}
+            slots=words;doneIdxs={};ocrMode=true;ocrLoading=false;renderApp();
+          })
+          .catch(function(){ocrLoading=false;renderApp();alert("読み取りに失敗しました");});
+      });
     };
     reader.readAsDataURL(file);
   };
