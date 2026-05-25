@@ -78,10 +78,10 @@ textarea{resize:none;}
 </head>
 <body>
 <div id="app"></div>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 <script>
 // ===== 定数 =====
-var APP_VERSION = "2.5";   // ← 更新するたびに変える
+var APP_VERSION = "2.6";
+var OCR_SPACE_KEY = "helloworld"; // ← ocr.space で無料キー取得後にここを差し替える
 var COLORS = ["#FF6B6B","#FF9F43","#FECA57","#48DBFB","#FF9FF3","#54A0FF","#5F27CD","#1DD1A1"];
 var SAMPLE_WORDS = [
   {word:"apple",   emoji:"🍎",ja:"りんご"},
@@ -209,44 +209,15 @@ function switchMode(m){stopAll();slots=[];ocrMode=false;initSlots();doneIdxs={};
 function clearAll(){stopAll();slots=[];ocrMode=false;initSlots();doneIdxs={};renderApp();}
 
 function switchRate(r){rate=r;renderApp();}
-function preprocessForOcr(dataURL,callback){
-  var img=new Image();
-  img.onload=function(){
-    try{
-      // 小さい画像は拡大（Tesseractは大きい画像の方が精度が高い）
-      var maxDim=Math.max(img.width,img.height);
-      var scale=maxDim<1200?Math.min(3,1200/maxDim):1;
-      var canvas=document.createElement('canvas');
-      canvas.width=Math.round(img.width*scale);
-      canvas.height=Math.round(img.height*scale);
-      var ctx=canvas.getContext('2d');
-      ctx.fillStyle='#fff';
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-      ctx.drawImage(img,0,0,canvas.width,canvas.height);
-
-      var id=ctx.getImageData(0,0,canvas.width,canvas.height);
-      var d=id.data,len=d.length;
-
-      // グレースケール化 & コントラスト最大値最小値を計算
-      var grays=new Uint8Array(len/4);
-      var lo=255,hi=0;
-      for(var i=0,j=0;i<len;i+=4,j++){
-        var g=Math.round(0.299*d[i]+0.587*d[i+1]+0.114*d[i+2]);
-        grays[j]=g;if(g<lo)lo=g;if(g>hi)hi=g;
-      }
-      // コントラストストレッチ（ヒストグラム正規化）＋少し強調
-      var range=Math.max(hi-lo,1);
-      for(var i=0,j=0;i<len;i+=4,j++){
-        var g=Math.round((grays[j]-lo)/range*255);
-        g=g<128?Math.max(0,g-15):Math.min(255,g+15);
-        d[i]=d[i+1]=d[i+2]=g;
-      }
-      ctx.putImageData(id,0,0);
-      callback(canvas.toDataURL('image/png'));
-    }catch(e){callback(dataURL);}
-  };
-  img.onerror=function(){callback(dataURL);};
-  img.src=dataURL;
+function extractWords(text){
+  var seen={};
+  return text
+    .replace(/[^a-zA-Z\s]/g," ")
+    .split(/\s+/)
+    .filter(function(w){return /^[a-zA-Z]{3,}$/.test(w);})
+    .filter(function(w){var lw=w.toLowerCase();if(seen[lw])return false;seen[lw]=true;return true;})
+    .map(function(w){return w.toLowerCase();})
+    .slice(0,20);
 }
 function triggerOcr(){
   var inp=mk("input");inp.type="file";inp.accept="image/*";
@@ -258,22 +229,25 @@ function triggerOcr(){
     ocrLoading=true;renderApp();
     var reader=new FileReader();
     reader.onload=function(ev){
-      preprocessForOcr(ev.target.result,function(processed){
-        Tesseract.recognize(processed,"eng",{logger:function(){}})
-          .then(function(r){
-            var seen={};
-            var words=(r.data.words||[])
-              .filter(function(w){return w.confidence>=60;})
-              .map(function(w){return w.text.replace(/[^a-zA-Z]/g,"");})
-              .filter(function(w){return /^[a-zA-Z]{3,}$/.test(w);})
-              .filter(function(w){var lw=w.toLowerCase();if(seen[lw])return false;seen[lw]=true;return true;})
-              .map(function(w){return w.toLowerCase();})
-              .slice(0,20);
-            if(!words.length){ocrLoading=false;renderApp();alert("英単語が見つかりませんでした");return;}
-            slots=words;doneIdxs={};ocrMode=true;ocrLoading=false;renderApp();
-          })
-          .catch(function(){ocrLoading=false;renderApp();alert("読み取りに失敗しました");});
-      });
+      var fd=new FormData();
+      fd.append("apikey",OCR_SPACE_KEY);
+      fd.append("base64Image",ev.target.result);
+      fd.append("language","eng");
+      fd.append("scale","true");
+      fd.append("isOverlayRequired","false");
+      fd.append("OCREngine","2");
+      fetch("https://api.ocr.space/parse/image",{method:"POST",body:fd})
+        .then(function(r){return r.json();})
+        .then(function(data){
+          if(data.IsErroredOnProcessing||!data.ParsedResults||!data.ParsedResults.length){
+            ocrLoading=false;renderApp();alert("読み取りに失敗しました");return;
+          }
+          var text=data.ParsedResults.map(function(r){return r.ParsedText;}).join(" ");
+          var words=extractWords(text);
+          if(!words.length){ocrLoading=false;renderApp();alert("英単語が見つかりませんでした");return;}
+          slots=words;doneIdxs={};ocrMode=true;ocrLoading=false;renderApp();
+        })
+        .catch(function(){ocrLoading=false;renderApp();alert("通信に失敗しました");});
     };
     reader.readAsDataURL(file);
   };
