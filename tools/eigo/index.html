@@ -101,8 +101,8 @@ var SAMPLE_SENTENCES = [
 // ===== 状態 =====
 var slots = [];
 var mode = "word";
-var rate = 0.8;
-var selectedVoiceName = "";   // 選択中の声（空＝自動）
+var rate = 0.9;
+var voiceGender = "girl";
 var currentIdx = null;
 var doneIdxs = {};
 var history = [];
@@ -133,15 +133,16 @@ function getEnVoices(){
   var vs=window.speechSynthesis.getVoices();
   return vs.filter(function(v){return v.lang.indexOf("en")===0;});
 }
+var FEMALE_NAMES=["samantha","kate","victoria","karen","moira","fiona","tessa","allison","ava","susan","zoe","serena"];
+function isFemaleVoice(v){var n=v.name.toLowerCase();return FEMALE_NAMES.some(function(fn){return n.indexOf(fn)>=0;});}
 function getVoice(){
-  var vs=window.speechSynthesis.getVoices();
-  if(selectedVoiceName){
-    for(var i=0;i<vs.length;i++){if(vs[i].name===selectedVoiceName)return vs[i];}
+  var vs=window.speechSynthesis.getVoices().filter(function(v){return v.lang.indexOf("en")===0;});
+  if(voiceGender==="girl"){
+    for(var i=0;i<vs.length;i++){if(isFemaleVoice(vs[i]))return vs[i];}
+  } else {
+    for(var i=0;i<vs.length;i++){if(!isFemaleVoice(vs[i]))return vs[i];}
   }
-  for(var i=0;i<vs.length;i++){if(vs[i].lang.indexOf("en")===0&&vs[i].name.toLowerCase().indexOf("samantha")>=0)return vs[i];}
-  for(var i=0;i<vs.length;i++){if(vs[i].lang.indexOf("en-US")===0)return vs[i];}
-  for(var i=0;i<vs.length;i++){if(vs[i].lang.indexOf("en")===0)return vs[i];}
-  return null;
+  return vs[0]||null;
 }
 function speakWord(text,idx){
   return new Promise(function(resolve){
@@ -197,6 +198,8 @@ function spawnStars(){
 function switchTab(t){tab=t;renderApp();}
 function switchMode(m){stopAll();slots=[];initSlots();doneIdxs={};mode=m;renderApp();}
 function clearAll(){stopAll();slots=[];initSlots();doneIdxs={};renderApp();}
+function switchGender(g){voiceGender=g;window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance("Hello!");u.lang="en-US";u.rate=rate;var v=getVoice();if(v)u.voice=v;window.speechSynthesis.speak(u);renderApp();}
+function switchRate(r){rate=r;renderApp();}
 function updateSlot(idx,val){slots[idx]=val;delete doneIdxs[idx];}
 function quickAddWord(wi){
   var ei=-1;for(var i=0;i<slots.length;i++){if(!slots[i].trim()){ei=i;break;}}
@@ -260,6 +263,25 @@ function renderApp(){
 
   var mw="width:100%;max-width:"+maxW+"px;";
 
+  // ---- ロゴヘッダー ----
+  var headerWrap=mkDiv("width:100%;max-width:"+maxW+"px;margin-bottom:"+(T?14:10)+"px;");
+  var headerLink=mk("a");
+  headerLink.href="https://www.beetle-web.jp";
+  headerLink.target="_blank";
+  headerLink.rel="noopener";
+  headerLink.style.cssText="display:inline-flex;align-items:center;gap:"+(T?10:8)+"px;text-decoration:none;background:rgba(255,255,255,0.15);border-radius:14px;padding:"+(T?"8px 16px 8px 10px":"6px 13px 6px 8px")+";backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.28);transition:background 0.2s;";
+  headerLink.addEventListener("mouseover",function(){this.style.background="rgba(255,255,255,0.25)";});
+  headerLink.addEventListener("mouseout",function(){this.style.background="rgba(255,255,255,0.15)";});
+  var hMark=mkDiv("width:"+(T?34:28)+"px;height:"+(T?34:28)+"px;background:linear-gradient(135deg,rgba(255,255,255,0.95),rgba(240,230,255,0.95));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:"+(T?19:15)+"px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.15);");
+  hMark.textContent="🪲";
+  var hText=mkDiv("display:flex;flex-direction:column;line-height:1.25;");
+  hText.appendChild(mkTxt("span","font-size:"+(T?13:11)+"px;font-weight:800;color:#fff;letter-spacing:1.5px;","BEETLE"));
+  hText.appendChild(mkTxt("span","font-size:"+(T?10:9)+"px;color:rgba(255,255,255,0.72);letter-spacing:0.3px;","合同会社"));
+  headerLink.appendChild(hMark);
+  headerLink.appendChild(hText);
+  headerWrap.appendChild(headerLink);
+  app.appendChild(headerWrap);
+
   // ---- タイトル ----
   var titleDiv=mkDiv("text-align:center;margin-bottom:"+(T?18:12)+"px;"+mw);
   titleDiv.appendChild(mkTxt("div","font-size:"+(T?52:38)+"px;","🔤"));
@@ -315,7 +337,7 @@ function renderApp(){
       slotWrap.style.cssText="display:flex;flex-direction:column;gap:"+(isSentence?10:8)+"px;margin-bottom:"+(T?16:12)+"px;";
     }
 
-    var badgeSz=T?30:24, btnSz=T?38:32, btnFs=T?18:15;
+    var badgeSz=T?38:32, btnSz=T?38:32, btnFs=T?18:15;
     var ph=isSentence
       ?["I like apples.","How are you?","This is fun!","Let's go!","Good morning!","Thank you!"]
       :["apple","banana","cat","dog","elephant","fish"];
@@ -347,15 +369,25 @@ function renderApp(){
         inp.value=val;
         inp.placeholder=ph[i]||"";
         inp.style.cssText="flex:1;min-width:0;font-size:"+(isSentence?(T?16:14):(T?18:16))+"px;font-weight:700;padding:"+(T?"11px 12px":"9px 10px")+";border-radius:12px;border:3px solid "+borderC+";background:"+bgC+";color:#4a3f8f;"+(isActive?"animation:glow 0.8s ease-in-out infinite;":"")+(isSentence?"line-height:1.5;":"letter-spacing:0.5px;");
-        (function(ii){inp.addEventListener("input",function(){updateSlot(ii,this.value);});})(i);
-        row.appendChild(inp);
 
-        // 🔊ボタン
+        // 🔊ボタン（先に生成してinpのイベントから参照できるようにする）
         var spk=mk("button");
         spk.textContent="🔊";
         spk.disabled=!val.trim();
         spk.style.cssText="width:"+btnSz+"px;height:"+btnSz+"px;flex-shrink:0;border-radius:9px;border:none;background:"+(val.trim()?COLORS[i%8]+"33":"#eee")+";cursor:"+(val.trim()?"pointer":"not-allowed")+";font-size:"+btnFs+"px;margin-top:"+(isSentence?8:0)+"px;";
-        (function(ii){spk.addEventListener("click",function(){speakOne(ii);});})(i);
+
+        (function(ii,s){
+          inp.addEventListener("input",function(){
+            updateSlot(ii,this.value);
+            var has=this.value.trim().length>0;
+            s.disabled=!has;
+            s.style.background=has?COLORS[ii%8]+"33":"#eee";
+            s.style.cursor=has?"pointer":"not-allowed";
+          });
+          s.addEventListener("click",function(){speakOne(ii);});
+        })(i,spk);
+
+        row.appendChild(inp);
         row.appendChild(spk);
 
         slotWrap.appendChild(row);
@@ -363,51 +395,33 @@ function renderApp(){
     }
     card.appendChild(slotWrap);
 
-    // スピードスライダー
-    var sliderRow=mkDiv("display:flex;align-items:center;gap:10px;margin-bottom:"+(T?14:10)+"px;");
-    sliderRow.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#888;white-space:nowrap;","🐢 はやさ 🐇"));
-    var slider=mk("input");slider.type="range";slider.min="0.5";slider.max="1.2";slider.step="0.1";slider.value=String(rate);
-    slider.style.cssText="flex:1;accent-color:#764ba2;height:4px;";
-    slider.addEventListener("input",function(){rate=parseFloat(this.value);});
-    sliderRow.appendChild(slider);
-    card.appendChild(sliderRow);
+    // スピードボタン
+    var speedRow=mkDiv("display:flex;align-items:center;gap:8px;margin-bottom:"+(T?14:10)+"px;");
+    speedRow.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#888;white-space:nowrap;flex-shrink:0;","⚡ はやさ"));
+    [[0.6,"🐢 ゆっくり"],[0.9,"🚶 ふつう"],[1.2,"🐇 はやく"]].forEach(function(pair){
+      var active=rate===pair[0];
+      var b=mkBtn(
+        "flex:1;padding:"+(T?"8px 4px":"7px 4px")+";border-radius:12px;border:2px solid "+(active?"#764ba2":"#e0d7ff")+";background:"+(active?"#764ba2":"#f8f6ff")+";color:"+(active?"#fff":"#888")+";font-size:"+(T?13:11)+"px;font-weight:700;cursor:pointer;",
+        pair[1],
+        (function(r){return function(){switchRate(r);};})(pair[0])
+      );
+      speedRow.appendChild(b);
+    });
+    card.appendChild(speedRow);
 
-    // 声選択
-    var enVoices=getEnVoices();
-    if(enVoices.length>1){
-      var voiceRow=mkDiv("display:flex;align-items:center;gap:10px;margin-bottom:"+(T?14:10)+"px;");
-      voiceRow.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#888;white-space:nowrap;","🎤 こえ"));
-      var sel=mk("select");
-      sel.style.cssText="flex:1;padding:"+(T?"8px 10px":"6px 8px")+";border-radius:10px;border:2px solid #e0d7ff;background:#f8f6ff;color:#4a3f8f;font-size:"+(T?14:12)+"px;font-weight:700;font-family:inherit;";
-      // 自動オプション
-      var optAuto=mk("option");optAuto.value="";optAuto.textContent="🔄 じどう";
-      if(!selectedVoiceName)optAuto.selected=true;
-      sel.appendChild(optAuto);
-      enVoices.forEach(function(v){
-        var opt=mk("option");
-        opt.value=v.name;
-        // 名前を短く・わかりやすく
-        var label=v.name.replace("com.apple.voice.compact.","").replace("com.apple.","");
-        var gender=v.name.toLowerCase().indexOf("samantha")>=0||v.name.toLowerCase().indexOf("kate")>=0||v.name.toLowerCase().indexOf("victoria")>=0||v.name.toLowerCase().indexOf("karen")>=0||v.name.toLowerCase().indexOf("moira")>=0?"👩":"👨";
-        opt.textContent=gender+" "+label+" ("+v.lang+")";
-        if(v.name===selectedVoiceName)opt.selected=true;
-        sel.appendChild(opt);
-      });
-      sel.addEventListener("change",function(){
-        selectedVoiceName=this.value;
-        // 試し読み
-        if(selectedVoiceName){
-          window.speechSynthesis.cancel();
-          var u=new SpeechSynthesisUtterance("Hello!");
-          u.lang="en-US";u.rate=rate;
-          var vs2=window.speechSynthesis.getVoices();
-          for(var i=0;i<vs2.length;i++){if(vs2[i].name===selectedVoiceName){u.voice=vs2[i];break;}}
-          window.speechSynthesis.speak(u);
-        }
-      });
-      voiceRow.appendChild(sel);
-      card.appendChild(voiceRow);
-    }
+    // 声選択（女の子/男の子）
+    var voiceRow=mkDiv("display:flex;align-items:center;gap:8px;margin-bottom:"+(T?14:10)+"px;");
+    voiceRow.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#888;white-space:nowrap;flex-shrink:0;","🎤 こえ"));
+    [["girl","👧 女の子"],["boy","👦 男の子"]].forEach(function(pair){
+      var active=voiceGender===pair[0];
+      var b=mkBtn(
+        "flex:1;padding:"+(T?"8px 4px":"7px 4px")+";border-radius:12px;border:2px solid "+(active?"#f093fb":"#e0d7ff")+";background:"+(active?"linear-gradient(135deg,#f093fb,#764ba2)":"#f8f6ff")+";color:"+(active?"#fff":"#888")+";font-size:"+(T?15:13)+"px;font-weight:900;cursor:pointer;",
+        pair[1],
+        (function(g){return function(){switchGender(g);};})(pair[0])
+      );
+      voiceRow.appendChild(b);
+    });
+    card.appendChild(voiceRow);
 
     // アクションボタン行
     var btnRow=mkDiv("display:flex;gap:7px;");
