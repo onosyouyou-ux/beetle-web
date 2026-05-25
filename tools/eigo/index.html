@@ -103,7 +103,7 @@ var SAMPLE_SENTENCES = [
 // ===== 状態 =====
 var slots = [];
 var mode = "word";
-var rate = 0.9;
+var rate = 1.0;
 var voiceGender = "girl";
 var currentIdx = null;
 var doneIdxs = {};
@@ -449,7 +449,7 @@ function renderApp(){
     // スピードボタン
     var speedRow=mkDiv("display:flex;align-items:center;gap:8px;margin-bottom:"+(T?14:10)+"px;");
     speedRow.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#888;white-space:nowrap;flex-shrink:0;","⚡ はやさ"));
-    [[0.6,"🐢 ゆっくり"],[0.9,"🚶 ふつう"],[1.2,"🐇 はやく"]].forEach(function(pair){
+    [[0.8,"🐢 ゆっくり"],[1.0,"🚶 ふつう"],[1.2,"🐇 はやい"]].forEach(function(pair){
       var active=rate===pair[0];
       var b=mkBtn(
         "flex:1;padding:"+(T?"8px 4px":"7px 4px")+";border-radius:12px;border:2px solid "+(active?"#764ba2":"#e0d7ff")+";background:"+(active?"#764ba2":"#f8f6ff")+";color:"+(active?"#fff":"#888")+";font-size:"+(T?13:11)+"px;font-weight:700;cursor:pointer;",
