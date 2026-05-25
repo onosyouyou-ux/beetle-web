@@ -472,7 +472,7 @@ function renderApp(){
     voiceHeaderRow.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#888;white-space:nowrap;flex-shrink:0;","🎤 こえ"));
     var voiceToggleBtn=mkBtn(
       "flex:1;padding:"+(T?"8px 12px":"7px 10px")+";border-radius:12px;border:2px solid #e0d7ff;background:#f8f6ff;color:#764ba2;font-size:"+(T?13:12)+"px;font-weight:700;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;",
-      "","",function(){toggleVoicePicker();}
+      "",function(){toggleVoicePicker();}
     );
     var vnSpan=mk("span");vnSpan.textContent=currentVoiceName;vnSpan.style.cssText="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;font-size:"+(T?12:11)+"px;";
     var arrowSpan=mk("span");arrowSpan.textContent=voicePickerOpen?"▲":"▼";arrowSpan.style.cssText="flex-shrink:0;margin-left:6px;font-size:10px;color:#aaa;";
