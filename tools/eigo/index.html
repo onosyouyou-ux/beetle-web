@@ -85,6 +85,7 @@ var OCR_SPACE_KEY = "K81919831188957";
 var MAX_WORD_LEN = 60;
 var MAX_SENT_LEN = 200;
 var MAX_HISTORY = 20;
+var OCR_DAILY_LIMIT = 10;
 var COLORS = ["#FF6B6B","#FF9F43","#FECA57","#48DBFB","#FF9FF3","#54A0FF","#5F27CD","#1DD1A1"];
 var SAMPLE_WORDS = [
   {word:"apple",   emoji:"🍎",ja:"りんご"},
@@ -160,6 +161,21 @@ initSlots();
 
 // ===== ストレージ =====
 function saveHistory(){try{localStorage.setItem("eigoHistory",JSON.stringify(historyList));}catch(e){}}
+function getOcrUsage(){
+  try{
+    var cutoff=Date.now()-86400000;
+    var usage=JSON.parse(localStorage.getItem("ocrUsage")||"[]");
+    return Array.isArray(usage)?usage.filter(function(t){return t>cutoff;}):[];
+  }catch(e){return [];}
+}
+function recordOcrUsage(){
+  try{
+    var usage=getOcrUsage();
+    usage.push(Date.now());
+    localStorage.setItem("ocrUsage",JSON.stringify(usage));
+  }catch(e){}
+}
+function ocrRemaining(){return Math.max(0,OCR_DAILY_LIMIT-getOcrUsage().length);}
 function sanitize(val,maxLen){
   return String(val)
     .replace(/[<>&"'`]/g,"")   // XSS起因文字を除去
@@ -305,6 +321,10 @@ function resizeForOcr(dataURL,callback){
   img.src=dataURL;
 }
 function triggerOcr(){
+  if(ocrRemaining()<=0){
+    alert("1日に使えるのは"+OCR_DAILY_LIMIT+"回までです。明日またためしてね！");
+    return;
+  }
   var inp=mk("input");inp.type="file";inp.accept="image/*";
   inp.style.cssText="position:fixed;top:-200px;left:-200px;opacity:0;pointer-events:none;";
   document.body.appendChild(inp);
@@ -331,6 +351,7 @@ function triggerOcr(){
           var text=data.ParsedResults.map(function(r){return r.ParsedText;}).join(" ");
           var words=extractWords(text);
           if(!words.length){ocrLoading=false;renderApp();alert("英単語が見つかりませんでした");return;}
+          recordOcrUsage();
           slots=words;doneIdxs={};ocrMode=true;ocrLoading=false;renderApp();
         })
         .catch(function(){ocrLoading=false;renderApp();alert("通信に失敗しました");});
@@ -464,7 +485,7 @@ function renderApp(){
     var ocrRow=mkDiv(mw+"margin-bottom:10px;");
     var ocrBtnEl=mkBtn(
       "width:100%;padding:"+(T?"10px":"9px")+";border-radius:16px;border:2px solid rgba(255,255,255,0.35);background:"+(ocrLoading?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.15)")+";color:rgba(255,255,255,0.95);font-size:"+(T?14:13)+"px;font-weight:700;cursor:"+(ocrLoading?"not-allowed":"pointer")+";letter-spacing:0.3px;",
-      ocrLoading?"🔍 よみとり中...":"📷 写真から英単語を取り込む",
+      ocrLoading?"🔍 よみとり中...":(ocrRemaining()>0?"📷 写真から英単語を取り込む（残り"+ocrRemaining()+"回/日）":"📷 本日の上限に達しました（"+OCR_DAILY_LIMIT+"回/日）"),
       function(){if(!ocrLoading)triggerOcr();}
     );
     ocrBtnEl.disabled=ocrLoading;
