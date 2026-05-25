@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="えいごよんで！— 小学生向け英語発音練習ツール。単語や英文を入れて、まとめて読んでもらおう！">
+<title>えいごよんで！— 英語発音練習ツール</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Hiragino Maru Gothic ProN','Comic Sans MS',cursive;
+  background:linear-gradient(160deg,#667eea 0%,#764ba2 50%,#f093fb 100%);
+  min-height:100vh;
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* バブル背景 */
+body::before{content:'';position:fixed;width:300px;height:300px;background:rgba(255,107,107,0.1);border-radius:50%;top:-80px;left:-80px;pointer-events:none;animation:float 6s ease-in-out infinite alternate;}
+body::after{content:'';position:fixed;width:220px;height:220px;background:rgba(84,160,255,0.1);border-radius:50%;bottom:-60px;right:-60px;pointer-events:none;animation:float 8s ease-in-out infinite alternate-reverse;}
+@keyframes float{from{transform:translateY(0)}to{transform:translateY(-30px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes shimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+
+.container{
+  max-width:640px;
+  margin:0 auto;
+  padding:0 20px 60px;
+  position:relative;z-index:1;
+}
+
+/* ===== ヘッダー ===== */
+.site-header{
+  display:flex;align-items:center;justify-content:center;
+  padding:24px 0 0;
+}
+.logo-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.28);
+  border-radius:99px;
+  padding:8px 18px 8px 10px;
+  backdrop-filter:blur(10px);
+  text-decoration:none;color:#fff;
+  font-size:13px;font-weight:800;letter-spacing:1px;
+  transition:background .2s;
+}
+.logo-pill:hover{background:rgba(255,255,255,0.25);}
+.logo-mark{width:28px;height:28px;background:rgba(255,255,255,0.9);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+
+/* ===== HERO ===== */
+.hero{
+  text-align:center;
+  padding:48px 0 36px;
+  animation:fadeUp .7s ease both;
+}
+.hero-emoji{
+  font-size:80px;
+  display:block;
+  margin-bottom:12px;
+  animation:bounce 2.5s ease-in-out infinite;
+}
+.hero-title{
+  font-size:clamp(32px,8vw,52px);
+  font-weight:900;
+  text-shadow:0 4px 20px rgba(0,0,0,0.25);
+  margin-bottom:10px;
+  letter-spacing:2px;
+}
+.hero-sub{
+  font-size:clamp(14px,3.5vw,18px);
+  color:rgba(255,255,255,0.88);
+  line-height:1.7;
+  margin-bottom:32px;
+}
+.hero-sub strong{color:#fff;}
+
+.cta-btn{
+  display:inline-block;
+  background:linear-gradient(135deg,#fff 0%,#f0e8ff 100%);
+  color:#764ba2;
+  font-size:clamp(16px,4vw,20px);
+  font-weight:900;
+  padding:18px 48px;
+  border-radius:99px;
+  text-decoration:none;
+  box-shadow:0 8px 30px rgba(0,0,0,0.25),0 0 0 4px rgba(255,255,255,0.2);
+  transition:transform .18s,box-shadow .18s;
+  letter-spacing:1px;
+  animation:popIn .6s .3s ease both;
+}
+.cta-btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 14px 40px rgba(0,0,0,0.3),0 0 0 6px rgba(255,255,255,0.25);}
+.cta-btn:active{transform:translateY(0) scale(0.98);}
+
+.arrow-down{
+  display:block;
+  margin:40px auto 0;
+  font-size:28px;
+  opacity:.7;
+  animation:bounce 2s ease-in-out infinite;
+}
+
+/* ===== 特徴セクション ===== */
+.section-title{
+  text-align:center;
+  font-size:clamp(18px,4.5vw,24px);
+  font-weight:900;
+  margin-bottom:24px;
+  color:rgba(255,255,255,0.95);
+  letter-spacing:1px;
+}
+
+.features{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  margin-bottom:48px;
+}
+.feature-card{
+  background:rgba(255,255,255,0.18);
+  border:1px solid rgba(255,255,255,0.28);
+  border-radius:24px;
+  padding:24px 22px;
+  backdrop-filter:blur(12px);
+  display:flex;
+  gap:18px;
+  align-items:flex-start;
+  animation:fadeUp .6s ease both;
+}
+.feature-card:nth-child(2){animation-delay:.1s;}
+.feature-card:nth-child(3){animation-delay:.2s;}
+.feature-icon{
+  font-size:44px;
+  flex-shrink:0;
+  line-height:1;
+}
+.feature-body{}
+.feature-name{
+  font-size:clamp(16px,4vw,19px);
+  font-weight:900;
+  margin-bottom:6px;
+  color:#fff;
+}
+.feature-desc{
+  font-size:clamp(13px,3vw,15px);
+  color:rgba(255,255,255,0.85);
+  line-height:1.7;
+}
+.feature-tag{
+  display:inline-block;
+  background:rgba(255,255,255,0.2);
+  border-radius:99px;
+  padding:2px 10px;
+  font-size:11px;
+  font-weight:700;
+  margin-top:8px;
+  letter-spacing:.5px;
+}
+
+/* ===== 使い方ステップ ===== */
+.steps{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  margin-bottom:48px;
+  position:relative;
+}
+.step{
+  display:flex;
+  gap:16px;
+  align-items:flex-start;
+  animation:fadeUp .6s ease both;
+}
+.step:nth-child(2){animation-delay:.1s;}
+.step:nth-child(3){animation-delay:.2s;}
+.step:nth-child(4){animation-delay:.3s;}
+.step-line{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  flex-shrink:0;
+}
+.step-num{
+  width:40px;height:40px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.9);
+  color:#764ba2;
+  font-weight:900;font-size:17px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+}
+.step-connector{
+  width:2px;flex:1;min-height:24px;
+  background:rgba(255,255,255,0.25);
+  margin:4px 0;
+}
+.step:last-child .step-connector{display:none;}
+.step-content{
+  padding:4px 0 28px;
+}
+.step-label{
+  font-size:clamp(14px,3.5vw,16px);
+  font-weight:900;
+  color:#fff;
+  margin-bottom:4px;
+}
+.step-note{
+  font-size:clamp(12px,3vw,14px);
+  color:rgba(255,255,255,0.8);
+  line-height:1.6;
+}
+
+/* ===== 対象・無料バッジ ===== */
+.badges{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  margin-bottom:40px;
+}
+.badge{
+  background:rgba(255,255,255,0.18);
+  border:1px solid rgba(255,255,255,0.3);
+  border-radius:99px;
+  padding:8px 18px;
+  font-size:13px;
+  font-weight:700;
+  backdrop-filter:blur(8px);
+}
+
+/* ===== CTA 下部 ===== */
+.cta-bottom{
+  text-align:center;
+  animation:fadeUp .6s .2s ease both;
+}
+.cta-bottom .cta-btn{font-size:clamp(18px,4.5vw,22px);padding:20px 56px;}
+.cta-note{
+  margin-top:14px;
+  font-size:12px;
+  color:rgba(255,255,255,0.6);
+}
+
+/* ===== フッター ===== */
+footer{
+  text-align:center;
+  padding:24px 0 0;
+  color:rgba(255,255,255,0.45);
+  font-size:12px;
+  line-height:2;
+}
+footer a{color:rgba(255,255,255,0.55);text-decoration:none;}
+footer a:hover{color:#fff;}
+
+/* ===== スマホ調整 ===== */
+@media(min-width:480px){
+  .features{gap:20px;}
+  .feature-card{padding:28px 26px;}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ヘッダー -->
+  <header class="site-header">
+    <a class="logo-pill" href="https://www.beetle-web.jp" target="_blank" rel="noopener">
+      <span class="logo-mark">🪲</span>
+      <span>BEETLE 合同会社</span>
+    </a>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <span class="hero-emoji">🔤</span>
+    <h1 class="hero-title">えいごよんで！</h1>
+    <p class="hero-sub">
+      単語や英文を入れるだけで、<br>
+      <strong>ネイティブっぽい発音</strong>で読んでくれる！<br>
+      小学生のための英語発音れんしゅうツール🎉
+    </p>
+    <a class="cta-btn" href="index.html">▶️ アプリを使う（無料）</a>
+    <span class="arrow-down">↓</span>
+  </section>
+
+  <!-- 特徴 -->
+  <h2 class="section-title">✨ できること</h2>
+  <div class="features">
+
+    <div class="feature-card">
+      <span class="feature-icon">📷</span>
+      <div class="feature-body">
+        <div class="feature-name">写真から単語をよみとり</div>
+        <div class="feature-desc">
+          教科書や単語カードを写真に撮るだけ！<br>
+          英単語を自動で読み取ってスロットに入れてくれるよ。
+        </div>
+        <span class="feature-tag">📸 カメラ対応</span>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">🔊</span>
+      <div class="feature-body">
+        <div class="feature-name">まとめてネイティブ読み上げ</div>
+        <div class="feature-desc">
+          入力した単語を順番に、ネイティブの声で読み上げ。<br>
+          スピードも「ゆっくり・ふつう・はやい」から選べるよ。
+        </div>
+        <span class="feature-tag">🐢 速度調整あり</span>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">💾</span>
+      <div class="feature-body">
+        <div class="feature-name">れんしゅうセットを保存</div>
+        <div class="feature-desc">
+          よく使う単語セットは💾ボタンで保存できる。<br>
+          履歴から呼び出してすぐ練習再開！
+        </div>
+        <span class="feature-tag">📚 最大20セット</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 使い方ステップ -->
+  <h2 class="section-title">🪄 使い方</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-line">
+        <div class="step-num">1</div>
+        <div class="step-connector"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">📷 写真を撮る or 手入力</div>
+        <div class="step-note">教科書を撮影して自動取り込み、または直接えいごを入力しよう。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-line">
+        <div class="step-num">2</div>
+        <div class="step-connector"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">🎤 声と速さを選ぶ</div>
+        <div class="step-note">好きな声（たくさんの種類があるよ！）とスピードを選んでね。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-line">
+        <div class="step-num">3</div>
+        <div class="step-connector"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">▶️ まとめて読む！</div>
+        <div class="step-note">ボタンを押したらネイティブの声で全部読んでくれる。まねして発音してみよう！</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-line">
+        <div class="step-num">4</div>
+        <div class="step-connector"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">💾 セットを保存して次も使う</div>
+        <div class="step-note">よかったセットは保存。次回すぐ呼び出してまた練習できるよ。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- バッジ -->
+  <div class="badges">
+    <span class="badge">✅ 完全無料</span>
+    <span class="badge">📱 スマホ対応</span>
+    <span class="badge">🏫 小学生向け</span>
+    <span class="badge">🔒 登録不要</span>
+    <span class="badge">🌐 ブラウザで動く</span>
+  </div>
+
+  <!-- CTA 下部 -->
+  <div class="cta-bottom">
+    <a class="cta-btn" href="index.html">▶️ さっそく使ってみる！</a>
+    <p class="cta-note">インストール不要・ログイン不要・完全無料</p>
+  </div>
+
+  <!-- フッター -->
+  <footer>
+    <p>© 2026 <a href="https://www.beetle-web.jp" target="_blank" rel="noopener">BEETLE 合同会社</a></p>
+    <p>えいごよんで！ は Web Speech API を使用しています</p>
+  </footer>
+
+</div>
+
+</body>
+</html>
