@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BEETLE合同会社</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',sans-serif;color:#1a1a1a;background:#fff;}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid #e5e5e5;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-mark{width:36px;height:36px;background:#2C2C2A;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo-name{font-size:15px;font-weight:500;}
+.logo-sub{font-size:11px;color:#888;display:block;}
+.nav-links{display:flex;gap:20px;}
+.nav-links a{font-size:13px;color:#555;text-decoration:none;}
+.hero{padding:40px 24px 0;border-bottom:1px solid #e5e5e5;}
+.impact-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;color:#854F0B;background:#FAEEDA;padding:4px 12px;border-radius:99px;margin-bottom:20px;}
+.pulse-dot{width:7px;height:7px;background:#EF9F27;border-radius:50%;animation:pdot 1.4s ease-in-out infinite;}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.6);}}
+.hero h1{font-size:26px;font-weight:500;line-height:1.4;margin-bottom:8px;}
+.hero h1 .accent{color:#BA7517;}
+.hero-sub{font-size:14px;color:#555;line-height:1.8;max-width:480px;margin-bottom:28px;}
+.ecg-wrap{position:relative;height:56px;margin:0 -24px;overflow:hidden;}
+.ecg-bg{position:absolute;top:0;left:0;right:0;bottom:0;background:#fafafa;}
+.ecg-svg{width:200%;height:100%;animation:ecgscroll 3s linear infinite;}
+@keyframes ecgscroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.ecg-label-left{position:absolute;left:24px;top:50%;transform:translateY(-50%);font-size:11px;color:#999;}
+.ecg-label-right{position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:11px;color:#854F0B;font-weight:500;}
+.hero-copy-strip{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #e5e5e5;}
+.copy-item{padding:16px;border-right:1px solid #e5e5e5;}
+.copy-item:last-child{border-right:none;}
+.ci-label{font-size:10px;color:#999;margin-bottom:4px;}
+.ci-text{font-size:13px;font-weight:500;line-height:1.5;color:#1a1a1a;}
+.ci-text span{color:#BA7517;}
+.hero-btns{display:flex;gap:10px;padding:20px 24px;border-bottom:1px solid #e5e5e5;}
+.btn-main{padding:11px 22px;font-size:14px;font-weight:500;background:#2C2C2A;color:#FAC775;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.btn-sub{padding:11px 22px;font-size:14px;background:none;color:#555;border:1px solid #ddd;border-radius:8px;cursor:pointer;}
+.marquee-wrap{overflow:hidden;padding:10px 0;background:#fafafa;border-bottom:1px solid #e5e5e5;}
+.marquee{display:flex;gap:28px;animation:scroll 20s linear infinite;white-space:nowrap;}
+@keyframes scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.marquee-item{font-size:12px;color:#999;display:flex;align-items:center;gap:5px;}
+.section{padding:32px 24px;border-bottom:1px solid #e5e5e5;}
+.section-head{display:flex;align-items:baseline;gap:12px;margin-bottom:20px;}
+.section-num{font-size:28px;font-weight:500;color:#FAEEDA;line-height:1;}
+.section-title{font-size:18px;font-weight:500;}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;}
+.card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:16px;}
+.card-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.card-icon{width:32px;height:32px;border-radius:8px;background:#2C2C2A;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;}
+.card h3{font-size:13px;font-weight:500;}
+.card p{font-size:12px;color:#666;line-height:1.6;}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;}
+.tool-card{background:#fafafa;border:1px solid #e5e5e5;border-radius:12px;padding:14px;display:flex;align-items:center;gap:10px;}
+.tool-icon{font-size:20px;flex-shrink:0;}
+.tool-name{font-size:13px;font-weight:500;}
+.tool-desc{font-size:11px;color:#999;margin-top:2px;}
+.badge-new{font-size:10px;background:#FAEEDA;color:#854F0B;padding:2px 6px;border-radius:99px;margin-left:6px;}
+.about-block{display:flex;gap:20px;align-items:flex-start;}
+.avatar{width:64px;height:64px;border-radius:50%;background:#2C2C2A;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500;color:#EF9F27;flex-shrink:0;}
+.about-body h3{font-size:15px;font-weight:500;margin-bottom:6px;}
+.about-body p{font-size:13px;color:#555;line-height:1.7;}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.tag{font-size:11px;padding:3px 8px;background:#fafafa;border:1px solid #e5e5e5;border-radius:99px;color:#666;}
+.cta{padding:40px 24px;text-align:center;}
+.cta h2{font-size:20px;font-weight:500;margin-bottom:8px;}
+.cta h2 span{color:#BA7517;}
+.cta p{font-size:14px;color:#555;margin-bottom:24px;line-height:1.8;}
+.footer{padding:16px 24px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e5e5e5;}
+.footer-copy{font-size:12px;color:#999;}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="logo">
+    <div class="logo-mark">🪲</div>
+    <div>
+      <span class="logo-name">BEETLE合同会社</span>
+      <span class="logo-sub">QA &amp; AI活用支援</span>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#">サービス</a>
+    <a href="#">ツール</a>
+    <a href="#">について</a>
+    <a href="#">お問い合わせ</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="impact-tag"><div class="pulse-dot"></div>QA × 生成AI</div>
+  <h1>現場の<span class="accent">心拍</span>を感じながら、<br>AIで品質をアップデートする</h1>
+  <p class="hero-sub">波形が乱れる前に、バグを見つける。<br>納品前のあの緊張感を、わたしたちは知っている。</p>
+
+  <div class="ecg-wrap">
+    <div class="ecg-bg"></div>
+    <svg class="ecg-svg" viewBox="0 0 800 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <polyline points="0,28 80,28 100,28 112,8 120,48 130,10 142,28 200,28 240,28 252,8 260,48 270,10 282,28 340,28 380,28 392,8 400,48 410,10 422,28 480,28 520,28 532,8 540,48 550,10 562,28 620,28 660,28 672,8 680,48 690,10 702,28 760,28 800,28" fill="none" stroke="#EF9F27" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+    </svg>
+    <span class="ecg-label-left">稼働中</span>
+    <span class="ecg-label-right">バグ発見前に検出 ✓</span>
+  </div>
+
+  <div class="hero-copy-strip">
+    <div class="copy-item">
+      <div class="ci-label">テスターの視点</div>
+      <div class="ci-text">波形が<span>下がる前</span>に、バグを潰す。</div>
+    </div>
+    <div class="copy-item">
+      <div class="ci-label">納品前の緊張感</div>
+      <div class="ci-text"><span>リリース前夜</span>の、あの感覚を知っている。</div>
+    </div>
+    <div class="copy-item">
+      <div class="ci-label">AIとの組み合わせ</div>
+      <div class="ci-text">修正確認OKが、<span>もっと速く</span>なる。</div>
+    </div>
+  </div>
+</div>
+
+<div class="hero-btns">
+  <button class="btn-main">→ サービスを見る</button>
+  <button class="btn-sub">無料ツールを試す</button>
+</div>
+
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span class="marquee-item">📋 テスト設計</span>
+    <span class="marquee-item">🐛 バグ起票</span>
+    <span class="marquee-item">🧠 AI活用支援</span>
+    <span class="marquee-item">📄 仕様確認</span>
+    <span class="marquee-item">🔧 業務改善ツール</span>
+    <span class="marquee-item">✅ Backlog管理</span>
+    <span class="marquee-item">❤️ 現場の心拍</span>
+    <span class="marquee-item">📋 テスト設計</span>
+    <span class="marquee-item">🐛 バグ起票</span>
+    <span class="marquee-item">🧠 AI活用支援</span>
+    <span class="marquee-item">📄 仕様確認</span>
+    <span class="marquee-item">🔧 業務改善ツール</span>
+    <span class="marquee-item">✅ Backlog管理</span>
+    <span class="marquee-item">❤️ 現場の心拍</span>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-head"><span class="section-num">01</span><span class="section-title">できること</span></div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-top"><div class="card-icon">📋</div><h3>QAエンジニアリング</h3></div>
+      <p>テスト設計・バグ起票・仕様確認・Backlog管理まで。現場を知り尽くした視点で動きます。</p>
+    </div>
+    <div class="card">
+      <div class="card-top"><div class="card-icon">🧠</div><h3>AI活用支援</h3></div>
+      <p>ClaudeやGeminiを実務に組み込む方法を、実体験をもとにサポート。「なんとなく使ってる」を卒業。</p>
+    </div>
+    <div class="card">
+      <div class="card-top"><div class="card-icon">🔧</div><h3>業務改善ツール</h3></div>
+      <p>現場の困りごとを解決する小さなWebツールを提供。バグ起票の自動化から始めます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-head"><span class="section-num">02</span><span class="section-title">無料ツール</span></div>
+  <div class="tools-grid">
+    <div class="tool-card"><div class="tool-icon">📸</div><div><div class="tool-name">バグ起票アシスタント<span class="badge-new">NEW</span></div><div class="tool-desc">スクショからバグ票を自動生成</div></div></div>
+    <div class="tool-card"><div class="tool-icon">🖼</div><div><div class="tool-name">UI部品名鑑</div><div class="tool-desc">部品名がわからない新人向け辞典</div></div></div>
+    <div class="tool-card"><div class="tool-icon">✅</div><div><div class="tool-name">テスト観点テンプレ</div><div class="tool-desc">すぐ使えるテスト設計の出発点</div></div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-head"><span class="section-num">03</span><span class="section-title">代表について</span></div>
+  <div class="about-block">
+    <div class="avatar">小野</div>
+    <div class="about-body">
+      <h3>小野（おの）／ BEETLE合同会社 代表</h3>
+      <p>自衛隊・建設業・営業・ITと異色のキャリアを経て、QAエンジニアとして独立。生成AIを現場にどう活かすかを日々実験中。「普通のおじさんがAIでここまでできる」を体現したい。昭和生まれの平成育ち、令和で生き直し中。</p>
+      <div class="tags">
+        <span class="tag">QAエンジニア</span>
+        <span class="tag">生成AI活用</span>
+        <span class="tag">Backlog</span>
+        <span class="tag">リモートワーク</span>
+        <span class="tag">長野移住予定</span>
+        <span class="tag">高卒</span>
+        <span class="tag">三国志好き</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cta">
+  <h2>まず、<span>話してみませんか。</span></h2>
+  <p>大きな案件でなくても構いません。<br>「こういうこと困ってるんだけど」くらいの温度感でお気軽にどうぞ。</p>
+  <button class="btn-main" style="margin:0 auto;">✉ お問い合わせ</button>
+</div>
+
+<footer class="footer">
+  <span class="footer-copy">© 2026 BEETLE合同会社</span>
+  <div class="nav-links"><a href="#">note</a><a href="#">Twitter/X</a></div>
+</footer>
+</body>
+</html>
