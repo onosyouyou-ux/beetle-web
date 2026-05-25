@@ -259,11 +259,10 @@ function triggerOcr(){
         Tesseract.recognize(processed,"eng",{logger:function(){}})
           .then(function(r){
             var seen={};
-            var words=r.data.text
-              .replace(/[^a-zA-Z\s\-']/g," ")
-              .split(/\s+/)
-              .map(function(w){return w.replace(/^[^a-zA-Z]+|[^a-zA-Z]+$/g,"");})
-              .filter(function(w){return /^[a-zA-Z]{2,}$/.test(w);})
+            var words=(r.data.words||[])
+              .filter(function(w){return w.confidence>=60;})
+              .map(function(w){return w.text.replace(/[^a-zA-Z]/g,"");})
+              .filter(function(w){return /^[a-zA-Z]{3,}$/.test(w);})
               .filter(function(w){var lw=w.toLowerCase();if(seen[lw])return false;seen[lw]=true;return true;})
               .map(function(w){return w.toLowerCase();})
               .slice(0,20);
