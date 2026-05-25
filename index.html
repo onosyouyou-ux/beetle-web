@@ -81,6 +81,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
 .cta h2{font-size:20px;font-weight:500;margin-bottom:8px;}
 .cta h2 span{color:#BA7517;}
 .cta p{font-size:14px;color:#555;margin-bottom:24px;line-height:1.8;}
+.sitemap{padding:32px 24px;border-top:1px solid #e5e5e5;background:#fafafa;}
+.sitemap-title{font-size:11px;font-weight:600;color:#999;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;}
+.sitemap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:24px;}
+.sitemap-group h4{font-size:12px;font-weight:600;color:#1a1a1a;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #e5e5e5;}
+.sitemap-group ul{list-style:none;}
+.sitemap-group ul li{margin-bottom:6px;}
+.sitemap-group ul li a{font-size:12px;color:#666;text-decoration:none;display:flex;align-items:center;gap:5px;}
+.sitemap-group ul li a:hover{color:#BA7517;}
+.sitemap-group ul li a .sm-badge{font-size:9px;background:#FAEEDA;color:#854F0B;padding:1px 5px;border-radius:99px;}
 .footer{padding:16px 24px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e5e5e5;}
 .footer-copy{font-size:12px;color:#999;}
 </style>
@@ -213,7 +222,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
 <div class="section">
   <div class="section-head"><span class="section-num">02</span><span class="section-title">無料ツール</span></div>
   <div class="tools-grid">
-    <div class="tool-card"><a href="tools/eigo/index.html"><div class="tool-icon">📖</div><div><div class="tool-name">英語リーディング<span class="badge-new">NEW</span></div><div class="tool-desc">英文を読んで語彙力・読解力を鍛える</div></div></a></div>
+    <div class="tool-card"><a href="tools/eigo/landing.html"><div class="tool-icon">📖</div><div><div class="tool-name">えいごよんで！<span class="badge-new">NEW</span></div><div class="tool-desc">小学生向け英語発音練習ツール</div></div></a></div>
     <div class="tool-card"><div class="tool-icon">📸</div><div><div class="tool-name">バグ起票アシスタント</div><div class="tool-desc">スクショからバグ票を自動生成</div></div></div>
     <div class="tool-card"><div class="tool-icon">🖼</div><div><div class="tool-name">UI部品名鑑</div><div class="tool-desc">部品名がわからない新人向け辞典</div></div></div>
     <div class="tool-card"><div class="tool-icon">✅</div><div><div class="tool-name">テスト観点テンプレ</div><div class="tool-desc">すぐ使えるテスト設計の出発点</div></div></div>
@@ -244,6 +253,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
   <h2>まず、<span>話してみませんか。</span></h2>
   <p>大きな案件でなくても構いません。<br>「こういうこと困ってるんだけど」くらいの温度感でお気軽にどうぞ。</p>
   <button class="btn-main" style="margin:0 auto;">✉ お問い合わせ</button>
+</div>
+
+<div class="sitemap">
+  <div class="sitemap-title">Sitemap</div>
+  <div class="sitemap-grid">
+    <div class="sitemap-group">
+      <h4>🪲 BEETLE</h4>
+      <ul>
+        <li><a href="/">トップページ</a></li>
+        <li><a href="#">サービス</a></li>
+        <li><a href="#">代表について</a></li>
+        <li><a href="#">お問い合わせ</a></li>
+      </ul>
+    </div>
+    <div class="sitemap-group">
+      <h4>🔧 無料ツール</h4>
+      <ul>
+        <li><a href="tools/eigo/landing.html">えいごよんで！<span class="sm-badge">NEW</span></a></li>
+        <li><a href="tools/eigo/index.html">えいごよんで！アプリ直リンク</a></li>
+      </ul>
+    </div>
+    <div class="sitemap-group">
+      <h4>🔗 外部リンク</h4>
+      <ul>
+        <li><a href="#" target="_blank" rel="noopener">note</a></li>
+        <li><a href="#" target="_blank" rel="noopener">Twitter / X</a></li>
+      </ul>
+    </div>
+  </div>
 </div>
 
 <footer class="footer">
