@@ -630,7 +630,8 @@ function renderApp(){
       hCard.appendChild(mkTxt("p","text-align:center;color:#bbb;font-size:"+(T?17:14)+"px;font-weight:700;margin-bottom:8px;","まだ保存していないよ"));
       hCard.appendChild(mkTxt("p","text-align:center;color:#bbb;font-size:"+(T?14:12)+"px;","れんしゅうして💾を押してね！"));
     } else {
-      hCard.appendChild(mkTxt("div","text-align:center;color:#888;font-size:"+(T?13:11)+"px;margin-bottom:12px;",historyList.length+"件保存中（最大20件）"));
+      hCard.appendChild(mkTxt("div","text-align:center;color:#888;font-size:"+(T?13:11)+"px;margin-bottom:4px;",historyList.length+"件保存中（最大20件）"));
+      hCard.appendChild(mkTxt("div","text-align:center;color:#bbb;font-size:"+(T?11:10)+"px;margin-bottom:12px;","📱 このブラウザに保存されます。ブラウザのデータ消去・プライベートモードでは消えます。"));
       var hw=mk("div");hw.className="hist-wrap";
       historyList.forEach(function(entry,hi){
         var item=mkDiv("background:#f8f6ff;border-radius:16px;padding:"+(T?14:12)+"px;border:2px solid #e0d7ff;");
