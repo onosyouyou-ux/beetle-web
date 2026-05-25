@@ -219,6 +219,22 @@ function extractWords(text){
     .map(function(w){return w.toLowerCase();})
     .slice(0,20);
 }
+function resizeForOcr(dataURL,callback){
+  var img=new Image();
+  img.onload=function(){
+    try{
+      var MAX=1500;
+      var scale=Math.min(1,MAX/Math.max(img.width,img.height));
+      var canvas=document.createElement('canvas');
+      canvas.width=Math.round(img.width*scale);
+      canvas.height=Math.round(img.height*scale);
+      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+      callback(canvas.toDataURL('image/jpeg',0.8));
+    }catch(e){callback(dataURL);}
+  };
+  img.onerror=function(){callback(dataURL);};
+  img.src=dataURL;
+}
 function triggerOcr(){
   var inp=mk("input");inp.type="file";inp.accept="image/*";
   inp.style.cssText="position:fixed;top:-200px;left:-200px;opacity:0;pointer-events:none;";
@@ -229,9 +245,10 @@ function triggerOcr(){
     ocrLoading=true;renderApp();
     var reader=new FileReader();
     reader.onload=function(ev){
+      resizeForOcr(ev.target.result,function(resized){
       var fd=new FormData();
       fd.append("apikey",OCR_SPACE_KEY);
-      fd.append("base64Image",ev.target.result);
+      fd.append("base64Image",resized);
       fd.append("language","eng");
       fd.append("scale","true");
       fd.append("isOverlayRequired","false");
@@ -248,6 +265,7 @@ function triggerOcr(){
           slots=words;doneIdxs={};ocrMode=true;ocrLoading=false;renderApp();
         })
         .catch(function(){ocrLoading=false;renderApp();alert("通信に失敗しました");});
+      });
     };
     reader.readAsDataURL(file);
   };
