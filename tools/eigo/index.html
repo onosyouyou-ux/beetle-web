@@ -336,7 +336,7 @@ function renderApp(){
 
   var isSentence=mode==="sentence";
   var filledCount=slots.filter(function(s){return s.trim();}).length;
-  var useGrid=T&&!isSentence&&!ocrMode;
+  var useGrid=!isSentence&&(T||ocrMode);
 
   var app=document.getElementById("app");
   while(app.firstChild)app.removeChild(app.firstChild);
@@ -431,8 +431,9 @@ function renderApp(){
 
     // スロットコンテナ
     var slotWrap=mk("div");
+    var ocrScroll=ocrMode&&slots.length>6;
     if(useGrid){
-      slotWrap.style.cssText="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:"+(T?16:12)+"px;";
+      slotWrap.style.cssText="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:"+(T?16:12)+"px;"+(ocrScroll?"max-height:260px;overflow-y:auto;padding-right:4px;":"");
     } else {
       slotWrap.style.cssText="display:flex;flex-direction:column;gap:"+(isSentence?10:8)+"px;margin-bottom:"+(T?16:12)+"px;";
     }
