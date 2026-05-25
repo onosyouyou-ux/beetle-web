@@ -36,7 +36,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
 .hero-sub{font-size:14px;color:#555;line-height:1.8;max-width:480px;margin-bottom:28px;}
 .ecg-wrap{position:relative;height:56px;margin:0 -24px;overflow:hidden;}
 .ecg-bg{position:absolute;top:0;left:0;right:0;bottom:0;background:#fafafa;}
-.ecg-svg{width:200%;height:100%;animation:ecgscroll 3s linear infinite;}
+.ecg-svg{width:200%;height:100%;animation:ecgscroll 9s linear infinite;}
 @keyframes ecgscroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 .ecg-label-left{position:absolute;left:24px;top:50%;transform:translateY(-50%);font-size:11px;color:#999;}
 .ecg-label-right{position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:11px;color:#854F0B;font-weight:500;}
@@ -108,7 +108,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
   <div class="ecg-wrap">
     <div class="ecg-bg"></div>
     <svg class="ecg-svg" viewBox="0 0 800 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-      <polyline points="0,28 80,28 100,28 112,8 120,48 130,10 142,28 200,28 240,28 252,8 260,48 270,10 282,28 340,28 380,28 392,8 400,48 410,10 422,28 480,28 520,28 532,8 540,48 550,10 562,28 620,28 660,28 672,8 680,48 690,10 702,28 760,28 800,28" fill="none" stroke="#EF9F27" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+      <defs>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="1.2" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <pattern id="grid" width="40" height="14" patternUnits="userSpaceOnUse">
+          <path d="M40,0 L0,0 0,14" fill="none" stroke="#e8d5b0" stroke-width="0.4" opacity="0.5"/>
+        </pattern>
+      </defs>
+      <rect width="800" height="56" fill="url(#grid)"/>
+      <!-- P波・QRS複合波・T波を持つリアルなECGパターン（200px/拍 × 4拍、400px周期でシームレスループ） -->
+      <path d="
+        M0,28 L40,28
+        C44,28 50,22 55,22 C60,22 66,28 70,28
+        L87,28 L93,31 L100,5 L108,40 L116,28
+        L124,28
+        C129,28 134,18 144,18 C154,18 159,28 165,28
+        L200,28
+        L240,28
+        C244,28 250,22 255,22 C260,22 266,28 270,28
+        L287,28 L293,31 L300,5 L308,40 L316,28
+        L324,28
+        C329,28 334,18 344,18 C354,18 359,28 365,28
+        L400,28
+        L440,28
+        C444,28 450,22 455,22 C460,22 466,28 470,28
+        L487,28 L493,31 L500,5 L508,40 L516,28
+        L524,28
+        C529,28 534,18 544,18 C554,18 559,28 565,28
+        L600,28
+        L640,28
+        C644,28 650,22 655,22 C660,22 666,28 670,28
+        L687,28 L693,31 L700,5 L708,40 L716,28
+        L724,28
+        C729,28 734,18 744,18 C754,18 759,28 765,28
+        L800,28
+      " fill="none" stroke="#EF9F27" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" opacity="0.9"/>
     </svg>
     <span class="ecg-label-left">稼働中</span>
     <span class="ecg-label-right">バグ発見前に検出 ✓</span>
