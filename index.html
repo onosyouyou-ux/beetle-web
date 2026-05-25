@@ -65,6 +65,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
 .card p{font-size:12px;color:#666;line-height:1.6;}
 .tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;}
 .tool-card{background:#fafafa;border:1px solid #e5e5e5;border-radius:12px;padding:14px;display:flex;align-items:center;gap:10px;}
+.tool-card a{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;width:100%;}
+.tool-card a:hover .tool-name{color:#BA7517;}
 .tool-icon{font-size:20px;flex-shrink:0;}
 .tool-name{font-size:13px;font-weight:500;}
 .tool-desc{font-size:11px;color:#999;margin-top:2px;}
@@ -211,7 +213,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',san
 <div class="section">
   <div class="section-head"><span class="section-num">02</span><span class="section-title">無料ツール</span></div>
   <div class="tools-grid">
-    <div class="tool-card"><div class="tool-icon">📸</div><div><div class="tool-name">バグ起票アシスタント<span class="badge-new">NEW</span></div><div class="tool-desc">スクショからバグ票を自動生成</div></div></div>
+    <div class="tool-card"><a href="tools/eigo/index.html"><div class="tool-icon">📖</div><div><div class="tool-name">英語リーディング<span class="badge-new">NEW</span></div><div class="tool-desc">英文を読んで語彙力・読解力を鍛える</div></div></a></div>
+    <div class="tool-card"><div class="tool-icon">📸</div><div><div class="tool-name">バグ起票アシスタント</div><div class="tool-desc">スクショからバグ票を自動生成</div></div></div>
     <div class="tool-card"><div class="tool-icon">🖼</div><div><div class="tool-name">UI部品名鑑</div><div class="tool-desc">部品名がわからない新人向け辞典</div></div></div>
     <div class="tool-card"><div class="tool-icon">✅</div><div><div class="tool-name">テスト観点テンプレ</div><div class="tool-desc">すぐ使えるテスト設計の出発点</div></div></div>
   </div>

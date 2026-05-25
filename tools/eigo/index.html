@@ -43,13 +43,14 @@ input,button,textarea{
 }
 textarea{resize:none;}
 .slot-input:focus{outline:none;}
+.slot-input::placeholder{color:#ccc;}
 
 /* カード */
 .card{
   background:rgba(255,255,255,0.95);
   border-radius:24px;
   box-shadow:0 16px 48px rgba(0,0,0,0.2);
-  width:100%;overflow:hidden;
+  width:100%;
 }
 
 /* スロット行 */
@@ -77,6 +78,7 @@ textarea{resize:none;}
 </head>
 <body>
 <div id="app"></div>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 <script>
 // ===== 定数 =====
 var APP_VERSION = "2.5";   // ← 更新するたびに変える
@@ -109,6 +111,8 @@ var history = [];
 var tab = "practice";
 var isSpeaking = false;
 var cancelFlag = false;
+var ocrLoading = false;
+var ocrMode = false;
 var stars = [];
 var starTimer = null;
 var saveMsgTimer = null;
@@ -118,6 +122,7 @@ function slotCount(){return window.innerWidth >= 680 ? 6 : 3;}
 function isTablet(){return window.innerWidth >= 680;}
 
 function initSlots(){
+  if(ocrMode)return;
   var n = slotCount();
   while(slots.length < n) slots.push("");
   while(slots.length > n) slots.pop();
@@ -196,10 +201,35 @@ function spawnStars(){
 
 // ===== アクション =====
 function switchTab(t){tab=t;renderApp();}
-function switchMode(m){stopAll();slots=[];initSlots();doneIdxs={};mode=m;renderApp();}
-function clearAll(){stopAll();slots=[];initSlots();doneIdxs={};renderApp();}
-function switchGender(g){voiceGender=g;window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance("Hello!");u.lang="en-US";u.rate=rate;var v=getVoice();if(v)u.voice=v;window.speechSynthesis.speak(u);renderApp();}
+function switchMode(m){stopAll();slots=[];ocrMode=false;initSlots();doneIdxs={};mode=m;renderApp();}
+function clearAll(){stopAll();slots=[];ocrMode=false;initSlots();doneIdxs={};renderApp();}
+function switchGender(g){voiceGender=g;renderApp();}
 function switchRate(r){rate=r;renderApp();}
+function triggerOcr(){
+  var inp=mk("input");inp.type="file";inp.accept="image/*";
+  inp.onchange=function(e){
+    var file=e.target.files[0];if(!file)return;
+    ocrLoading=true;renderApp();
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      Tesseract.recognize(ev.target.result,"eng",{logger:function(){}})
+        .then(function(r){
+          var seen={};
+          var words=r.data.text
+            .split(/[^a-zA-Z]+/)
+            .filter(function(w){return /^[a-zA-Z]{2,}$/.test(w);})
+            .filter(function(w){var lw=w.toLowerCase();if(seen[lw])return false;seen[lw]=true;return true;})
+            .map(function(w){return w.toLowerCase();})
+            .slice(0,20);
+          if(!words.length){ocrLoading=false;renderApp();alert("英単語が見つかりませんでした");return;}
+          slots=words;doneIdxs={};ocrMode=true;ocrLoading=false;renderApp();
+        })
+        .catch(function(){ocrLoading=false;renderApp();alert("読み取りに失敗しました");});
+    };
+    reader.readAsDataURL(file);
+  };
+  inp.click();
+}
 function updateSlot(idx,val){slots[idx]=val;delete doneIdxs[idx];}
 function quickAddWord(wi){
   var ei=-1;for(var i=0;i<slots.length;i++){if(!slots[i].trim()){ei=i;break;}}
@@ -249,14 +279,15 @@ function mkBtn(css,label,fn){var e=mk("button");e.style.cssText=css;e.textConten
 function renderApp(){
   var T=isTablet();
   var maxW=T?700:440;
-  var n=slotCount();
-  // スロット数が変わった場合に調整
-  while(slots.length<n)slots.push("");
-  while(slots.length>n)slots.pop();
+  var n=ocrMode?slots.length:slotCount();
+  if(!ocrMode){
+    while(slots.length<n)slots.push("");
+    while(slots.length>n)slots.pop();
+  }
 
   var isSentence=mode==="sentence";
   var filledCount=slots.filter(function(s){return s.trim();}).length;
-  var useGrid=T&&!isSentence; // タブレット単語モードのみ2列
+  var useGrid=T&&!isSentence&&!ocrMode;
 
   var app=document.getElementById("app");
   while(app.firstChild)app.removeChild(app.firstChild);
@@ -316,6 +347,17 @@ function renderApp(){
     });
     app.appendChild(modeBar);
 
+    // ---- OCRボタン ----
+    var ocrRow=mkDiv(mw+"margin-bottom:10px;");
+    var ocrBtnEl=mkBtn(
+      "width:100%;padding:"+(T?"10px":"9px")+";border-radius:16px;border:2px solid rgba(255,255,255,0.35);background:"+(ocrLoading?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.15)")+";color:rgba(255,255,255,0.95);font-size:"+(T?14:13)+"px;font-weight:700;cursor:"+(ocrLoading?"not-allowed":"pointer")+";letter-spacing:0.3px;",
+      ocrLoading?"🔍 よみとり中...":"📷 写真から英単語を取り込む",
+      function(){if(!ocrLoading)triggerOcr();}
+    );
+    ocrBtnEl.disabled=ocrLoading;
+    ocrRow.appendChild(ocrBtnEl);
+    app.appendChild(ocrRow);
+
     // ---- メインカード ----
     var card=mk("div");card.className="card";
     card.style.cssText="padding:"+(T?"22px 20px":"16px 14px")+";max-width:"+maxW+"px;margin-bottom:12px;";
@@ -329,6 +371,15 @@ function renderApp(){
       card.appendChild(star);
     });
 
+    // OCRモード表示
+    if(ocrMode){
+      var ocrTag=mkDiv("display:flex;align-items:center;justify-content:space-between;margin-bottom:"+(T?12:10)+"px;");
+      ocrTag.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#764ba2;font-weight:700;","📷 写真から "+n+" 語を取り込みました"));
+      var ocrClearBtn=mkBtn("font-size:"+(T?12:11)+"px;color:#aaa;background:none;border:none;cursor:pointer;padding:0;","× 通常モードに戻る",function(){clearAll();});
+      ocrTag.appendChild(ocrClearBtn);
+      card.appendChild(ocrTag);
+    }
+
     // スロットコンテナ
     var slotWrap=mk("div");
     if(useGrid){
@@ -337,10 +388,10 @@ function renderApp(){
       slotWrap.style.cssText="display:flex;flex-direction:column;gap:"+(isSentence?10:8)+"px;margin-bottom:"+(T?16:12)+"px;";
     }
 
-    var badgeSz=T?38:32, btnSz=T?38:32, btnFs=T?18:15;
+    var badgeSz=T?32:26, btnSz=T?32:26, btnFs=T?16:14;
     var ph=isSentence
-      ?["I like apples.","How are you?","This is fun!","Let's go!","Good morning!","Thank you!"]
-      :["apple","banana","cat","dog","elephant","fish"];
+      ?["えいぶん１","えいぶん２","えいぶん３","えいぶん４","えいぶん５","えいぶん６"]
+      :["えいご１","えいご２","えいご３","えいご４","えいご５","えいご６"];
 
     for(var i=0;i<slots.length;i++){
       (function(i){
