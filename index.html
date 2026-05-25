@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<script>
+(function(){
+  var saved = sessionStorage.getItem('auth');
+  if(saved !== 'ok'){
+    var p = prompt('パスワードを入力してください');
+    if(p !== 'ono'){
+      document.documentElement.innerHTML = '<body style="font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#f5f5f5;"><p style="color:#555;">アクセスが拒否されました。</p></body>';
+      throw new Error('auth');
+    }
+    sessionStorage.setItem('auth', 'ok');
+  }
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BEETLE合同会社</title>
