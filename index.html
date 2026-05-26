@@ -159,22 +159,31 @@ a{text-decoration:none;}
   </div>
 </div>
 
+<!-- ツール一覧 =====================================================
+     カードを追加するときは .tools-grid の中に下記をコピーしてください:
+
+     <div class="tool-card">
+       <div class="tool-card-top"><div class="tool-icon">🔧</div><div class="tool-name">ツール名</div></div>
+       <p class="tool-desc">説明文</p>
+       <span class="tool-tag free">無料</span>  ← free / wip / soon
+     </div>
+
+     リンクあり版:
+     <a class="tool-card" href="URL">…</a>
+================================================================== -->
 <div class="section" id="tools">
   <div class="container">
     <div class="section-header">
       <span class="section-num">01</span>
-      <h2 class="section-title">自分が困ったから、作った。</h2>
-      <p class="section-sub">— 新人・検証者のためのツール</p>
-    </div>
-    <div class="senior-intro">
-      <p>
-        単体も通らないシステムをQAしてた。<br>
-        「使いにくい」をどこに起票すればいいかわからなかった。<br>
-        バグ票の書き方、誰も教えてくれなかった。
-      </p>
-      <p class="whisper">そのまま新人にさせたくなくて、ツールを作りはじめた。<span>——現場10年の先輩より。</span></p>
+      <h2 class="section-title">定時に帰るために、作った。</h2>
+      <p class="section-sub">— 現場を知っている人間が、使えるものを。</p>
     </div>
     <div class="tools-grid">
+      <a class="tool-card" href="tools/eigo/landing.html">
+        <div class="tool-card-top"><div class="tool-icon">🔤</div><div class="tool-name">えいごよんで！</div></div>
+        <p class="tool-desc">「この単語なんて読むの？」教科書を写真に撮るだけでネイティブ発音。小学生のお子さんがいる親御さんへ。</p>
+        <span class="tool-tag free">無料</span>
+      </a>
       <div class="tool-card">
         <div class="tool-card-top"><div class="tool-icon">📸</div><div class="tool-name">バグ起票アシスタント</div></div>
         <p class="tool-desc">スクショを貼るだけ。タイトルと本文を自動生成。「何を書けばいいかわからない」を卒業。</p>
@@ -190,23 +199,6 @@ a{text-decoration:none;}
         <p class="tool-desc">ゼロから考えなくていい。すぐ使えるテスト設計の出発点。</p>
         <span class="tool-tag free">無料</span>
       </div>
-    </div>
-  </div>
-</div>
-
-<div class="section">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-num">02</span>
-      <h2 class="section-title">みんなのためのツール</h2>
-      <p class="section-sub">— 日常のちょっとした困りごとを解決する</p>
-    </div>
-    <div class="tools-grid">
-      <a class="tool-card" href="tools/eigo/landing.html">
-        <div class="tool-card-top"><div class="tool-icon">🔤</div><div class="tool-name">えいごよんで！</div></div>
-        <p class="tool-desc">「この単語なんて読むの？」教科書を写真に撮るだけでネイティブ発音。小学生のお子さんがいる親御さんへ。</p>
-        <span class="tool-tag free">無料</span>
-      </a>
       <div class="tool-card">
         <div class="tool-card-top"><div class="tool-icon">🎴</div><div class="tool-name">MyDeck</div></div>
         <p class="tool-desc">ポケカ・遊戯王・NBA——カード会社の垣根を超えたコレクション管理＆自慢アプリ。</p>
@@ -219,8 +211,9 @@ a{text-decoration:none;}
 <div class="section">
   <div class="container">
     <div class="section-header">
-      <span class="section-num">03</span>
+      <span class="section-num">02</span>
       <h2 class="section-title">できること</h2>
+      <p class="section-sub">— ツール開発だけじゃない。QAの現場ごと、一緒に動きます。</p>
     </div>
     <div class="cards">
       <div class="card"><div class="card-top"><div class="card-icon">📋</div><h3>QAエンジニアリング</h3></div><p>テスト設計・バグ起票・仕様確認・Backlog管理まで。現場を知り尽くした視点で動きます。</p></div>
@@ -233,7 +226,7 @@ a{text-decoration:none;}
 <div class="section" id="about">
   <div class="container">
     <div class="section-header">
-      <span class="section-num">04</span>
+      <span class="section-num">03</span>
       <h2 class="section-title">代表について</h2>
     </div>
     <div class="about-block">
