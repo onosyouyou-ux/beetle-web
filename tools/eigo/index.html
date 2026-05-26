@@ -119,6 +119,211 @@ var POPULAR_WORDS = [
   // うごき
   "jump","swim","sing","dance","read","write","draw","paint","laugh","cry","think","dream","grow","shine","fly","climb","throw","catch","kick","push"
 ];
+var WORD_DICT = {
+  // どうぶつ
+  "cat":{ja:"ねこ",emoji:"🐱"},"dog":{ja:"いぬ",emoji:"🐶"},"bird":{ja:"とり",emoji:"🐦"},"fish":{ja:"さかな",emoji:"🐟"},
+  "rabbit":{ja:"うさぎ",emoji:"🐰"},"horse":{ja:"うま",emoji:"🐴"},"cow":{ja:"うし",emoji:"🐄"},"pig":{ja:"ぶた",emoji:"🐷"},
+  "sheep":{ja:"ひつじ",emoji:"🐑"},"duck":{ja:"アヒル",emoji:"🦆"},"frog":{ja:"かえる",emoji:"🐸"},"monkey":{ja:"さる",emoji:"🐵"},
+  "giraffe":{ja:"きりん",emoji:"🦒"},"elephant":{ja:"ぞう",emoji:"🐘"},"lion":{ja:"ライオン",emoji:"🦁"},"tiger":{ja:"とら",emoji:"🐯"},
+  "bear":{ja:"くま",emoji:"🐻"},"wolf":{ja:"おおかみ",emoji:"🐺"},"fox":{ja:"きつね",emoji:"🦊"},"deer":{ja:"しか",emoji:"🦌"},
+  "owl":{ja:"ふくろう",emoji:"🦉"},"eagle":{ja:"わし",emoji:"🦅"},"whale":{ja:"くじら",emoji:"🐋"},"dolphin":{ja:"いるか",emoji:"🐬"},
+  "penguin":{ja:"ペンギン",emoji:"🐧"},"turtle":{ja:"かめ",emoji:"🐢"},"snake":{ja:"へび",emoji:"🐍"},
+  "butterfly":{ja:"ちょうちょ",emoji:"🦋"},"bee":{ja:"みつばち",emoji:"🐝"},"ant":{ja:"あり",emoji:"🐜"},
+  "zebra":{ja:"しまうま",emoji:"🦓"},"crocodile":{ja:"わに",emoji:"🐊"},"octopus":{ja:"たこ",emoji:"🐙"},
+  "crab":{ja:"かに",emoji:"🦀"},"shrimp":{ja:"えび",emoji:"🦐"},"panda":{ja:"パンダ",emoji:"🐼"},
+  "koala":{ja:"コアラ",emoji:"🐨"},"kangaroo":{ja:"カンガルー",emoji:"🦘"},"hamster":{ja:"ハムスター",emoji:"🐹"},
+  "squirrel":{ja:"りす",emoji:"🐿"},"gorilla":{ja:"ゴリラ",emoji:"🦍"},"parrot":{ja:"おうむ",emoji:"🦜"},
+  "cheetah":{ja:"チーター",emoji:"🐆"},"camel":{ja:"ラクダ",emoji:"🐪"},"rhino":{ja:"サイ",emoji:"🦏"},
+  "hippo":{ja:"カバ",emoji:"🦛"},"peacock":{ja:"クジャク",emoji:"🦚"},"flamingo":{ja:"フラミンゴ",emoji:"🦩"},
+  // たべもの
+  "apple":{ja:"りんご",emoji:"🍎"},"banana":{ja:"バナナ",emoji:"🍌"},"orange":{ja:"オレンジ",emoji:"🍊"},
+  "grape":{ja:"ぶどう",emoji:"🍇"},"strawberry":{ja:"いちご",emoji:"🍓"},"watermelon":{ja:"すいか",emoji:"🍉"},
+  "peach":{ja:"もも",emoji:"🍑"},"cherry":{ja:"さくらんぼ",emoji:"🍒"},"lemon":{ja:"レモン",emoji:"🍋"},
+  "melon":{ja:"メロン",emoji:"🍈"},"pineapple":{ja:"パイナップル",emoji:"🍍"},"kiwi":{ja:"キウイ",emoji:"🥝"},
+  "mango":{ja:"マンゴー",emoji:"🥭"},"pear":{ja:"なし",emoji:"🍐"},"coconut":{ja:"ヤシの実",emoji:"🥥"},
+  "rice":{ja:"ごはん",emoji:"🍚"},"bread":{ja:"パン",emoji:"🍞"},"egg":{ja:"たまご",emoji:"🥚"},
+  "milk":{ja:"ぎゅうにゅう",emoji:"🥛"},"cheese":{ja:"チーズ",emoji:"🧀"},"butter":{ja:"バター",emoji:"🧈"},
+  "meat":{ja:"にく",emoji:"🥩"},"chicken":{ja:"とりにく",emoji:"🍗"},"soup":{ja:"スープ",emoji:"🍲"},
+  "salad":{ja:"サラダ",emoji:"🥗"},"pizza":{ja:"ピザ",emoji:"🍕"},"cake":{ja:"ケーキ",emoji:"🎂"},
+  "cookie":{ja:"クッキー",emoji:"🍪"},"candy":{ja:"あめ",emoji:"🍬"},"chocolate":{ja:"チョコレート",emoji:"🍫"},
+  "juice":{ja:"ジュース",emoji:"🧃"},"water":{ja:"みず",emoji:"💧"},"tea":{ja:"おちゃ",emoji:"🍵"},
+  "coffee":{ja:"コーヒー",emoji:"☕"},"sandwich":{ja:"サンドイッチ",emoji:"🥪"},"hamburger":{ja:"ハンバーガー",emoji:"🍔"},
+  "hotdog":{ja:"ホットドッグ",emoji:"🌭"},"sushi":{ja:"すし",emoji:"🍣"},"ramen":{ja:"ラーメン",emoji:"🍜"},
+  "potato":{ja:"じゃがいも",emoji:"🥔"},"carrot":{ja:"にんじん",emoji:"🥕"},"onion":{ja:"たまねぎ",emoji:"🧅"},
+  "corn":{ja:"とうもろこし",emoji:"🌽"},"tomato":{ja:"トマト",emoji:"🍅"},"mushroom":{ja:"きのこ",emoji:"🍄"},
+  "cucumber":{ja:"きゅうり",emoji:"🥒"},"broccoli":{ja:"ブロッコリー",emoji:"🥦"},"cabbage":{ja:"キャベツ",emoji:"🥬"},
+  "honey":{ja:"はちみつ",emoji:"🍯"},"sugar":{ja:"さとう",emoji:"🧂"},"salt":{ja:"しお",emoji:"🧂"},
+  "donut":{ja:"ドーナツ",emoji:"🍩"},"icecream":{ja:"アイスクリーム",emoji:"🍦"},"popcorn":{ja:"ポップコーン",emoji:"🍿"},
+  // からだ
+  "head":{ja:"あたま",emoji:"👤"},"face":{ja:"かお",emoji:"😊"},"eye":{ja:"め",emoji:"👁"},
+  "ear":{ja:"みみ",emoji:"👂"},"nose":{ja:"はな",emoji:"👃"},"mouth":{ja:"くち",emoji:"👄"},
+  "hair":{ja:"かみ",emoji:"💇"},"hand":{ja:"て",emoji:"✋"},"foot":{ja:"あし(足)",emoji:"🦶"},
+  "arm":{ja:"うで",emoji:"💪"},"leg":{ja:"あし(脚)",emoji:"🦵"},"shoulder":{ja:"かた",emoji:"🤷"},
+  "knee":{ja:"ひざ",emoji:"🦵"},"finger":{ja:"ゆび",emoji:"☝️"},"back":{ja:"せなか",emoji:"🧍"},
+  "chest":{ja:"むね",emoji:"🫀"},"stomach":{ja:"おなか",emoji:"🤰"},"tooth":{ja:"は",emoji:"🦷"},
+  "tongue":{ja:"した",emoji:"👅"},"neck":{ja:"くび",emoji:"🧣"},"heart":{ja:"こころ・しんぞう",emoji:"❤️"},
+  "brain":{ja:"のう",emoji:"🧠"},"skin":{ja:"はだ",emoji:"🫁"},"voice":{ja:"こえ",emoji:"🔊"},
+  "body":{ja:"からだ",emoji:"🧍"},"bone":{ja:"ほね",emoji:"🦴"},
+  // がっこう
+  "pencil":{ja:"えんぴつ",emoji:"✏️"},"pen":{ja:"ペン",emoji:"🖊"},"ruler":{ja:"じょうぎ",emoji:"📏"},
+  "eraser":{ja:"けしごむ",emoji:"🧹"},"notebook":{ja:"ノート",emoji:"📓"},"book":{ja:"ほん",emoji:"📚"},
+  "desk":{ja:"つくえ",emoji:"🪑"},"chair":{ja:"いす",emoji:"🪑"},"bag":{ja:"かばん",emoji:"🎒"},
+  "school":{ja:"がっこう",emoji:"🏫"},"teacher":{ja:"せんせい",emoji:"👩‍🏫"},"student":{ja:"せいと",emoji:"🧑‍🎓"},
+  "class":{ja:"じゅぎょう",emoji:"📖"},"lesson":{ja:"じゅぎょう",emoji:"📖"},"library":{ja:"としょかん",emoji:"📚"},
+  "gym":{ja:"たいいくかん",emoji:"🏋️"},"music":{ja:"おんがく",emoji:"🎵"},"art":{ja:"びじゅつ",emoji:"🎨"},
+  "science":{ja:"りか",emoji:"🔬"},"math":{ja:"さんすう",emoji:"➕"},"lunch":{ja:"ひるごはん",emoji:"🍱"},
+  "test":{ja:"テスト",emoji:"📝"},"exam":{ja:"しけん",emoji:"📝"},"homework":{ja:"しゅくだい",emoji:"📚"},
+  "answer":{ja:"こたえ",emoji:"💡"},"question":{ja:"しつもん",emoji:"❓"},"grade":{ja:"がくねん",emoji:"🏫"},
+  "classroom":{ja:"きょうしつ",emoji:"🏫"},"scissors":{ja:"はさみ",emoji:"✂️"},"glue":{ja:"のり",emoji:"🖊"},
+  "crayon":{ja:"クレヨン",emoji:"🖍"},"paint":{ja:"えのぐ",emoji:"🎨"},
+  // しぜん
+  "sun":{ja:"たいよう",emoji:"☀️"},"moon":{ja:"つき",emoji:"🌙"},"star":{ja:"ほし",emoji:"⭐"},
+  "sky":{ja:"そら",emoji:"🌤"},"cloud":{ja:"くも",emoji:"☁️"},"rain":{ja:"あめ",emoji:"🌧"},
+  "snow":{ja:"ゆき",emoji:"❄️"},"wind":{ja:"かぜ",emoji:"💨"},"flower":{ja:"はな",emoji:"🌸"},
+  "tree":{ja:"き",emoji:"🌳"},"mountain":{ja:"やま",emoji:"⛰"},"river":{ja:"かわ",emoji:"🏞"},
+  "ocean":{ja:"うみ",emoji:"🌊"},"sea":{ja:"うみ",emoji:"🌊"},"beach":{ja:"すなはま",emoji:"🏖"},
+  "forest":{ja:"もり",emoji:"🌲"},"island":{ja:"しま",emoji:"🏝"},"desert":{ja:"さばく",emoji:"🏜"},
+  "volcano":{ja:"かざん",emoji:"🌋"},"rainbow":{ja:"にじ",emoji:"🌈"},"grass":{ja:"くさ",emoji:"🌿"},
+  "rock":{ja:"いわ",emoji:"🪨"},"sand":{ja:"すな",emoji:"🏖"},"lake":{ja:"みずうみ",emoji:"🏞"},
+  "spring":{ja:"はる",emoji:"🌸"},"summer":{ja:"なつ",emoji:"☀️"},"autumn":{ja:"あき",emoji:"🍁"},
+  "fall":{ja:"あき",emoji:"🍁"},"winter":{ja:"ふゆ",emoji:"⛄"},"leaf":{ja:"は・葉",emoji:"🍃"},
+  "seed":{ja:"たね",emoji:"🌱"},"root":{ja:"ね",emoji:"🌱"},"stone":{ja:"いし",emoji:"🪨"},
+  "earth":{ja:"ちきゅう",emoji:"🌍"},"fire":{ja:"ひ",emoji:"🔥"},"ice":{ja:"こおり",emoji:"🧊"},
+  // いろ
+  "red":{ja:"あか",emoji:"🔴"},"blue":{ja:"あお",emoji:"🔵"},"yellow":{ja:"きいろ",emoji:"🟡"},
+  "green":{ja:"みどり",emoji:"🟢"},"orange":{ja:"オレンジ",emoji:"🟠"},"purple":{ja:"むらさき",emoji:"🟣"},
+  "pink":{ja:"ピンク",emoji:"🩷"},"white":{ja:"しろ",emoji:"⬜"},"black":{ja:"くろ",emoji:"⬛"},
+  "brown":{ja:"ちゃいろ",emoji:"🟤"},"gray":{ja:"はいいろ",emoji:"🩶"},"grey":{ja:"はいいろ",emoji:"🩶"},
+  "gold":{ja:"きんいろ",emoji:"🌟"},"silver":{ja:"ぎんいろ",emoji:"⭐"},
+  // かず
+  "one":{ja:"いち（１）",emoji:"1️⃣"},"two":{ja:"に（２）",emoji:"2️⃣"},"three":{ja:"さん（３）",emoji:"3️⃣"},
+  "four":{ja:"し（４）",emoji:"4️⃣"},"five":{ja:"ご（５）",emoji:"5️⃣"},"six":{ja:"ろく（６）",emoji:"6️⃣"},
+  "seven":{ja:"しち（７）",emoji:"7️⃣"},"eight":{ja:"はち（８）",emoji:"8️⃣"},"nine":{ja:"く（９）",emoji:"9️⃣"},
+  "ten":{ja:"じゅう（10）",emoji:"🔟"},"eleven":{ja:"じゅういち（11）",emoji:"1️⃣1️⃣"},
+  "twelve":{ja:"じゅうに（12）",emoji:"1️⃣2️⃣"},"twenty":{ja:"にじゅう（20）",emoji:"✌️"},
+  "hundred":{ja:"ひゃく（100）",emoji:"💯"},"zero":{ja:"れい・ゼロ",emoji:"0️⃣"},
+  "first":{ja:"いちばん・1番",emoji:"🥇"},"second":{ja:"2番",emoji:"🥈"},"third":{ja:"3番",emoji:"🥉"},
+  // かぞく
+  "mother":{ja:"おかあさん",emoji:"👩"},"father":{ja:"おとうさん",emoji:"👨"},"mom":{ja:"おかあさん",emoji:"👩"},
+  "dad":{ja:"おとうさん",emoji:"👨"},"sister":{ja:"おねえさん・いもうと",emoji:"👧"},"brother":{ja:"おにいさん・おとうと",emoji:"👦"},
+  "grandmother":{ja:"おばあさん",emoji:"👵"},"grandfather":{ja:"おじいさん",emoji:"👴"},
+  "grandma":{ja:"おばあさん",emoji:"👵"},"grandpa":{ja:"おじいさん",emoji:"👴"},
+  "baby":{ja:"あかちゃん",emoji:"👶"},"family":{ja:"かぞく",emoji:"👨‍👩‍👧‍👦"},"friend":{ja:"ともだち",emoji:"🤝"},
+  "parent":{ja:"おや",emoji:"👨‍👩‍👧"},"child":{ja:"こども",emoji:"🧒"},"boy":{ja:"おとこのこ",emoji:"👦"},
+  "girl":{ja:"おんなのこ",emoji:"👧"},"man":{ja:"おとこのひと",emoji:"👨"},"woman":{ja:"おんなのひと",emoji:"👩"},
+  // ふく
+  "shirt":{ja:"シャツ",emoji:"👕"},"pants":{ja:"ズボン",emoji:"👖"},"dress":{ja:"ドレス",emoji:"👗"},
+  "skirt":{ja:"スカート",emoji:"🩱"},"shoes":{ja:"くつ",emoji:"👟"},"hat":{ja:"ぼうし",emoji:"🎩"},
+  "cap":{ja:"キャップ",emoji:"🧢"},"coat":{ja:"コート",emoji:"🧥"},"jacket":{ja:"ジャケット",emoji:"🧥"},
+  "socks":{ja:"くつした",emoji:"🧦"},"gloves":{ja:"てぶくろ",emoji:"🧤"},"scarf":{ja:"マフラー",emoji:"🧣"},
+  "umbrella":{ja:"かさ",emoji:"☂️"},"glasses":{ja:"めがね",emoji:"👓"},"ring":{ja:"ゆびわ",emoji:"💍"},
+  "watch":{ja:"うでどけい",emoji:"⌚"},"belt":{ja:"ベルト",emoji:"👔"},"swimsuit":{ja:"みずぎ",emoji:"🩱"},
+  // スポーツ
+  "soccer":{ja:"サッカー",emoji:"⚽"},"baseball":{ja:"やきゅう",emoji:"⚾"},"basketball":{ja:"バスケットボール",emoji:"🏀"},
+  "tennis":{ja:"テニス",emoji:"🎾"},"swimming":{ja:"すいえい",emoji:"🏊"},"running":{ja:"かけっこ",emoji:"🏃"},
+  "cycling":{ja:"じてんしゃ",emoji:"🚴"},"volleyball":{ja:"バレーボール",emoji:"🏐"},"golf":{ja:"ゴルフ",emoji:"⛳"},
+  "skiing":{ja:"スキー",emoji:"⛷"},"skating":{ja:"スケート",emoji:"⛸"},"boxing":{ja:"ボクシング",emoji:"🥊"},
+  "gym":{ja:"たいいくかん",emoji:"🏋️"},"game":{ja:"ゲーム・しあい",emoji:"🎮"},"sport":{ja:"スポーツ",emoji:"🏅"},
+  "ball":{ja:"ボール",emoji:"⚽"},"team":{ja:"チーム",emoji:"👥"},"win":{ja:"かつ・かち",emoji:"🏆"},
+  "lose":{ja:"まける・まけ",emoji:"😢"},"play":{ja:"あそぶ・プレー",emoji:"🎮"},
+  // ばしょ
+  "house":{ja:"いえ",emoji:"🏠"},"home":{ja:"うち・ホーム",emoji:"🏡"},"park":{ja:"こうえん",emoji:"🌳"},
+  "shop":{ja:"みせ",emoji:"🏪"},"store":{ja:"みせ",emoji:"🏪"},"hospital":{ja:"びょういん",emoji:"🏥"},
+  "station":{ja:"えき",emoji:"🚉"},"airport":{ja:"くうこう",emoji:"✈️"},"city":{ja:"まち・都市",emoji:"🌆"},
+  "town":{ja:"まち",emoji:"🏘"},"village":{ja:"むら",emoji:"🏡"},"country":{ja:"くに",emoji:"🌍"},
+  "world":{ja:"せかい",emoji:"🌍"},"zoo":{ja:"どうぶつえん",emoji:"🦁"},"museum":{ja:"はくぶつかん",emoji:"🏛"},
+  "restaurant":{ja:"レストラン",emoji:"🍽"},"hotel":{ja:"ホテル",emoji:"🏨"},"castle":{ja:"おしろ",emoji:"🏰"},
+  "bridge":{ja:"はし",emoji:"🌉"},"road":{ja:"みち",emoji:"🛣"},"market":{ja:"いちば・マーケット",emoji:"🛒"},
+  "farm":{ja:"のうじょう",emoji:"🚜"},"factory":{ja:"こうじょう",emoji:"🏭"},"bank":{ja:"ぎんこう",emoji:"🏦"},
+  "church":{ja:"きょうかい",emoji:"⛪"},"temple":{ja:"おてら",emoji:"⛩"},"theater":{ja:"えいがかん",emoji:"🎭"},
+  // のりもの
+  "car":{ja:"くるま",emoji:"🚗"},"bus":{ja:"バス",emoji:"🚌"},"train":{ja:"でんしゃ",emoji:"🚆"},
+  "bicycle":{ja:"じてんしゃ",emoji:"🚲"},"plane":{ja:"ひこうき",emoji:"✈️"},"ship":{ja:"ふね",emoji:"🚢"},
+  "boat":{ja:"ボート",emoji:"🚤"},"taxi":{ja:"タクシー",emoji:"🚕"},"truck":{ja:"トラック",emoji:"🚚"},
+  "motorcycle":{ja:"バイク",emoji:"🏍"},"rocket":{ja:"ロケット",emoji:"🚀"},"helicopter":{ja:"ヘリコプター",emoji:"🚁"},
+  "ambulance":{ja:"きゅうきゅうしゃ",emoji:"🚑"},"fire truck":{ja:"しょうぼうしゃ",emoji:"🚒"},"submarine":{ja:"せんすいかん",emoji:"🤿"},
+  // どうさ
+  "run":{ja:"はしる",emoji:"🏃"},"walk":{ja:"あるく",emoji:"🚶"},"jump":{ja:"とぶ",emoji:"🏃"},
+  "swim":{ja:"およぐ",emoji:"🏊"},"sing":{ja:"うたう",emoji:"🎤"},"dance":{ja:"おどる",emoji:"💃"},
+  "read":{ja:"よむ",emoji:"📖"},"write":{ja:"かく",emoji:"✏️"},"draw":{ja:"えをかく",emoji:"🎨"},
+  "laugh":{ja:"わらう",emoji:"😄"},"cry":{ja:"なく",emoji:"😢"},"think":{ja:"かんがえる",emoji:"🤔"},
+  "dream":{ja:"ゆめをみる",emoji:"💭"},"fly":{ja:"とぶ",emoji:"🦅"},"climb":{ja:"のぼる",emoji:"🧗"},
+  "throw":{ja:"なげる",emoji:"🤾"},"catch":{ja:"つかまえる・キャッチ",emoji:"🤲"},"kick":{ja:"ける",emoji:"🦵"},
+  "push":{ja:"おす",emoji:"👐"},"pull":{ja:"ひく",emoji:"💪"},"eat":{ja:"たべる",emoji:"🍽"},
+  "drink":{ja:"のむ",emoji:"🥤"},"sleep":{ja:"ねむる",emoji:"😴"},"wake":{ja:"おきる",emoji:"⏰"},
+  "study":{ja:"べんきょうする",emoji:"📚"},"help":{ja:"たすける",emoji:"🤝"},"make":{ja:"つくる",emoji:"🔨"},
+  "open":{ja:"あける",emoji:"🚪"},"close":{ja:"しめる",emoji:"🚪"},"stop":{ja:"とまる・やめる",emoji:"🛑"},
+  "start":{ja:"はじめる",emoji:"▶️"},"wait":{ja:"まつ",emoji:"⏳"},"listen":{ja:"きく",emoji:"👂"},
+  "speak":{ja:"はなす",emoji:"💬"},"talk":{ja:"はなす",emoji:"🗣"},"ask":{ja:"きく・たずねる",emoji:"❓"},
+  "find":{ja:"みつける",emoji:"🔍"},"buy":{ja:"かう",emoji:"🛒"},"give":{ja:"あげる",emoji:"🎁"},
+  "take":{ja:"とる",emoji:"🤲"},"show":{ja:"みせる",emoji:"👀"},"call":{ja:"よぶ・でんわする",emoji:"📞"},
+  "try":{ja:"ためす",emoji:"💪"},"use":{ja:"つかう",emoji:"🔧"},"like":{ja:"すき",emoji:"❤️"},
+  "love":{ja:"だいすき・あい",emoji:"💕"},"know":{ja:"しる・しっている",emoji:"💡"},
+  "remember":{ja:"おぼえる",emoji:"🧠"},"forget":{ja:"わすれる",emoji:"🤦"},"learn":{ja:"まなぶ",emoji:"📚"},
+  "teach":{ja:"おしえる",emoji:"👩‍🏫"},"count":{ja:"かぞえる",emoji:"🔢"},"see":{ja:"みえる・みる",emoji:"👀"},
+  "look":{ja:"みる",emoji:"👀"},"hear":{ja:"きこえる",emoji:"👂"},"touch":{ja:"さわる",emoji:"🤲"},
+  "feel":{ja:"かんじる",emoji:"❤️"},"go":{ja:"いく",emoji:"🚶"},"come":{ja:"くる",emoji:"👋"},
+  // ようす（形容詞）
+  "happy":{ja:"うれしい・しあわせ",emoji:"😊"},"sad":{ja:"かなしい",emoji:"😢"},"angry":{ja:"おこっている",emoji:"😠"},
+  "scared":{ja:"こわい",emoji:"😨"},"excited":{ja:"わくわく",emoji:"🤩"},"tired":{ja:"つかれた",emoji:"😴"},
+  "hungry":{ja:"おなかがすいた",emoji:"😋"},"sleepy":{ja:"ねむい",emoji:"😪"},"funny":{ja:"おかしい・たのしい",emoji:"😄"},
+  "brave":{ja:"ゆうきがある",emoji:"💪"},"kind":{ja:"しんせつ",emoji:"😊"},"gentle":{ja:"やさしい",emoji:"🕊"},
+  "clever":{ja:"かしこい",emoji:"🧠"},"silly":{ja:"ばかげた・おかしい",emoji:"🤪"},"noisy":{ja:"うるさい",emoji:"📢"},
+  "quiet":{ja:"しずか",emoji:"🤫"},"warm":{ja:"あたたかい",emoji:"🌞"},"cool":{ja:"すずしい・かっこいい",emoji:"😎"},
+  "soft":{ja:"やわらかい",emoji:"🪶"},"hard":{ja:"かたい",emoji:"💎"},"big":{ja:"おおきい",emoji:"🐘"},
+  "small":{ja:"ちいさい",emoji:"🐭"},"large":{ja:"おおきい",emoji:"🐋"},"tiny":{ja:"とても小さい",emoji:"🐜"},
+  "long":{ja:"ながい",emoji:"📏"},"short":{ja:"みじかい",emoji:"📏"},"tall":{ja:"せが高い",emoji:"🏀"},
+  "fast":{ja:"はやい",emoji:"⚡"},"slow":{ja:"おそい",emoji:"🐢"},"strong":{ja:"つよい",emoji:"💪"},
+  "weak":{ja:"よわい",emoji:"🪶"},"heavy":{ja:"おもい",emoji:"⚖️"},"light":{ja:"かるい",emoji:"🪶"},
+  "hot":{ja:"あつい",emoji:"🔥"},"cold":{ja:"つめたい・さむい",emoji:"🧊"},"new":{ja:"あたらしい",emoji:"✨"},
+  "old":{ja:"ふるい",emoji:"🏚"},"good":{ja:"いい・よい",emoji:"👍"},"bad":{ja:"わるい",emoji:"👎"},
+  "beautiful":{ja:"うつくしい",emoji:"💐"},"cute":{ja:"かわいい",emoji:"🥰"},"clean":{ja:"きれい",emoji:"✨"},
+  "dirty":{ja:"きたない",emoji:"🤢"},"easy":{ja:"かんたん",emoji:"😊"},"difficult":{ja:"むずかしい",emoji:"😓"},
+  "free":{ja:"むりょう・じゆう",emoji:"🆓"},"busy":{ja:"いそがしい",emoji:"😤"},"ready":{ja:"じゅんびOK",emoji:"✅"},
+  "safe":{ja:"あんぜん",emoji:"🛡"},"wonderful":{ja:"すばらしい",emoji:"🌟"},"amazing":{ja:"すごい",emoji:"🤩"},
+  "special":{ja:"とくべつ",emoji:"⭐"},"important":{ja:"たいせつ",emoji:"❗"},"popular":{ja:"にんきがある",emoji:"🌟"},
+  "delicious":{ja:"おいしい",emoji:"😋"},"sweet":{ja:"あまい",emoji:"🍬"},"sour":{ja:"すっぱい",emoji:"🍋"},
+  "spicy":{ja:"からい",emoji:"🌶"},"bitter":{ja:"にがい",emoji:"😬"},
+  // もの・どうぐ
+  "phone":{ja:"でんわ",emoji:"📱"},"computer":{ja:"コンピュータ",emoji:"💻"},"tablet":{ja:"タブレット",emoji:"📱"},
+  "television":{ja:"テレビ",emoji:"📺"},"tv":{ja:"テレビ",emoji:"📺"},"radio":{ja:"ラジオ",emoji:"📻"},
+  "camera":{ja:"カメラ",emoji:"📷"},"clock":{ja:"とけい",emoji:"⏰"},"key":{ja:"かぎ",emoji:"🔑"},
+  "door":{ja:"ドア",emoji:"🚪"},"window":{ja:"まど",emoji:"🪟"},"table":{ja:"テーブル",emoji:"🪑"},
+  "cup":{ja:"コップ",emoji:"☕"},"plate":{ja:"さら",emoji:"🍽"},"box":{ja:"はこ",emoji:"📦"},
+  "bed":{ja:"ベッド",emoji:"🛏"},"pillow":{ja:"まくら",emoji:"💤"},"blanket":{ja:"もうふ",emoji:"🛏"},
+  "mirror":{ja:"かがみ",emoji:"🪞"},"soap":{ja:"せっけん",emoji:"🧼"},"towel":{ja:"タオル",emoji:"🧴"},
+  "money":{ja:"おかね",emoji:"💰"},"letter":{ja:"てがみ",emoji:"💌"},"map":{ja:"ちず",emoji:"🗺"},
+  "flag":{ja:"はた・こっき",emoji:"🚩"},"gift":{ja:"プレゼント",emoji:"🎁"},"toy":{ja:"おもちゃ",emoji:"🧸"},
+  "doll":{ja:"にんぎょう",emoji:"🪆"},"robot":{ja:"ロボット",emoji:"🤖"},"picture":{ja:"え・しゃしん",emoji:"🖼"},
+  "music":{ja:"おんがく",emoji:"🎵"},"song":{ja:"うた",emoji:"🎤"},"movie":{ja:"えいが",emoji:"🎬"},
+  "story":{ja:"おはなし",emoji:"📖"},"news":{ja:"ニュース",emoji:"📰"},"word":{ja:"ことば・たんご",emoji:"💬"},
+  "name":{ja:"なまえ",emoji:"🏷"},"color":{ja:"いろ",emoji:"🎨"},"shape":{ja:"かたち",emoji:"🔷"},
+  "number":{ja:"すうじ・かず",emoji:"🔢"},"letter":{ja:"もじ・てがみ",emoji:"🔤"},
+  // てんき
+  "sunny":{ja:"はれ",emoji:"☀️"},"cloudy":{ja:"くもり",emoji:"☁️"},"rainy":{ja:"あめ",emoji:"🌧"},
+  "snowy":{ja:"ゆき",emoji:"❄️"},"windy":{ja:"かぜが強い",emoji:"💨"},"foggy":{ja:"きり",emoji:"🌫"},
+  "stormy":{ja:"あらし",emoji:"⛈"},"weather":{ja:"てんき",emoji:"🌤"},"temperature":{ja:"きおん",emoji:"🌡"},
+  // じかん
+  "morning":{ja:"あさ",emoji:"🌅"},"afternoon":{ja:"ごご",emoji:"🌞"},"evening":{ja:"ゆうがた",emoji:"🌇"},
+  "night":{ja:"よる",emoji:"🌙"},"today":{ja:"きょう",emoji:"📅"},"tomorrow":{ja:"あした",emoji:"📅"},
+  "yesterday":{ja:"きのう",emoji:"📅"},"week":{ja:"しゅう",emoji:"📅"},"month":{ja:"つき・がつ",emoji:"📅"},
+  "year":{ja:"とし・ねん",emoji:"📅"},"hour":{ja:"じかん",emoji:"⏰"},"minute":{ja:"ふん・ぷん",emoji:"⏱"},
+  "time":{ja:"じかん",emoji:"⏰"},"day":{ja:"ひ・にち",emoji:"☀️"},"date":{ja:"ひづけ",emoji:"📅"},
+  "monday":{ja:"げつようび",emoji:"📅"},"tuesday":{ja:"かようび",emoji:"📅"},"wednesday":{ja:"すいようび",emoji:"📅"},
+  "thursday":{ja:"もくようび",emoji:"📅"},"friday":{ja:"きんようび",emoji:"📅"},"saturday":{ja:"どようび",emoji:"📅"},
+  "sunday":{ja:"にちようび",emoji:"📅"},"january":{ja:"いちがつ",emoji:"❄️"},"february":{ja:"にがつ",emoji:"❄️"},
+  "march":{ja:"さんがつ",emoji:"🌸"},"april":{ja:"しがつ",emoji:"🌸"},"may":{ja:"ごがつ",emoji:"🌿"},
+  "june":{ja:"ろくがつ",emoji:"☔"},"july":{ja:"しちがつ",emoji:"🌊"},"august":{ja:"はちがつ",emoji:"🌻"},
+  "september":{ja:"くがつ",emoji:"🍂"},"october":{ja:"じゅうがつ",emoji:"🎃"},"november":{ja:"じゅういちがつ",emoji:"🍁"},
+  "december":{ja:"じゅうにがつ",emoji:"🎄"},
+  // しごと
+  "doctor":{ja:"おいしゃさん",emoji:"👨‍⚕️"},"nurse":{ja:"かんごし",emoji:"👩‍⚕️"},"teacher":{ja:"せんせい",emoji:"👩‍🏫"},
+  "police":{ja:"けいさつかん",emoji:"👮"},"firefighter":{ja:"しょうぼうし",emoji:"🚒"},"farmer":{ja:"のうか",emoji:"🧑‍🌾"},
+  "cook":{ja:"りょうりにん",emoji:"👨‍🍳"},"chef":{ja:"シェフ",emoji:"👨‍🍳"},"pilot":{ja:"パイロット",emoji:"👨‍✈️"},
+  "driver":{ja:"うんてんし",emoji:"🚗"},"singer":{ja:"かしゅ",emoji:"🎤"},"artist":{ja:"げいじゅつか",emoji:"🎨"},
+  "scientist":{ja:"かがくしゃ",emoji:"🔬"},"engineer":{ja:"エンジニア",emoji:"⚙️"},"athlete":{ja:"せんしゅ",emoji:"🏅"},
+};
+
 function pickRandomWords(n){
   var pool=POPULAR_WORDS.slice();
   var result=[];
@@ -383,7 +588,9 @@ function triggerOcr(){
           var words=extractWords(text);
           if(!words.length){ocrLoading=false;renderApp();alert("えいたんごがみつかりませんでした");return;}
           recordOcrUsage();
-          slots=words;doneIdxs={};ocrMode=true;ocrLoading=false;renderApp();
+          slots=words;doneIdxs={};ocrMode=true;ocrLoading=false;
+          slotMeta=words.map(function(w){return WORD_DICT[w.toLowerCase()]||null;});
+          renderApp();
         })
         .catch(function(){ocrLoading=false;renderApp();alert("つうしんにしっぱいしました");});
       });
@@ -394,7 +601,8 @@ function triggerOcr(){
 }
 function updateSlot(idx,val){
   slots[idx]=sanitize(val,mode==="sentence"?MAX_SENT_LEN:MAX_WORD_LEN);
-  slotMeta[idx]=null;
+  var word=slots[idx].trim().toLowerCase();
+  slotMeta[idx]=(mode==="word"&&word)?( WORD_DICT[word]||null):null;
   delete doneIdxs[idx];
 }
 function quickAddWord(wi){
@@ -612,9 +820,9 @@ function renderApp(){
 
         var inputWrap=mkDiv("flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;");
         inputWrap.appendChild(inp);
-        if((isActive||isDone)&&slotMeta[i]){
-          var mDiv=mkDiv("display:flex;align-items:center;gap:5px;padding-left:6px;");
-          mDiv.appendChild(mkTxt("span","font-size:"+(T?18:15)+"px;line-height:1;",slotMeta[i].emoji));
+        if(slotMeta[i]){
+          var mDiv=mkDiv("display:flex;align-items:center;gap:5px;padding-left:6px;margin-top:2px;");
+          if(slotMeta[i].emoji)mDiv.appendChild(mkTxt("span","font-size:"+(T?18:15)+"px;line-height:1;",slotMeta[i].emoji));
           mDiv.appendChild(mkTxt("span","font-size:"+(T?13:11)+"px;font-weight:700;color:#764ba2;",slotMeta[i].ja));
           inputWrap.appendChild(mDiv);
         }
