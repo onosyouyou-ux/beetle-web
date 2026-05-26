@@ -9,21 +9,15 @@ export default async function handler(req, res) {
   }
 
   try {
-    const body = await new Promise((resolve, reject) => {
-      let data = "";
-      req.on("data", (chunk) => (data += chunk));
-      req.on("end", () => resolve(data));
-      req.on("error", reject);
-    });
+    const body = req.body;
 
-    const params = new URLSearchParams(body);
     const fd = new FormData();
     fd.append("apikey", apiKey);
-    fd.append("base64Image", params.get("base64Image") || "");
-    fd.append("language", params.get("language") || "eng");
-    fd.append("scale", params.get("scale") || "true");
+    fd.append("base64Image", body.base64Image || "");
+    fd.append("language", body.language || "eng");
+    fd.append("scale", body.scale || "true");
     fd.append("isOverlayRequired", "false");
-    fd.append("OCREngine", params.get("OCREngine") || "2");
+    fd.append("OCREngine", body.OCREngine || "2");
 
     const response = await fetch("https://api.ocr.space/parse/image", {
       method: "POST",
