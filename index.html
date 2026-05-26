@@ -59,7 +59,7 @@ a{text-decoration:none;}
 
 /* Tool cards */
 .tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;}
-.tool-card{background:#fff;border:1px solid #ebebeb;border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 6px 18px rgba(0,0,0,0.06);transition:all .2s;}
+.tool-card{background:#fff;border:1px solid #ebebeb;border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 6px 18px rgba(0,0,0,0.06);transition:all .2s;display:block;color:inherit;}
 .tool-card:hover{box-shadow:0 4px 24px rgba(0,0,0,0.1);transform:translateY(-2px);}
 .tool-card-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
 .tool-icon{width:38px;height:38px;border-radius:10px;background:#2C2C2A;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
@@ -206,11 +206,11 @@ a{text-decoration:none;}
       <p class="section-sub">— 日常のちょっとした困りごとを解決する</p>
     </div>
     <div class="tools-grid">
-      <div class="tool-card">
+      <a class="tool-card" href="tools/eigo/">
         <div class="tool-card-top"><div class="tool-icon">🔤</div><div class="tool-name">えいごよんで！</div></div>
         <p class="tool-desc">「この単語なんて読むの？」教科書を写真に撮るだけでネイティブ発音。小学生のお子さんがいる親御さんへ。</p>
         <span class="tool-tag free">無料</span>
-      </div>
+      </a>
       <div class="tool-card">
         <div class="tool-card-top"><div class="tool-icon">🎴</div><div class="tool-name">MyDeck</div></div>
         <p class="tool-desc">ポケカ・遊戯王・NBA——カード会社の垣根を超えたコレクション管理＆自慢アプリ。</p>
