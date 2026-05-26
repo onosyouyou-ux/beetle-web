@@ -28,7 +28,7 @@ a{text-decoration:none;}
 .hero-q{font-size:42px;font-weight:700;line-height:1.35;margin-bottom:36px;color:#111;letter-spacing:-0.02em;}
 .hero-body{font-size:16px;color:#555;line-height:2.1;margin-bottom:20px;}
 .hero-body-note{font-size:15px;color:#444;line-height:1.9;margin-bottom:40px;}
-.hero-resolve{font-size:17px;font-weight:600;line-height:1.8;color:#1a1a1a;padding:22px 26px;background:#fafafa;border-left:3px solid #EF9F27;margin-bottom:44px;border-radius:0 12px 12px 0;}
+.section-divider{font-size:11px;font-weight:700;color:#aaa;letter-spacing:0.12em;text-transform:uppercase;margin:48px 0 20px;padding-bottom:12px;border-bottom:1px solid #ebebeb;}
 .hero-btns{display:flex;gap:12px;}
 .btn-main{padding:14px 28px;font-size:14px;font-weight:600;background:#2C2C2A;color:#FAC775;border:none;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s;}
 .btn-main:hover{background:#3a3a38;}
@@ -124,7 +124,7 @@ a{text-decoration:none;}
 <div class="hero">
   <div class="container">
     <p class="hero-eyebrow">BEETLE合同会社</p>
-    <p class="hero-q">そうだ、定時に帰ろう。</p>
+    <p class="hero-q">そうだ、<span class="accent">定時</span>に帰ろう。</p>
     <p class="hero-body">
       この業界は、スタートアップ時にかなりの知識がいる。<br>
       バグかどうかもわからない。仕様書も探せない。<br>
@@ -132,7 +132,7 @@ a{text-decoration:none;}
       リズムが崩れる。時間だけが過ぎていく。
     </p>
     <p class="hero-body-note">その時間を少しでも解消できるように、僕は考えた。</p>
-    <p class="hero-resolve">今日は、定時に帰れそうですか？</p>
+    <p class="hero-body-note">今日は、定時に帰れそうですか？</p>
     <div class="hero-btns">
       <button class="btn-main" onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})">→ ツールを見る</button>
       <button class="btn-sub">コラムを読む</button>
@@ -179,11 +179,6 @@ a{text-decoration:none;}
       <p class="section-sub">— 現場を知っている人間が、使えるものを。</p>
     </div>
     <div class="tools-grid">
-      <a class="tool-card" href="tools/eigo/landing.html">
-        <div class="tool-card-top"><div class="tool-icon">🔤</div><div class="tool-name">えいごよんで！</div></div>
-        <p class="tool-desc">「この単語なんて読むの？」教科書を写真に撮るだけでネイティブ発音。小学生のお子さんがいる親御さんへ。</p>
-        <span class="tool-tag free">無料</span>
-      </a>
       <div class="tool-card">
         <div class="tool-card-top"><div class="tool-icon">📸</div><div class="tool-name">バグ起票アシスタント</div></div>
         <p class="tool-desc">スクショを貼るだけ。タイトルと本文を自動生成。「何を書けばいいかわからない」を卒業。</p>
@@ -199,11 +194,15 @@ a{text-decoration:none;}
         <p class="tool-desc">ゼロから考えなくていい。すぐ使えるテスト設計の出発点。</p>
         <span class="tool-tag free">無料</span>
       </div>
-      <div class="tool-card">
-        <div class="tool-card-top"><div class="tool-icon">🎴</div><div class="tool-name">MyDeck</div></div>
-        <p class="tool-desc">ポケカ・遊戯王・NBA——カード会社の垣根を超えたコレクション管理＆自慢アプリ。</p>
-        <span class="tool-tag soon">近日公開</span>
-      </div>
+    </div>
+
+    <p class="section-divider">その他のツール</p>
+    <div class="tools-grid">
+      <a class="tool-card" href="tools/eigo/landing.html">
+        <div class="tool-card-top"><div class="tool-icon">🔤</div><div class="tool-name">えいごよんで！</div></div>
+        <p class="tool-desc">「この単語なんて読むの？」教科書を写真に撮るだけでネイティブ発音。小学生のお子さんがいる親御さんへ。</p>
+        <span class="tool-tag free">無料</span>
+      </a>
     </div>
   </div>
 </div>
