@@ -25,13 +25,10 @@ a{text-decoration:none;}
 /* Hero */
 .hero{padding:96px 0 88px;border-bottom:1px solid #ebebeb;}
 .hero-eyebrow{font-size:11px;font-weight:600;color:#BA7517;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:22px;}
-.hero-q{font-size:40px;font-weight:700;line-height:1.4;margin-bottom:36px;color:#111;letter-spacing:-0.02em;}
-.hero-q .accent{color:#BA7517;}
-.hero-list{list-style:none;margin-bottom:40px;}
-.hero-list li{font-size:16px;color:#555;line-height:2.1;padding-left:22px;position:relative;}
-.hero-list li::before{content:"—";position:absolute;left:0;color:#EF9F27;}
-.hero-resolve{font-size:15px;line-height:2;color:#1a1a1a;padding:22px 26px;background:#fafafa;border-left:3px solid #EF9F27;margin-bottom:44px;border-radius:0 12px 12px 0;}
-.hero-resolve span{font-weight:600;color:#BA7517;}
+.hero-q{font-size:42px;font-weight:700;line-height:1.35;margin-bottom:36px;color:#111;letter-spacing:-0.02em;}
+.hero-body{font-size:16px;color:#555;line-height:2.1;margin-bottom:20px;}
+.hero-body-note{font-size:15px;color:#444;line-height:1.9;margin-bottom:40px;}
+.hero-resolve{font-size:17px;font-weight:600;line-height:1.8;color:#1a1a1a;padding:22px 26px;background:#fafafa;border-left:3px solid #EF9F27;margin-bottom:44px;border-radius:0 12px 12px 0;}
 .hero-btns{display:flex;gap:12px;}
 .btn-main{padding:14px 28px;font-size:14px;font-weight:600;background:#2C2C2A;color:#FAC775;border:none;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s;}
 .btn-main:hover{background:#3a3a38;}
@@ -127,16 +124,15 @@ a{text-decoration:none;}
 <div class="hero">
   <div class="container">
     <p class="hero-eyebrow">BEETLE合同会社</p>
-    <p class="hero-q">あなたが<span class="accent">使いやすい</span>サイト、<br>ありますか？</p>
-    <ul class="hero-list">
-      <li>説明書を読んでも、書いてない。</li>
-      <li>検索しようにも、何を検索すればいいかわからない。</li>
-      <li>やっと見つけたら「詳細は別ファイル参照」。</li>
-    </ul>
-    <p class="hero-resolve">
-      その「あるある」を、なくしたくてツールを作っています。<br>
-      <span>現場を知っている人間が、現場で使えるものを。</span>
+    <p class="hero-q">そうだ、定時に帰ろう。</p>
+    <p class="hero-body">
+      この業界は、スタートアップ時にかなりの知識がいる。<br>
+      バグかどうかもわからない。仕様書も探せない。<br>
+      聞きたくても、エスカレーション先の空きを待つしかない。<br>
+      リズムが崩れる。時間だけが過ぎていく。
     </p>
+    <p class="hero-body-note">その時間を少しでも解消できるように、僕は考えた。</p>
+    <p class="hero-resolve">今日は、定時に帰れそうですか？</p>
     <div class="hero-btns">
       <button class="btn-main" onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})">→ ツールを見る</button>
       <button class="btn-sub">コラムを読む</button>
