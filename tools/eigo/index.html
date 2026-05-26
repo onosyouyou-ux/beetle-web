@@ -81,7 +81,7 @@ textarea{resize:none;}
 <script>
 // ===== 定数 =====
 var APP_VERSION = "2.6";
-var OCR_SPACE_KEY = "K81919831188957";
+var OCR_SPACE_KEY = "";
 var MAX_WORD_LEN = 60;
 var MAX_SENT_LEN = 200;
 var MAX_HISTORY = 50;
@@ -368,14 +368,12 @@ function triggerOcr(){
     var reader=new FileReader();
     reader.onload=function(ev){
       resizeForOcr(ev.target.result,function(resized){
-      var fd=new FormData();
-      fd.append("apikey",OCR_SPACE_KEY);
-      fd.append("base64Image",resized);
-      fd.append("language","eng");
-      fd.append("scale","true");
-      fd.append("isOverlayRequired","false");
-      fd.append("OCREngine","2");
-      fetch("https://api.ocr.space/parse/image",{method:"POST",body:fd})
+      var params=new URLSearchParams();
+      params.append("base64Image",resized);
+      params.append("language","eng");
+      params.append("scale","true");
+      params.append("OCREngine","2");
+      fetch("/api/ocr",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:params.toString()})
         .then(function(r){return r.json();})
         .then(function(data){
           if(data.IsErroredOnProcessing||!data.ParsedResults||!data.ParsedResults.length){

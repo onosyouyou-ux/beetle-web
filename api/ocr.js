@@ -1,0 +1,38 @@
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  const apiKey = process.env.OCR_SPACE_KEY;
+  if (!apiKey) {
+    return res.status(500).json({ error: "API key not configured" });
+  }
+
+  try {
+    const body = await new Promise((resolve, reject) => {
+      let data = "";
+      req.on("data", (chunk) => (data += chunk));
+      req.on("end", () => resolve(data));
+      req.on("error", reject);
+    });
+
+    const params = new URLSearchParams(body);
+    const fd = new FormData();
+    fd.append("apikey", apiKey);
+    fd.append("base64Image", params.get("base64Image") || "");
+    fd.append("language", params.get("language") || "eng");
+    fd.append("scale", params.get("scale") || "true");
+    fd.append("isOverlayRequired", "false");
+    fd.append("OCREngine", params.get("OCREngine") || "2");
+
+    const response = await fetch("https://api.ocr.space/parse/image", {
+      method: "POST",
+      body: fd,
+    });
+
+    const data = await response.json();
+    return res.status(200).json(data);
+  } catch (e) {
+    return res.status(500).json({ error: "Proxy error" });
+  }
+}
