@@ -426,10 +426,10 @@ function loadEntry(id){
   var entry=null;
   for(var i=0;i<historyList.length;i++){if(historyList[i].id===id){entry=historyList[i];break;}}
   if(!entry)return;
-  var n=slotCount();
-  slots=entry.words.slice(0,n);
+  var n=Math.max(slotCount(),entry.words.length);
+  slots=entry.words.slice();
   while(slots.length<n)slots.push("");
-  doneIdxs={};slotMeta=[];if(entry.mode)mode=entry.mode;
+  doneIdxs={};slotMeta=[];ocrMode=false;if(entry.mode)mode=entry.mode;
   tab="practice";renderApp();
 }
 function deleteEntry(id){
@@ -591,7 +591,7 @@ function renderApp(){
         inp.className="slot-input";
         inp.maxLength=isSentence?MAX_SENT_LEN:MAX_WORD_LEN;
         inp.value=val;
-        inp.placeholder=ph[i]||"";
+        inp.placeholder=ph[i]||(isSentence?"えいぶん"+(i+1):"えいご"+(i+1));
         inp.style.cssText="width:100%;font-size:"+(isSentence?(T?16:14):(T?18:16))+"px;font-weight:700;padding:"+(T?"11px 12px":"9px 10px")+";border-radius:12px;border:3px solid "+borderC+";background:"+bgC+";color:#4a3f8f;"+(isActive?"animation:glow 0.8s ease-in-out infinite;":"")+(isSentence?"line-height:1.5;":"letter-spacing:0.5px;");
 
         // 🔊ボタン（先に生成してinpのイベントから参照できるようにする）
