@@ -524,7 +524,7 @@ function renderApp(){
     var ocrRow=mkDiv(mw+"margin-bottom:10px;");
     var ocrBtnEl=mkBtn(
       "width:100%;padding:"+(T?"10px":"9px")+";border-radius:16px;border:2px solid rgba(255,255,255,0.35);background:"+(ocrLoading?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.15)")+";color:rgba(255,255,255,0.95);font-size:"+(T?14:13)+"px;font-weight:700;cursor:"+(ocrLoading?"not-allowed":"pointer")+";letter-spacing:0.3px;",
-      ocrLoading?"🔍 よみとりちゅう...":(ocrRemaining()>0?"📷 しゃしんからえいたんごをとりこむ（のこり"+ocrRemaining()+"かい/日）":"📷 きょうのじょうげんにたっしました（"+OCR_DAILY_LIMIT+"かい/日）"),
+      ocrLoading?"🔍 よみとりちゅう...":(ocrRemaining()>0?"📷 カメラからえいたんごをとりこむ（のこり"+ocrRemaining()+"かい/日）":"📷 きょうのじょうげんにたっしました（"+OCR_DAILY_LIMIT+"かい/日）"),
       function(){if(!ocrLoading)triggerOcr();}
     );
     ocrBtnEl.disabled=ocrLoading;
@@ -547,7 +547,7 @@ function renderApp(){
     // OCRモード表示
     if(ocrMode){
       var ocrTag=mkDiv("display:flex;align-items:center;justify-content:space-between;margin-bottom:"+(T?12:10)+"px;");
-      ocrTag.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#764ba2;font-weight:700;","📷 しゃしんから "+n+" ごをとりこみました"));
+      ocrTag.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#764ba2;font-weight:700;","📷 カメラから "+n+" ごをとりこみました"));
       var ocrClearBtn=mkBtn("font-size:"+(T?12:11)+"px;color:#aaa;background:none;border:none;cursor:pointer;padding:0;","× ふつうにもどる",function(){clearAll();});
       ocrTag.appendChild(ocrClearBtn);
       card.appendChild(ocrTag);
