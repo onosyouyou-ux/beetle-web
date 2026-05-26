@@ -309,6 +309,7 @@ function spawnStars(){
 function switchTab(t){tab=t;renderApp();}
 function switchMode(m){stopAll();slots=[];slotMeta=[];ocrMode=false;initSlots();doneIdxs={};mode=m;renderApp();}
 function clearAll(){stopAll();slots=[];slotMeta=[];ocrMode=false;initSlots();doneIdxs={};renderApp();}
+function addSlot(){slots.push("");slotMeta.push(null);renderApp();}
 
 function switchRate(r){rate=r;renderApp();}
 var STOP_WORDS={the:1,a:1,an:1,and:1,or:1,but:1,so:1,yet:1,nor:1,for:1,
@@ -453,7 +454,6 @@ function renderApp(){
   var n=ocrMode?slots.length:slotCount();
   if(!ocrMode){
     while(slots.length<n)slots.push("");
-    while(slots.length>n)slots.pop();
   }
 
   var isSentence=mode==="sentence";
@@ -626,6 +626,16 @@ function renderApp(){
       })(i);
     }
     card.appendChild(slotWrap);
+
+    // ことばをついかボタン
+    if(!ocrMode){
+      var addBtn=mkBtn(
+        "width:100%;padding:"+(T?"10px":"9px")+";margin-bottom:"+(T?12:10)+"px;border-radius:14px;border:2px dashed #c4b5fd;background:transparent;color:#764ba2;font-size:"+(T?14:13)+"px;font-weight:700;cursor:pointer;",
+        "＋ ことばをついか",
+        addSlot
+      );
+      card.appendChild(addBtn);
+    }
 
     // スピードボタン
     var speedRow=mkDiv("display:flex;align-items:center;gap:8px;margin-bottom:"+(T?14:10)+"px;");
