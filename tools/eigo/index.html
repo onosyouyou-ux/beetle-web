@@ -400,16 +400,16 @@ function updateSlot(idx,val){
 }
 function quickAddWord(wi){
   var ei=-1;for(var i=0;i<slots.length;i++){if(!slots[i].trim()){ei=i;break;}}
-  if(ei>=0){
-    var item=SAMPLE_WORDS[wi];
-    slots[ei]=item.word;
-    slotMeta[ei]={emoji:item.emoji,ja:item.ja};
-    renderApp();
-  }
+  if(ei<0){slots.push("");slotMeta.push(null);ei=slots.length-1;}
+  var item=SAMPLE_WORDS[wi];
+  slots[ei]=item.word;
+  slotMeta[ei]={emoji:item.emoji,ja:item.ja};
+  renderApp();
 }
 function quickAddSentence(si){
   var ei=-1;for(var i=0;i<slots.length;i++){if(!slots[i].trim()){ei=i;break;}}
-  if(ei>=0){slots[ei]=SAMPLE_SENTENCES[si];renderApp();}
+  if(ei<0){slots.push("");slotMeta.push(null);ei=slots.length-1;}
+  slots[ei]=SAMPLE_SENTENCES[si];renderApp();
 }
 function saveEntry(){
   var words=slots.filter(function(s){return s.trim();});
@@ -823,7 +823,7 @@ function renderApp(){
         var n=slotCount();
         if(slots.length<n)while(slots.length<n)slots.push("");
         var ei=-1;for(var i=0;i<slots.length;i++){if(!slots[i].trim()){ei=i;break;}}
-        if(ei<0)ei=0;
+        if(ei<0){slots.push("");slotMeta.push(null);ei=slots.length-1;}
         slots[ei]=w2;slotMeta[ei]=null;
         doneIdxs={};mode="word";tab="practice";renderApp();
       };})(w));
