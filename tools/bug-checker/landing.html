@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="バグのスクショを貼るだけ。AIがバグか否かを判定し、起票タイトル・再現手順・期待値・実際の動作を自動生成。テスト担当者・開発者向け無料ツール。">
+<title>これってバグなの？| バグ起票アシスタント</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
+  background:linear-gradient(160deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
+  min-height:100vh;
+  color:#fff;
+  overflow-x:hidden;
+}
+
+body::before{content:'';position:fixed;width:300px;height:300px;background:rgba(220,50,50,0.08);border-radius:50%;top:-80px;left:-80px;pointer-events:none;animation:float 6s ease-in-out infinite alternate;}
+body::after{content:'';position:fixed;width:220px;height:220px;background:rgba(255,100,0,0.07);border-radius:50%;bottom:-60px;right:-60px;pointer-events:none;animation:float 8s ease-in-out infinite alternate-reverse;}
+@keyframes float{from{transform:translateY(0)}to{transform:translateY(-30px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+.container{
+  max-width:640px;
+  margin:0 auto;
+  padding:0 20px 60px;
+  position:relative;z-index:1;
+}
+
+.site-header{
+  display:flex;align-items:center;justify-content:center;
+  padding:24px 0 0;
+}
+.logo-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:99px;
+  padding:8px 18px 8px 10px;
+  backdrop-filter:blur(10px);
+  text-decoration:none;color:#fff;
+  font-size:13px;font-weight:700;letter-spacing:1px;
+  transition:background .2s;
+}
+.logo-pill:hover{background:rgba(255,255,255,0.18);}
+.logo-mark{width:28px;height:28px;background:rgba(255,255,255,0.15);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+
+.hero{
+  text-align:center;
+  padding:48px 0 36px;
+  animation:fadeUp .7s ease both;
+}
+.hero-emoji{
+  font-size:80px;
+  display:block;
+  margin-bottom:12px;
+  animation:bounce 2.5s ease-in-out infinite;
+}
+.hero-label{
+  display:inline-block;
+  background:rgba(220,50,50,0.3);
+  border:1px solid rgba(220,50,50,0.5);
+  border-radius:4px;
+  padding:3px 10px;
+  font-size:11px;font-weight:700;letter-spacing:2px;
+  color:#ff8080;
+  margin-bottom:14px;
+}
+.hero-title{
+  font-size:clamp(28px,7vw,48px);
+  font-weight:900;
+  text-shadow:0 4px 20px rgba(0,0,0,0.4);
+  margin-bottom:10px;
+  letter-spacing:2px;
+}
+.hero-sub{
+  font-size:clamp(14px,3.5vw,17px);
+  color:rgba(255,255,255,0.8);
+  line-height:1.8;
+  margin-bottom:32px;
+}
+.hero-sub strong{color:#fff;}
+
+.cta-btn{
+  display:inline-block;
+  background:linear-gradient(135deg,#e53935 0%,#ff6b35 100%);
+  color:#fff;
+  font-size:clamp(16px,4vw,19px);
+  font-weight:900;
+  padding:18px 48px;
+  border-radius:99px;
+  text-decoration:none;
+  box-shadow:0 8px 30px rgba(229,57,53,0.4),0 0 0 4px rgba(255,255,255,0.1);
+  transition:transform .18s,box-shadow .18s;
+  letter-spacing:1px;
+  animation:popIn .6s .3s ease both;
+}
+.cta-btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 14px 40px rgba(229,57,53,0.5),0 0 0 6px rgba(255,255,255,0.15);}
+.cta-btn:active{transform:translateY(0) scale(0.98);}
+
+.arrow-down{
+  display:block;
+  margin:40px auto 0;
+  font-size:28px;
+  opacity:.6;
+  animation:bounce 2s ease-in-out infinite;
+}
+
+.section-title{
+  text-align:center;
+  font-size:clamp(17px,4vw,22px);
+  font-weight:900;
+  margin-bottom:24px;
+  color:rgba(255,255,255,0.95);
+  letter-spacing:1px;
+}
+
+/* ペインポイント */
+.pain-section{
+  margin-bottom:48px;
+  animation:fadeUp .6s .1s ease both;
+}
+.pain-bubble{
+  display:flex;align-items:flex-end;gap:12px;margin-bottom:20px;
+}
+.pain-icon{font-size:48px;flex-shrink:0;}
+.pain-speech{
+  background:rgba(255,255,255,0.95);
+  color:#333;
+  border-radius:20px 20px 20px 4px;
+  padding:14px 18px;
+  font-size:clamp(14px,3.5vw,16px);
+  font-weight:700;
+  line-height:1.5;
+  box-shadow:0 4px 16px rgba(0,0,0,0.2);
+}
+.pain-speech-label{display:block;font-size:11px;color:#999;font-weight:500;margin-bottom:4px;}
+.pain-detail{
+  display:flex;gap:12px;
+  background:rgba(0,0,0,0.2);
+  border-radius:20px;padding:20px;margin-bottom:16px;
+}
+.pain-detail-icon{font-size:36px;flex-shrink:0;margin-top:2px;}
+.pain-detail-text{font-size:clamp(13px,3vw,15px);color:rgba(255,255,255,0.85);line-height:1.8;}
+.pain-detail-text strong{color:#fff;}
+.pain-solution{
+  display:flex;gap:12px;
+  background:rgba(229,57,53,0.2);
+  border:2px solid rgba(229,57,53,0.5);
+  border-radius:20px;padding:20px;
+}
+.pain-solution-icon{font-size:36px;flex-shrink:0;margin-top:2px;}
+.pain-solution-text{font-size:clamp(14px,3.5vw,16px);color:#fff;line-height:1.8;}
+.pain-solution-text strong{font-size:clamp(16px,4vw,19px);display:block;margin-bottom:4px;}
+
+/* 特徴 */
+.features{display:flex;flex-direction:column;gap:16px;margin-bottom:48px;}
+.feature-card{
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:20px;padding:22px 20px;
+  backdrop-filter:blur(12px);
+  display:flex;gap:18px;align-items:flex-start;
+  animation:fadeUp .6s ease both;
+}
+.feature-card:nth-child(2){animation-delay:.1s;}
+.feature-card:nth-child(3){animation-delay:.2s;}
+.feature-icon{font-size:44px;flex-shrink:0;line-height:1;}
+.feature-name{font-size:clamp(15px,3.8vw,18px);font-weight:900;margin-bottom:6px;color:#fff;}
+.feature-desc{font-size:clamp(13px,3vw,14px);color:rgba(255,255,255,0.75);line-height:1.7;}
+.feature-tag{
+  display:inline-block;
+  background:rgba(229,57,53,0.25);
+  border:1px solid rgba(229,57,53,0.4);
+  border-radius:99px;padding:2px 10px;
+  font-size:11px;font-weight:700;margin-top:8px;letter-spacing:.5px;
+  color:#ff9090;margin-right:6px;
+}
+
+/* ステップ */
+.steps{display:flex;flex-direction:column;gap:0;margin-bottom:48px;}
+.step{display:flex;gap:16px;align-items:flex-start;animation:fadeUp .6s ease both;}
+.step:nth-child(2){animation-delay:.1s;}
+.step:nth-child(3){animation-delay:.2s;}
+.step-line{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.step-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#e53935,#ff6b35);font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(229,57,53,0.4);}
+.step-connector{width:2px;flex:1;min-height:24px;background:rgba(255,255,255,0.15);margin:4px 0;}
+.step:last-child .step-connector{display:none;}
+.step-content{padding:4px 0 28px;}
+.step-label{font-size:clamp(14px,3.5vw,16px);font-weight:900;color:#fff;margin-bottom:4px;}
+.step-note{font-size:clamp(12px,3vw,14px);color:rgba(255,255,255,0.7);line-height:1.6;}
+
+/* バッジ */
+.badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:40px;}
+.badge{
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:99px;padding:8px 18px;
+  font-size:13px;font-weight:700;backdrop-filter:blur(8px);
+}
+
+/* CTA下部 */
+.cta-bottom{text-align:center;animation:fadeUp .6s .2s ease both;}
+.cta-bottom .cta-btn{font-size:clamp(17px,4.5vw,21px);padding:20px 56px;}
+.cta-note{margin-top:14px;font-size:12px;color:rgba(255,255,255,0.5);}
+
+footer{text-align:center;padding:24px 0 0;color:rgba(255,255,255,0.35);font-size:12px;line-height:2;}
+footer a{color:rgba(255,255,255,0.45);text-decoration:none;}
+footer a:hover{color:#fff;}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ヘッダー -->
+  <header class="site-header">
+    <a class="logo-pill" href="https://www.beetle-web.jp" target="_blank" rel="noopener">
+      <span class="logo-mark">🪲</span>
+      <span>BEETLE 合同会社</span>
+    </a>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <span class="hero-emoji">🐛</span>
+    <div class="hero-label">BUG DETECTOR</div>
+    <h1 class="hero-title">これってバグなの？</h1>
+    <p class="hero-sub">
+      画像を貼るだけで<strong>バグか否かを即判定</strong>。<br>
+      バグなら<strong>起票内容を自動生成</strong>します。<br>
+      タイトル・再現手順・期待値まで全部出てくる。
+    </p>
+    <a class="cta-btn" href="https://bug-checker.vercel.app" target="_blank" rel="noopener">🔍 バグスキャンを試す</a>
+    <span class="arrow-down">↓</span>
+  </section>
+
+  <!-- ペインポイント -->
+  <section class="pain-section">
+    <div class="pain-bubble">
+      <span class="pain-icon">😵</span>
+      <div class="pain-speech">
+        <span class="pain-speech-label">テスト中のあるある…</span>
+        「これバグ？仕様？どっちだろ…」
+      </div>
+    </div>
+    <div class="pain-detail">
+      <span class="pain-detail-icon">😤</span>
+      <p class="pain-detail-text">
+        怪しい挙動を見つけたけど、バグか仕様か判断に迷う。<br>
+        起票しようにも<strong>「何を書けばいいか」</strong>がわからない。<br>
+        毎回ゼロから書くのも地味にしんどい。
+      </p>
+    </div>
+    <div class="pain-solution">
+      <span class="pain-solution-icon">✨</span>
+      <p class="pain-solution-text">
+        <strong>スクショを貼るだけで解決！</strong>
+        AIが画面を見てバグ判定 → 起票テンプレートを一発生成。<br>
+        あとはコピーして貼るだけ。
+      </p>
+    </div>
+  </section>
+
+  <!-- 特徴 -->
+  <h2 class="section-title">✨ できること</h2>
+  <div class="features">
+
+    <div class="feature-card">
+      <span class="feature-icon">🔍</span>
+      <div>
+        <div class="feature-name">バグか否かをAIが判定</div>
+        <div class="feature-desc">
+          スクショを見てAIが「バグ・仕様・不明」を判定。<br>
+          判断に迷う時間をゼロにします。
+        </div>
+        <span class="feature-tag">🐛 バグ / 仕様 / 不明</span>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">📋</span>
+      <div>
+        <div class="feature-name">起票内容を自動生成</div>
+        <div class="feature-desc">
+          タイトル・深刻度・再現手順・期待値・実際の動作まで自動で出力。<br>
+          コピーしてそのままチケットに貼れます。
+        </div>
+        <span class="feature-tag">📝 Jira / Redmine 等に対応</span>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">⚡</span>
+      <div>
+        <div class="feature-name">貼って3秒で完了</div>
+        <div class="feature-desc">
+          ログイン不要・インストール不要。<br>
+          ブラウザを開いてスクショを貼るだけ。
+        </div>
+        <span class="feature-tag">🆓 月1万回まで無料</span>
+        <span class="feature-tag">🔒 登録不要</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 使い方 -->
+  <h2 class="section-title">🪄 使い方</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-line">
+        <div class="step-num">1</div>
+        <div class="step-connector"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">📸 スクショを貼る</div>
+        <div class="step-note">気になる画面のスクリーンショットをドラッグ&ドロップ、またはクリックして選択。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-line">
+        <div class="step-num">2</div>
+        <div class="step-connector"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">🔍 バグスキャン実行</div>
+        <div class="step-note">ボタンを押すだけ。AIが画面を解析してバグか否かを判定します。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-line">
+        <div class="step-num">3</div>
+        <div class="step-connector"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">📋 起票内容をコピー</div>
+        <div class="step-note">自動生成された起票内容をコピーして、Jira や Redmine に貼り付けて完了。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- バッジ -->
+  <div class="badges">
+    <span class="badge">🆓 月1万回まで無料</span>
+    <span class="badge">📱 スマホ対応</span>
+    <span class="badge">🔒 登録不要</span>
+    <span class="badge">🌐 ブラウザで動く</span>
+    <span class="badge">⚡ インストール不要</span>
+  </div>
+
+  <!-- CTA下部 -->
+  <div class="cta-bottom">
+    <a class="cta-btn" href="https://bug-checker.vercel.app" target="_blank" rel="noopener">🔍 さっそく試してみる</a>
+    <p class="cta-note">登録不要・インストール不要・月1万回まで無料</p>
+  </div>
+
+  <!-- フッター -->
+  <footer>
+    <p>© 2026 <a href="https://www.beetle-web.jp" target="_blank" rel="noopener">BEETLE 合同会社</a></p>
+  </footer>
+
+</div>
+
+</body>
+</html>
