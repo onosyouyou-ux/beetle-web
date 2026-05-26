@@ -6,117 +6,141 @@
 <title>BEETLE合同会社 | QA &amp; ツール開発</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',sans-serif;color:#1a1a1a;background:#fff;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI',sans-serif;color:#1a1a1a;background:#fff;-webkit-font-smoothing:antialiased;}
 a{text-decoration:none;}
-.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid #e5e5e5;position:sticky;top:0;background:#fff;z-index:100;}
+
+.container{max-width:860px;margin:0 auto;padding:0 40px;}
+
+/* Nav */
+.nav{border-bottom:1px solid #ebebeb;position:sticky;top:0;background:rgba(255,255,255,0.96);backdrop-filter:blur(8px);z-index:100;}
+.nav-inner{max-width:860px;margin:0 auto;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;}
 .logo{display:flex;align-items:center;gap:10px;}
 .logo-mark{width:36px;height:36px;background:#2C2C2A;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
-.logo-name{font-size:15px;font-weight:500;color:#1a1a1a;}
-.logo-sub{font-size:11px;color:#888;display:block;}
-.nav-links{display:flex;gap:20px;}
-.nav-links a{font-size:13px;color:#555;}
+.logo-name{font-size:15px;font-weight:600;color:#1a1a1a;}
+.logo-sub{font-size:11px;color:#aaa;display:block;margin-top:1px;}
+.nav-links{display:flex;gap:28px;}
+.nav-links a{font-size:13px;color:#666;transition:color .15s;}
 .nav-links a:hover{color:#1a1a1a;}
 
-.hero{padding:52px 24px 32px;border-bottom:1px solid #e5e5e5;}
-.hero-q{font-size:22px;font-weight:500;line-height:1.5;margin-bottom:24px;color:#1a1a1a;}
+/* Hero */
+.hero{padding:96px 0 88px;border-bottom:1px solid #ebebeb;}
+.hero-eyebrow{font-size:11px;font-weight:600;color:#BA7517;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:22px;}
+.hero-q{font-size:40px;font-weight:700;line-height:1.4;margin-bottom:36px;color:#111;letter-spacing:-0.02em;}
 .hero-q .accent{color:#BA7517;}
-.hero-list{list-style:none;margin-bottom:24px;}
-.hero-list li{font-size:14px;color:#555;line-height:1.9;padding-left:16px;position:relative;}
+.hero-list{list-style:none;margin-bottom:40px;}
+.hero-list li{font-size:16px;color:#555;line-height:2.1;padding-left:22px;position:relative;}
 .hero-list li::before{content:"—";position:absolute;left:0;color:#EF9F27;}
-.hero-resolve{font-size:14px;line-height:1.9;color:#1a1a1a;padding:16px 20px;background:#fafafa;border-left:3px solid #EF9F27;margin-bottom:28px;border-radius:0 8px 8px 0;}
-.hero-resolve span{font-weight:500;color:#BA7517;}
-.hero-btns{display:flex;gap:10px;}
-.btn-main{padding:11px 22px;font-size:14px;font-weight:500;background:#2C2C2A;color:#FAC775;border:none;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+.hero-resolve{font-size:15px;line-height:2;color:#1a1a1a;padding:22px 26px;background:#fafafa;border-left:3px solid #EF9F27;margin-bottom:44px;border-radius:0 12px 12px 0;}
+.hero-resolve span{font-weight:600;color:#BA7517;}
+.hero-btns{display:flex;gap:12px;}
+.btn-main{padding:14px 28px;font-size:14px;font-weight:600;background:#2C2C2A;color:#FAC775;border:none;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s;}
 .btn-main:hover{background:#3a3a38;}
-.btn-sub{padding:11px 22px;font-size:14px;background:none;color:#555;border:1px solid #ddd;border-radius:8px;cursor:pointer;}
+.btn-sub{padding:14px 28px;font-size:14px;background:none;color:#555;border:1px solid #ddd;border-radius:8px;cursor:pointer;transition:all .15s;}
 .btn-sub:hover{border-color:#aaa;color:#1a1a1a;}
 
-.marquee-wrap{overflow:hidden;padding:10px 0;background:#fafafa;border-bottom:1px solid #e5e5e5;}
-.marquee{display:flex;gap:28px;animation:scroll 20s linear infinite;white-space:nowrap;}
+/* Marquee */
+.marquee-wrap{overflow:hidden;padding:14px 0;background:#fafafa;border-bottom:1px solid #ebebeb;}
+.marquee{display:flex;gap:40px;animation:scroll 22s linear infinite;white-space:nowrap;}
 @keyframes scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
-.marquee-item{font-size:12px;color:#999;}
+.marquee-item{font-size:12px;color:#bbb;}
 
-.section{padding:32px 24px;border-bottom:1px solid #e5e5e5;}
-.section-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px;}
-.section-num{font-size:28px;font-weight:500;color:#FAEEDA;line-height:1;}
-.section-title{font-size:18px;font-weight:500;color:#1a1a1a;}
-.section-sub{font-size:13px;color:#888;margin-bottom:20px;}
+/* Section */
+.section{padding:80px 0;border-bottom:1px solid #ebebeb;}
+.section-header{margin-bottom:48px;}
+.section-num{font-size:11px;font-weight:700;color:#BA7517;letter-spacing:0.14em;display:block;margin-bottom:10px;}
+.section-title{font-size:26px;font-weight:700;color:#111;letter-spacing:-0.01em;line-height:1.3;}
+.section-sub{font-size:14px;color:#999;margin-top:8px;}
 
-.senior-intro{margin-bottom:24px;padding:20px;background:#fafafa;border-radius:12px;border:1px solid #e5e5e5;}
-.senior-intro p{font-size:13px;color:#444;line-height:2;}
-.senior-intro .whisper{font-size:13px;color:#888;margin-top:12px;padding-top:12px;border-top:1px solid #e5e5e5;line-height:1.8;}
+/* Senior intro */
+.senior-intro{margin-bottom:36px;padding:28px 32px;background:#fafafa;border-radius:16px;border:1px solid #ebebeb;}
+.senior-intro p{font-size:15px;color:#444;line-height:2.1;}
+.senior-intro .whisper{font-size:13px;color:#aaa;margin-top:18px;padding-top:18px;border-top:1px solid #e8e8e8;line-height:1.9;}
 .senior-intro .whisper span{color:#BA7517;font-weight:500;}
 
-.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;}
-.tool-card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:16px;transition:border-color .15s;}
-.tool-card:hover{border-color:#BA7517;}
-.tool-card-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.tool-icon{width:32px;height:32px;border-radius:8px;background:#2C2C2A;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
-.tool-name{font-size:13px;font-weight:500;color:#1a1a1a;}
-.tool-desc{font-size:12px;color:#666;line-height:1.6;margin-bottom:8px;}
-.tool-tag{font-size:11px;padding:2px 8px;border-radius:99px;display:inline-block;}
+/* Tool cards */
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;}
+.tool-card{background:#fff;border:1px solid #ebebeb;border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 6px 18px rgba(0,0,0,0.06);transition:all .2s;}
+.tool-card:hover{box-shadow:0 4px 24px rgba(0,0,0,0.1);transform:translateY(-2px);}
+.tool-card-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.tool-icon{width:38px;height:38px;border-radius:10px;background:#2C2C2A;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.tool-name{font-size:14px;font-weight:600;color:#1a1a1a;}
+.tool-desc{font-size:13px;color:#666;line-height:1.8;margin-bottom:16px;}
+.tool-tag{font-size:11px;padding:3px 10px;border-radius:99px;display:inline-block;font-weight:500;}
 .tool-tag.free{background:#e8f5e9;color:#2e7d32;}
-.tool-tag.wip{background:#FAEEDA;color:#854F0B;}
-.tool-tag.soon{background:#f3f3f3;color:#888;}
+.tool-tag.wip{background:#FEF3E2;color:#9a5700;}
+.tool-tag.soon{background:#f3f3f3;color:#999;}
 
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;}
-.card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:16px;}
-.card-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
-.card-icon{width:32px;height:32px;border-radius:8px;background:#2C2C2A;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;}
-.card h3{font-size:13px;font-weight:500;color:#1a1a1a;}
-.card p{font-size:12px;color:#666;line-height:1.6;}
+/* Service cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;}
+.card{background:#fff;border:1px solid #ebebeb;border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 6px 18px rgba(0,0,0,0.06);}
+.card-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.card-icon{width:38px;height:38px;border-radius:10px;background:#2C2C2A;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;}
+.card h3{font-size:14px;font-weight:600;color:#1a1a1a;}
+.card p{font-size:13px;color:#666;line-height:1.8;}
 
-.about-block{display:flex;gap:20px;align-items:flex-start;}
-.avatar{width:64px;height:64px;border-radius:50%;background:#2C2C2A;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500;color:#EF9F27;flex-shrink:0;}
-.about-body h3{font-size:15px;font-weight:500;margin-bottom:10px;color:#1a1a1a;}
-.about-body .intro{font-size:14px;color:#444;line-height:1.9;margin-bottom:14px;}
-.about-body .tagline{font-size:13px;color:#444;padding:12px 16px;background:#fafafa;border-left:3px solid #EF9F27;border-radius:0 8px 8px 0;margin-bottom:14px;line-height:1.8;}
-.about-body .tagline span{color:#BA7517;font-weight:500;}
-.more-link{display:inline-flex;align-items:center;gap:4px;font-size:13px;color:#BA7517;border-bottom:1px solid #FAEEDA;padding-bottom:2px;}
-.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px;}
-.tag{font-size:11px;padding:3px 8px;background:#fafafa;border:1px solid #e5e5e5;border-radius:99px;color:#666;}
+/* About */
+.about-block{display:flex;gap:32px;align-items:flex-start;}
+.avatar{width:72px;height:72px;border-radius:50%;background:#2C2C2A;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#EF9F27;flex-shrink:0;}
+.about-body h3{font-size:16px;font-weight:600;margin-bottom:14px;color:#1a1a1a;}
+.about-body .intro{font-size:15px;color:#444;line-height:2;margin-bottom:18px;}
+.about-body .tagline{font-size:14px;color:#444;padding:18px 22px;background:#fafafa;border-left:3px solid #EF9F27;border-radius:0 12px 12px 0;margin-bottom:18px;line-height:1.9;}
+.about-body .tagline span{color:#BA7517;font-weight:600;}
+.more-link{display:inline-flex;align-items:center;gap:4px;font-size:14px;color:#BA7517;border-bottom:1px solid #FAEEDA;padding-bottom:2px;transition:border-color .15s;}
+.more-link:hover{border-color:#BA7517;}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:18px;}
+.tag{font-size:11px;padding:4px 10px;background:#fafafa;border:1px solid #ebebeb;border-radius:99px;color:#777;}
 
-.cta{padding:40px 24px;text-align:center;}
-.cta h2{font-size:20px;font-weight:500;margin-bottom:8px;color:#1a1a1a;}
+/* CTA */
+.cta{padding:100px 40px;text-align:center;}
+.cta h2{font-size:28px;font-weight:700;margin-bottom:14px;color:#111;letter-spacing:-0.01em;}
 .cta h2 span{color:#BA7517;}
-.cta p{font-size:14px;color:#555;margin-bottom:24px;line-height:1.8;}
+.cta p{font-size:15px;color:#555;margin-bottom:36px;line-height:2;}
 
-.footer{padding:16px 24px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e5e5e5;}
-.footer-copy{font-size:12px;color:#999;}
+/* Footer */
+.footer{padding:24px 40px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #ebebeb;}
+.footer-copy{font-size:12px;color:#bbb;}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{font-size:13px;color:#aaa;transition:color .15s;}
+.footer-links a:hover{color:#555;}
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <div class="logo">
-    <div class="logo-mark">🪲</div>
-    <div>
-      <span class="logo-name">BEETLE合同会社</span>
-      <span class="logo-sub">QA &amp; ツール開発</span>
+  <div class="nav-inner">
+    <div class="logo">
+      <div class="logo-mark">🪲</div>
+      <div>
+        <span class="logo-name">BEETLE合同会社</span>
+        <span class="logo-sub">QA &amp; ツール開発</span>
+      </div>
     </div>
-  </div>
-  <div class="nav-links">
-    <a href="#tools">ツール</a>
-    <a href="#about">について</a>
-    <a href="#">コラム</a>
-    <a href="#contact">お問い合わせ</a>
+    <div class="nav-links">
+      <a href="#tools">ツール</a>
+      <a href="#about">について</a>
+      <a href="#">コラム</a>
+      <a href="#contact">お問い合わせ</a>
+    </div>
   </div>
 </nav>
 
 <div class="hero">
-  <p class="hero-q">あなたが<span class="accent">使いやすい</span>サイト、<br>ありますか？</p>
-  <ul class="hero-list">
-    <li>説明書を読んでも、書いてない。</li>
-    <li>検索しようにも、何を検索すればいいかわからない。</li>
-    <li>やっと見つけたら「詳細は別ファイル参照」。</li>
-  </ul>
-  <p class="hero-resolve">
-    その「あるある」を、なくしたくてツールを作っています。<br>
-    <span>現場を知っている人間が、現場で使えるものを。</span>
-  </p>
-  <div class="hero-btns">
-    <button class="btn-main" onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})">→ ツールを見る</button>
-    <button class="btn-sub">コラムを読む</button>
+  <div class="container">
+    <p class="hero-eyebrow">BEETLE合同会社</p>
+    <p class="hero-q">あなたが<span class="accent">使いやすい</span>サイト、<br>ありますか？</p>
+    <ul class="hero-list">
+      <li>説明書を読んでも、書いてない。</li>
+      <li>検索しようにも、何を検索すればいいかわからない。</li>
+      <li>やっと見つけたら「詳細は別ファイル参照」。</li>
+    </ul>
+    <p class="hero-resolve">
+      その「あるある」を、なくしたくてツールを作っています。<br>
+      <span>現場を知っている人間が、現場で使えるものを。</span>
+    </p>
+    <div class="hero-btns">
+      <button class="btn-main" onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})">→ ツールを見る</button>
+      <button class="btn-sub">コラムを読む</button>
+    </div>
   </div>
 </div>
 
@@ -140,85 +164,105 @@ a{text-decoration:none;}
 </div>
 
 <div class="section" id="tools">
-  <div class="section-head"><span class="section-num">01</span><span class="section-title">自分が困ったから、作った。</span></div>
-  <p class="section-sub">— 新人・検証者のためのツール</p>
-  <div class="senior-intro">
-    <p>
-      単体も通らないシステムをQAしてた。<br>
-      「使いにくい」をどこに起票すればいいかわからなかった。<br>
-      バグ票の書き方、誰も教えてくれなかった。
-    </p>
-    <p class="whisper">そのまま新人にさせたくなくて、ツールを作りはじめた。<span>——現場10年の先輩より。</span></p>
-  </div>
-  <div class="tools-grid">
-    <div class="tool-card">
-      <div class="tool-card-top"><div class="tool-icon">📸</div><div class="tool-name">バグ起票アシスタント</div></div>
-      <p class="tool-desc">スクショを貼るだけ。タイトルと本文を自動生成。「何を書けばいいかわからない」を卒業。</p>
-      <span class="tool-tag wip">開発中</span>
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">自分が困ったから、作った。</h2>
+      <p class="section-sub">— 新人・検証者のためのツール</p>
     </div>
-    <div class="tool-card">
-      <div class="tool-card-top"><div class="tool-icon">🖼</div><div class="tool-name">UI部品名鑑</div></div>
-      <p class="tool-desc">「このボタンみたいなやつ、なんて言うの？」画面をキャプチャしたら部品名がわかる。</p>
-      <span class="tool-tag wip">開発中</span>
+    <div class="senior-intro">
+      <p>
+        単体も通らないシステムをQAしてた。<br>
+        「使いにくい」をどこに起票すればいいかわからなかった。<br>
+        バグ票の書き方、誰も教えてくれなかった。
+      </p>
+      <p class="whisper">そのまま新人にさせたくなくて、ツールを作りはじめた。<span>——現場10年の先輩より。</span></p>
     </div>
-    <div class="tool-card">
-      <div class="tool-card-top"><div class="tool-icon">✅</div><div class="tool-name">テスト観点テンプレ</div></div>
-      <p class="tool-desc">ゼロから考えなくていい。すぐ使えるテスト設計の出発点。</p>
-      <span class="tool-tag free">無料</span>
-    </div>
-  </div>
-</div>
-
-<div class="section">
-  <div class="section-head"><span class="section-num">02</span><span class="section-title">みんなのためのツール</span></div>
-  <p class="section-sub">— 日常のちょっとした困りごとを解決する</p>
-  <div class="tools-grid">
-    <div class="tool-card">
-      <div class="tool-card-top"><div class="tool-icon">🔤</div><div class="tool-name">えいごよんで！</div></div>
-      <p class="tool-desc">「この単語なんて読むの？」教科書を写真に撮るだけでネイティブ発音。小学生のお子さんがいる親御さんへ。</p>
-      <span class="tool-tag free">無料</span>
-    </div>
-    <div class="tool-card">
-      <div class="tool-card-top"><div class="tool-icon">🎴</div><div class="tool-name">MyDeck</div></div>
-      <p class="tool-desc">ポケカ・遊戯王・NBA——カード会社の垣根を超えたコレクション管理＆自慢アプリ。</p>
-      <span class="tool-tag soon">近日公開</span>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-card-top"><div class="tool-icon">📸</div><div class="tool-name">バグ起票アシスタント</div></div>
+        <p class="tool-desc">スクショを貼るだけ。タイトルと本文を自動生成。「何を書けばいいかわからない」を卒業。</p>
+        <span class="tool-tag wip">開発中</span>
+      </div>
+      <div class="tool-card">
+        <div class="tool-card-top"><div class="tool-icon">🖼</div><div class="tool-name">UI部品名鑑</div></div>
+        <p class="tool-desc">「このボタンみたいなやつ、なんて言うの？」画面をキャプチャしたら部品名がわかる。</p>
+        <span class="tool-tag wip">開発中</span>
+      </div>
+      <div class="tool-card">
+        <div class="tool-card-top"><div class="tool-icon">✅</div><div class="tool-name">テスト観点テンプレ</div></div>
+        <p class="tool-desc">ゼロから考えなくていい。すぐ使えるテスト設計の出発点。</p>
+        <span class="tool-tag free">無料</span>
+      </div>
     </div>
   </div>
 </div>
 
 <div class="section">
-  <div class="section-head"><span class="section-num">03</span><span class="section-title">できること</span></div>
-  <div class="cards">
-    <div class="card"><div class="card-top"><div class="card-icon">📋</div><h3>QAエンジニアリング</h3></div><p>テスト設計・バグ起票・仕様確認・Backlog管理まで。現場を知り尽くした視点で動きます。</p></div>
-    <div class="card"><div class="card-top"><div class="card-icon">🧠</div><h3>AI活用支援</h3></div><p>ClaudeやGeminiを実務に組み込む方法を、実体験をもとにサポート。「なんとなく使ってる」を卒業。</p></div>
-    <div class="card"><div class="card-top"><div class="card-icon">🔧</div><h3>ツール開発</h3></div><p>現場の困りごとを解決する小さなWebツールを作っています。使う人間が作るから、刺さる。</p></div>
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">みんなのためのツール</h2>
+      <p class="section-sub">— 日常のちょっとした困りごとを解決する</p>
+    </div>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-card-top"><div class="tool-icon">🔤</div><div class="tool-name">えいごよんで！</div></div>
+        <p class="tool-desc">「この単語なんて読むの？」教科書を写真に撮るだけでネイティブ発音。小学生のお子さんがいる親御さんへ。</p>
+        <span class="tool-tag free">無料</span>
+      </div>
+      <div class="tool-card">
+        <div class="tool-card-top"><div class="tool-icon">🎴</div><div class="tool-name">MyDeck</div></div>
+        <p class="tool-desc">ポケカ・遊戯王・NBA——カード会社の垣根を超えたコレクション管理＆自慢アプリ。</p>
+        <span class="tool-tag soon">近日公開</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">できること</h2>
+    </div>
+    <div class="cards">
+      <div class="card"><div class="card-top"><div class="card-icon">📋</div><h3>QAエンジニアリング</h3></div><p>テスト設計・バグ起票・仕様確認・Backlog管理まで。現場を知り尽くした視点で動きます。</p></div>
+      <div class="card"><div class="card-top"><div class="card-icon">🧠</div><h3>AI活用支援</h3></div><p>ClaudeやGeminiを実務に組み込む方法を、実体験をもとにサポート。「なんとなく使ってる」を卒業。</p></div>
+      <div class="card"><div class="card-top"><div class="card-icon">🔧</div><h3>ツール開発</h3></div><p>現場の困りごとを解決する小さなWebツールを作っています。使う人間が作るから、刺さる。</p></div>
+    </div>
   </div>
 </div>
 
 <div class="section" id="about">
-  <div class="section-head"><span class="section-num">04</span><span class="section-title">代表について</span></div>
-  <div class="about-block">
-    <div class="avatar">小野</div>
-    <div class="about-body">
-      <h3>小野（おの）／ BEETLE合同会社 代表</h3>
-      <p class="intro">
-        北海道生まれの沖縄育ち。自衛隊がはじめの仕事で、今はQAエンジニア。<br>
-        自分のベクトルってどこに伸びてるんだろうと思う日々を送ってる48歳。
-      </p>
-      <p class="tagline">
-        「仕様書に書いてないからいい」が許せなくて、独立した。<br>
-        <span>AIは、使うものではない。最高のパートナーだ。</span>
-      </p>
-      <a class="more-link" href="about.html">→ 自己紹介を読む</a>
-      <div class="tags">
-        <span class="tag">QAエンジニア</span>
-        <span class="tag">生成AI活用</span>
-        <span class="tag">アプリ開発</span>
-        <span class="tag">北海道生まれ</span>
-        <span class="tag">沖縄育ち</span>
-        <span class="tag">長野移住予定</span>
-        <span class="tag">高卒</span>
-        <span class="tag">三国志好き</span>
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">代表について</h2>
+    </div>
+    <div class="about-block">
+      <div class="avatar">小野</div>
+      <div class="about-body">
+        <h3>小野（おの）／ BEETLE合同会社 代表</h3>
+        <p class="intro">
+          北海道生まれの沖縄育ち。自衛隊がはじめの仕事で、今はQAエンジニア。<br>
+          自分のベクトルってどこに伸びてるんだろうと思う日々を送ってる48歳。
+        </p>
+        <p class="tagline">
+          「仕様書に書いてないからいい」が許せなくて、独立した。<br>
+          <span>AIは、使うものではない。最高のパートナーだ。</span>
+        </p>
+        <a class="more-link" href="about.html">→ 自己紹介を読む</a>
+        <div class="tags">
+          <span class="tag">QAエンジニア</span>
+          <span class="tag">生成AI活用</span>
+          <span class="tag">アプリ開発</span>
+          <span class="tag">北海道生まれ</span>
+          <span class="tag">沖縄育ち</span>
+          <span class="tag">長野移住予定</span>
+          <span class="tag">高卒</span>
+          <span class="tag">三国志好き</span>
+        </div>
       </div>
     </div>
   </div>
@@ -232,7 +276,10 @@ a{text-decoration:none;}
 
 <footer class="footer">
   <span class="footer-copy">© 2026 BEETLE合同会社</span>
-  <div class="nav-links"><a href="#" style="font-size:13px;color:#555;">note</a>&nbsp;&nbsp;<a href="#" style="font-size:13px;color:#555;">Twitter/X</a></div>
+  <div class="footer-links">
+    <a href="#">note</a>
+    <a href="#">Twitter/X</a>
+  </div>
 </footer>
 
 </body>
