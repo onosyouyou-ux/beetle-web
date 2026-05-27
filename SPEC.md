@@ -9,9 +9,16 @@
 ```
 beetle-web/
 ├── index.html              # コーポレートサイト
+├── about.html
+├── beetle_hp_mockup.html
+├── README.md
+├── SPEC.md
 └── tools/
-    └── eigo/
-        └── index.html      # えいごよんで！ツール (v2.6)
+    ├── eigo/
+    │   ├── index.html      # えいごよんで！ツール (v2.6)
+    │   └── landing.html
+    └── bug-checker/
+        └── mock.html       # これってバグなの？ モック
 ```
 
 ---
@@ -196,10 +203,197 @@ beetle-web/
 
 ---
 
-## 3. 今後の検討事項（未実装）
+## 3. これってバグなの？ (`tools/bug-checker/` または Vercel 独立デプロイ)
+
+最終更新: 2026-05-26
+
+### 3-1. 概要
+
+スクリーンショットをアップロードするだけで AI がバグか否かを判定し、バグの場合は起票内容を自動生成する Web ツール。
+
+- ターゲット：新人テスター・QAエンジニア
+- リリース形態：Vercel（Next.js）
+- 収益モデル：フリーミアム（グローバル無料枠 + 月額サブスク）
+- 参考モック：`tools/bug-checker/mock.html`
+
+### 3-2. 技術スタック
+
+| 役割 | 採用技術 |
+|---|---|
+| フレームワーク | Next.js 14（App Router） |
+| 言語 | TypeScript |
+| スタイル | Tailwind CSS |
+| ホスティング | Vercel |
+| KV | Vercel KV（Redis） |
+| 課金 | Stripe（サブスク） |
+| AI | Claude Haiku API（`claude-haiku-4-5-20251001`） |
+| アイコン | Tabler Icons（`@tabler/icons-react`） |
+
+### 3-3. 料金プラン
+
+| プラン | 料金 | 制限 |
+|---|---|---|
+| 無料 | 無料 | グローバル月10,000回まで（全ユーザー共通枠） |
+| サブスク | 月額480円 | 月240回 |
+
+- カウンターは Vercel KV にグローバル1個で管理（キー: `scan:count:YYYY-MM`）
+- 上限値は環境変数 `FREE_LIMIT` で管理（デフォルト 10,000）
+- 毎月1日 0:00（JST）に自動リセット
+- 上限到達時はサブスク登録ページへ誘導
+
+### 3-4. 画面構成
+
+```
+/ （メイン）
+  ├── ヘッダー：アプリ名 + グローバルカウンター
+  ├── 画像アップロードエリア
+  ├── スキャン実行ボタン
+  ├── スキャンアニメーション（判定中）
+  ├── 判定結果 + 起票カード（判定後）
+  └── フッター：リリース日
+
+/subscribe  → Stripe チェックアウトへリダイレクト
+/success    → 支払い完了ページ
+/cancel     → キャンセルページ
+```
+
+### 3-5. UIコピー
+
+| 要素 | テキスト |
+|---|---|
+| アプリ名 | これってバグなの？ |
+| バッジ | BUG DETECTOR |
+| サブタイトル | 画像を貼るだけで判定 → バグなら起票内容を自動生成 |
+| カウンター | 今月みんなで {used} 回使いました（無料枠 {limit} 回まで） |
+| スキャンボタン | バグスキャン実行 |
+| バグ判定 | 残念... バグです。 |
+| 非バグ判定 | バグではなさそうです |
+| 不明判定 | 判断が難しいです |
+| 無料枠終了 | 今月の無料枠が終了しました。サブスク登録（月額400円）で引き続きご利用いただけます。 |
+| フッター | リリース日：{NEXT_PUBLIC_RELEASE_DATE} |
+
+### 3-6. スキャンアニメーション仕様
+
+ボタン押下後の画面遷移：
+
+**① スキャン中（約3秒）**
+
+```
+ステップ1（0〜900ms）    スピナー → チェック「画像を解析中...」
+ステップ2（900〜1800ms） スピナー → チェック「UIパターンを確認中...」
+ステップ3（1800〜2700ms）スピナー → チェック「バグ判定中...」
+```
+
+**② 判定結果の表示（2700ms以降）**
+
+スキャンエリアが消えて判定カードがポップインで登場。
+バグの場合は 0.2秒後に起票カードがスライドダウンで表示。
+
+| アニメーション | 対象 | 仕様 |
+|---|---|---|
+| verdictPop | 判定カード | scale(0.92)→scale(1.03)→scale(1), 0.5s, cubic-bezier(0.34,1.56,0.64,1) |
+| slideDown | 起票カード | translateY(-10px)→0, opacity 0→1, 0.4s ease, delay 0.2s |
+| spin | スピナー | rotate 360deg, 0.7s linear infinite |
+
+### 3-7. API設計
+
+#### POST /api/scan
+
+**リクエスト**
+```json
+{
+  "image": "base64文字列",
+  "mimeType": "image/png",
+  "subscriptionToken": "トークン（任意）"
+}
+```
+
+**レスポンス（成功）**
+```json
+{
+  "verdict": "bug" | "not_bug" | "unclear",
+  "reason": "判定理由（日本語）",
+  "ticket": {
+    "title": "バグタイトル",
+    "severity": "Critical | High | Medium | Low",
+    "category": "UI | API | Performance | Logic | Security",
+    "description": "詳細説明",
+    "steps": ["手順1", "手順2", "手順3"],
+    "expected": "期待する動作",
+    "actual": "実際の動作",
+    "env": "環境情報"
+  } | null,
+  "remaining": 6153
+}
+```
+
+**レスポンス（無料枠超過）**
+```json
+{ "error": "FREE_LIMIT_EXCEEDED", "remaining": 0 }
+```
+
+**処理フロー**
+1. `subscriptionToken` を Vercel KV で確認 → 有効ならカウントせず処理
+2. 今月カウンターを取得
+3. `FREE_LIMIT` 以上なら `FREE_LIMIT_EXCEEDED` を返す
+4. Claude Haiku API に画像を送信して判定
+5. カウンターをインクリメント
+6. 結果を返す
+
+**Claude Haiku システムプロンプト**
+```
+あなたはソフトウェアQAの専門家です。アップロードされた画像を見て、バグ・不具合かどうかを判断してください。
+以下のJSON形式のみで回答してください。他のテキストは一切含めないでください。
+verdict が "not_bug" または "unclear" の場合、ticket は null にしてください。
+```
+
+#### GET /api/count
+```json
+{ "used": 3847, "limit": 10000, "remaining": 6153, "resetAt": "2026-06-01T00:00:00+09:00" }
+```
+
+#### POST /api/checkout
+Stripe サブスクチェックアウトセッションを作成。メールを受け取り URL を返す。
+
+#### POST /api/webhook
+- `checkout.session.completed` → トークン発行・メール送信
+- `customer.subscription.deleted` → トークン削除
+
+### 3-8. Vercel KV データ構造
+
+```
+scan:count:{YYYY-MM}   → number
+subscription:{token}   → { email, stripeCustomerId, status, createdAt }
+```
+
+### 3-9. 環境変数
+
+```env
+ANTHROPIC_API_KEY=
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+STRIPE_PRICE_ID=
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+FREE_LIMIT=10000
+NEXT_PUBLIC_RELEASE_DATE=2026-06-01
+NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
+```
+
+### 3-10. 非機能要件
+
+- 画像サイズ上限：5MB（フロント側でバリデーション）
+- 対応フォーマット：PNG / JPEG / WebP / GIF
+- API タイムアウト：30秒
+- レート制限：同一 IP から1分間に10リクエストまで（Vercel Edge Middleware）
+
+---
+
+## 4. 今後の検討事項（未実装）
 
 - [ ] パスワード認証のより堅牢な実装（現状はクライアントサイドのみ）
 - [ ] スロット数カスタマイズ
 - [ ] 読み上げ回数のカウント・統計表示
 - [ ] 音声が使えない環境へのフォールバック表示
 - [ ] OCR.space 月間上限（25,000回）を超えた場合の対応
+- [ ] バグ判定：Jira / Linear への直接起票連携
+- [ ] バグ判定：サブスク会員向けの判定履歴保存機能
