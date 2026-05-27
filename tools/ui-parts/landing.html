@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="「このボタンみたいなやつ、なんて言うの？」画面をキャプチャするだけでUI部品の名前がわかる。QA・デザイナー・エンジニア向け無料ツール。近日公開。">
+<title>UI部品名鑑 | 画面キャプチャでUI部品名がわかる</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
+  background:linear-gradient(160deg,#0f172a 0%,#1e1b4b 50%,#312e81 100%);
+  min-height:100vh;
+  color:#fff;
+  overflow-x:hidden;
+}
+body::before{content:'';position:fixed;width:300px;height:300px;background:rgba(99,102,241,0.1);border-radius:50%;top:-80px;left:-80px;pointer-events:none;animation:float 6s ease-in-out infinite alternate;}
+body::after{content:'';position:fixed;width:220px;height:220px;background:rgba(139,92,246,0.08);border-radius:50%;bottom:-60px;right:-60px;pointer-events:none;animation:float 8s ease-in-out infinite alternate-reverse;}
+@keyframes float{from{transform:translateY(0)}to{transform:translateY(-30px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+
+.container{max-width:640px;margin:0 auto;padding:0 20px 60px;position:relative;z-index:1;}
+
+.site-header{display:flex;align-items:center;justify-content:center;padding:24px 0 0;}
+.logo-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);
+  border-radius:99px;padding:8px 18px 8px 10px;backdrop-filter:blur(10px);
+  text-decoration:none;color:#fff;font-size:13px;font-weight:700;letter-spacing:1px;
+  transition:background .2s;
+}
+.logo-pill:hover{background:rgba(255,255,255,0.18);}
+.logo-mark{width:28px;height:28px;background:rgba(255,255,255,0.15);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+
+.hero{text-align:center;padding:48px 0 36px;animation:fadeUp .7s ease both;}
+.hero-emoji{font-size:80px;display:block;margin-bottom:12px;animation:bounce 2.5s ease-in-out infinite;}
+.hero-label{
+  display:inline-block;
+  background:rgba(99,102,241,0.35);border:1px solid rgba(99,102,241,0.6);
+  border-radius:4px;padding:3px 10px;
+  font-size:11px;font-weight:700;letter-spacing:2px;color:#a5b4fc;margin-bottom:14px;
+}
+.hero-title{font-size:clamp(26px,7vw,44px);font-weight:900;text-shadow:0 4px 20px rgba(0,0,0,0.4);margin-bottom:10px;letter-spacing:2px;}
+.hero-sub{font-size:clamp(14px,3.5vw,17px);color:rgba(255,255,255,0.8);line-height:1.8;margin-bottom:32px;}
+.hero-sub strong{color:#fff;}
+
+/* 開発中バナー */
+.wip-banner{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.4);
+  border-radius:99px;padding:10px 24px;
+  font-size:14px;font-weight:700;color:#fcd34d;
+  animation:popIn .6s .3s ease both;
+  margin-bottom:16px;
+}
+.wip-dot{width:8px;height:8px;background:#fbbf24;border-radius:50%;animation:pulse 1.5s ease-in-out infinite;}
+
+.notify-form{
+  display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
+  animation:popIn .6s .4s ease both;
+}
+.notify-input{
+  padding:12px 18px;border-radius:99px;border:none;
+  background:rgba(255,255,255,0.12);color:#fff;
+  font-size:14px;width:240px;outline:none;
+  border:1px solid rgba(255,255,255,0.2);
+  transition:background .2s,border-color .2s;
+}
+.notify-input::placeholder{color:rgba(255,255,255,0.4);}
+.notify-input:focus{background:rgba(255,255,255,0.18);border-color:rgba(99,102,241,0.6);}
+.notify-btn{
+  padding:12px 24px;border-radius:99px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;
+  font-size:14px;font-weight:700;letter-spacing:.5px;
+  box-shadow:0 4px 16px rgba(99,102,241,0.4);
+  transition:transform .15s,box-shadow .15s;
+}
+.notify-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(99,102,241,0.5);}
+.notify-note{font-size:12px;color:rgba(255,255,255,0.4);margin-top:10px;}
+
+.arrow-down{display:block;margin:40px auto 0;font-size:28px;opacity:.6;animation:bounce 2s ease-in-out infinite;}
+
+.section-title{text-align:center;font-size:clamp(17px,4vw,22px);font-weight:900;margin-bottom:24px;color:rgba(255,255,255,0.95);letter-spacing:1px;}
+
+/* ペインポイント */
+.pain-section{margin-bottom:48px;animation:fadeUp .6s .1s ease both;}
+.pain-bubble{display:flex;align-items:flex-end;gap:12px;margin-bottom:20px;}
+.pain-icon{font-size:48px;flex-shrink:0;}
+.pain-speech{
+  background:rgba(255,255,255,0.95);color:#333;
+  border-radius:20px 20px 20px 4px;padding:14px 18px;
+  font-size:clamp(14px,3.5vw,16px);font-weight:700;line-height:1.5;
+  box-shadow:0 4px 16px rgba(0,0,0,0.2);
+}
+.pain-speech-label{display:block;font-size:11px;color:#999;font-weight:500;margin-bottom:4px;}
+.pain-detail{
+  display:flex;gap:12px;background:rgba(0,0,0,0.2);
+  border-radius:20px;padding:20px;margin-bottom:16px;
+}
+.pain-detail-icon{font-size:36px;flex-shrink:0;margin-top:2px;}
+.pain-detail-text{font-size:clamp(13px,3vw,15px);color:rgba(255,255,255,0.85);line-height:1.8;}
+.pain-detail-text strong{color:#fff;}
+.pain-solution{
+  display:flex;gap:12px;
+  background:rgba(99,102,241,0.2);border:2px solid rgba(99,102,241,0.5);
+  border-radius:20px;padding:20px;
+}
+.pain-solution-icon{font-size:36px;flex-shrink:0;margin-top:2px;}
+.pain-solution-text{font-size:clamp(14px,3.5vw,16px);color:#fff;line-height:1.8;}
+.pain-solution-text strong{font-size:clamp(16px,4vw,19px);display:block;margin-bottom:4px;}
+
+/* 特徴 */
+.features{display:flex;flex-direction:column;gap:16px;margin-bottom:48px;}
+.feature-card{
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+  border-radius:20px;padding:22px 20px;backdrop-filter:blur(12px);
+  display:flex;gap:18px;align-items:flex-start;animation:fadeUp .6s ease both;
+}
+.feature-card:nth-child(2){animation-delay:.1s;}
+.feature-card:nth-child(3){animation-delay:.2s;}
+.feature-icon{font-size:44px;flex-shrink:0;line-height:1;}
+.feature-name{font-size:clamp(15px,3.8vw,18px);font-weight:900;margin-bottom:6px;color:#fff;}
+.feature-desc{font-size:clamp(13px,3vw,14px);color:rgba(255,255,255,0.75);line-height:1.7;}
+.feature-tag{
+  display:inline-block;background:rgba(99,102,241,0.25);border:1px solid rgba(99,102,241,0.4);
+  border-radius:99px;padding:2px 10px;font-size:11px;font-weight:700;margin-top:8px;
+  letter-spacing:.5px;color:#a5b4fc;margin-right:6px;
+}
+
+/* ステップ */
+.steps{display:flex;flex-direction:column;gap:0;margin-bottom:48px;}
+.step{display:flex;gap:16px;align-items:flex-start;animation:fadeUp .6s ease both;}
+.step:nth-child(2){animation-delay:.1s;}
+.step:nth-child(3){animation-delay:.2s;}
+.step-line{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.step-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(99,102,241,0.4);}
+.step-connector{width:2px;flex:1;min-height:24px;background:rgba(255,255,255,0.15);margin:4px 0;}
+.step:last-child .step-connector{display:none;}
+.step-content{padding:4px 0 28px;}
+.step-label{font-size:clamp(14px,3.5vw,16px);font-weight:900;color:#fff;margin-bottom:4px;}
+.step-note{font-size:clamp(12px,3vw,14px);color:rgba(255,255,255,0.7);line-height:1.6;}
+
+/* バッジ */
+.badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:40px;}
+.badge{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:99px;padding:8px 18px;font-size:13px;font-weight:700;backdrop-filter:blur(8px);}
+
+footer{text-align:center;padding:24px 0 0;color:rgba(255,255,255,0.35);font-size:12px;line-height:2;}
+footer a{color:rgba(255,255,255,0.45);text-decoration:none;}
+footer a:hover{color:#fff;}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="site-header">
+    <a class="logo-pill" href="https://www.beetle-web.jp">
+      <span class="logo-mark">🪲</span>
+      <span>BEETLE 合同会社</span>
+    </a>
+  </header>
+
+  <section class="hero">
+    <span class="hero-emoji">🖼️</span>
+    <div class="hero-label">UI PARTS CATALOG</div>
+    <h1 class="hero-title">UI部品名鑑</h1>
+    <p class="hero-sub">
+      「このボタンみたいなやつ、なんて言うの？」<br>
+      画面をキャプチャするだけで<strong>UI部品の名前がわかる</strong>。<br>
+      QA・デザイナー・エンジニアの「あれなんだっけ」を解消。
+    </p>
+    <div class="wip-banner">
+      <span class="wip-dot"></span>
+      ただいま開発中です
+    </div><br><br>
+    <div class="notify-form">
+      <input class="notify-input" type="email" placeholder="メールアドレスを入力">
+      <button class="notify-btn" onclick="alert('ご登録ありがとうございます！公開時にお知らせします。')">公開時に通知する</button>
+    </div>
+    <p class="notify-note">登録不要・スパムなし・いつでも解除できます</p>
+    <span class="arrow-down">↓</span>
+  </section>
+
+  <section class="pain-section">
+    <div class="pain-bubble">
+      <span class="pain-icon">😕</span>
+      <div class="pain-speech">
+        <span class="pain-speech-label">こんな場面、ありませんか？</span>
+        「このドロップダウンみたいなやつ、正式名称なんだっけ…」
+      </div>
+    </div>
+    <div class="pain-detail">
+      <span class="pain-detail-icon">🤔</span>
+      <p class="pain-detail-text">
+        バグ起票するとき、仕様書を書くとき、デザインレビューのとき。<br>
+        <strong>「このUI部品の名前がわからない」</strong>で手が止まる。<br>
+        ググっても「それっぽい名前」がヒットしない。
+      </p>
+    </div>
+    <div class="pain-solution">
+      <span class="pain-solution-icon">✨</span>
+      <p class="pain-solution-text">
+        <strong>スクショを貼るだけで名前がわかる！</strong>
+        AIが画面を解析してUI部品の正式名称・説明・使われ方を即出力。<br>
+        「あれなんだっけ」に二度と悩まない。
+      </p>
+    </div>
+  </section>
+
+  <h2 class="section-title">✨ できること（予定）</h2>
+  <div class="features">
+    <div class="feature-card">
+      <span class="feature-icon">🔍</span>
+      <div>
+        <div class="feature-name">UI部品名を即特定</div>
+        <div class="feature-desc">
+          スクショを貼るとAIが画面内の部品を認識。<br>
+          ボタン・モーダル・トースト・スライダーなど正式名称を返します。
+        </div>
+        <span class="feature-tag">🖼️ キャプチャ1枚でOK</span>
+      </div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📖</span>
+      <div>
+        <div class="feature-name">名前 + 説明 + 使われ方</div>
+        <div class="feature-desc">
+          部品名だけでなく「どんな目的で使われるか」「よくある実装パターン」まで解説。<br>
+          そのままドキュメントに貼れます。
+        </div>
+        <span class="feature-tag">📝 仕様書にそのまま使える</span>
+      </div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">⚡</span>
+      <div>
+        <div class="feature-name">登録不要・ブラウザで動く</div>
+        <div class="feature-desc">
+          インストールなし・アカウント不要。<br>
+          開いてすぐ使える軽さを目指して開発中です。
+        </div>
+        <span class="feature-tag">🆓 無料予定</span>
+        <span class="feature-tag">🔒 登録不要</span>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-title">🪄 使い方（予定）</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-line"><div class="step-num">1</div><div class="step-connector"></div></div>
+      <div class="step-content">
+        <div class="step-label">📸 画面をキャプチャして貼る</div>
+        <div class="step-note">名前を知りたいUI部品が写ったスクリーンショットをドラッグ&ドロップ。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-line"><div class="step-num">2</div><div class="step-connector"></div></div>
+      <div class="step-content">
+        <div class="step-label">🔍 AIが部品を認識</div>
+        <div class="step-note">AIが画面内のUI部品を解析し、正式名称・分類・説明を生成します。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-line"><div class="step-num">3</div><div class="step-connector"></div></div>
+      <div class="step-content">
+        <div class="step-label">📋 名前と説明をコピー</div>
+        <div class="step-note">バグ起票・仕様書・デザインレビューにそのままペーストして活用。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="badges">
+    <span class="badge">🆓 無料予定</span>
+    <span class="badge">📱 スマホ対応予定</span>
+    <span class="badge">🔒 登録不要</span>
+    <span class="badge">🌐 ブラウザで動く</span>
+    <span class="badge">⚡ インストール不要</span>
+  </div>
+
+  <footer>
+    <p>© 2026 <a href="https://www.beetle-web.jp">BEETLE 合同会社</a></p>
+  </footer>
+
+</div>
+</body>
+</html>

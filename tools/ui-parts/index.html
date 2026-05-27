@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI部品名鑑 | BEETLE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --card: #ffffff;
+    --navy: #1c1c2e;
+    --orange: #e06c2a;
+    --orange-light: #fdf1ea;
+    --blue: #3b7dd8;
+    --border: #e8e6e0;
+    --muted: #888;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Zen Kaku Gothic New', sans-serif; background: var(--bg); color: var(--navy); line-height: 1.7; }
+
+  /* HEADER */
+  .site-header { background: var(--navy); padding: 0 2rem; display: flex; align-items: center; gap: 1rem; height: 52px; position: sticky; top: 0; z-index: 100; }
+  .site-header a { color: #fff; text-decoration: none; font-size: 13px; opacity: 0.7; }
+  .site-header a:hover { opacity: 1; }
+  .site-header span { color: #fff; opacity: 0.3; font-size: 12px; }
+
+  /* HERO */
+  .hero { background: var(--navy); padding: 3.5rem 2rem 3rem; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -60px; left: 50%; transform: translateX(-50%); width: 600px; height: 300px; background: radial-gradient(ellipse, rgba(224,108,42,0.18) 0%, transparent 70%); pointer-events: none; }
+  .hero-badge { display: inline-block; background: var(--orange); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; padding: 4px 14px; border-radius: 99px; margin-bottom: 1.2rem; text-transform: uppercase; }
+  .hero h1 { font-family: 'Syne', 'Zen Kaku Gothic New', sans-serif; font-size: clamp(2rem, 6vw, 3.2rem); font-weight: 800; color: #fff; line-height: 1.15; margin-bottom: 0.8rem; }
+  .hero h1 span { color: var(--orange); }
+  .hero p { color: rgba(255,255,255,0.6); font-size: 1rem; max-width: 480px; margin: 0 auto; }
+
+  /* TOC NAV */
+  .toc-nav { background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 52px; z-index: 90; }
+  .toc-inner { display: flex; overflow-x: auto; gap: 0; padding: 0 1rem; scrollbar-width: none; -ms-overflow-style: none; }
+  .toc-inner::-webkit-scrollbar { display: none; }
+  .toc-link { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 0.7rem 0.9rem; text-decoration: none; color: var(--muted); font-size: 0.75rem; font-weight: 700; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; flex-shrink: 0; }
+  .toc-link:hover { color: var(--navy); border-bottom-color: var(--border); }
+  .toc-link.active { color: var(--orange); border-bottom-color: var(--orange); }
+  .toc-link svg { width: 20px; height: 20px; }
+
+  /* GRID */
+  .container { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+
+  /* CARD */
+  .card { background: var(--card); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: box-shadow 0.2s, transform 0.2s; scroll-margin-top: 120px; }
+  .card:hover { box-shadow: 0 8px 32px rgba(28,28,46,0.1); transform: translateY(-2px); }
+  .card-illo { background: #f2f0eb; padding: 2rem; display: flex; align-items: center; justify-content: center; height: 140px; }
+  .card-body { padding: 1.25rem 1.5rem 1.5rem; }
+  .card-label { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.6rem; }
+  .card-name-jp { font-size: 1.15rem; font-weight: 900; color: var(--navy); }
+  .card-name-en { font-size: 0.78rem; font-weight: 700; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+  .card-desc { font-size: 0.88rem; color: #555; margin-bottom: 1rem; line-height: 1.6; }
+  .bug-title { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; color: var(--orange); text-transform: uppercase; margin-bottom: 0.5rem; }
+  .bug-list { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+  .bug-list li { font-size: 0.82rem; color: #555; padding-left: 1.1rem; position: relative; line-height: 1.5; }
+  .bug-list li::before { content: '⚡'; position: absolute; left: 0; font-size: 0.75rem; }
+
+  footer { text-align: center; padding: 2.5rem 1rem; color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--border); }
+  footer a { color: var(--orange); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/">BEETLE</a>
+  <span>›</span>
+  <a href="/tools/">Tools</a>
+  <span>›</span>
+  <a href="#">UI部品名鑑</a>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Reference</div>
+  <h1>UI部品<span>名鑑</span></h1>
+  <p>「このボタンみたいなやつ、なんて言うの？」ってなやんだら、ここ見て。名前とよくあるバグをまとめたよ。</p>
+</section>
+
+<!-- TOC NAV -->
+<nav class="toc-nav" aria-label="部品一覧">
+  <div class="toc-inner">
+    <a class="toc-link" href="#button">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="8" rx="3" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="10" x2="13" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      ボタン
+    </a>
+    <a class="toc-link" href="#input">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="8" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="5" y1="10" x2="5" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      テキスト
+    </a>
+    <a class="toc-link" href="#checkbox">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/><polyline points="6,10 9,13 14,7" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      チェックボックス
+    </a>
+    <a class="toc-link" href="#radio">
+      <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="3" fill="currentColor"/></svg>
+      ラジオ
+    </a>
+    <a class="toc-link" href="#toggle">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="8" rx="4" stroke="currentColor" stroke-width="1.5"/><circle cx="14" cy="10" r="2.5" fill="currentColor"/></svg>
+      トグル
+    </a>
+    <a class="toc-link" href="#select">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="8" rx="2" stroke="currentColor" stroke-width="1.5"/><polyline points="13,9 15,11 17,9" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      セレクト
+    </a>
+    <a class="toc-link" href="#modal">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" fill="currentColor" opacity="0.15"/><rect x="4" y="4" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/></svg>
+      モーダル
+    </a>
+    <a class="toc-link" href="#tooltip">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.5"/><polyline points="8,12 10,15 12,12" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+      ツールチップ
+    </a>
+    <a class="toc-link" href="#tabs">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="8" width="16" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="4" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
+      タブ
+    </a>
+    <a class="toc-link" href="#accordion">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="10" width="16" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/><polyline points="14,5 16,6.5 18,5" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+      アコーディオン
+    </a>
+    <a class="toc-link" href="#slider">
+      <svg viewBox="0 0 20 20" fill="none"><line x1="2" y1="10" x2="18" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="10" r="3" fill="white" stroke="currentColor" stroke-width="1.5"/></svg>
+      スライダー
+    </a>
+    <a class="toc-link" href="#progress">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="8" width="16" height="4" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="8" width="10" height="4" rx="2" fill="currentColor"/></svg>
+      プログレス
+    </a>
+    <a class="toc-link" href="#badge">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="7" width="14" height="6" rx="3" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="10" x2="12" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      バッジ
+    </a>
+    <a class="toc-link" href="#toast">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="6" cy="9" r="2" fill="currentColor"/><line x1="10" y1="7" x2="16" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="10" y1="10" x2="14" y2="10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      トースト
+    </a>
+    <a class="toc-link" href="#breadcrumb">
+      <svg viewBox="0 0 20 20" fill="none"><line x1="2" y1="10" x2="18" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><polyline points="5,7 8,10 5,13" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/><polyline points="10,7 13,10 10,13" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+      パンくず
+    </a>
+    <a class="toc-link" href="#card">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="9" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="2" width="7" height="9" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="13" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="13" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
+      カード
+    </a>
+    <a class="toc-link" href="#pagination">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="7" width="5" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="7.5" y="7" width="5" height="6" rx="1.5" fill="currentColor"/><rect x="13" y="7" width="5" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
+      ページネーション
+    </a>
+    <a class="toc-link" href="#hamburger">
+      <svg viewBox="0 0 20 20" fill="none"><line x1="3" y1="6" x2="17" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="3" y1="10" x2="17" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="3" y1="14" x2="17" y2="14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      ハンバーガー
+    </a>
+    <a class="toc-link" href="#skeleton">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="5" rx="1.5" fill="currentColor" opacity="0.2"/><rect x="2" y="10" width="12" height="3" rx="1.5" fill="currentColor" opacity="0.2"/><rect x="2" y="15" width="8" height="3" rx="1.5" fill="currentColor" opacity="0.2"/></svg>
+      スケルトン
+    </a>
+    <a class="toc-link" href="#spinner">
+      <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="2" stroke-dasharray="22 22" stroke-linecap="round"/></svg>
+      スピナー
+    </a>
+    <a class="toc-link" href="#searchbar">
+      <svg viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.5"/><line x1="12.5" y1="12.5" x2="17" y2="17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      検索バー
+    </a>
+    <a class="toc-link" href="#drawer">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="12" y="2" width="6" height="16" rx="2" fill="currentColor" opacity="0.25"/><line x1="14" y1="9" x2="14" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      ドロワー
+    </a>
+    <a class="toc-link" href="#carousel">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="4" y="4" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><polyline points="2,9 4,7 4,11" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><polyline points="18,9 16,7 16,11" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      カルーセル
+    </a>
+  </div>
+</nav>
+
+<main class="container">
+<div class="grid">
+
+  <!-- ボタン -->
+  <div class="card" id="button">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <rect x="20" y="22" width="90" height="36" rx="8" fill="#e06c2a"/>
+        <text x="65" y="44" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif" font-weight="700">送信する</text>
+        <rect x="124" y="22" width="56" height="36" rx="8" fill="none" stroke="#d0cec7" stroke-width="1.5"/>
+        <text x="152" y="44" text-anchor="middle" fill="#aaa" font-size="13" font-family="sans-serif">キャンセル</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">ボタン</span><span class="card-name-en">Button</span></div>
+      <p class="card-desc">クリック（タップ）するとアクションを実行するやつ。色・形・サイズでプライマリ／セカンダリ／ゴーストなどのバリエーションを作る。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>ダブルクリックで2回フォームが送信される</li>
+        <li>disabled状態なのにクリックイベントが発火する</li>
+        <li>ホバーしてもカーソルが矢印のまま（cursor: pointer 忘れ）</li>
+        <li>非同期処理中にボタンが連打できてしまう</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- テキストフィールド -->
+  <div class="card" id="input">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <rect x="20" y="24" width="160" height="34" rx="7" fill="white" stroke="#e06c2a" stroke-width="1.5"/>
+        <text x="34" y="46" fill="#aaa" font-size="12" font-family="sans-serif">メールアドレス</text>
+        <line x1="34" y1="44" x2="34" y2="32" stroke="#e06c2a" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">テキストフィールド</span><span class="card-name-en">Text Input</span></div>
+      <p class="card-desc">ユーザーが文字を入力するやつ。フォーカス中は枠の色が変わるのが一般的。type属性でメール・電話・パスワード用に切り替えられる。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>iOSでフォーカス時に画面がズームインしてしまう（font-size: 16px 未満）</li>
+        <li>プレースホルダーと入力テキストの色が同じで見えない</li>
+        <li>オートフィルで背景が黄色くなってデザインが崩れる</li>
+        <li>日本語変換が確定する前にsubmitが走る</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- チェックボックス -->
+  <div class="card" id="checkbox">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <rect x="20" y="14" width="20" height="20" rx="4" fill="#e06c2a"/>
+        <polyline points="25,24 29,29 38,19" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="48" y="29" fill="#333" font-size="12" font-family="sans-serif">利用規約に同意する</text>
+        <rect x="20" y="44" width="20" height="20" rx="4" fill="white" stroke="#c8c5be" stroke-width="1.5"/>
+        <text x="48" y="59" fill="#aaa" font-size="12" font-family="sans-serif">メルマガを受け取る</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">チェックボックス</span><span class="card-name-en">Checkbox</span></div>
+      <p class="card-desc">複数の選択肢をそれぞれオン・オフできるやつ。「利用規約に同意する」みたいな場面でよく使われる。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>クリック範囲がボックスだけで、ラベルをクリックしても反応しない</li>
+        <li>全選択チェックボックスと個別の状態が同期されない</li>
+        <li>フォーム送信時にチェックなしの値がPOSTされない</li>
+        <li>CSSリセットでチェックマークが消える</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ラジオボタン -->
+  <div class="card" id="radio">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <circle cx="30" cy="22" r="9" fill="white" stroke="#e06c2a" stroke-width="2"/>
+        <circle cx="30" cy="22" r="4" fill="#e06c2a"/>
+        <text x="46" y="27" fill="#333" font-size="12" font-family="sans-serif">クレジットカード</text>
+        <circle cx="30" cy="50" r="9" fill="white" stroke="#c8c5be" stroke-width="1.5"/>
+        <text x="46" y="55" fill="#aaa" font-size="12" font-family="sans-serif">銀行振込</text>
+        <circle cx="30" cy="70" r="9" fill="white" stroke="#c8c5be" stroke-width="1.5"/>
+        <text x="46" y="75" fill="#aaa" font-size="12" font-family="sans-serif">コンビニ払い</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">ラジオボタン</span><span class="card-name-en">Radio Button</span></div>
+      <p class="card-desc">グループから必ず1つだけ選ぶやつ。支払い方法・性別選択でよく出てくる。同じname属性でグループになる。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>name属性が違うと別グループになって複数選べてしまう</li>
+        <li>一度選んだ選択肢を解除できず、リセットできない</li>
+        <li>labelとinputが紐づいていないのでラベルクリックが効かない</li>
+        <li>デフォルト選択なしで送信すると未選択エラーになる</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- トグルスイッチ -->
+  <div class="card" id="toggle">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <rect x="20" y="18" width="54" height="28" rx="14" fill="#e06c2a"/>
+        <circle cx="60" cy="32" r="11" fill="white"/>
+        <text x="83" y="37" fill="#333" font-size="12" font-family="sans-serif">通知オン</text>
+        <rect x="20" y="56" width="54" height="28" rx="14" fill="#d0cec7"/>
+        <circle cx="33" cy="70" r="11" fill="white"/>
+        <text x="83" y="75" fill="#aaa" font-size="12" font-family="sans-serif">ダークモード</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">トグルスイッチ</span><span class="card-name-en">Toggle Switch</span></div>
+      <p class="card-desc">オン／オフをぱちっと切り替えるやつ。設定画面でよく見かける。チェックボックスより「今すぐ切り替える」感が強い。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>アニメーションなしでガクッと瞬間移動する</li>
+        <li>色だけで状態を伝えていて色覚多様性に対応していない</li>
+        <li>クリック範囲が小さくてスマホで操作しにくい</li>
+        <li>表示はオフなのに値はオンのまま（状態の同期ミス）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- セレクトボックス -->
+  <div class="card" id="select">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <rect x="20" y="18" width="160" height="36" rx="7" fill="white" stroke="#c8c5be" stroke-width="1.5"/>
+        <text x="36" y="41" fill="#333" font-size="12" font-family="sans-serif">東京都</text>
+        <polyline points="158,32 165,39 172,32" stroke="#888" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="20" y="55" width="160" height="24" rx="4" fill="#fdf1ea"/>
+        <text x="36" y="71" fill="#555" font-size="11" font-family="sans-serif">大阪府</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">セレクトボックス</span><span class="card-name-en">Select / Dropdown</span></div>
+      <p class="card-desc">リストから1つ選ぶやつ。都道府県・カテゴリ・並び順などの選択に使う。選択肢が多いときはスクロールできる。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>iOSでCSSが効かず角丸やフォントが無視される</li>
+        <li>長い選択肢テキストがはみ出す（overflow: hidden 忘れ）</li>
+        <li>「-- 選択してください --」がそのまま送信されてしまう</li>
+        <li>Androidのドロップダウンがシステムデザインに上書きされる</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- モーダル -->
+  <div class="card" id="modal">
+    <div class="card-illo">
+      <svg width="200" height="100" viewBox="0 0 200 100" fill="none">
+        <rect x="0" y="0" width="200" height="100" fill="rgba(28,28,46,0.45)" rx="8"/>
+        <rect x="30" y="14" width="140" height="72" rx="10" fill="white"/>
+        <text x="100" y="37" text-anchor="middle" fill="#1c1c2e" font-size="12" font-family="sans-serif" font-weight="700">削除しますか？</text>
+        <text x="100" y="53" text-anchor="middle" fill="#888" font-size="10" font-family="sans-serif">この操作は取り消せません。</text>
+        <rect x="45" y="64" width="48" height="16" rx="4" fill="#e06c2a"/>
+        <text x="69" y="76" text-anchor="middle" fill="white" font-size="10" font-family="sans-serif">削除</text>
+        <rect x="103" y="64" width="48" height="16" rx="4" fill="none" stroke="#c8c5be" stroke-width="1"/>
+        <text x="127" y="76" text-anchor="middle" fill="#888" font-size="10" font-family="sans-serif">キャンセル</text>
+        <text x="157" y="28" fill="#aaa" font-size="15" font-family="sans-serif">×</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">モーダル</span><span class="card-name-en">Modal / Dialog</span></div>
+      <p class="card-desc">画面の手前に出てくるポップアップ。削除確認・画像拡大・ログインフォームなど「今すぐ注目してほしい」ときに使う。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>ESCキーで閉じない</li>
+        <li>スクロールが背景ページに伝わる（スクロール貫通）</li>
+        <li>スマホで画面に収まらずボタンが見えない</li>
+        <li>開いてもフォーカスが移動せずスクリーンリーダーに伝わらない</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ツールチップ -->
+  <div class="card" id="tooltip">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <rect x="55" y="8" width="90" height="26" rx="5" fill="#1c1c2e"/>
+        <polygon points="95,34 100,42 105,34" fill="#1c1c2e"/>
+        <text x="100" y="25" text-anchor="middle" fill="white" font-size="10" font-family="sans-serif">ホバーすると出てくるよ</text>
+        <circle cx="100" cy="57" r="14" fill="#e8e6e0"/>
+        <text x="100" y="62" text-anchor="middle" fill="#888" font-size="14" font-family="sans-serif" font-weight="700">?</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">ツールチップ</span><span class="card-name-en">Tooltip</span></div>
+      <p class="card-desc">ホバーしたときに補足説明がひょこっと出てくるやつ。アイコンだけのボタンの説明によく使う。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>画面端で外にはみ出して見えない</li>
+        <li>スマホはホバーがないので永遠に表示されない</li>
+        <li>親要素に overflow: hidden があると切れる</li>
+        <li>テキストが長くて吹き出しが巨大になりすぎる</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- タブ -->
+  <div class="card" id="tabs">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <rect x="20" y="10" width="45" height="26" rx="6" fill="#e06c2a"/>
+        <text x="42" y="27" text-anchor="middle" fill="white" font-size="11" font-family="sans-serif" font-weight="700">概要</text>
+        <rect x="68" y="10" width="45" height="26" rx="6" fill="#f2f0eb"/>
+        <text x="90" y="27" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">詳細</text>
+        <rect x="116" y="10" width="45" height="26" rx="6" fill="#f2f0eb"/>
+        <text x="138" y="27" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">レビュー</text>
+        <rect x="20" y="36" width="160" height="32" rx="6" fill="#f2f0eb"/>
+        <text x="100" y="56" text-anchor="middle" fill="#bbb" font-size="10" font-family="sans-serif">コンテンツがここに表示される</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">タブ</span><span class="card-name-en">Tabs</span></div>
+      <p class="card-desc">ページ内で複数のコンテンツを切り替えて表示するやつ。商品の「概要・仕様・レビュー」みたいに場面を分けたいときに使う。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>非アクティブタブのコンテンツが検索エンジンに読まれてSEOが混乱する</li>
+        <li>URLにページ番号がないのでリロードで最初のタブに戻る</li>
+        <li>スマホで横並びタブが画面から溢れてはみ出す</li>
+        <li>アクティブ状態のスタイルが他のCSSに上書きされる</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- アコーディオン -->
+  <div class="card" id="accordion">
+    <div class="card-illo">
+      <svg width="200" height="90" viewBox="0 0 200 90" fill="none">
+        <rect x="20" y="8" width="160" height="26" rx="5" fill="#f2f0eb"/>
+        <text x="34" y="25" fill="#333" font-size="11" font-family="sans-serif">返品はできますか？</text>
+        <polyline points="163,18 168,23 173,18" stroke="#e06c2a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" transform="rotate(180,168,20.5)"/>
+        <rect x="20" y="36" width="160" height="18" rx="3" fill="#fdf1ea"/>
+        <text x="34" y="49" fill="#888" font-size="10" font-family="sans-serif">ご購入から14日以内であれば可能です。</text>
+        <rect x="20" y="58" width="160" height="26" rx="5" fill="#f2f0eb"/>
+        <text x="34" y="75" fill="#333" font-size="11" font-family="sans-serif">送料は無料ですか？</text>
+        <polyline points="163,68 168,73 173,68" stroke="#888" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">アコーディオン</span><span class="card-name-en">Accordion</span></div>
+      <p class="card-desc">クリックで開いたり閉じたりするやつ。FAQや設定項目をコンパクトに並べるときに使う。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>height: auto へのCSSアニメーションができずガクッと瞬間展開する</li>
+        <li>「1つだけ開ける」仕様なのに複数同時に開いてしまう</li>
+        <li>閉じた状態のコンテンツがタブキーでフォーカスを受けてしまう</li>
+        <li>開くと内容が画面外に押し出されスクロールが必要になる</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- スライダー -->
+  <div class="card" id="slider">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <text x="100" y="22" text-anchor="middle" fill="#e06c2a" font-size="16" font-family="sans-serif" font-weight="700">¥ 30,000</text>
+        <rect x="20" y="42" width="160" height="4" rx="2" fill="#e8e6e0"/>
+        <rect x="20" y="42" width="90" height="4" rx="2" fill="#e06c2a"/>
+        <circle cx="110" cy="44" r="10" fill="white" stroke="#e06c2a" stroke-width="2"/>
+        <text x="20" y="65" fill="#bbb" font-size="10" font-family="sans-serif">¥0</text>
+        <text x="163" y="65" fill="#bbb" font-size="10" font-family="sans-serif">¥50,000</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">スライダー</span><span class="card-name-en">Range Slider</span></div>
+      <p class="card-desc">数値をドラッグして調整するやつ。価格帯の絞り込みや音量調整など、連続した値を入力するのに向いている。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>スマホでドラッグしようとするとページのスクロールが始まる</li>
+        <li>ブラウザによってデザインが全然違う（特にiOS/Android）</li>
+        <li>0.1 + 0.2 = 0.30000000000000004 みたいな浮動小数点誤差が表示される</li>
+        <li>min/maxの範囲外の値を手入力で打ててしまう</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- プログレスバー -->
+  <div class="card" id="progress">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <text x="20" y="24" fill="#555" font-size="11" font-family="sans-serif">アップロード中…</text>
+        <text x="172" y="24" fill="#e06c2a" font-size="11" font-family="sans-serif" text-anchor="end" font-weight="700">68%</text>
+        <rect x="20" y="32" width="160" height="10" rx="5" fill="#e8e6e0"/>
+        <rect x="20" y="32" width="109" height="10" rx="5" fill="#e06c2a"/>
+        <rect x="20" y="56" width="160" height="8" rx="4" fill="#e8e6e0"/>
+        <text x="100" y="73" text-anchor="middle" fill="#bbb" font-size="10" font-family="sans-serif">不定長（ローディング中）</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">プログレスバー</span><span class="card-name-en">Progress Bar</span></div>
+      <p class="card-desc">処理の進み具合を視覚的に示すやつ。ファイルアップロードや読み込み中に表示する。長さがわからないときはアニメーション版になる。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>100%になっても表示が消えず完了したか分からない</li>
+        <li>処理が速すぎて一瞬しか見えない（かえって点滅みたいでびっくり）</li>
+        <li>バーの幅が実際の進捗と合っておらず「演技」になっている</li>
+        <li>aria属性がないのでスクリーンリーダーに進捗が伝わらない</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- バッジ -->
+  <div class="card" id="badge">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <rect x="20" y="12" width="44" height="20" rx="10" fill="#d4edda"/>
+        <text x="42" y="25" text-anchor="middle" fill="#1a6b31" font-size="10" font-family="sans-serif" font-weight="700">公開中</text>
+        <rect x="72" y="12" width="44" height="20" rx="10" fill="#fde8e8"/>
+        <text x="94" y="25" text-anchor="middle" fill="#b02020" font-size="10" font-family="sans-serif" font-weight="700">エラー</text>
+        <rect x="124" y="12" width="56" height="20" rx="10" fill="#dceeff"/>
+        <text x="152" y="25" text-anchor="middle" fill="#174a8a" font-size="10" font-family="sans-serif" font-weight="700">レビュー中</text>
+        <rect x="20" y="46" width="46" height="22" rx="5" fill="#f2f0eb" stroke="#ddd" stroke-width="1"/>
+        <text x="43" y="61" text-anchor="middle" fill="#555" font-size="10" font-family="sans-serif">JavaScript</text>
+        <rect x="74" y="46" width="34" height="22" rx="5" fill="#f2f0eb" stroke="#ddd" stroke-width="1"/>
+        <text x="91" y="61" text-anchor="middle" fill="#555" font-size="10" font-family="sans-serif">React</text>
+        <rect x="116" y="46" width="28" height="22" rx="5" fill="#f2f0eb" stroke="#ddd" stroke-width="1"/>
+        <text x="130" y="61" text-anchor="middle" fill="#555" font-size="10" font-family="sans-serif">CSS</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">バッジ・タグ</span><span class="card-name-en">Badge / Tag</span></div>
+      <p class="card-desc">ステータスやカテゴリを小さく示すラベル。「公開中・エラー」みたいな状態がバッジ、カテゴリ分類がタグ。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>長い文字列でバッジが横に伸びてレイアウトが崩れる</li>
+        <li>色だけでステータスを表現して色覚多様性の人に伝わらない</li>
+        <li>タグのバツボタンが小さすぎてスマホで消せない</li>
+        <li>数字バッジが2桁になったら円形が崩れて楕円になる</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- トースト -->
+  <div class="card" id="toast">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <rect x="20" y="10" width="160" height="34" rx="8" fill="#1c1c2e"/>
+        <circle cx="40" cy="27" r="8" fill="#4caf50"/>
+        <polyline points="36,27 39,31 46,23" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="56" y="23" fill="white" font-size="11" font-family="sans-serif" font-weight="700">保存しました</text>
+        <text x="56" y="36" fill="rgba(255,255,255,0.5)" font-size="10" font-family="sans-serif">プロフィールを更新しました</text>
+        <text x="168" y="22" fill="rgba(255,255,255,0.4)" font-size="14" font-family="sans-serif">×</text>
+        <rect x="20" y="54" width="160" height="4" rx="2" fill="rgba(255,255,255,0.12)"/>
+        <rect x="20" y="54" width="60" height="4" rx="2" fill="#e06c2a" opacity="0.7"/>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">トースト通知</span><span class="card-name-en">Toast</span></div>
+      <p class="card-desc">操作の結果を一時的にポップアップで知らせるやつ。「保存しました」「エラーが発生しました」などが代表例。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>連続して発火すると複数重なって積み上がる</li>
+        <li>3秒で消えて、読み終わる前にすっと消えてしまう</li>
+        <li>スマホのホームバー（iPhoneの下部）に被って×ボタンを押せない</li>
+        <li>エラートーストが自動消滅してしまいユーザーが読めない</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- パンくず -->
+  <div class="card" id="breadcrumb">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <text x="20" y="44" fill="#3b7dd8" font-size="11" font-family="sans-serif">ホーム</text>
+        <text x="60" y="44" fill="#bbb" font-size="11" font-family="sans-serif">›</text>
+        <text x="71" y="44" fill="#3b7dd8" font-size="11" font-family="sans-serif">製品</text>
+        <text x="101" y="44" fill="#bbb" font-size="11" font-family="sans-serif">›</text>
+        <text x="112" y="44" fill="#3b7dd8" font-size="11" font-family="sans-serif">スマートフォン</text>
+        <text x="178" y="44" fill="#bbb" font-size="11" font-family="sans-serif">›</text>
+        <text x="182" y="44" fill="#555" font-size="11" font-family="sans-serif">…</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">パンくずリスト</span><span class="card-name-en">Breadcrumb</span></div>
+      <p class="card-desc">「今サイトのどこにいるか」を示すナビゲーション。階層の深いECサイトで「3階層上に戻りたい」ときに便利。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>ページ名が長くてスマホで折り返し、縦長になってスペースを圧迫する</li>
+        <li>現在地のページもリンクになっていて自分自身に遷移できてしまう</li>
+        <li>セパレーター（›）が文字化けして□になる</li>
+        <li>構造化データ（JSON-LD）を設定し忘れてGoogleに認識されない</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- カード -->
+  <div class="card" id="card">
+    <div class="card-illo">
+      <svg width="200" height="90" viewBox="0 0 200 90" fill="none">
+        <rect x="20" y="8" width="75" height="75" rx="8" fill="white" stroke="#e8e6e0" stroke-width="1"/>
+        <rect x="20" y="8" width="75" height="32" rx="8" fill="#e8e6e0"/>
+        <rect x="20" y="32" width="75" height="8" fill="#e8e6e0"/>
+        <text x="57" y="56" text-anchor="middle" fill="#333" font-size="9" font-family="sans-serif" font-weight="700">商品タイトル</text>
+        <text x="57" y="68" text-anchor="middle" fill="#e06c2a" font-size="9" font-family="sans-serif" font-weight="700">¥ 2,980</text>
+        <rect x="104" y="8" width="75" height="75" rx="8" fill="white" stroke="#e8e6e0" stroke-width="1"/>
+        <rect x="104" y="8" width="75" height="32" rx="8" fill="#dceeff"/>
+        <rect x="104" y="32" width="75" height="8" fill="#dceeff"/>
+        <text x="141" y="56" text-anchor="middle" fill="#333" font-size="9" font-family="sans-serif" font-weight="700">別の商品</text>
+        <text x="141" y="68" text-anchor="middle" fill="#e06c2a" font-size="9" font-family="sans-serif" font-weight="700">¥ 5,500</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">カード</span><span class="card-name-en">Card</span></div>
+      <p class="card-desc">関連する情報をひとまとめにしたコンテナ。商品・記事・プロフィールなど「1つのもの」を表す単位として広く使われる。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>テキストの量が違うとカードの高さがバラバラになる</li>
+        <li>画像の縦横比がバラバラで並べたときにガタガタになる</li>
+        <li>カード全体をリンクにしようとして a タグが入れ子になる</li>
+        <li>ホバーのbox-shadowアニメーションでレイアウトがずれる（transformを使うべき）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ページネーション -->
+  <div class="card" id="pagination">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <rect x="18" y="28" width="24" height="24" rx="5" fill="#f2f0eb"/>
+        <text x="30" y="44" text-anchor="middle" fill="#bbb" font-size="13" font-family="sans-serif">‹</text>
+        <rect x="48" y="28" width="24" height="24" rx="5" fill="#f2f0eb"/>
+        <text x="60" y="44" text-anchor="middle" fill="#888" font-size="12" font-family="sans-serif">1</text>
+        <rect x="78" y="28" width="24" height="24" rx="5" fill="#e06c2a"/>
+        <text x="90" y="44" text-anchor="middle" fill="white" font-size="12" font-family="sans-serif" font-weight="700">2</text>
+        <rect x="108" y="28" width="24" height="24" rx="5" fill="#f2f0eb"/>
+        <text x="120" y="44" text-anchor="middle" fill="#888" font-size="12" font-family="sans-serif">3</text>
+        <text x="142" y="44" text-anchor="middle" fill="#bbb" font-size="12" font-family="sans-serif">…</text>
+        <rect x="152" y="28" width="28" height="24" rx="5" fill="#f2f0eb"/>
+        <text x="166" y="44" text-anchor="middle" fill="#888" font-size="12" font-family="sans-serif">12</text>
+        <rect x="186" y="28" width="14" height="24" rx="5" fill="#f2f0eb"/>
+        <text x="193" y="44" text-anchor="middle" fill="#888" font-size="13" font-family="sans-serif">›</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">ページネーション</span><span class="card-name-en">Pagination</span></div>
+      <p class="card-desc">大量のデータを複数ページに分けて表示するやつ。「1 2 3 … 12 ›」みたいな見た目で今どのページかを示す。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>最初のページで「前へ」が押せてしまう（disabled 忘れ）</li>
+        <li>URLにページ番号がないのでリロードで1ページ目に戻る</li>
+        <li>スマホで全ページ番号が並んで画面からはみ出す</li>
+        <li>データが0件のときもページネーションが「1」で表示される</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ハンバーガーメニュー -->
+  <div class="card" id="hamburger">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <rect x="0" y="0" width="200" height="80" fill="transparent"/>
+        <rect x="20" y="18" width="160" height="44" rx="8" fill="#1c1c2e"/>
+        <line x1="34" y1="32" x2="58" y2="32" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="34" y1="40" x2="58" y2="40" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="34" y1="48" x2="58" y2="48" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="140" y="37" text-anchor="middle" fill="white" font-size="11" font-family="sans-serif" font-weight="700" opacity="0.6">ホーム</text>
+        <text x="140" y="52" text-anchor="middle" fill="white" font-size="11" font-family="sans-serif" font-weight="700" opacity="0.6">会社概要</text>
+        <line x1="70" y1="20" x2="70" y2="62" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">ハンバーガーメニュー</span><span class="card-name-en">Hamburger Menu</span></div>
+      <p class="card-desc">三本線のアイコンをクリックするとナビゲーションが開くやつ。スマホで画面が狭いときにメニューをたたむために使う。形がハンバーガーに見えることからその名前。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>開いているのに再度押しても閉じない（×アイコンへの切り替え忘れ）</li>
+        <li>メニューが開いた状態でスクロールが背景に伝わる</li>
+        <li>アニメーションなしでメニューが瞬間出現する</li>
+        <li>メニュー外をタップしても閉じない</li>
+        <li>タブレット幅でハンバーガーが出続けてメニューが余裕なのに隠れる</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- スケルトンローディング -->
+  <div class="card" id="skeleton">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <defs>
+          <linearGradient id="shimmer" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#e8e6e0"/>
+            <stop offset="50%" stop-color="#f5f4f0"/>
+            <stop offset="100%" stop-color="#e8e6e0"/>
+          </linearGradient>
+        </defs>
+        <circle cx="34" cy="24" r="14" fill="url(#shimmer)"/>
+        <rect x="56" y="14" width="80" height="10" rx="5" fill="url(#shimmer)"/>
+        <rect x="56" y="30" width="50" height="8" rx="4" fill="url(#shimmer)"/>
+        <rect x="20" y="52" width="160" height="8" rx="4" fill="url(#shimmer)"/>
+        <rect x="20" y="65" width="120" height="8" rx="4" fill="url(#shimmer)"/>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">スケルトンローディング</span><span class="card-name-en">Skeleton</span></div>
+      <p class="card-desc">データを読み込んでいる間、実際のコンテンツの「骨格」を薄いグレーで先に表示するやつ。くるくるスピナーより「何が来るか」が分かって体感が速い。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>データが来た後もスケルトンが消えず、実コンテンツに重なる</li>
+        <li>実際のレイアウトとスケルトンの形が全然違ってガクッと変わる</li>
+        <li>シマーアニメーションが重すぎてかえってカクつく</li>
+        <li>エラー時のハンドリングがなく、スケルトンが永遠に表示され続ける</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- スピナー -->
+  <div class="card" id="spinner">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <circle cx="56" cy="40" r="20" stroke="#e8e6e0" stroke-width="4"/>
+        <path d="M56 20 A20 20 0 0 1 76 40" stroke="#e06c2a" stroke-width="4" stroke-linecap="round"/>
+        <text x="90" y="36" fill="#555" font-size="11" font-family="sans-serif">読み込み中…</text>
+        <text x="90" y="52" fill="#bbb" font-size="10" font-family="sans-serif">しばらくお待ちください</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">スピナー</span><span class="card-name-en">Spinner / Loader</span></div>
+      <p class="card-desc">処理中であることを示すくるくる回るやつ。「何かが起きている」ことは伝えられるが、どのくらいかかるかは分からない。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>処理が終わっても回り続ける（非表示切り替え忘れ）</li>
+        <li>ボタンの上にスピナーを表示すると、ボタンが連打できてしまう</li>
+        <li>CSSアニメーションが重いページで回転がカクつく</li>
+        <li>背景と色が似ていてスピナーが見えない</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 検索バー -->
+  <div class="card" id="searchbar">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <rect x="20" y="22" width="145" height="36" rx="8" fill="white" stroke="#e06c2a" stroke-width="1.5"/>
+        <circle cx="38" cy="40" r="7" stroke="#bbb" stroke-width="1.5" fill="none"/>
+        <line x1="43" y1="45" x2="47" y2="49" stroke="#bbb" stroke-width="1.5" stroke-linecap="round"/>
+        <text x="56" y="44" fill="#aaa" font-size="12" font-family="sans-serif">キーワードを入力</text>
+        <rect x="170" y="22" width="10" height="36" rx="5" fill="none"/>
+        <rect x="168" y="22" width="12" height="36" rx="6" fill="#e06c2a"/>
+        <line x1="174" y1="36" x2="174" y2="44" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <line x1="170" y1="40" x2="178" y2="40" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">検索バー</span><span class="card-name-en">Search Bar</span></div>
+      <p class="card-desc">キーワードを入力してコンテンツを絞り込むやつ。虫眼鏡アイコンが定番。サジェスト（候補を表示するドロップダウン）が付くことも多い。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>入力のたびにAPIを叩いてサーバーに負荷がかかる（debounce忘れ）</li>
+        <li>日本語変換中（IME入力中）にもサジェストが発火して文字が崩れる</li>
+        <li>Enterキーで検索できない（form タグと submit の設定漏れ）</li>
+        <li>クリアボタン（×）を押してもフォーカスが外れて結果が消えない</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ドロワー -->
+  <div class="card" id="drawer">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <rect x="0" y="0" width="200" height="80" fill="rgba(28,28,46,0.3)" rx="8"/>
+        <rect x="100" y="0" width="100" height="80" rx="0" fill="white"/>
+        <rect x="100" y="0" width="100" height="80" rx="8" fill="white"/>
+        <rect x="100" y="0" width="4" height="80" fill="#e8e6e0"/>
+        <text x="115" y="22" fill="#1c1c2e" font-size="11" font-family="sans-serif" font-weight="700">フィルター</text>
+        <line x1="115" y1="30" x2="190" y2="30" stroke="#eee" stroke-width="1"/>
+        <text x="115" y="45" fill="#555" font-size="10" font-family="sans-serif">カテゴリ</text>
+        <text x="115" y="58" fill="#555" font-size="10" font-family="sans-serif">価格帯</text>
+        <text x="115" y="71" fill="#555" font-size="10" font-family="sans-serif">ブランド</text>
+        <text x="188" y="16" fill="#aaa" font-size="14" font-family="sans-serif">×</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">ドロワー</span><span class="card-name-en">Drawer / Side Panel</span></div>
+      <p class="card-desc">画面の端からスライドして出てくるパネル。フィルター・カート・通知一覧など、メインコンテンツを置き換えずに追加情報を見せたいときに使う。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>ドロワー内でスクロールしようとすると背景がスクロールされる</li>
+        <li>スライドアニメーション中にコンテンツが一瞬チラつく</li>
+        <li>背景オーバーレイをタップしても閉じない</li>
+        <li>ドロワーが開いているのに×ボタンが見切れてタップできない</li>
+        <li>スマホの仮想キーボードが出るとドロワーが押し上げられて崩れる</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- カルーセル -->
+  <div class="card" id="carousel">
+    <div class="card-illo">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <rect x="30" y="10" width="140" height="45" rx="6" fill="#f2f0eb"/>
+        <rect x="30" y="10" width="140" height="45" rx="6" fill="none" stroke="#e8e6e0" stroke-width="1"/>
+        <text x="100" y="37" text-anchor="middle" fill="#bbb" font-size="11" font-family="sans-serif">スライド 2 / 4</text>
+        <polygon points="18,32 28,26 28,38" fill="#ddd"/>
+        <polygon points="182,32 172,26 172,38" fill="#ddd"/>
+        <circle cx="86" cy="66" r="4" fill="#e8e6e0"/>
+        <circle cx="100" cy="66" r="4" fill="#e06c2a"/>
+        <circle cx="114" cy="66" r="4" fill="#e8e6e0"/>
+        <circle cx="128" cy="66" r="4" fill="#e8e6e0"/>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label"><span class="card-name-jp">カルーセル</span><span class="card-name-en">Carousel / Slider</span></div>
+      <p class="card-desc">画像やカードを横にスライドして表示するやつ。バナー・商品写真・レビューをコンパクトに並べるときに使う。ドットやボタンで今何枚目か分かる。</p>
+      <p class="bug-title">よくあるバグ</p>
+      <ul class="bug-list">
+        <li>自動再生が速すぎて読む前に次のスライドに移動する</li>
+        <li>スマホでスワイプしようとするとページがスクロールされる</li>
+        <li>ループ設定で最後のスライドから最初に戻るときにガクッとする</li>
+        <li>SEO的に非表示のスライドのコンテンツが評価されにくい</li>
+        <li>画像の高さが違うとスライドごとにレイアウトが揺れる</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <p>BEETLE Tools — <a href="/tools/">ツール一覧に戻る</a> | <a href="/">beetle-web.jp</a></p>
+</footer>
+
+<script>
+  const links = document.querySelectorAll('.toc-link');
+  const cards = document.querySelectorAll('.card[id]');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector('.toc-link[href="#' + entry.target.id + '"]');
+        if (active) {
+          active.classList.add('active');
+          active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      }
+    });
+  }, { rootMargin: '-100px 0px -60% 0px', threshold: 0 });
+
+  cards.forEach(c => observer.observe(c));
+</script>
+</body>
+</html>
