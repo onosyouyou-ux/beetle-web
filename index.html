@@ -9,16 +9,16 @@
 body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI',sans-serif;color:#1a1a1a;background:#fff;-webkit-font-smoothing:antialiased;}
 a{text-decoration:none;}
 
-.container{max-width:860px;margin:0 auto;padding:0 40px;}
+.container{max-width:860px;margin:0 auto;padding:0 24px;}
 
 /* Nav */
 .nav{border-bottom:1px solid #ebebeb;position:sticky;top:0;background:rgba(255,255,255,0.96);backdrop-filter:blur(8px);z-index:100;}
-.nav-inner{max-width:860px;margin:0 auto;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;}
+.nav-inner{max-width:860px;margin:0 auto;padding:14px 24px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;}
 .logo{display:flex;align-items:center;gap:10px;}
 .logo-mark{width:36px;height:36px;background:#2C2C2A;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
 .logo-name{font-size:15px;font-weight:600;color:#1a1a1a;}
 .logo-sub{font-size:11px;color:#aaa;display:block;margin-top:1px;}
-.nav-links{display:flex;gap:28px;}
+.nav-links{display:flex;gap:22px;}
 .nav-links a{font-size:13px;color:#666;transition:color .15s;}
 .nav-links a:hover{color:#1a1a1a;}
 
@@ -26,13 +26,21 @@ a{text-decoration:none;}
 .hero{padding:96px 0 88px;border-bottom:1px solid #ebebeb;}
 .hero-eyebrow{font-size:11px;font-weight:600;color:#BA7517;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:22px;}
 .hero-q{font-size:42px;font-weight:700;line-height:1.35;margin-bottom:36px;color:#111;letter-spacing:-0.02em;}
+.accent{color:#EF9F27;}
+.sp-br{display:none;}
+@media(max-width:600px){
+  .sp-br{display:block;}
+  .about-block{display:block;}
+  .avatar{width:44px;height:44px;font-size:13px;float:left;margin:0 12px 8px 0;}
+  .about-body .intro{clear:left;}
+}
 .hero-body{font-size:16px;color:#555;line-height:2.1;margin-bottom:20px;}
 .hero-body-note{font-size:15px;color:#444;line-height:1.9;margin-bottom:40px;}
 .section-divider{font-size:11px;font-weight:700;color:#aaa;letter-spacing:0.12em;text-transform:uppercase;margin:48px 0 20px;padding-bottom:12px;border-bottom:1px solid #ebebeb;}
 .hero-btns{display:flex;gap:12px;}
-.btn-main{padding:14px 28px;font-size:14px;font-weight:600;background:#2C2C2A;color:#FAC775;border:none;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s;}
+.btn-main{padding:14px 28px;font-size:14px;font-weight:600;background:#2C2C2A;color:#FAC775;border:none;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s;white-space:nowrap;}
 .btn-main:hover{background:#3a3a38;}
-.btn-sub{padding:14px 28px;font-size:14px;background:none;color:#555;border:1px solid #ddd;border-radius:8px;cursor:pointer;transition:all .15s;}
+.btn-sub{padding:14px 28px;font-size:14px;background:none;color:#555;border:1px solid #ddd;border-radius:8px;cursor:pointer;transition:all .15s;white-space:nowrap;}
 .btn-sub:hover{border-color:#aaa;color:#1a1a1a;}
 
 /* Marquee */
@@ -88,13 +96,13 @@ a{text-decoration:none;}
 .tag{font-size:11px;padding:4px 10px;background:#fafafa;border:1px solid #ebebeb;border-radius:99px;color:#777;}
 
 /* CTA */
-.cta{padding:100px 40px;text-align:center;}
+.cta{padding:100px 24px;text-align:center;}
 .cta h2{font-size:28px;font-weight:700;margin-bottom:14px;color:#111;letter-spacing:-0.01em;}
 .cta h2 span{color:#BA7517;}
 .cta p{font-size:15px;color:#555;margin-bottom:36px;line-height:2;}
 
 /* Footer */
-.footer{padding:24px 40px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #ebebeb;}
+.footer{padding:24px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #ebebeb;}
 .footer-copy{font-size:12px;color:#bbb;}
 .footer-links{display:flex;gap:20px;}
 .footer-links a{font-size:13px;color:#aaa;transition:color .15s;}
@@ -114,7 +122,6 @@ a{text-decoration:none;}
     </div>
     <div class="nav-links">
       <a href="#tools">ツール</a>
-      <a href="#about">について</a>
       <a href="#">コラム</a>
       <a href="#contact">お問い合わせ</a>
     </div>
@@ -124,12 +131,9 @@ a{text-decoration:none;}
 <div class="hero">
   <div class="container">
     <p class="hero-eyebrow">BEETLE合同会社</p>
-    <p class="hero-q">そうだ、<span class="accent">定時</span>に帰ろう。</p>
+    <p class="hero-q">そうだ、<br class="sp-br"><span class="accent">定時</span>に帰ろう。</p>
     <p class="hero-body">
-      この業界は、スタートアップ時にかなりの知識がいる。<br>
-      バグかどうかもわからない。仕様書も探せない。<br>
-      聞きたくても、エスカレーション先の空きを待つしかない。<br>
-      リズムが崩れる。時間だけが過ぎていく。
+      この業界は、スタートアップ時にかなりの知識がいる。バグかどうかもわからない。仕様書も探せない。聞きたくても、エスカレーション先の空きを待つしかない。リズムが崩れる。時間だけが過ぎていく。
     </p>
     <p class="hero-body-note">その時間を少しでも解消できるように、僕は考えた。</p>
     <p class="hero-body-note">今日は、定時に帰れそうですか？</p>

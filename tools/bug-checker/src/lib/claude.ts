@@ -43,7 +43,11 @@ export interface ScanResult {
   ticket: Ticket | null;
 }
 
-export async function scanImage(base64: string, mimeType: string): Promise<ScanResult> {
+export async function scanImage(base64: string, mimeType: string, note?: string): Promise<ScanResult> {
+  const userText = note
+    ? `この画像を分析してください。\n\n【ユーザーからの補足情報】\n${note}`
+    : 'この画像を分析してください。';
+
   const response = await getClient().messages.create({
     model: 'claude-haiku-4-5-20251001',
     max_tokens: 1024,
@@ -60,7 +64,7 @@ export async function scanImage(base64: string, mimeType: string): Promise<ScanR
               data: base64,
             },
           },
-          { type: 'text', text: 'この画像を分析してください。' },
+          { type: 'text', text: userText },
         ],
       },
     ],

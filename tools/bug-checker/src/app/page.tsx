@@ -22,6 +22,7 @@ export default function HomePage() {
   const [counter, setCounter] = useState<CounterData | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [note, setNote] = useState('');
   const [scanning, setScanning] = useState(false);
   const [scanPhase, setScanPhase] = useState(0);
   const [verdict, setVerdict] = useState<ScanResponse | null>(null);
@@ -44,6 +45,7 @@ export default function HomePage() {
   const handleReset = useCallback(() => {
     setImageFile(null);
     setImagePreview(null);
+    setNote('');
     setVerdict(null);
     setLimitExceeded(false);
     setScanPhase(0);
@@ -68,7 +70,7 @@ export default function HomePage() {
       fetch('/api/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: base64, mimeType, subscriptionToken: token }),
+        body: JSON.stringify({ image: base64, mimeType, subscriptionToken: token, note: note.trim() || undefined }),
       }).then(r => r.json() as Promise<ScanResponse>),
       new Promise<void>(resolve => {
         setTimeout(() => setScanPhase(2), 900);
@@ -110,7 +112,17 @@ export default function HomePage() {
           disabled={scanning}
         />
 
+        <textarea
+          value={note}
+          onChange={e => setNote(e.target.value)}
+          disabled={scanning}
+          placeholder="操作していた内容・エラーの状況・気になったことなど、補足があれば書いてください（任意）"
+          className="w-full border border-[#c8c7c0] rounded-xl px-4 py-3 text-[13px] text-ink bg-[#fafaf8] resize-none h-[72px] outline-none focus:border-[#888780] transition-colors mb-4 placeholder:text-[#b4b2a9] disabled:opacity-50"
+        />
         <ScanButton disabled={!imagePreview || scanning || !!verdict} onClick={handleScan} />
+        <p className="text-[11px] text-[#b4b2a9] text-center mt-2">
+          ※ AIの判定は参考情報です。誤りが含まれる場合があります。
+        </p>
 
         <ScanningArea phase={scanPhase} />
 
@@ -118,7 +130,17 @@ export default function HomePage() {
 
         <footer className="mt-8 pt-3 border-t border-[#e0dfd8] flex justify-between items-center">
           <div className="text-[12px] font-semibold text-ink">🐛 これってバグなの？</div>
-          <div className="text-[11px] text-[#b4b2a9] font-mono">リリース日：{releaseDate}</div>
+          <div className="flex items-center gap-3">
+            {(imagePreview || verdict) && (
+              <button
+                onClick={handleReset}
+                className="text-[11px] text-[#888780] hover:text-ink transition-colors font-mono underline underline-offset-2"
+              >
+                クリア
+              </button>
+            )}
+            <div className="text-[11px] text-[#b4b2a9] font-mono">リリース日：{releaseDate}</div>
+          </div>
         </footer>
       </div>
     </main>

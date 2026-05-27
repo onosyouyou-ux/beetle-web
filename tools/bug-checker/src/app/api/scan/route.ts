@@ -7,10 +7,11 @@ export const maxDuration = 30;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { image, mimeType, subscriptionToken } = body as {
+    const { image, mimeType, subscriptionToken, note } = body as {
       image?: string;
       mimeType?: string;
       subscriptionToken?: string;
+      note?: string;
     };
 
     if (!image || !mimeType) {
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const result = await scanImage(image, mimeType);
+    const result = await scanImage(image, mimeType, note);
 
     if (!isSubscriber) {
       await incrementCount().catch(() => null);
