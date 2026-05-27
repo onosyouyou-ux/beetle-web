@@ -3,17 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="「このボタンみたいなやつ、なんて言うの？」画面をキャプチャするだけでUI部品の名前がわかる。QA・デザイナー・エンジニア向け無料ツール。近日公開。">
-<title>UI部品名鑑 | 画面キャプチャでUI部品名がわかる</title>
+<meta name="description" content="「このボタンみたいなやつ、なんて言うの？」UIコンポーネント23種の名前・説明・よくあるバグをまとめた無料リファレンス。QA・デザイナー・エンジニア向け。">
+<title>UI部品名鑑 | UIコンポーネントのリファレンス</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{
   font-family:'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
   background:linear-gradient(160deg,#0f172a 0%,#1e1b4b 50%,#312e81 100%);
-  min-height:100vh;
-  color:#fff;
-  overflow-x:hidden;
+  min-height:100vh;color:#fff;overflow-x:hidden;
 }
 body::before{content:'';position:fixed;width:300px;height:300px;background:rgba(99,102,241,0.1);border-radius:50%;top:-80px;left:-80px;pointer-events:none;animation:float 6s ease-in-out infinite alternate;}
 body::after{content:'';position:fixed;width:220px;height:220px;background:rgba(139,92,246,0.08);border-radius:50%;bottom:-60px;right:-60px;pointer-events:none;animation:float 8s ease-in-out infinite alternate-reverse;}
@@ -21,7 +19,6 @@ body::after{content:'';position:fixed;width:220px;height:220px;background:rgba(1
 @keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
 @keyframes popIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
 
 .container{max-width:640px;margin:0 auto;padding:0 20px 60px;position:relative;z-index:1;}
 
@@ -39,48 +36,26 @@ body::after{content:'';position:fixed;width:220px;height:220px;background:rgba(1
 .hero{text-align:center;padding:48px 0 36px;animation:fadeUp .7s ease both;}
 .hero-emoji{font-size:80px;display:block;margin-bottom:12px;animation:bounce 2.5s ease-in-out infinite;}
 .hero-label{
-  display:inline-block;
-  background:rgba(99,102,241,0.35);border:1px solid rgba(99,102,241,0.6);
-  border-radius:4px;padding:3px 10px;
-  font-size:11px;font-weight:700;letter-spacing:2px;color:#a5b4fc;margin-bottom:14px;
+  display:inline-block;background:rgba(99,102,241,0.35);border:1px solid rgba(99,102,241,0.6);
+  border-radius:4px;padding:3px 10px;font-size:11px;font-weight:700;letter-spacing:2px;
+  color:#a5b4fc;margin-bottom:14px;
 }
 .hero-title{font-size:clamp(26px,7vw,44px);font-weight:900;text-shadow:0 4px 20px rgba(0,0,0,0.4);margin-bottom:10px;letter-spacing:2px;}
 .hero-sub{font-size:clamp(14px,3.5vw,17px);color:rgba(255,255,255,0.8);line-height:1.8;margin-bottom:32px;}
 .hero-sub strong{color:#fff;}
 
-/* 開発中バナー */
-.wip-banner{
-  display:inline-flex;align-items:center;gap:10px;
-  background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.4);
-  border-radius:99px;padding:10px 24px;
-  font-size:14px;font-weight:700;color:#fcd34d;
+.cta-btn{
+  display:inline-block;
+  background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 100%);
+  color:#fff;font-size:clamp(16px,4vw,19px);font-weight:900;
+  padding:18px 48px;border-radius:99px;text-decoration:none;
+  box-shadow:0 8px 30px rgba(99,102,241,0.4),0 0 0 4px rgba(255,255,255,0.1);
+  transition:transform .18s,box-shadow .18s;letter-spacing:1px;
   animation:popIn .6s .3s ease both;
-  margin-bottom:16px;
 }
-.wip-dot{width:8px;height:8px;background:#fbbf24;border-radius:50%;animation:pulse 1.5s ease-in-out infinite;}
-
-.notify-form{
-  display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
-  animation:popIn .6s .4s ease both;
-}
-.notify-input{
-  padding:12px 18px;border-radius:99px;border:none;
-  background:rgba(255,255,255,0.12);color:#fff;
-  font-size:14px;width:240px;outline:none;
-  border:1px solid rgba(255,255,255,0.2);
-  transition:background .2s,border-color .2s;
-}
-.notify-input::placeholder{color:rgba(255,255,255,0.4);}
-.notify-input:focus{background:rgba(255,255,255,0.18);border-color:rgba(99,102,241,0.6);}
-.notify-btn{
-  padding:12px 24px;border-radius:99px;border:none;cursor:pointer;
-  background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;
-  font-size:14px;font-weight:700;letter-spacing:.5px;
-  box-shadow:0 4px 16px rgba(99,102,241,0.4);
-  transition:transform .15s,box-shadow .15s;
-}
-.notify-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(99,102,241,0.5);}
-.notify-note{font-size:12px;color:rgba(255,255,255,0.4);margin-top:10px;}
+.cta-btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 14px 40px rgba(99,102,241,0.5),0 0 0 6px rgba(255,255,255,0.15);}
+.cta-btn:active{transform:translateY(0) scale(0.98);}
+.cta-note{font-size:12px;color:rgba(255,255,255,0.4);margin-top:12px;}
 
 .arrow-down{display:block;margin:40px auto 0;font-size:28px;opacity:.6;animation:bounce 2s ease-in-out infinite;}
 
@@ -127,26 +102,28 @@ body::after{content:'';position:fixed;width:220px;height:220px;background:rgba(1
 .feature-desc{font-size:clamp(13px,3vw,14px);color:rgba(255,255,255,0.75);line-height:1.7;}
 .feature-tag{
   display:inline-block;background:rgba(99,102,241,0.25);border:1px solid rgba(99,102,241,0.4);
-  border-radius:99px;padding:2px 10px;font-size:11px;font-weight:700;margin-top:8px;
-  letter-spacing:.5px;color:#a5b4fc;margin-right:6px;
+  border-radius:99px;padding:2px 10px;font-size:11px;font-weight:700;
+  margin-top:8px;letter-spacing:.5px;color:#a5b4fc;margin-right:6px;
 }
 
-/* ステップ */
-.steps{display:flex;flex-direction:column;gap:0;margin-bottom:48px;}
-.step{display:flex;gap:16px;align-items:flex-start;animation:fadeUp .6s ease both;}
-.step:nth-child(2){animation-delay:.1s;}
-.step:nth-child(3){animation-delay:.2s;}
-.step-line{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
-.step-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(99,102,241,0.4);}
-.step-connector{width:2px;flex:1;min-height:24px;background:rgba(255,255,255,0.15);margin:4px 0;}
-.step:last-child .step-connector{display:none;}
-.step-content{padding:4px 0 28px;}
-.step-label{font-size:clamp(14px,3.5vw,16px);font-weight:900;color:#fff;margin-bottom:4px;}
-.step-note{font-size:clamp(12px,3vw,14px);color:rgba(255,255,255,0.7);line-height:1.6;}
+/* 収録リスト */
+.parts-grid{
+  display:flex;flex-wrap:wrap;gap:8px;margin-bottom:48px;
+  animation:fadeUp .6s .1s ease both;
+}
+.part-chip{
+  background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);
+  border-radius:99px;padding:6px 14px;font-size:12px;font-weight:700;
+  backdrop-filter:blur(8px);white-space:nowrap;
+}
 
 /* バッジ */
 .badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:40px;}
 .badge{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:99px;padding:8px 18px;font-size:13px;font-weight:700;backdrop-filter:blur(8px);}
+
+/* CTA bottom */
+.cta-bottom{text-align:center;animation:fadeUp .6s .2s ease both;}
+.cta-bottom .cta-btn{font-size:clamp(17px,4.5vw,21px);padding:20px 56px;}
 
 footer{text-align:center;padding:24px 0 0;color:rgba(255,255,255,0.35);font-size:12px;line-height:2;}
 footer a{color:rgba(255,255,255,0.45);text-decoration:none;}
@@ -169,18 +146,11 @@ footer a:hover{color:#fff;}
     <h1 class="hero-title">UI部品名鑑</h1>
     <p class="hero-sub">
       「このボタンみたいなやつ、なんて言うの？」<br>
-      画面をキャプチャするだけで<strong>UI部品の名前がわかる</strong>。<br>
+      UIコンポーネント<strong>23種の名前・説明・よくあるバグ</strong>をまとめたリファレンス。<br>
       QA・デザイナー・エンジニアの「あれなんだっけ」を解消。
     </p>
-    <div class="wip-banner">
-      <span class="wip-dot"></span>
-      ただいま開発中です
-    </div><br><br>
-    <div class="notify-form">
-      <input class="notify-input" type="email" placeholder="メールアドレスを入力">
-      <button class="notify-btn" onclick="alert('ご登録ありがとうございます！公開時にお知らせします。')">公開時に通知する</button>
-    </div>
-    <p class="notify-note">登録不要・スパムなし・いつでも解除できます</p>
+    <a class="cta-btn" href="./index.html">🔍 名鑑を見る</a>
+    <p class="cta-note">登録不要・無料・ブラウザで開くだけ</p>
     <span class="arrow-down">↓</span>
   </section>
 
@@ -195,90 +165,95 @@ footer a:hover{color:#fff;}
     <div class="pain-detail">
       <span class="pain-detail-icon">🤔</span>
       <p class="pain-detail-text">
-        バグ起票するとき、仕様書を書くとき、デザインレビューのとき。<br>
+        バグ起票のとき、仕様書を書くとき、デザインレビューのとき。<br>
         <strong>「このUI部品の名前がわからない」</strong>で手が止まる。<br>
-        ググっても「それっぽい名前」がヒットしない。
+        ググっても「それっぽい名前」がなかなかヒットしない。
       </p>
     </div>
     <div class="pain-solution">
       <span class="pain-solution-icon">✨</span>
       <p class="pain-solution-text">
-        <strong>スクショを貼るだけで名前がわかる！</strong>
-        AIが画面を解析してUI部品の正式名称・説明・使われ方を即出力。<br>
-        「あれなんだっけ」に二度と悩まない。
+        <strong>名前と「よくあるバグ」がセットでわかる！</strong>
+        部品の正式名称・説明に加えて、その部品でありがちなバグまで収録。<br>
+        テストの観点出しにもそのまま使えます。
       </p>
     </div>
   </section>
 
-  <h2 class="section-title">✨ できること（予定）</h2>
+  <h2 class="section-title">✨ できること</h2>
   <div class="features">
-    <div class="feature-card">
-      <span class="feature-icon">🔍</span>
-      <div>
-        <div class="feature-name">UI部品名を即特定</div>
-        <div class="feature-desc">
-          スクショを貼るとAIが画面内の部品を認識。<br>
-          ボタン・モーダル・トースト・スライダーなど正式名称を返します。
-        </div>
-        <span class="feature-tag">🖼️ キャプチャ1枚でOK</span>
-      </div>
-    </div>
     <div class="feature-card">
       <span class="feature-icon">📖</span>
       <div>
-        <div class="feature-name">名前 + 説明 + 使われ方</div>
+        <div class="feature-name">23種のUI部品を収録</div>
         <div class="feature-desc">
-          部品名だけでなく「どんな目的で使われるか」「よくある実装パターン」まで解説。<br>
-          そのままドキュメントに貼れます。
+          ボタン・モーダル・トースト・スライダーなど、よく出てくる部品を網羅。<br>
+          日本語名・英語名・説明がセットで確認できます。
         </div>
-        <span class="feature-tag">📝 仕様書にそのまま使える</span>
+        <span class="feature-tag">🖼️ SVGイラスト付き</span>
       </div>
     </div>
     <div class="feature-card">
       <span class="feature-icon">⚡</span>
       <div>
-        <div class="feature-name">登録不要・ブラウザで動く</div>
+        <div class="feature-name">よくあるバグも一緒に確認</div>
         <div class="feature-desc">
-          インストールなし・アカウント不要。<br>
-          開いてすぐ使える軽さを目指して開発中です。
+          各部品に「現場でよく見るバグ」を4〜5件ずつ掲載。<br>
+          テスト観点の出しにそのまま使えます。
         </div>
-        <span class="feature-tag">🆓 無料予定</span>
-        <span class="feature-tag">🔒 登録不要</span>
+        <span class="feature-tag">🐛 テスト観点に活用</span>
+      </div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🔗</span>
+      <div>
+        <div class="feature-name">上部ナビでサッと飛べる</div>
+        <div class="feature-desc">
+          画面上部のアイコンナビから目的の部品にワンクリックでジャンプ。<br>
+          スクロールに合わせてナビがハイライトされます。
+        </div>
+        <span class="feature-tag">🧭 スクロール連動</span>
       </div>
     </div>
   </div>
 
-  <h2 class="section-title">🪄 使い方（予定）</h2>
-  <div class="steps">
-    <div class="step">
-      <div class="step-line"><div class="step-num">1</div><div class="step-connector"></div></div>
-      <div class="step-content">
-        <div class="step-label">📸 画面をキャプチャして貼る</div>
-        <div class="step-note">名前を知りたいUI部品が写ったスクリーンショットをドラッグ&ドロップ。</div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-line"><div class="step-num">2</div><div class="step-connector"></div></div>
-      <div class="step-content">
-        <div class="step-label">🔍 AIが部品を認識</div>
-        <div class="step-note">AIが画面内のUI部品を解析し、正式名称・分類・説明を生成します。</div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-line"><div class="step-num">3</div><div class="step-connector"></div></div>
-      <div class="step-content">
-        <div class="step-label">📋 名前と説明をコピー</div>
-        <div class="step-note">バグ起票・仕様書・デザインレビューにそのままペーストして活用。</div>
-      </div>
-    </div>
+  <h2 class="section-title">📋 収録している部品</h2>
+  <div class="parts-grid">
+    <span class="part-chip">🔘 ボタン</span>
+    <span class="part-chip">✏️ テキストフィールド</span>
+    <span class="part-chip">☑️ チェックボックス</span>
+    <span class="part-chip">🔵 ラジオボタン</span>
+    <span class="part-chip">🔀 トグルスイッチ</span>
+    <span class="part-chip">▼ セレクトボックス</span>
+    <span class="part-chip">🪟 モーダル</span>
+    <span class="part-chip">💬 ツールチップ</span>
+    <span class="part-chip">📑 タブ</span>
+    <span class="part-chip">📂 アコーディオン</span>
+    <span class="part-chip">🎚 スライダー</span>
+    <span class="part-chip">📊 プログレスバー</span>
+    <span class="part-chip">🏷 バッジ・タグ</span>
+    <span class="part-chip">🔔 トースト通知</span>
+    <span class="part-chip">🍞 パンくずリスト</span>
+    <span class="part-chip">🃏 カード</span>
+    <span class="part-chip">📄 ページネーション</span>
+    <span class="part-chip">☰ ハンバーガーメニュー</span>
+    <span class="part-chip">⬜ スケルトン</span>
+    <span class="part-chip">⏳ スピナー</span>
+    <span class="part-chip">🔍 検索バー</span>
+    <span class="part-chip">◀ ドロワー</span>
+    <span class="part-chip">🎠 カルーセル</span>
   </div>
 
   <div class="badges">
-    <span class="badge">🆓 無料予定</span>
-    <span class="badge">📱 スマホ対応予定</span>
+    <span class="badge">🆓 無料</span>
     <span class="badge">🔒 登録不要</span>
     <span class="badge">🌐 ブラウザで動く</span>
-    <span class="badge">⚡ インストール不要</span>
+    <span class="badge">📱 スマホ対応</span>
+  </div>
+
+  <div class="cta-bottom">
+    <a class="cta-btn" href="./index.html">🔍 名鑑を見る</a>
+    <p class="cta-note" style="margin-top:14px;">登録不要・無料・ブラウザで開くだけ</p>
   </div>
 
   <footer>
