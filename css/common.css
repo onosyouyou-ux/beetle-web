@@ -18,5 +18,6 @@ a{text-decoration:none;}
 .site-footer-logo span { font-size: 15px; font-weight: bold; color: #fff; }
 .site-footer-right { display: flex; align-items: center; gap: 16px; }
 .site-footer-copy { font-size: 12px; color: #888; }
-.scroll-top-btn { width: 32px; height: 32px; border-radius: 50%; background: #333; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 16px; transition: background .15s; }
-.scroll-top-btn:hover { background: #444; }
+.scroll-top-float { position: fixed; bottom: 28px; right: 24px; width: 40px; height: 40px; border-radius: 50%; background: #2C2C2A; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.18); opacity: 0; pointer-events: none; transition: opacity .25s, background .15s; z-index: 200; }
+.scroll-top-float.visible { opacity: 1; pointer-events: auto; }
+.scroll-top-float:hover { background: #444; }
