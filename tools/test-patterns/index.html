@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TESTパターン集</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/style/common.css">
+<style>
+body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cream);color:var(--tp-text);line-height:1.6}
+.bc{background:var(--tp-dark2);padding:10px 32px;font-size:12px;color:#888;display:flex;gap:6px;align-items:center}
+.bc span{color:#555}
+.bc a{color:#aaa}
+.bc a:hover{color:#fff}
+.hero{background:var(--tp-dark);padding:56px 32px 48px;text-align:center;position:relative;overflow:hidden;border-bottom:none}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(232,90,26,.22) 0%,transparent 65%);pointer-events:none}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(0,0,0,.4) 0%,transparent 60%);pointer-events:none}
+.hero-badge{display:inline-block;background:var(--tp-orange);color:#fff;font-size:11px;font-weight:700;padding:4px 14px;border-radius:99px;letter-spacing:.1em;margin-bottom:18px}
+.hero h1{font-size:52px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:14px;font-family:'Syne','Zen Kaku Gothic New','Noto Sans JP',sans-serif;letter-spacing:.08em;text-shadow:2px 2px 0px rgba(0,0,0,.6),0 4px 16px rgba(0,0,0,.5);-webkit-text-stroke:.5px rgba(255,255,255,.15)}
+.hero h1 em{color:var(--tp-orange);font-style:normal;font-family:'Zen Kaku Gothic New','Noto Sans JP',sans-serif;text-shadow:2px 2px 0px rgba(100,20,0,.6),0 4px 20px rgba(232,90,26,.4);-webkit-text-stroke:.5px rgba(232,90,26,.3)}
+.hero p{font-size:14px;color:#aaa;max-width:460px;margin:0 auto;line-height:1.8}
+.icon-nav-wrap{background:var(--tp-dark2);border-bottom:1px solid #333;position:sticky;top:0;z-index:100}
+.icon-nav{display:flex;padding:0;justify-content:center}
+.icon-nav button{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 28px;border:none;background:none;cursor:pointer;color:#888;font-size:11px;font-family:inherit;border-bottom:2px solid transparent;transition:all .15s}
+.icon-nav button svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.icon-nav button:hover{color:#ccc}
+.icon-nav button.active{color:var(--tp-orange);border-bottom-color:var(--tp-orange)}
+.cat-bar{background:#fff;border-top:1px solid var(--tp-border);border-bottom:1px solid var(--tp-border);padding:12px 32px;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:28px}
+.cat-bar a{font-size:12px;padding:4px 12px;border-radius:99px;border:1px solid var(--tp-border2);color:var(--tp-text2);transition:all .12s}
+.cat-bar a:hover,.cat-bar a.new:hover{background:var(--tp-orange);color:#fff;border-color:var(--tp-orange)}
+.cat-bar a.new{border-color:var(--tp-border2);color:var(--tp-text2);background:transparent}
+.sw{display:none;padding:32px}
+.sw.active{display:block}
+.levels{margin-bottom:0;padding:20px 0 16px}
+.lv{display:none}
+.lv.lv-current{display:block}
+.lv-head{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+.lv-label{font-size:15px;font-weight:700}
+.lv-desc{font-size:13px;color:var(--tp-text2)}
+.lv-note{font-size:13px;color:var(--tp-text2);line-height:1.75;max-width:580px}
+.lv-u.lv-current .lv-label{color:var(--tp-blue)}
+.lv-i.lv-current .lv-label{color:var(--tp-orange)}
+.lv-s.lv-current .lv-label{color:var(--tp-purple)}
+.sec{margin-bottom:32px}
+.sec-hd{font-size:13px;font-weight:700;padding:6px 0;border-bottom:2px solid var(--tp-cream2);margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sec-hd .d{font-size:11px;font-weight:400;color:var(--tp-text3)}
+.bdg{font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--tp-orange-bg);color:var(--tp-orange)}
+.p{display:grid;grid-template-columns:minmax(0,1fr) 18px minmax(0,1fr) 18px minmax(0,1fr);align-items:start;gap:3px;padding:12px 14px;border-radius:10px;border:1px solid var(--tp-border);margin-bottom:8px;background:#fff;transition:all .15s}
+.p:hover{border-color:var(--tp-orange-bd);box-shadow:0 2px 8px rgba(232,90,26,.08)}
+.cl{font-size:10px;font-weight:700;color:var(--tp-text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.06em}
+.c{font-size:13px;color:var(--tp-text);line-height:1.5}
+.ar{text-align:center;color:var(--tp-border2);padding-top:13px}
+.t{font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;display:inline-block;margin-top:5px}
+.tr{background:var(--tp-green-bg);color:var(--tp-green)}
+.ta{background:var(--tp-blue-bg);color:var(--tp-blue)}
+.td{background:var(--tp-amber-bg);color:var(--tp-amber)}
+.ts{background:var(--tp-purple-bg);color:var(--tp-purple)}
+.tn{background:var(--tp-coral-bg);color:var(--tp-coral)}
+.tc{background:var(--tp-red-bg);color:var(--tp-red)}
+.te{background:var(--tp-gray-bg);color:var(--tp-gray)}
+.tk{background:var(--tp-pink-bg);color:var(--tp-pink)}
+.tco{background:var(--tp-coral-bg);color:var(--tp-coral)}
+.tv{background:#f0faf5;color:#0a5c3a}
+.ta2{background:#f0f4ff;color:#2d3d9a}
+.sc{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px 22px;margin-bottom:16px;transition:all .15s}
+.sc:hover{border-color:var(--tp-orange-bd);box-shadow:0 2px 12px rgba(232,90,26,.08)}
+.sc-title{font-size:15px;font-weight:700;margin-bottom:5px}
+.sc-pre{font-size:12px;color:var(--tp-text2);background:var(--tp-cream);border-radius:6px;padding:7px 12px;margin-bottom:16px;border-left:3px solid var(--tp-orange)}
+.sc-steps{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.sc-step{display:flex;align-items:baseline;gap:10px}
+.sc-n{font-size:11px;font-weight:700;min-width:22px;height:22px;background:var(--tp-orange);color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.sc-t{font-size:13px;line-height:1.55}
+.sc-div{height:1px;background:var(--tp-border);margin-bottom:14px}
+.sc-ct{font-size:10px;font-weight:700;color:var(--tp-text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em}
+.sc-checks{display:flex;flex-direction:column;gap:6px}
+.sc-ck{font-size:13px;padding-left:18px;position:relative;line-height:1.5}
+.sc-ck::before{content:"⚡";position:absolute;left:0;font-size:11px;color:var(--tp-orange)}
+@media(max-width:600px){
+  .p{grid-template-columns:1fr;gap:6px}
+  .ar{display:none}
+  .hero h1{font-size:28px}
+  .sw{padding:20px 16px}
+  .bc,.cat-bar{padding-left:16px;padding-right:16px}
+}
+</style>
+</head>
+<body>
+ 
+<div class="bc"><a href="/">BEETLE</a><span>›</span><a href="/#tools">Tools</a><span>›</span><span style="color:#ddd">TESTパターン集</span></div>
+ 
+<div class="hero">
+  <div class="hero-badge">REFERENCE</div>
+  <h1>TEST<em>パターン集</em></h1>
+  <p>「結合テストって何を書けばいいの？」ってなったら、ここを見て。<br>観点とよくある見落としをまとめたよ。</p>
+</div>
+ 
+<div class="icon-nav-wrap">
+  <div class="icon-nav">
+    <button onclick="switchTab('ut',this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+      単体テスト
+    </button>
+    <button class="active" onclick="switchTab('it',this)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+      結合テスト
+    </button>
+    <button onclick="switchTab('sc',this)">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      シナリオテスト
+    </button>
+  </div>
+</div>
+ 
+<div id="ut" class="sw">
+<div class="levels">
+  <div class="lv lv-u lv-current">
+    <div class="lv-head"><span class="lv-label">単体テスト</span><span class="lv-desc">部品ごとに動くか</span></div>
+    <div class="lv-note">仕様書の各機能を1つずつ確認する。ボタン・フォーム・計算ロジックなど、部品単体が壊れていないかを検証する。</div>
+  </div>
+</div>
+<div class="cat-bar">
+  <a href="#u-validate">バリデーション</a><a href="#u-button">ボタン</a><a href="#u-input">テキストフィールド</a><a href="#u-select">セレクト・チェック・ラジオ</a><a href="#u-date">日付・時刻</a><a href="#u-file">ファイル入力</a><a href="#u-calc">計算・変換ロジック</a><a href="#u-error">エラーメッセージ</a><a href="#u-api">API関数（単体）</a><a href="#u-auth">権限判定ロジック</a><a href="#u-display">表示切り替え</a><a href="#u-format">フォーマット・整形</a><a href="#u-layout" class="new">表示崩れ</a><a href="#u-modal" class="new">モーダル</a><a href="#u-toast" class="new">トースト・通知</a><a href="#u-tooltip" class="new">ツールチップ</a><a href="#u-accordion" class="new">アコーディオン・タブ</a><a href="#u-scroll" class="new">スクロール</a><a href="#u-responsive" class="new">レスポンシブ</a><a href="#u-loading" class="new">ローディング</a>
+</div>
+ 
+<div id="u-validate" class="sec"><div class="sec-hd">バリデーション <span class="d">入力値の検証ロジックが正しく動くか</span></div>
+<div class="p"><div class="c"><div class="cl">入力</div>必須項目を空のまま送信</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>フォームの必須フィールド</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>エラーメッセージが表示され送信されない<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>メールアドレス形式以外の文字列を入力</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>メールアドレス入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>形式エラーが出て送信できない<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>最大文字数+1文字を入力</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>文字数制限のあるフィールド</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>入力が制限されるかエラーが表示される<br><span class="t ts">境界値</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>最大文字数ちょうどを入力</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>文字数制限のあるフィールド</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>エラーにならず送信できる<br><span class="t ts">境界値</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>数値フィールドにマイナス・小数・文字を入力</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>数値入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>仕様外の値が弾かれるか制限される<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>パスワードと確認パスワードを異なる値で入力</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>パスワード確認フィールド</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>「一致しない」エラーが表示される<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>既に登録済みのメールアドレスを入力して送信</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>登録フォーム</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>重複エラーが表示される<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>スペースのみ入力</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>必須テキストフィールド</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>空扱いになりエラーになる（スペースを有効値と見なさない）<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>前後にスペースを含む入力値を送信</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>テキストフィールド</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>トリムされて保存される（仕様による）<br><span class="t ts">境界値</span></div></div>
+</div>
+ 
+<div id="u-button" class="sec"><div class="sec-hd">ボタン <span class="d">クリック・状態・二重送信が正しく制御されるか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>送信ボタンをクリック</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>送信ボタン</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>処理が実行される<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>送信ボタンを素早く2回クリック</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>送信ボタン</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>2回目のクリックが無効になる（二重送信防止）<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">状態</div>disabled属性が付いているボタン</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>disabled ボタン</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>クリックしても何も起きない・クリックイベントが発火しない<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">状態</div>処理中（loading中）のボタン</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>送信ボタン</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ローディング表示になりクリックできない<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>キーボード（Enter・Space）でボタンを操作</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ボタン全般</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>クリックと同じ動作になる（アクセシビリティ）<br><span class="t td">アクセシビリティ</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>削除ボタンをクリック</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>削除確認ダイアログ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>確認ダイアログが表示される（いきなり削除されない）<br><span class="t ta">状態確認</span></div></div>
+</div>
+ 
+<div id="u-input" class="sec"><div class="sec-hd">テキストフィールド <span class="d">入力・フォーカス・プレースホルダーの挙動</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>フィールドをクリックしてフォーカス</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>テキスト入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>枠の色が変わりフォーカス状態が分かる<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>何も入力していない状態</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>テキスト入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>プレースホルダーが表示されている<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>テキストを入力し始める</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>テキスト入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>プレースホルダーが消えて入力したテキストが表示される<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>パスワードフィールドに入力</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>パスワード入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>入力値がマスク（●●●）表示される<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>パスワード表示切り替えボタンをクリック</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>パスワード入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>マスクが解除されて平文で見える（再クリックで戻る）<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>モバイルでメールアドレス欄をタップ</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>type=email のフィールド</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>メールアドレス用キーボード（@が出る）が表示される<br><span class="t td">アクセシビリティ</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>モバイルで数値入力欄をタップ</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>type=number / inputmode=numeric のフィールド</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>数字キーボードが表示される（iOSでズームしない）<br><span class="t td">アクセシビリティ</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>読み取り専用フィールドに入力を試みる</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>readonly フィールド</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>値が変更できない・フォームとして送信される<br><span class="t ta">状態確認</span></div></div>
+</div>
+ 
+<div id="u-select" class="sec"><div class="sec-hd">セレクト・チェックボックス・ラジオ <span class="d">選択状態が正しく管理されるか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>セレクトボックスで選択肢を選ぶ</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>セレクトボックス</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>選んだ値が表示されフォームに反映される<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>セレクトの初期状態を確認</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>セレクトボックス</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>「選択してください」などのデフォルトが選択されている<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>チェックボックスをクリック</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>チェックボックス</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>チェックが入る・もう一度クリックで外れる<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>チェックボックスのラベルテキストをクリック</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>チェックボックスのラベル</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ボックス本体と同じようにチェックが切り替わる<br><span class="t td">アクセシビリティ</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>「全選択」チェックボックスをクリック</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>全選択チェックボックス</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>配下の全チェックボックスがONになる<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>配下の一部チェックを外す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>全選択チェックボックス</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>全選択が「中間状態」（indeterminate）になる<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ラジオボタンを1つ選択</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ラジオボタングループ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>同グループの他のラジオが自動的に外れる<br><span class="t tr">動作確認</span></div></div>
+</div>
+ 
+<div id="u-date" class="sec"><div class="sec-hd">日付・時刻 <span class="d">日付入力・範囲制限・フォーマットが正しいか</span></div>
+<div class="p"><div class="c"><div class="cl">入力</div>過去の日付を入力（最小日付制限あり）</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>日付入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>エラーになるか選択できない<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>開始日に終了日より後の日付を設定</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>日付範囲入力（開始〜終了）</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>「開始日は終了日より前」エラーが表示される<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>2月30日など存在しない日付を入力</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>日付入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>入力できないか自動補正されるか仕様通りか<br><span class="t ts">境界値</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>うるう年の2月29日を入力</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>日付入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>うるう年では正常に入力でき・非うるう年では弾かれる<br><span class="t ts">境界値</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>タイムゾーンが異なる環境で日時を入力</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>日時入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>保存・表示時に意図したタイムゾーンで扱われる<br><span class="t tc">エラー制御</span></div></div>
+</div>
+ 
+<div id="u-file" class="sec"><div class="sec-hd">ファイル入力（単体） <span class="d">ファイル選択・形式制限・サイズ制限の動作</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>許可された形式のファイルを選択</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ファイル入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ファイルが選択されてファイル名が表示される<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>許可されていない形式（例：exeやsvg）を選択</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ファイル入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>フィルターで選択できないかエラーが出る<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>上限サイズを超えるファイルを選択</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ファイル入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>サイズエラーが表示され送信できない<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ファイルを選択後にキャンセル</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ファイル入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>選択前の状態に戻る（前のファイルが残らない）<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>複数ファイル選択が可能なフィールドで複数選択</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>multiple対応ファイル入力欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>選択したファイル数と名前が正しく表示される<br><span class="t tr">動作確認</span></div></div>
+</div>
+ 
+<div id="u-calc" class="sec"><div class="sec-hd">計算・変換ロジック <span class="d">数値処理・変換が正しい結果を返すか</span></div>
+<div class="p"><div class="c"><div class="cl">入力</div>単価100円・数量3・税率10%</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>合計金額計算</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>330円が表示される（端数処理も確認）<br><span class="t td">計算確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>数量を0に変更</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>カート・合計金額</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>合計が0円になる・または0は入力できない仕様通りか<br><span class="t ts">境界値</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>割引クーポン適用後の金額計算</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>割引計算ロジック</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>割引後金額がマイナスにならない（0円下限）<br><span class="t ts">境界値</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>消費税の小数点以下の処理</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>税額計算</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>切り捨て・四捨五入・切り上げが仕様通りに一貫している<br><span class="t td">計算確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>文字列「1,000」を数値変換</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>数値変換ロジック</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>カンマを除去して1000として処理される<br><span class="t td">計算確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>進捗5件/全10件</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>進捗率計算</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>50%と表示される<br><span class="t td">計算確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>全件数0件（ゼロ除算）</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>進捗率・割合計算</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>エラーにならず0%または「-」が表示される<br><span class="t ts">境界値</span></div></div>
+</div>
+ 
+<div id="u-error" class="sec"><div class="sec-hd">エラーメッセージ <span class="d">エラーの表示・内容・消えるタイミングが正しいか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>必須項目を空で送信してエラーを発生させる</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>エラーメッセージ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>どの項目のエラーか分かるメッセージが表示される<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>エラーが出た後に正しい値を入力して再送信</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>エラーメッセージ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>エラーメッセージが消えて正常に送信できる<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>エラーが出た後に入力を修正している途中</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>エラーメッセージ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>入力中にリアルタイムでエラーが消える or 送信後に消える（仕様通りか）<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>APIがエラーレスポンスを返す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>フォーム・画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ユーザーが理解できるエラーメッセージが表示される（エラーコードだけが出ない）<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>複数項目にエラーが発生</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>フォーム全体</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>すべてのエラーが一度に表示される（1件ずつしか出ない仕様でないなら）<br><span class="t tc">エラー制御</span></div></div>
+</div>
+ 
+<div id="u-api" class="sec"><div class="sec-hd">API関数（単体） <span class="d">関数が正しい値を返すか・エラーをハンドリングするか</span></div>
+<div class="p"><div class="c"><div class="cl">入力</div>正常なパラメーターでAPIを呼び出す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>API関数</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>期待するレスポンスが返る<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>必須パラメーターを省略してAPIを呼び出す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>API関数</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>適切なエラーが返る（500でなく400番台）<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>APIが500エラーを返す（サーバーエラー）</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>API呼び出し処理</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>エラーハンドリングが動いてアプリがクラッシュしない<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>APIがタイムアウト（30秒無応答）</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>API呼び出し処理</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>タイムアウトエラーが出てローディングが止まる<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>認証トークンなしでAPIを呼び出す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>認証が必要なAPI</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>401エラーが返りログイン画面にリダイレクトされる<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>存在しないIDでデータ取得APIを呼び出す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>データ取得API</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>404エラーが返り「見つかりません」画面が表示される<br><span class="t tc">エラー制御</span></div></div>
+</div>
+ 
+<div id="u-auth" class="sec"><div class="sec-hd">権限判定ロジック <span class="d">権限チェックが単体で正しく動くか</span></div>
+<div class="p"><div class="c"><div class="cl">入力</div>管理者権限のトークンで管理APIを呼び出す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>権限判定ロジック</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>正常にレスポンスが返る<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>一般権限のトークンで管理APIを呼び出す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>権限判定ロジック</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>403エラーが返る<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>期限切れのトークンでAPIを呼び出す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>認証チェック</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>401エラーが返る（403ではなく401）<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">入力</div>改ざんされたトークンでAPIを呼び出す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>認証チェック</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>401エラーが返りアクセスできない<br><span class="t tc">エラー制御</span></div></div>
+</div>
+ 
+<div id="u-display" class="sec"><div class="sec-hd">表示切り替え <span class="d">条件によって表示・非表示が正しく切り替わるか</span></div>
+<div class="p"><div class="c"><div class="cl">状態</div>データが0件のとき</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>一覧・テーブル</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>「データがありません」などのエンプティステートが表示される<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">状態</div>データ読み込み中</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>一覧・カード</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>スケルトンスクリーンまたはローディングが表示される<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">状態</div>エラーでデータ取得失敗</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>一覧・カード</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>エラー表示と再試行ボタンが出る<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">状態</div>特定権限を持つユーザーでログイン</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>メニュー・ボタン</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>権限に応じたメニューだけが表示される<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">状態</div>トグルをON</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>トグルスイッチ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>対応するコンテンツが表示される（OFFで非表示）<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">状態</div>モーダルを開く操作をする</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>モーダル</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>オーバーレイとモーダルが表示され・背景スクロールが止まる<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>モーダル外側をクリック or Escキーを押す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>モーダル</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>モーダルが閉じる（仕様通りか）<br><span class="t tr">動作確認</span></div></div>
+</div>
+ 
+<div id="u-format" class="sec"><div class="sec-hd">フォーマット・整形 <span class="d">表示する値が正しくフォーマットされているか</span></div>
+<div class="p"><div class="c"><div class="cl">値</div>1000000（百万）</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>金額表示</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>「1,000,000円」と3桁区切りで表示される<br><span class="t td">計算確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>2024-01-15T10:30:00Z（UTC）</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>日時表示</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>「2024/01/15 19:30」など日本時間で表示される<br><span class="t td">計算確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>電話番号「09012345678」</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>電話番号表示</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>「090-1234-5678」とハイフン区切りで表示される<br><span class="t td">計算確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>長いテキスト（100文字超）</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>一覧のテキスト列</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>省略（…）されてレイアウトが崩れない<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>HTMLタグを含む文字列（XSSテスト）</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>テキスト表示全般</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>タグがエスケープされてHTMLとして解釈されない<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>null / undefined のデータ</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>テキスト・数値表示</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>「-」「未設定」などのフォールバックが表示されクラッシュしない<br><span class="t ts">境界値</span></div></div>
+</div>
+ 
+<div id="u-layout" class="sec"><div class="sec-hd">表示崩れ <span class="d">コンテンツの内容によってレイアウトが壊れないか</span></div>
+<div class="p"><div class="c"><div class="cl">値</div>テキストが1文字（極端に短い）</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>カード・リスト・テーブル行</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>レイアウトが崩れずコンパクトに表示される<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>テキストが500文字（極端に長い）</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>カード・リスト・テーブル行</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>はみ出さず省略・折り返しされてレイアウトが保たれる<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>改行を含む文字列</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>テキスト表示エリア</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>改行が反映される or 無視される（仕様通りか）<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>画像URLが壊れている（404）</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>画像表示エリア</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>代替画像またはアイコンが表示されてレイアウトが崩れない<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>縦長・横長など極端なアスペクト比の画像</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>サムネイル・アイコン</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>クロップ・フィットされてレイアウトが崩れない<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>テーブルのセルに長い英単語（スペースなし）</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>テーブルのセル</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>セルがはみ出さずword-breakが効いている<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>バッジ・タグの文字数が多いとき</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>バッジ・ステータスタグ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>縦に伸びるかテキストが省略されてはみ出さない<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>アイコンとテキストが並ぶ要素でテキストが長い</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>アイコン+テキストのUI</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>アイコンが押し出されず縦揃えが保たれる<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>グリッドレイアウトで子要素が1つ・奇数個</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>グリッド表示</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>最後の余った要素が左揃えで表示される（中央に引き伸ばされない）<br><span class="t ta">状態確認</span></div></div>
+</div>
+ 
+<div id="u-modal" class="sec"><div class="sec-hd">モーダル <span class="d">開閉・フォーカス・スクロール・入れ子が正しく動くか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>モーダルを開くボタンをクリック</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>モーダル</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>オーバーレイとモーダルが表示され背景のスクロールが止まる<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>×ボタンをクリック</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>モーダル</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>モーダルが閉じる・背景スクロールが再び動く<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>オーバーレイ（背景暗い部分）をクリック</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>モーダル</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>閉じる or 閉じない（仕様通りか）<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>Escキーを押す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>モーダル</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>モーダルが閉じる（仕様通りか）<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>モーダルが開いた直後にTabキーを押す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>モーダル内のフォーカス</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>フォーカスがモーダル内の最初の操作可能要素に移っている<br><span class="t td">アクセシビリティ</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>モーダル内でTabキーを繰り返す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>モーダル内のフォーカス</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>フォーカスがモーダル外に出ない（フォーカストラップ）<br><span class="t td">アクセシビリティ</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>モーダルを閉じる</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>元のトリガーボタン</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>フォーカスがモーダルを開いたボタンに戻っている<br><span class="t td">アクセシビリティ</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>モーダル内のコンテンツが縦に長い</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>モーダル内スクロール</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>モーダル内がスクロールできて背景は動かない<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>モーダル内のフォームに入力して送信</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>モーダル</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>送信後にモーダルが閉じる or 結果が表示される（仕様通りか）<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>モーダル内のボタンから別のモーダルを開く</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>入れ子モーダル</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>2つ目のモーダルが正しく重なって表示される（z-indexが正しい）<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>確認ダイアログで「キャンセル」を押す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>確認モーダル</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>処理が実行されずモーダルが閉じる<br><span class="t tr">動作確認</span></div></div>
+</div>
+ 
+<div id="u-toast" class="sec"><div class="sec-hd">トースト・通知バナー <span class="d">表示タイミング・内容・自動消去が正しいか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>保存ボタンをクリックして成功</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>成功トースト</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>「保存しました」などの成功メッセージが表示される<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>APIエラーが発生</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>エラートースト</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>エラーメッセージが表示される（成功と区別できる色・アイコン）<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>トーストが表示されてから数秒待つ</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>トースト</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>一定時間（例：3秒）後に自動で消える<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>トーストの×ボタンをクリック</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>トースト</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>即座に閉じる<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>短時間に複数回操作してトーストを連続発生</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>トースト</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>重なって表示されるか・最新だけ表示されるか仕様通りか<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>トーストが表示中にページをスクロール</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>トースト</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>画面の端（右上など）に固定されたまま追従する<br><span class="t ta">状態確認</span></div></div>
+</div>
+ 
+<div id="u-tooltip" class="sec"><div class="sec-hd">ツールチップ <span class="d">表示タイミング・位置・内容が正しいか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ツールチップつきの要素にホバー</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ツールチップ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>テキストが表示される<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ホバーを外す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ツールチップ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ツールチップが消える<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>画面右端・下端近くにある要素</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ツールチップの表示位置</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>画面外にはみ出さず自動で反対側に出る<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>キーボードでフォーカスを当てる</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ツールチップ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ホバーと同様にツールチップが表示される（アクセシビリティ）<br><span class="t td">アクセシビリティ</span></div></div>
+<div class="p"><div class="c"><div class="cl">値</div>ツールチップのテキストが長い（50文字以上）</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ツールチップ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>折り返されてはみ出さない<br><span class="t ta">状態確認</span></div></div>
+</div>
+ 
+<div id="u-accordion" class="sec"><div class="sec-hd">アコーディオン・タブ <span class="d">開閉・切り替えの状態が正しく管理されるか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>閉じているアコーディオンをクリック</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>アコーディオン</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>コンテンツが展開される<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>開いているアコーディオンをクリック</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>アコーディオン</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>コンテンツが閉じる<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>1つだけ開けるアコーディオンで別の項目を開く</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>アコーディオン（排他制御）</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>前の項目が自動で閉じる<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>タブを切り替える</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>タブコンポーネント</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>選択タブのコンテンツが表示され・他タブのコンテンツが非表示になる<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>タブを切り替えて別のタブに移動後に戻る</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>タブ内の入力フォーム</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>入力していた値が保持されている or リセットされる（仕様通りか）<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>アコーディオン展開時にコンテンツが動的に読み込まれる</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>遅延ロードのアコーディオン</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ローディング表示の後にコンテンツが表示される<br><span class="t ta">状態確認</span></div></div>
+</div>
+ 
+<div id="u-scroll" class="sec"><div class="sec-hd">スクロール <span class="d">スクロール位置・固定要素・無限スクロールが正しく動くか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ページを一番下までスクロール</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ヘッダー・固定フッター</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>固定要素がコンテンツに隠れず正しい位置に表示され続ける<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>アンカーリンクをクリックしてジャンプ</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>固定ヘッダーとアンカーリンク</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ジャンプ先がヘッダーに隠れない（scroll-margin-topが設定されている）<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>無限スクロールで下端に到達</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>無限スクロールリスト</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>次のデータが読み込まれてリストに追加される<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>無限スクロール中にAPIがエラーを返す</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>無限スクロールリスト</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>エラーメッセージと「再読み込み」ボタンが表示される<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>全データ読み込み後に最下端に到達</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>無限スクロールリスト</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>「すべて読み込みました」等が表示されAPIが再呼び出しされない<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>横スクロールが必要なテーブルをスクロール</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>テーブルの左端固定列</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>固定列が動かず右側のみスクロールされる<br><span class="t ta">状態確認</span></div></div>
+</div>
+ 
+<div id="u-responsive" class="sec"><div class="sec-hd">レスポンシブ <span class="d">画面サイズによって表示が正しく切り替わるか</span></div>
+<div class="p"><div class="c"><div class="cl">環境</div>スマホ幅（375px）で表示</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ナビゲーション</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ハンバーガーメニューに切り替わる<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">環境</div>スマホ幅（375px）で表示</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>テーブル・カラムレイアウト</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>縦積みに切り替わり横スクロールが不要になる<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">環境</div>スマホでタップ</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ボタン・リンク</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>タップ領域が十分な大きさ（44px以上が目安）で押しやすい<br><span class="t td">アクセシビリティ</span></div></div>
+<div class="p"><div class="c"><div class="cl">環境</div>タブレット幅（768px）で表示</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>グリッドレイアウト</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>PC・スマホどちらとも異なる中間レイアウトになる（仕様通りか）<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">環境</div>横向き（landscape）に回転</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>画面全体</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>レイアウトが崩れず操作できる<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">環境</div>ブラウザのフォントサイズを最大に設定</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>テキスト・ボタン</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>テキストがボタンやカードからはみ出さない<br><span class="t ta">状態確認</span></div></div>
+</div>
+ 
+<div id="u-loading" class="sec"><div class="sec-hd">ローディング <span class="d">読み込み中の表示・キャンセル・二重呼び出し防止が正しいか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>データ取得の非同期処理が始まる</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ローディングUI</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>スピナー・スケルトンなどローディング表示が出る<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>データ取得が完了</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ローディングUI</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ローディングが消えてデータが表示される<br><span class="t tr">動作確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ローディング中に別の画面に遷移する</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>非同期処理</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>前のリクエストがキャンセルされ・新しい画面に古いデータが表示されない<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ローディング中に同じボタンを連打</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ボタン・APIリクエスト</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>リクエストが重複して飛ばない（ボタンが非活性になる）<br><span class="t tc">エラー制御</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>全画面ローディング中にブラウザバック</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>ローディングオーバーレイ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>前のページに戻ってローディングが残らない<br><span class="t ta">状態確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ページ遷移中（ルーター遷移）</div><div class="ar">›</div><div class="c"><div class="cl">対象</div>プログレスバー・ローディング</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>遷移開始でローディングが出て・完了で消える<br><span class="t ta">状態確認</span></div></div>
+</div>
+</div>
+ 
+<div id="it" class="sw active">
+<div class="levels">
+  <div class="lv lv-i lv-current">
+    <div class="lv-head"><span class="lv-label">結合テスト</span><span class="lv-desc">つなぎ目が壊れてないか</span></div>
+    <div class="lv-note">複数の機能をつないで動作を確認する。操作した結果が別の画面に正しく反映されるか、画面をまたいだデータの流れを検証する。</div>
+  </div>
+</div>
+<div class="cat-bar">
+  <a href="#i-user">ユーザー管理</a><a href="#i-auth">権限・ロール</a><a href="#i-stock">在庫・数値</a><a href="#i-status">ステータス遷移</a><a href="#i-notify">通知・メール</a><a href="#i-file">ファイル</a><a href="#i-search">検索・フィルター</a><a href="#i-flow">入力フロー</a><a href="#i-cascade">削除の波及</a><a href="#i-session">セッション</a><a href="#i-page">ページネーション</a><a href="#i-agg">集計・レポート</a><a href="#i-cache">キャッシュ</a><a href="#i-apv">承認フロー</a><a href="#i-conc">同時操作</a><a href="#i-plan">プラン・課金</a><a href="#i-imp">インポート</a><a href="#i-tag">タグ・紐づけ</a><a href="#i-rsv" class="new">予約・空き枠</a><a href="#i-ec" class="new">EC特有</a><a href="#i-sns" class="new">SNS系</a><a href="#i-sub" class="new">サブスク</a><a href="#i-chat" class="new">チャット・既読</a><a href="#i-master" class="new">マスターデータ</a><a href="#i-cal" class="new">カレンダー</a><a href="#i-rev" class="new">レビュー・評価</a><a href="#i-ten" class="new">マルチテナント</a>
+</div>
+ 
+<div id="i-user" class="sec"><div class="sec-hd">ユーザー管理 <span class="d">登録・編集・削除が他の画面に波及するか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>入力画面でユーザーを新規登録</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ユーザー一覧</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>登録したユーザーが一覧に表示される<br><span class="t tr">画面反映</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>一覧からユーザーを削除</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ユーザー一覧</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>削除したユーザーが一覧から消える<br><span class="t tr">画面反映</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ユーザーを削除</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ログイン画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>削除ユーザーのIDでログインできない<br><span class="t ta">認証連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>プロフィール編集で名前を変更</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ヘッダー・マイページ・投稿一覧</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>変更後の名前がすべての箇所に反映される<br><span class="t tr">画面反映</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>パスワードを変更</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ログイン画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>古いパスワードでログインできない・新しいパスワードで入れる<br><span class="t ta">認証連動</span></div></div>
+</div>
+ 
+<div id="i-auth" class="sec"><div class="sec-hd">権限・ロール <span class="d">権限によって見えるもの・できることが変わるか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>一般ユーザーでログイン</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>管理画面URL直アクセス</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>アクセスできずリダイレクトされる<br><span class="t ta">認証連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ユーザーの権限を一般→管理者に変更</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>そのユーザーのメニュー</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>管理者メニューが表示・操作できる<br><span class="t tr">画面反映</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>権限のないユーザーでログイン</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>操作画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>権限外のボタン・メニューが表示されない<br><span class="t ta">認証連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>AユーザーでBユーザーのデータURLを直打ち</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>Bユーザーのデータ詳細</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>表示されない・エラーになる<br><span class="t ta">認証連動</span></div></div>
+</div>
+ 
+<div id="i-stock" class="sec"><div class="sec-hd">在庫・数値 <span class="d">操作によって数値が正しく増減するか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>商品を注文</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>在庫管理・商品詳細</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>在庫数が注文数だけ減っている<br><span class="t td">データ連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>在庫が0になる最後の1個を注文</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>商品一覧・詳細</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>「在庫なし」表示になり注文ボタンが非活性<br><span class="t ts">状態変化</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>カートに商品を追加</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ヘッダーのカートアイコン</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>バッジの数が増える<br><span class="t tr">画面反映</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>注文をキャンセル</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>在庫管理画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>キャンセル分の在庫が戻っている<br><span class="t td">データ連動</span></div></div>
+</div>
+ 
+<div id="i-status" class="sec"><div class="sec-hd">ステータス遷移 <span class="d">状態が変わったとき関係する画面すべてに反映されるか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>管理画面で注文を「発送済」に変更</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ユーザーの注文履歴</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ステータスが「発送済」に変わっている<br><span class="t tr">画面反映</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>記事を「下書き」で保存</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>一般ユーザーの記事一覧</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>一般ユーザーには表示されない<br><span class="t ta">認証連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>「公開」した記事を「非公開」に戻す</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>記事一覧・URL直アクセス</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>一般ユーザーに見えない・直打ちしても見えない<br><span class="t ts">状態変化</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>タスクを「完了」に変更</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ダッシュボード・進捗サマリー</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>完了数・進捗率が更新される<br><span class="t td">データ連動</span></div></div>
+</div>
+ 
+<div id="i-notify" class="sec"><div class="sec-hd">通知・メール <span class="d">操作に対して通知やメールが正しく飛ぶか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ユーザー登録完了</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>登録メールアドレス</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>確認メールが届く（本文・リンクが正しい）<br><span class="t tn">通知連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>パスワードリセットを申請</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>登録メールアドレス</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>リセット用URLが届き有効期限内に使える<br><span class="t tn">通知連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>通知を既読にする</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ヘッダーの通知バッジ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>未読数が減る・0になったら消える<br><span class="t tr">画面反映</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>メール通知をオフに設定</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>その後の操作トリガー</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>オフにしたメールが届かない<br><span class="t tn">通知連動</span></div></div>
+</div>
+ 
+<div id="i-file" class="sec"><div class="sec-hd">ファイル <span class="d">アップロード・削除が一覧や参照先に反映されるか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ファイルをアップロード</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ファイル一覧</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>アップロードしたファイルが一覧に表示<br><span class="t tr">画面反映</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ファイルを削除</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>そのファイルを参照している画面・URL</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>リンク切れにならない・フォールバックが出る<br><span class="t tc">波及確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>プロフィール画像をアップロード</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ヘッダー・投稿一覧・コメント欄</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>すべての箇所で新しい画像に切り替わる<br><span class="t tr">画面反映</span></div></div>
+</div>
+ 
+<div id="i-search" class="sec"><div class="sec-hd">検索・フィルター <span class="d">絞り込み状態が画面をまたいで維持されるか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>フィルター適用状態でリロード</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>同じ一覧画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>フィルター条件がURLに保存されて維持<br><span class="t ts">状態変化</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>検索結果から詳細に遷移してブラウザバック</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>検索一覧画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>検索条件・スクロール位置が元に戻っている<br><span class="t ts">状態変化</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>一覧のデータを削除</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>検索・フィルター結果の一覧</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>削除データが検索結果にも出なくなる<br><span class="t tr">画面反映</span></div></div>
+</div>
+ 
+<div id="i-flow" class="sec"><div class="sec-hd">入力フロー（ウィザード） <span class="d">複数画面にまたがる入力の整合性</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>バリデーションエラーが発生</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>同じ入力画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>入力済みの値が消えずに残っている<br><span class="t ts">状態変化</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>確認画面から「戻る」</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>入力画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>入力した値がそのまま残っている<br><span class="t ts">状態変化</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>完了画面でブラウザの戻る→再送信</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>完了・登録一覧</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>二重登録されない<br><span class="t td">データ連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>入力途中でブラウザを閉じて再度開く</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>入力画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>下書き保存されているか空になっているか仕様通りか<br><span class="t ts">状態変化</span></div></div>
+</div>
+ 
+<div id="i-cascade" class="sec"><div class="sec-hd">削除の波及 <span class="d">親データを消したとき子データがどうなるか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>カテゴリを削除</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>そのカテゴリの商品・記事一覧</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>孤立せず未分類移動か連鎖削除か仕様通り<br><span class="t tc">波及確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ユーザーを削除</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>そのユーザーの投稿・コメント・注文履歴</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>関連データが匿名化・連鎖削除・保持のいずれか仕様通り<br><span class="t tc">波及確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>プロジェクトを削除</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>そのプロジェクトのタスク・メンバー</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>タスクが残留せず参照エラーが起きない<br><span class="t tc">波及確認</span></div></div>
+</div>
+ 
+<div id="i-session" class="sec"><div class="sec-hd">セッション <span class="d">ログイン状態が画面をまたいで正しく管理されるか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>セッションが切れた状態で操作</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ログイン画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ログイン画面にリダイレクト（フリーズしない）<br><span class="t te">セッション</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>別タブでログアウト</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>元のタブで操作</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ログイン画面にリダイレクト（操作が通らない）<br><span class="t te">セッション</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>未ログインで保護ページのURLを直打ち</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ログイン後</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ログイン後に元々開こうとしたページに戻る<br><span class="t te">セッション</span></div></div>
+</div>
+ 
+<div id="i-page" class="sec"><div class="sec-hd">ページネーション <span class="d">件数・ページ数が操作後も正しく更新されるか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>最後のページの最後の1件を削除</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>一覧画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>存在しないページに留まらず前のページに戻る<br><span class="t ts">状態変化</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>データを新規追加</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>一覧の件数・最終ページ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>総件数が増えページ数が正しく更新<br><span class="t tr">画面反映</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>2ページ目表示中に1ページ目のデータを削除</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>現在の2ページ目</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>データがずれて重複・欠落が起きない<br><span class="t td">データ連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>全件削除</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>一覧画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>「データがありません」が表示されエラーにならない<br><span class="t ts">状態変化</span></div></div>
+</div>
+ 
+<div id="i-agg" class="sec"><div class="sec-hd">集計・レポート <span class="d">データ変更が集計画面にも反映されるか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>売上データを登録</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ダッシュボードの売上グラフ・合計</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>グラフと合計金額が更新される<br><span class="t td">データ連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>データを削除・修正</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>集計・レポート画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>削除・修正分が集計値に反映され合計が正しい<br><span class="t td">データ連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>CSVエクスポートを実行</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ダウンロードしたCSV</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>画面の表示データと件数・値が一致する<br><span class="t td">データ連動</span></div></div>
+</div>
+ 
+<div id="i-cache" class="sec"><div class="sec-hd">キャッシュ <span class="d">更新後に古いデータが残っていないか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>データを更新してすぐ一覧に戻る</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>一覧画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>古い値でなく最新値が表示される<br><span class="t tk">キャッシュ</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ログアウトして別アカウントでログイン</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>マイページ・ユーザー固有データ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>前のユーザーのデータが残っていない<br><span class="t tk">キャッシュ</span></div></div>
+</div>
+ 
+<div id="i-apv" class="sec"><div class="sec-hd">承認フロー <span class="d">申請→承認→完了が各画面に連動するか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>申請者が申請を送信</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>承認者の承認待ち一覧</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>申請が承認待ち一覧に表示される<br><span class="t tr">画面反映</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>承認者が承認</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>申請者の申請一覧・ステータス</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ステータスが「承認済」に変わり申請者に通知<br><span class="t tn">通知連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>承認者が却下</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>申請者の画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>却下理由が表示され再申請できる状態になっている<br><span class="t ts">状態変化</span></div></div>
+</div>
+ 
+<div id="i-conc" class="sec"><div class="sec-hd">同時操作 <span class="d">複数ユーザーが同時に操作したとき壊れないか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>AとBが同じデータを同時に編集して保存</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>編集後のデータ詳細</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>片方が上書きされるか競合エラーで安全に処理<br><span class="t tco">同時操作</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>残り1件をAとBが同時に注文</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>注文完了・在庫管理</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>どちらか1件だけ成功し在庫がマイナスにならない<br><span class="t tco">同時操作</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>同じボタンを素早く2回連打</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>処理結果・登録一覧</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>同じデータが2件登録されない<br><span class="t tco">同時操作</span></div></div>
+</div>
+ 
+<div id="i-plan" class="sec"><div class="sec-hd">プラン・課金 <span class="d">プラン変更が機能制限・表示に即座に反映されるか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>有料→無料プランにダウングレード</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>機能メニュー・操作画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>有料機能が使えなくなりロック表示になる<br><span class="t ts">状態変化</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>無料プランの上限に達する</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>新規登録画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>登録が止まり上限到達のメッセージが出る<br><span class="t ts">状態変化</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>無料→有料にアップグレード</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ロックされていた機能メニュー</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ロックが外れて操作できるようになる<br><span class="t tr">画面反映</span></div></div>
+</div>
+ 
+<div id="i-imp" class="sec"><div class="sec-hd">インポート <span class="d">一括取り込み後に画面・集計が正しく更新されるか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>CSVで100件を一括インポート</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>一覧・件数表示</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>100件が追加され件数が正しく更新<br><span class="t td">データ連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>重複キーを含むCSVをインポート</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>一覧・エラー表示</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>重複分だけエラーで他の正常データは登録される<br><span class="t td">データ連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>インポート途中でエラー</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>一覧画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>全件成功か全件ロールバックか仕様通りになっている<br><span class="t td">データ連動</span></div></div>
+</div>
+ 
+<div id="i-tag" class="sec"><div class="sec-hd">タグ・紐づけ <span class="d">関連データの変更が参照元に波及するか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>タグ名を変更</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>そのタグが付いた記事・商品</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>表示タグ名がすべて新しい名前に変わっている<br><span class="t tr">画面反映</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>タグを削除</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>そのタグが付いていた記事・商品</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>削除タグが消えて他のタグや本体データは残っている<br><span class="t tc">波及確認</span></div></div>
+</div>
+ 
+<div id="i-rsv" class="sec"><div class="sec-hd">予約・空き枠 <span class="bdg">ニッチ</span> <span class="d">予約が空き枠・他画面に正しく連動するか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>空き枠を予約</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>カレンダー・空き枠一覧</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>その枠が「予約済」になり他のユーザーが選べなくなる<br><span class="t ts">状態変化</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>予約をキャンセル</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>空き枠一覧・キャンセル待ち</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>空き枠が復活しキャンセル待ちユーザーに通知が届く<br><span class="t tn">通知連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>AとBが同じ枠を同時に予約</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>予約完了・枠一覧</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>どちらか1件だけ成功しダブルブッキングにならない<br><span class="t tco">同時操作</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>予約の日時を変更</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>元の枠・新しい枠</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>元の枠が解放され・新しい枠が埋まっている<br><span class="t td">データ連動</span></div></div>
+</div>
+ 
+<div id="i-ec" class="sec"><div class="sec-hd">EC特有（クーポン・ポイント・送料） <span class="bdg">ニッチ</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>クーポンコードを適用</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>カート・合計金額</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>割引が適用された金額が表示される<br><span class="t td">データ連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>クーポンを使って注文完了</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>クーポン管理・マイクーポン</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>使用済みになり再使用できない<br><span class="t ts">状態変化</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ポイントを使って決済</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ポイント残高・合計金額</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>ポイント残高が減り合計金額に反映されている<br><span class="t td">データ連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>注文をキャンセル（ポイント払いあり）</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ポイント残高</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>使ったポイントが返還される<br><span class="t td">データ連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>送料無料ラインを超える金額まで商品を追加</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>カートの送料表示</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>送料が0円に切り替わる<br><span class="t ts">状態変化</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>カート内の商品が注文完了前に在庫切れになる</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>決済確認画面・カート</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>在庫切れの旨が表示され注文が通らない<br><span class="t ts">状態変化</span></div></div>
+</div>
+ 
+<div id="i-sns" class="sec"><div class="sec-hd">SNS系（フォロー・ブロック） <span class="bdg">ニッチ</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ユーザーをフォロー</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>フォロー数・フォロワー数・タイムライン</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>双方のカウントが増え相手の投稿がタイムラインに出る<br><span class="t tr">画面反映</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>フォロー解除</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>タイムライン・フォロー数</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>カウントが減り相手の投稿がタイムラインから消える<br><span class="t tr">画面反映</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>ユーザーをブロック</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>ブロックした相手からの自分のプロフィール</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>相手から自分のページが見えない・フォローもできない<br><span class="t ta">認証連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>非公開アカウントをフォロー申請</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>承認前の相手の投稿一覧</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>承認前は投稿が見えない<br><span class="t ta">認証連動</span></div></div>
+</div>
+ 
+<div id="i-sub" class="sec"><div class="sec-hd">サブスク・試用期間 <span class="bdg">ニッチ</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>試用期間が終了</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>機能メニュー・操作画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>有料プランに移行するか機能が制限されるか仕様通り<br><span class="t ts">状態変化</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>サブスクを解約</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>機能メニュー・期間終了後</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>契約期間終了まで機能が使える・期間後に制限される<br><span class="t ts">状態変化</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>解約後に再登録</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>マイページ・過去データ</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>過去データが引き継がれるか消えるか仕様通り<br><span class="t td">データ連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>支払いが失敗（カード期限切れ等）</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>サービス機能・通知</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>サービスが停止または猶予期間が設けられ通知が届く<br><span class="t tn">通知連動</span></div></div>
+</div>
+ 
+<div id="i-chat" class="sec"><div class="sec-hd">チャット・既読 <span class="bdg">ニッチ</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>メッセージを送信</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>受信者のチャット画面・通知</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>メッセージが表示され未読バッジが増える<br><span class="t tn">通知連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>受信者がメッセージを読む</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>送信者のチャット画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>送信側に「既読」マークがつく<br><span class="t tr">画面反映</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>メッセージを削除</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>相手のチャット画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>「このメッセージは削除されました」等が表示される<br><span class="t ts">状態変化</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>グループチャットにメンバーを追加</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>追加されたユーザーのチャット画面</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>過去ログが見える/見えないが仕様通りになっている<br><span class="t ta">認証連動</span></div></div>
+</div>
+ 
+<div id="i-master" class="sec"><div class="sec-hd">マスターデータ変更の波及 <span class="bdg">ニッチ</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>商品名を変更</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>過去の注文履歴・請求書</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>過去データは変更前の名前のまま（変更が遡及しない）<br><span class="t tc">波及確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>商品単価を変更</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>進行中の見積もり・カート</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>進行中の見積もりに影響するか・しないか仕様通り<br><span class="t tc">波及確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>税率マスターを変更</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>新規注文の合計金額・過去注文</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>新規注文には新税率が適用・過去注文は変更前の税率のまま<br><span class="t tc">波及確認</span></div></div>
+</div>
+ 
+<div id="i-cal" class="sec"><div class="sec-hd">カレンダー・繰り返しイベント <span class="bdg">ニッチ</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>イベントを追加</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>カレンダー・参加者のカレンダー</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>追加したイベントが正しい日時に表示される<br><span class="t tr">画面反映</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>繰り返しイベントの1件だけを変更</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>他の繰り返しイベント</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>変更した1件だけが変わり他の繰り返しに影響しない<br><span class="t tc">波及確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>繰り返しイベントを「以降すべて」変更</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>それ以降の繰り返しイベント</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>対象の全件に変更が反映・それ以前の件は変わっていない<br><span class="t tc">波及確認</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>イベントに参加者を追加</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>追加された参加者のカレンダー・通知</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>参加者側のカレンダーにも表示され通知が届く<br><span class="t tn">通知連動</span></div></div>
+</div>
+ 
+<div id="i-rev" class="sec"><div class="sec-hd">レビュー・評価 <span class="bdg">ニッチ</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>商品にレビューを投稿</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>商品詳細の平均評価・レビュー一覧</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>平均評価が再計算されレビューが一覧に表示される<br><span class="t td">データ連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>投稿済みのレビューを削除</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>商品詳細の平均評価</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>削除分を除いた平均評価に再計算される<br><span class="t td">データ連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>管理者がレビューを非表示にする</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>一般ユーザーの商品詳細</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>非表示レビューが見えず平均評価からも除外される<br><span class="t ta">認証連動</span></div></div>
+</div>
+ 
+<div id="i-ten" class="sec"><div class="sec-hd">マルチテナント <span class="bdg">ニッチ</span> <span class="d">組織をまたいでデータが漏れないか</span></div>
+<div class="p"><div class="c"><div class="cl">操作</div>A組織のユーザーでログイン</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>B組織のデータURL直打ち</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>B組織のデータが見えない・エラーになる<br><span class="t ta">認証連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>組織管理者がメンバーを削除</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>削除されたメンバーのログイン・組織データアクセス</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>組織データにアクセスできなくなる<br><span class="t ta">認証連動</span></div></div>
+<div class="p"><div class="c"><div class="cl">操作</div>A組織のデータを検索</div><div class="ar">›</div><div class="c"><div class="cl">画面</div>検索結果</div><div class="ar">›</div><div class="c"><div class="cl">確認</div>B組織のデータが検索結果に混入しない<br><span class="t ta">認証連動</span></div></div>
+</div>
+</div>
+ 
+<div id="sc" class="sw">
+<div class="levels">
+  <div class="lv lv-s lv-current">
+    <div class="lv-head"><span class="lv-label">シナリオテスト</span><span class="lv-desc">人間として使えるか</span></div>
+    <div class="lv-note">実際のユーザー操作フローで端から端まで動くかを確認する。「登録→購入→通知」など、人が使う流れ全体を通して検証する。</div>
+  </div>
+</div>
+<div class="cat-bar">
+  <a href="#s-register">新規登録→注文</a><a href="#s-admin">管理者商品管理</a><a href="#s-approval">申請→承認</a><a href="#s-reserve">予約→キャンセル待ち</a><a href="#s-subscribe">サブスク全周期</a><a href="#s-sns">SNS投稿→フォロー</a><a href="#s-review">購入→レビュー</a><a href="#s-role">権限昇格→操作</a><a href="#s-import">インポート→集計</a><a href="#s-delete">ユーザー削除の波及</a><a href="#s-password" class="new">パスワードリセット</a><a href="#s-guest" class="new">ゲスト→会員転換</a><a href="#s-inquiry" class="new">問い合わせ対応</a><a href="#s-coupon" class="new">クーポン全周期</a><a href="#s-multiapv" class="new">多段階承認</a><a href="#s-export" class="new">データ整合性確認</a>
+</div>
+ 
+<div id="s-register" class="sec"><div class="sec-hd">新規ユーザー登録からはじめての注文まで</div>
+<div class="sc"><div class="sc-title">一般的なECサイトの新規ユーザー購入フロー</div><div class="sc-pre">前提：未ログイン状態・新規ユーザー</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">会員登録フォームに必要事項を入力して送信</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">確認メールが届き・メール内のリンクをクリックして認証</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">ログインして商品を検索・詳細ページを確認</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">カートに追加してカート画面で数量を変更</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">配送先住所・支払い方法を入力して注文確認</span></div><div class="sc-step"><span class="sc-n">6</span><span class="sc-t">注文完了 → 注文完了メールを受信</span></div><div class="sc-step"><span class="sc-n">7</span><span class="sc-t">マイページの注文履歴で注文を確認</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">登録直後のログイン可否が仕様通りか（メール認証前後）</div><div class="sc-ck">カートの数量変更が合計金額にリアルタイム反映される</div><div class="sc-ck">注文完了メールの内容（商品名・数量・金額・住所）が正しい</div><div class="sc-ck">注文後に在庫が正しく減っている</div><div class="sc-ck">注文履歴に今回の注文が表示されている</div><div class="sc-ck">完了ページをリロードしても二重注文されない</div></div></div>
+</div>
+ 
+<div id="s-admin" class="sec"><div class="sec-hd">管理者による商品追加 → 一般ユーザーへの反映</div>
+<div class="sc"><div class="sc-title">管理者が新商品を追加してユーザーが購入できるまで</div><div class="sc-pre">前提：管理者アカウントでログイン済み</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">管理画面で新商品を「下書き」で作成</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">一般ユーザー画面で商品が表示されないことを確認</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">商品を「公開」に変更して保存</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">一般ユーザー画面で商品一覧・検索に表示されることを確認</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">一般ユーザーがカートに追加して注文できることを確認</span></div><div class="sc-step"><span class="sc-n">6</span><span class="sc-t">管理画面で注文が反映されていることを確認</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">下書き中は一般ユーザーに一切見えない（URL直打ちも）</div><div class="sc-ck">公開後すぐに一覧・検索に反映される（キャッシュで遅延しない）</div><div class="sc-ck">商品画像・価格・在庫数が管理画面と一般画面で一致する</div><div class="sc-ck">注文後に管理画面の在庫数が減っている</div></div></div>
+</div>
+ 
+<div id="s-approval" class="sec"><div class="sec-hd">申請 → 承認 → 完了の一連フロー</div>
+<div class="sc"><div class="sc-title">経費申請を例にした承認ワークフロー全体</div><div class="sc-pre">前提：申請者ユーザーと承認者ユーザーの2アカウント</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">申請者が経費申請フォームを入力して送信</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">承認者に通知が届き・承認待ち一覧に申請が表示される</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">承認者が内容を確認してコメントを入力・承認する</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">申請者に承認通知が届く</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">申請者の申請一覧でステータスが「承認済」になっている</span></div><div class="sc-step"><span class="sc-n">6</span><span class="sc-t">承認済みの申請をキャンセル・差し戻しした場合の挙動も確認</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">申請送信後すぐに承認者の一覧に表示される</div><div class="sc-ck">承認者のコメントが申請者側に表示される</div><div class="sc-ck">承認通知のメール・画面通知が両方届く</div><div class="sc-ck">却下された場合に再申請できる状態になっている</div></div></div>
+</div>
+ 
+<div id="s-reserve" class="sec"><div class="sec-hd">予約 → キャンセル → キャンセル待ちへの通知</div>
+<div class="sc"><div class="sc-title">満席からキャンセル待ち繰り上がりまでの全フロー</div><div class="sc-pre">前提：残り1枠の状態・キャンセル待ちユーザーが1名いる</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">ユーザーAが最後の1枠を予約 → 満席になる</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">ユーザーBがキャンセル待ち登録</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">ユーザーAが予約をキャンセル</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">キャンセル待ちのユーザーBに通知が届く</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">ユーザーBが通知から予約を確定する</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">満席後は予約ボタンが非活性になりキャンセル待ちボタンが出る</div><div class="sc-ck">キャンセル後すぐにキャンセル待ちユーザーへ通知が届く</div><div class="sc-ck">予約確定後に空き枠が再び0になる</div><div class="sc-ck">通知の有効期限が切れた場合次のキャンセル待ちに繰り上がる</div></div></div>
+</div>
+ 
+<div id="s-subscribe" class="sec"><div class="sec-hd">サブスク登録 → 使用 → 解約 → 再登録</div>
+<div class="sc"><div class="sc-title">サブスクの全ライフサイクル確認</div><div class="sc-pre">前提：無料プランのユーザー</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">有料プランに申し込み・決済完了</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">有料機能が解放されていることを確認</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">有料機能でデータを作成</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">解約手続きをする</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">契約期間中は有料機能が引き続き使えることを確認</span></div><div class="sc-step"><span class="sc-n">6</span><span class="sc-t">期間終了後に有料機能が制限されることを確認</span></div><div class="sc-step"><span class="sc-n">7</span><span class="sc-t">再登録して過去データが引き継がれることを確認</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">決済完了と同時に有料機能が解放される（タイムラグがない）</div><div class="sc-ck">解約後も期間内は機能が使える</div><div class="sc-ck">期間終了後に機能制限の画面・メッセージが出る</div><div class="sc-ck">制限後も作成済みデータは閲覧できる（削除されない）</div><div class="sc-ck">再登録後に過去データがそのまま使える</div></div></div>
+</div>
+ 
+<div id="s-sns" class="sec"><div class="sec-hd">投稿 → フォロー → タイムライン反映</div>
+<div class="sc"><div class="sc-title">SNSの基本的なフォロー・投稿フロー</div><div class="sc-pre">前提：ユーザーAとBの2アカウント・互いにフォローしていない</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">ユーザーAが投稿をする</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">ユーザーBのタイムラインにはAの投稿が出ないことを確認</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">ユーザーBがAをフォロー</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">ユーザーBのタイムラインにAの投稿が表示される</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">ユーザーAがさらに投稿 → Bのタイムラインにリアルタイム反映</span></div><div class="sc-step"><span class="sc-n">6</span><span class="sc-t">ユーザーBがAをフォロー解除 → タイムラインから消える</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">フォロー前の投稿もタイムラインに表示されるか（仕様による）</div><div class="sc-ck">フォロー・解除がリアルタイムでカウントに反映される</div><div class="sc-ck">フォロー解除してもAの投稿自体は削除されていない</div></div></div>
+</div>
+ 
+<div id="s-review" class="sec"><div class="sec-hd">商品購入 → レビュー投稿 → 評価反映</div>
+<div class="sc"><div class="sc-title">購入済みユーザーのみレビューできる仕組みの確認</div><div class="sc-pre">前提：対象商品を購入済みのユーザー</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">購入履歴からレビュー投稿画面へ遷移</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">評価（星）とコメントを入力して投稿</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">商品詳細ページの平均評価と件数が更新される</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">レビュー一覧に自分の投稿が表示される</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">未購入ユーザーでログインしてレビュー投稿を試みる → 弾かれる</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">レビュー投稿直後に平均評価が再計算される</div><div class="sc-ck">同じ商品への2回目投稿が制御されている</div><div class="sc-ck">未購入ユーザーがAPIを直接叩いてもレビューできない</div><div class="sc-ck">レビューを削除したとき平均評価から除外される</div></div></div>
+</div>
+ 
+<div id="s-role" class="sec"><div class="sec-hd">一般ユーザーの権限昇格 → 管理操作 → 降格</div>
+<div class="sc"><div class="sc-title">権限変更が即時に全画面に反映されるかの確認</div><div class="sc-pre">前提：一般権限ユーザーAと上位管理者B</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">ユーザーAが管理機能にアクセスできないことを確認</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">管理者BがAの権限を「管理者」に変更</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">ユーザーAがログインし直さずに管理機能にアクセスできるか確認</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">ユーザーAが管理操作（ユーザー削除・商品追加など）を実行</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">管理者BがAの権限を「一般」に戻す</span></div><div class="sc-step"><span class="sc-n">6</span><span class="sc-t">ユーザーAが管理機能にアクセスできなくなっていることを確認</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">権限昇格がリアルタイムに反映されるか・再ログイン必要か（仕様確認）</div><div class="sc-ck">降格後に管理APIを直接叩いても弾かれる</div><div class="sc-ck">Aが実行した管理操作の記録がAのアカウント名で残っている</div></div></div>
+</div>
+ 
+<div id="s-import" class="sec"><div class="sec-hd">CSVインポート → 一覧反映 → 集計更新</div>
+<div class="sc"><div class="sc-title">一括データ投入後の全画面整合性確認</div><div class="sc-pre">前提：現在100件のデータが登録されている状態</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">正常データ50件・重複データ10件を含むCSVを用意</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">CSVをインポート実行</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">インポート結果（成功50件・エラー10件）が表示される</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">一覧画面の件数が100 → 150件になっている</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">ダッシュボードの集計が新しい合計を反映している</span></div><div class="sc-step"><span class="sc-n">6</span><span class="sc-t">CSVエクスポートして件数・内容が一致することを確認</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">重複エラーになったデータが一覧に入っていない</div><div class="sc-ck">インポート途中でエラーになった場合の全件ロールバック動作</div><div class="sc-ck">インポート直後に集計・グラフが更新されている</div><div class="sc-ck">エクスポートのデータがインポートで追加した内容と一致する</div></div></div>
+</div>
+ 
+<div id="s-delete" class="sec"><div class="sec-hd">ユーザー削除が関連データ全体に波及するフロー</div>
+<div class="sc"><div class="sc-title">ユーザー削除後に孤立データ・参照エラーが起きないかの確認</div><div class="sc-pre">前提：投稿・コメント・注文・レビューをもつユーザーA</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">ユーザーAの投稿・コメント・注文・レビューを事前に記録</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">管理者がユーザーAを削除</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">削除ユーザーのIDでログインできないことを確認</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">Aの投稿が一覧に表示されるか・匿名化されるか・消えるかを確認</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">Aのコメントが付いた他ユーザーの投稿詳細が正しく表示されるかを確認</span></div><div class="sc-step"><span class="sc-n">6</span><span class="sc-t">Aの注文履歴が管理画面に残っているかを確認</span></div><div class="sc-step"><span class="sc-n">7</span><span class="sc-t">Aのレビューが削除された場合に商品の平均評価が再計算されているかを確認</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">削除ユーザーIDを含むURLを直打ちしてもエラーにならない（404等が返る）</div><div class="sc-ck">他ユーザーの投稿・ページが削除ユーザー起因で壊れていない</div><div class="sc-ck">注文履歴など法的に保持が必要なデータは残っている</div><div class="sc-ck">Aへの通知・メール送信が止まっている</div></div></div>
+</div>
+ 
+<div id="s-password" class="sec"><div class="sec-hd">パスワードを忘れた → リセット → ログイン <span class="bdg">NEW</span></div>
+<div class="sc"><div class="sc-title">パスワードリセットの全フロー確認</div><div class="sc-pre">前提：登録済みユーザー・パスワードを忘れた状態</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">ログイン画面から「パスワードを忘れた」をクリック</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">登録メールアドレスを入力して送信</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">リセット用URLメールが届く</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">URLをクリックして新しいパスワードを設定</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">新しいパスワードでログインできることを確認</span></div><div class="sc-step"><span class="sc-n">6</span><span class="sc-t">古いパスワードでログインできないことを確認</span></div><div class="sc-step"><span class="sc-n">7</span><span class="sc-t">期限切れURLをクリックしたとき適切なエラーが出ることを確認</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">未登録メールアドレスを入力してもメールアドレスの存在が漏れない（同じ文言が出る）</div><div class="sc-ck">リセットURLは1回使ったら無効になる</div><div class="sc-ck">有効期限（例：24時間）を過ぎたURLは使えない</div><div class="sc-ck">パスワード変更後に既存の全セッションが無効になる（仕様による）</div></div></div>
+</div>
+ 
+<div id="s-guest" class="sec"><div class="sec-hd">ゲスト購入 → 会員登録 → 購入履歴の引き継ぎ <span class="bdg">NEW</span></div>
+<div class="sc"><div class="sc-title">ゲストから会員への転換でデータが正しく引き継がれるか</div><div class="sc-pre">前提：未ログイン・未会員のゲストユーザー</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">ログインせずにカートに商品を追加</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">ゲストとして決済・注文完了</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">注文完了画面から会員登録する</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">会員登録後にマイページの注文履歴を確認</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">ゲスト時の注文が履歴に表示されるか確認</span></div><div class="sc-step"><span class="sc-n">6</span><span class="sc-t">カートに入れていた他の商品が引き継がれているか確認（仕様による）</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">ゲスト注文のメールアドレスと会員登録のメールアドレスが一致する場合に注文が紐づく</div><div class="sc-ck">ゲスト時のカートが会員登録後も維持されるか（仕様による）</div><div class="sc-ck">同じメールアドレスで既に会員登録がある場合の処理が仕様通りか</div><div class="sc-ck">ゲスト注文の追跡・返品が会員登録後も可能か</div></div></div>
+</div>
+ 
+<div id="s-inquiry" class="sec"><div class="sec-hd">問い合わせ送信 → 管理者対応 → クローズ <span class="bdg">NEW</span></div>
+<div class="sc"><div class="sc-title">問い合わせ対応の一連フロー確認</div><div class="sc-pre">前提：一般ユーザーAと管理者B</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">ユーザーAが問い合わせフォームを入力して送信</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">Aに「受付完了メール」が届く</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">管理者Bの問い合わせ管理画面に表示される</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">管理者Bが返信を入力して送信</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">ユーザーAに返信メールが届く</span></div><div class="sc-step"><span class="sc-n">6</span><span class="sc-t">管理者Bが問い合わせを「解決済み」にクローズ</span></div><div class="sc-step"><span class="sc-n">7</span><span class="sc-t">ユーザーAのマイページで問い合わせ状態が「解決済み」になっている</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">受付完了メールに問い合わせ内容・受付番号が含まれている</div><div class="sc-ck">管理画面に問い合わせが即時表示される</div><div class="sc-ck">クローズ後にユーザーが追加返信しようとしたときの制御が仕様通り</div><div class="sc-ck">クローズした問い合わせが管理画面の「対応済み」に移動している</div></div></div>
+</div>
+ 
+<div id="s-coupon" class="sec"><div class="sec-hd">クーポン発行 → 配布 → 使用 → 期限切れ <span class="bdg">NEW</span></div>
+<div class="sc"><div class="sc-title">クーポンの全ライフサイクル確認</div><div class="sc-pre">前提：管理者と対象ユーザー複数名</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">管理者がクーポンを作成（割引率・有効期限・使用回数上限を設定）</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">対象ユーザーにクーポンコードをメール配布</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">ユーザーがカートでクーポンコードを入力して適用</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">割引金額が反映された状態で注文完了</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">同じクーポンを再使用しようとする → 使用済みエラーになる</span></div><div class="sc-step"><span class="sc-n">6</span><span class="sc-t">有効期限を過ぎたクーポンを入力する → 期限切れエラーになる</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">クーポン適用後の割引額・合計金額が正しい（端数処理も確認）</div><div class="sc-ck">使用回数上限に達したクーポンが使えなくなる</div><div class="sc-ck">注文キャンセル時にクーポンが返還されるか（仕様による）</div><div class="sc-ck">対象外の商品・カテゴリには適用されない</div><div class="sc-ck">管理画面でクーポン使用状況（誰がいつ使ったか）が確認できる</div></div></div>
+</div>
+ 
+<div id="s-multiapv" class="sec"><div class="sec-hd">多段階承認フロー（申請 → 一次承認 → 最終承認） <span class="bdg">NEW</span></div>
+<div class="sc"><div class="sc-title">承認者が複数いる段階的ワークフローの確認</div><div class="sc-pre">前提：申請者・一次承認者・最終承認者の3アカウント</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">申請者が申請を送信</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">一次承認者にのみ通知が届く（最終承認者にはまだ届かない）</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">一次承認者が承認する</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">最終承認者に通知が届く</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">最終承認者が承認する</span></div><div class="sc-step"><span class="sc-n">6</span><span class="sc-t">申請者に最終承認完了の通知が届く</span></div><div class="sc-step"><span class="sc-n">7</span><span class="sc-t">一次承認者が却下したとき最終承認者に通知が届かないことを確認</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">一次承認前に最終承認者が操作できない（順番が守られる）</div><div class="sc-ck">一次却下されたとき申請者に届く通知が「一次却下」であることが分かる</div><div class="sc-ck">最終承認後にシステム上の処理（在庫確保・発注など）が実行される</div><div class="sc-ck">承認履歴に各承認者・日時・コメントが残っている</div></div></div>
+</div>
+ 
+<div id="s-export" class="sec"><div class="sec-hd">画面表示 → エクスポート → 再インポートの整合性確認 <span class="bdg">NEW</span></div>
+<div class="sc"><div class="sc-title">表示・エクスポート・インポートを通じてデータが劣化しないか</div><div class="sc-pre">前提：日本語・特殊文字・数値を含む多様なデータが登録済み</div><div class="sc-steps"><div class="sc-step"><span class="sc-n">1</span><span class="sc-t">一覧画面で表示されているデータの件数・内容を記録</span></div><div class="sc-step"><span class="sc-n">2</span><span class="sc-t">CSVエクスポートを実行してダウンロード</span></div><div class="sc-step"><span class="sc-n">3</span><span class="sc-t">CSVをExcelで開いて文字化け・数値ずれがないことを確認</span></div><div class="sc-step"><span class="sc-n">4</span><span class="sc-t">別環境（テスト環境など）にCSVをインポート</span></div><div class="sc-step"><span class="sc-n">5</span><span class="sc-t">インポート後の一覧を元のデータと比較</span></div></div><div class="sc-div"></div><div class="sc-ct">確認ポイント</div><div class="sc-checks"><div class="sc-ck">日本語が文字化けしない（UTF-8 BOM対応）</div><div class="sc-ck">数値の精度が失われていない（小数・大きな数）</div><div class="sc-ck">日付フォーマットがExcelで崩れない</div><div class="sc-ck">コンマ・改行を含む文字列がCSVで正しくクォートされている</div><div class="sc-ck">エクスポートの件数とインポート後の件数が一致する</div></div></div>
+</div>
+</div>
+ 
+<script>
+function switchTab(id,el){
+  document.querySelectorAll('.sw').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.icon-nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.cat-bar a').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+</script>
+<button class="back-to-top" aria-label="トップに戻る">↑</button>
+<script src="/style/common.js"></script>
+</body>
+</html>

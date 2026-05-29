@@ -105,11 +105,15 @@ a{text-decoration:none;}
 .cta p{font-size:15px;color:#555;margin-bottom:24px;line-height:1.9;}
 
 /* Footer */
-.footer{padding:24px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #ebebeb;}
-.footer-copy{font-size:12px;color:#bbb;}
-.footer-links{display:flex;gap:20px;}
+.footer{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #ebebeb;}
+.footer-logo{display:flex;align-items:center;gap:8px;}
+.footer-logo-mark{width:28px;height:28px;background:#2C2C2A;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.footer-logo-name{font-size:12px;font-weight:600;color:#bbb;}
+.footer-right{display:flex;align-items:center;gap:16px;}
 .footer-links a{font-size:13px;color:#aaa;transition:color .15s;}
 .footer-links a:hover{color:#555;}
+.scroll-top{width:32px;height:32px;border-radius:50%;background:#f0f0f0;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:#888;transition:background .15s;}
+.scroll-top:hover{background:#e0e0e0;}
 </style>
 </head>
 <body>
@@ -187,25 +191,25 @@ a{text-decoration:none;}
   <div class="container">
     <div class="section-header">
       <span class="section-num">01</span>
-      <h2 class="section-title">定時に帰るために、作った。</h2>
+      <h2 class="section-title">テストツール</h2>
       <p class="section-sub">— 現場を知っている人間が、使えるものを。</p>
     </div>
     <div class="tools-grid">
-      <a class="tool-card" href="./tools/bug-checker/landing.html" style="text-decoration:none;color:inherit;display:block;">
-        <div class="tool-card-top"><div class="tool-icon">🐛</div><div class="tool-name">これってバグなの？</div></div>
-        <p class="tool-desc">スクショを貼るだけでバグ判定 → 起票内容を自動生成。タイトル・再現手順・期待値まで全部出てくる。</p>
-        <span class="tool-tag try">→ 使ってみる</span>
+      <a class="tool-card" href="./tools/test-patterns/index.html">
+        <div class="tool-card-top"><div class="tool-icon">📋</div><div class="tool-name">TESTパターン集</div></div>
+        <p class="tool-desc">「結合テストって何を書けばいいの？」観点とよくある見落としをまとめたリファレンス。単体・結合・シナリオのパターン収録。</p>
+        <span class="tool-tag try">→ みてみる</span>
       </a>
       <a class="tool-card" href="./tools/ui-parts/index.html">
         <div class="tool-card-top"><div class="tool-icon">🖼️</div><div class="tool-name">UI部品名鑑</div></div>
         <p class="tool-desc">「このボタンみたいなやつ、なんて言うの？」UIコンポーネント23種の名前・説明・よくあるバグをまとめたリファレンス。</p>
         <span class="tool-tag try">→ みてみる</span>
       </a>
-      <div class="tool-card">
-        <div class="tool-card-top"><div class="tool-icon">✅</div><div class="tool-name">テスト観点テンプレ</div></div>
-        <p class="tool-desc">ゼロから考えなくていい。すぐ使えるテスト設計の出発点。</p>
-        <span class="tool-tag free">無料</span>
-      </div>
+      <a class="tool-card" href="./tools/bug-checker/landing.html">
+        <div class="tool-card-top"><div class="tool-icon">🐛</div><div class="tool-name">これってバグなの？</div></div>
+        <p class="tool-desc">スクショを貼るだけでバグ判定 → 起票内容を自動生成。タイトル・再現手順・期待値まで全部出てくる。</p>
+        <span class="tool-tag try">→ 使ってみる</span>
+      </a>
     </div>
 
     <div class="section-header" style="margin-top:40px;">
@@ -249,7 +253,8 @@ a{text-decoration:none;}
         <h3>小野（おの）／ BEETLE合同会社 代表</h3>
         <p class="intro">
           北海道生まれの沖縄育ち。自衛隊がはじめの仕事で、今はQAエンジニア。<br>
-          自分のベクトルってどこに伸びてるんだろうと思う日々を送ってる48歳。
+          なんだかんだで独立して、ワンオペでやってる48歳。<br>
+          チームメンバー よめぼくと、時々、Claude。
         </p>
         <p class="tagline">
           「仕様書に書いてないからいい」が許せなくて、独立した。<br>
@@ -276,10 +281,15 @@ a{text-decoration:none;}
 </div>
 
 <footer class="footer">
-  <span class="footer-copy">© 2026 BEETLE合同会社</span>
-  <div class="footer-links">
-    <a href="#">note</a>
-    <a href="#">Twitter/X</a>
+  <div class="footer-logo">
+    <div class="footer-logo-mark">🪲</div>
+    <span class="footer-logo-name">BEETLE</span>
+  </div>
+  <div class="footer-right">
+    <div class="footer-links">
+      <a href="#">note</a>
+    </div>
+    <button class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
   </div>
 </footer>
 
