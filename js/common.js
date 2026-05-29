@@ -11,7 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('scrollTopBtn');
     if (!btn) return;
     window.addEventListener('scroll', () => {
-      btn.classList.toggle('visible', window.scrollY > 200);
+      const footer = document.querySelector('.site-footer');
+      const footerVisible = footer && footer.getBoundingClientRect().top < window.innerHeight;
+      btn.classList.toggle('visible', window.scrollY > 200 && !footerVisible);
     }, { passive: true });
   });
 });
