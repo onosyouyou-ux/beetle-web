@@ -44,7 +44,7 @@
 .post-page{padding:40px 0 80px;}
 .post-back{display:inline-flex;align-items:center;gap:4px;font-size:13px;color:#999;margin-bottom:32px;transition:color .15s;}
 .post-back:hover{color:#333;}
-.post-header{margin-bottom:0;padding-bottom:24px;border-bottom:1px solid #ebebeb;}
+.post-header{margin-bottom:0;padding-bottom:24px;}
 .post-h1{font-size:26px;font-weight:700;line-height:1.5;color:#111;letter-spacing:-0.02em;margin-top:14px;}
 .post-body{font-size:14px;line-height:2;color:#333;margin-top:36px;}
 .post-body p{margin-bottom:1.8em;}
