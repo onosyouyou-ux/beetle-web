@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>「これってバグですか？」を1000回言わなくて済む環境を作りたかった | BEETLE合同会社</title>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-05-29</span>
+        <span class="post-tag qa">QA</span>
+      </div>
+      <h1 class="post-h1">「これってバグですか？」を1000回言わなくて済む環境を作りたかった</h1>
+    </div>
+
+    <div class="post-body">
+
+      <p class="lead">作った。<br>
+      ずっと頭の中にあったやつを、形にした。<br>
+      リリースした瞬間、特別な感慨はなかった。あ、動いてる。それだけだった。<br>
+      でも少し経って、思った。あのころの自分に渡せるものが、ひとつ増えた。</p>
+
+      <p>新人のころ、一番困ったのは「これがバグかどうかわからない」だった。<br>
+      挙動がおかしい。でも仕様書を探しても、それらしい記述が見当たらない。<br>
+      聞けば「確認中です」で返ってこない。<br>
+      その繰り返し。</p>
+
+      <p>「これってバグですか？」<br>
+      この一言を言うのに、なぜかエネルギーがいった。<br>
+      バグじゃなかったときの気まずさ。仕様です、と言われたときの「あ、そうか」という感じ。聞く前から萎縮していた。<br>
+      でも聞かないと進まない。毎回ゼロから書く起票も地味にきつかった。</p>
+
+      <p>あの感覚を、なくしたかった。<br>
+      だから作った。</p>
+
+      <p>「これってバグなの？」<br>
+      スクショを貼るだけで、AIが判定してくれるツールだ。<br>
+      バグか、仕様か、不明か。三択で出してくれる。<br>
+      バグなら起票内容まで自動生成する。タイトル、再現手順、期待値、実際の動作。コピーしてそのままJiraやRedmineに貼り付けられる。<br>
+      ログイン不要。インストール不要。ブラウザを開いてスクショを貼るだけ。</p>
+
+      <p>便利にしたかったわけじゃない。<br>
+      「聞く前に一回確認できる場所」が欲しかった。<br>
+      バグかどうか迷うとき、人に聞く前にここに投げれば、少なくとも方向性が出る。それだけで、動けるようになる。</p>
+
+      <p>登録もいらない。<br>
+      まずスクショを一枚、貼ってみてほしい。</p>
+
+    </div>
+
+    <div class="post-cta">
+      <p>スクショを貼るだけでバグか仕様かを即判定。<br>起票内容まで自動生成します。</p>
+      <a class="post-cta-btn" href="/tools/bug-checker/landing.html">→ これってバグなの？を試す</a>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>
