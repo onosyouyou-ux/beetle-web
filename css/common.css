@@ -1,0 +1,16 @@
+/* Nav */
+.nav { border-bottom: 1px solid #ebebeb; position: sticky; top: 0; background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); z-index: 100; }
+.nav-inner { max-width: 860px; margin: 0 auto; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; }
+.logo a { display: flex; align-items: center; }
+.nav-links { display: flex; gap: 22px; }
+.nav-links a { font-size: 13px; color: #666; text-decoration: none; transition: color .15s; }
+.nav-links a:hover { color: #EF9F27; }
+
+/* Footer */
+.site-footer { background: #1a1a1a; padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+.site-footer-logo { display: flex; align-items: center; gap: 12px; }
+.site-footer-logo span { font-size: 15px; font-weight: bold; color: #fff; }
+.site-footer-right { display: flex; align-items: center; gap: 16px; }
+.site-footer-copy { font-size: 12px; color: #888; }
+.scroll-top-btn { width: 32px; height: 32px; border-radius: 50%; background: #333; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 16px; transition: background .15s; }
+.scroll-top-btn:hover { background: #444; }
