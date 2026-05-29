@@ -48,14 +48,14 @@
 .post-h1{font-size:26px;font-weight:700;line-height:1.5;color:#111;letter-spacing:-0.02em;margin-top:14px;}
 .post-body{font-size:14px;line-height:2;color:#333;margin-top:36px;}
 .post-body p{margin-bottom:1.8em;}
-.post-body .lead{font-size:15px;color:#111;font-weight:500;}
+.post-body .lead{font-size:15px;color:#111;font-weight:700;}
 .post-cta{margin-top:48px;padding:28px 24px;background:#fafafa;border:1px solid #ebebeb;border-radius:16px;text-align:center;}
 .post-cta p{font-size:14px;color:#666;margin-bottom:16px;line-height:1.8;}
 .post-cta-btn{display:inline-block;padding:14px 32px;background:#2C2C2A;color:#fff;font-size:14px;font-weight:600;border-radius:8px;transition:background .15s;}
 .post-cta-btn:hover{background:#444;}
 
 /* Lead text inside post-header */
-.post-lead{font-size:15px;color:#555;line-height:1.9;margin-top:16px;}
+.post-lead{font-size:15px;font-weight:700;color:#555;line-height:1.9;margin-top:16px;}
 
 /* Feature cards (full container width, outside post-body) */
 .post-features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:28px 0 32px;border-bottom:1px solid #ebebeb;margin-bottom:0;}
