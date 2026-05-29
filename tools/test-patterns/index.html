@@ -626,8 +626,19 @@ const topBtn = document.querySelector('.back-to-top');
 topBtn.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
 window.addEventListener('scroll', () => {
   const footer = document.querySelector('.tp-footer');
-  const footerVisible = footer && footer.getBoundingClientRect().top < window.innerHeight;
-  topBtn.classList.toggle('visible', window.scrollY > 200 && !footerVisible);
+  if (!footer) return;
+  const footerTop = footer.getBoundingClientRect().top;
+  const gap = 8;
+  const btnH = 40 + 28 + gap;
+  if (window.scrollY > 200) {
+    topBtn.classList.add('visible');
+    topBtn.style.bottom = footerTop < window.innerHeight
+      ? (window.innerHeight - footerTop + gap) + 'px'
+      : '28px';
+  } else {
+    topBtn.classList.remove('visible');
+    topBtn.style.bottom = '28px';
+  }
 }, {passive:true});
 </script>
 </body>

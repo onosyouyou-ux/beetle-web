@@ -12,8 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!btn) return;
     window.addEventListener('scroll', () => {
       const footer = document.querySelector('.site-footer');
-      const footerVisible = footer && footer.getBoundingClientRect().top < window.innerHeight;
-      btn.classList.toggle('visible', window.scrollY > 200 && !footerVisible);
+      if (!footer) return;
+      const footerTop = footer.getBoundingClientRect().top;
+      if (window.scrollY > 200) {
+        btn.classList.add('visible');
+        btn.style.bottom = footerTop < window.innerHeight
+          ? (window.innerHeight - footerTop + 8) + 'px'
+          : '28px';
+      } else {
+        btn.classList.remove('visible');
+        btn.style.bottom = '28px';
+      }
     }, { passive: true });
   });
 });
