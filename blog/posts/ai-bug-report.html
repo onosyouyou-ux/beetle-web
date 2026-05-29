@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIにバグの状況を説明したら、再現手順まで書いてくれた話 | BEETLE合同会社</title>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-05-20</span>
+        <span class="post-tag ai">AI</span>
+      </div>
+      <h1 class="post-h1">AIにバグの状況を説明したら、再現手順まで書いてくれた話</h1>
+    </div>
+
+    <div class="post-body">
+
+      <p class="lead">スクリーンショット1枚とちょっとした説明を渡しただけで、起票できるレベルの内容が返ってきた。このツールを作ろうと思ったきっかけ。</p>
+
+      <p>最初は半信半疑だった。「スクショ貼ってバグを説明したら、AIが起票内容を書いてくれる」なんて話、なんとなく胡散臭いというか、どうせそれっぽいことしか言わないだろう、と思っていた。</p>
+
+      <p>試してみたのは、ある操作後にエラーが出るケースだった。エラーの画面のスクショを貼って、「この画面、おかしくないですか」くらいの雑な説明を添えた。30秒もしないうちに返ってきたのが、こんな内容だった。</p>
+
+      <p>タイトル、再現手順、期待する動作、実際の動作、環境情報。Jiraにそのまま貼れるレベルで整っていた。しかも再現手順が3ステップで書かれていて、「あ、そういう順番で起きてるのか」と自分でも気づかされた部分があった。</p>
+
+      <p>思ってたより、ずっとうまくいった。</p>
+
+      <p>バグの起票って、地味に時間がかかる。現象を整理して、言葉にして、再現手順を思い出して、開発者に伝わるように書く。慣れてる人でも5〜10分はかかる作業だ。慣れてない人だとそれ以上。しかも「ちゃんと書けてるかな」という不安もある。</p>
+
+      <p>AIに渡すと、そこが一気に省ける。自分はスクショを撮って、何が起きたかをざっくり説明するだけでいい。あとは確認して、直して、貼るだけ。</p>
+
+      <p>それが、このツールを作ろうと思ったきっかけだった。</p>
+
+    </div>
+
+    <div class="post-cta">
+      <p>スクショを貼るだけでバグか仕様かを即判定。<br>起票内容まで自動生成します。</p>
+      <a class="post-cta-btn" href="/tools/bug-checker/landing.html">→ これってバグなの？を試す</a>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>
