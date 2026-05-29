@@ -8,9 +8,9 @@
 <link rel="stylesheet" href="/style/common.css">
 <style>
 body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cream);color:var(--tp-text);line-height:1.6}
-.bc{background:var(--tp-dark2);padding:10px 32px;font-size:12px;color:#888;display:flex;gap:6px;align-items:center}
-.bc span{color:#555}
-.bc a{color:#aaa}
+.bc{background:var(--tp-dark);padding:0 2rem;font-size:13px;color:#888;display:flex;gap:10px;align-items:center;height:52px;position:sticky;top:0;z-index:100}
+.bc span{color:#444}
+.bc a{color:#aaa;text-decoration:none}
 .bc a:hover{color:#fff}
 .hero{background:var(--tp-dark);padding:56px 32px 48px;text-align:center;position:relative;overflow:hidden;border-bottom:none}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(232,90,26,.22) 0%,transparent 65%);pointer-events:none}
@@ -86,7 +86,13 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 </head>
 <body>
  
-<div class="bc"><a href="/">BEETLE</a><span>›</span><a href="/#tools">Tools</a><span>›</span><span style="color:#ddd">TESTパターン集</span></div>
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" style="height:28px;vertical-align:middle;border-radius:6px;"></a>
+  <span>›</span>
+  <a href="/#tools">ツール一覧</a>
+  <span>›</span>
+  <span style="color:#ddd;font-size:13px;">TESTパターン集</span>
+</div>
  
 <div class="hero">
   <div class="hero-badge">REFERENCE</div>
