@@ -31,22 +31,14 @@ body::after{content:'';position:fixed;width:220px;height:220px;background:rgba(2
 }
 
 .site-header{
-  display:flex;align-items:center;justify-content:center;
-  padding:24px 0 0;
+  display:flex;align-items:center;gap:10px;
+  padding:20px 0 0;
+  font-size:13px;
 }
-.logo-pill{
-  display:inline-flex;align-items:center;gap:8px;
-  background:rgba(255,255,255,0.1);
-  border:1px solid rgba(255,255,255,0.2);
-  border-radius:99px;
-  padding:8px 18px 8px 10px;
-  backdrop-filter:blur(10px);
-  text-decoration:none;color:#fff;
-  font-size:13px;font-weight:700;letter-spacing:1px;
-  transition:background .2s;
-}
-.logo-pill:hover{background:rgba(255,255,255,0.18);}
-.logo-mark{width:28px;height:28px;background:rgba(255,255,255,0.15);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.site-header a{color:rgba(255,255,255,0.65);text-decoration:none;transition:color .15s;}
+.site-header a:hover{color:#fff;}
+.site-header .sep{color:rgba(255,255,255,0.25);}
+.site-header .current{color:rgba(255,255,255,0.9);}
 
 .hero{
   text-align:center;
@@ -218,10 +210,11 @@ footer a:hover{color:#fff;}
 
   <!-- ヘッダー -->
   <header class="site-header">
-    <a class="logo-pill" href="https://www.beetle-web.jp" target="_blank" rel="noopener">
-      <span class="logo-mark">🪲</span>
-      <span>BEETLE 合同会社</span>
-    </a>
+    <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" style="height:28px;vertical-align:middle;border-radius:6px;"></a>
+    <span class="sep">›</span>
+    <a href="/#tools">ツール一覧</a>
+    <span class="sep">›</span>
+    <span class="current">これってバグなの？</span>
   </header>
 
   <!-- HERO -->
