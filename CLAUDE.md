@@ -10,6 +10,42 @@
 - `assets/` 以下の画像・SVGファイル
 - 新しいツールページ（`tools/xxxx/index.html` など）
 
+## ファイル構成ルール
+
+```
+beetle-web/
+├── assets/icons/       ← SVG・アイコン素材
+├── css/
+│   └── common.css      ← ナビ・フッターの共通スタイル
+├── js/
+│   └── common.js       ← header/footer の fetch ローダー
+├── partials/
+│   ├── header.html     ← 共通ナビ（ここを編集すれば全ページ反映）
+│   └── footer.html     ← 共通フッター（同上）
+├── style/              ← ツール固有のCSS変数（test-patterns用）
+└── tools/xxxx/
+```
+
+### 新しいページを作るとき
+
+`<head>` に追加：
+```html
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+```
+
+`<body>` の先頭と末尾に追加：
+```html
+<div id="site-header"></div>
+
+<!-- ページ固有のコンテンツ -->
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+```
+
+ナビ・フッターを変更したいときは `partials/header.html` か `partials/footer.html` だけ編集すればOK。各ページは触らなくていい。
+
 ## ブランチ運用
 
 作業はブランチを切って行い、確認できたら main にマージする。
