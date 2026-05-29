@@ -42,8 +42,16 @@
 .post-cta-btn{display:inline-block;padding:14px 32px;background:#2C2C2A;color:#fff;font-size:14px;font-weight:600;border-radius:8px;transition:background .15s;}
 .post-cta-btn:hover{background:#444;}
 
+/* Feature cards inside post */
+.post-features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:28px 0 32px;}
+.post-feature-card{background:#fafafa;border:1px solid #ebebeb;border-radius:12px;padding:16px;}
+.post-feature-title{font-size:13px;font-weight:700;color:#111;margin-bottom:6px;}
+.post-feature-desc{font-size:12px;color:#666;line-height:1.7;}
+
 @media(max-width:600px){
+  .post-features{grid-template-columns:1fr;}
   .page-title{font-size:26px;}
   .posts-grid{grid-template-columns:1fr;}
   .post-h1{font-size:22px;}
+  .post-features{grid-template-columns:1fr;}
 }
