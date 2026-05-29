@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>スタートアップのQAって、何から始めたらいいんだろう | BEETLE合同会社</title>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-05-12</span>
+        <span class="post-tag tips">Tips</span>
+      </div>
+      <h1 class="post-h1">スタートアップのQAって、何から始めたらいいんだろう</h1>
+    </div>
+
+    <div class="post-body">
+
+      <p class="lead">テスト設計書もなく、仕様書もSlackに散らばっていて、「テストよろしく」とだけ言われる現場。そこで最初にやるべきことを整理してみた。</p>
+
+      <p>最初に正直に言うと、手順書を作ろうとしてはいけない。資料を整えようとしてもいけない。まずリリース予定のものを触る。それだけでいい。</p>
+
+      <p>スタートアップのQAは「整った環境でテストを回す」仕事じゃない。「何が壊れたら困るかを把握する」仕事だ。そのためにいちばん早いのは、自分が使ってみることだ。</p>
+
+      <p><strong>最初の1週間でやること</strong></p>
+
+      <p>まず、ログインからコアの操作までを一通り触る。仕様書がなくても動きを見ればわかることは多い。気になった挙動はスクショを撮ってメモするだけでいい。起票は後回しでいい。</p>
+
+      <p>次に、開発者に「一番怖いのどこですか」と聞く。これが効く。バグを出したくない箇所、触ると壊れがちな部分、リリースのたびに心配しているところ。そこが最初に手を入れるべき場所だ。</p>
+
+      <p>そしてSlackを読む。直近1〜2週間の開発チャンネルを流し読みするだけで、何を作ったか・何が問題だったかがだいたい見える。仕様書代わりになる。</p>
+
+      <p><strong>ドキュメントより先に動くものを作る</strong></p>
+
+      <p>テスト設計書を最初から整備しようとすると、書くことが目的になる。スタートアップに必要なのは、リリースを止めないことと、大事なところが壊れていないことの確認だ。</p>
+
+      <p>シンプルなチェックリストで十分。「ログインできる」「注文が通る」「メールが届く」。このくらいのレベルから始めて、やりながら育てていく。完璧な設計書より、毎リリース回せる5項目の方がずっと価値がある。</p>
+
+      <p>整っていない環境でQAをやることは、弱点じゃない。何を確認すべきかを自分で判断できるようになる、いい訓練だと思っている。</p>
+
+    </div>
+
+    <div class="post-cta">
+      <p>バグか仕様かの判断も、起票もAIに任せてみませんか。<br>スクショ1枚から始められます。</p>
+      <a class="post-cta-btn" href="/tools/bug-checker/landing.html">→ これってバグなの？を試す</a>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>
