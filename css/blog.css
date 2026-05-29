@@ -32,9 +32,9 @@
 .post-page{padding:40px 0 80px;}
 .post-back{display:inline-flex;align-items:center;gap:4px;font-size:13px;color:#999;margin-bottom:32px;transition:color .15s;}
 .post-back:hover{color:#333;}
-.post-header{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid #ebebeb;}
+.post-header{margin-bottom:0;padding-bottom:24px;border-bottom:1px solid #ebebeb;}
 .post-h1{font-size:26px;font-weight:700;line-height:1.5;color:#111;letter-spacing:-0.02em;margin-top:14px;}
-.post-body{font-size:16px;line-height:2;color:#333;max-width:640px;}
+.post-body{font-size:16px;line-height:2;color:#333;max-width:640px;margin-top:36px;}
 .post-body p{margin-bottom:1.8em;}
 .post-body .lead{font-size:17px;color:#111;font-weight:500;}
 .post-cta{margin-top:48px;padding:28px 24px;background:#fafafa;border:1px solid #ebebeb;border-radius:16px;text-align:center;}
@@ -42,14 +42,16 @@
 .post-cta-btn{display:inline-block;padding:14px 32px;background:#2C2C2A;color:#fff;font-size:14px;font-weight:600;border-radius:8px;transition:background .15s;}
 .post-cta-btn:hover{background:#444;}
 
-/* Feature cards inside post */
-.post-features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:28px 0 32px;}
-.post-feature-card{background:#fafafa;border:1px solid #ebebeb;border-radius:12px;padding:16px;}
-.post-feature-title{font-size:13px;font-weight:700;color:#111;margin-bottom:6px;}
-.post-feature-desc{font-size:12px;color:#666;line-height:1.7;}
+/* Lead text inside post-header */
+.post-lead{font-size:17px;color:#555;line-height:1.9;margin-top:16px;}
+
+/* Feature cards (full container width, outside post-body) */
+.post-features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:28px 0 32px;border-bottom:1px solid #ebebeb;margin-bottom:0;}
+.post-feature-card{background:#fafafa;border:1px solid #ebebeb;border-radius:12px;padding:20px;}
+.post-feature-title{font-size:13px;font-weight:700;color:#111;margin-bottom:8px;}
+.post-feature-desc{font-size:12px;color:#666;line-height:1.8;}
 
 @media(max-width:600px){
-  .post-features{grid-template-columns:1fr;}
   .page-title{font-size:26px;}
   .posts-grid{grid-template-columns:1fr;}
   .post-h1{font-size:22px;}
