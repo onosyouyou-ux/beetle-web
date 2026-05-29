@@ -10,6 +10,15 @@ export default function AppHeader({ counter }: { counter: CounterData | null }) 
 
   return (
     <div className="mb-6">
+      <div className="flex items-center gap-2 text-[12px] mb-5">
+        <a href="https://www.beetle-web.jp" target="_blank" rel="noopener">
+          <img src="https://www.beetle-web.jp/assets/icons/beetle-icon.svg" alt="BEETLE" style={{ height: '26px', borderRadius: '5px', verticalAlign: 'middle' }} />
+        </a>
+        <span className="text-[#ccc]">›</span>
+        <a href="https://www.beetle-web.jp/#tools" target="_blank" rel="noopener" className="text-[#999] hover:text-[#333] transition-colors">ツール一覧</a>
+        <span className="text-[#ccc]">›</span>
+        <span className="text-[#555]">これってバグなの？</span>
+      </div>
       <div className="inline-block text-[10px] font-mono bg-[#fcebeb] text-[#a32d2d] px-[7px] py-[2px] rounded-[3px] mb-[5px] tracking-[0.06em]">
         BUG DETECTOR
       </div>
