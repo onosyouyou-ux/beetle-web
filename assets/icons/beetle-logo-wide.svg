@@ -1,6 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
-  <rect width="200" height="200" rx="40" fill="#F47C2B"/>
-  <text x="100" y="120" text-anchor="middle" font-family="'Arial Black', Arial, sans-serif" font-size="110" font-weight="900" fill="white">B</text>
-  <rect x="30" y="135" width="140" height="2.5" rx="1.25" fill="white" opacity="0.45"/>
-  <text x="100" y="172" text-anchor="middle" font-family="'Arial Black', Arial, sans-serif" font-size="22" font-weight="900" fill="white" letter-spacing="6">BEETLE</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="400" height="120">
+  <rect x="0" y="0" width="120" height="120" rx="24" fill="#C0634C"/>
+  <text x="60" y="72" text-anchor="middle" font-family="'Arial Black', Arial, sans-serif" font-size="66" font-weight="900" fill="white">B</text>
+  <rect x="18" y="81" width="84" height="1.5" rx="0.75" fill="white" opacity="0.45"/>
+  <text x="60" y="103" text-anchor="middle" font-family="'Arial Black', Arial, sans-serif" font-size="13" font-weight="900" fill="white" letter-spacing="3.5">BEETLE</text>
+  <text x="148" y="58" font-family="'Arial Black', Arial, sans-serif" font-size="48" font-weight="900" fill="#C0634C">BEETLE</text>
+  <text x="150" y="92" font-family="Arial, sans-serif" font-size="16" font-weight="400" fill="#888">BEETLE Co., LLC</text>
 </svg>
