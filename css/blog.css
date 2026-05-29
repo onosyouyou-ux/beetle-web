@@ -49,6 +49,7 @@
 .post-h1{font-size:26px;font-weight:700;line-height:1.5;color:#111;letter-spacing:-0.02em;margin-top:14px;}
 .post-body{font-size:14px;line-height:2;color:#333;margin-top:36px;}
 .post-body p{margin-bottom:1.8em;}
+.post-rule{border:none;border-top:1px solid #ebebeb;margin:2em 0;}
 .post-body .lead{font-size:15px;color:#111;font-weight:700;padding-bottom:24px;border-bottom:1px solid #ebebeb;}
 .post-cta{margin-top:48px;padding:28px 24px;background:#fafafa;border:1px solid #ebebeb;border-radius:16px;text-align:center;}
 .post-cta p{font-size:14px;color:#666;margin-bottom:16px;line-height:1.8;}
