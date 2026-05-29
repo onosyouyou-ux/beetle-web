@@ -1,7 +1,3 @@
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI',sans-serif;color:#1a1a1a;background:#fff;-webkit-font-smoothing:antialiased;}
-a{text-decoration:none;}
-
 .container{max-width:860px;margin:0 auto;padding:0 24px;}
 
 /* Page header */
