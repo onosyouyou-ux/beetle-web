@@ -38,18 +38,13 @@ body::after{content:'';position:fixed;width:220px;height:220px;background:rgba(8
   padding:24px 0 0;
 }
 .logo-pill{
-  display:inline-flex;align-items:center;gap:8px;
-  background:rgba(255,255,255,0.15);
-  border:1px solid rgba(255,255,255,0.28);
-  border-radius:99px;
-  padding:8px 18px 8px 10px;
-  backdrop-filter:blur(10px);
-  text-decoration:none;color:#fff;
-  font-size:13px;font-weight:800;letter-spacing:1px;
-  transition:background .2s;
+  display:inline-flex;align-items:center;
+  text-decoration:none;
+  opacity:.9;
+  transition:opacity .2s;
 }
-.logo-pill:hover{background:rgba(255,255,255,0.25);}
-.logo-mark{width:28px;height:28px;background:rgba(255,255,255,0.9);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.logo-pill:hover{opacity:1;}
+.logo-pill img{height:36px;width:auto;display:block;}
 
 /* ===== HERO ===== */
 .hero{
@@ -336,8 +331,7 @@ footer a:hover{color:#fff;}
   <!-- ヘッダー -->
   <header class="site-header">
     <a class="logo-pill" href="https://www.beetle-web.jp" target="_blank" rel="noopener">
-      <span class="logo-mark">🪲</span>
-      <span>BEETLE 合同会社</span>
+      <img src="/assets/icons/beetle-logo-wide.svg" alt="BEETLE 合同会社">
     </a>
   </header>
 
