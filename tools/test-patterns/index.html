@@ -41,7 +41,7 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 .lv-u.lv-current .lv-label{color:var(--tp-blue)}
 .lv-i.lv-current .lv-label{color:var(--tp-orange)}
 .lv-s.lv-current .lv-label{color:var(--tp-purple)}
-.sec{margin-bottom:32px;scroll-margin-top:124px}
+.sec{margin-bottom:32px}
 .sec-hd{font-size:13px;font-weight:700;padding:6px 0;border-bottom:2px solid var(--tp-cream2);margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .sec-hd .d{font-size:11px;font-weight:400;color:var(--tp-text3)}
 .bdg{font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--tp-orange-bg);color:var(--tp-orange)}
@@ -602,7 +602,11 @@ document.querySelectorAll('.cat-bar a').forEach(a=>{
   a.addEventListener('click',e=>{
     e.preventDefault();
     const t=document.querySelector(a.getAttribute('href'));
-    if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+    if(!t) return;
+    const bc=document.querySelector('.bc');
+    const nav=document.querySelector('.icon-nav-wrap');
+    const offset=(bc?bc.offsetHeight:0)+(nav?nav.offsetHeight:0)+8;
+    window.scrollTo({top:t.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});
   });
 });
 </script>
