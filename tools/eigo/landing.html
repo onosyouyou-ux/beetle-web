@@ -34,17 +34,14 @@ body::after{content:'';position:fixed;width:220px;height:220px;background:rgba(8
 
 /* ===== ヘッダー ===== */
 .site-header{
-  display:flex;align-items:center;justify-content:center;
-  padding:24px 0 0;
+  display:flex;align-items:center;gap:10px;
+  padding:20px 0 0;
+  font-size:13px;
 }
-.logo-pill{
-  display:inline-flex;align-items:center;
-  text-decoration:none;
-  opacity:.9;
-  transition:opacity .2s;
-}
-.logo-pill:hover{opacity:1;}
-.logo-pill img{height:36px;width:auto;display:block;}
+.site-header a{color:rgba(255,255,255,0.65);text-decoration:none;transition:color .15s;}
+.site-header a:hover{color:#fff;}
+.site-header .sep{color:rgba(255,255,255,0.25);}
+.site-header .current{color:rgba(255,255,255,0.9);}
 
 /* ===== HERO ===== */
 .hero{
@@ -330,9 +327,11 @@ footer a:hover{color:#fff;}
 
   <!-- ヘッダー -->
   <header class="site-header">
-    <a class="logo-pill" href="https://www.beetle-web.jp" target="_blank" rel="noopener">
-      <img src="/assets/icons/beetle-logo-wide.svg" alt="BEETLE 合同会社">
-    </a>
+    <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" style="height:28px;vertical-align:middle;border-radius:6px;"></a>
+    <span class="sep">›</span>
+    <a href="/#tools">ツール一覧</a>
+    <span class="sep">›</span>
+    <span class="current">えいごよんで！</span>
   </header>
 
   <!-- HERO -->

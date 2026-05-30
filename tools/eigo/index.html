@@ -673,22 +673,16 @@ function renderApp(){
   var mw="width:100%;max-width:"+maxW+"px;";
 
   // ---- ロゴヘッダー ----
-  var headerWrap=mkDiv("width:100%;max-width:"+maxW+"px;margin-bottom:"+(T?14:10)+"px;");
-  var headerLink=mk("a");
-  headerLink.href="https://www.beetle-web.jp";
-  headerLink.target="_blank";
-  headerLink.rel="noopener";
-  headerLink.style.cssText="display:inline-flex;align-items:center;gap:"+(T?10:8)+"px;text-decoration:none;background:rgba(255,255,255,0.15);border-radius:14px;padding:"+(T?"8px 16px 8px 10px":"6px 13px 6px 8px")+";backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.28);transition:background 0.2s;";
-  headerLink.addEventListener("mouseover",function(){this.style.background="rgba(255,255,255,0.25)";});
-  headerLink.addEventListener("mouseout",function(){this.style.background="rgba(255,255,255,0.15)";});
-  var hMark=mkDiv("width:"+(T?34:28)+"px;height:"+(T?34:28)+"px;background:linear-gradient(135deg,rgba(255,255,255,0.95),rgba(240,230,255,0.95));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:"+(T?19:15)+"px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.15);");
-  hMark.textContent="🪲";
-  var hText=mkDiv("display:flex;flex-direction:column;line-height:1.25;");
-  hText.appendChild(mkTxt("span","font-size:"+(T?13:11)+"px;font-weight:800;color:#fff;letter-spacing:1.5px;","BEETLE"));
-  hText.appendChild(mkTxt("span","font-size:"+(T?10:9)+"px;color:rgba(255,255,255,0.72);letter-spacing:0.3px;","合同会社"));
-  headerLink.appendChild(hMark);
-  headerLink.appendChild(hText);
-  headerWrap.appendChild(headerLink);
+  var headerWrap=mkDiv("width:100%;max-width:"+maxW+"px;margin-bottom:"+(T?14:10)+"px;display:flex;align-items:center;gap:10px;font-size:13px;");
+  var hLogo=mk("a"); hLogo.href="/";
+  var hLogoImg=mk("img"); hLogoImg.src="/assets/icons/beetle-icon.svg"; hLogoImg.alt="BEETLE"; hLogoImg.style.cssText="height:28px;vertical-align:middle;border-radius:6px;display:block;";
+  hLogo.appendChild(hLogoImg);
+  var hSep1=mkTxt("span","color:rgba(255,255,255,0.25);","›");
+  var hTools=mk("a"); hTools.href="/#tools"; hTools.style.cssText="color:rgba(255,255,255,0.65);text-decoration:none;"; hTools.textContent="ツール一覧";
+  hTools.addEventListener("mouseover",function(){this.style.color="#fff";}); hTools.addEventListener("mouseout",function(){this.style.color="rgba(255,255,255,0.65)";});
+  var hSep2=mkTxt("span","color:rgba(255,255,255,0.25);","›");
+  var hCurrent=mkTxt("span","color:rgba(255,255,255,0.9);","えいごよんで！");
+  headerWrap.appendChild(hLogo); headerWrap.appendChild(hSep1); headerWrap.appendChild(hTools); headerWrap.appendChild(hSep2); headerWrap.appendChild(hCurrent);
   app.appendChild(headerWrap);
 
   // ---- タイトル ----
