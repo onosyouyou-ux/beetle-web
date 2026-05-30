@@ -20,11 +20,24 @@ a{text-decoration:none;}
 }
 
 /* Footer */
-.site-footer { background: #1a1a1a; padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; }
-.site-footer-logo { display: flex; align-items: center; gap: 12px; }
-.site-footer-logo span { font-size: 15px; font-weight: bold; color: #fff; }
-.site-footer-right { display: flex; align-items: center; gap: 16px; }
-.site-footer-copy { font-size: 12px; color: #888; }
+.site-footer { background: #1a1a1a; padding: 1.25rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+.footer-left { display: flex; align-items: center; gap: 2rem; }
+.footer-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.footer-brand span { font-size: 14px; font-weight: bold; color: #fff; white-space: nowrap; }
+.footer-nav { display: flex; gap: 1.5rem; }
+.footer-nav a { font-size: 13px; color: #888; text-decoration: none; transition: color .15s; }
+.footer-nav a:hover { color: #fff; }
+.footer-copy { font-size: 12px; color: #888; white-space: nowrap; }
+.footer-sitemap-mobile { display: none; }
+@media (max-width: 600px) {
+  .footer-sitemap-mobile { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; background: #1a1a1a; border-bottom: 1px solid #2a2a2a; padding: 1.25rem 1.5rem; }
+  .footer-sitemap-mobile a { font-size: 13px; color: #888; text-decoration: none; }
+  .footer-sitemap-mobile a:hover { color: #fff; }
+  .site-footer { flex-direction: row; padding: 1rem 1.5rem; }
+  .footer-left { gap: 0; }
+  .footer-nav { display: none; }
+  .footer-copy { font-size: 11px; }
+}
 .scroll-top-float { position: fixed; bottom: 28px; right: 24px; width: 40px; height: 40px; border-radius: 50%; background: #2C2C2A; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.18); opacity: 0; pointer-events: none; transition: opacity .25s, background .15s; z-index: 200; }
 .scroll-top-float.visible { opacity: 1; pointer-events: auto; }
 .scroll-top-float:hover { background: #444; }
