@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/common.css">
 <style>
   :root {
     --bg: #f7f5f0;
@@ -21,13 +22,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body { font-family: 'Zen Kaku Gothic New', sans-serif; background: var(--bg); color: var(--navy); line-height: 1.7; display: flex; flex-direction: column; min-height: 100vh; }
-  .ui-footer { background: var(--navy); padding: 1.5rem; text-align: center; margin-top: auto; }
-  .ui-footer p { font-size: 13px; color: #888; }
-  .ui-footer a { color: #aaa; text-decoration: none; transition: color .15s; }
-  .ui-footer a:hover { color: #fff; }
-  .ui-scroll-top { position: fixed; bottom: 28px; right: 24px; width: 40px; height: 40px; border-radius: 50%; background: var(--navy); border: 1px solid #444; cursor: pointer; color: #aaa; font-size: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.3); opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 200; }
-  .ui-scroll-top.visible { opacity: 1; pointer-events: auto; }
-  .ui-scroll-top:hover { background: #333; }
 
   /* HEADER */
   .site-header { background: var(--navy); padding: 0 2rem; display: flex; align-items: center; gap: 1rem; height: 52px; position: sticky; top: 0; z-index: 100; }
@@ -70,8 +64,6 @@
   .bug-list li { font-size: 0.82rem; color: #555; padding-left: 1.1rem; position: relative; line-height: 1.5; }
   .bug-list li::before { content: '⚡'; position: absolute; left: 0; font-size: 0.75rem; }
 
-  footer { text-align: center; padding: 2.5rem 1rem; color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--border); }
-  footer a { color: var(--orange); text-decoration: none; }
 </style>
 </head>
 <body>
@@ -803,9 +795,6 @@
 </div>
 </main>
 
-<footer>
-  <p>BEETLE Tools — <a href="/#tools">ツール一覧に戻る</a> | <a href="/">beetle-web.jp</a></p>
-</footer>
 
 <script>
   const links = document.querySelectorAll('.toc-link');
@@ -827,25 +816,7 @@
   cards.forEach(c => observer.observe(c));
 </script>
 
-<footer class="ui-footer">
-  <p>BEETLE Tools &mdash; <a href="/#tools">ツール一覧に戻る</a> | <a href="/">beetle-web.jp</a></p>
-</footer>
-
-<button class="ui-scroll-top" id="uiScrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
-
-<script>
-  const uiBtn = document.getElementById('uiScrollTop');
-  const uiFooter = document.querySelector('.ui-footer');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 200) {
-      uiBtn.classList.add('visible');
-      const ft = uiFooter.getBoundingClientRect().top;
-      uiBtn.style.bottom = ft < window.innerHeight ? (window.innerHeight - ft + 8) + 'px' : '28px';
-    } else {
-      uiBtn.classList.remove('visible');
-      uiBtn.style.bottom = '28px';
-    }
-  }, { passive: true });
-</script>
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
 </body>
 </html>

@@ -11,6 +11,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>えいご よんで！</title>
+<link rel="stylesheet" href="/css/common.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;min-height:100vh;}
@@ -1057,11 +1058,8 @@ function renderApp(){
   footer.appendChild(reloadBtn);
   app.appendChild(footer);
 
-  // コピーライトフッター
-  var cpFooter=mkDiv("text-align:center;padding:20px 0 8px;max-width:"+maxW+"px;");
-  cpFooter.appendChild(mkTxt("p","color:rgba(255,255,255,0.4);font-size:"+(T?12:11)+"px;line-height:2;","© 2026 BEETLE 合同会社"));
-  cpFooter.appendChild(mkTxt("p","color:rgba(255,255,255,0.35);font-size:"+(T?11:10)+"px;line-height:1.6;","音声: Web Speech API ／ 画像よみとり: OCR.space"));
-  app.appendChild(cpFooter);
+  var credits=mkTxt("p","text-align:center;color:rgba(255,255,255,0.35);font-size:"+(T?11:10)+"px;padding:12px 0 20px;","音声: Web Speech API ／ 画像よみとり: OCR.space");
+  app.appendChild(credits);
 }
 
 // ===== 初期化 =====
@@ -1079,6 +1077,8 @@ window.addEventListener("resize",function(){
   },100);
 });
 </script>
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
 </body>
 </html>
 

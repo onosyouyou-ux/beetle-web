@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TESTパターン集</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/style/common.css">
 <style>
 body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cream);color:var(--tp-text);line-height:1.6}
@@ -82,13 +83,6 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
   .sw{padding:20px 16px}
   .bc,.cat-bar{padding-left:16px;padding-right:16px}
 }
-.tp-footer{background:var(--tp-dark);padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;margin-top:0;border-top:1px solid #2a2a3e;}
-.tp-footer-logo{display:flex;align-items:center;gap:12px;}
-.tp-footer-logo span{font-size:14px;font-weight:bold;color:#fff;}
-.tp-footer-copy{font-size:12px;color:#555;}
-.back-to-top{position:fixed;bottom:28px;right:24px;width:40px;height:40px;border-radius:50%;background:#2a2a3e;border:1px solid #333;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#888;font-size:18px;box-shadow:0 2px 12px rgba(0,0,0,0.3);opacity:0;pointer-events:none;transition:opacity .25s,background .15s;z-index:200;}
-.back-to-top.visible{opacity:1;pointer-events:auto;}
-.back-to-top:hover{background:#333;color:#ccc;}
 </style>
 </head>
 <body>
@@ -610,40 +604,7 @@ document.querySelectorAll('.cat-bar a').forEach(a=>{
   });
 });
 </script>
-<footer class="tp-footer">
-  <div class="tp-footer-logo">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="32" height="32">
-      <rect width="48" height="48" rx="10" fill="#C0634C"/>
-      <text x="24" y="29" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="26" font-weight="900" fill="white">B</text>
-      <rect x="9" y="31" width="30" height="1.2" rx="0.6" fill="white" opacity="0.45"/>
-      <text x="24" y="40" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="6" font-weight="900" fill="white" letter-spacing="1.2">BEETLE</text>
-    </svg>
-    <span>BEETLE 合同会社</span>
-  </div>
-  <span class="tp-footer-copy">© 2025 BEETLE Co., LLC</span>
-</footer>
-
-<button class="back-to-top" aria-label="トップに戻る">↑</button>
-
-<script>
-const topBtn = document.querySelector('.back-to-top');
-topBtn.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
-window.addEventListener('scroll', () => {
-  const footer = document.querySelector('.tp-footer');
-  if (!footer) return;
-  const footerTop = footer.getBoundingClientRect().top;
-  const gap = 8;
-  const btnH = 40 + 28 + gap;
-  if (window.scrollY > 200) {
-    topBtn.classList.add('visible');
-    topBtn.style.bottom = footerTop < window.innerHeight
-      ? (window.innerHeight - footerTop + gap) + 'px'
-      : '28px';
-  } else {
-    topBtn.classList.remove('visible');
-    topBtn.style.bottom = '28px';
-  }
-}, {passive:true});
-</script>
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
 </body>
 </html>
