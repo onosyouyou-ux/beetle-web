@@ -27,7 +27,9 @@ a{text-decoration:none;}
 .footer-nav { display: flex; gap: 1.5rem; }
 .footer-nav a { font-size: 13px; color: #888; text-decoration: none; transition: color .15s; }
 .footer-nav a:hover { color: #fff; }
-.footer-copy { font-size: 12px; color: #888; white-space: nowrap; }
+.footer-copy { font-size: 12px; color: #888; white-space: nowrap; display: flex; align-items: center; gap: 1rem; }
+.footer-copy a { color: #888; text-decoration: none; transition: color .15s; }
+.footer-copy a:hover { color: #fff; }
 .footer-sitemap-mobile { display: none; }
 @media (max-width: 600px) {
   .footer-sitemap-mobile { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; background: #1a1a1a; border-bottom: 1px solid #2a2a2a; padding: 1.25rem 1.5rem; }
