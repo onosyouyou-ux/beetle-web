@@ -29,10 +29,22 @@ export default function HomePage() {
   const [limitExceeded, setLimitExceeded] = useState(false);
 
   useEffect(() => {
+    const CACHE_KEY = 'beetle_count_cache';
     fetch('/api/count')
-      .then(r => r.json())
-      .then((d: CounterData) => setCounter(d))
-      .catch(() => null);
+      .then(r => {
+        if (!r.ok) throw new Error('count unavailable');
+        return r.json();
+      })
+      .then((d: CounterData) => {
+        setCounter(d);
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); } catch {}
+      })
+      .catch(() => {
+        try {
+          const cached = localStorage.getItem(CACHE_KEY);
+          if (cached) setCounter(JSON.parse(cached));
+        } catch {}
+      });
   }, []);
 
   const handleUpload = useCallback((file: File, dataUrl: string) => {
@@ -89,7 +101,12 @@ export default function HomePage() {
     } else {
       setVerdict(data);
       if (data.remaining !== undefined) {
-        setCounter(prev => prev ? { ...prev, remaining: data.remaining, used: prev.limit - data.remaining } : prev);
+        setCounter(prev => {
+          if (!prev) return prev;
+          const next = { ...prev, remaining: data.remaining, used: prev.limit - data.remaining };
+          try { localStorage.setItem('beetle_count_cache', JSON.stringify(next)); } catch {}
+          return next;
+        });
       }
     }
 
