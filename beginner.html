@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BEETLE合同会社 | QA &amp; ツール開発</title>
+<meta name="description" content="QAエンジニアが作った、現場で詰まる時間を減らすためのホームページ。テストパターン集・バグ判定AI・英語読み上げなど、実務で使えるツールを無料公開中。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="BEETLE合同会社 | QA & ツール開発">
+<meta property="og:description" content="QAエンジニアが作った、現場で詰まる時間を減らすためのホームページ。テストパターン集・バグ判定AI・英語読み上げなど、実務で使えるツールを無料公開中。">
+<meta property="og:url" content="https://www.beetle-web.jp/">
+<link rel="icon" href="./assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="hero">
+  <div class="container">
+    <p class="hero-eyebrow">BEETLE合同会社</p>
+    <p class="hero-q">そうだ、<br class="sp-br"><span class="accent">定時</span>に帰ろう。</p>
+    <p class="hero-body">QAエンジニアが作った、現場で詰まる時間を減らすためのホームページ。</p>
+    <p class="hero-body-note"><strong>活用したら定時に帰れそうですか？</strong></p>
+    <div class="hero-btns">
+      <button class="btn-main" onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})">→ ツールを見る</button>
+      <a href="./blog/" class="btn-sub">コラムを読む</a>
+    </div>
+  </div>
+</div>
+
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span class="marquee-item">📋 テスト設計</span>
+    <span class="marquee-item">🐛 バグ起票</span>
+    <span class="marquee-item">🧠 AI活用</span>
+    <span class="marquee-item">📱 アプリ開発</span>
+    <span class="marquee-item">✅ ユーザビリティ</span>
+    <span class="marquee-item">🔤 えいごよんで</span>
+    <span class="marquee-item">🎴 MyDeck</span>
+    <span class="marquee-item">📋 テスト設計</span>
+    <span class="marquee-item">🐛 バグ起票</span>
+    <span class="marquee-item">🧠 AI活用</span>
+    <span class="marquee-item">📱 アプリ開発</span>
+    <span class="marquee-item">✅ ユーザビリティ</span>
+    <span class="marquee-item">🔤 えいごよんで</span>
+    <span class="marquee-item">🎴 MyDeck</span>
+  </div>
+</div>
+
+<!-- ツール一覧 =====================================================
+     カードを追加するときは .tools-grid の中に下記をコピーしてください:
+
+     <div class="tool-card">
+       <div class="tool-card-top"><div class="tool-icon">🔧</div><div class="tool-name">ツール名</div></div>
+       <p class="tool-desc">説明文</p>
+       <span class="tool-tag free">無料</span>  ← free / wip / soon
+     </div>
+
+     リンクあり版:
+     <a class="tool-card" href="URL">…</a>
+================================================================== -->
+<div class="section" id="tools">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">テストツール</h2>
+      <p class="section-sub">— 現場を知っている人間が、使えるものを。</p>
+    </div>
+    <div class="tools-grid">
+      <a class="tool-card" href="./tools/test-patterns/index.html">
+        <div class="tool-card-top"><div class="tool-icon">📋</div><div class="tool-name">TESTパターン集</div></div>
+        <p class="tool-desc">「結合テストって何を書けばいいの？」観点とよくある見落としをまとめたリファレンス。単体・結合・シナリオのパターン収録。</p>
+        <span class="tool-tag try">→ みてみる</span>
+      </a>
+      <a class="tool-card" href="./tools/ui-parts/index.html">
+        <div class="tool-card-top"><div class="tool-icon">🖼️</div><div class="tool-name">UI部品名鑑</div></div>
+        <p class="tool-desc">「このボタンみたいなやつ、なんて言うの？」UIコンポーネント23種の名前・説明・よくあるバグをまとめたリファレンス。</p>
+        <span class="tool-tag try">→ みてみる</span>
+      </a>
+      <a class="tool-card" href="./tools/bug-checker/landing.html">
+        <div class="tool-card-top"><div class="tool-icon">🐛</div><div class="tool-name">これってバグなの？</div></div>
+        <p class="tool-desc">スクショを貼るだけでバグ判定 → 起票内容を自動生成。タイトル・再現手順・期待値まで全部出てくる。</p>
+        <span class="tool-tag try">→ 使ってみる</span>
+      </a>
+    </div>
+
+    <div class="section-header" style="margin-top:40px;">
+      <h2 class="section-title">その他のツール</h2>
+    </div>
+    <div class="tools-grid">
+      <a class="tool-card" href="tools/eigo/landing.html">
+        <div class="tool-card-top"><div class="tool-icon">🔤</div><div class="tool-name">えいごよんで！</div></div>
+        <p class="tool-desc">「この単語なんて読むの？」教科書を写真に撮るだけでネイティブ発音。小学生のお子さんがいる親御さんへ。</p>
+        <span class="tool-tag free">無料</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">できること</h2>
+      <p class="section-sub">— ツール開発だけじゃない。QAの現場ごと、一緒に動きます。</p>
+    </div>
+    <div class="cards">
+      <div class="card"><div class="card-top"><div class="card-icon">📋</div><h3>QAエンジニアリング</h3></div><p>テスト設計・バグ起票・仕様確認・Backlog管理まで。</p></div>
+      <div class="card"><div class="card-top"><div class="card-icon">🧠</div><h3>AI活用支援</h3></div><p>ClaudeやGeminiを実務に組み込む方法を、実体験をもとにサポート。あくまで我流ですが。</p></div>
+      <div class="card"><div class="card-top"><div class="card-icon">🔧</div><h3>ツール開発</h3></div><p>現場の困りごとを解決する小さなWebツールを作っています。使う人目線でつくってるつもりです。</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="about">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">代表について</h2>
+    </div>
+    <div class="about-block">
+      <div class="avatar">小野</div>
+      <div class="about-body">
+        <h3>小野 礁洋／ BEETLE合同会社 代表</h3>
+        <p class="intro">
+          北海道生まれの沖縄育ち。自衛隊がはじめの仕事で、今はQAエンジニア。<br>
+          なんだかんだで独立して、ワンオペでやってる48歳。<br>
+          チームメンバー よめぼくと、時々、Claude。
+        </p>
+        <p class="tagline">
+          <span>AIは、使うものではない。最高のパートナーだ。</span>
+        </p>
+        <a class="more-link" href="about.html">→ 自己紹介を読む</a>
+        <div class="tags">
+          <span class="tag">QAエンジニア</span>
+          <span class="tag">生成AI活用</span>
+          <span class="tag">アプリ開発</span>
+          <span class="tag">北海道生まれ</span>
+          <span class="tag">沖縄育ち</span>
+          <span class="tag">長野移住予定</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cta" id="contact">
+  <h2>まず、<span>話してみませんか。</span></h2>
+  <p>大きな案件でなくても構いません。<br>むしろ２人しかいないのでできません（笑）<br>「こういうこと困ってるんだけど」くらいの温度感でお気軽にどうぞ。</p>
+  <a href="mailto:info@beetle-web.jp" class="btn-main" style="margin:0 auto;">✉ お問い合わせ</a>
+  <a href="https://forms.gle/eM6Z9kHGhja5Xa3P9" target="_blank" style="display:block;margin-top:12px;font-size:0.85rem;color:#C0634C;border-bottom:1px solid #e8b0a2;padding-bottom:2px;width:fit-content;margin-left:auto;margin-right:auto;">Googleフォームからのお問い合わせ</a>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>
