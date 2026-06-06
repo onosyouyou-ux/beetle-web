@@ -82,7 +82,7 @@
 @media(max-width:600px){
   .sp-br{display:block;}
   .section-title{display:block;}
-  .section-sub{display:block;margin-left:0;margin-top:4px;}
+  .section-sub{display:none;}
   .about-block{gap:12px;}
   .avatar{width:44px;height:44px;font-size:13px;}
   .about-body h3{font-size:14px;}
