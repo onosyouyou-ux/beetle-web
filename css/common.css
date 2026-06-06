@@ -26,6 +26,8 @@ a{text-decoration:none;}
 .footer-left { display: flex; align-items: center; gap: 2rem; }
 .footer-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .footer-brand span { font-size: 14px; font-weight: bold; color: #fff; white-space: nowrap; }
+.footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; letter-spacing: 0.08em; color: #fff; }
+.footer-logo span { color: #C0634C; }
 .footer-nav { display: flex; gap: 1.5rem; }
 .footer-nav a { font-size: 13px; color: #888; text-decoration: none; transition: color .15s; }
 .footer-nav a:hover { color: #fff; }
