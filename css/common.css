@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Noto+Sans+JP:wght@400;700;900&display=swap');
 
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:"Noto Sans JP",sans-serif;color:#1a1a1a;background:#fff;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh;}
@@ -9,9 +9,11 @@ a{text-decoration:none;}
 .nav { border-bottom: 1px solid #ebebeb; position: sticky; top: 0; background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); z-index: 100; }
 .nav-inner { max-width: 860px; margin: 0 auto; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; }
 .logo a { display: flex; align-items: center; }
+.nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; letter-spacing: 0.08em; color: #1c1c2e; text-decoration: none; }
+.nav-logo span { color: #C0634C; }
 .nav-links { display: flex; gap: 22px; }
 .nav-links a { font-size: 13px; color: #666; text-decoration: none; white-space: nowrap; transition: color .15s; }
-.nav-links a:hover { color: #EF9F27; }
+.nav-links a:hover { color: #C0634C; }
 
 @media (max-width: 480px) {
   .nav-inner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 10px 16px; }
