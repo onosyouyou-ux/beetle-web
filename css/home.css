@@ -69,6 +69,10 @@
 .cta h2 span{color:#C0634C;}
 .cta p{font-size:15px;color:#555;margin-bottom:24px;line-height:1.9;}
 
+/* Site description */
+.site-description{padding:40px 24px 0;text-align:center;max-width:620px;margin:0 auto;}
+.site-description p{font-size:13px;color:#aaa;line-height:1.9;margin-bottom:6px;}
+
 /* To service link */
 .to-service{padding:32px 24px;text-align:center;border-top:1px solid #ebebeb;}
 .to-service p{font-size:14px;color:#999;}
