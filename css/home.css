@@ -69,6 +69,12 @@
 .cta h2 span{color:#C0634C;}
 .cta p{font-size:15px;color:#555;margin-bottom:24px;line-height:1.9;}
 
+/* To service link */
+.to-service{padding:32px 24px;text-align:center;border-top:1px solid #ebebeb;}
+.to-service p{font-size:14px;color:#999;}
+.to-service a{color:#C0634C;border-bottom:1px solid #e8b0a2;padding-bottom:1px;transition:border-color .15s;}
+.to-service a:hover{border-color:#C0634C;}
+
 @media(max-width:600px){
   .sp-br{display:block;}
   .about-block{gap:12px;}
