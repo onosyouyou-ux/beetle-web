@@ -39,6 +39,15 @@
     <a href="#about">代表</a>
   </nav>
   <a href="mailto:info@beetle-web.jp" class="header-cta">相談する</a>
+  <div class="header-menu">
+    <button class="header-menu-btn" aria-label="メニュー" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="header-menu-dropdown">
+      <a href="./beginner.html">ツール</a>
+      <a href="/blog/">コラム</a>
+    </div>
+  </div>
 </header>
 
 <!-- HERO -->
@@ -583,6 +592,22 @@
 </footer>
 
 <script>
+  // header menu
+  const headerMenuBtn = document.querySelector('.header-menu-btn');
+  const headerMenuDropdown = document.querySelector('.header-menu-dropdown');
+  const headerMenu = document.querySelector('.header-menu');
+  headerMenuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = headerMenuDropdown.classList.toggle('open');
+    headerMenu.classList.toggle('open', isOpen);
+    headerMenuBtn.setAttribute('aria-expanded', isOpen);
+  });
+  document.addEventListener('click', () => {
+    headerMenuDropdown.classList.remove('open');
+    headerMenu.classList.remove('open');
+    headerMenuBtn.setAttribute('aria-expanded', 'false');
+  });
+
   // back to top
   const backToTop = document.querySelector('.back-to-top');
   window.addEventListener('scroll', () => {
