@@ -9,7 +9,7 @@
 .accent{color:#C0634C;}
 .sp-br{display:none;}
 .hero-body{font-size:16px;color:#555;line-height:1.9;margin-bottom:12px;}
-.hero-body-note{font-size:15px;color:#444;line-height:1.8;margin-bottom:24px;}
+.hero-body-note{font-size:19px;color:#444;line-height:1.8;margin-bottom:24px;}
 .hero-btns{display:flex;gap:12px;}
 .btn-main{padding:14px 28px;font-size:14px;font-weight:600;background:#2C2C2A;color:#FAC775;border:none;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s;white-space:nowrap;}
 .btn-main:hover{background:#3a3a38;}
