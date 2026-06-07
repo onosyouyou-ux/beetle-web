@@ -331,6 +331,9 @@ a { color: inherit; text-decoration: none; }
   .fit-btn { display: block; text-align: center; width: fit-content; margin: 20px auto 0; }
   .section { padding: 56px 20px; }
   .supported-inner { flex-wrap: wrap; gap: 16px; }
+  .about-brief-supported { flex-wrap: wrap; gap: 12px; }
+  .about-brief-supported .supported-divider { display: none; }
+  .supported-tags { flex-wrap: wrap; }
   .problems-grid { grid-template-columns: repeat(2, 1fr); }
   .services-grid { grid-template-columns: 1fr; }
   .case-layout { grid-template-columns: 1fr; }
