@@ -7,32 +7,122 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-N6JXJGQ1Q6');
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BEETLE合同会社 | QA &amp; ツール開発</title>
-<meta name="description" content="QAエンジニアが作る、現場の時短に効くテスト設計・品質保証・AI活用の実践ツール集。テストパターン集・バグ判定AI・英語読み上げなど、実務で使えるツールを無料公開中。">
+<title>QAテストツール無料まとめ | テスト設計・バグ起票・AI活用 | BEETLE</title>
+<meta name="description" content="QAエンジニアが作った無料ツール集。テストパターン集・バグ判定AI・UI部品名鑑など、現場で使える実務ツールを公開中。登録不要ですぐ使えます。">
+<link rel="canonical" href="https://www.beetle-web.jp/beginner.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="BEETLE合同会社">
-<meta property="og:title" content="BEETLE合同会社 | QA & ツール開発">
-<meta property="og:description" content="QAエンジニアが作った、現場で詰まる時間を減らすためのホームページ。テストパターン集・バグ判定AI・英語読み上げなど、実務で使えるツールを無料公開中。">
-<meta property="og:url" content="https://www.beetle-web.jp/">
-<link rel="icon" href="./assets/icons/favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="QAテストツール無料まとめ | テスト設計・バグ起票・AI活用 | BEETLE">
+<meta property="og:description" content="QAエンジニアが作った無料ツール集。テストパターン集・バグ判定AI・UI部品名鑑など、現場で使える実務ツールを公開中。登録不要ですぐ使えます。">
+<meta property="og:url" content="https://www.beetle-web.jp/beginner.html">
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="/css/home.css">
+<link rel="stylesheet" href="/style/common.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "QAテストツール無料まとめ | BEETLE",
+  "description": "QAエンジニアが作った無料ツール集。テストパターン集・バグ判定AI・UI部品名鑑など、現場で使える実務ツールを公開中。",
+  "url": "https://www.beetle-web.jp/beginner.html",
+  "publisher": {
+    "@type": "Organization",
+    "name": "BEETLE合同会社",
+    "url": "https://www.beetle-web.jp"
+  }
+}
+</script>
+<style>
+body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:#16161e;color:#ccc9c2;line-height:1.6}
+
+/* パンくず */
+.bc{background:var(--tp-dark);padding:0 2rem;font-size:13px;color:#888;display:flex;gap:10px;align-items:center;height:52px;position:sticky;top:0;z-index:100;border-bottom:1px solid #2a2a3a}
+.bc span{color:#444}
+.bc a{color:#aaa;text-decoration:none}
+.bc a:hover{color:#fff}
+
+/* ヒーロー */
+.hero{background:var(--tp-dark);padding:72px 32px 64px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(232,90,26,.2) 0%,transparent 65%);pointer-events:none}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(0,0,0,.4) 0%,transparent 60%);pointer-events:none}
+.hero h1{font-size:2.8rem;font-weight:900;color:#fff;line-height:1.3;margin-bottom:18px;position:relative;z-index:1;text-shadow:2px 2px 0px rgba(0,0,0,.6),0 4px 16px rgba(0,0,0,.5)}
+.accent{color:var(--tp-orange)}
+.hero-body{font-size:15px;color:#aaa;line-height:1.9;margin-bottom:10px;position:relative;z-index:1}
+.hero-body-note{font-size:16px;color:#ccc;font-weight:700;position:relative;z-index:1}
+
+/* マーキー */
+.marquee-wrap{overflow:hidden;padding:10px 0;background:#1a1a28;border-top:1px solid #2a2a3a;border-bottom:1px solid #2a2a3a}
+.marquee{display:flex;gap:40px;animation:scroll 22s linear infinite;white-space:nowrap}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.marquee-item{font-size:12px;color:#555}
+
+/* セクション共通 */
+.section{padding:52px 0;border-bottom:1px solid #2a2a3a;scroll-margin-top:52px}
+.container{max-width:860px;margin:0 auto;padding:0 24px}
+.section-header{margin-bottom:28px}
+.section-num{font-size:11px;font-weight:700;color:var(--tp-orange);letter-spacing:.14em;display:block;margin-bottom:10px}
+.section-title{font-size:1.5rem;font-weight:800;color:#fff;letter-spacing:-.01em;line-height:1.3;display:inline}
+.section-sub{font-size:14px;color:#555;margin-top:0;display:inline;margin-left:10px}
+
+/* ツールカード */
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.tool-card{background:#252535;border:1px solid #2e2e42;border-radius:12px;padding:20px;display:flex;flex-direction:column;color:inherit;text-decoration:none;transition:all .15s}
+.tool-card:hover{border-color:var(--tp-orange-bd);box-shadow:0 2px 12px rgba(232,90,26,.12);transform:translateY(-2px)}
+.tool-card-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.tool-icon{width:38px;height:38px;border-radius:10px;background:var(--tp-dark);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.tool-name{font-size:14px;font-weight:700;color:#e0ddd8}
+.tool-desc{font-size:13px;color:#777;line-height:1.8;margin-bottom:14px;flex:1}
+.tool-tag{font-size:11px;padding:5px 14px;border-radius:99px;display:inline-block;font-weight:700;align-self:flex-start}
+.tool-tag.free{background:#1a3a22;color:#4caf6a}
+.tool-tag.try{background:var(--tp-orange);color:#fff}
+
+/* サービスカード */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.card{background:#252535;border:1px solid #2e2e42;border-radius:12px;padding:20px}
+.card-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.card-icon{width:38px;height:38px;border-radius:10px;background:var(--tp-dark);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.card h3{font-size:14px;font-weight:700;color:#e0ddd8}
+.card p{font-size:13px;color:#777;line-height:1.8}
+
+/* サイト説明 */
+.site-description{padding:40px 24px 0;text-align:center;max-width:620px;margin:0 auto}
+.site-description p{font-size:13px;color:#444;line-height:1.9;margin-bottom:6px}
+
+/* リンク */
+.to-service{padding:32px 24px 56px;text-align:center}
+.to-service p{font-size:14px;color:#555}
+.to-service a{color:var(--tp-orange);border-bottom:1px solid rgba(232,90,26,.3);padding-bottom:1px;transition:border-color .15s}
+.to-service a:hover{border-color:var(--tp-orange)}
+
+@media(max-width:600px){
+  .hero h1{font-size:2rem}
+  .hero{padding:52px 20px 48px}
+  .sp-br{display:block}
+  .section-title{display:block}
+  .section-sub{display:none}
+  .tools-grid{grid-template-columns:1fr}
+  .cards{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 
 <div id="site-header"></div>
 
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" style="height:28px;vertical-align:middle;border-radius:6px;"></a>
+  <span>›</span>
+  <span style="color:#ddd;font-size:13px;">ツール一覧</span>
+</div>
+
 <div class="hero">
-  <div class="container">
-    <p class="hero-q">そうだ、<br class="sp-br"><span class="accent">定時</span>に帰ろう。</p>
-    <p class="hero-body">QAエンジニアが作る、現場の時短に効く<br>テスト設計・品質保証・AI活用の実践ツール集。</p>
-    <p class="hero-body-note"><strong>活用したら定時に帰れそうですか？</strong></p>
-  </div>
+  <h1>そうだ、<br class="sp-br"><span class="accent">定時</span>に帰ろう。</h1>
+  <p class="hero-body">QAエンジニアが作る、現場の時短に効く<br>テスト設計・品質保証・AI活用の実践ツール集。</p>
+  <p class="hero-body-note"><strong>活用したら定時に帰れそうですか？</strong></p>
 </div>
 
 <div class="marquee-wrap">
@@ -54,23 +144,11 @@
   </div>
 </div>
 
-<!-- ツール一覧 =====================================================
-     カードを追加するときは .tools-grid の中に下記をコピーしてください:
-
-     <div class="tool-card">
-       <div class="tool-card-top"><div class="tool-icon">🔧</div><div class="tool-name">ツール名</div></div>
-       <p class="tool-desc">説明文</p>
-       <span class="tool-tag free">無料</span>  ← free / wip / soon
-     </div>
-
-     リンクあり版:
-     <a class="tool-card" href="URL">…</a>
-================================================================== -->
 <div class="section" id="tools">
   <div class="container">
     <div class="section-header">
       <span class="section-num">01</span>
-      <h2 class="section-title">テスト<span style="color:#C0634C">検証用</span>ツール</h2>
+      <h2 class="section-title">テスト<span class="accent">検証用</span>ツール</h2>
       <p class="section-sub">— 現場を知っている人間が、使えるものを。</p>
     </div>
     <div class="tools-grid">
@@ -91,8 +169,8 @@
       </a>
     </div>
 
-    <div class="section-header" style="margin-top:40px;">
-      <h2 class="section-title"><span style="color:#C0634C">その他</span>のツール</h2>
+    <div class="section-header" style="margin-top:48px;">
+      <h2 class="section-title"><span class="accent">その他</span>のツール</h2>
       <p class="section-sub">— 依頼があれば色々つくってます。</p>
     </div>
     <div class="tools-grid" style="grid-template-columns:repeat(auto-fill,minmax(210px,300px));justify-content:start;">
@@ -109,7 +187,7 @@
   <div class="container">
     <div class="section-header">
       <span class="section-num">02</span>
-      <h2 class="section-title"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:0.9em;color:#1c1c2e;letter-spacing:0.08em;">BEET<span style="color:#C0634C">LE</span></span>ができること</h2>
+      <h2 class="section-title"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:0.9em;letter-spacing:0.08em;">BEET<span class="accent">LE</span></span>ができること</h2>
       <p class="section-sub">— QAエンジニアリングからツール開発まで、一緒に動きます。</p>
     </div>
     <div class="cards">
