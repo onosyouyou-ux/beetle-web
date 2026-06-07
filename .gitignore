@@ -1,0 +1,4 @@
+.vercel
+.env*
+*.bak
+*Zone.Identifier
