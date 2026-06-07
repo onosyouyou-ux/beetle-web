@@ -14,17 +14,37 @@
 
 ```
 beetle-web/
-├── assets/icons/       ← SVG・アイコン素材
+├── assets/
+│   ├── icons/          ← SVG・アイコン素材のみ
+│   └── images/         ← PNG・JPGなど画像ファイル
 ├── css/
-│   └── common.css      ← ナビ・フッターの共通スタイル
+│   ├── common.css      ← ナビ・フッターの共通スタイル
+│   └── xxxx.css        ← ページ固有CSS（ページ名に合わせた名前）
 ├── js/
-│   └── common.js       ← header/footer の fetch ローダー
+│   ├── common.js       ← header/footer の fetch ローダー
+│   └── xxxx.js         ← ページ固有JS（ページ名に合わせた名前）
 ├── partials/
 │   ├── header.html     ← 共通ナビ（ここを編集すれば全ページ反映）
 │   └── footer.html     ← 共通フッター（同上）
 ├── style/              ← ツール固有のCSS変数（test-patterns用）
 └── tools/xxxx/
 ```
+
+## CSS・JS のお作法
+
+### インラインは書かない
+- `<style>` ブロックは HTML に書かず、必ず `/css/xxxx.css` に外出しする
+- `<script>` ブロックも HTML に書かず、必ず `/js/xxxx.js` に外出しする
+
+### インラインのまま残してよい例外
+- Google Analytics の `gtag()` スニペット（仕様上インライン必須）
+- JSON-LD 構造化データ `<script type="application/ld+json">`（SEO上インライン必須）
+
+## アセットのお作法
+
+- **SVG・アイコン** → `assets/icons/`
+- **PNG・JPGなど画像** → `assets/images/`
+- 種類を混在させない
 
 ### 新しいページを作るとき
 
