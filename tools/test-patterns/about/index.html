@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>テストケースの観点・パターン一覧 | 単体・結合・シナリオテストとは | BEETLE</title>
+<meta name="description" content="単体・結合・シナリオの3カテゴリ、100以上のテストパターンを無料公開。バリデーション・権限・ステータス遷移など現場でよく見落とすポイントをまとめたリファレンス。">
+<link rel="canonical" href="https://www.beetle-web.jp/tools/test-patterns/about/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="テストケースの観点・パターン一覧 | 単体・結合・シナリオテストとは | BEETLE">
+<meta property="og:description" content="単体・結合・シナリオの3カテゴリ、100以上のテストパターンを無料公開。バリデーション・権限・ステータス遷移など現場でよく見落とすポイントをまとめたリファレンス。">
+<meta property="og:url" content="https://www.beetle-web.jp/tools/test-patterns/about/">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/style/common.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "TESTパターン集",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "url": "https://www.beetle-web.jp/tools/test-patterns/",
+  "description": "単体・結合・シナリオの3カテゴリで構成されたQAテストパターンリファレンス"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "単体テストとは何ですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "単体テストとは、画面や機能を1つずつ単独で確認するテストです。ボタン・フォーム・計算ロジックなど、部品単体が壊れていないかを検証します。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "結合テストとは何ですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "結合テストとは、複数の機能をつないで動作を確認するテストです。操作した結果が別の画面に正しく反映されるか、画面をまたいだデータの流れを検証します。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "シナリオテスト（総合テスト）とは何ですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "シナリオテストとは、実際のユーザー操作フローで端から端まで動くかを確認するテストです。登録→購入→通知など、人が使う流れ全体を通して検証します。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "TESTパターン集は無料で使えますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "はい、完全無料です。登録不要でブラウザからすぐ使えます。"
+      }
+    }
+  ]
+}
+</script>
+<style>
+body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cream);color:var(--tp-text);line-height:1.6}
+
+/* パンくず */
+.bc{background:var(--tp-dark);padding:0 2rem;font-size:13px;color:#888;display:flex;gap:10px;align-items:center;height:52px;position:sticky;top:0;z-index:100}
+.bc span{color:#444}
+.bc a{color:#aaa;text-decoration:none}
+.bc a:hover{color:#fff}
+
+/* ヒーロー */
+.hero{background:var(--tp-dark);padding:72px 32px 64px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(232,90,26,.22) 0%,transparent 65%);pointer-events:none}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(0,0,0,.4) 0%,transparent 60%);pointer-events:none}
+.hero-badge{display:inline-block;background:var(--tp-orange);color:#fff;font-size:11px;font-weight:700;padding:4px 14px;border-radius:99px;letter-spacing:.1em;margin-bottom:20px;position:relative;z-index:1}
+.hero h1{font-size:2.4rem;font-weight:900;color:#fff;line-height:1.3;margin-bottom:16px;position:relative;z-index:1;text-shadow:2px 2px 0px rgba(0,0,0,.6),0 4px 16px rgba(0,0,0,.5)}
+.hero h1 em{color:var(--tp-orange);font-style:normal;text-shadow:2px 2px 0px rgba(100,20,0,.6),0 4px 20px rgba(232,90,26,.4)}
+.hero-sub{font-size:14px;color:#aaa;max-width:480px;margin:0 auto 32px;line-height:1.8;position:relative;z-index:1}
+.hero-cta{display:inline-block;background:var(--tp-orange);color:#fff;font-size:15px;font-weight:700;padding:14px 36px;border-radius:8px;text-decoration:none;transition:opacity .15s;position:relative;z-index:1}
+.hero-cta:hover{opacity:.85}
+
+/* コンテンツ共通 */
+.content{max-width:820px;margin:0 auto;padding:60px 24px}
+.section{margin-bottom:64px}
+.section-label{display:inline-block;font-size:11px;font-weight:700;color:var(--tp-orange);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+.section-title{font-size:1.6rem;font-weight:900;color:var(--tp-text);margin-bottom:8px;line-height:1.35}
+.section-desc{font-size:14px;color:var(--tp-text2);line-height:1.8;max-width:620px;margin-bottom:32px}
+
+/* 課題セクション */
+.pain-list{display:flex;flex-direction:column;gap:12px}
+.pain-item{display:flex;align-items:flex-start;gap:14px;background:#fff;border:1px solid var(--tp-border);border-radius:10px;padding:18px 20px}
+.pain-icon{font-size:20px;flex-shrink:0;line-height:1}
+.pain-text{font-size:14px;line-height:1.65;color:var(--tp-text)}
+
+/* テストタイプカード */
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.type-card{background:#fff;border:1px solid var(--tp-border);border-radius:12px;overflow:hidden;transition:box-shadow .15s}
+.type-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.type-card-head{padding:20px 20px 16px;border-bottom:1px solid var(--tp-border)}
+.type-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:10px}
+.type-badge-ut{background:var(--tp-blue-bg);color:var(--tp-blue)}
+.type-badge-it{background:var(--tp-orange-bg);color:var(--tp-orange)}
+.type-badge-st{background:var(--tp-purple-bg);color:var(--tp-purple)}
+.type-card h3{font-size:1rem;font-weight:800;margin-bottom:6px;color:var(--tp-text)}
+.type-card-desc{font-size:13px;color:var(--tp-text2);line-height:1.7}
+.type-card-body{padding:18px 20px}
+.type-example-label{font-size:10px;font-weight:700;color:var(--tp-text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.type-examples{display:flex;flex-direction:column;gap:7px}
+.type-example{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.55;color:var(--tp-text)}
+.type-example::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--tp-border2);flex-shrink:0;margin-top:6px}
+
+/* シナリオテストの番号付きステップ */
+.sc-steps{display:flex;flex-direction:column;gap:7px}
+.sc-step{display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.55;color:var(--tp-text)}
+.sc-n{font-size:10px;font-weight:700;min-width:20px;height:20px;background:var(--tp-purple);color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+/* できることカード */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feat-card{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:24px 22px;transition:all .15s}
+.feat-card:hover{border-color:var(--tp-orange-bd);box-shadow:0 2px 12px rgba(232,90,26,.08)}
+.feat-card-icon{font-size:28px;margin-bottom:14px}
+.feat-card h3{font-size:1rem;font-weight:800;margin-bottom:8px;color:var(--tp-text)}
+.feat-card-body{font-size:13px;color:var(--tp-text2);line-height:1.7}
+.feat-count{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;margin-top:12px}
+.feat-count-ut{background:var(--tp-blue-bg);color:var(--tp-blue)}
+.feat-count-it{background:var(--tp-orange-bg);color:var(--tp-orange)}
+.feat-count-st{background:var(--tp-purple-bg);color:var(--tp-purple)}
+
+/* 末尾CTA */
+.cta-section{background:var(--tp-dark);border-radius:16px;padding:56px 32px;text-align:center;margin-bottom:0}
+.cta-section h2{font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:10px}
+.cta-section p{font-size:14px;color:#aaa;margin-bottom:32px;line-height:1.8}
+.cta-btns{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+.cta-btn-main{display:inline-block;background:var(--tp-orange);color:#fff;font-size:15px;font-weight:700;padding:14px 36px;border-radius:8px;text-decoration:none;transition:opacity .15s}
+.cta-btn-main:hover{opacity:.85}
+.cta-btn-sub{display:inline-block;background:transparent;color:#aaa;font-size:14px;font-weight:500;padding:14px 28px;border-radius:8px;border:1px solid #444;text-decoration:none;transition:all .15s}
+.cta-btn-sub:hover{border-color:#888;color:#fff}
+
+@media(max-width:680px){
+  .hero h1{font-size:1.7rem}
+  .hero{padding:52px 20px 48px}
+  .content{padding:44px 16px}
+  .type-grid,.feat-grid{grid-template-columns:1fr}
+  .section-title{font-size:1.3rem}
+  .cta-section{padding:40px 20px;border-radius:12px}
+  .cta-btn-main,.cta-btn-sub{width:100%;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" style="height:28px;vertical-align:middle;border-radius:6px;"></a>
+  <span>›</span>
+  <a href="/#tools">ツール一覧</a>
+  <span>›</span>
+  <a href="/tools/test-patterns/">TESTパターン集</a>
+  <span>›</span>
+  <span style="color:#ddd;font-size:13px;">テストとは</span>
+</div>
+
+<!-- ヒーロー -->
+<div class="hero">
+  <div class="hero-badge">REFERENCE</div>
+  <h1>テストケースの観点・見落とし、<br><em>全部ここにある</em></h1>
+  <p class="hero-sub">単体・結合・シナリオの3カテゴリ、100以上のパターンを無料公開</p>
+  <a href="/tools/test-patterns/" class="hero-cta">TESTパターン集を見る</a>
+</div>
+
+<div class="content">
+
+  <!-- こんな課題ありませんか？ -->
+  <div class="section">
+    <span class="section-label">Pain Points</span>
+    <h2 class="section-title">こんな課題、ありませんか？</h2>
+    <p class="section-desc">テストケースを書くとき、誰もが一度はぶつかる壁があります。</p>
+    <div class="pain-list">
+      <div class="pain-item">
+        <div class="pain-icon">😓</div>
+        <div class="pain-text">テストケースを書くとき何を確認すればいいか、毎回迷ってしまう</div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🔗</div>
+        <div class="pain-text">結合テストで画面間のデータ連動の確認が抜けがちになっている</div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🆕</div>
+        <div class="pain-text">新人に「テスト観点」を説明しようとすると、うまく言語化できない</div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🗺️</div>
+        <div class="pain-text">シナリオテストで何を通せばいいか、判断の基準がない</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- テストの種類とは -->
+  <div class="section">
+    <span class="section-label">What is Testing</span>
+    <h2 class="section-title">テストの種類とは</h2>
+    <p class="section-desc">出勤打刻システムを例に、3種類のテストの違いを整理します。</p>
+    <div class="type-grid">
+
+      <!-- 単体テスト -->
+      <div class="type-card">
+        <div class="type-card-head">
+          <span class="type-badge type-badge-ut">単体テスト</span>
+          <h3>部品ごとに動くか</h3>
+          <p class="type-card-desc">画面や機能を1つずつ単独で確認する。「その部品だけで壊れていないか」を見る。</p>
+        </div>
+        <div class="type-card-body">
+          <div class="type-example-label">出勤打刻システムの場合</div>
+          <div class="type-examples">
+            <div class="type-example">打刻画面にログインユーザーの名前が表示されるか</div>
+            <div class="type-example">現在時刻が表示されているか</div>
+            <div class="type-example">打刻ボタンが表示されているか</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 結合テスト -->
+      <div class="type-card">
+        <div class="type-card-head">
+          <span class="type-badge type-badge-it">結合テスト</span>
+          <h3>つなぎ目が壊れていないか</h3>
+          <p class="type-card-desc">複数の機能をつないで、データが正しく連動するかを確認する。</p>
+        </div>
+        <div class="type-card-body">
+          <div class="type-example-label">出勤打刻システムの場合</div>
+          <div class="type-examples">
+            <div class="type-example">打刻画面で出勤打刻 → 管理画面で該当ユーザーの打刻が確認できる</div>
+            <div class="type-example">打刻せずに日付をまたぐ → 翌日打刻 → 前日が欠席扱いになっている</div>
+            <div class="type-example">一般職で打刻 → 管理画面に反映される</div>
+            <div class="type-example">管理職で打刻 → 管理画面に反映される</div>
+            <div class="type-example">役員職でログイン → 打刻画面は表示されず一覧画面が表示される</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- シナリオテスト -->
+      <div class="type-card">
+        <div class="type-card-head">
+          <span class="type-badge type-badge-st">シナリオテスト</span>
+          <h3>人間として使えるか</h3>
+          <p class="type-card-desc">実際のユーザー操作を端から端まで通して確認する。</p>
+        </div>
+        <div class="type-card-body">
+          <div class="type-example-label">出勤打刻システムの場合</div>
+          <div class="sc-steps">
+            <div class="sc-step"><span class="sc-n">1</span><span>管理画面で一般職アカウントを登録</span></div>
+            <div class="sc-step"><span class="sc-n">2</span><span>登録アカウントでログイン → ログインできること</span></div>
+            <div class="sc-step"><span class="sc-n">3</span><span>打刻画面に遷移 → 本日の打刻表示になること</span></div>
+            <div class="sc-step"><span class="sc-n">4</span><span>出勤・休憩開始・休憩終了・退勤を打刻 → 打刻できること</span></div>
+            <div class="sc-step"><span class="sc-n">5</span><span>管理画面で該当社員の打刻状況を確認 → 打刻終了になっていること</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TESTパターン集でできること -->
+  <div class="section">
+    <span class="section-label">Features</span>
+    <h2 class="section-title">TESTパターン集でできること</h2>
+    <p class="section-desc">現場でよく見落とすポイントを3カテゴリにまとめました。</p>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-card-icon">🔬</div>
+        <h3>単体テスト</h3>
+        <div class="feat-card-body">バリデーション・ボタン・モーダル・レスポンシブなど、部品ごとの確認観点を収録。</div>
+        <span class="feat-count feat-count-ut">20カテゴリ収録</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-icon">🔗</div>
+        <h3>結合テスト</h3>
+        <div class="feat-card-body">ユーザー管理・権限・ステータス遷移など、画面をまたいだデータ連動の確認パターンを収録。</div>
+        <span class="feat-count feat-count-it">27カテゴリ収録</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-icon">🗺️</div>
+        <h3>シナリオテスト</h3>
+        <div class="feat-card-body">注文・承認フロー・サブスクなど、実際のユーザー操作に沿ったシナリオを収録。</div>
+        <span class="feat-count feat-count-st">16シナリオ収録</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 末尾CTA -->
+  <div class="cta-section">
+    <h2>テスト観点を、もう迷わない</h2>
+    <p>登録不要・完全無料。ブラウザからすぐ使えます。</p>
+    <div class="cta-btns">
+      <a href="/tools/test-patterns/" class="cta-btn-main">TESTパターン集を使う（無料）</a>
+      <a href="https://www.beetle-web.jp" class="cta-btn-sub">BEETLEについて</a>
+    </div>
+  </div>
+
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+</body>
+</html>
