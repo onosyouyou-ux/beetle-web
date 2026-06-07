@@ -337,6 +337,7 @@ a { color: inherit; text-decoration: none; }
   .flow-desc { font-size: 0.82rem; }
   .flow-item { gap: 14px; }
   .flow-num { font-size: 1.2rem; width: 36px; }
+  .section-title { font-size: 1.6rem; }
   .about-brief-supported { flex-wrap: wrap; gap: 12px; }
   .about-brief-supported .supported-divider { display: none; }
   .supported-tags { flex-wrap: wrap; padding-left: 6px; }
