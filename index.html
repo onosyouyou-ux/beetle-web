@@ -628,40 +628,6 @@
   <a href="/privacy" style="color:rgba(255,255,255,0.4); font-size:0.78rem; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.2);">プライバシーポリシー</a>
 </footer>
 
-<script>
-  // header menu
-  const headerMenuBtn = document.querySelector('.header-menu-btn');
-  const headerMenuDropdown = document.querySelector('.header-menu-dropdown');
-  const headerMenu = document.querySelector('.header-menu');
-  headerMenuBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isOpen = headerMenuDropdown.classList.toggle('open');
-    headerMenu.classList.toggle('open', isOpen);
-    headerMenuBtn.setAttribute('aria-expanded', isOpen);
-  });
-  document.addEventListener('click', () => {
-    headerMenuDropdown.classList.remove('open');
-    headerMenu.classList.remove('open');
-    headerMenuBtn.setAttribute('aria-expanded', 'false');
-  });
-
-  // back to top
-  const backToTop = document.querySelector('.back-to-top');
-  window.addEventListener('scroll', () => {
-    backToTop.classList.toggle('visible', window.scrollY > 300);
-  });
-  backToTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  const carousel = document.querySelector('.tools-carousel');
-  const cardWidth = () => carousel.querySelector('.tool-card').offsetWidth + 20;
-  document.querySelector('.carousel-btn.prev').addEventListener('click', () => {
-    carousel.scrollBy({ left: -cardWidth(), behavior: 'smooth' });
-  });
-  document.querySelector('.carousel-btn.next').addEventListener('click', () => {
-    carousel.scrollBy({ left: cardWidth(), behavior: 'smooth' });
-  });
-</script>
+<script src="/js/index.js"></script>
 </body>
 </html>

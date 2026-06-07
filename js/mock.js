@@ -1,0 +1,173 @@
+let uploaded = false;
+let scanning = false;
+
+const MOCK_RESULTS = [
+  {
+    verdict: 'bug',
+    reason: 'モバイル幅（375px）でナビゲーションバーのボタンラベルが末尾で切れており、テキストが正しく表示されていません。レスポンシブ対応の不具合と考えられます。',
+    ticket: {
+      id: 'BUG-4821',
+      title: 'モバイル表示でナビゲーションボタンのラベルが切れる',
+      severity: 'High',
+      category: 'UI',
+      description: 'モバイル幅（375px）でボタンのラベルテキストが末尾で「…」と切れて表示される',
+      steps: ['スマートフォンで対象画面を開く', 'ナビゲーションバーのボタンを確認する', '画面幅375px以下でテキストが切れることを確認'],
+      expected: 'ボタンラベルが全て表示される',
+      actual: 'テキストが「設定…」のように途中で切れる',
+      env: 'モバイル / iOS Safari（画像から推測）'
+    }
+  },
+  {
+    verdict: 'not_bug',
+    reason: '表示されている内容はデザイン仕様の範囲内と判断されます。レイアウトの崩れや機能的な問題は見当たりません。意図的なデザインの可能性が高いです。',
+  },
+  {
+    verdict: 'unclear',
+    reason: '画像だけでは仕様との差異を判断することが難しい状態です。デザインカンプや仕様書と照らし合わせて確認することをおすすめします。',
+  }
+];
+
+function mockUpload() {
+  if (scanning) return;
+  uploaded = true;
+  const zone = document.getElementById('upload-zone');
+  zone.className = 'upload-zone has-image';
+  zone.onclick = null;
+  zone.innerHTML = '<div class="upload-img-wrap"><img src="https://via.placeholder.com/560x180/f1efe8/888780?text=screenshot.png" alt="アップロード済み画像" /><button class="upload-reset" onclick="resetAll(event)"><i class="ti ti-x"></i></button></div>';
+  document.getElementById('scan-btn').disabled = false;
+  document.getElementById('verdict-area').className = 'verdict-area hidden';
+  document.getElementById('verdict-area').innerHTML = '';
+  document.getElementById('scanning-area').className = 'scanning-area hidden';
+  resetSteps();
+}
+
+function resetAll(e) {
+  if (e) e.stopPropagation();
+  uploaded = false; scanning = false;
+  const zone = document.getElementById('upload-zone');
+  zone.className = 'upload-zone';
+  zone.onclick = mockUpload;
+  zone.innerHTML = '<div class="upload-icon"><i class="ti ti-photo-scan"></i></div><div class="upload-label">クリックして画像をアップロード</div><div class="upload-hint">スクリーンショット・エラー画面・UIの不具合など PNG / JPEG / WebP / GIF（5MBまで）</div>';
+  document.getElementById('scan-btn').disabled = true;
+  document.getElementById('scanning-area').className = 'scanning-area hidden';
+  document.getElementById('verdict-area').className = 'verdict-area hidden';
+  document.getElementById('verdict-area').innerHTML = '';
+  resetSteps();
+}
+
+function resetSteps() {
+  [1,2,3].forEach(i => {
+    document.getElementById('step'+i).className = 'scan-step';
+    const icon = document.getElementById('step'+i+'-icon');
+    icon.className = 'step-icon';
+    icon.innerHTML = i;
+  });
+}
+
+function activateStep(i) {
+  document.getElementById('step'+i).className = 'scan-step active';
+  const icon = document.getElementById('step'+i+'-icon');
+  icon.innerHTML = '<div class="spinner-ring"></div>';
+}
+
+function doneStep(i) {
+  document.getElementById('step'+i).className = 'scan-step done';
+  const icon = document.getElementById('step'+i+'-icon');
+  icon.innerHTML = '<i class="ti ti-check" style="font-size:11px"></i>';
+}
+
+function startScan() {
+  if (!uploaded || scanning) return;
+  scanning = true;
+  document.getElementById('scan-btn').disabled = true;
+  document.getElementById('verdict-area').className = 'verdict-area hidden';
+  document.getElementById('verdict-area').innerHTML = '';
+  resetSteps();
+  document.getElementById('scanning-area').className = 'scanning-area';
+
+  const result = MOCK_RESULTS[Math.floor(Math.random() * MOCK_RESULTS.length)];
+
+  activateStep(1);
+  setTimeout(() => { doneStep(1); activateStep(2); }, 900);
+  setTimeout(() => { doneStep(2); activateStep(3); }, 1800);
+  setTimeout(() => {
+    doneStep(3);
+    setTimeout(() => {
+      document.getElementById('scanning-area').className = 'scanning-area hidden';
+      showVerdict(result);
+      scanning = false;
+      document.getElementById('scan-btn').disabled = false;
+    }, 400);
+  }, 2700);
+}
+
+function showVerdict(result) {
+  const area = document.getElementById('verdict-area');
+  area.className = 'verdict-area';
+
+  let verdictHTML = '';
+  if (result.verdict === 'bug') {
+    verdictHTML = `<div class="verdict-is-bug verdict-pop"><div class="verdict-sad"><i class="ti ti-mood-sad" style="font-size:22px"></i> 残念... バグです。</div><div class="verdict-reason">${result.reason}</div></div>`;
+  } else if (result.verdict === 'not_bug') {
+    verdictHTML = `<div class="verdict-ok verdict-pop"><div class="verdict-good"><i class="ti ti-circle-check" style="font-size:22px"></i> バグではなさそうです</div><div class="verdict-reason">${result.reason}</div></div>`;
+  } else {
+    verdictHTML = `<div class="verdict-unclear verdict-pop"><div class="verdict-hmm"><i class="ti ti-help-circle" style="font-size:22px"></i> 判断が難しいです</div><div class="verdict-reason">${result.reason}</div></div>`;
+  }
+
+  let ticketHTML = '';
+  if (result.verdict === 'bug' && result.ticket) {
+    const t = result.ticket;
+    ticketHTML = `
+      <div class="ticket-slide" style="opacity:0">
+        <div class="ticket-section-label"><i class="ti ti-ticket" style="font-size:11px"></i>&nbsp;自動生成された起票内容</div>
+        <div class="ticket-card">
+          <div class="ticket-head">
+            <div class="ticket-id">${t.id}</div>
+            <div class="ticket-title-text">${t.title}</div>
+          </div>
+          <div class="ticket-meta">
+            <div class="meta-item"><i class="ti ti-alert-triangle" style="font-size:12px"></i>&nbsp;<span class="sev-pill">${t.severity}</span></div>
+            <div class="meta-item"><i class="ti ti-tag" style="font-size:12px"></i>&nbsp;${t.category}</div>
+            <div class="meta-item"><i class="ti ti-user" style="font-size:12px"></i>&nbsp;未割り当て</div>
+          </div>
+          <div class="ticket-fields">
+            <div class="field-row"><div class="field-key">概要</div><div class="field-val">${t.description}</div></div>
+            <div class="field-row"><div class="field-key">再現手順</div><div class="field-val"><ol class="steps-ol">${t.steps.map(s=>`<li>${s}</li>`).join('')}</ol></div></div>
+            <div class="field-row"><div class="field-key">期待する動作</div><div class="field-val">${t.expected}</div></div>
+            <div class="field-row"><div class="field-key">実際の動作</div><div class="field-val">${t.actual}</div></div>
+            <div class="field-row"><div class="field-key">環境</div><div class="field-val">${t.env}</div></div>
+          </div>
+        </div>
+        <button class="copy-btn" id="copy-btn"><i class="ti ti-copy"></i>&nbsp;起票内容をコピー</button>
+      </div>`;
+  }
+
+  area.innerHTML = verdictHTML + ticketHTML;
+
+  if (result.verdict === 'bug' && result.ticket) {
+    setTimeout(() => {
+      const slide = area.querySelector('.ticket-slide');
+      if (slide) { slide.style.opacity = '1'; slide.style.animation = 'slideDown 0.4s ease forwards'; }
+    }, 200);
+    setTimeout(() => {
+      const btn = document.getElementById('copy-btn');
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        const t = result.ticket;
+        const text = [
+          `【${t.id}】${t.title}`,
+          `深刻度: ${t.severity} / カテゴリ: ${t.category}`,
+          '', '■ 概要', t.description,
+          '', '■ 再現手順', ...t.steps.map((s,i)=>`${i+1}. ${s}`),
+          '', '■ 期待する動作', t.expected,
+          '', '■ 実際の動作', t.actual,
+          '', '■ 環境', t.env
+        ].join('\n');
+        navigator.clipboard.writeText(text).then(() => {
+          btn.innerHTML = '<i class="ti ti-check"></i>&nbsp;コピーしました！';
+          setTimeout(() => { btn.innerHTML = '<i class="ti ti-copy"></i>&nbsp;起票内容をコピー'; }, 2000);
+        });
+      });
+    }, 300);
+  }
+}

@@ -1,0 +1,996 @@
+// ===== 定数 =====
+var APP_VERSION = "2.6";
+var OCR_SPACE_KEY = "";
+var MAX_WORD_LEN = 60;
+var MAX_SENT_LEN = 200;
+var MAX_HISTORY = 50;
+var OCR_DAILY_LIMIT = 20;
+var COLORS = ["#FF6B6B","#FF9F43","#FECA57","#48DBFB","#FF9FF3","#54A0FF","#5F27CD","#1DD1A1"];
+var SAMPLE_WORDS = [
+  {word:"apple",   emoji:"🍎",ja:"りんご"},
+  {word:"banana",  emoji:"🍌",ja:"バナナ"},
+  {word:"cat",     emoji:"🐱",ja:"ねこ"},
+  {word:"dog",     emoji:"🐶",ja:"いぬ"},
+  {word:"elephant",emoji:"🐘",ja:"ぞう"},
+  {word:"fish",    emoji:"🐟",ja:"さかな"},
+  {word:"grape",   emoji:"🍇",ja:"ぶどう"},
+  {word:"house",   emoji:"🏠",ja:"いえ"},
+  {word:"ice cream",emoji:"🍦",ja:"アイスクリーム"},
+  {word:"juice",   emoji:"🧃",ja:"ジュース"}
+];
+var SAMPLE_SENTENCES = [
+  "I like cats.","This is a pen.","How are you?",
+  "I am happy today.","Let's play together!","Good morning!"
+];
+var POPULAR_WORDS = [
+  // どうぶつ
+  "rabbit","tiger","lion","bear","horse","cow","pig","sheep","duck","frog","monkey","giraffe","zebra","wolf","deer","owl","eagle","whale","dolphin","penguin",
+  // たべもの
+  "bread","rice","egg","milk","cake","pizza","salad","soup","cookie","candy","cheese","butter","honey","lemon","cherry","peach","melon","corn","carrot","onion",
+  // からだ
+  "head","eye","ear","nose","mouth","hand","foot","arm","leg","hair","face","back","shoulder","knee","finger","tooth","heart","voice","brain","skin",
+  // がっこう
+  "pencil","ruler","eraser","notebook","desk","chair","teacher","lesson","class","score","answer","question","library","science","music","art","gym","lunch","recess","grade",
+  // しぜん
+  "sun","moon","star","sky","cloud","rain","snow","wind","flower","tree","mountain","river","ocean","beach","forest","field","island","desert","volcano","rainbow",
+  // きもち・ようす
+  "happy","sad","angry","scared","excited","tired","hungry","sleepy","funny","brave","kind","gentle","clever","silly","noisy","quiet","warm","cool","soft","hard",
+  // うごき
+  "jump","swim","sing","dance","read","write","draw","paint","laugh","cry","think","dream","grow","shine","fly","climb","throw","catch","kick","push"
+];
+var WORD_DICT = {
+  // どうぶつ
+  "cat":{ja:"ねこ",emoji:"🐱"},"dog":{ja:"いぬ",emoji:"🐶"},"bird":{ja:"とり",emoji:"🐦"},"fish":{ja:"さかな",emoji:"🐟"},
+  "rabbit":{ja:"うさぎ",emoji:"🐰"},"horse":{ja:"うま",emoji:"🐴"},"cow":{ja:"うし",emoji:"🐄"},"pig":{ja:"ぶた",emoji:"🐷"},
+  "sheep":{ja:"ひつじ",emoji:"🐑"},"duck":{ja:"アヒル",emoji:"🦆"},"frog":{ja:"かえる",emoji:"🐸"},"monkey":{ja:"さる",emoji:"🐵"},
+  "giraffe":{ja:"きりん",emoji:"🦒"},"elephant":{ja:"ぞう",emoji:"🐘"},"lion":{ja:"ライオン",emoji:"🦁"},"tiger":{ja:"とら",emoji:"🐯"},
+  "bear":{ja:"くま",emoji:"🐻"},"wolf":{ja:"おおかみ",emoji:"🐺"},"fox":{ja:"きつね",emoji:"🦊"},"deer":{ja:"しか",emoji:"🦌"},
+  "owl":{ja:"ふくろう",emoji:"🦉"},"eagle":{ja:"わし",emoji:"🦅"},"whale":{ja:"くじら",emoji:"🐋"},"dolphin":{ja:"いるか",emoji:"🐬"},
+  "penguin":{ja:"ペンギン",emoji:"🐧"},"turtle":{ja:"かめ",emoji:"🐢"},"snake":{ja:"へび",emoji:"🐍"},
+  "butterfly":{ja:"ちょうちょ",emoji:"🦋"},"bee":{ja:"みつばち",emoji:"🐝"},"ant":{ja:"あり",emoji:"🐜"},
+  "zebra":{ja:"しまうま",emoji:"🦓"},"crocodile":{ja:"わに",emoji:"🐊"},"octopus":{ja:"たこ",emoji:"🐙"},
+  "crab":{ja:"かに",emoji:"🦀"},"shrimp":{ja:"えび",emoji:"🦐"},"panda":{ja:"パンダ",emoji:"🐼"},
+  "koala":{ja:"コアラ",emoji:"🐨"},"kangaroo":{ja:"カンガルー",emoji:"🦘"},"hamster":{ja:"ハムスター",emoji:"🐹"},
+  "squirrel":{ja:"りす",emoji:"🐿"},"gorilla":{ja:"ゴリラ",emoji:"🦍"},"parrot":{ja:"おうむ",emoji:"🦜"},
+  "cheetah":{ja:"チーター",emoji:"🐆"},"camel":{ja:"ラクダ",emoji:"🐪"},"rhino":{ja:"サイ",emoji:"🦏"},
+  "hippo":{ja:"カバ",emoji:"🦛"},"peacock":{ja:"クジャク",emoji:"🦚"},"flamingo":{ja:"フラミンゴ",emoji:"🦩"},
+  // たべもの
+  "apple":{ja:"りんご",emoji:"🍎"},"banana":{ja:"バナナ",emoji:"🍌"},"orange":{ja:"オレンジ",emoji:"🍊"},
+  "grape":{ja:"ぶどう",emoji:"🍇"},"strawberry":{ja:"いちご",emoji:"🍓"},"watermelon":{ja:"すいか",emoji:"🍉"},
+  "peach":{ja:"もも",emoji:"🍑"},"cherry":{ja:"さくらんぼ",emoji:"🍒"},"lemon":{ja:"レモン",emoji:"🍋"},
+  "melon":{ja:"メロン",emoji:"🍈"},"pineapple":{ja:"パイナップル",emoji:"🍍"},"kiwi":{ja:"キウイ",emoji:"🥝"},
+  "mango":{ja:"マンゴー",emoji:"🥭"},"pear":{ja:"なし",emoji:"🍐"},"coconut":{ja:"ヤシの実",emoji:"🥥"},
+  "rice":{ja:"ごはん",emoji:"🍚"},"bread":{ja:"パン",emoji:"🍞"},"egg":{ja:"たまご",emoji:"🥚"},
+  "milk":{ja:"ぎゅうにゅう",emoji:"🥛"},"cheese":{ja:"チーズ",emoji:"🧀"},"butter":{ja:"バター",emoji:"🧈"},
+  "meat":{ja:"にく",emoji:"🥩"},"chicken":{ja:"とりにく",emoji:"🍗"},"soup":{ja:"スープ",emoji:"🍲"},
+  "salad":{ja:"サラダ",emoji:"🥗"},"pizza":{ja:"ピザ",emoji:"🍕"},"cake":{ja:"ケーキ",emoji:"🎂"},
+  "cookie":{ja:"クッキー",emoji:"🍪"},"candy":{ja:"あめ",emoji:"🍬"},"chocolate":{ja:"チョコレート",emoji:"🍫"},
+  "juice":{ja:"ジュース",emoji:"🧃"},"water":{ja:"みず",emoji:"💧"},"tea":{ja:"おちゃ",emoji:"🍵"},
+  "coffee":{ja:"コーヒー",emoji:"☕"},"sandwich":{ja:"サンドイッチ",emoji:"🥪"},"hamburger":{ja:"ハンバーガー",emoji:"🍔"},
+  "hotdog":{ja:"ホットドッグ",emoji:"🌭"},"sushi":{ja:"すし",emoji:"🍣"},"ramen":{ja:"ラーメン",emoji:"🍜"},
+  "potato":{ja:"じゃがいも",emoji:"🥔"},"carrot":{ja:"にんじん",emoji:"🥕"},"onion":{ja:"たまねぎ",emoji:"🧅"},
+  "corn":{ja:"とうもろこし",emoji:"🌽"},"tomato":{ja:"トマト",emoji:"🍅"},"mushroom":{ja:"きのこ",emoji:"🍄"},
+  "cucumber":{ja:"きゅうり",emoji:"🥒"},"broccoli":{ja:"ブロッコリー",emoji:"🥦"},"cabbage":{ja:"キャベツ",emoji:"🥬"},
+  "honey":{ja:"はちみつ",emoji:"🍯"},"sugar":{ja:"さとう",emoji:"🧂"},"salt":{ja:"しお",emoji:"🧂"},
+  "donut":{ja:"ドーナツ",emoji:"🍩"},"icecream":{ja:"アイスクリーム",emoji:"🍦"},"popcorn":{ja:"ポップコーン",emoji:"🍿"},
+  // からだ
+  "head":{ja:"あたま",emoji:"👤"},"face":{ja:"かお",emoji:"😊"},"eye":{ja:"め",emoji:"👁"},
+  "ear":{ja:"みみ",emoji:"👂"},"nose":{ja:"はな",emoji:"👃"},"mouth":{ja:"くち",emoji:"👄"},
+  "hair":{ja:"かみ",emoji:"💇"},"hand":{ja:"て",emoji:"✋"},"foot":{ja:"あし(足)",emoji:"🦶"},
+  "arm":{ja:"うで",emoji:"💪"},"leg":{ja:"あし(脚)",emoji:"🦵"},"shoulder":{ja:"かた",emoji:"🤷"},
+  "knee":{ja:"ひざ",emoji:"🦵"},"finger":{ja:"ゆび",emoji:"☝️"},"back":{ja:"せなか",emoji:"🧍"},
+  "chest":{ja:"むね",emoji:"🫀"},"stomach":{ja:"おなか",emoji:"🤰"},"tooth":{ja:"は",emoji:"🦷"},
+  "tongue":{ja:"した",emoji:"👅"},"neck":{ja:"くび",emoji:"🧣"},"heart":{ja:"こころ・しんぞう",emoji:"❤️"},
+  "brain":{ja:"のう",emoji:"🧠"},"skin":{ja:"はだ",emoji:"🫁"},"voice":{ja:"こえ",emoji:"🔊"},
+  "body":{ja:"からだ",emoji:"🧍"},"bone":{ja:"ほね",emoji:"🦴"},
+  // がっこう
+  "pencil":{ja:"えんぴつ",emoji:"✏️"},"pen":{ja:"ペン",emoji:"🖊"},"ruler":{ja:"じょうぎ",emoji:"📏"},
+  "eraser":{ja:"けしごむ",emoji:"🧹"},"notebook":{ja:"ノート",emoji:"📓"},"book":{ja:"ほん",emoji:"📚"},
+  "desk":{ja:"つくえ",emoji:"🪑"},"chair":{ja:"いす",emoji:"🪑"},"bag":{ja:"かばん",emoji:"🎒"},
+  "school":{ja:"がっこう",emoji:"🏫"},"teacher":{ja:"せんせい",emoji:"👩‍🏫"},"student":{ja:"せいと",emoji:"🧑‍🎓"},
+  "class":{ja:"じゅぎょう",emoji:"📖"},"lesson":{ja:"じゅぎょう",emoji:"📖"},"library":{ja:"としょかん",emoji:"📚"},
+  "gym":{ja:"たいいくかん",emoji:"🏋️"},"music":{ja:"おんがく",emoji:"🎵"},"art":{ja:"びじゅつ",emoji:"🎨"},
+  "science":{ja:"りか",emoji:"🔬"},"math":{ja:"さんすう",emoji:"➕"},"lunch":{ja:"ひるごはん",emoji:"🍱"},
+  "test":{ja:"テスト",emoji:"📝"},"exam":{ja:"しけん",emoji:"📝"},"homework":{ja:"しゅくだい",emoji:"📚"},
+  "answer":{ja:"こたえ",emoji:"💡"},"question":{ja:"しつもん",emoji:"❓"},"grade":{ja:"がくねん",emoji:"🏫"},
+  "classroom":{ja:"きょうしつ",emoji:"🏫"},"scissors":{ja:"はさみ",emoji:"✂️"},"glue":{ja:"のり",emoji:"🖊"},
+  "crayon":{ja:"クレヨン",emoji:"🖍"},"paint":{ja:"えのぐ",emoji:"🎨"},
+  // しぜん
+  "sun":{ja:"たいよう",emoji:"☀️"},"moon":{ja:"つき",emoji:"🌙"},"star":{ja:"ほし",emoji:"⭐"},
+  "sky":{ja:"そら",emoji:"🌤"},"cloud":{ja:"くも",emoji:"☁️"},"rain":{ja:"あめ",emoji:"🌧"},
+  "snow":{ja:"ゆき",emoji:"❄️"},"wind":{ja:"かぜ",emoji:"💨"},"flower":{ja:"はな",emoji:"🌸"},
+  "tree":{ja:"き",emoji:"🌳"},"mountain":{ja:"やま",emoji:"⛰"},"river":{ja:"かわ",emoji:"🏞"},
+  "ocean":{ja:"うみ",emoji:"🌊"},"sea":{ja:"うみ",emoji:"🌊"},"beach":{ja:"すなはま",emoji:"🏖"},
+  "forest":{ja:"もり",emoji:"🌲"},"island":{ja:"しま",emoji:"🏝"},"desert":{ja:"さばく",emoji:"🏜"},
+  "volcano":{ja:"かざん",emoji:"🌋"},"rainbow":{ja:"にじ",emoji:"🌈"},"grass":{ja:"くさ",emoji:"🌿"},
+  "rock":{ja:"いわ",emoji:"🪨"},"sand":{ja:"すな",emoji:"🏖"},"lake":{ja:"みずうみ",emoji:"🏞"},
+  "spring":{ja:"はる",emoji:"🌸"},"summer":{ja:"なつ",emoji:"☀️"},"autumn":{ja:"あき",emoji:"🍁"},
+  "fall":{ja:"あき",emoji:"🍁"},"winter":{ja:"ふゆ",emoji:"⛄"},"leaf":{ja:"は・葉",emoji:"🍃"},
+  "seed":{ja:"たね",emoji:"🌱"},"root":{ja:"ね",emoji:"🌱"},"stone":{ja:"いし",emoji:"🪨"},
+  "earth":{ja:"ちきゅう",emoji:"🌍"},"fire":{ja:"ひ",emoji:"🔥"},"ice":{ja:"こおり",emoji:"🧊"},
+  // いろ
+  "red":{ja:"あか",emoji:"🔴"},"blue":{ja:"あお",emoji:"🔵"},"yellow":{ja:"きいろ",emoji:"🟡"},
+  "green":{ja:"みどり",emoji:"🟢"},"orange":{ja:"オレンジ",emoji:"🟠"},"purple":{ja:"むらさき",emoji:"🟣"},
+  "pink":{ja:"ピンク",emoji:"🩷"},"white":{ja:"しろ",emoji:"⬜"},"black":{ja:"くろ",emoji:"⬛"},
+  "brown":{ja:"ちゃいろ",emoji:"🟤"},"gray":{ja:"はいいろ",emoji:"🩶"},"grey":{ja:"はいいろ",emoji:"🩶"},
+  "gold":{ja:"きんいろ",emoji:"🌟"},"silver":{ja:"ぎんいろ",emoji:"⭐"},
+  // かず
+  "one":{ja:"いち（１）",emoji:"1️⃣"},"two":{ja:"に（２）",emoji:"2️⃣"},"three":{ja:"さん（３）",emoji:"3️⃣"},
+  "four":{ja:"し（４）",emoji:"4️⃣"},"five":{ja:"ご（５）",emoji:"5️⃣"},"six":{ja:"ろく（６）",emoji:"6️⃣"},
+  "seven":{ja:"しち（７）",emoji:"7️⃣"},"eight":{ja:"はち（８）",emoji:"8️⃣"},"nine":{ja:"く（９）",emoji:"9️⃣"},
+  "ten":{ja:"じゅう（10）",emoji:"🔟"},"eleven":{ja:"じゅういち（11）",emoji:"1️⃣1️⃣"},
+  "twelve":{ja:"じゅうに（12）",emoji:"1️⃣2️⃣"},"twenty":{ja:"にじゅう（20）",emoji:"✌️"},
+  "hundred":{ja:"ひゃく（100）",emoji:"💯"},"zero":{ja:"れい・ゼロ",emoji:"0️⃣"},
+  "first":{ja:"いちばん・1番",emoji:"🥇"},"second":{ja:"2番",emoji:"🥈"},"third":{ja:"3番",emoji:"🥉"},
+  // かぞく
+  "mother":{ja:"おかあさん",emoji:"👩"},"father":{ja:"おとうさん",emoji:"👨"},"mom":{ja:"おかあさん",emoji:"👩"},
+  "dad":{ja:"おとうさん",emoji:"👨"},"sister":{ja:"おねえさん・いもうと",emoji:"👧"},"brother":{ja:"おにいさん・おとうと",emoji:"👦"},
+  "grandmother":{ja:"おばあさん",emoji:"👵"},"grandfather":{ja:"おじいさん",emoji:"👴"},
+  "grandma":{ja:"おばあさん",emoji:"👵"},"grandpa":{ja:"おじいさん",emoji:"👴"},
+  "baby":{ja:"あかちゃん",emoji:"👶"},"family":{ja:"かぞく",emoji:"👨‍👩‍👧‍👦"},"friend":{ja:"ともだち",emoji:"🤝"},
+  "parent":{ja:"おや",emoji:"👨‍👩‍👧"},"child":{ja:"こども",emoji:"🧒"},"boy":{ja:"おとこのこ",emoji:"👦"},
+  "girl":{ja:"おんなのこ",emoji:"👧"},"man":{ja:"おとこのひと",emoji:"👨"},"woman":{ja:"おんなのひと",emoji:"👩"},
+  // ふく
+  "shirt":{ja:"シャツ",emoji:"👕"},"pants":{ja:"ズボン",emoji:"👖"},"dress":{ja:"ドレス",emoji:"👗"},
+  "skirt":{ja:"スカート",emoji:"🩱"},"shoes":{ja:"くつ",emoji:"👟"},"hat":{ja:"ぼうし",emoji:"🎩"},
+  "cap":{ja:"キャップ",emoji:"🧢"},"coat":{ja:"コート",emoji:"🧥"},"jacket":{ja:"ジャケット",emoji:"🧥"},
+  "socks":{ja:"くつした",emoji:"🧦"},"gloves":{ja:"てぶくろ",emoji:"🧤"},"scarf":{ja:"マフラー",emoji:"🧣"},
+  "umbrella":{ja:"かさ",emoji:"☂️"},"glasses":{ja:"めがね",emoji:"👓"},"ring":{ja:"ゆびわ",emoji:"💍"},
+  "watch":{ja:"うでどけい",emoji:"⌚"},"belt":{ja:"ベルト",emoji:"👔"},"swimsuit":{ja:"みずぎ",emoji:"🩱"},
+  // スポーツ
+  "soccer":{ja:"サッカー",emoji:"⚽"},"baseball":{ja:"やきゅう",emoji:"⚾"},"basketball":{ja:"バスケットボール",emoji:"🏀"},
+  "tennis":{ja:"テニス",emoji:"🎾"},"swimming":{ja:"すいえい",emoji:"🏊"},"running":{ja:"かけっこ",emoji:"🏃"},
+  "cycling":{ja:"じてんしゃ",emoji:"🚴"},"volleyball":{ja:"バレーボール",emoji:"🏐"},"golf":{ja:"ゴルフ",emoji:"⛳"},
+  "skiing":{ja:"スキー",emoji:"⛷"},"skating":{ja:"スケート",emoji:"⛸"},"boxing":{ja:"ボクシング",emoji:"🥊"},
+  "gym":{ja:"たいいくかん",emoji:"🏋️"},"game":{ja:"ゲーム・しあい",emoji:"🎮"},"sport":{ja:"スポーツ",emoji:"🏅"},
+  "ball":{ja:"ボール",emoji:"⚽"},"team":{ja:"チーム",emoji:"👥"},"win":{ja:"かつ・かち",emoji:"🏆"},
+  "lose":{ja:"まける・まけ",emoji:"😢"},"play":{ja:"あそぶ・プレー",emoji:"🎮"},
+  // ばしょ
+  "house":{ja:"いえ",emoji:"🏠"},"home":{ja:"うち・ホーム",emoji:"🏡"},"park":{ja:"こうえん",emoji:"🌳"},
+  "shop":{ja:"みせ",emoji:"🏪"},"store":{ja:"みせ",emoji:"🏪"},"hospital":{ja:"びょういん",emoji:"🏥"},
+  "station":{ja:"えき",emoji:"🚉"},"airport":{ja:"くうこう",emoji:"✈️"},"city":{ja:"まち・都市",emoji:"🌆"},
+  "town":{ja:"まち",emoji:"🏘"},"village":{ja:"むら",emoji:"🏡"},"country":{ja:"くに",emoji:"🌍"},
+  "world":{ja:"せかい",emoji:"🌍"},"zoo":{ja:"どうぶつえん",emoji:"🦁"},"museum":{ja:"はくぶつかん",emoji:"🏛"},
+  "restaurant":{ja:"レストラン",emoji:"🍽"},"hotel":{ja:"ホテル",emoji:"🏨"},"castle":{ja:"おしろ",emoji:"🏰"},
+  "bridge":{ja:"はし",emoji:"🌉"},"road":{ja:"みち",emoji:"🛣"},"market":{ja:"いちば・マーケット",emoji:"🛒"},
+  "farm":{ja:"のうじょう",emoji:"🚜"},"factory":{ja:"こうじょう",emoji:"🏭"},"bank":{ja:"ぎんこう",emoji:"🏦"},
+  "church":{ja:"きょうかい",emoji:"⛪"},"temple":{ja:"おてら",emoji:"⛩"},"theater":{ja:"えいがかん",emoji:"🎭"},
+  // のりもの
+  "car":{ja:"くるま",emoji:"🚗"},"bus":{ja:"バス",emoji:"🚌"},"train":{ja:"でんしゃ",emoji:"🚆"},
+  "bicycle":{ja:"じてんしゃ",emoji:"🚲"},"plane":{ja:"ひこうき",emoji:"✈️"},"ship":{ja:"ふね",emoji:"🚢"},
+  "boat":{ja:"ボート",emoji:"🚤"},"taxi":{ja:"タクシー",emoji:"🚕"},"truck":{ja:"トラック",emoji:"🚚"},
+  "motorcycle":{ja:"バイク",emoji:"🏍"},"rocket":{ja:"ロケット",emoji:"🚀"},"helicopter":{ja:"ヘリコプター",emoji:"🚁"},
+  "ambulance":{ja:"きゅうきゅうしゃ",emoji:"🚑"},"fire truck":{ja:"しょうぼうしゃ",emoji:"🚒"},"submarine":{ja:"せんすいかん",emoji:"🤿"},
+  // どうさ
+  "run":{ja:"はしる",emoji:"🏃"},"walk":{ja:"あるく",emoji:"🚶"},"jump":{ja:"とぶ",emoji:"🏃"},
+  "swim":{ja:"およぐ",emoji:"🏊"},"sing":{ja:"うたう",emoji:"🎤"},"dance":{ja:"おどる",emoji:"💃"},
+  "read":{ja:"よむ",emoji:"📖"},"write":{ja:"かく",emoji:"✏️"},"draw":{ja:"えをかく",emoji:"🎨"},
+  "laugh":{ja:"わらう",emoji:"😄"},"cry":{ja:"なく",emoji:"😢"},"think":{ja:"かんがえる",emoji:"🤔"},
+  "dream":{ja:"ゆめをみる",emoji:"💭"},"fly":{ja:"とぶ",emoji:"🦅"},"climb":{ja:"のぼる",emoji:"🧗"},
+  "throw":{ja:"なげる",emoji:"🤾"},"catch":{ja:"つかまえる・キャッチ",emoji:"🤲"},"kick":{ja:"ける",emoji:"🦵"},
+  "push":{ja:"おす",emoji:"👐"},"pull":{ja:"ひく",emoji:"💪"},"eat":{ja:"たべる",emoji:"🍽"},
+  "drink":{ja:"のむ",emoji:"🥤"},"sleep":{ja:"ねむる",emoji:"😴"},"wake":{ja:"おきる",emoji:"⏰"},
+  "study":{ja:"べんきょうする",emoji:"📚"},"help":{ja:"たすける",emoji:"🤝"},"make":{ja:"つくる",emoji:"🔨"},
+  "open":{ja:"あける",emoji:"🚪"},"close":{ja:"しめる",emoji:"🚪"},"stop":{ja:"とまる・やめる",emoji:"🛑"},
+  "start":{ja:"はじめる",emoji:"▶️"},"wait":{ja:"まつ",emoji:"⏳"},"listen":{ja:"きく",emoji:"👂"},
+  "speak":{ja:"はなす",emoji:"💬"},"talk":{ja:"はなす",emoji:"🗣"},"ask":{ja:"きく・たずねる",emoji:"❓"},
+  "find":{ja:"みつける",emoji:"🔍"},"buy":{ja:"かう",emoji:"🛒"},"give":{ja:"あげる",emoji:"🎁"},
+  "take":{ja:"とる",emoji:"🤲"},"show":{ja:"みせる",emoji:"👀"},"call":{ja:"よぶ・でんわする",emoji:"📞"},
+  "try":{ja:"ためす",emoji:"💪"},"use":{ja:"つかう",emoji:"🔧"},"like":{ja:"すき",emoji:"❤️"},
+  "love":{ja:"だいすき・あい",emoji:"💕"},"know":{ja:"しる・しっている",emoji:"💡"},
+  "remember":{ja:"おぼえる",emoji:"🧠"},"forget":{ja:"わすれる",emoji:"🤦"},"learn":{ja:"まなぶ",emoji:"📚"},
+  "teach":{ja:"おしえる",emoji:"👩‍🏫"},"count":{ja:"かぞえる",emoji:"🔢"},"see":{ja:"みえる・みる",emoji:"👀"},
+  "look":{ja:"みる",emoji:"👀"},"hear":{ja:"きこえる",emoji:"👂"},"touch":{ja:"さわる",emoji:"🤲"},
+  "feel":{ja:"かんじる",emoji:"❤️"},"go":{ja:"いく",emoji:"🚶"},"come":{ja:"くる",emoji:"👋"},
+  // ようす（形容詞）
+  "happy":{ja:"うれしい・しあわせ",emoji:"😊"},"sad":{ja:"かなしい",emoji:"😢"},"angry":{ja:"おこっている",emoji:"😠"},
+  "scared":{ja:"こわい",emoji:"😨"},"excited":{ja:"わくわく",emoji:"🤩"},"tired":{ja:"つかれた",emoji:"😴"},
+  "hungry":{ja:"おなかがすいた",emoji:"😋"},"sleepy":{ja:"ねむい",emoji:"😪"},"funny":{ja:"おかしい・たのしい",emoji:"😄"},
+  "brave":{ja:"ゆうきがある",emoji:"💪"},"kind":{ja:"しんせつ",emoji:"😊"},"gentle":{ja:"やさしい",emoji:"🕊"},
+  "clever":{ja:"かしこい",emoji:"🧠"},"silly":{ja:"ばかげた・おかしい",emoji:"🤪"},"noisy":{ja:"うるさい",emoji:"📢"},
+  "quiet":{ja:"しずか",emoji:"🤫"},"warm":{ja:"あたたかい",emoji:"🌞"},"cool":{ja:"すずしい・かっこいい",emoji:"😎"},
+  "soft":{ja:"やわらかい",emoji:"🪶"},"hard":{ja:"かたい",emoji:"💎"},"big":{ja:"おおきい",emoji:"🐘"},
+  "small":{ja:"ちいさい",emoji:"🐭"},"large":{ja:"おおきい",emoji:"🐋"},"tiny":{ja:"とても小さい",emoji:"🐜"},
+  "long":{ja:"ながい",emoji:"📏"},"short":{ja:"みじかい",emoji:"📏"},"tall":{ja:"せが高い",emoji:"🏀"},
+  "fast":{ja:"はやい",emoji:"⚡"},"slow":{ja:"おそい",emoji:"🐢"},"strong":{ja:"つよい",emoji:"💪"},
+  "weak":{ja:"よわい",emoji:"🪶"},"heavy":{ja:"おもい",emoji:"⚖️"},"light":{ja:"かるい",emoji:"🪶"},
+  "hot":{ja:"あつい",emoji:"🔥"},"cold":{ja:"つめたい・さむい",emoji:"🧊"},"new":{ja:"あたらしい",emoji:"✨"},
+  "old":{ja:"ふるい",emoji:"🏚"},"good":{ja:"いい・よい",emoji:"👍"},"bad":{ja:"わるい",emoji:"👎"},
+  "beautiful":{ja:"うつくしい",emoji:"💐"},"cute":{ja:"かわいい",emoji:"🥰"},"clean":{ja:"きれい",emoji:"✨"},
+  "dirty":{ja:"きたない",emoji:"🤢"},"easy":{ja:"かんたん",emoji:"😊"},"difficult":{ja:"むずかしい",emoji:"😓"},
+  "free":{ja:"むりょう・じゆう",emoji:"🆓"},"busy":{ja:"いそがしい",emoji:"😤"},"ready":{ja:"じゅんびOK",emoji:"✅"},
+  "safe":{ja:"あんぜん",emoji:"🛡"},"wonderful":{ja:"すばらしい",emoji:"🌟"},"amazing":{ja:"すごい",emoji:"🤩"},
+  "special":{ja:"とくべつ",emoji:"⭐"},"important":{ja:"たいせつ",emoji:"❗"},"popular":{ja:"にんきがある",emoji:"🌟"},
+  "delicious":{ja:"おいしい",emoji:"😋"},"sweet":{ja:"あまい",emoji:"🍬"},"sour":{ja:"すっぱい",emoji:"🍋"},
+  "spicy":{ja:"からい",emoji:"🌶"},"bitter":{ja:"にがい",emoji:"😬"},
+  // もの・どうぐ
+  "phone":{ja:"でんわ",emoji:"📱"},"computer":{ja:"コンピュータ",emoji:"💻"},"tablet":{ja:"タブレット",emoji:"📱"},
+  "television":{ja:"テレビ",emoji:"📺"},"tv":{ja:"テレビ",emoji:"📺"},"radio":{ja:"ラジオ",emoji:"📻"},
+  "camera":{ja:"カメラ",emoji:"📷"},"clock":{ja:"とけい",emoji:"⏰"},"key":{ja:"かぎ",emoji:"🔑"},
+  "door":{ja:"ドア",emoji:"🚪"},"window":{ja:"まど",emoji:"🪟"},"table":{ja:"テーブル",emoji:"🪑"},
+  "cup":{ja:"コップ",emoji:"☕"},"plate":{ja:"さら",emoji:"🍽"},"box":{ja:"はこ",emoji:"📦"},
+  "bed":{ja:"ベッド",emoji:"🛏"},"pillow":{ja:"まくら",emoji:"💤"},"blanket":{ja:"もうふ",emoji:"🛏"},
+  "mirror":{ja:"かがみ",emoji:"🪞"},"soap":{ja:"せっけん",emoji:"🧼"},"towel":{ja:"タオル",emoji:"🧴"},
+  "money":{ja:"おかね",emoji:"💰"},"letter":{ja:"てがみ",emoji:"💌"},"map":{ja:"ちず",emoji:"🗺"},
+  "flag":{ja:"はた・こっき",emoji:"🚩"},"gift":{ja:"プレゼント",emoji:"🎁"},"toy":{ja:"おもちゃ",emoji:"🧸"},
+  "doll":{ja:"にんぎょう",emoji:"🪆"},"robot":{ja:"ロボット",emoji:"🤖"},"picture":{ja:"え・しゃしん",emoji:"🖼"},
+  "music":{ja:"おんがく",emoji:"🎵"},"song":{ja:"うた",emoji:"🎤"},"movie":{ja:"えいが",emoji:"🎬"},
+  "story":{ja:"おはなし",emoji:"📖"},"news":{ja:"ニュース",emoji:"📰"},"word":{ja:"ことば・たんご",emoji:"💬"},
+  "name":{ja:"なまえ",emoji:"🏷"},"color":{ja:"いろ",emoji:"🎨"},"shape":{ja:"かたち",emoji:"🔷"},
+  "number":{ja:"すうじ・かず",emoji:"🔢"},"letter":{ja:"もじ・てがみ",emoji:"🔤"},
+  // てんき
+  "sunny":{ja:"はれ",emoji:"☀️"},"cloudy":{ja:"くもり",emoji:"☁️"},"rainy":{ja:"あめ",emoji:"🌧"},
+  "snowy":{ja:"ゆき",emoji:"❄️"},"windy":{ja:"かぜが強い",emoji:"💨"},"foggy":{ja:"きり",emoji:"🌫"},
+  "stormy":{ja:"あらし",emoji:"⛈"},"weather":{ja:"てんき",emoji:"🌤"},"temperature":{ja:"きおん",emoji:"🌡"},
+  // じかん
+  "morning":{ja:"あさ",emoji:"🌅"},"afternoon":{ja:"ごご",emoji:"🌞"},"evening":{ja:"ゆうがた",emoji:"🌇"},
+  "night":{ja:"よる",emoji:"🌙"},"today":{ja:"きょう",emoji:"📅"},"tomorrow":{ja:"あした",emoji:"📅"},
+  "yesterday":{ja:"きのう",emoji:"📅"},"week":{ja:"しゅう",emoji:"📅"},"month":{ja:"つき・がつ",emoji:"📅"},
+  "year":{ja:"とし・ねん",emoji:"📅"},"hour":{ja:"じかん",emoji:"⏰"},"minute":{ja:"ふん・ぷん",emoji:"⏱"},
+  "time":{ja:"じかん",emoji:"⏰"},"day":{ja:"ひ・にち",emoji:"☀️"},"date":{ja:"ひづけ",emoji:"📅"},
+  "monday":{ja:"げつようび",emoji:"📅"},"tuesday":{ja:"かようび",emoji:"📅"},"wednesday":{ja:"すいようび",emoji:"📅"},
+  "thursday":{ja:"もくようび",emoji:"📅"},"friday":{ja:"きんようび",emoji:"📅"},"saturday":{ja:"どようび",emoji:"📅"},
+  "sunday":{ja:"にちようび",emoji:"📅"},"january":{ja:"いちがつ",emoji:"❄️"},"february":{ja:"にがつ",emoji:"❄️"},
+  "march":{ja:"さんがつ",emoji:"🌸"},"april":{ja:"しがつ",emoji:"🌸"},"may":{ja:"ごがつ",emoji:"🌿"},
+  "june":{ja:"ろくがつ",emoji:"☔"},"july":{ja:"しちがつ",emoji:"🌊"},"august":{ja:"はちがつ",emoji:"🌻"},
+  "september":{ja:"くがつ",emoji:"🍂"},"october":{ja:"じゅうがつ",emoji:"🎃"},"november":{ja:"じゅういちがつ",emoji:"🍁"},
+  "december":{ja:"じゅうにがつ",emoji:"🎄"},
+  // しごと
+  "doctor":{ja:"おいしゃさん",emoji:"👨‍⚕️"},"nurse":{ja:"かんごし",emoji:"👩‍⚕️"},"teacher":{ja:"せんせい",emoji:"👩‍🏫"},
+  "police":{ja:"けいさつかん",emoji:"👮"},"firefighter":{ja:"しょうぼうし",emoji:"🚒"},"farmer":{ja:"のうか",emoji:"🧑‍🌾"},
+  "cook":{ja:"りょうりにん",emoji:"👨‍🍳"},"chef":{ja:"シェフ",emoji:"👨‍🍳"},"pilot":{ja:"パイロット",emoji:"👨‍✈️"},
+  "driver":{ja:"うんてんし",emoji:"🚗"},"singer":{ja:"かしゅ",emoji:"🎤"},"artist":{ja:"げいじゅつか",emoji:"🎨"},
+  "scientist":{ja:"かがくしゃ",emoji:"🔬"},"engineer":{ja:"エンジニア",emoji:"⚙️"},"athlete":{ja:"せんしゅ",emoji:"🏅"},
+};
+
+function pickRandomWords(n){
+  var pool=POPULAR_WORDS.slice();
+  var result=[];
+  for(var i=0;i<n&&pool.length;i++){
+    var idx=Math.floor(Math.random()*pool.length);
+    result.push(pool.splice(idx,1)[0]);
+  }
+  return result;
+}
+
+// ===== 声のフレンドリー名 =====
+var FRIENDLY_FEMALE=["Emily","Sarah","Emma","Olivia","Sophie","Jessica","Amy","Grace","Lily","Mia"];
+var FRIENDLY_MALE=["Mike","James","Jack","Tom","Ryan","Noah","Leo","Max","Sam","Alex"];
+var FEMALE_KWORDS=["female","zira","hazel","aria","jenny","samantha","karen","moira","tessa","fiona","victoria","ava","allison","susan"];
+var MALE_KWORDS=["male","david","mark","guy","eric","fred","daniel"];
+function voiceGender(v){
+  var n=(v.name+" "+v.voiceURI).toLowerCase();
+  for(var i=0;i<FEMALE_KWORDS.length;i++){if(n.indexOf(FEMALE_KWORDS[i])>=0)return "f";}
+  for(var i=0;i<MALE_KWORDS.length;i++){if(n.indexOf(MALE_KWORDS[i])>=0)return "m";}
+  return "u";
+}
+function langFlag(lang){
+  if(/en.?US/i.test(lang))return "🇺🇸";
+  if(/en.?GB/i.test(lang))return "🇬🇧";
+  if(/en.?AU/i.test(lang))return "🇦🇺";
+  if(/en.?IN/i.test(lang))return "🇮🇳";
+  if(/en.?CA/i.test(lang))return "🇨🇦";
+  return "🌎";
+}
+function buildVoiceMap(voices){
+  var map={};var fCnt=0,mCnt=0;
+  voices.forEach(function(v){
+    var g=voiceGender(v);
+    var lbl;
+    if(g==="f"){lbl=FRIENDLY_FEMALE[fCnt%FRIENDLY_FEMALE.length]+" "+langFlag(v.lang);fCnt++;}
+    else if(g==="m"){lbl=FRIENDLY_MALE[mCnt%FRIENDLY_MALE.length]+" "+langFlag(v.lang);mCnt++;}
+    else{lbl=langFlag(v.lang)+" "+v.name.replace(/Microsoft /,"").replace(/ \(.*\)/,"").slice(0,14);}
+    map[v.voiceURI]={label:lbl,gender:g};
+  });
+  return map;
+}
+
+// ===== 状態 =====
+var slots = [];
+var slotMeta = [];
+var mode = "word";
+var rate = 1.0;
+var selectedVoiceURI = null;
+var voicePickerOpen = false;
+var currentIdx = null;
+var doneIdxs = {};
+var historyList = [];
+var tab = "practice";
+var isSpeaking = false;
+var cancelFlag = false;
+var ocrLoading = false;
+var ocrMode = false;
+var stars = [];
+var starTimer = null;
+var saveMsgTimer = null;
+
+// スロット数をデバイス幅で決定
+function slotCount(){return window.innerWidth >= 680 ? 6 : 3;}
+function isTablet(){return window.innerWidth >= 680;}
+
+function initSlots(){
+  if(ocrMode)return;
+  var n = slotCount();
+  while(slots.length < n) slots.push("");
+}
+initSlots();
+
+// ===== ストレージ =====
+function saveHistory(){try{localStorage.setItem("eigoHistory",JSON.stringify(historyList));}catch(e){}}
+function getOcrUsage(){
+  try{
+    var cutoff=Date.now()-86400000;
+    var usage=JSON.parse(localStorage.getItem("ocrUsage")||"[]");
+    return Array.isArray(usage)?usage.filter(function(t){return t>cutoff;}):[];
+  }catch(e){return [];}
+}
+function recordOcrUsage(){
+  try{
+    var usage=getOcrUsage();
+    usage.push(Date.now());
+    localStorage.setItem("ocrUsage",JSON.stringify(usage));
+  }catch(e){}
+}
+function ocrRemaining(){return Math.max(0,OCR_DAILY_LIMIT-getOcrUsage().length);}
+function sanitize(val,maxLen){
+  return String(val)
+    .replace(/[<>&"'`]/g,"")   // XSS起因文字を除去
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g,"") // 制御文字除去
+    .slice(0,maxLen);
+}
+function loadHistory(){
+  try{
+    var d=localStorage.getItem("eigoHistory");
+    if(!d)return;
+    var parsed=JSON.parse(d);
+    if(!Array.isArray(parsed))return;
+    historyList=parsed.filter(function(e){
+      return e&&typeof e.id==="number"&&Array.isArray(e.words)&&e.words.length>0;
+    }).map(function(e){
+      return {
+        id:e.id,
+        mode:e.mode==="sentence"?"sentence":"word",
+        savedAt:typeof e.savedAt==="number"?e.savedAt:e.id,
+        words:e.words.slice(0,MAX_HISTORY).map(function(w){
+          return sanitize(String(w),MAX_SENT_LEN);
+        }).filter(function(w){return w.trim().length>0;})
+      };
+    }).filter(function(e){return e.words.length>0;});
+  }catch(e){}
+}
+
+// ===== 音声 =====
+function getEnVoices(){
+  return window.speechSynthesis.getVoices().filter(function(v){return v.lang.indexOf("en")===0;});
+}
+function getVoice(){
+  var vs=getEnVoices();
+  if(selectedVoiceURI){
+    for(var i=0;i<vs.length;i++){if(vs[i].voiceURI===selectedVoiceURI)return vs[i];}
+  }
+  return vs[0]||null;
+}
+function sampleVoice(voice){
+  window.speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance("Hello! Nice to meet you!");
+  u.voice=voice;u.lang=voice.lang;u.rate=rate;u.pitch=1.0;
+  window.speechSynthesis.speak(u);
+}
+function selectVoice(uri){selectedVoiceURI=uri;voicePickerOpen=false;renderApp();}
+function toggleVoicePicker(){voicePickerOpen=!voicePickerOpen;renderApp();}
+function speakWord(text,idx){
+  return new Promise(function(resolve){
+    var u=new SpeechSynthesisUtterance(text.trim());
+    u.lang="en-US";u.rate=rate;u.pitch=1.1;
+    var v=getVoice();if(v)u.voice=v;
+    u.onstart=function(){currentIdx=idx;renderApp();};
+    u.onend=function(){doneIdxs[idx]=true;resolve();renderApp();};
+    u.onerror=function(){resolve();};
+    window.speechSynthesis.speak(u);
+  });
+}
+function delay(ms){return new Promise(function(r){setTimeout(r,ms);});}
+async function speakAll(){
+  if(isSpeaking)return;
+  var words=[];
+  for(var i=0;i<slots.length;i++){if(slots[i].trim())words.push({word:slots[i].trim(),idx:i});}
+  if(!words.length)return;
+  window.speechSynthesis.cancel();
+  doneIdxs={};cancelFlag=false;isSpeaking=true;renderApp();
+  for(var i=0;i<words.length;i++){
+    if(cancelFlag)break;
+    await speakWord(words[i].word,words[i].idx);
+    if(cancelFlag)break;
+    await delay(600);
+  }
+  isSpeaking=false;currentIdx=null;
+  if(!cancelFlag)spawnStars();
+  renderApp();
+}
+function stopAll(){
+  cancelFlag=true;isSpeaking=false;
+  window.speechSynthesis.cancel();currentIdx=null;renderApp();
+}
+function speakOne(idx){
+  var word=slots[idx];if(!word||!word.trim())return;
+  window.speechSynthesis.cancel();cancelFlag=true;isSpeaking=false;currentIdx=null;
+  setTimeout(function(){
+    cancelFlag=false;isSpeaking=true;doneIdxs={};
+    speakWord(word,idx).then(function(){isSpeaking=false;currentIdx=null;renderApp();});
+    renderApp();
+  },80);
+}
+function spawnStars(){
+  stars=[];
+  for(var i=0;i<8;i++)stars.push({id:Date.now()+i,x:15+Math.random()*70,y:5+Math.random()*70});
+  renderApp();
+  if(starTimer)clearTimeout(starTimer);
+  starTimer=setTimeout(function(){stars=[];renderApp();},1000);
+}
+
+// ===== アクション =====
+function switchTab(t){tab=t;renderApp();}
+function switchMode(m){stopAll();slots=[];slotMeta=[];ocrMode=false;initSlots();doneIdxs={};mode=m;renderApp();}
+function clearAll(){stopAll();slots=[];slotMeta=[];ocrMode=false;initSlots();doneIdxs={};renderApp();}
+function addSlot(){slots.push("");slotMeta.push(null);renderApp();}
+
+function switchRate(r){rate=r;renderApp();}
+var STOP_WORDS={the:1,a:1,an:1,and:1,or:1,but:1,so:1,yet:1,nor:1,for:1,
+  is:1,are:1,was:1,were:1,be:1,been:1,being:1,have:1,has:1,had:1,
+  do:1,does:1,did:1,will:1,would:1,could:1,should:1,may:1,might:1,
+  shall:1,can:1,must:1,need:1,get:1,got:1,
+  in:1,on:1,at:1,to:1,of:1,with:1,by:1,from:1,up:1,out:1,
+  about:1,into:1,through:1,before:1,after:1,above:1,below:1,
+  between:1,among:1,against:1,during:1,without:1,within:1,
+  i:1,you:1,he:1,she:1,it:1,we:1,they:1,me:1,him:1,her:1,
+  us:1,them:1,my:1,your:1,his:1,its:1,our:1,their:1,
+  this:1,that:1,these:1,those:1,here:1,there:1,
+  not:1,no:1,yes:1,as:1,all:1,also:1,just:1,very:1,too:1,
+  more:1,most:1,than:1,then:1,when:1,where:1,how:1,what:1,
+  which:1,who:1,whom:1,whose:1,if:1,because:1,although:1,
+  while:1,since:1,unless:1,until:1,though:1,
+  one:1,two:1,three:1,any:1,some:1,each:1,every:1,both:1,
+  such:1,own:1,same:1,other:1,like:1};
+function extractWords(text){
+  var seen={};
+  return text
+    .replace(/[^a-zA-Z\s]/g," ")
+    .split(/\s+/)
+    .filter(function(w){return /^[a-zA-Z]{3,}$/.test(w);})
+    .filter(function(w){var lw=w.toLowerCase();if(STOP_WORDS[lw])return false;if(seen[lw])return false;seen[lw]=true;return true;})
+    .map(function(w){return w.toLowerCase();})
+    .slice(0,20);
+}
+function resizeForOcr(dataURL,callback){
+  var img=new Image();
+  img.onload=function(){
+    try{
+      var MAX=1500;
+      var scale=Math.min(1,MAX/Math.max(img.width,img.height));
+      var canvas=document.createElement('canvas');
+      canvas.width=Math.round(img.width*scale);
+      canvas.height=Math.round(img.height*scale);
+      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+      callback(canvas.toDataURL('image/jpeg',0.8));
+    }catch(e){callback(dataURL);}
+  };
+  img.onerror=function(){callback(dataURL);};
+  img.src=dataURL;
+}
+function triggerOcr(){
+  if(ocrRemaining()<=0){
+    alert("1日に使えるのは"+OCR_DAILY_LIMIT+"回までです。明日またためしてね！");
+    return;
+  }
+  var inp=mk("input");inp.type="file";inp.accept="image/*";
+  inp.style.cssText="position:fixed;top:-200px;left:-200px;opacity:0;pointer-events:none;";
+  document.body.appendChild(inp);
+  inp.onchange=function(e){
+    document.body.removeChild(inp);
+    var file=e.target.files[0];if(!file)return;
+    ocrLoading=true;renderApp();
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      resizeForOcr(ev.target.result,function(resized){
+      var params=new URLSearchParams();
+      params.append("base64Image",resized);
+      params.append("language","eng");
+      params.append("scale","true");
+      params.append("OCREngine","2");
+      fetch("/api/ocr",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:params.toString()})
+        .then(function(r){return r.json();})
+        .then(function(data){
+          if(data.IsErroredOnProcessing||!data.ParsedResults||!data.ParsedResults.length){
+            ocrLoading=false;renderApp();alert("よみとりにしっぱいしました");return;
+          }
+          var text=data.ParsedResults.map(function(r){return r.ParsedText;}).join(" ");
+          var words=extractWords(text);
+          if(!words.length){ocrLoading=false;renderApp();alert("えいたんごがみつかりませんでした");return;}
+          recordOcrUsage();
+          slots=words;doneIdxs={};ocrMode=true;ocrLoading=false;
+          slotMeta=words.map(function(w){return WORD_DICT[w.toLowerCase()]||null;});
+          renderApp();
+        })
+        .catch(function(){ocrLoading=false;renderApp();alert("つうしんにしっぱいしました");});
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+  inp.click();
+}
+function updateSlot(idx,val){
+  slots[idx]=sanitize(val,mode==="sentence"?MAX_SENT_LEN:MAX_WORD_LEN);
+  var word=slots[idx].trim().toLowerCase();
+  slotMeta[idx]=(mode==="word"&&word)?( WORD_DICT[word]||null):null;
+  delete doneIdxs[idx];
+}
+function quickAddWord(wi){
+  var ei=-1;for(var i=0;i<slots.length;i++){if(!slots[i].trim()){ei=i;break;}}
+  if(ei<0){slots.push("");slotMeta.push(null);ei=slots.length-1;}
+  var item=SAMPLE_WORDS[wi];
+  slots[ei]=item.word;
+  slotMeta[ei]={emoji:item.emoji,ja:item.ja};
+  renderApp();
+}
+function quickAddSentence(si){
+  var ei=-1;for(var i=0;i<slots.length;i++){if(!slots[i].trim()){ei=i;break;}}
+  if(ei<0){slots.push("");slotMeta.push(null);ei=slots.length-1;}
+  slots[ei]=SAMPLE_SENTENCES[si];renderApp();
+}
+function saveEntry(){
+  var words=slots.filter(function(s){return s.trim();});
+  if(!words.length)return;
+  historyList.unshift({id:Date.now(),words:words,mode:mode,savedAt:Date.now()});
+  if(historyList.length>MAX_HISTORY)historyList.length=MAX_HISTORY;
+  saveHistory();renderApp();
+  var el=document.getElementById("saveMsg");
+  if(el){el.textContent="ほぞんしました！✅";el.style.animation="popIn 0.3s ease";}
+  if(saveMsgTimer)clearTimeout(saveMsgTimer);
+  saveMsgTimer=setTimeout(function(){var e=document.getElementById("saveMsg");if(e)e.textContent="";},2000);
+}
+function loadEntry(id){
+  var entry=null;
+  for(var i=0;i<historyList.length;i++){if(historyList[i].id===id){entry=historyList[i];break;}}
+  if(!entry)return;
+  var n=Math.max(slotCount(),entry.words.length);
+  slots=entry.words.slice();
+  while(slots.length<n)slots.push("");
+  doneIdxs={};slotMeta=[];ocrMode=false;if(entry.mode)mode=entry.mode;
+  tab="practice";renderApp();
+}
+function deleteEntry(id){
+  historyList=historyList.filter(function(e){return e.id!==id;});
+  saveHistory();renderApp();
+}
+function fmtDate(ts){
+  var d=new Date(ts);
+  return (d.getMonth()+1)+"/"+d.getDate()+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+}
+
+// ===== DOM ヘルパー =====
+function mk(tag){return document.createElement(tag);}
+function mkDiv(css){var e=mk("div");e.style.cssText=css;return e;}
+function mkTxt(tag,css,text){var e=mk(tag);e.style.cssText=css;e.textContent=text;return e;}
+function mkBtn(css,label,fn){var e=mk("button");e.style.cssText=css;e.textContent=label;e.addEventListener("click",fn);return e;}
+
+// ===== レンダリング =====
+function renderApp(){
+  var T=isTablet();
+  var maxW=T?700:440;
+  var n=ocrMode?slots.length:slotCount();
+  if(!ocrMode){
+    while(slots.length<n)slots.push("");
+  }
+
+  var isSentence=mode==="sentence";
+  var filledCount=slots.filter(function(s){return s.trim();}).length;
+  var useGrid=!isSentence&&(T||ocrMode);
+
+  var app=document.getElementById("app");
+  while(app.firstChild)app.removeChild(app.firstChild);
+
+  var mw="width:100%;max-width:"+maxW+"px;";
+
+  // ---- ロゴヘッダー ----
+  var headerWrap=mkDiv("width:100%;max-width:"+maxW+"px;margin-bottom:"+(T?14:10)+"px;display:flex;align-items:center;gap:10px;font-size:13px;");
+  var hLogo=mk("a"); hLogo.href="/";
+  var hLogoImg=mk("img"); hLogoImg.src="/assets/icons/beetle-icon.svg"; hLogoImg.alt="BEETLE"; hLogoImg.style.cssText="height:28px;vertical-align:middle;border-radius:6px;display:block;";
+  hLogo.appendChild(hLogoImg);
+  var hSep1=mkTxt("span","color:rgba(255,255,255,0.25);","›");
+  var hTools=mk("a"); hTools.href="/#tools"; hTools.style.cssText="color:rgba(255,255,255,0.65);text-decoration:none;"; hTools.textContent="ツール一覧";
+  hTools.addEventListener("mouseover",function(){this.style.color="#fff";}); hTools.addEventListener("mouseout",function(){this.style.color="rgba(255,255,255,0.65)";});
+  var hSep2=mkTxt("span","color:rgba(255,255,255,0.25);","›");
+  var hCurrent=mkTxt("span","color:rgba(255,255,255,0.9);","えいごよんで！");
+  headerWrap.appendChild(hLogo); headerWrap.appendChild(hSep1); headerWrap.appendChild(hTools); headerWrap.appendChild(hSep2); headerWrap.appendChild(hCurrent);
+  app.appendChild(headerWrap);
+
+  // ---- タイトル ----
+  var titleDiv=mkDiv("text-align:center;margin-bottom:"+(T?18:12)+"px;"+mw);
+  titleDiv.appendChild(mkTxt("div","font-size:"+(T?52:38)+"px;","🔤"));
+  titleDiv.appendChild(mkTxt("h1","color:#fff;font-size:"+(T?32:22)+"px;font-weight:900;margin:4px 0;text-shadow:0 4px 14px rgba(0,0,0,0.3);","えいご よんで！"));
+  titleDiv.appendChild(mkTxt("p","color:rgba(255,255,255,0.85);font-size:"+(T?15:12)+"px;","たんごやえいぶんをいれて、まとめてよんでもらおう！"));
+  app.appendChild(titleDiv);
+
+  // ---- タブ ----
+  var tabBar=mkDiv("display:flex;gap:5px;background:rgba(0,0,0,0.2);border-radius:18px;padding:4px;margin-bottom:10px;"+mw);
+  [["practice","📝 れんしゅう"],["history","📚 りれき"]].forEach(function(pair){
+    var active=tab===pair[0];
+    var b=mkBtn(
+      "flex:1;padding:"+(T?11:9)+"px;border-radius:13px;border:none;background:"+(active?"rgba(255,255,255,0.95)":"transparent")+";color:"+(active?"#764ba2":"rgba(255,255,255,0.8)")+";font-weight:900;font-size:"+(T?16:14)+"px;cursor:pointer;",
+      pair[1],
+      (function(id){return function(){switchTab(id);};})(pair[0])
+    );
+    tabBar.appendChild(b);
+  });
+  app.appendChild(tabBar);
+
+  if(tab==="practice"){
+    // ---- モード切替 ----
+    var modeBar=mkDiv("display:flex;gap:8px;margin-bottom:10px;"+mw);
+    [["word","🔤 たんごモード"],["sentence","📖 えいぶんモード"]].forEach(function(pair){
+      var active=mode===pair[0];
+      var b=mkBtn(
+        "flex:1;padding:"+(T?12:9)+"px;border-radius:16px;border:none;background:"+(active?"rgba(255,255,255,0.95)":"rgba(255,255,255,0.2)")+";color:"+(active?"#764ba2":"rgba(255,255,255,0.9)")+";font-weight:900;font-size:"+(T?15:13)+"px;cursor:pointer;box-shadow:"+(active?"0 4px 14px rgba(0,0,0,0.15)":"none")+";",
+        pair[1],
+        (function(m){return function(){switchMode(m);};})(pair[0])
+      );
+      modeBar.appendChild(b);
+    });
+    app.appendChild(modeBar);
+
+    // ---- OCRボタン ----
+    var ocrRow=mkDiv(mw+"margin-bottom:10px;");
+    var ocrBtnEl=mkBtn(
+      "width:100%;padding:"+(T?"10px":"9px")+";border-radius:16px;border:2px solid rgba(255,255,255,0.35);background:"+(ocrLoading?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.15)")+";color:rgba(255,255,255,0.95);font-size:"+(T?14:13)+"px;font-weight:700;cursor:"+(ocrLoading?"not-allowed":"pointer")+";letter-spacing:0.3px;",
+      ocrLoading?"🔍 よみとりちゅう...":(ocrRemaining()>0?"📷 しゃしんからとりこむ（のこり"+ocrRemaining()+"かい/日）":"📷 きょうのじょうげんにたっしました（"+OCR_DAILY_LIMIT+"かい/日）"),
+      function(){if(!ocrLoading)triggerOcr();}
+    );
+    ocrBtnEl.disabled=ocrLoading;
+    ocrRow.appendChild(ocrBtnEl);
+    app.appendChild(ocrRow);
+
+    // ---- メインカード ----
+    var card=mk("div");card.className="card";
+    card.style.cssText="padding:"+(T?"22px 20px":"16px 14px")+";max-width:"+maxW+"px;margin-bottom:12px;";
+
+    // 星
+    stars.forEach(function(s){
+      var star=mk("div");
+      star.style.cssText="position:absolute;font-size:"+(T?24:18)+"px;left:"+s.x+"%;top:"+s.y+"%;animation:starPop 0.9s ease-out forwards;pointer-events:none;z-index:10;";
+      star.textContent="⭐";
+      card.style.position="relative";
+      card.appendChild(star);
+    });
+
+    // OCRモード表示
+    if(ocrMode){
+      var ocrTag=mkDiv("display:flex;align-items:center;justify-content:space-between;margin-bottom:"+(T?12:10)+"px;");
+      ocrTag.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#764ba2;font-weight:700;","📷 しゃしんから "+n+" ごをとりこみました"));
+      var ocrClearBtn=mkBtn("font-size:"+(T?12:11)+"px;color:#aaa;background:none;border:none;cursor:pointer;padding:0;","× ふつうにもどる",function(){clearAll();});
+      ocrTag.appendChild(ocrClearBtn);
+      card.appendChild(ocrTag);
+    }
+
+    // スロットコンテナ
+    var slotWrap=mk("div");
+    var ocrScroll=ocrMode&&slots.length>6;
+    if(useGrid){
+      slotWrap.style.cssText="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:"+(T?16:12)+"px;"+(ocrScroll?"max-height:260px;overflow-y:auto;padding-right:4px;":"");
+    } else {
+      slotWrap.style.cssText="display:flex;flex-direction:column;gap:"+(isSentence?10:8)+"px;margin-bottom:"+(T?16:12)+"px;";
+    }
+
+    var badgeSz=T?32:26, btnSz=T?32:26, btnFs=T?16:14;
+    var ph=isSentence
+      ?["えいぶん１","えいぶん２","えいぶん３","えいぶん４","えいぶん５","えいぶん６"]
+      :["えいご１","えいご２","えいご３","えいご４","えいご５","えいご６"];
+
+    for(var i=0;i<slots.length;i++){
+      (function(i){
+        var val=slots[i];
+        var isActive=currentIdx===i, isDone=!!doneIdxs[i];
+        var borderC=isActive?"#f093fb":isDone?"#1DD1A1":"#e0d7ff";
+        var bgC=isActive?"#fff8ff":isDone?"#f0fff8":"#f8f6ff";
+        var badgeBg=isActive?"linear-gradient(135deg,#f093fb,#f5576c)":isDone?"linear-gradient(135deg,#1DD1A1,#48DBFB)":COLORS[i%8]+"33";
+
+        var row=mk("div");row.className="slot-row";
+        row.style.cssText="align-items:"+(isSentence?"flex-start":"center")+";";
+
+        // バッジ
+        var badge=mkDiv("width:"+badgeSz+"px;height:"+badgeSz+"px;border-radius:50%;background:"+badgeBg+";display:flex;align-items:center;justify-content:center;font-size:"+(T?13:11)+"px;font-weight:900;color:"+(isActive||isDone?"#fff":"#666")+";flex-shrink:0;margin-top:"+(isSentence?8:0)+"px;");
+        badge.textContent=isDone?"✓":String(i+1);
+        row.appendChild(badge);
+
+        // 入力欄
+        var inp;
+        if(isSentence){
+          inp=mk("textarea");inp.rows=2;
+        } else {
+          inp=mk("input");inp.type="text";
+        }
+        inp.className="slot-input";
+        inp.maxLength=isSentence?MAX_SENT_LEN:MAX_WORD_LEN;
+        inp.value=val;
+        inp.placeholder=ph[i]||(isSentence?"えいぶん"+(i+1):"えいご"+(i+1));
+        inp.style.cssText="width:100%;font-size:"+(isSentence?(T?16:14):(T?18:16))+"px;font-weight:700;padding:"+(T?"11px 12px":"9px 10px")+";border-radius:12px;border:3px solid "+borderC+";background:"+bgC+";color:#4a3f8f;"+(isActive?"animation:glow 0.8s ease-in-out infinite;":"")+(isSentence?"line-height:1.5;":"letter-spacing:0.5px;");
+
+        // 🔊ボタン（先に生成してinpのイベントから参照できるようにする）
+        var spk=mk("button");
+        spk.textContent="🔊";
+        spk.disabled=!val.trim();
+        spk.style.cssText="width:"+btnSz+"px;height:"+btnSz+"px;flex-shrink:0;border-radius:9px;border:none;background:"+(val.trim()?COLORS[i%8]+"33":"#eee")+";cursor:"+(val.trim()?"pointer":"not-allowed")+";font-size:"+btnFs+"px;margin-top:"+(isSentence?8:0)+"px;";
+
+        (function(ii,s){
+          inp.addEventListener("input",function(){
+            updateSlot(ii,this.value);
+            var has=this.value.trim().length>0;
+            s.disabled=!has;
+            s.style.background=has?COLORS[ii%8]+"33":"#eee";
+            s.style.cursor=has?"pointer":"not-allowed";
+          });
+          s.addEventListener("click",function(){speakOne(ii);});
+        })(i,spk);
+
+        var inputWrap=mkDiv("flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;");
+        inputWrap.appendChild(inp);
+        if(slotMeta[i]){
+          var mDiv=mkDiv("display:flex;align-items:center;gap:5px;padding-left:6px;margin-top:2px;");
+          if(slotMeta[i].emoji)mDiv.appendChild(mkTxt("span","font-size:"+(T?18:15)+"px;line-height:1;",slotMeta[i].emoji));
+          mDiv.appendChild(mkTxt("span","font-size:"+(T?13:11)+"px;font-weight:700;color:#764ba2;",slotMeta[i].ja));
+          inputWrap.appendChild(mDiv);
+        }
+        row.appendChild(inputWrap);
+        row.appendChild(spk);
+
+        slotWrap.appendChild(row);
+      })(i);
+    }
+    card.appendChild(slotWrap);
+
+    // ことばをついかボタン
+    if(!ocrMode){
+      var addBtn=mkBtn(
+        "width:100%;padding:"+(T?"10px":"9px")+";margin-bottom:"+(T?12:10)+"px;border-radius:14px;border:2px dashed #c4b5fd;background:transparent;color:#764ba2;font-size:"+(T?14:13)+"px;font-weight:700;cursor:pointer;",
+        "＋ ことばをついか",
+        addSlot
+      );
+      card.appendChild(addBtn);
+    }
+
+    // スピードボタン
+    var speedRow=mkDiv("display:flex;align-items:center;gap:8px;margin-bottom:"+(T?14:10)+"px;");
+    speedRow.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#888;white-space:nowrap;flex-shrink:0;","⚡ はやさ"));
+    [[0.5,"🐢 ゆっくり"],[1.0,"🚶 ふつう"],[1.2,"🐇 はやい"]].forEach(function(pair){
+      var active=rate===pair[0];
+      var b=mkBtn(
+        "flex:1;padding:"+(T?"8px 4px":"7px 4px")+";border-radius:12px;border:2px solid "+(active?"#764ba2":"#e0d7ff")+";background:"+(active?"#764ba2":"#f8f6ff")+";color:"+(active?"#fff":"#888")+";font-size:"+(T?13:11)+"px;font-weight:700;cursor:pointer;",
+        pair[1],
+        (function(r){return function(){switchRate(r);};})(pair[0])
+      );
+      speedRow.appendChild(b);
+    });
+    card.appendChild(speedRow);
+
+    // 声選択パネル
+    var enVoices=getEnVoices();
+    var currentVoice=getVoice();
+    var vMap=buildVoiceMap(enVoices);
+    var currentVoiceName=currentVoice?(vMap[currentVoice.voiceURI]||{label:"（じどう）"}).label:"（じどう）";
+    var voiceHeaderRow=mkDiv("display:flex;align-items:center;gap:8px;margin-bottom:"+(voicePickerOpen?6:(T?14:10))+"px;");
+    voiceHeaderRow.appendChild(mkTxt("span","font-size:"+(T?13:12)+"px;color:#888;white-space:nowrap;flex-shrink:0;","🎤 こえ"));
+    var voiceToggleBtn=mkBtn(
+      "flex:1;padding:"+(T?"8px 12px":"7px 10px")+";border-radius:12px;border:2px solid #e0d7ff;background:#f8f6ff;color:#764ba2;font-size:"+(T?13:12)+"px;font-weight:700;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;",
+      "",function(){toggleVoicePicker();}
+    );
+    var vnSpan=mk("span");vnSpan.textContent=currentVoiceName;vnSpan.style.cssText="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;font-size:"+(T?12:11)+"px;";
+    var arrowSpan=mk("span");arrowSpan.textContent=voicePickerOpen?"▲":"▼";arrowSpan.style.cssText="flex-shrink:0;margin-left:6px;font-size:10px;color:#aaa;";
+    voiceToggleBtn.appendChild(vnSpan);voiceToggleBtn.appendChild(arrowSpan);
+    voiceHeaderRow.appendChild(voiceToggleBtn);
+    card.appendChild(voiceHeaderRow);
+
+    if(voicePickerOpen){
+      var voiceGrid=mkDiv("display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:"+(T?14:10)+"px;max-height:260px;overflow-y:auto;padding:2px;");
+      enVoices.forEach(function(voice,vi){
+        var isSelected=voice.voiceURI===selectedVoiceURI||(selectedVoiceURI===null&&vi===0);
+        var lbl=vMap[voice.voiceURI].label;
+        var cell=mkDiv("display:flex;align-items:center;gap:5px;padding:8px 8px;border-radius:10px;border:2px solid "+(isSelected?"#764ba2":"#e0d7ff")+";background:"+(isSelected?"#f0ebff":"#faf9ff")+";cursor:pointer;min-width:0;");
+        var nameEl=mkTxt("span","flex:1;font-size:"+(T?12:11)+"px;font-weight:700;color:"+(isSelected?"#764ba2":"#555")+";overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;",lbl);
+        var tryBtn=mk("button");
+        tryBtn.textContent="🔊";
+        tryBtn.style.cssText="flex-shrink:0;width:24px;height:24px;border-radius:6px;border:none;background:rgba(118,75,162,0.12);cursor:pointer;font-size:12px;padding:0;";
+        (function(v){
+          tryBtn.addEventListener("click",function(e){e.stopPropagation();sampleVoice(v);});
+          cell.addEventListener("click",function(){selectVoice(v.voiceURI);});
+        })(voice);
+        cell.appendChild(nameEl);
+        cell.appendChild(tryBtn);
+        voiceGrid.appendChild(cell);
+      });
+      if(enVoices.length===0){
+        voiceGrid.appendChild(mkTxt("div","grid-column:1/-1;text-align:center;color:#bbb;font-size:12px;padding:12px;","こえがよみこまれていません。すこしまってからまたひらいてね。"));
+      }
+      card.appendChild(voiceGrid);
+    }
+
+    // アクションボタン行
+    var btnRow=mkDiv("display:flex;gap:7px;");
+    var speakLabel=currentIdx!==null?"⏹ とめる":"▶️ "+filledCount+(isSentence?"文":"こ")+" まとめて読む";
+    var speakBg=currentIdx!==null?"linear-gradient(135deg,#f5576c,#f093fb)":filledCount>0?"linear-gradient(135deg,#667eea,#764ba2)":"#ccc";
+    var mainBtn=mkBtn(
+      "flex:1;padding:"+(T?14:11)+"px;border-radius:16px;border:none;background:"+speakBg+";color:#fff;font-size:"+(T?17:14)+"px;font-weight:900;cursor:pointer;animation:"+(currentIdx!==null?"pulse 0.7s ease-in-out infinite":"none")+";",
+      speakLabel,
+      function(){if(currentIdx!==null)stopAll();else speakAll();}
+    );
+    if(!currentIdx&&filledCount===0)mainBtn.disabled=true;
+    btnRow.appendChild(mainBtn);
+
+    var saveBtn=mkBtn(
+      "padding:"+(T?"14px 16px":"11px 13px")+";border-radius:16px;border:none;background:"+(filledCount>0?"linear-gradient(135deg,#1DD1A1,#48DBFB)":"#ccc")+";color:#fff;font-size:"+(T?20:17)+"px;cursor:"+(filledCount>0?"pointer":"not-allowed")+";",
+      "💾",function(){saveEntry();}
+    );
+    if(filledCount===0)saveBtn.disabled=true;
+    btnRow.appendChild(saveBtn);
+
+    btnRow.appendChild(mkBtn(
+      "padding:"+(T?"14px 16px":"11px 13px")+";border-radius:16px;border:2px solid #e0d7ff;background:#f8f6ff;color:#aaa;font-size:"+(T?20:17)+"px;cursor:pointer;",
+      "🗑️",function(){clearAll();}
+    ));
+    card.appendChild(btnRow);
+
+    var saveMsg=mk("div");saveMsg.id="saveMsg";
+    saveMsg.style.cssText="text-align:center;color:#1DD1A1;font-weight:700;font-size:"+(T?14:12)+"px;min-height:20px;margin-top:7px;";
+    card.appendChild(saveMsg);
+    app.appendChild(card);
+
+    // ---- サンプルパネル ----
+    var panel=mkDiv("background:rgba(255,255,255,0.15);border-radius:20px;padding:"+(T?"18px":"14px 12px")+";"+mw);
+    panel.appendChild(mkTxt("div","text-align:center;color:rgba(255,255,255,0.9);font-size:"+(T?14:12)+"px;margin-bottom:10px;font-weight:700;",
+      isSentence?"── サンプルえいぶん（タップしてついか）──":"── よくつかうたんご ──"));
+
+    if(isSentence){
+      var sg=mk("div");sg.className="sent-wrap";
+      SAMPLE_SENTENCES.forEach(function(s,si){
+        var b=mk("button");
+        b.style.cssText="background:"+COLORS[si%8]+"33;border:2px solid "+COLORS[si%8]+"66;border-radius:12px;padding:"+(T?"9px 14px":"7px 10px")+";cursor:pointer;font-size:"+(T?14:12)+"px;font-weight:700;color:#fff;";
+        b.textContent=s;
+        b.addEventListener("click",(function(si2){return function(){quickAddSentence(si2);};})(si));
+        sg.appendChild(b);
+      });
+      panel.appendChild(sg);
+    } else {
+      var wg=mk("div");wg.className="word-grid";
+      SAMPLE_WORDS.forEach(function(item,wi){
+        var b=mk("button");
+        b.style.cssText="background:"+COLORS[wi%8]+"33;border:2px solid "+COLORS[wi%8]+"66;border-radius:12px;padding:"+(T?"9px 5px":"7px 4px")+";cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;";
+        var em=mk("span");em.style.fontSize=(T?24:18)+"px";em.textContent=item.emoji;
+        var wt=mk("span");wt.style.cssText="font-size:"+(T?12:10)+"px;font-weight:700;color:#fff;";wt.textContent=item.word;
+        var jt=mk("span");jt.style.cssText="font-size:"+(T?11:9)+"px;color:rgba(255,255,255,0.8);";jt.textContent=item.ja;
+        b.appendChild(em);b.appendChild(wt);b.appendChild(jt);
+        b.addEventListener("click",(function(wi2){return function(){quickAddWord(wi2);};})(wi));
+        wg.appendChild(b);
+      });
+      panel.appendChild(wg);
+    }
+    app.appendChild(panel);
+
+  } else {
+    // ---- 履歴タブ ----
+    var hCard=mk("div");hCard.className="card";
+    hCard.style.cssText="padding:"+(T?"26px 22px":"20px 16px")+";max-width:"+maxW+"px;";
+
+    if(historyList.length===0){
+      hCard.appendChild(mkTxt("div","text-align:center;padding:"+(T?50:36)+"px 0 10px;color:#bbb;font-size:"+(T?52:42)+"px;","📭"));
+      hCard.appendChild(mkTxt("p","text-align:center;color:#bbb;font-size:"+(T?17:14)+"px;font-weight:700;margin-bottom:8px;","まだほぞんしていないよ"));
+      hCard.appendChild(mkTxt("p","text-align:center;color:#bbb;font-size:"+(T?14:12)+"px;","れんしゅうして💾を押してね！"));
+    } else {
+      hCard.appendChild(mkTxt("div","text-align:center;color:#888;font-size:"+(T?13:11)+"px;margin-bottom:4px;",historyList.length+"こほぞんしてあるよ（さいだい50こ）"));
+      hCard.appendChild(mkTxt("div","text-align:center;color:#bbb;font-size:"+(T?11:10)+"px;margin-bottom:12px;","📱 このブラウザにほぞんされます。ブラウザのデータをけしたり、プライベートモードではきえます。"));
+      var hw=mk("div");hw.className="hist-wrap";
+      historyList.forEach(function(entry,hi){
+        var item=mkDiv("background:#f8f6ff;border-radius:16px;padding:"+(T?14:12)+"px;border:2px solid #e0d7ff;");
+
+        var top=mkDiv("display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:5px;");
+        var left=mkDiv("display:flex;align-items:center;gap:5px;");
+        var modeTag=mkTxt("span","font-size:"+(T?11:10)+"px;background:"+(entry.mode==="sentence"?"#e8f4ff":"#f0e8ff")+";color:"+(entry.mode==="sentence"?"#4a90d9":"#764ba2")+";border-radius:7px;padding:2px 7px;font-weight:700;",
+          entry.mode==="sentence"?"📖 えいぶん":"🔤 たんご");
+        var dateEl=mkTxt("span","font-size:"+(T?11:10)+"px;color:#aaa;","🕐 "+fmtDate(entry.savedAt));
+        left.appendChild(modeTag);left.appendChild(dateEl);
+
+        var right=mkDiv("display:flex;gap:5px;");
+        var loadBtn=mkBtn(
+          "padding:"+(T?"6px 13px":"4px 10px")+";border-radius:9px;border:none;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-size:"+(T?13:11)+"px;font-weight:700;cursor:pointer;",
+          "よみこむ",(function(eid){return function(){loadEntry(eid);};})(entry.id)
+        );
+        var delBtn=mkBtn(
+          "padding:"+(T?"6px 9px":"4px 8px")+";border-radius:9px;border:2px solid #ffcdd2;background:#fff5f5;color:#ff6b6b;font-size:"+(T?14:12)+"px;cursor:pointer;",
+          "🗑️",(function(eid){return function(){deleteEntry(eid);};})(entry.id)
+        );
+        right.appendChild(loadBtn);right.appendChild(delBtn);
+        top.appendChild(left);top.appendChild(right);
+        item.appendChild(top);
+
+        var tags=mkDiv("display:flex;flex-wrap:wrap;gap:5px;");
+        entry.words.forEach(function(w,wi){
+          var s=mkTxt("span",
+            "background:"+COLORS[wi%8]+"22;border:2px solid "+COLORS[wi%8]+"44;border-radius:8px;padding:"+(T?"4px 9px":"3px 7px")+";font-size:"+(entry.mode==="sentence"?(T?12:11):(T?14:12))+"px;font-weight:700;color:#4a3f8f;word-break:break-word;",
+            w);
+          tags.appendChild(s);
+        });
+        item.appendChild(tags);
+        hw.appendChild(item);
+      });
+      hCard.appendChild(hw);
+    }
+    app.appendChild(hCard);
+
+    // ---- おすすめ単語セクション ----
+    var sugWords=pickRandomWords(T?6:3);
+    var sugPanel=mkDiv("background:rgba(255,255,255,0.15);border-radius:20px;padding:"+(T?"18px":"14px 12px")+";width:100%;max-width:"+maxW+"px;margin-top:12px;");
+    var sugHead=mkDiv("display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;");
+    sugHead.appendChild(mkTxt("div","color:rgba(255,255,255,0.9);font-size:"+(T?14:12)+"px;font-weight:700;","🎲 きょうのおすすめたんご"));
+    var shuffleBtn=mkBtn(
+      "font-size:"+(T?12:11)+"px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);border-radius:99px;padding:4px 12px;color:#fff;cursor:pointer;",
+      "🔀 シャッフル",function(){renderApp();}
+    );
+    sugHead.appendChild(shuffleBtn);
+    sugPanel.appendChild(sugHead);
+
+    var sugGrid=mkDiv("display:grid;grid-template-columns:repeat("+(T?3:3)+",1fr);gap:8px;margin-bottom:12px;");
+    sugWords.forEach(function(w,wi){
+      var cell=mkDiv("background:"+COLORS[wi%8]+"33;border:2px solid "+COLORS[wi%8]+"66;border-radius:12px;padding:"+(T?"9px 6px":"7px 4px")+";text-align:center;cursor:pointer;");
+      cell.appendChild(mkTxt("div","font-size:"+(T?16:14)+"px;font-weight:700;color:#fff;",w));
+      cell.addEventListener("click",(function(w2){return function(){
+        var n=slotCount();
+        if(slots.length<n)while(slots.length<n)slots.push("");
+        var ei=-1;for(var i=0;i<slots.length;i++){if(!slots[i].trim()){ei=i;break;}}
+        if(ei<0){slots.push("");slotMeta.push(null);ei=slots.length-1;}
+        slots[ei]=w2;slotMeta[ei]=null;
+        doneIdxs={};mode="word";tab="practice";renderApp();
+      };})(w));
+      sugGrid.appendChild(cell);
+    });
+    sugPanel.appendChild(sugGrid);
+
+    var useAllBtn=mkBtn(
+      "width:100%;padding:"+(T?"10px":"9px")+";border-radius:14px;border:none;background:rgba(255,255,255,0.9);color:#764ba2;font-size:"+(T?14:13)+"px;font-weight:900;cursor:pointer;",
+      "▶️ このセットでれんしゅうする",
+      function(){
+        var n=slotCount();
+        slots=sugWords.slice(0,n);
+        while(slots.length<n)slots.push("");
+        doneIdxs={};mode="word";tab="practice";renderApp();
+      }
+    );
+    sugPanel.appendChild(useAllBtn);
+    app.appendChild(sugPanel);
+  }
+
+  // フッター（バージョン表示 + リロードボタン）
+  var footer=mkDiv("display:flex;align-items:center;gap:10px;margin-top:14px;");
+  footer.appendChild(mkTxt("p","color:rgba(255,255,255,0.45);font-size:"+(T?12:10)+"px;","🔈 音量オン　v"+APP_VERSION));
+  var reloadBtn=mkBtn(
+    "padding:5px 12px;border-radius:10px;border:none;background:rgba(255,255,255,0.2);color:rgba(255,255,255,0.8);font-size:"+(T?12:10)+"px;cursor:pointer;",
+    "🔄 さいよみこみ",
+    function(){window.location.reload(true);}
+  );
+  footer.appendChild(reloadBtn);
+  app.appendChild(footer);
+
+  var credits=mkTxt("p","text-align:center;color:rgba(255,255,255,0.35);font-size:"+(T?11:10)+"px;padding:12px 0 20px;","音声: Web Speech API ／ 画像よみとり: OCR.space");
+  app.appendChild(credits);
+}
+
+// ===== 初期化 =====
+window.speechSynthesis.getVoices();
+window.speechSynthesis.onvoiceschanged=function(){window.speechSynthesis.getVoices();};
+loadHistory();
+renderApp();
+
+var resizeTimer=null;
+window.addEventListener("resize",function(){
+  clearTimeout(resizeTimer);
+  resizeTimer=setTimeout(function(){
+    initSlots();
+    renderApp();
+  },100);
+});
