@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=M+PLUS+1p:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #888;
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+  min-height: 100vh;
+}
+
+/* ── OG canvas 1200×630 ── */
+.og {
+  width: 1200px;
+  height: 630px;
+  flex-shrink: 0;
+  background: #f7f5f0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.35);
+  border-radius: 6px;
+  overflow: hidden;
+  font-family: 'M PLUS 1p', 'Yu Gothic', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── トップヘッダーバー ── */
+.og-header {
+  flex-shrink: 0;
+  height: 52px;
+  background: #1c1c2e;
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  gap: 12px;
+}
+.og-header-logo {
+  font-family: 'Syne', 'Arial Black', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.06em;
+}
+.og-header-logo span { color: #C0634C; }
+.og-header-sep { color: rgba(255,255,255,0.2); font-size: 14px; }
+.og-header-tool { font-size: 13px; color: rgba(255,255,255,0.55); }
+
+/* ── コンテンツエリア（左右） ── */
+.og-body {
+  flex: 1;
+  display: flex;
+}
+
+/* ── 左ペイン ── */
+.left {
+  flex: 0 0 580px;
+  padding: 52px 52px 48px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  border-right: 1px solid #e0dbd4;
+}
+.accent-bar {
+  position: absolute;
+  left: 56px;
+  top: 52px;
+  bottom: 48px;
+  width: 4px;
+  background: #C0634C;
+  border-radius: 2px;
+}
+.en-label {
+  font-family: 'Syne', 'Arial', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #C0634C;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.title {
+  font-family: 'M PLUS 1p', 'Yu Gothic', 'Hiragino Sans', sans-serif;
+  font-size: 50px;
+  font-weight: 800;
+  color: #1c1c2e;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+.desc {
+  font-size: 17px;
+  color: #555;
+  line-height: 1.9;
+  margin-bottom: 32px;
+  font-weight: 400;
+}
+.badges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.badge {
+  font-size: 12px;
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+.badge.filled { background: #C0634C; color: white; }
+.badge.outline { border: 1.5px solid rgba(192,99,76,0.45); color: #C0634C; }
+
+/* ── 右ペイン ── */
+.right {
+  flex: 1;
+  padding: 40px 44px;
+  display: flex;
+  align-items: center;
+}
+.mock-card {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 28px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.07);
+}
+.card-top {
+  background: #1c1c2e;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+}
+.card-top-label {
+  font-size: 10px;
+  color: rgba(255,255,255,0.45);
+  font-family: 'Syne', 'Arial', sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.verdict-chip {
+  background: #C0634C;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 10px;
+  margin-left: auto;
+  font-family: 'M PLUS 1p', 'Yu Gothic', sans-serif;
+}
+.card-body { padding: 20px 20px 16px; }
+.card-row { margin-bottom: 14px; }
+.card-row:last-child { margin-bottom: 0; }
+.card-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #C0634C;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-family: 'Syne', 'Arial', sans-serif;
+}
+.card-value {
+  font-size: 13px;
+  color: #1c1c2e;
+  line-height: 1.7;
+  font-family: 'M PLUS 1p', 'Yu Gothic', 'Hiragino Sans', sans-serif;
+  font-weight: 700;
+}
+.card-value.muted {
+  color: #666;
+  font-size: 12px;
+  font-weight: 400;
+}
+.card-divider {
+  border: none;
+  border-top: 1px solid #edeae4;
+  margin: 14px 0;
+}
+</style>
+</head>
+<body>
+<div class="og">
+
+  <!-- ヘッダーバー -->
+  <div class="og-header">
+    <span class="og-header-logo">BEET<span>LE</span></span>
+    <span class="og-header-sep">›</span>
+    <span class="og-header-tool">ツール</span>
+  </div>
+
+  <!-- コンテンツ -->
+  <div class="og-body">
+
+    <div class="left">
+      <div class="accent-bar"></div>
+      <div class="en-label">BUG DETECTOR</div>
+      <div class="title">これってバグなの？</div>
+      <p class="desc">
+        スクショを貼るだけで<br>
+        AIがバグ判定 &amp; 起票内容を自動生成
+      </p>
+      <div class="badges">
+        <span class="badge filled">月1万回まで無料</span>
+        <span class="badge outline">登録不要</span>
+        <span class="badge outline">ブラウザで動く</span>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="mock-card">
+        <div class="card-top">
+          <span class="card-top-label">SCAN RESULT</span>
+          <span class="verdict-chip">🐛 バグあり</span>
+        </div>
+        <div class="card-body">
+          <div class="card-row">
+            <div class="card-label">タイトル</div>
+            <div class="card-value">ログイン後、プロフィール画面が白紙になる</div>
+          </div>
+          <div class="card-row">
+            <div class="card-label">深刻度</div>
+            <div class="card-value">High — ユーザーが操作できない致命的な表示不具合</div>
+          </div>
+          <hr class="card-divider">
+          <div class="card-row">
+            <div class="card-label">再現手順</div>
+            <div class="card-value muted">① ログインする<br>② プロフィールタブをタップ<br>③ 画面が白紙になる</div>
+          </div>
+          <div class="card-row">
+            <div class="card-label">期待値</div>
+            <div class="card-value muted">プロフィール情報が正常に表示される</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
