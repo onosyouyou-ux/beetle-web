@@ -111,10 +111,35 @@ function mZip(b) { const a = new Uint8Array(b); a[0] = 0x50; a[1] = 0x4B; a[2] =
 function mXlsx(b, t) { let s = `id,label,name,email,value,timestamp\n`; let i = 1; while (s.length < b) s += `${i++},${lbl(t)},テストユーザー${i},test${i}@example.com,${(Math.random() * 10000).toFixed(2)},${new Date().toISOString()}\n`; return new Blob([s.slice(0, b)], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }); }
 function mDocx(b, t) { let body = ''; let i = 1; while (body.length < b) body += `<w:p><w:r><w:t>${lbl(t)} 段落${i++}: BEETLE QAツール生成テストデータ。Value: ${Math.random().toFixed(6)}</w:t></w:r></w:p>\n`; const x = `<?xml version="1.0" encoding="UTF-8"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body><w:p><w:r><w:rPr><w:b/></w:rPr><w:t>${lbl(t)} — BEETLE QA Tool</w:t></w:r></w:p>${body}</w:body></w:document>`; return new Blob([x], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }); }
 function mSvg(t) { return new Blob([`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"><rect width="800" height="600" fill="#1c1c2e"/><rect x="20" y="20" width="760" height="560" fill="none" stroke="#C0634C" stroke-width="3"/><text x="400" y="265" text-anchor="middle" font-size="48" font-weight="bold" fill="#C0634C" font-family="sans-serif">${lbl(t)}</text><text x="400" y="318" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.7)" font-family="sans-serif">BEETLE QA Tool</text><text x="400" y="355" text-anchor="middle" font-size="13" fill="rgba(255,255,255,0.4)" font-family="monospace">${new Date().toISOString()}</text></svg>`], { type: 'image/svg+xml' }); }
-function mCanvas(w, h, t) { const c = document.createElement('canvas'); c.width = w; c.height = h; const ctx = c.getContext('2d'); ctx.fillStyle = '#1c1c2e'; ctx.fillRect(0, 0, w, h); for (let i = 0; i < 100; i++) { ctx.fillStyle = `rgba(192,99,76,${Math.random() * .12})`; ctx.fillRect(Math.random() * w, Math.random() * h, Math.random() * 80 + 10, Math.random() * 80 + 10); } ctx.fillStyle = '#C0634C'; ctx.font = `bold ${Math.floor(h / 10)}px sans-serif`; ctx.textAlign = 'center'; ctx.fillText(lbl(t), w / 2, h / 2 - h * .07); ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = `${Math.floor(h / 22)}px sans-serif`; ctx.fillText('BEETLE QA Tool', w / 2, h / 2 + h * .03); ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = `${Math.floor(h / 36)}px monospace`; ctx.fillText(new Date().toISOString(), w / 2, h / 2 + h * .1); ctx.strokeStyle = 'rgba(192,99,76,0.5)'; ctx.lineWidth = 4; ctx.strokeRect(15, 15, w - 30, h - 30); return c; }
-function mPng(b, t) { return new Promise(r => { const ratio = b / (800 * 600 * 4); const s = Math.max(0.1, Math.min(3, Math.sqrt(ratio))); const w = Math.round(800 * s), h = Math.round(600 * s); mCanvas(w, h, t).toBlob(blob => r(blob), 'image/png'); }); }
-function mJpeg(b, t) { return new Promise(r => { const ratio = b / (800 * 600 * 3); const s = Math.max(0.1, Math.min(3, Math.sqrt(ratio))); const w = Math.round(800 * s), h = Math.round(600 * s); mCanvas(w, h, t).toBlob(blob => r(blob), 'image/jpeg', 0.85); }); }
-function mGif(b, t) { const w = 200, h = 150; const c = document.createElement('canvas'); c.width = w; c.height = h; const ctx = c.getContext('2d'); ctx.fillStyle = '#1c1c2e'; ctx.fillRect(0, 0, w, h); ctx.fillStyle = '#C0634C'; ctx.font = 'bold 18px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(lbl(t), w / 2, h / 2); ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '11px sans-serif'; ctx.fillText('BEETLE .gif', w / 2, h / 2 + 18); return new Promise(r => c.toBlob(blob => r(blob), 'image/png')); }
+function mCanvas(w, h, t) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  // ランダムノイズ背景（圧縮を防いでサイズを目標値に近づける）
+  const img = ctx.createImageData(w, h);
+  const buf = new Uint8Array(img.data.buffer);
+  crypto.getRandomValues(buf);
+  for (let i = 3; i < buf.length; i += 4) buf[i] = 255;
+  ctx.putImageData(img, 0, 0);
+  const fs = Math.max(12, Math.floor(h / 10));
+  ctx.fillStyle = 'rgba(28,28,46,0.72)';
+  ctx.fillRect(0, h * 0.32, w, h * 0.36);
+  ctx.fillStyle = '#C0634C';
+  ctx.font = `bold ${fs}px sans-serif`; ctx.textAlign = 'center';
+  ctx.fillText(lbl(t), w / 2, h * 0.5 - fs * 0.3);
+  ctx.fillStyle = 'rgba(255,255,255,0.75)';
+  ctx.font = `${Math.max(10, Math.floor(fs * 0.55))}px sans-serif`;
+  ctx.fillText('BEETLE QA Tool', w / 2, h * 0.5 + fs * 0.5);
+  ctx.fillStyle = 'rgba(255,255,255,0.35)';
+  ctx.font = `${Math.max(8, Math.floor(fs * 0.35))}px monospace`;
+  ctx.fillText(new Date().toISOString(), w / 2, h * 0.5 + fs * 1.1);
+  return c;
+}
+// PNG: ノイズはほぼ圧縮されない → 4 bytes/pixel で計算
+function mPng(b, t) { return new Promise(r => { const s = Math.max(0.05, Math.sqrt(b / (800 * 600 * 4))); const w = Math.round(800 * s), h = Math.round(600 * s); mCanvas(w, h, t).toBlob(blob => r(blob), 'image/png'); }); }
+// JPEG: q=1.0 ノイズで約2 bytes/pixel
+function mJpeg(b, t) { return new Promise(r => { const s = Math.max(0.05, Math.sqrt(b / (800 * 600 * 2))); const w = Math.round(800 * s), h = Math.round(600 * s); mCanvas(w, h, t).toBlob(blob => r(blob), 'image/jpeg', 1.0); }); }
+// GIF: ブラウザAPIではPNGデータで代用、ノイズで4 bytes/pixel
+function mGif(b, t) { return new Promise(r => { const s = Math.max(0.05, Math.sqrt(b / (800 * 600 * 4))); const w = Math.round(800 * s), h = Math.round(600 * s); mCanvas(w, h, t).toBlob(blob => r(blob), 'image/png'); }); }
 function mAudio() { return new Promise((res, rej) => { if (!('speechSynthesis' in window)) { rej(new Error('TTSに対応していません')); return; } const ctx = new (window.AudioContext || window.webkitAudioContext)(); const dest = ctx.createMediaStreamDestination(); const rec = new MediaRecorder(dest.stream, { mimeType: 'audio/webm' }); const chunks = []; rec.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); }; rec.onstop = () => { ctx.close(); res(new Blob(chunks, { type: 'audio/webm' })); }; rec.start(); const osc = ctx.createOscillator(); osc.frequency.value = 440; osc.connect(dest); osc.start(); const u = new SpeechSynthesisUtterance('これはテストです。本日は晴天なり。これはテストです。'); u.lang = 'ja-JP'; u.rate = 0.9; u.onend = () => { osc.stop(); rec.stop(); }; u.onerror = () => { osc.stop(); rec.stop(); }; setTimeout(() => speechSynthesis.speak(u), 200); }); }
 function mVideo() { return new Promise(res => { const w = 640, h = 360; const canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h; const ctx = canvas.getContext('2d'); const stream = canvas.captureStream(15); const rec = new MediaRecorder(stream, { mimeType: 'video/webm' }); const chunks = []; rec.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); }; rec.onstop = () => res(new Blob(chunks, { type: 'video/webm' })); rec.start(); const dur = 5000; const start = Date.now(); const txt = document.getElementById('fileText').value || 'TEST DATA'; function draw() { const el = Date.now() - start; if (el > dur) { rec.stop(); return; } ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, w, h); for (let i = 0; i < 40; i++) { ctx.fillStyle = `rgba(${Math.random() * 60},${Math.random() * 60},${Math.random() * 60},0.7)`; const x = Math.floor(Math.random() * w / 4) * 4; const y = Math.floor(Math.random() * h / 4) * 4; ctx.fillRect(x, y, 4, 4); } ctx.fillStyle = '#C0634C'; ctx.font = 'bold 48px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(txt, w / 2, h / 2 - 20); ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '20px sans-serif'; ctx.fillText('BEETLE QA Tool', w / 2, h / 2 + 18); ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = '13px monospace'; ctx.fillText(new Date().toISOString(), w / 2, h / 2 + 46); requestAnimationFrame(draw); } draw(); setTimeout(() => { if (rec.state !== 'inactive') rec.stop(); }, dur + 500); }); }
 
