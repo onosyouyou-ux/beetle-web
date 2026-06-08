@@ -66,6 +66,40 @@ beetle-web/
 
 ナビ・フッターを変更したいときは `partials/header.html` か `partials/footer.html` だけ編集すればOK。各ページは触らなくていい。
 
+## ページレイアウト型
+
+依頼時に「Reference系で」「Tool系で」と指定すると、ヘッダー・フッター・スタイルが型通りに揃う。
+
+### Reference系
+対象: TESTパターン集・UI部品名鑑など「読んで参照する」静的ページ
+
+| 要素 | 内容 |
+|---|---|
+| ヘッダー | `partials/header.html`（ライトナビ、`common.css` の `.nav`） |
+| フッター | `partials/footer.html`（ダークバー、`common.css` の `.site-footer`） |
+| ページヘッダー | BEETLEデザインシステムの `page-header` コンポーネント |
+| 背景 | `var(--color-bg-primary)` = `#f7f5f0` |
+| フォント | Syne（英字見出し）＋ M PLUS 1p（日本語タイトル） |
+| CSS管理 | `/css/xxxx.css` に外出し、インライン禁止 |
+
+### Tool系
+対象: bug-checker・えいごよんで など「操作して使う」インタラクティブページ（Next.js）
+
+| 要素 | 内容 |
+|---|---|
+| ヘッダー | ダークバー `#1c1c2e`（`.bc-nav`）、BEETLEロゴ＋パンくず＋右端リファレンスリンク |
+| フッター | ダークバー（`.site-footer-app`）、BEETLEロゴ＋ナビ＋プライバシーポリシー＋© |
+| ページヘッダー | BEETLEデザインシステムの `page-header` コンポーネント（共通） |
+| 背景 | `var(--color-bg-primary)` = `#f7f5f0` |
+| フォント | Syne + M PLUS 1p（layout.tsx の Google Fonts で読み込み） |
+| CSS管理 | `globals.css` にBEETLE変数定義、Tailwind 併用 |
+
+**フッターに必須の要素（Tool系）**
+- BEETLEロゴ（BEET＋LEオレンジ）
+- ナビリンク: ホーム・ツール・コラム・お問い合わせ
+- プライバシーポリシーリンク → `https://www.beetle-web.jp/privacy`
+- © 表記
+
 ## カラー運用ルール
 
 - アクセントカラーは `common.css` の `:root` で定義

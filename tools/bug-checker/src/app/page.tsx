@@ -130,17 +130,42 @@ export default function HomePage() {
           disabled={scanning}
         />
 
-        <textarea
-          value={note}
-          onChange={e => setNote(e.target.value)}
-          disabled={scanning}
-          placeholder="操作していた内容・エラーの状況・気になったことなど、補足があれば書いてください（任意）"
-          className="w-full border border-[#c8c7c0] rounded-xl px-4 py-3 text-[13px] text-ink bg-[#fafaf8] resize-none h-[72px] outline-none focus:border-[#888780] transition-colors mb-4 placeholder:text-[#b4b2a9] disabled:opacity-50"
-        />
+        <div className="mb-4">
+          <div className="field-label">テスト状況・補足メモ</div>
+          <textarea
+            value={note}
+            onChange={e => setNote(e.target.value)}
+            disabled={scanning}
+            placeholder="操作していた内容・エラーの状況・気になったことなど（任意）"
+            className="w-full border border-[#c8c7c0] rounded-xl px-4 py-3 text-[13px] text-ink bg-[#fafaf8] resize-none h-[72px] outline-none focus:border-[#888780] transition-colors placeholder:text-[#b4b2a9] disabled:opacity-50"
+          />
+        </div>
         <ScanButton disabled={!imagePreview || scanning || !!verdict} onClick={handleScan} />
         <p className="text-[11px] text-[#b4b2a9] text-center mt-2">
           ※ AIの判定は参考情報です。誤りが含まれる場合があります。
         </p>
+
+        {!verdict && !scanning && (
+          <div className="how-to">
+            <div className="how-to-label">使い方</div>
+            <div className="how-to-steps">
+              <div className="how-to-step">
+                <span className="how-to-num">①</span>
+                <span className="how-to-text">気になる画面のスクショを貼る</span>
+              </div>
+              <span className="how-to-arrow">→</span>
+              <div className="how-to-step">
+                <span className="how-to-num">②</span>
+                <span className="how-to-text">バグスキャンを実行する</span>
+              </div>
+              <span className="how-to-arrow">→</span>
+              <div className="how-to-step">
+                <span className="how-to-num">③</span>
+                <span className="how-to-text">判定結果と起票内容をコピー</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         <ScanningArea phase={scanPhase} />
 
