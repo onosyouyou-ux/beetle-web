@@ -66,6 +66,19 @@ beetle-web/
 
 ナビ・フッターを変更したいときは `partials/header.html` か `partials/footer.html` だけ編集すればOK。各ページは触らなくていい。
 
+## カラー運用ルール
+
+- アクセントカラーは `common.css` の `:root` で定義
+- 各ファイルで `#C0634C` の直書き禁止、必ず `var(--color-accent)` を使う
+- 色を変更する場合は `common.css` の1行のみ修正
+
+```css
+/* common.css */
+:root {
+  --color-accent: #C0634C;
+}
+```
+
 ## ブランチ運用
 
 作業はブランチを切って行い、確認できたら main にマージする。
