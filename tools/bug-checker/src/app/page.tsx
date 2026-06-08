@@ -116,7 +116,7 @@ export default function HomePage() {
   const releaseDate = process.env.NEXT_PUBLIC_RELEASE_DATE ?? '2026-06-01';
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--color-bg-primary)' }}>
+    <main className="min-h-screen flex flex-col" style={{ background: 'var(--color-bg-primary)' }}>
       <AppHeader counter={counter} />
       <div className="mx-auto px-5" style={{ maxWidth: '600px', paddingTop: '24px', paddingBottom: '64px' }}>
         <div className="w-full max-w-[560px] mx-auto">
@@ -146,35 +146,42 @@ export default function HomePage() {
 
         {verdict && !limitExceeded && <VerdictCard result={verdict} />}
 
-        <footer className="app-footer">
-          <div className="app-footer-top">
-            <a href="https://www.beetle-web.jp" target="_blank" rel="noopener" className="app-footer-logo">
-              BEET<span>LE</span>
-            </a>
-            <div className="flex items-center gap-3">
-              {(imagePreview || verdict) && (
-                <button
-                  onClick={handleReset}
-                  className="text-[11px] text-[#888780] hover:text-ink transition-colors font-mono underline underline-offset-2"
-                >
-                  クリア
-                </button>
-              )}
-              <span className="text-[11px] text-[#b4b2a9] font-mono">リリース日：{releaseDate}</span>
-            </div>
+        <div className="content-footer">
+          <div className="content-footer-row">
+            <span className="text-[11px] text-[#b4b2a9] font-mono">リリース日：{releaseDate}</span>
+            {(imagePreview || verdict) && (
+              <button
+                onClick={handleReset}
+                className="text-[11px] text-[#888780] hover:text-ink transition-colors font-mono underline underline-offset-2"
+              >
+                クリア
+              </button>
+            )}
           </div>
-          <div className="app-footer-meta">
-            <a href="https://www.beetle-web.jp/privacy" target="_blank" rel="noopener" className="app-footer-privacy">
-              プライバシーポリシー
-            </a>
-            <span className="app-footer-copy">© 2026 BEETLE Co., LLC</span>
-          </div>
-          <p className="app-footer-notice">
+          <p className="content-footer-notice">
             アップロードされた画像はAI判定のためAnthropicのAPIに送信されます。モデルの学習には利用されません。
           </p>
-        </footer>
+        </div>
         </div>
       </div>
+
+      <footer className="site-footer-app">
+        <div className="sfa-left">
+          <a href="https://www.beetle-web.jp" target="_blank" rel="noopener" className="sfa-logo">
+            BEET<span>LE</span>
+          </a>
+          <nav className="sfa-nav">
+            <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">ホーム</a>
+            <a href="https://www.beetle-web.jp/#tools" target="_blank" rel="noopener">ツール</a>
+            <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
+            <a href="mailto:info@beetle-web.jp">お問い合わせ</a>
+          </nav>
+        </div>
+        <div className="sfa-right">
+          <a href="https://www.beetle-web.jp/privacy" target="_blank" rel="noopener">プライバシーポリシー</a>
+          <span>© 2026 BEETLE Co., LLC</span>
+        </div>
+      </footer>
     </main>
   );
 }
