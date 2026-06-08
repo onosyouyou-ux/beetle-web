@@ -14,7 +14,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--color-bg); font-family: sans-serif; color: var(--color-text); min-height: 100vh; }
 
-.page-header { background: var(--color-bg); padding: 24px 40px 20px; border-bottom: 1px solid var(--color-border); }
+.page-header { background: var(--color-bg); padding: 24px 60px 20px; border-bottom: 1px solid var(--color-border); }
 .page-header-en { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; color: var(--color-accent); letter-spacing: .16em; text-transform: uppercase; margin-bottom: 8px; }
 .page-header-inner { border-left: 3px solid var(--color-accent); padding-left: 14px; }
 .page-header-title { font-family: 'M PLUS 1p', sans-serif; font-size: 26px; font-weight: 800; color: var(--color-text); line-height: 1.1; margin-bottom: 8px; }
@@ -26,7 +26,7 @@ body { background: var(--color-bg); font-family: sans-serif; color: var(--color-
 .phm-num { font-size: 20px; font-weight: 700; color: var(--color-accent); line-height: 1; }
 .phm-label { font-size: 11px; color: var(--color-text-muted); margin-top: 2px; }
 
-.main { padding: 20px 40px 32px; max-width: 800px; margin: 0 auto; }
+.main { padding: 20px 60px 32px; max-width: 1100px; margin: 0 auto; }
 .card { background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
 
 .input-grid { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; margin-bottom: 14px; }
