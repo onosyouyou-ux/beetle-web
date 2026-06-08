@@ -2,7 +2,7 @@
 
 /* Page header */
 .page-header{padding:52px 0 40px;border-bottom:1px solid #ebebeb;}
-.page-eyebrow{font-size:11px;font-weight:600;color:#BA7517;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:14px;}
+.page-eyebrow{font-size:11px;font-weight:600;color:var(--color-accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:14px;}
 .page-title{font-size:34px;font-weight:700;color:#111;letter-spacing:-0.02em;margin-bottom:10px;}
 .page-sub{font-size:15px;color:#666;line-height:1.8;}
 
@@ -19,15 +19,15 @@
 .post-tag.qa{background:#e8f0fe;color:#1a56db;}
 .post-tag.ai{background:#fce8ff;color:#7c3aed;}
 .post-tag.tips{background:#e8f5e9;color:#2e7d32;}
-.post-tag.essay{background:#fdf0e8;color:#C0634C;}
+.post-tag.essay{background:#fdf0e8;color:var(--color-accent);}
 .post-title{font-size:15px;font-weight:700;color:#111;line-height:1.5;margin-bottom:10px;letter-spacing:-0.01em;}
 .post-excerpt{font-size:13px;color:#666;line-height:1.8;}
-.post-card:hover .post-title{color:#BA7517;}
+.post-card:hover .post-title{color:var(--color-accent);}
 
 /* Category sections */
 .col-category{margin-bottom:56px;}
-.col-category-header{margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #C0634C;}
-.col-category-label{font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#C0634C;}
+.col-category-header{margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--color-accent);}
+.col-category-label{font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-accent);}
 .col-category-desc{font-size:13px;color:#999;margin-top:6px;}
 
 /* note section */
@@ -39,7 +39,7 @@
 /* WIP state */
 .wip-banner{margin-top:40px;padding:32px;background:#fafafa;border:1px dashed #ddd;border-radius:16px;text-align:center;}
 .wip-banner p{font-size:14px;color:#999;line-height:1.9;}
-.wip-banner strong{color:#BA7517;}
+.wip-banner strong{color:var(--color-accent);}
 
 /* Post page */
 .post-page{padding:40px 0 80px;}
@@ -53,7 +53,7 @@
 .post-body h3{font-size:14px;font-weight:700;color:#333;margin-bottom:0.8em;margin-top:1.6em;}
 .post-body ul{padding-left:1.4em;margin-bottom:1.8em;}
 .post-body ul li{margin-bottom:0.5em;}
-.post-body a{color:#BA7517;text-decoration:underline;text-underline-offset:3px;}
+.post-body a{color:var(--color-accent);text-decoration:underline;text-underline-offset:3px;}
 .post-rule{border:none;border-top:1px solid #ebebeb;margin:2em 0;}
 .post-body .lead{font-size:15px;color:#111;font-weight:700;padding-bottom:24px;border-bottom:1px solid #ebebeb;}
 .post-cta{margin-top:48px;padding:28px 24px;background:#fafafa;border:1px solid #ebebeb;border-radius:16px;text-align:center;}
