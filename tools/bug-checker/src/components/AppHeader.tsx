@@ -27,20 +27,19 @@ export default function AppHeader({ counter }: { counter: CounterData | null }) 
               画像を貼るだけでAIがバグか否かを判定。バグなら起票内容を自動生成します。<br />
               タイトル・再現手順・期待値まで全部出てきます。
             </p>
-            <div className="page-header-metrics">
-              <div className="phm-item">
-                <div className="phm-num">{counter ? counter.used.toLocaleString() : '…'}</div>
-                <div className="phm-label">今月の利用回数</div>
+            {counter && (
+              <div className="mt-3 inline-flex flex-col gap-1 bg-white border border-[#e8e4de] rounded-lg px-3 py-2" style={{ borderWidth: '0.5px' }}>
+                <div className="text-[12px]" style={{ color: 'var(--color-text-muted)' }}>
+                  今月みんなで {counter.used.toLocaleString()} 回使いました（無料枠 {counter.limit.toLocaleString()} 回まで）
+                </div>
+                <div className="w-[200px] h-[3px] rounded-full overflow-hidden" style={{ background: 'var(--color-border)' }}>
+                  <div
+                    className="h-full rounded-full transition-all duration-300"
+                    style={{ width: `${Math.min(100, (counter.used / counter.limit) * 100)}%`, background: 'var(--color-accent)' }}
+                  />
+                </div>
               </div>
-              <div className="phm-item">
-                <div className="phm-num">0</div>
-                <div className="phm-label">サーバー保存</div>
-              </div>
-              <div className="phm-item">
-                <div className="phm-num">∞</div>
-                <div className="phm-label">生成回数</div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
