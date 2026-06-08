@@ -146,9 +146,12 @@ export default function HomePage() {
 
         {verdict && !limitExceeded && <VerdictCard result={verdict} />}
 
-        <footer className="mt-8 pt-3 border-t border-[#e0dfd8]">
-          <div className="flex justify-between items-center">
-            <div className="text-[12px] font-semibold text-ink">🐛 これってバグなの？</div>
+        <footer style={{ marginTop: '40px', paddingTop: '16px', borderTop: '1px solid var(--color-border)' }}>
+          <div className="flex justify-between items-center mb-3">
+            <a href="https://www.beetle-web.jp" target="_blank" rel="noopener"
+               style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '13px', letterSpacing: '0.06em', color: 'var(--color-text-primary)', textDecoration: 'none' }}>
+              BEET<span style={{ color: 'var(--color-accent)' }}>LE</span>
+            </a>
             <div className="flex items-center gap-3">
               {(imagePreview || verdict) && (
                 <button
@@ -158,10 +161,17 @@ export default function HomePage() {
                   クリア
                 </button>
               )}
-              <div className="text-[11px] text-[#b4b2a9] font-mono">リリース日：{releaseDate}</div>
+              <span className="text-[11px] text-[#b4b2a9] font-mono">リリース日：{releaseDate}</span>
             </div>
           </div>
-          <p className="text-[10px] text-[#b4b2a9] mt-2">
+          <div className="flex items-center gap-4 mb-2">
+            <a href="https://www.beetle-web.jp/privacy" target="_blank" rel="noopener"
+               style={{ fontSize: '11px', color: 'var(--color-text-muted)', textDecoration: 'underline', textUnderlineOffset: '2px' }}>
+              プライバシーポリシー
+            </a>
+            <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>© 2026 BEETLE Co., LLC</span>
+          </div>
+          <p className="text-[10px] text-[#b4b2a9] pb-8">
             アップロードされた画像はAI判定のためAnthropicのAPIに送信されます。モデルの学習には利用されません。
           </p>
         </footer>

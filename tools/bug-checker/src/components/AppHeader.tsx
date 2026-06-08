@@ -10,7 +10,9 @@ export default function AppHeader({ counter }: { counter: CounterData | null }) 
     <header>
       <nav className="bc-nav">
         <div className="bc-nav-inner">
-          <a href="https://www.beetle-web.jp" target="_blank" rel="noopener">BEETLE</a>
+          <a href="https://www.beetle-web.jp" target="_blank" rel="noopener" style={{ display: 'flex', alignItems: 'center' }}>
+            <img src="https://www.beetle-web.jp/assets/icons/beetle-icon.svg" alt="BEETLE" style={{ height: '22px', borderRadius: '4px', verticalAlign: 'middle' }} />
+          </a>
           <span className="sep">›</span>
           <a href="https://www.beetle-web.jp/#tools" target="_blank" rel="noopener">ツール一覧</a>
           <span className="sep">›</span>
