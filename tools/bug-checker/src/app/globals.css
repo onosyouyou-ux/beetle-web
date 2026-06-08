@@ -22,25 +22,41 @@
 
 /* ── Page Header ── */
 .bc-nav {
-  border-bottom: 1px solid var(--color-border);
-  font-size: 12px;
-}
-.bc-nav-inner {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 10px 20px;
+  background: #1c1c2e;
+  padding: 0 20px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--color-text-muted);
+  gap: 10px;
+  height: 48px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  font-size: 13px;
 }
-.bc-nav-inner a {
-  color: var(--color-text-muted);
+.bc-nav a {
+  color: rgba(255,255,255,0.65);
   text-decoration: none;
   transition: color .15s;
+  display: flex;
+  align-items: center;
 }
-.bc-nav-inner a:hover { color: var(--color-text-primary); }
-.bc-nav-inner .sep { color: #ddd; }
+.bc-nav a:hover { color: #fff; }
+.bc-nav .sep { color: rgba(255,255,255,0.25); font-size: 11px; }
+.bc-nav .bc-current { color: rgba(255,255,255,0.9); font-size: 13px; }
+.bc-nav .bc-spacer { flex: 1; }
+.bc-ref-btn {
+  font-size: 12px !important;
+  color: rgba(255,255,255,0.7) !important;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 20px;
+  padding: 4px 14px;
+  transition: border-color .15s, color .15s !important;
+  white-space: nowrap;
+}
+.bc-ref-btn:hover {
+  border-color: rgba(255,255,255,0.6) !important;
+  color: #fff !important;
+}
 
 .page-header {
   background: var(--color-bg-primary);
