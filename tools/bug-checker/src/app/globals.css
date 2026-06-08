@@ -7,3 +7,100 @@
     animation: spinRing 0.7s linear infinite;
   }
 }
+
+:root {
+  --color-bg-primary:    #f7f5f0;
+  --color-bg-card:       #ffffff;
+  --color-bg-muted:      #faf9f7;
+  --color-text-primary:  #1c1c2e;
+  --color-text-secondary:#555555;
+  --color-text-muted:    #999999;
+  --color-accent:        #C0634C;
+  --color-border:        #e8e4de;
+  --color-border-input:  #dddddd;
+}
+
+/* ── Page Header ── */
+.bc-nav {
+  border-bottom: 1px solid var(--color-border);
+  font-size: 12px;
+}
+.bc-nav-inner {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted);
+}
+.bc-nav-inner a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color .15s;
+}
+.bc-nav-inner a:hover { color: var(--color-text-primary); }
+.bc-nav-inner .sep { color: #ddd; }
+
+.page-header {
+  background: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border);
+}
+.page-header-wrap {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px 20px 22px;
+}
+.page-header-en {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.page-header-inner {
+  border-left: 3px solid var(--color-accent);
+  padding-left: 16px;
+}
+.page-header-title {
+  font-family: 'M PLUS 1p', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  line-height: 1.1;
+  letter-spacing: -.01em;
+  margin-bottom: 10px;
+}
+.page-header-desc {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.75;
+  max-width: 500px;
+}
+.page-header-metrics {
+  display: flex;
+  border-top: 1px solid var(--color-border);
+  padding-top: 14px;
+  margin-top: 14px;
+}
+.phm-item {
+  flex: 1;
+  padding-right: 16px;
+  border-right: 1px solid var(--color-border);
+}
+.phm-item:last-child { border-right: none; padding-right: 0; }
+.phm-item:not(:first-child) { padding-left: 16px; }
+.phm-num {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-accent);
+  line-height: 1;
+  font-family: 'Syne', sans-serif;
+}
+.phm-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 3px;
+}

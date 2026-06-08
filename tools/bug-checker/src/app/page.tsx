@@ -116,9 +116,10 @@ export default function HomePage() {
   const releaseDate = process.env.NEXT_PUBLIC_RELEASE_DATE ?? '2026-06-01';
 
   return (
-    <main className="bg-[#f5f5f3] min-h-screen flex justify-center py-8 px-4">
-      <div className="w-full max-w-[560px]">
-        <AppHeader counter={counter} />
+    <main className="min-h-screen" style={{ background: 'var(--color-bg-primary)' }}>
+      <AppHeader counter={counter} />
+      <div className="mx-auto px-5" style={{ maxWidth: '600px', paddingTop: '24px', paddingBottom: '64px' }}>
+        <div className="w-full max-w-[560px] mx-auto">
 
         {limitExceeded && <LimitBanner />}
 
@@ -164,6 +165,7 @@ export default function HomePage() {
             アップロードされた画像はAI判定のためAnthropicのAPIに送信されます。モデルの学習には利用されません。
           </p>
         </footer>
+        </div>
       </div>
     </main>
   );
