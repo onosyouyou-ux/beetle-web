@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="テスト用のコンテンツ作成、めんどくさい。タイトルと容量・拡張子を選んでワンクリック。複数ファイルも一括作成できます。">
+<title>テストコンテンツ作成ツール | BEETLE</title>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=M+PLUS+1p:wght@700;800&display=swap">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/test-content.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="page-header">
+  <div class="page-header-en">Test Content Generator</div>
+  <div class="page-header-inner">
+    <div class="page-header-title">テストコンテンツ作成ツール</div>
+    <div class="page-header-desc">テスト用のコンテンツ作成、めんどくさい。タイトルと容量・拡張子を選んでワンクリック。複数ファイルも一括作成できます。</div>
+    <div class="page-header-metrics">
+      <div class="phm-item"><div class="phm-num">18</div><div class="phm-label">対応形式</div></div>
+      <div class="phm-item"><div class="phm-num">0</div><div class="phm-label">サーバー通信</div></div>
+      <div class="phm-item"><div class="phm-num">∞</div><div class="phm-label">生成回数</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="card">
+    <div class="input-grid">
+      <div>
+        <div class="field-label">ファイル名</div>
+        <input class="text-input" type="text" id="fileText" placeholder="ファイル名を入力（コンテンツ中央に表示されます）">
+      </div>
+      <div>
+        <div class="field-label">サイズ</div>
+        <div class="size-row">
+          <select class="size-select" id="sizePreset" onchange="applyPreset(this)">
+            <option value="">選択...</option>
+            <optgroup label="KB">
+              <option value="1_KB">1 KB</option>
+              <option value="10_KB">10 KB</option>
+              <option value="100_KB" selected>100 KB</option>
+              <option value="500_KB">500 KB</option>
+            </optgroup>
+            <optgroup label="MB">
+              <option value="1_MB">1 MB</option>
+              <option value="5_MB">5 MB</option>
+              <option value="10_MB">10 MB</option>
+              <option value="50_MB">50 MB</option>
+              <option value="100_MB">100 MB</option>
+            </optgroup>
+            <optgroup label="GB">
+              <option value="1_GB">1 GB</option>
+            </optgroup>
+          </select>
+          <input class="size-num" type="number" id="sVal" value="100" min="1" placeholder="手入力">
+          <div class="unit-group">
+            <button class="ubtn on" data-u="KB" onclick="setUnit(this)">KB</button>
+            <button class="ubtn" data-u="MB" onclick="setUnit(this)">MB</button>
+            <button class="ubtn" data-u="GB" onclick="setUnit(this)">GB</button>
+          </div>
+          <div class="range-group">
+            <button class="rbtn on" data-r="above" onclick="setRange(this)">以上</button>
+            <button class="rbtn" data-r="below" onclick="setRange(this)">未満</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fmt-section">
+      <div class="fmt-section-label">画像</div>
+      <div class="btn-group">
+        <button class="tog on" data-v="png">PNG</button>
+        <button class="tog" data-v="jpeg">JPEG</button>
+        <button class="tog" data-v="svg">SVG</button>
+        <button class="tog" data-v="gif">GIF</button>
+      </div>
+    </div>
+    <div class="fmt-section">
+      <div class="fmt-section-label">Office / ドキュメント</div>
+      <div class="btn-group">
+        <button class="tog" data-v="xlsx">Excel</button>
+        <button class="tog" data-v="docx">Word</button>
+        <button class="tog" data-v="pdf_d">PDF</button>
+        <button class="tog" data-v="bin">BIN</button>
+        <button class="tog" data-v="zip_d">ZIP</button>
+      </div>
+    </div>
+    <div class="fmt-section">
+      <div class="fmt-section-label">動画系 <span style="font-size:10px;color:var(--color-dummy);font-weight:400;">※ webm以外はサイズ確認用・再生不可</span></div>
+      <div class="btn-group">
+        <button class="tog" data-v="video">WebM（再生可）</button>
+        <button class="tog dummy" data-v="mp4">MP4</button>
+        <button class="tog dummy" data-v="mov">MOV</button>
+        <button class="tog dummy" data-v="avi">AVI</button>
+        <button class="tog dummy" data-v="wmv">WMV</button>
+      </div>
+    </div>
+    <div class="fmt-section">
+      <div class="fmt-section-label">音声系 <span style="font-size:10px;color:var(--color-dummy);font-weight:400;">※ webm以外はサイズ確認用・再生不可</span></div>
+      <div class="btn-group">
+        <button class="tog" data-v="audio">WebM（再生可）</button>
+        <button class="tog dummy" data-v="mp3">MP3</button>
+        <button class="tog dummy" data-v="wav">WAV</button>
+        <button class="tog dummy" data-v="aac">AAC</button>
+      </div>
+    </div>
+
+    <p class="size-note">※ 指定サイズは目安です。テキスト系は近い値になりますが、画像・音声・動画はブラウザの生成エンジン依存のためサイズが前後します。</p>
+
+    <div class="mnote" id="mnote"></div>
+
+    <button class="gen-btn" id="genBtn" onclick="generate()">生成してダウンロード</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="card" style="padding:0;">
+    <div style="padding:14px 16px 0;">
+      <p class="section-title">サンプルをダウンロード</p>
+      <p class="sample-note">クリックするとその場でファイルを生成してダウンロードします。音声・動画（WebM）は約5秒かかります。</p>
+    </div>
+    <div class="tab-bar" id="tabBar">
+      <button class="tab on" data-tab="image" onclick="swTab(this)">画像</button>
+      <button class="tab" data-tab="excel" onclick="swTab(this)">Excel</button>
+      <button class="tab" data-tab="word" onclick="swTab(this)">Word</button>
+      <button class="tab" data-tab="pdf" onclick="swTab(this)">PDF</button>
+      <button class="tab" data-tab="video" onclick="swTab(this)">動画</button>
+      <button class="tab" data-tab="audio" onclick="swTab(this)">音声</button>
+    </div>
+    <div class="panel-body">
+
+      <div id="panel-image" class="panel on">
+        <div class="sec-block"><p class="sec-head">PNG</p><div class="sgrid" id="png-grid"></div></div>
+        <div class="sec-block"><p class="sec-head">JPEG</p><div class="sgrid" id="jpeg-grid"></div></div>
+        <div class="sec-block"><p class="sec-head">SVG</p><div class="sgrid">
+          <div class="sc" onclick="dlS(this,'svg','fixed',2048)"><div class="sc-ext">svg</div><div class="sc-sz">〜 2 KB</div></div>
+        </div></div>
+        <div class="sec-block"><p class="sec-head">GIF</p><div class="sgrid" id="gif-grid"></div></div>
+      </div>
+
+      <div id="panel-excel" class="panel">
+        <div class="sec-block"><p class="sec-head">Excel</p><div class="sgrid" id="xlsx-grid"></div></div>
+      </div>
+
+      <div id="panel-word" class="panel">
+        <div class="sec-block"><p class="sec-head">Word</p><div class="sgrid" id="docx-grid"></div></div>
+      </div>
+
+      <div id="panel-pdf" class="panel">
+        <div class="sec-block"><p class="sec-head">PDF</p><div class="sgrid" id="pdf-grid"></div></div>
+      </div>
+
+      <div id="panel-video" class="panel">
+        <div class="sec-block"><p class="sec-head">WebM（再生可能）</p><div class="sgrid">
+          <div class="sc" onclick="dlS(this,'video','rec',0)"><div class="sc-ext">webm</div><div class="sc-sz">約5秒</div></div>
+        </div></div>
+        <div class="sec-block"><p class="sec-head">MP4 / MOV / AVI / WMV <span style="font-size:10px;color:var(--color-dummy);margin-left:4px;">サイズ確認用・再生不可</span></p>
+        <div class="sgrid" id="mp4-grid"></div></div>
+      </div>
+
+      <div id="panel-audio" class="panel">
+        <div class="sec-block"><p class="sec-head">WebM（再生可能）</p><div class="sgrid">
+          <div class="sc" onclick="dlS(this,'audio','rec',0)"><div class="sc-ext">webm</div><div class="sc-sz">約5秒</div></div>
+        </div></div>
+        <div class="sec-block"><p class="sec-head">MP3 / WAV / AAC <span style="font-size:10px;color:var(--color-dummy);margin-left:4px;">サイズ確認用・再生不可</span></p>
+        <div class="sgrid" id="mp3-grid"></div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="how">
+    <div class="how-title">✦ 使い方</div>
+    <div class="how-step"><div class="how-num">1</div><div><div class="how-step-title">🖊 ファイル名とサイズを指定する</div><div class="how-step-desc">ファイルに表示したいテキストと、目標サイズを設定します。</div></div></div>
+    <div class="how-step"><div class="how-num">2</div><div><div class="how-step-title">📄 ファイル形式を選ぶ</div><div class="how-step-desc">複数選択可。複数選択した場合はZIPにまとめてダウンロードされます。</div></div></div>
+    <div class="how-step"><div class="how-num">3</div><div><div class="how-step-title">⬇ 生成してダウンロード</div><div class="how-step-desc">ブラウザ上で即生成。サーバーへのアップロードは一切ありません。</div></div></div>
+  </div>
+
+  <div class="card" style="padding:14px 16px;">
+    <p class="section-title" style="margin-bottom:10px;">こんな用途に</p>
+    <div class="use-cases">
+      <div class="uc"><div class="uc-title">アップロード機能の動作確認</div><div class="uc-desc">ファイルアップロード機能が正しく動くかテスト用ファイルで確認</div></div>
+      <div class="uc"><div class="uc-title">サイズ上限・下限のテスト</div><div class="uc-desc">バリデーションが正しく機能するか、サイズを変えて検証</div></div>
+      <div class="uc"><div class="uc-title">対応形式の確認</div><div class="uc-desc">許可・拒否すべき形式の挙動を素早く確認</div></div>
+      <div class="uc"><div class="uc-title">開発環境へのデータ投入</div><div class="uc-desc">ダミーデータが必要な開発・テスト環境へ手軽に投入</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+<script src="/js/test-content.js"></script>
+</body>
+</html>

@@ -68,6 +68,12 @@
     <priority>0.6</priority>
   </url>
 
+  <url>
+    <loc>https://www.beetle-web.jp/tools/test-content/</loc>
+    <lastmod>2026-06-08</lastmod>
+    <priority>0.8</priority>
+  </url>
+
   <!-- コラム -->
   <url>
     <loc>https://www.beetle-web.jp/blog/</loc>
