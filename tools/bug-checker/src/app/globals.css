@@ -104,3 +104,46 @@
   color: var(--color-text-muted);
   margin-top: 3px;
 }
+
+/* ── App Footer ── */
+.app-footer {
+  margin-top: 40px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+  padding-bottom: 32px;
+}
+.app-footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.app-footer-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--color-text-primary);
+  text-decoration: none;
+}
+.app-footer-logo span { color: var(--color-accent); }
+.app-footer-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+.app-footer-privacy {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.app-footer-copy {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+.app-footer-notice {
+  font-size: 10px;
+  color: #b4b2a9;
+}

@@ -146,11 +146,10 @@ export default function HomePage() {
 
         {verdict && !limitExceeded && <VerdictCard result={verdict} />}
 
-        <footer style={{ marginTop: '40px', paddingTop: '16px', borderTop: '1px solid var(--color-border)' }}>
-          <div className="flex justify-between items-center mb-3">
-            <a href="https://www.beetle-web.jp" target="_blank" rel="noopener"
-               style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '13px', letterSpacing: '0.06em', color: 'var(--color-text-primary)', textDecoration: 'none' }}>
-              BEET<span style={{ color: 'var(--color-accent)' }}>LE</span>
+        <footer className="app-footer">
+          <div className="app-footer-top">
+            <a href="https://www.beetle-web.jp" target="_blank" rel="noopener" className="app-footer-logo">
+              BEET<span>LE</span>
             </a>
             <div className="flex items-center gap-3">
               {(imagePreview || verdict) && (
@@ -164,14 +163,13 @@ export default function HomePage() {
               <span className="text-[11px] text-[#b4b2a9] font-mono">リリース日：{releaseDate}</span>
             </div>
           </div>
-          <div className="flex items-center gap-4 mb-2">
-            <a href="https://www.beetle-web.jp/privacy" target="_blank" rel="noopener"
-               style={{ fontSize: '11px', color: 'var(--color-text-muted)', textDecoration: 'underline', textUnderlineOffset: '2px' }}>
+          <div className="app-footer-meta">
+            <a href="https://www.beetle-web.jp/privacy" target="_blank" rel="noopener" className="app-footer-privacy">
               プライバシーポリシー
             </a>
-            <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>© 2026 BEETLE Co., LLC</span>
+            <span className="app-footer-copy">© 2026 BEETLE Co., LLC</span>
           </div>
-          <p className="text-[10px] text-[#b4b2a9] pb-8">
+          <p className="app-footer-notice">
             アップロードされた画像はAI判定のためAnthropicのAPIに送信されます。モデルの学習には利用されません。
           </p>
         </footer>
