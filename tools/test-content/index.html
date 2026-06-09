@@ -42,26 +42,7 @@
       <div>
         <div class="field-label">サイズ</div>
         <div class="size-row">
-          <select class="size-select" id="sizePreset" onchange="applyPreset(this)">
-            <option value="">選択...</option>
-            <optgroup label="KB">
-              <option value="1_KB">1 KB</option>
-              <option value="10_KB">10 KB</option>
-              <option value="100_KB" selected>100 KB</option>
-              <option value="500_KB">500 KB</option>
-            </optgroup>
-            <optgroup label="MB">
-              <option value="1_MB">1 MB</option>
-              <option value="5_MB">5 MB</option>
-              <option value="10_MB">10 MB</option>
-              <option value="50_MB">50 MB</option>
-              <option value="100_MB">100 MB</option>
-            </optgroup>
-            <optgroup label="GB">
-              <option value="1_GB">1 GB</option>
-            </optgroup>
-          </select>
-          <input class="size-num" type="number" id="sVal" value="100" min="1" placeholder="手入力">
+          <input class="size-num" type="number" id="sVal" value="100" min="1" placeholder="数値を入力">
           <div class="unit-group">
             <button class="ubtn on" data-u="KB" onclick="setUnit(this)">KB</button>
             <button class="ubtn" data-u="MB" onclick="setUnit(this)">MB</button>

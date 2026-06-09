@@ -12,14 +12,6 @@ document.querySelectorAll('.tog').forEach(b => {
 
 function setUnit(el) { document.querySelectorAll('.ubtn').forEach(x => x.classList.remove('on')); el.classList.add('on'); curUnit = el.dataset.u; }
 function setRange(el) { document.querySelectorAll('.rbtn').forEach(x => x.classList.remove('on')); el.classList.add('on'); curRange = el.dataset.r; }
-function applyPreset(el) {
-  const v = el.value; if (!v) return;
-  const [num, unit] = v.split('_');
-  document.getElementById('sVal').value = num;
-  document.querySelectorAll('.ubtn').forEach(x => x.classList.remove('on'));
-  document.querySelector(`.ubtn[data-u="${unit}"]`).classList.add('on');
-  curUnit = unit;
-}
 function chkMedia() {
   const n = document.getElementById('mnote');
   const ha = sel.has('audio'), hv = sel.has('video');
