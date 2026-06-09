@@ -105,7 +105,9 @@ function setSt(m, e = false) { stEl.textContent = m; stEl.className = 'status' +
 const tsS = () => new Date().toISOString().slice(0, 19).replace(/[T:]/g, '-');
 const lbl = t => t || 'TEST DATA';
 
-function mBin(b) { const a = new Uint8Array(b); crypto.getRandomValues(a); return new Blob([a], { type: 'application/octet-stream' }); }
+// crypto.getRandomValues の上限 65536 bytes/call を超えないよう分割する
+function fillRandom(arr) { for (let i = 0; i < arr.length; i += 65536) crypto.getRandomValues(arr.subarray(i, Math.min(i + 65536, arr.length))); }
+function mBin(b) { const a = new Uint8Array(b); fillRandom(a); return new Blob([a], { type: 'application/octet-stream' }); }
 function mPdf(b, t) { let s = `%PDF-1.4\n% ${lbl(t)} — BEETLE QA Tool\n1 0 obj\n<</Type/Catalog>>\nendobj\n`; while (s.length < b) s += '% ' + lbl(t) + ' ' + Math.random().toString(36) + '\n'; return new Blob([s.slice(0, b)], { type: 'application/pdf' }); }
 function mZip(b) { const a = new Uint8Array(b); a[0] = 0x50; a[1] = 0x4B; a[2] = 0x03; a[3] = 0x04; for (let i = 4; i < b; i++) a[i] = Math.floor(Math.random() * 256); return new Blob([a], { type: 'application/zip' }); }
 function mXlsx(b, t) { let s = `id,label,name,email,value,timestamp\n`; let i = 1; while (s.length < b) s += `${i++},${lbl(t)},テストユーザー${i},test${i}@example.com,${(Math.random() * 10000).toFixed(2)},${new Date().toISOString()}\n`; return new Blob([s.slice(0, b)], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }); }
@@ -117,7 +119,7 @@ function mCanvas(w, h, t) {
   // ランダムノイズ背景（圧縮を防いでサイズを目標値に近づける）
   const img = ctx.createImageData(w, h);
   const buf = new Uint8Array(img.data.buffer);
-  crypto.getRandomValues(buf);
+  fillRandom(buf);
   for (let i = 3; i < buf.length; i += 4) buf[i] = 255;
   ctx.putImageData(img, 0, 0);
   const fs = Math.max(12, Math.floor(h / 10));
@@ -156,7 +158,7 @@ function mPng(b, t) {
       const dv = new DataView(ck.buffer);
       dv.setUint32(0, dLen, false);
       ck.set([0x74, 0x45, 0x58, 0x74], 4);
-      crypto.getRandomValues(new Uint8Array(ck.buffer, 8, dLen));
+      fillRandom(new Uint8Array(ck.buffer, 8, dLen));
       const ci = new Uint8Array(4 + dLen); ci.set(ck.slice(4, 8 + dLen));
       dv.setUint32(8 + dLen, _crc(ci), false);
       r(new Blob([body, ck, iend], { type: 'image/png' }));
@@ -180,7 +182,7 @@ function mJpeg(b, t) {
         const com = new Uint8Array(4 + dLen);
         com[0] = 0xFF; com[1] = 0xFE;
         const ln = dLen + 2; com[2] = (ln >> 8) & 0xFF; com[3] = ln & 0xFF;
-        if (dLen > 0) crypto.getRandomValues(new Uint8Array(com.buffer, 4, dLen));
+        if (dLen > 0) fillRandom(new Uint8Array(com.buffer, 4, dLen));
         coms.push(com); needed -= (4 + dLen);
       }
       const parts = [src.slice(0, 2), ...coms, src.slice(2)];
