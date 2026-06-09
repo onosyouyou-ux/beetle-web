@@ -11,7 +11,7 @@ a{text-decoration:none;}
 
 /* Nav */
 .nav { border-bottom: 1px solid #ebebeb; position: sticky; top: 0; background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); z-index: 100; }
-.nav-inner { max-width: 860px; margin: 0 auto; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; }
+.nav-inner { max-width: 1232px; margin: 0 auto; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; }
 .logo a { display: flex; align-items: center; }
 .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; letter-spacing: 0.08em; color: #1c1c2e; text-decoration: none; }
 .nav-logo span { color: var(--color-accent); }
