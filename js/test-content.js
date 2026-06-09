@@ -134,12 +134,65 @@ function mCanvas(w, h, t) {
   ctx.fillText(new Date().toISOString(), w / 2, h * 0.5 + fs * 1.1);
   return c;
 }
-// PNG: ノイズはほぼ圧縮されない → 4 bytes/pixel で計算
-function mPng(b, t) { return new Promise(r => { const s = Math.max(0.05, Math.sqrt(b / (800 * 600 * 4))); const w = Math.round(800 * s), h = Math.round(600 * s); mCanvas(w, h, t).toBlob(blob => r(blob), 'image/png'); }); }
-// JPEG: q=1.0 ノイズで約2 bytes/pixel
-function mJpeg(b, t) { return new Promise(r => { const s = Math.max(0.05, Math.sqrt(b / (800 * 600 * 2))); const w = Math.round(800 * s), h = Math.round(600 * s); mCanvas(w, h, t).toBlob(blob => r(blob), 'image/jpeg', 1.0); }); }
-// GIF: ブラウザAPIではPNGデータで代用、ノイズで4 bytes/pixel
-function mGif(b, t) { return new Promise(r => { const s = Math.max(0.05, Math.sqrt(b / (800 * 600 * 4))); const w = Math.round(800 * s), h = Math.round(600 * s); mCanvas(w, h, t).toBlob(blob => r(blob), 'image/png'); }); }
+// CRC-32（PNG tEXt チャンクの検証用）
+const _ct = (() => { const t = new Uint32Array(256); for (let i = 0; i < 256; i++) { let c = i; for (let j = 0; j < 8; j++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[i] = c; } return t; })();
+function _crc(buf) { let c = 0xFFFFFFFF; for (let i = 0; i < buf.length; i++) c = (c >>> 8) ^ _ct[(c ^ buf[i]) & 0xFF]; return (c ^ 0xFFFFFFFF) >>> 0; }
+
+// PNG: 小さいcanvasを生成してtEXtチャンクで正確なサイズにパディング
+function mPng(b, t) {
+  return new Promise(r => {
+    const px = Math.min(Math.floor(b * 0.7 / 4), 200 * 150);
+    const sc = Math.sqrt(px / (200 * 150));
+    const w = Math.max(4, Math.round(200 * sc)), h = Math.max(4, Math.round(150 * sc));
+    mCanvas(w, h, t).toBlob(async blob => {
+      const src = new Uint8Array(await blob.arrayBuffer());
+      if (src.length >= b) { r(new Blob([src], { type: 'image/png' })); return; }
+      const needed = b - src.length;
+      if (needed < 12) { r(new Blob([src], { type: 'image/png' })); return; }
+      const dLen = needed - 12;
+      const body = src.slice(0, src.length - 12);
+      const iend = src.slice(src.length - 12);
+      const ck = new Uint8Array(12 + dLen);
+      const dv = new DataView(ck.buffer);
+      dv.setUint32(0, dLen, false);
+      ck.set([0x74, 0x45, 0x58, 0x74], 4);
+      crypto.getRandomValues(new Uint8Array(ck.buffer, 8, dLen));
+      const ci = new Uint8Array(4 + dLen); ci.set(ck.slice(4, 8 + dLen));
+      dv.setUint32(8 + dLen, _crc(ci), false);
+      r(new Blob([body, ck, iend], { type: 'image/png' }));
+    }, 'image/png');
+  });
+}
+
+// JPEG: 小さいcanvasを生成してCOMマーカーで正確なサイズにパディング
+function mJpeg(b, t) {
+  return new Promise(r => {
+    const px = Math.min(Math.floor(b * 0.5 / 4), 200 * 150);
+    const sc = Math.sqrt(px / (200 * 150));
+    const w = Math.max(4, Math.round(200 * sc)), h = Math.max(4, Math.round(150 * sc));
+    mCanvas(w, h, t).toBlob(async blob => {
+      const src = new Uint8Array(await blob.arrayBuffer());
+      let needed = b - src.length;
+      if (needed <= 0) { r(new Blob([src], { type: 'image/jpeg' })); return; }
+      const coms = [];
+      while (needed >= 4) {
+        const dLen = Math.min(needed - 4, 65533);
+        const com = new Uint8Array(4 + dLen);
+        com[0] = 0xFF; com[1] = 0xFE;
+        const ln = dLen + 2; com[2] = (ln >> 8) & 0xFF; com[3] = ln & 0xFF;
+        if (dLen > 0) crypto.getRandomValues(new Uint8Array(com.buffer, 4, dLen));
+        coms.push(com); needed -= (4 + dLen);
+      }
+      const parts = [src.slice(0, 2), ...coms, src.slice(2)];
+      const out = new Uint8Array(parts.reduce((s, p) => s + p.length, 0));
+      let off = 0; for (const p of parts) { out.set(p, off); off += p.length; }
+      r(new Blob([out], { type: 'image/jpeg' }));
+    }, 'image/jpeg', 0.85);
+  });
+}
+
+// GIF: ブラウザAPIではPNGデータで代用（同じパディング処理）
+function mGif(b, t) { return mPng(b, t).then(blob => new Blob([blob], { type: 'image/gif' })); }
 function mAudio() { return new Promise((res, rej) => { if (!('speechSynthesis' in window)) { rej(new Error('TTSに対応していません')); return; } const ctx = new (window.AudioContext || window.webkitAudioContext)(); const dest = ctx.createMediaStreamDestination(); const rec = new MediaRecorder(dest.stream, { mimeType: 'audio/webm' }); const chunks = []; rec.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); }; rec.onstop = () => { ctx.close(); res(new Blob(chunks, { type: 'audio/webm' })); }; rec.start(); const osc = ctx.createOscillator(); osc.frequency.value = 440; osc.connect(dest); osc.start(); const u = new SpeechSynthesisUtterance('これはテストです。本日は晴天なり。これはテストです。'); u.lang = 'ja-JP'; u.rate = 0.9; u.onend = () => { osc.stop(); rec.stop(); }; u.onerror = () => { osc.stop(); rec.stop(); }; setTimeout(() => speechSynthesis.speak(u), 200); }); }
 function mVideo() { return new Promise(res => { const w = 640, h = 360; const canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h; const ctx = canvas.getContext('2d'); const stream = canvas.captureStream(15); const rec = new MediaRecorder(stream, { mimeType: 'video/webm' }); const chunks = []; rec.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); }; rec.onstop = () => res(new Blob(chunks, { type: 'video/webm' })); rec.start(); const dur = 5000; const start = Date.now(); const txt = document.getElementById('fileText').value || 'TEST DATA'; function draw() { const el = Date.now() - start; if (el > dur) { rec.stop(); return; } ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, w, h); for (let i = 0; i < 40; i++) { ctx.fillStyle = `rgba(${Math.random() * 60},${Math.random() * 60},${Math.random() * 60},0.7)`; const x = Math.floor(Math.random() * w / 4) * 4; const y = Math.floor(Math.random() * h / 4) * 4; ctx.fillRect(x, y, 4, 4); } ctx.fillStyle = '#C0634C'; ctx.font = 'bold 48px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(txt, w / 2, h / 2 - 20); ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '20px sans-serif'; ctx.fillText('BEETLE QA Tool', w / 2, h / 2 + 18); ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = '13px monospace'; ctx.fillText(new Date().toISOString(), w / 2, h / 2 + 46); requestAnimationFrame(draw); } draw(); setTimeout(() => { if (rec.state !== 'inactive') rec.stop(); }, dur + 500); }); }
 
@@ -176,10 +229,10 @@ async function generate() {
       for (let i = 0; i < fmts.length; i++) {
         setSt(`生成中… ${i + 1}/${fmts.length} (${fmts[i]})`);
         const [blob, ext] = await build(fmts[i], bytes, t);
-        zip.file(`${getFT()}_${getSzLabel()}.${ext}`, blob);
+        zip.file(`${getFT()}_${getSzLabel()}.${ext}`, blob, { compression: 'STORE' });
       }
       setSt('ZIPを作成中…');
-      const zb = await zip.generateAsync({ type: 'blob' });
+      const zb = await zip.generateAsync({ type: 'blob', compression: 'STORE' });
       dl(zb, `${getFT()}_${getSzLabel()}_${tsS()}.zip`);
       setSt(`完了 — ZIP（${(zb.size / 1024).toFixed(1)} KB）`);
     }
