@@ -110,8 +110,41 @@ function fillRandom(arr) { for (let i = 0; i < arr.length; i += 65536) crypto.ge
 function mBin(b) { const a = new Uint8Array(b); fillRandom(a); return new Blob([a], { type: 'application/octet-stream' }); }
 function mPdf(b, t) { const enc = new TextEncoder(); const h = enc.encode(`%PDF-1.4\n% ${lbl(t)} - BEETLE QA Tool\n1 0 obj\n<</Type/Catalog>>\nendobj\n`); const cs = [h]; let n = h.length; while (n < b) { const c = enc.encode('% ' + lbl(t) + ' ' + Math.random().toString(36) + '\n'); cs.push(c); n += c.length; } const a = new Uint8Array(n); let o = 0; for (const c of cs) { a.set(c, o); o += c.length; } return new Blob([a.slice(0, b)], { type: 'application/pdf' }); }
 function mZip(b) { const a = new Uint8Array(b); a[0] = 0x50; a[1] = 0x4B; a[2] = 0x03; a[3] = 0x04; for (let i = 4; i < b; i++) a[i] = Math.floor(Math.random() * 256); return new Blob([a], { type: 'application/zip' }); }
-function mXlsx(b, t) { const enc = new TextEncoder(); const h = enc.encode(`id,label,name,email,value,timestamp\n`); const cs = [h]; let n = h.length, i = 1; while (n < b) { const c = enc.encode(`${i},${lbl(t)},user${i},test${i}@example.com,${(Math.random() * 10000).toFixed(2)},${new Date().toISOString()}\n`); cs.push(c); n += c.length; i++; } const a = new Uint8Array(n); let o = 0; for (const c of cs) { a.set(c, o); o += c.length; } return new Blob([a.slice(0, b)], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }); }
-function mDocx(b, t) { const enc = new TextEncoder(); const h = enc.encode(`<?xml version="1.0" encoding="UTF-8"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>`); const cs = [h]; let n = h.length, i = 1; while (n < b) { const c = enc.encode(`<w:p><w:r><w:t>${lbl(t)} ${i++}: ${Math.random().toFixed(6)}</w:t></w:r></w:p>\n`); cs.push(c); n += c.length; } const a = new Uint8Array(n); let o = 0; for (const c of cs) { a.set(c, o); o += c.length; } return new Blob([a.slice(0, b)], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }); }
+async function mXlsx(b, t) {
+  const enc = new TextEncoder(); const P = 'http://schemas.openxmlformats.org/package/2006'; const O = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'; const X = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+  const ct = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="${P}/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`;
+  const rl = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="${P}/relationships"><Relationship Id="rId1" Type="${O}/officeDocument" Target="xl/workbook.xml"/></Relationships>`;
+  const wb = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="${X}" xmlns:r="${O}"><sheets><sheet name="Sheet1" sheetId="1" r:id="rId1"/></sheets></workbook>`;
+  const wbr = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="${P}/relationships"><Relationship Id="rId1" Type="${O}/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="${O}/styles" Target="styles.xml"/></Relationships>`;
+  const st = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="${X}"><fonts><font><sz val="11"/><name val="Calibri"/></font></fonts><fills><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs></styleSheet>`;
+  const shHdr = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="${X}"><sheetData>`;
+  const shFtr = '</sheetData></worksheet>';
+  const lb = lbl(t);
+  const h0 = `<row r="1"><c r="A1" t="inlineStr"><is><t>id</t></is></c><c r="B1" t="inlineStr"><is><t>${lb}</t></is></c><c r="C1" t="inlineStr"><is><t>value</t></is></c><c r="D1" t="inlineStr"><is><t>timestamp</t></is></c></row>`;
+  const fixed = [ct,rl,wb,wbr,st,shHdr,h0,shFtr].reduce((s,x)=>s+enc.encode(x).length,0)+700;
+  const rows = [h0]; let rb = enc.encode(h0).length; const tgt = b-fixed+rb;
+  for (let i=2; rb<tgt; i++) { const r=`<row r="${i}"><c r="A${i}"><v>${i-1}</v></c><c r="B${i}" t="inlineStr"><is><t>${lb}</t></is></c><c r="C${i}"><v>${(Math.random()*10000).toFixed(2)}</v></c><c r="D${i}" t="inlineStr"><is><t>${new Date().toISOString()}</t></is></c></row>`; rows.push(r); rb+=enc.encode(r).length; }
+  const zip=new JSZip();
+  zip.file('[Content_Types].xml',ct,{compression:'STORE'}); zip.file('_rels/.rels',rl,{compression:'STORE'}); zip.file('xl/workbook.xml',wb,{compression:'STORE'}); zip.file('xl/_rels/workbook.xml.rels',wbr,{compression:'STORE'}); zip.file('xl/styles.xml',st,{compression:'STORE'}); zip.file('xl/worksheets/sheet1.xml',shHdr+rows.join('')+shFtr,{compression:'STORE'});
+  return zip.generateAsync({type:'blob',compression:'STORE'});
+}
+async function mDocx(b, t) {
+  const enc = new TextEncoder(); const P = 'http://schemas.openxmlformats.org/package/2006'; const O = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'; const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+  const ct = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="${P}/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>`;
+  const rl = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="${P}/relationships"><Relationship Id="rId1" Type="${O}/officeDocument" Target="word/document.xml"/></Relationships>`;
+  const wdrl = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="${P}/relationships"><Relationship Id="rId1" Type="${O}/styles" Target="styles.xml"/></Relationships>`;
+  const st = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="${W}"><w:style w:type="paragraph" w:styleId="Normal"><w:name w:val="Normal"/></w:style></w:styles>`;
+  const dHdr = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="${W}"><w:body>`;
+  const dFtr = '<w:sectPr/></w:body></w:document>';
+  const lb = lbl(t);
+  const p0 = `<w:p><w:r><w:rPr><w:b/></w:rPr><w:t>${lb} - BEETLE QA Tool</w:t></w:r></w:p>`;
+  const fixed = [ct,rl,wdrl,st,dHdr,p0,dFtr].reduce((s,x)=>s+enc.encode(x).length,0)+600;
+  const paras = [p0]; let pb = enc.encode(p0).length; const tgt = b-fixed+pb;
+  for (let i=1; pb<tgt; i++) { const p=`<w:p><w:r><w:t>${lb} ${i}: ${Math.random().toFixed(8)}</w:t></w:r></w:p>`; paras.push(p); pb+=enc.encode(p).length; }
+  const zip=new JSZip();
+  zip.file('[Content_Types].xml',ct,{compression:'STORE'}); zip.file('_rels/.rels',rl,{compression:'STORE'}); zip.file('word/document.xml',dHdr+paras.join('')+dFtr,{compression:'STORE'}); zip.file('word/_rels/document.xml.rels',wdrl,{compression:'STORE'}); zip.file('word/styles.xml',st,{compression:'STORE'});
+  return zip.generateAsync({type:'blob',compression:'STORE'});
+}
 function mSvg(t) { return new Blob([`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"><rect width="800" height="600" fill="#1c1c2e"/><rect x="20" y="20" width="760" height="560" fill="none" stroke="#C0634C" stroke-width="3"/><text x="400" y="265" text-anchor="middle" font-size="48" font-weight="bold" fill="#C0634C" font-family="sans-serif">${lbl(t)}</text><text x="400" y="318" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.7)" font-family="sans-serif">BEETLE QA Tool</text><text x="400" y="355" text-anchor="middle" font-size="13" fill="rgba(255,255,255,0.4)" font-family="monospace">${new Date().toISOString()}</text></svg>`], { type: 'image/svg+xml' }); }
 function mCanvas(w, h, t) {
   const c = document.createElement('canvas'); c.width = w; c.height = h;
@@ -204,8 +237,8 @@ async function build(fmt, bytes, t) {
     case 'jpeg': return [await mJpeg(bytes, t), 'jpg'];
     case 'svg': return [mSvg(t), 'svg'];
     case 'gif': return [await mGif(bytes, t), 'gif'];
-    case 'xlsx': return [mXlsx(bytes, t), 'xlsx'];
-    case 'docx': return [mDocx(bytes, t), 'docx'];
+    case 'xlsx': return [await mXlsx(bytes, t), 'xlsx'];
+    case 'docx': return [await mDocx(bytes, t), 'docx'];
     case 'pdf_d': return [mPdf(bytes, t), 'pdf'];
     case 'zip_d': return [mZip(bytes), 'zip'];
     case 'bin': return [mBin(bytes), 'bin'];
