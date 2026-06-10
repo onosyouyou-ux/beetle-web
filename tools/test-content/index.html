@@ -24,7 +24,7 @@
     <div class="page-header-title">テストコンテンツ作成ツール <span class="wip-badge">調整中</span></div>
     <div class="page-header-desc">テスト用のコンテンツ作成、めんどくさい。タイトルと容量・拡張子を選んでワンクリック。複数ファイルも一括作成できます。</div>
     <div class="page-header-metrics">
-      <div class="phm-item"><div class="phm-num">18</div><div class="phm-label">対応形式</div></div>
+      <div class="phm-item"><div class="phm-num">20</div><div class="phm-label">対応形式</div></div>
       <div class="phm-item"><div class="phm-num">0</div><div class="phm-label">サーバー通信</div></div>
       <div class="phm-item"><div class="phm-num">∞</div><div class="phm-label">生成回数</div></div>
     </div>
@@ -73,6 +73,13 @@
         <button class="tog" data-v="pdf_d">PDF</button>
         <button class="tog" data-v="bin">BIN</button>
         <button class="tog" data-v="zip_d">ZIP</button>
+      </div>
+    </div>
+    <div class="fmt-section">
+      <div class="fmt-section-label">テキスト</div>
+      <div class="btn-group">
+        <button class="tog" data-v="txt">TXT</button>
+        <button class="tog" data-v="csv">CSV</button>
       </div>
     </div>
     <div class="fmt-section">
@@ -127,6 +134,8 @@
         <div class="sec-block"><p class="sec-head">Excel</p><div class="sgrid" id="xlsx-grid"></div></div>
         <div class="sec-block"><p class="sec-head">Word</p><div class="sgrid" id="docx-grid"></div></div>
         <div class="sec-block"><p class="sec-head">PDF</p><div class="sgrid" id="pdf-grid"></div></div>
+        <div class="sec-block"><p class="sec-head">TXT</p><div class="sgrid" id="txt-grid"></div></div>
+        <div class="sec-block"><p class="sec-head">CSV</p><div class="sgrid" id="csv-grid"></div></div>
       </div>
 
       <div id="panel-video" class="panel">

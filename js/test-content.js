@@ -58,6 +58,8 @@ makeGrid('gif-grid', 'gif', 'gif');
 makeGrid('xlsx-grid', 'xlsx', 'xlsx');
 makeGrid('docx-grid', 'docx', 'docx');
 makeGrid('pdf-grid', 'pdf_d', 'pdf');
+makeGrid('txt-grid', 'txt', 'txt');
+makeGrid('csv-grid', 'csv', 'csv');
 
 const mp4g = document.getElementById('mp4-grid');
 dummyVideoFmts.forEach(fmt => {
@@ -137,6 +139,28 @@ async function mDocx(b, t) {
   const zip=new JSZip();
   zip.file('[Content_Types].xml',ct,{compression:'STORE'}); zip.file('_rels/.rels',rl,{compression:'STORE'}); zip.file('word/document.xml',dHdr+paras.join('')+dFtr,{compression:'STORE'}); zip.file('word/_rels/document.xml.rels',wdrl,{compression:'STORE'}); zip.file('word/styles.xml',st,{compression:'STORE'});
   return zip.generateAsync({type:'blob',compression:'STORE'});
+}
+function mTxt(b, t) {
+  const enc = new TextEncoder();
+  const lb = lbl(t);
+  const hdr = enc.encode(`${lb} - BEETLE QA Tool\n${new Date().toISOString()}\n${'='.repeat(40)}\n\n`);
+  if (b <= hdr.length) return new Blob([hdr.slice(0, b)], { type: 'text/plain' });
+  const parts = [hdr]; let total = hdr.length;
+  for (let i = 1; total < b; i++) { const r = enc.encode(`Line ${i}: ${lb} ${(Math.random()*99999).toFixed(2)} ${Math.random().toString(36).slice(2)}\n`); parts.push(r); total += r.length; }
+  const out = new Uint8Array(b); let off = 0;
+  for (const p of parts) { const c = p.slice(0, Math.min(p.length, b - off)); out.set(c, off); off += c.length; if (off >= b) break; }
+  return new Blob([out], { type: 'text/plain' });
+}
+function mCsv(b, t) {
+  const enc = new TextEncoder();
+  const lb = lbl(t);
+  const hdr = enc.encode(`id,name,value,timestamp\n`);
+  if (b <= hdr.length) return new Blob([hdr.slice(0, b)], { type: 'text/csv' });
+  const parts = [hdr]; let total = hdr.length;
+  for (let i = 1; total < b; i++) { const r = enc.encode(`${i},${lb},${(Math.random()*10000).toFixed(2)},${new Date().toISOString()}\n`); parts.push(r); total += r.length; }
+  const out = new Uint8Array(b); let off = 0;
+  for (const p of parts) { const c = p.slice(0, Math.min(p.length, b - off)); out.set(c, off); off += c.length; if (off >= b) break; }
+  return new Blob([out], { type: 'text/csv' });
 }
 function mSvg(b, t) {
   const enc = new TextEncoder();
@@ -247,6 +271,8 @@ async function build(fmt, bytes, t) {
     case 'xlsx': return [await mXlsx(bytes, t), 'xlsx'];
     case 'docx': return [await mDocx(bytes, t), 'docx'];
     case 'pdf_d': return [mPdf(bytes, t), 'pdf'];
+    case 'txt': return [mTxt(bytes, t), 'txt'];
+    case 'csv': return [mCsv(bytes, t), 'csv'];
     case 'zip_d': return [mZip(bytes), 'zip'];
     case 'bin': return [mBin(bytes), 'bin'];
     case 'audio': return [await mAudio(), 'webm'];
