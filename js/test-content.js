@@ -53,6 +53,7 @@ function makeGrid(gridId, fmt, ext, isDummy = false) {
 
 makeGrid('png-grid', 'png', 'png');
 makeGrid('jpeg-grid', 'jpeg', 'jpg');
+makeGrid('svg-grid', 'svg', 'svg');
 makeGrid('gif-grid', 'gif', 'gif');
 makeGrid('xlsx-grid', 'xlsx', 'xlsx');
 makeGrid('docx-grid', 'docx', 'docx');
@@ -137,7 +138,21 @@ async function mDocx(b, t) {
   zip.file('[Content_Types].xml',ct,{compression:'STORE'}); zip.file('_rels/.rels',rl,{compression:'STORE'}); zip.file('word/document.xml',dHdr+paras.join('')+dFtr,{compression:'STORE'}); zip.file('word/_rels/document.xml.rels',wdrl,{compression:'STORE'}); zip.file('word/styles.xml',st,{compression:'STORE'});
   return zip.generateAsync({type:'blob',compression:'STORE'});
 }
-function mSvg(t) { return new Blob([`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"><rect width="800" height="600" fill="#1c1c2e"/><rect x="20" y="20" width="760" height="560" fill="none" stroke="#C0634C" stroke-width="3"/><text x="400" y="265" text-anchor="middle" font-size="48" font-weight="bold" fill="#C0634C" font-family="sans-serif">${lbl(t)}</text><text x="400" y="318" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.7)" font-family="sans-serif">BEETLE QA Tool</text><text x="400" y="355" text-anchor="middle" font-size="13" fill="rgba(255,255,255,0.4)" font-family="monospace">${new Date().toISOString()}</text></svg>`], { type: 'image/svg+xml' }); }
+function mSvg(b, t) {
+  const enc = new TextEncoder();
+  const base = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"><rect width="800" height="600" fill="#1c1c2e"/><rect x="20" y="20" width="760" height="560" fill="none" stroke="#C0634C" stroke-width="3"/><text x="400" y="265" text-anchor="middle" font-size="48" font-weight="bold" fill="#C0634C" font-family="sans-serif">${lbl(t)}</text><text x="400" y="318" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.7)" font-family="sans-serif">BEETLE QA Tool</text><text x="400" y="355" text-anchor="middle" font-size="13" fill="rgba(255,255,255,0.4)" font-family="monospace">${new Date().toISOString()}</text>`;
+  const close = '</svg>';
+  const baseLen = enc.encode(base + close).length;
+  if (b <= baseLen + 7) return new Blob([base + close], { type: 'image/svg+xml' });
+  const padLen = b - baseLen - 7;
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  const rnd = new Uint8Array(padLen);
+  crypto.getRandomValues(rnd);
+  let pad = '<!--';
+  for (let i = 0; i < padLen; i++) pad += chars[rnd[i] & 63];
+  pad += '-->';
+  return new Blob([base + pad + close], { type: 'image/svg+xml' });
+}
 function mCanvas(w, h, t) {
   const c = document.createElement('canvas'); c.width = w; c.height = h;
   const ctx = c.getContext('2d');
@@ -227,7 +242,7 @@ async function build(fmt, bytes, t) {
   switch (fmt) {
     case 'png': return [await mPng(bytes, t), 'png'];
     case 'jpeg': return [await mJpeg(bytes, t), 'jpg'];
-    case 'svg': return [mSvg(t), 'svg'];
+    case 'svg': return [mSvg(bytes, t), 'svg'];
     case 'gif': return [await mGif(bytes, t), 'gif'];
     case 'xlsx': return [await mXlsx(bytes, t), 'xlsx'];
     case 'docx': return [await mDocx(bytes, t), 'docx'];

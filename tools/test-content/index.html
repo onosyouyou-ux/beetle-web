@@ -109,33 +109,23 @@
       <p class="sample-note">クリックするとその場でファイルを生成してダウンロードします。音声・動画（WebM）は約5秒かかります。</p>
     </div>
     <div class="tab-bar" id="tabBar">
-      <button class="tab on" data-tab="image" onclick="swTab(this)">画像</button>
-      <button class="tab" data-tab="excel" onclick="swTab(this)">Excel</button>
-      <button class="tab" data-tab="word" onclick="swTab(this)">Word</button>
-      <button class="tab" data-tab="pdf" onclick="swTab(this)">PDF</button>
-      <button class="tab" data-tab="video" onclick="swTab(this)">動画</button>
-      <button class="tab" data-tab="audio" onclick="swTab(this)">音声</button>
+      <button class="tab on" data-tab="image" onclick="swTab(this)">画像系</button>
+      <button class="tab" data-tab="office" onclick="swTab(this)">Office系</button>
+      <button class="tab" data-tab="video" onclick="swTab(this)">動画系</button>
+      <button class="tab" data-tab="audio" onclick="swTab(this)">音声系</button>
     </div>
     <div class="panel-body">
 
       <div id="panel-image" class="panel on">
         <div class="sec-block"><p class="sec-head">PNG</p><div class="sgrid" id="png-grid"></div></div>
         <div class="sec-block"><p class="sec-head">JPEG</p><div class="sgrid" id="jpeg-grid"></div></div>
-        <div class="sec-block"><p class="sec-head">SVG</p><div class="sgrid">
-          <div class="sc" onclick="dlS(this,'svg','fixed',2048)"><div class="sc-ext">svg</div><div class="sc-sz">〜 2 KB</div></div>
-        </div></div>
+        <div class="sec-block"><p class="sec-head">SVG</p><div class="sgrid" id="svg-grid"></div></div>
         <div class="sec-block"><p class="sec-head">GIF</p><div class="sgrid" id="gif-grid"></div></div>
       </div>
 
-      <div id="panel-excel" class="panel">
+      <div id="panel-office" class="panel">
         <div class="sec-block"><p class="sec-head">Excel</p><div class="sgrid" id="xlsx-grid"></div></div>
-      </div>
-
-      <div id="panel-word" class="panel">
         <div class="sec-block"><p class="sec-head">Word</p><div class="sgrid" id="docx-grid"></div></div>
-      </div>
-
-      <div id="panel-pdf" class="panel">
         <div class="sec-block"><p class="sec-head">PDF</p><div class="sgrid" id="pdf-grid"></div></div>
       </div>
 
