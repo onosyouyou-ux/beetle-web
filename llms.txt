@@ -1,0 +1,34 @@
+# BEETLE合同会社
+
+> ソフトウェアテスト・QA支援・品質保証を専門とする会社。スタートアップを中心にテスト設計・テスト実行・バグ起票・品質評価を支援する。沖縄県糸満市拠点。法人番号: 6360003013461
+
+## 会社情報
+
+- 会社名: BEETLE合同会社（ビートル）
+- URL: https://www.beetle-web.jp/
+- 所在地: 沖縄県糸満市字大度309番地の30
+- 専門: ソフトウェアテスト、品質保証（QA）、テスト設計、バグ起票
+- 対象: スタートアップ・中小企業のQA支援
+- 代表: 小野礁洋（QAエンジニア・自衛隊・建築営業を経てQA転身）
+- X（旧Twitter）: https://x.com/BEETLE1101
+- note: https://note.com/kakikata_hazime
+- Facebook: https://www.facebook.com/profile.php?id=61590759595243
+- お問い合わせ: info@beetle-web.jp
+
+## 提供ツール（すべて無料・登録不要）
+
+- [テストコンテンツ作成ツール](https://www.beetle-web.jp/tools/test-content/): テスト用ファイル（PNG・JPEG・SVG・PDF・Excel・Word・TXT・CSVなど20形式）を指定サイズでブラウザ上で即生成。サーバー送信なし。
+- [TESTパターン集](https://www.beetle-web.jp/tools/test-patterns/): 単体・結合・シナリオの3カテゴリ、100超のテスト観点をまとめたQAリファレンス。テストケース設計の出発点として活用できる。
+- [えいごよんで！](https://www.beetle-web.jp/tools/eigo/): 英単語・英文を入力するだけでネイティブ発音をブラウザ上で確認できる無料ツール。写真からの単語取り込みにも対応。
+- [AIバグ確認ツール「これってバグなの？」](https://www.beetle-web.jp/tools/bug-checker/landing.html): スクショを貼るだけでAIがバグか仕様か判定し、起票内容（タイトル・再現手順・期待値・実際の動作）を自動生成する。
+
+## コラム一覧
+
+- [スタートアップのQAって、何から始めたらいいんだろう](https://www.beetle-web.jp/blog/posts/startup-qa.html): 仕様書も設計書もない現場でQAを任されたときの最初の一手。
+- [AIにバグの状況を説明したら、再現手順まで書いてくれた話](https://www.beetle-web.jp/blog/posts/ai-bug-report.html): スクショ1枚でAIがバグ再現手順を書いてくれた実体験。
+- [「これってバグですか？」を1000回言わなくて済む環境を作りたかった](https://www.beetle-web.jp/blog/posts/bug-or-not.html): バグ判定AIツール開発の経緯とリリースの話。
+- [テストパターン集をつくった](https://www.beetle-web.jp/blog/posts/test-patterns.html): 結合テスト・シナリオテストの書き方がわからない人向けにパターン集を作った話。
+- [AIは武器か、平均点製造機か。](https://www.beetle-web.jp/blog/posts/ai-instruction.html): AIの指示の質が出力の質を決める、というエッセイ。
+- [Claude：A氏、Claude：B氏、Claude：C氏](https://www.beetle-web.jp/blog/posts/claude-abc.html): AIの一貫性のなさと、うまく付き合うためのヒント。
+- [この話は、誰に語り継がれるのだろうか](https://www.beetle-web.jp/blog/posts/sarukani.html): さるかに合戦から考える、仕事と情報の非対称性。
+- [ボールのキャッチは下手でいい](https://www.beetle-web.jp/blog/posts/catch-ball.html): 手を挙げることと、ボールを受け取ることの意味。
