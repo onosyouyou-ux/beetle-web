@@ -83,3 +83,10 @@
   .post-h1{font-size:22px;}
   .post-features{grid-template-columns:1fr;}
 }
+
+/* Related posts */
+.post-related{margin-top:48px;padding-top:32px;border-top:1px solid #ebebeb;}
+.post-related-title{font-size:11px;font-weight:700;color:var(--color-accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;}
+.post-related-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;}
+.post-related-list a{font-size:14px;color:#333;text-decoration:none;line-height:1.6;}
+.post-related-list a:hover{color:var(--color-accent);}
