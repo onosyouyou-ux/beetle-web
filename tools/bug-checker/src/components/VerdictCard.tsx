@@ -5,7 +5,7 @@ import TicketCard from './TicketCard';
 import type { ScanResult, Ticket } from '@/lib/claude';
 
 export default function VerdictCard({ result }: { result: ScanResult & { remaining: number } }) {
-  const { verdict, reason, ticket } = result;
+  const { verdict, reason, tickets } = result;
 
   return (
     <div className="mt-5">
@@ -39,7 +39,16 @@ export default function VerdictCard({ result }: { result: ScanResult & { remaini
         </div>
       )}
 
-      {verdict === 'bug' && ticket && <TicketCard ticket={ticket as Ticket} />}
+      {verdict === 'bug' && tickets && tickets.length > 0 && (
+        <>
+          {tickets.length > 1 && (
+            <div className="text-[11px] text-[#a32d2d] font-semibold mt-4 mb-1">
+              {tickets.length}件のバグが検出されました
+            </div>
+          )}
+          {tickets.map((t: Ticket) => <TicketCard key={t.id} ticket={t} />)}
+        </>
+      )}
     </div>
   );
 }

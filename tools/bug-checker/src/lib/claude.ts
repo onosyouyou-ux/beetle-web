@@ -8,21 +8,24 @@ function getClient(): Anthropic {
 
 const SYSTEM_PROMPT = `あなたはソフトウェアQAの専門家です。アップロードされた画像を見て、バグ・不具合かどうかを判断してください。
 以下のJSON形式のみで回答してください。他のテキストは一切含めないでください。
-verdict が "not_bug" または "unclear" の場合、ticket は null にしてください。
+画像に複数のバグがある場合は、tickets配列にすべて列挙してください。
+verdict が "not_bug" または "unclear" の場合、tickets は空配列 [] にしてください。
 
 {
   "verdict": "bug" | "not_bug" | "unclear",
   "reason": "判定理由（日本語・2〜3文）",
-  "ticket": {
-    "title": "バグタイトル",
-    "severity": "Critical" | "High" | "Medium" | "Low",
-    "category": "UI" | "API" | "Performance" | "Logic" | "Security",
-    "description": "詳細説明",
-    "steps": ["手順1", "手順2", "手順3"],
-    "expected": "期待する動作",
-    "actual": "実際の動作",
-    "env": "環境情報（画像から推測）"
-  } | null
+  "tickets": [
+    {
+      "title": "バグタイトル",
+      "severity": "Critical" | "High" | "Medium" | "Low",
+      "category": "UI" | "API" | "Performance" | "Logic" | "Security",
+      "description": "詳細説明",
+      "steps": ["手順1", "手順2", "手順3"],
+      "expected": "期待する動作",
+      "actual": "実際の動作",
+      "env": "環境情報（画像から推測）"
+    }
+  ]
 }`;
 
 export interface Ticket {
@@ -40,7 +43,7 @@ export interface Ticket {
 export interface ScanResult {
   verdict: 'bug' | 'not_bug' | 'unclear';
   reason: string;
-  ticket: Ticket | null;
+  tickets: Ticket[];
 }
 
 export async function scanImage(base64: string, mimeType: string, note?: string): Promise<ScanResult> {
@@ -76,9 +79,10 @@ export async function scanImage(base64: string, mimeType: string, note?: string)
   const jsonText = content.text.replace(/```json\n?|\n?```/g, '').trim();
   const result = JSON.parse(jsonText) as ScanResult;
 
-  if (result.ticket) {
-    result.ticket.id = `BUG-${Math.floor(1000 + Math.random() * 9000)}`;
-  }
+  if (!Array.isArray(result.tickets)) result.tickets = [];
+  result.tickets.forEach(t => {
+    t.id = `BUG-${Math.floor(1000 + Math.random() * 9000)}`;
+  });
 
   return result;
 }
