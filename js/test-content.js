@@ -103,7 +103,29 @@ const lbl = t => t || 'TEST DATA';
 // crypto.getRandomValues の上限 65536 bytes/call を超えないよう分割する
 function fillRandom(arr) { for (let i = 0; i < arr.length; i += 65536) crypto.getRandomValues(arr.subarray(i, Math.min(i + 65536, arr.length))); }
 function mBin(b) { const a = new Uint8Array(b); fillRandom(a); return new Blob([a], { type: 'application/octet-stream' }); }
-function mPdf(b, t) { const enc = new TextEncoder(); const h = enc.encode(`%PDF-1.4\n% ${lbl(t)} - BEETLE QA Tool\n1 0 obj\n<</Type/Catalog>>\nendobj\n`); const cs = [h]; let n = h.length; while (n < b) { const c = enc.encode('% ' + lbl(t) + ' ' + Math.random().toString(36) + '\n'); cs.push(c); n += c.length; } const a = new Uint8Array(n); let o = 0; for (const c of cs) { a.set(c, o); o += c.length; } return new Blob([a.slice(0, b)], { type: 'application/pdf' }); }
+function mPdf(b, t) {
+  const enc = new TextEncoder();
+  const ts = new Date().toISOString();
+  const cStr = `BT\n/F1 18 Tf\n50 748 Td\n(BEETLE QA Tool) Tj\n0 -26 Td\n/F1 11 Tf\n(${ts}) Tj\nET`;
+  const cLen = enc.encode(cStr).length;
+  const hdr = `%PDF-1.4\n% ${lbl(t)}\n`;
+  const o1 = '1 0 obj\n<</Type /Catalog /Pages 2 0 R>>\nendobj\n';
+  const o2 = '2 0 obj\n<</Type /Pages /Kids [3 0 R] /Count 1>>\nendobj\n';
+  const o3 = '3 0 obj\n<</Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources <</Font <</F1 5 0 R>>>>>>\nendobj\n';
+  const o4 = `4 0 obj\n<</Length ${cLen}>>\nstream\n${cStr}\nendstream\nendobj\n`;
+  const o5 = '5 0 obj\n<</Type /Font /Subtype /Type1 /BaseFont /Helvetica>>\nendobj\n';
+  const objs = [o1, o2, o3, o4, o5];
+  let pos = enc.encode(hdr).length;
+  const offs = [];
+  for (const o of objs) { offs.push(pos); pos += enc.encode(o).length; }
+  const xref = `xref\n0 6\n0000000000 65535 f \n${offs.map(p => p.toString().padStart(10,'0') + ' 00000 n \n').join('')}trailer\n<</Size 6 /Root 1 0 R>>\nstartxref\n${pos}\n%%EOF\n`;
+  const validParts = [hdr, ...objs, xref];
+  const validSize = pos + enc.encode(xref).length;
+  if (b <= validSize) return new Blob(validParts, { type: 'application/pdf' });
+  const pad = new Uint8Array(b - validSize);
+  fillRandom(pad);
+  return new Blob([...validParts, pad], { type: 'application/pdf' });
+}
 function mZip(b) { const a = new Uint8Array(b); a[0] = 0x50; a[1] = 0x4B; a[2] = 0x03; a[3] = 0x04; for (let i = 4; i < b; i++) a[i] = Math.floor(Math.random() * 256); return new Blob([a], { type: 'application/zip' }); }
 async function mXlsx(b, t) {
   const enc = new TextEncoder(); const P = 'http://schemas.openxmlformats.org/package/2006'; const O = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'; const X = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
