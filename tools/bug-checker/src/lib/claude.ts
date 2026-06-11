@@ -6,9 +6,15 @@ function getClient(): Anthropic {
   return _client;
 }
 
-const SYSTEM_PROMPT = `あなたはソフトウェアQAの専門家です。アップロードされた画像を見て、バグ・不具合かどうかを判断してください。
+const SYSTEM_PROMPT = `あなたはソフトウェアQAの専門家です。アップロードされた画像を見て、画面上に存在するバグ・不具合をすべて列挙してください。
+
+【重要ルール】
+- 画面上で視認できる問題は、根本原因が同じでも「別々の症状」として1件ずつ別チケットに起こす
+- ナビゲーション・ヘッダー・コンテンツエリア・レイアウト・テキスト・ボタン・空白など、画面の各パーツを個別にチェックする
+- 「根本原因が同じだから1件にまとめる」はしない。見えている問題はすべて出す
+- バグが1件もない場合のみ verdict を "not_bug" にする
+
 以下のJSON形式のみで回答してください。他のテキストは一切含めないでください。
-画像に複数のバグがある場合は、tickets配列にすべて列挙してください。
 verdict が "not_bug" または "unclear" の場合、tickets は空配列 [] にしてください。
 
 {
@@ -53,7 +59,7 @@ export async function scanImage(base64: string, mimeType: string, note?: string)
 
   const response = await getClient().messages.create({
     model: 'claude-haiku-4-5-20251001',
-    max_tokens: 1024,
+    max_tokens: 2048,
     system: SYSTEM_PROMPT,
     messages: [
       {
