@@ -113,6 +113,47 @@ beetle-web/
 }
 ```
 
+## レスポンシブ・幅広対応のお作法
+
+### コンテンツエリアの幅制限
+ページの主要コンテンツは `max-width + margin:0 auto` で幅を制限する。
+
+```css
+.sw { max-width: 1100px; margin: 0 auto; }
+```
+
+### ヒーローの幅広対応
+ヒーローは背景を全幅に保ちつつ、コンテンツが間延びしないよう `max()` でpadding制約をかける。
+
+```css
+.hero {
+  padding: 72px max(32px, calc((100% - 860px) / 2)) 64px;
+}
+```
+
+これで幅広画面でもコンテンツが860px以内に収まる。背景（ダークバー）は全幅のまま。
+
+## UIテキストのトーン
+
+- ナビやボタンのラベルはカジュアルな表現を優先する
+- 例: 「テストとは？」→「**テストってなに？**」
+
+## アコーディオン（FAQ）の実装
+
+JS不要の `<details>/<summary>` を使う。CSS アニメーションも追加可能。
+
+```html
+<details class="faq-item">
+  <summary class="faq-q">
+    <span>質問文</span>
+    <span class="faq-icon">+</span>
+  </summary>
+  <div class="faq-a">回答文</div>
+</details>
+```
+
+FAQ をページに追加するときは **JSON-LD の FAQPage も同内容で更新**すること（SEO連動）。
+
 ## デプロイ
 
 ホスティング: **GitHub Pages**（`main` ブランチを直接公開）
