@@ -33,34 +33,42 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "単体テストとは何ですか？",
+      "name": "テストケースって何から書けばいいですか？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "単体テストとは、画面や機能を1つずつ単独で確認するテストです。ボタン・フォーム・計算ロジックなど、部品単体が壊れていないかを検証します。"
+        "text": "まず「何を操作して、何を確認するか」を1文で書くのが出発点です。TESTパターン集の各パターンは「入力→対象→確認」の形式になっているので、そのまま参照しながら書き写す形でOKです。いきなりゼロから書こうとせず、観点を先に拾うのがコツです。"
       }
     },
     {
       "@type": "Question",
-      "name": "結合テストとは何ですか？",
+      "name": "単体・結合・シナリオの順番でやらないといけませんか？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "結合テストとは、複数の機能をつないで動作を確認するテストです。操作した結果が別の画面に正しく反映されるか、画面をまたいだデータの流れを検証します。"
+        "text": "厳密な決まりはありません。現場では工数やフェーズに合わせて組み合わせることが多いです。ただし順番通りに進めると「どこでバグが入ったか」を切り分けやすくなるメリットがあります。"
       }
     },
     {
       "@type": "Question",
-      "name": "シナリオテスト（総合テスト）とは何ですか？",
+      "name": "テスト観点って何ですか？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "シナリオテストとは、実際のユーザー操作フローで端から端まで動くかを確認するテストです。登録→購入→通知など、人が使う流れ全体を通して検証します。"
+        "text": "「何を確認するか」の切り口のことです。バリデーションなら「空欄・最大文字数・不正な形式」、ボタンなら「クリック・二重送信・disabled状態」といった具合に、機能ごとに確認すべき軸があります。観点が足りないとバグを見落とし、多すぎると工数がかさみます。"
       }
     },
     {
       "@type": "Question",
-      "name": "TESTパターン集は無料で使えますか？",
+      "name": "見落としが多い観点はどこですか？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "はい、完全無料です。登録不要でブラウザからすぐ使えます。"
+        "text": "境界値（最大・最小・ちょうど）、権限チェック、ステータス遷移、エラーハンドリングの4つが特に抜けやすいです。「正常系は書いた、でも異常系が薄い」というパターンが現場では多く見られます。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "TESTパターン集は無料ですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "完全無料です。アカウント登録も不要で、ブラウザからすぐ使えます。"
       }
     }
   ]
@@ -206,6 +214,55 @@
         <div class="feat-card-body">注文・承認フロー・サブスクなど、実際のユーザー操作に沿ったシナリオを収録。</div>
         <span class="feat-count feat-count-st">16シナリオ収録</span>
       </div>
+    </div>
+  </div>
+
+  <!-- よくある質問 -->
+  <div class="section">
+    <span class="section-label">FAQ</span>
+    <h2 class="section-title">よくある質問</h2>
+    <div class="faq">
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>テストケースって何から書けばいいですか？</span>
+          <span class="faq-icon">+</span>
+        </summary>
+        <div class="faq-a">まず「何を操作して、何を確認するか」を1文で書くのが出発点です。TESTパターン集の各パターンは「入力→対象→確認」の形式になっているので、そのまま参照しながら書き写す形でOKです。いきなりゼロから書こうとせず、観点を先に拾うのがコツです。</div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>単体・結合・シナリオの順番でやらないといけませんか？</span>
+          <span class="faq-icon">+</span>
+        </summary>
+        <div class="faq-a">厳密な決まりはありません。現場では工数やフェーズに合わせて組み合わせることが多いです。ただし順番通りに進めると「どこでバグが入ったか」を切り分けやすくなるメリットがあります。</div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>テスト観点って何ですか？</span>
+          <span class="faq-icon">+</span>
+        </summary>
+        <div class="faq-a">「何を確認するか」の切り口のことです。バリデーションなら「空欄・最大文字数・不正な形式」、ボタンなら「クリック・二重送信・disabled状態」といった具合に、機能ごとに確認すべき軸があります。観点が足りないとバグを見落とし、多すぎると工数がかさみます。</div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>見落としが多い観点はどこですか？</span>
+          <span class="faq-icon">+</span>
+        </summary>
+        <div class="faq-a">境界値（最大・最小・ちょうど）、権限チェック、ステータス遷移、エラーハンドリングの4つが特に抜けやすいです。「正常系は書いた、でも異常系が薄い」というパターンが現場では多く見られます。TESTパターン集はこれらを重点的にカバーしています。</div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>TESTパターン集は無料ですか？</span>
+          <span class="faq-icon">+</span>
+        </summary>
+        <div class="faq-a">完全無料です。アカウント登録も不要で、ブラウザからすぐ使えます。</div>
+      </details>
+
     </div>
   </div>
 
