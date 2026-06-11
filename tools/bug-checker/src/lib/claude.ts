@@ -58,7 +58,7 @@ export async function scanImage(base64: string, mimeType: string, note?: string)
     : 'この画像を分析してください。';
 
   const response = await getClient().messages.create({
-    model: 'claude-haiku-4-5-20251001',
+    model: 'claude-sonnet-4-6',
     max_tokens: 2048,
     system: SYSTEM_PROMPT,
     messages: [
