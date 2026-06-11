@@ -5,7 +5,7 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 .bc a:hover{color:#fff}
 .bc-about{margin-left:auto;font-size:12px;font-weight:600;padding:5px 14px;border:1px solid #444;border-radius:99px;color:#aaa!important;transition:all .15s;white-space:nowrap}
 .bc-about:hover{border-color:var(--tp-orange)!important;color:var(--tp-orange)!important}
-.hero{background:var(--tp-dark);padding:56px 32px 48px;text-align:center;position:relative;overflow:hidden;border-bottom:none}
+.hero{background:var(--tp-dark);padding:56px max(32px,calc((100% - 860px) / 2)) 48px;text-align:center;position:relative;overflow:hidden;border-bottom:none}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(232,90,26,.22) 0%,transparent 65%);pointer-events:none}
 .hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(0,0,0,.4) 0%,transparent 60%);pointer-events:none}
 .hero-badge{display:inline-block;background:var(--tp-orange);color:#fff;font-size:11px;font-weight:700;padding:4px 14px;border-radius:99px;letter-spacing:.1em;margin-bottom:18px}
