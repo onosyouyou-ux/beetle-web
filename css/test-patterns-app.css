@@ -22,7 +22,7 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 .cat-bar a{font-size:12px;padding:4px 12px;border-radius:99px;border:1px solid var(--tp-border2);color:var(--tp-text2);transition:all .12s}
 .cat-bar a:hover,.cat-bar a.new:hover{background:var(--tp-orange);color:#fff;border-color:var(--tp-orange)}
 .cat-bar a.new{border-color:var(--tp-border2);color:var(--tp-text2);background:transparent}
-.sw{display:none;padding:32px}
+.sw{display:none;padding:32px;max-width:1100px;margin:0 auto}
 .sw.active{display:block}
 .levels{margin-bottom:0;padding:20px 0 16px}
 .lv{display:none}
