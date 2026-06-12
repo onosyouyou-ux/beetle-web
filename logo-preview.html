@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>BEETLE ロゴ縦組み プレビュー（確認用）</title>
+<style>
+  :root{ --navy:#1c1c2e; --terra:#C0634C; --orange:#E8651A; --green:#5b8a6a; --gray:#8a8a8a; --bg:#f7f5f0; --border:#e8e4de; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:var(--bg);color:var(--navy);padding:40px 24px 80px;line-height:1.6}
+  .wrap{max-width:1100px;margin:0 auto}
+  h1{font-size:20px;margin-bottom:6px}
+  .lead{font-size:13px;color:#777;margin-bottom:32px}
+  h2{font-size:14px;letter-spacing:.04em;margin:40px 0 16px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+  .row{display:flex;flex-wrap:wrap;gap:20px}
+  .cell{text-align:center}
+  .cap{font-size:11px;color:#888;margin-top:8px}
+  /* app icon */
+  .appicon{width:120px;height:120px;border-radius:26px;display:flex;align-items:center;justify-content:center}
+  .appicon svg{width:88px;height:88px}
+  .appicon.outline{background:#fff;border:1px solid var(--border)}
+  /* lockup */
+  .lockup{display:flex;align-items:center;gap:22px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 26px}
+  .lockup .stacked{height:64px}
+  .word{font-family:'Arial Black',Arial,sans-serif;font-weight:900;font-size:30px;letter-spacing:.16em}
+  /* footer mini */
+  .mini{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 18px}
+  .mini .stacked{height:30px}
+  .mini .co{font-weight:800;font-size:14px;letter-spacing:.02em}
+  .darkbar{background:var(--navy);border-radius:10px;padding:14px 22px;display:flex;align-items:center;gap:14px}
+  .darkbar .stacked{height:34px}
+  .darkbar .word{font-size:18px;color:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>BEETLE 縦組みロゴ — 色 / 使用シーン 確認版</h1>
+  <p class="lead">配置と色の比較用。書体は仮（太ゴシック）です。主役色を決めてもらえれば、手描き風書体のアウトライン化＋favicon・パンくず・フッターへ本適用します。</p>
+
+  <!-- 縦組みマークの定義（fill=currentColorで色を継承） -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="mark" viewBox="0 0 200 200">
+      <text x="100" y="96"  text-anchor="middle" font-family="'Arial Black',Arial,sans-serif" font-weight="900" font-size="66" letter-spacing="2" fill="currentColor">BEE</text>
+      <text x="100" y="170" text-anchor="middle" font-family="'Arial Black',Arial,sans-serif" font-weight="900" font-size="66" letter-spacing="2" fill="currentColor">TLE</text>
+    </symbol>
+  </svg>
+
+  <h2>① アプリアイコン（角丸・塗り）</h2>
+  <div class="row">
+    <div class="cell"><div class="appicon" style="background:var(--terra)"><svg style="color:#fff"><use href="#mark"/></svg></div><div class="cap">テラコッタ（現サイト色）</div></div>
+    <div class="cell"><div class="appicon" style="background:var(--navy)"><svg style="color:#fff"><use href="#mark"/></svg></div><div class="cap">ネイビー</div></div>
+    <div class="cell"><div class="appicon" style="background:var(--orange)"><svg style="color:#fff"><use href="#mark"/></svg></div><div class="cap">濃いオレンジ</div></div>
+    <div class="cell"><div class="appicon" style="background:var(--green)"><svg style="color:#fff"><use href="#mark"/></svg></div><div class="cap">グリーン</div></div>
+    <div class="cell"><div class="appicon" style="background:var(--gray)"><svg style="color:#fff"><use href="#mark"/></svg></div><div class="cap">グレー</div></div>
+  </div>
+
+  <h2>② アウトライン（白背景）</h2>
+  <div class="row">
+    <div class="cell"><div class="appicon outline"><svg style="color:var(--terra)"><use href="#mark"/></svg></div><div class="cap">テラコッタ</div></div>
+    <div class="cell"><div class="appicon outline"><svg style="color:var(--navy)"><use href="#mark"/></svg></div><div class="cap">ネイビー</div></div>
+    <div class="cell"><div class="appicon outline"><svg style="color:var(--green)"><use href="#mark"/></svg></div><div class="cap">グリーン</div></div>
+    <div class="cell"><div class="appicon outline"><svg style="color:var(--gray)"><use href="#mark"/></svg></div><div class="cap">グレー</div></div>
+  </div>
+
+  <h2>③ 横組みロゴとセット（ヘッダー用イメージ）</h2>
+  <div class="row" style="flex-direction:column">
+    <div class="lockup">
+      <svg class="stacked" viewBox="0 0 200 200" style="color:var(--terra)"><use href="#mark"/></svg>
+      <span class="word"><span style="color:var(--navy)">BEET</span><span style="color:var(--terra)">LE</span></span>
+    </div>
+    <div class="lockup">
+      <svg class="stacked" viewBox="0 0 200 200" style="color:var(--navy)"><use href="#mark"/></svg>
+      <span class="word"><span style="color:var(--navy)">BEET</span><span style="color:var(--terra)">LE</span></span>
+    </div>
+  </div>
+
+  <h2>④ ダークバー（実際のフッター背景）</h2>
+  <div class="row">
+    <div class="darkbar">
+      <svg class="stacked" viewBox="0 0 200 200" style="color:var(--terra)"><use href="#mark"/></svg>
+      <span class="word"><span style="color:#fff">BEET</span><span style="color:var(--terra)">LE</span></span>
+    </div>
+    <div class="darkbar">
+      <svg class="stacked" viewBox="0 0 200 200" style="color:#fff"><use href="#mark"/></svg>
+      <span class="word"><span style="color:#fff">BEET</span><span style="color:var(--terra)">LE</span></span>
+    </div>
+  </div>
+
+  <h2>⑤ 名刺・フッター等の小さな表示</h2>
+  <div class="row">
+    <div class="mini"><svg class="stacked" viewBox="0 0 200 200" style="color:var(--terra)"><use href="#mark"/></svg><span class="co"><span style="color:var(--navy)">BEETLE</span> 合同会社</span></div>
+    <div class="mini"><svg class="stacked" viewBox="0 0 200 200" style="color:var(--navy)"><use href="#mark"/></svg><span class="co"><span style="color:var(--navy)">BEETLE</span> 合同会社</span></div>
+  </div>
+</div>
+</body>
+</html>
