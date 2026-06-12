@@ -39,10 +39,11 @@
   transition: color .15s;
   display: flex;
   align-items: center;
+  white-space: nowrap;
 }
 .bc-nav a:hover { color: #fff; }
-.bc-nav .sep { color: rgba(255,255,255,0.25); font-size: 11px; }
-.bc-nav .bc-current { color: rgba(255,255,255,0.9); font-size: 13px; }
+.bc-nav .sep { color: rgba(255,255,255,0.25); font-size: 11px; flex-shrink: 0; }
+.bc-nav .bc-current { color: rgba(255,255,255,0.9); font-size: 13px; white-space: nowrap; }
 .bc-nav .bc-spacer { flex: 1; }
 .bc-ref-btn {
   font-size: 12px !important;

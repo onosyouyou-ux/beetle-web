@@ -1,5 +1,5 @@
 body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cream);color:var(--tp-text);line-height:1.6}
-.bc{background:var(--tp-dark);padding:0 2rem;font-size:13px;color:#888;display:flex;gap:10px;align-items:center;height:52px;position:sticky;top:0;z-index:100}
+.bc{background:var(--tp-dark);padding:0 2rem;font-size:13px;color:#888;display:flex;gap:10px;align-items:center;height:52px;position:sticky;top:52px;z-index:100}
 .bc span{color:#444}
 .bc a{color:#aaa;text-decoration:none;white-space:nowrap}
 .bc span{white-space:nowrap}
@@ -13,7 +13,7 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 .hero h1{font-size:52px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:14px;font-family:'Syne','Zen Kaku Gothic New','Noto Sans JP',sans-serif;letter-spacing:.08em;text-shadow:2px 2px 0px rgba(0,0,0,.6),0 4px 16px rgba(0,0,0,.5);-webkit-text-stroke:.5px rgba(255,255,255,.15)}
 .hero h1 em{color:var(--tp-orange);font-style:normal;font-family:'Zen Kaku Gothic New','Noto Sans JP',sans-serif;text-shadow:2px 2px 0px rgba(100,20,0,.6),0 4px 20px rgba(232,90,26,.4);-webkit-text-stroke:.5px rgba(232,90,26,.3)}
 .hero p{font-size:14px;color:#aaa;max-width:460px;margin:0 auto;line-height:1.8}
-.icon-nav-wrap{background:var(--tp-dark2);border-bottom:1px solid #333;position:sticky;top:52px;z-index:100}
+.icon-nav-wrap{background:var(--tp-dark2);border-bottom:1px solid #333;position:sticky;top:104px;z-index:100}
 .icon-nav{display:flex;padding:0;justify-content:center}
 .icon-nav button{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 28px;border:none;background:none;cursor:pointer;color:#888;font-size:11px;font-family:inherit;border-bottom:2px solid transparent;transition:all .15s}
 .icon-nav button svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
