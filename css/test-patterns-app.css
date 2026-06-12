@@ -1,7 +1,8 @@
 body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cream);color:var(--tp-text);line-height:1.6}
 .bc{background:var(--tp-dark);padding:0 2rem;font-size:13px;color:#888;display:flex;gap:10px;align-items:center;height:52px;position:sticky;top:0;z-index:100}
 .bc span{color:#444}
-.bc a{color:#aaa;text-decoration:none}
+.bc a{color:#aaa;text-decoration:none;white-space:nowrap}
+.bc span{white-space:nowrap}
 .bc a:hover{color:#fff}
 .bc-about{margin-left:auto;font-size:12px;font-weight:600;padding:5px 14px;border:1px solid #444;border-radius:99px;color:#aaa!important;transition:all .15s;white-space:nowrap}
 .bc-about:hover{border-color:var(--tp-orange)!important;color:var(--tp-orange)!important}
