@@ -7,7 +7,7 @@ export default function AppFooter() {
         </a>
         <nav className="sfa-nav">
           <a href="https://www.beetle-web.jp" target="_blank" rel="noopener">ホーム</a>
-          <a href="https://www.beetle-web.jp/#tools" target="_blank" rel="noopener">ツール</a>
+          <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール</a>
           <a href="https://www.beetle-web.jp/#column" target="_blank" rel="noopener">コラム</a>
           <a href="https://www.beetle-web.jp/#contact" target="_blank" rel="noopener">お問い合わせ</a>
         </nav>

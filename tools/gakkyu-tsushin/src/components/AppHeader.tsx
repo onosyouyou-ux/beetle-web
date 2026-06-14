@@ -10,7 +10,7 @@ export default function AppHeader() {
           />
         </a>
         <span className="sep">›</span>
-        <a href="https://www.beetle-web.jp/#tools" target="_blank" rel="noopener">ツール一覧</a>
+        <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール一覧</a>
         <span className="sep">›</span>
         <span className="bc-current">学級通信メーカー</span>
         <span className="bc-spacer" />

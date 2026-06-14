@@ -13,7 +13,7 @@ export default function AppHeader({ counter }: { counter: CounterData | null }) 
           <img src="https://www.beetle-web.jp/assets/icons/beetle-icon.svg" alt="BEETLE" style={{ height: '22px', borderRadius: '4px' }} />
         </a>
         <span className="sep">›</span>
-        <a href="https://www.beetle-web.jp/#tools" target="_blank" rel="noopener">ツール一覧</a>
+        <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール一覧</a>
         <span className="sep">›</span>
         <span className="bc-current">これってバグなの？</span>
         <span className="bc-spacer" />

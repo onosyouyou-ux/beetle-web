@@ -197,7 +197,7 @@ export default function HomePage() {
           </a>
           <nav className="sfa-nav">
             <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">ホーム</a>
-            <a href="https://www.beetle-web.jp/#tools" target="_blank" rel="noopener">ツール</a>
+            <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール</a>
             <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
             <a href="mailto:info@beetle-web.jp">お問い合わせ</a>
           </nav>
