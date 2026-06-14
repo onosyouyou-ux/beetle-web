@@ -397,3 +397,8 @@ NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
 - [ ] OCR.space 月間上限（25,000回）を超えた場合の対応
 - [ ] バグ判定：Jira / Linear への直接起票連携
 - [ ] バグ判定：サブスク会員向けの判定履歴保存機能
+- [ ] **Next.js を 16 系へメジャー更新（gakkyu-tsushin / bug-checker 両方）**
+  - 現状: 両ツールとも `next@14.2.35`（2025-12-11 告知の脆弱性はパッチ済み）で運用中
+  - `npm audit` は過去の Next 脆弱性をまとめて表示する仕様のため、なお「2 vulnerabilities」が残る。これを完全に解消するには `next@16` へのメジャー更新が必要（audit の自動提案も next@16）
+  - 14 → 15 → 16 は breaking change あり（App Router の request API が async 化 等）。動作確認が必要なので、まとまった時間が取れるタイミングで別ブランチで実施する
+  - 優先度: 中（告知済みの脆弱性は対応済みのため緊急ではない。GitHub Pages / Vercel 用途では実害リスクも小さい）
