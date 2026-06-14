@@ -597,7 +597,7 @@ function renderApp(){
   var hLogoImg=mk("img"); hLogoImg.src="/assets/icons/beetle-icon.svg"; hLogoImg.alt="BEETLE"; hLogoImg.style.cssText="height:28px;vertical-align:middle;border-radius:6px;display:block;";
   hLogo.appendChild(hLogoImg);
   var hSep1=mkTxt("span","color:rgba(255,255,255,0.25);","›");
-  var hTools=mk("a"); hTools.href="/#tools"; hTools.style.cssText="color:rgba(255,255,255,0.65);text-decoration:none;"; hTools.textContent="ツール一覧";
+  var hTools=mk("a"); hTools.href="/test-tools.html"; hTools.style.cssText="color:rgba(255,255,255,0.65);text-decoration:none;"; hTools.textContent="ツール一覧";
   hTools.addEventListener("mouseover",function(){this.style.color="#fff";}); hTools.addEventListener("mouseout",function(){this.style.color="rgba(255,255,255,0.65)";});
   var hSep2=mkTxt("span","color:rgba(255,255,255,0.25);","›");
   var hCurrent=mkTxt("span","color:rgba(255,255,255,0.9);","えいごよんで！");
