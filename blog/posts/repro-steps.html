@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>「再現しません」で突き返されないバグ報告 | BEETLE合同会社</title>
+<meta name="description" content="せっかく見つけたバグが「再現しませんでした」で戻ってくる。原因の多くはバグそのものより報告の書き方にある。再現する報告の型を現場目線で。">
+<link rel="canonical" href="https://www.beetle-web.jp/blog/posts/repro-steps.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="「再現しません」で突き返されないバグ報告 | BEETLE合同会社">
+<meta property="og:description" content="せっかく見つけたバグが「再現しませんでした」で戻ってくる。原因の多くはバグそのものより報告の書き方にある。再現する報告の型を現場目線で。">
+<meta property="og:url" content="https://www.beetle-web.jp/blog/posts/repro-steps.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="「再現しません」で突き返されないバグ報告 | BEETLE合同会社">
+<meta name="twitter:description" content="せっかく見つけたバグが「再現しませんでした」で戻ってくる。原因の多くはバグそのものより報告の書き方にある。再現する報告の型を現場目線で。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"「再現しません」で突き返されないバグ報告","datePublished":"2026-06-13","dateModified":"2026-06-13","description":"せっかく見つけたバグが「再現しませんでした」で戻ってくる。原因の多くはバグそのものより報告の書き方にある。再現する報告の型を現場目線で。","image":"https://www.beetle-web.jp/assets/images/OG.png","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/repro-steps.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"「再現しません」で突き返されないバグ報告","item":"https://www.beetle-web.jp/blog/posts/repro-steps.html"}]}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-06-13</span>
+        <span class="post-tag tips">Tips</span>
+      </div>
+      <h1 class="post-h1">「再現しません」で突き返されないバグ報告</h1>
+    </div>
+
+    <div class="post-body">
+
+      <p class="lead">せっかく見つけたバグが「再現しませんでした」で戻ってくる。原因の多くは、バグそのものより報告の書き方にある。</p>
+
+      <p>バグ報告が「再現しません」で返ってくると、見つけた側も直す側も時間を失う。やり取りが一往復増えるたびに、修正は遅れる。たいていの原因はバグが気まぐれだからではなく、前提条件が報告から抜けているからだ。直す人は、書かれたとおりにしか再現できない。</p>
+
+      <p><strong>環境を最初に書く</strong></p>
+
+      <p>OS、ブラウザとそのバージョン、端末、ログイン状態、アカウントの種別。当たり前のものほど抜ける。自分の環境では起きるのに相手の環境では起きないバグは、ほとんどここで決まる。一行でいいので、必ず先頭に置く。</p>
+
+      <p><strong>「操作」ではなく「状態の遷移」を書く</strong></p>
+
+      <p>「ボタンを押すと落ちる」では再現できないことが多い。「未ログインの状態で、カートに2件入れて、クーポンを適用してから、ボタンを押すと落ちる」。再現は前提が9割だ。何をしたかより、どういう状態で何をしたかを書く。</p>
+
+      <p><strong>期待と実際を分ける</strong></p>
+
+      <p>「おかしい」ではなく、「こうなるはずなのに、こうなった」。期待値と実際の挙動を分けて書くだけで、相手は「何が問題なのか」を読み取らなくて済む。スクショは1枚で十分。矢印を1本引いて、どこを見てほしいかだけ示す。</p>
+
+      <p><strong>1チケットに1事象</strong></p>
+
+      <p>関連して見えるバグをまとめて1枚に書くと、片方だけ直して「直りました」で閉じられる。面倒でも、事象ごとに分ける。粒度をそろえておくと、あとで「何が残っているか」も追いやすい。</p>
+
+      <p>いいバグ報告は、書いた本人がその場にいなくても再現できる。誰が読んでも同じ操作にたどり着ける——それを目標にすると、報告の質は自然と上がっていく。</p>
+
+    </div>
+
+    <div class="post-related">
+      <p class="post-related-title">関連記事</p>
+      <ul class="post-related-list">
+        <li><a href="/blog/posts/spec-or-bug.html">「仕様です」の一言で、片づけないために</a></li>
+        <li><a href="/blog/posts/ai-bug-report.html">AIにバグの状況を説明したら、再現手順まで書いてくれた話</a></li>
+        <li><a href="/blog/posts/test-patterns.html">テストパターン集をつくった</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>

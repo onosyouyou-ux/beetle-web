@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>「仕様です」の一言で、片づけないために | BEETLE合同会社</title>
+<meta name="description" content="「それ、仕様です」で引き下がったバグが、リリース後にユーザーの声になって戻ってくる。仕様とバグの境界線をどう扱うか、QA現場の視点から。">
+<link rel="canonical" href="https://www.beetle-web.jp/blog/posts/spec-or-bug.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="「仕様です」の一言で、片づけないために | BEETLE合同会社">
+<meta property="og:description" content="「それ、仕様です」で引き下がったバグが、リリース後にユーザーの声になって戻ってくる。仕様とバグの境界線をどう扱うか、QA現場の視点から。">
+<meta property="og:url" content="https://www.beetle-web.jp/blog/posts/spec-or-bug.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="「仕様です」の一言で、片づけないために | BEETLE合同会社">
+<meta name="twitter:description" content="「それ、仕様です」で引き下がったバグが、リリース後にユーザーの声になって戻ってくる。仕様とバグの境界線をどう扱うか、QA現場の視点から。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"「仕様です」の一言で、片づけないために","datePublished":"2026-06-11","dateModified":"2026-06-11","description":"「それ、仕様です」で引き下がったバグが、リリース後にユーザーの声になって戻ってくる。仕様とバグの境界線をどう扱うか、QA現場の視点から。","image":"https://www.beetle-web.jp/assets/images/OG.png","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/spec-or-bug.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"「仕様です」の一言で、片づけないために","item":"https://www.beetle-web.jp/blog/posts/spec-or-bug.html"}]}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-06-11</span>
+        <span class="post-tag qa">QA</span>
+      </div>
+      <h1 class="post-h1">「仕様です」の一言で、片づけないために</h1>
+    </div>
+
+    <div class="post-body">
+
+      <p class="lead">「それ、仕様です」と言われて引き下がったバグが、リリース後にユーザーから同じ指摘で返ってくる。仕様とバグの境界線は、誰が引くのか。</p>
+
+      <p>「仕様です」は強い言葉だ。会話を終わらせる力がある。テスターが違和感を伝えても、この一言が出ると、たいていそこで議論は止まる。でも、その一言で閉じた違和感が、あとからユーザーの問い合わせになって戻ってくることがある。何度か経験すると、すぐには引き下がれなくなる。</p>
+
+      <p><strong>「仕様」と「仕様にした覚えがない」は違う</strong></p>
+
+      <p>「仕様です」と言われたら、まず一つだけ確認する。「それ、どこで決まった仕様ですか」。仕様書やチケットに明記されているなら、それは本当に仕様だ。納得して引く。問題は、誰も決めた覚えがないのに「なんとなくそう動いている」だけのケース。これは仕様ではなく、設計が漏れた結果——つまりバグの可能性が高い。</p>
+
+      <p><strong>ユーザーがどう受け取るか、で一度考える</strong></p>
+
+      <p>開発の意図がどうであれ、ユーザーが「壊れている」と感じたら、それは品質の問題だ。仕様かバグかという内部の線引きより、「この挙動を初めて見た人がどう思うか」で一度考えてみる。意図どおりでも、ユーザーにとって不親切なら、それは直す価値のある「仕様」だ。</p>
+
+      <p><strong>引き下がるときは、記録を残す</strong></p>
+
+      <p>議論の末に「今回は仕様とする」で着地するのは、まったく普通のことだ。全部を直す必要はない。大事なのは、その判断と理由をチケットに一行でも残しておくこと。次に同じ違和感が別の人から出たとき、ゼロから揉めずに済む。「過去にこう判断した」が残っているだけで、現場はずいぶん軽くなる。</p>
+
+      <p>「仕様です」は、会話を終わらせる言葉じゃなくて、本当はそこから始まる問いだと思っている。終わらせるために使うのか、確かめるために使うのか。その違いが、たぶん品質に出る。</p>
+
+    </div>
+
+    <div class="post-related">
+      <p class="post-related-title">関連記事</p>
+      <ul class="post-related-list">
+        <li><a href="/blog/posts/repro-steps.html">「再現しません」で突き返されないバグ報告</a></li>
+        <li><a href="/blog/posts/bug-or-not.html">「これってバグですか？」を1000回言わなくて済む環境を作りたかった</a></li>
+        <li><a href="/blog/posts/startup-qa.html">スタートアップのQAって、何から始めたらいいんだろう</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>

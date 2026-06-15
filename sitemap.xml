@@ -129,4 +129,22 @@
     <priority>0.6</priority>
   </url>
 
+  <url>
+    <loc>https://www.beetle-web.jp/blog/posts/spec-or-bug.html</loc>
+    <lastmod>2026-06-11</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/blog/posts/repro-steps.html</loc>
+    <lastmod>2026-06-13</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/blog/posts/friday-deploy.html</loc>
+    <lastmod>2026-06-14</lastmod>
+    <priority>0.6</priority>
+  </url>
+
 </urlset>
