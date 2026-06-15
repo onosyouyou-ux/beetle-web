@@ -67,6 +67,7 @@
   <a href="#t-input">入力値の設計技法</a>
   <a href="#t-comb">振る舞い・組合せの技法</a>
   <a href="#t-exp">経験ベースの技法</a>
+  <a href="#t-other">そのほかの技法</a>
 </div>
 
 <p class="ref-lead">テストケースは数を増やせばいいわけじゃない。少ない手数で抜けなく確認するために、先人が整理した「型」がテスト技法です。代表的なものを実務で使う粒度でまとめました。</p>
@@ -152,6 +153,41 @@
         <div class="tech-row"><span class="tech-k">なに</span><span>実際のユーザーの一連の行動に沿って通しで確認する。単体では問題なくても流れで壊れる不具合を拾う。</span></div>
         <div class="tech-row"><span class="tech-k">例</span><span class="tech-ex">登録→ログイン→購入→キャンセル→<br>再購入 を一連で操作して整合性を確認</span></div>
         <div class="tech-row"><span class="tech-k">使う時</span><span>結合〜システムテスト。機能をまたぐ業務フローの確認に。</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="t-other" class="ref-section">
+    <div class="ref-sec-hd"><h2>そのほかの技法・考え方</h2><span class="d">条件の整理や、網羅とは別アプローチ</span></div>
+    <div class="ref-grid">
+
+      <div class="ref-card tech-card">
+        <div class="tech-name">分類木法<span class="tech-tag">条件整理</span></div>
+        <div class="tech-row"><span class="tech-k">なに</span><span>テスト対象を「観点 → 区分」と木構造で分解し、何をどの値で試すかを枝で整理する技法。</span></div>
+        <div class="tech-row"><span class="tech-k">例</span><span class="tech-ex">会員種別[一般/プレミアム] ×<br>支払方法[カード/コンビニ/後払い]</span></div>
+        <div class="tech-row"><span class="tech-k">使う時</span><span>観点が多く、何と何を掛け合わせるか頭の中がこんがらがるとき。</span></div>
+      </div>
+
+      <div class="ref-card tech-card">
+        <div class="tech-name">原因結果グラフ<span class="tech-tag">条件整理</span></div>
+        <div class="tech-row"><span class="tech-k">なに</span><span>入力（原因）と出力（結果）の論理関係を図にし、そこからデシジョンテーブルを導く技法。</span></div>
+        <div class="tech-row"><span class="tech-k">例</span><span class="tech-ex">「会員 かつ 在庫あり」なら購入可<br>のAND/OR関係を図で整理</span></div>
+        <div class="tech-row"><span class="tech-k">使う時</span><span>条件の論理が複雑で、表だけでは関係が見えにくいとき。</span></div>
+      </div>
+
+      <div class="ref-card tech-card">
+        <div class="tech-name">ドメイン分析<span class="tech-tag">入力設計</span></div>
+        <div class="tech-row"><span class="tech-k">なに</span><span>複数の変数が絡む条件で、境界値分析を多次元に拡張して効率よく値を選ぶ技法。</span></div>
+        <div class="tech-row"><span class="tech-k">例</span><span class="tech-ex">「数量×単価が一定額以上で送料無料」<br>の境界の組合せを狙う</span></div>
+        <div class="tech-row"><span class="tech-k">使う時</span><span>複数の入力が同時に効く境界条件を、もれなく押さえたいとき。</span></div>
+      </div>
+
+      <div class="ref-card tech-card">
+        <div class="tech-name">ランダムテスト / ファジング<span class="tech-tag">経験ベース</span></div>
+        <div class="tech-row"><span class="tech-k">なに</span><span>でたらめな大量の入力を機械的に流し込み、想定外のクラッシュや例外を炙り出す技法。</span></div>
+        <div class="tech-row"><span class="tech-k">例</span><span class="tech-ex">巨大文字列・制御文字・壊れたファイル<br>を自動生成して投入</span></div>
+        <div class="tech-row"><span class="tech-k">使う時</span><span>入力を受け取る境界（フォーム・API・パーサ）の頑丈さを確かめたいとき。</span></div>
       </div>
 
     </div>

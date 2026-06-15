@@ -64,6 +64,7 @@
 <div class="ref-nav">
   <a href="#r-quality">機能・品質の最終確認</a>
   <a href="#r-ops">リリースの段取り</a>
+  <a href="#r-sec">セキュリティ・データ</a>
   <a href="#r-web">公開まわり（Web）</a>
   <a href="#r-after">公開後の確認</a>
 </div>
@@ -82,6 +83,8 @@
         <div class="ck-item"><span><b>異常系（エラー時の挙動）を確認した</b><span class="ck-why">通信断・入力ミス・権限なしなど、失敗したときに壊れないか。</span></span></div>
         <div class="ck-item"><span><b>対応ブラウザ・端末で表示を確認した</b><span class="ck-why">Safari / Android / 実機の小さい画面でのレイアウト崩れ。</span></span></div>
         <div class="ck-item"><span><b>文言・リンク・画像の差し替え漏れがない</b><span class="ck-why">「サンプルテキスト」「test@example.com」「ダミー画像」の残り。</span></span></div>
+        <div class="ck-item"><span><b>キーボード操作・文字コントラストを確認した</b><span class="ck-why">マウスなしで操作できるか、色のコントラストが薄すぎないか（アクセシビリティ）。</span></span></div>
+        <div class="ck-item"><span><b>空・最大・極端なデータでも表示が崩れない</b><span class="ck-why">0件のエンプティ表示、長文・大量件数でのレイアウト崩れ。</span></span></div>
       </div>
     </div>
   </section>
@@ -96,6 +99,21 @@
         <div class="ck-item"><span><b>DBマイグレーションの順番・後戻り可否を確認</b><span class="ck-why">一度流すと戻せない変更がないか。バックアップは取れているか。</span></span></div>
         <div class="ck-item"><span><b>環境変数・APIキー・シークレットが本番用になっている</b><span class="ck-why">テスト用のキーのまま公開、は典型的な事故。</span></span></div>
         <div class="ck-item"><span><b>外部サービス（決済・メール等）が本番設定になっている</b><span class="ck-why">サンドボックスのまま、Webhook先がテスト向き、を防ぐ。</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="r-sec" class="ref-section">
+    <div class="ck-group">
+      <div class="ck-group-hd"><span class="ck-icon">🔐</span>セキュリティ・データ保護</div>
+      <div class="ck-group-sub">出してから気づくと、取り返しがつきにくいパート。</div>
+      <div class="ck-list">
+        <div class="ck-item"><span><b>全ページが HTTPS で配信される</b><span class="ck-why">http でアクセスしたら https へリダイレクトされるか。混在コンテンツがないか。</span></span></div>
+        <div class="ck-item"><span><b>パスワード・トークン・個人情報をログに出していない</b><span class="ck-why">デバッグ用の console.log やサーバーログに機密が残っていないか。</span></span></div>
+        <div class="ck-item"><span><b>認証・権限の境界を本番でも確認した</b><span class="ck-why">URL直打ち・API直叩きで、権限のないデータが見えてしまわないか。</span></span></div>
+        <div class="ck-item"><span><b>バックアップ・復旧手順が用意されている</b><span class="ck-why">データが壊れたとき、いつの時点まで・どう戻せるか。</span></span></div>
+        <div class="ck-item"><span><b>依存パッケージの既知の脆弱性を確認した</b><span class="ck-why">古いライブラリのまま公開していないか。監査コマンドで確認。</span></span></div>
+        <div class="ck-item"><span><b>個人情報の取り扱いとプライバシーポリシーが整合している</b><span class="ck-why">新しく集める情報が、ポリシーの記載と矛盾していないか。</span></span></div>
       </div>
     </div>
   </section>

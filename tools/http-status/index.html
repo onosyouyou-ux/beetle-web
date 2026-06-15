@@ -79,7 +79,9 @@
     <div class="http-group-hd"><span class="http-cls cls-2">2xx</span> 成功 — リクエストは正常に処理された</div>
     <div class="http-card"><div class="http-code">200<span class="http-name">OK</span></div><div class="http-body"><div class="http-mean">リクエストが成功し、結果が返ってきた状態。一番よく見る正常応答。</div><div class="http-qa"><b>QA</b> 200でも中身が空・エラー文言が本文に入っている「中身だけ失敗」がある。ステータスだけで成功判定しない。</div></div></div>
     <div class="http-card"><div class="http-code">201<span class="http-name">Created</span></div><div class="http-body"><div class="http-mean">リクエストが成功し、新しいリソースが作成された。登録・投稿系のAPIで返る。</div><div class="http-qa"><b>QA</b> 作成後に実際にデータが増えているか、レスポンスに作成されたIDが含まれるかを確認。</div></div></div>
+    <div class="http-card"><div class="http-code">202<span class="http-name">Accepted</span></div><div class="http-body"><div class="http-mean">リクエストは受け付けたが、処理はまだ完了していない。非同期・バッチ処理で返る。</div><div class="http-qa"><b>QA</b> 202のあと、処理完了をどう知るか（ポーリング・通知）。完了前の表示が正しいか。</div></div></div>
     <div class="http-card"><div class="http-code">204<span class="http-name">No Content</span></div><div class="http-body"><div class="http-mean">成功したが、返す本文がない。削除やお気に入り解除などで使われる。</div><div class="http-qa"><b>QA</b> 本文が空でも正常。フロントが本文を期待して落ちないか確認。</div></div></div>
+    <div class="http-card"><div class="http-code">206<span class="http-name">Partial Content</span></div><div class="http-body"><div class="http-mean">一部だけを返した状態。動画のシーク再生や大きいファイルの分割ダウンロードで使われる。</div><div class="http-qa"><b>QA</b> 動画の途中再生・レジューム download が正しく動くか。</div></div></div>
   </section>
 
   <section id="h-3xx" class="ref-section http-group">
@@ -87,6 +89,8 @@
     <div class="http-card"><div class="http-code">301<span class="http-name">Moved Permanently</span></div><div class="http-body"><div class="http-mean">恒久的な移転。URLが完全に変わったときに使う。検索エンジンも評価を引き継ぐ。</div><div class="http-qa"><b>QA</b> URL構成を変えたリリースで、旧URLが301で新URLに飛ぶか。SEO評価の引き継ぎに重要。</div></div></div>
     <div class="http-card"><div class="http-code">302<span class="http-name">Found</span></div><div class="http-body"><div class="http-mean">一時的な移転。元のURLは生きている前提。ログイン後のリダイレクト等で使われる。</div><div class="http-qa"><b>QA</b> 「恒久移転なのに302」だと検索評価が移らない。301/302の使い分けが意図通りか確認。</div></div></div>
     <div class="http-card"><div class="http-code">304<span class="http-name">Not Modified</span></div><div class="http-body"><div class="http-mean">前回から変わっていないので、キャッシュを使ってという応答。表示は速くなる。</div><div class="http-qa"><b>QA</b> 更新したのに古い表示が出る「キャッシュ事故」の原因になりがち。強制リロードで切り分け。</div></div></div>
+    <div class="http-card"><div class="http-code">307<span class="http-name">Temporary Redirect</span></div><div class="http-body"><div class="http-mean">一時的な転送。302と違い、メソッド（POST等）を変えずにそのまま転送する点が厳密。</div><div class="http-qa"><b>QA</b> POST送信中のリダイレクトで、データが欠けず正しく転送先に届くか。</div></div></div>
+    <div class="http-card"><div class="http-code">308<span class="http-name">Permanent Redirect</span></div><div class="http-body"><div class="http-mean">恒久的な転送。301に近いが、メソッドを変えずに転送する。</div><div class="http-qa"><b>QA</b> URL恒久移転で、フォーム送信も含めて転送先に正しく届くか。</div></div></div>
   </section>
 
   <section id="h-4xx" class="ref-section http-group">
@@ -98,6 +102,10 @@
     <div class="http-card"><div class="http-code">405<span class="http-name">Method Not Allowed</span></div><div class="http-body"><div class="http-mean">そのURLに対して、使ったメソッド（GET/POST等）が許可されていない。</div><div class="http-qa"><b>QA</b> API仕様と実装でメソッドがズレていないか。GET専用にPOSTした場合の挙動。</div></div></div>
     <div class="http-card"><div class="http-code">409<span class="http-name">Conflict</span></div><div class="http-body"><div class="http-mean">現在の状態と矛盾する。重複登録・同時編集の衝突など。</div><div class="http-qa"><b>QA</b> メール重複登録・2人同時編集の保存で409が返り、適切なメッセージが出るか。</div></div></div>
     <div class="http-card"><div class="http-code">422<span class="http-name">Unprocessable Entity</span></div><div class="http-body"><div class="http-mean">形式は正しいが、内容（バリデーション）が通らない。多くのAPIで入力エラーに使う。</div><div class="http-qa"><b>QA</b> どの項目がなぜダメか、レスポンスにフィールド単位のエラーが含まれるか。</div></div></div>
+    <div class="http-card"><div class="http-code">408<span class="http-name">Request Timeout</span></div><div class="http-body"><div class="http-mean">クライアントからのリクエストが時間内に届ききらなかった。回線が遅いときなど。</div><div class="http-qa"><b>QA</b> 低速回線・大きいファイル送信でタイムアウトしたとき、適切なエラーとリトライができるか。</div></div></div>
+    <div class="http-card"><div class="http-code">410<span class="http-name">Gone</span></div><div class="http-body"><div class="http-mean">かつて存在したが、恒久的に削除された。404と違い「もう戻らない」を明示する。</div><div class="http-qa"><b>QA</b> 公開終了したページ・キャンペーンで、404ではなく410を返す設計か（仕様による）。</div></div></div>
+    <div class="http-card"><div class="http-code">413<span class="http-name">Payload Too Large</span></div><div class="http-body"><div class="http-mean">送ったデータが大きすぎる。サイズ上限を超えたアップロードなど。</div><div class="http-qa"><b>QA</b> 上限超えファイルで413が返り、ユーザーに上限が分かるメッセージが出るか。</div></div></div>
+    <div class="http-card"><div class="http-code">415<span class="http-name">Unsupported Media Type</span></div><div class="http-body"><div class="http-mean">対応していない形式を送った。許可外の拡張子・Content-Type など。</div><div class="http-qa"><b>QA</b> 許可外形式のアップロードで弾かれるか。許可形式の案内が出るか。</div></div></div>
     <div class="http-card"><div class="http-code">429<span class="http-name">Too Many Requests</span></div><div class="http-body"><div class="http-mean">短時間にリクエストが多すぎる。レート制限に引っかかった状態。</div><div class="http-qa"><b>QA</b> 連打・大量送信で429が返るか。ユーザーに「時間を置いて」と伝わるか。</div></div></div>
   </section>
 
@@ -106,6 +114,7 @@
     <div class="http-card"><div class="http-code">500<span class="http-name">Internal Server Error</span></div><div class="http-body"><div class="http-mean">サーバー内部で想定外のエラー。原因は様々で、最も「中で何か壊れた」を表す汎用コード。</div><div class="http-qa"><b>QA</b> 入力ミスで500が出るのは黙ってバグ。本来400番台で返すべきものが500になっていないか要チェック。</div></div></div>
     <div class="http-card"><div class="http-code">502<span class="http-name">Bad Gateway</span></div><div class="http-body"><div class="http-mean">前段のサーバー（ロードバランサ等）が、後ろのサーバーから不正な応答を受けた。</div><div class="http-qa"><b>QA</b> デプロイ直後・再起動中に出やすい。再現条件（タイミング）をログとあわせて記録。</div></div></div>
     <div class="http-card"><div class="http-code">503<span class="http-name">Service Unavailable</span></div><div class="http-body"><div class="http-mean">一時的にサービスが使えない。メンテナンス中・過負荷など。</div><div class="http-qa"><b>QA</b> メンテナンス画面が正しく出るか。復旧後に自動で通常表示へ戻るか。</div></div></div>
+    <div class="http-card"><div class="http-code">501<span class="http-name">Not Implemented</span></div><div class="http-body"><div class="http-mean">サーバーがそのリクエスト（機能）に未対応。実装されていないメソッドなど。</div><div class="http-qa"><b>QA</b> 未実装の機能を呼んだとき501で返るか、500と混同していないか。</div></div></div>
     <div class="http-card"><div class="http-code">504<span class="http-name">Gateway Timeout</span></div><div class="http-body"><div class="http-mean">後ろのサーバーからの応答が時間内に返ってこなかった。処理が重い・詰まっている。</div><div class="http-qa"><b>QA</b> 重い処理・大量データで504になるか。フロントでローディングが止まりタイムアウト表示が出るか。</div></div></div>
   </section>
 

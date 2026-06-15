@@ -82,6 +82,11 @@
       <div class="ref-card gl-card"><div class="gl-term">回帰テスト<span class="gl-read">かいきてすと</span><span class="gl-cat">基本</span></div><div class="gl-def">修正・追加によって既存の機能が壊れていないかを確認するテスト。リグレッションテストとも。</div></div>
       <div class="ref-card gl-card"><div class="gl-term">スモークテスト<span class="gl-read">すもーくてすと</span><span class="gl-cat">基本</span></div><div class="gl-def">主要機能がとりあえず動くかをざっと確認する最小限のテスト。詳細テストに入る前のゲート。</div></div>
       <div class="ref-card gl-card"><div class="gl-term">探索的テスト<span class="gl-read">たんさくてきてすと</span><span class="gl-cat">基本</span></div><div class="gl-def">事前のケースに縛られず、操作しながら気づいた点をその場で掘り下げるテスト。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">ブラックボックステスト<span class="gl-read">black box</span><span class="gl-cat">基本</span></div><div class="gl-def">内部構造を見ず、入力と出力だけに注目するテスト。「仕様どおり動くか」を外側から確認する。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">ホワイトボックステスト<span class="gl-read">white box</span><span class="gl-cat">基本</span></div><div class="gl-def">コードの中身（分岐・経路）を見ながら、論理が正しく通るかを確認するテスト。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">性能・負荷テスト<span class="gl-read">せいのう / ロードテスト</span><span class="gl-cat">基本</span></div><div class="gl-def">大量アクセス・大量データを与え、速度や安定性が保てるかを確認するテスト。限界を探るのはストレステスト。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">ユーザビリティテスト<span class="gl-read">usability</span><span class="gl-cat">基本</span></div><div class="gl-def">実際のユーザーに使ってもらい、迷わず操作できるか・分かりにくい所がないかを確認するテスト。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">モンキーテスト<span class="gl-read">monkey test</span><span class="gl-cat">基本</span></div><div class="gl-def">無秩序に操作してアプリを壊そうとするテスト。連打・乱暴な入力で想定外の落ち方を探す。</div></div>
     </div>
   </section>
 
@@ -96,6 +101,11 @@
       <div class="ref-card gl-card"><div class="gl-term">優先度<span class="gl-read">Priority</span><span class="gl-cat">バグ</span></div><div class="gl-def">どれだけ早く直すべきか。重要度が低くても多発・目立つなら優先度は上がる。重要度と別物。</div></div>
       <div class="ref-card gl-card"><div class="gl-term">起票<span class="gl-read">きひょう</span><span class="gl-cat">バグ</span></div><div class="gl-def">バグや課題をチケット（Backlog・Jira など）に登録すること。</div><div class="gl-ex">→ <a href="/tools/bug-checker/landing.html">これってバグなの？</a> で起票内容を自動生成</div></div>
       <div class="ref-card gl-card"><div class="gl-term">仕様です<span class="gl-read">しようです</span><span class="gl-cat">バグ</span></div><div class="gl-def">「不具合ではなく意図した挙動」という回答。安易な「仕様です」は後でトラブルのもとに。</div><div class="gl-ex">→ コラム「<a href="/blog/posts/spec-or-bug.html">仕様かバグか</a>」参照</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">トリアージ<span class="gl-read">triage</span><span class="gl-cat">バグ</span></div><div class="gl-def">溜まったバグを重要度・優先度で仕分けし、「今直す／後で／直さない」を決める作業。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">ワークアラウンド<span class="gl-read">回避策</span><span class="gl-cat">バグ</span></div><div class="gl-def">根本修正の前に、ユーザーが問題を避けて使えるようにする暫定の回避手段。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">既知の不具合<span class="gl-read">Known Issue</span><span class="gl-cat">バグ</span></div><div class="gl-def">把握済みだが、今回は直さずリリースすると判断したバグ。リリースノートに明記することが多い。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">再現率<span class="gl-read">さいげんりつ</span><span class="gl-cat">バグ</span></div><div class="gl-def">同じ手順で何回中何回バグが出るか。「10回中2回」のように書くと原因調査の手がかりになる。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">ブロッカー<span class="gl-read">blocker</span><span class="gl-cat">バグ</span></div><div class="gl-def">これがあると先のテストが進められない致命的なバグ。最優先で対応される。</div></div>
     </div>
   </section>
 
@@ -108,6 +118,10 @@
       <div class="ref-card gl-card"><div class="gl-term">ロールバック<span class="gl-read">切り戻し</span><span class="gl-cat">リリース</span></div><div class="gl-def">デプロイ後に問題が出たとき、ひとつ前の状態に戻すこと。誰が・どう戻すかを事前に決めておく。</div><div class="gl-ex">→ コラム「<a href="/blog/posts/friday-deploy.html">金曜17時のデプロイ</a>」参照</div></div>
       <div class="ref-card gl-card"><div class="gl-term">ホットフィックス<span class="gl-read">hotfix</span><span class="gl-cat">リリース</span></div><div class="gl-def">本番で起きた緊急の不具合を、通常リリースを待たずに即修正すること。</div></div>
       <div class="ref-card gl-card"><div class="gl-term">フィーチャーフラグ<span class="gl-read">feature flag</span><span class="gl-cat">リリース</span></div><div class="gl-def">機能をコードに入れつつ、スイッチでオン/オフ切り替えできる仕組み。段階公開や緊急停止に使う。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">CI / CD<span class="gl-read">しーあい / しーでぃー</span><span class="gl-cat">リリース</span></div><div class="gl-def">コードの変更を自動でテスト（CI）し、自動でリリース（CD）する仕組み。手作業の事故を減らす。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">カナリアリリース<span class="gl-read">canary</span><span class="gl-cat">リリース</span></div><div class="gl-def">まず一部のユーザーだけに新版を出し、問題なければ全体へ広げる段階的な公開方法。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">ブルーグリーンデプロイ<span class="gl-read">blue-green</span><span class="gl-cat">リリース</span></div><div class="gl-def">本番と同じ環境を2つ用意し、切り替えでリリースする方式。問題時は瞬時に元へ戻せる。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">マイグレーション<span class="gl-read">migration</span><span class="gl-cat">リリース</span></div><div class="gl-def">データベースの構造やデータを新しい形に移行する作業。順番・後戻りの可否を要確認。</div></div>
     </div>
   </section>
 
@@ -119,6 +133,10 @@
       <div class="ref-card gl-card"><div class="gl-term">テストカバレッジ<span class="gl-read">coverage</span><span class="gl-cat">品質</span></div><div class="gl-def">テストが対象のどれだけを網羅できているかの割合。高ければ安心とは限らない点に注意。</div></div>
       <div class="ref-card gl-card"><div class="gl-term">エビデンス<span class="gl-read">えびでんす</span><span class="gl-cat">品質</span></div><div class="gl-def">テストを実施した証拠。スクリーンショット・ログ・実行結果など。</div></div>
       <div class="ref-card gl-card"><div class="gl-term">トレーサビリティ<span class="gl-read">traceability</span><span class="gl-cat">品質</span></div><div class="gl-def">要件 → テストケース → 結果 が辿れる状態。どの要件をどのテストで確認したか追跡できる。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">テスト計画<span class="gl-read">テストけいかく</span><span class="gl-cat">品質</span></div><div class="gl-def">何を・どこまで・どの環境で・誰がテストするかをまとめた計画。テストの地図にあたる。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">DoD（完了の定義）<span class="gl-read">Definition of Done</span><span class="gl-cat">品質</span></div><div class="gl-def">「この作業はどうなったら完了か」をチームで決めた基準。テスト済み・レビュー済みなどを含む。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">品質ゲート<span class="gl-read">Quality Gate</span><span class="gl-cat">品質</span></div><div class="gl-def">次の工程へ進む前に満たすべき品質の関門。「重大バグ0件ならリリース可」など。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">バグ密度<span class="gl-read">ばぐみつど</span><span class="gl-cat">品質</span></div><div class="gl-def">規模あたりのバグ件数。多すぎる箇所は設計の見直し、少なすぎる箇所はテスト不足を疑う材料に。</div></div>
     </div>
   </section>
 
