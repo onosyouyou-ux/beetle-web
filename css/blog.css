@@ -11,8 +11,11 @@
 .posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px;}
 
 /* Post card */
-.post-card{display:block;color:inherit;border:1px solid #ebebeb;border-radius:16px;padding:24px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 12px rgba(0,0,0,0.05);transition:all .2s;}
+.post-card{position:relative;display:block;color:inherit;border:1px solid #ebebeb;border-radius:16px;padding:24px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 12px rgba(0,0,0,0.05);transition:all .2s;}
 .post-card:hover{box-shadow:0 4px 24px rgba(0,0,0,0.1);transform:translateY(-2px);}
+/* ホバーでカブトムシが降りてくる（LPの card-mascot と同じ演出） */
+.post-card::after{content:"";position:absolute;top:-80px;right:14px;width:64px;height:64px;background:url(/assets/images/kabuto.png) center/contain no-repeat;opacity:0;transition:top .35s cubic-bezier(.34,1.56,.64,1),opacity .25s ease;pointer-events:none;mix-blend-mode:multiply;}
+.post-card:hover::after{top:8px;opacity:1;}
 .post-meta{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
 .post-date{font-size:11px;color:#aaa;font-family:monospace;}
 .post-tag{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600;}
@@ -33,7 +36,8 @@
 /* note section */
 .note-section{padding:32px 0 8px;border-top:1px solid #ebebeb;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
 .note-section-label{font-size:13px;color:#999;}
-.note-link{font-size:13px;font-weight:600;padding:8px 20px;border-radius:8px;border:1px solid #ddd;color:#ccc;transition:all .15s;}
+.note-link{font-size:13px;font-weight:600;padding:8px 20px;border-radius:8px;border:1px solid #ddd;color:#555;transition:all .15s;}
+.note-link:hover{border-color:var(--color-accent);color:var(--color-accent);}
 .note-link-disabled{pointer-events:none;cursor:default;}
 
 /* WIP state */
