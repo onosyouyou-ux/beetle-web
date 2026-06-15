@@ -3,26 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>「これってバグですか？」を1000回言わなくて済む環境を作りたかった | BEETLE合同会社</title>
-<meta name="description" content="「これってバグですか？」を何度も聞かれ続けた現場の経験から、バグ判定AIツールを作るに至った経緯と、リリースの瞬間の話。">
+<title>「これ、バグですか？」って聞くの、しんどくないですか。 | BEETLE合同会社</title>
+<meta name="description" content="テスト中に1日何度も出くわす「これってバグ？」。聞く前の一手間をなくしたくて、スクショを貼るだけでバグ/仕様/不明をAIが判定するツール「これってバグなの？」を作りました。起票内容まで自動生成、月1万回まで無料。">
 <link rel="canonical" href="https://www.beetle-web.jp/blog/posts/bug-or-not.html">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="BEETLE合同会社">
-<meta property="og:title" content="「これってバグですか？」を1000回言わなくて済む環境を作りたかった | BEETLE合同会社">
-<meta property="og:description" content="「これってバグですか？」を何度も聞かれ続けた現場の経験から、バグ判定AIツールを作るに至った経緯と、リリースの瞬間の話。">
+<meta property="og:title" content="「これ、バグですか？」って聞くの、しんどくないですか。 | BEETLE合同会社">
+<meta property="og:description" content="テスト中に1日何度も出くわす「これってバグ？」。聞く前の一手間をなくしたくて、スクショを貼るだけでバグ/仕様/不明をAIが判定するツールを作りました。起票内容まで自動生成、月1万回まで無料。">
 <meta property="og:url" content="https://www.beetle-web.jp/blog/posts/bug-or-not.html">
-<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/blog/bug-or-not.png">
+<meta property="og:image:width" content="1536">
+<meta property="og:image:height" content="1024">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="「これってバグですか？」を1000回言わなくて済む環境を作りたかった | BEETLE合同会社">
-<meta name="twitter:description" content="「これってバグですか？」を何度も聞かれ続けた現場の経験から、バグ判定AIツールを作るに至った経緯と、リリースの瞬間の話。">
-<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.png">
+<meta name="twitter:title" content="「これ、バグですか？」って聞くの、しんどくないですか。 | BEETLE合同会社">
+<meta name="twitter:description" content="スクショを貼るだけでバグ/仕様/不明をAIが判定。起票内容まで自動生成する「これってバグなの？」を作りました。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/blog/bug-or-not.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","headline":"「これってバグですか？」を1000回言わなくて済む環境を作りたかった","datePublished":"2026-05-29","dateModified":"2026-06-10","description":"「これってバグですか？」を何度も聞かれ続けた現場の経験から、バグ判定AIツールを作るに至った経緯と、リリースの瞬間の話。","image":"https://www.beetle-web.jp/assets/images/OG.png","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/bug-or-not.html"}
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"「これ、バグですか？」って聞くの、しんどくないですか。バグかどうか判定するツールを作ってみた。","datePublished":"2026-05-29","dateModified":"2026-06-11","description":"テスト中に1日何度も出くわす「これってバグ？」。聞く前の一手間をなくしたくて、スクショを貼るだけでバグ/仕様/不明をAIが判定するツール「これってバグなの？」を作りました。","image":"https://www.beetle-web.jp/assets/images/blog/bug-or-not.png","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/bug-or-not.html"}
 </script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"「これってバグですか？」を1000回言わなくて済む環境を作りたかった","item":"https://www.beetle-web.jp/blog/posts/bug-or-not.html"}]}
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"「これ、バグですか？」って聞くの、しんどくないですか。","item":"https://www.beetle-web.jp/blog/posts/bug-or-not.html"}]}
 </script>
 <link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/css/common.css">
@@ -39,44 +39,47 @@
 
     <div class="post-header">
       <div class="post-meta">
-        <span class="post-date">2026-05-29</span>
+        <span class="post-date">2026-06-11</span>
         <span class="post-tag qa">QA</span>
       </div>
-      <h1 class="post-h1">「これってバグですか？」を1000回言わなくて済む環境を作りたかった</h1>
+      <h1 class="post-h1">「これ、バグですか？」って聞くの、しんどくないですか。</h1>
     </div>
+
+    <img class="post-eyecatch" src="/assets/images/blog/bug-or-not.png" alt="「これ、バグですか？」って地味にしんどくないですか。スクショを貼るだけでバグ/仕様/不明をAIが判定するツール「これってバグなの？」。">
 
     <div class="post-body">
 
-      <p class="lead">作った。<br>
-      ずっと頭の中にあったやつを、形にした。<br>
-      リリースした瞬間、特別な感慨はなかった。あ、動いてる。それだけだった。<br>
-      でも少し経って、思った。あのころの自分に渡せるものが、ひとつ増えた。</p>
+      <p class="lead">テストをやっていると、1日に何度も出くわす場面があります。<br>
+      画面の挙動がなんかおかしい。でも仕様書を見ても、それらしい記述が見当たらない。バグなのか、仕様なのか、自分の勘違いなのか。判断がつかない。</p>
 
-      <p>新人のころ、一番困ったのは「これがバグかどうかわからない」だった。<br>
-      挙動がおかしい。でも仕様書を探しても、それらしい記述が見当たらない。<br>
-      聞けば「確認中です」で返ってこない。<br>
-      その繰り返し。</p>
+      <p>で、結局こう聞くわけです。「これってバグですか？」<br>
+      この一言、地味にエネルギーいりませんか。</p>
 
-      <p>「これってバグですか？」<br>
-      この一言を言うのに、なぜかエネルギーがいった。<br>
-      バグじゃなかったときの気まずさ。仕様です、と言われたときの「あ、そうか」という感じ。聞く前から萎縮していた。<br>
-      でも聞かないと進まない。毎回ゼロから書く起票も地味にきつかった。</p>
+      <p>バグじゃなかったときの気まずさ。「仕様です」と返ってきたときの、あの「あ、そうか…」という空気。聞く前から、なんとなく萎縮している。でも聞かないと先に進めない。確認待ちで止まって、別作業に移って、戻ってきたらまた思い出すところから——。</p>
 
-      <p>あの感覚を、なくしたかった。<br>
-      だから作った。</p>
+      <p>この「聞く前の一手間」をなくしたくて、ツールを作りました。</p>
 
-      <p>「これってバグなの？」<br>
-      スクショを貼るだけで、AIが判定してくれるツールだ。<br>
-      バグか、仕様か、不明か。三択で出してくれる。<br>
-      バグなら起票内容まで自動生成する。タイトル、再現手順、期待値、実際の動作。コピーしてそのままJiraやRedmineに貼り付けられる。<br>
-      ログイン不要。インストール不要。ブラウザを開いてスクショを貼るだけ。</p>
+      <h2>スクショを貼るだけ。AIが「バグ / 仕様 / 不明」を判定します</h2>
 
-      <p>便利にしたかったわけじゃない。<br>
-      「聞く前に一回確認できる場所」が欲しかった。<br>
-      バグかどうか迷うとき、人に聞く前にここに投げれば、少なくとも方向性が出る。それだけで、動けるようになる。</p>
+      <p>名前は「これってバグなの？」。やることは1つだけ。気になる画面のスクリーンショットを貼る。それだけです。AIが画面を見て、バグ・仕様・不明の三択で判定を返します。</p>
 
-      <p>登録もいらない。<br>
-      まずスクショを一枚、貼ってみてほしい。</p>
+      <p>しかも、バグと判定された場合は<strong>起票内容まで自動生成</strong>してくれます。タイトル・深刻度・再現手順・期待値・実際の動作。JiraやRedmineにそのまま貼り付けられる形で出てくるので、毎回ゼロから起票文を書く、あの地味につらい作業が消えます。</p>
+
+      <ul>
+        <li>ログイン不要</li>
+        <li>インストール不要</li>
+        <li>ブラウザを開いて貼るだけ</li>
+        <li>月1万回まで無料</li>
+      </ul>
+
+      <h2>「正解」をくれる道具ではなく、「方向性」をくれる道具</h2>
+
+      <p>正直に言うと、AIの判定は完璧ではありません。間違えることもあります。</p>
+
+      <p>でもこれは、「人に聞く前に、一回自分で確認できる場所」として作りました。バグか仕様か迷ったとき、人に投げる前にここに通せば、少なくとも方向性は出る。それだけで、止まらずに動けるようになる。</p>
+
+      <p>新人のころの自分が一番ほしかったのは、たぶんこれでした。<br>
+      登録もいりません。まずはスクショを1枚、貼ってみてください。</p>
 
     </div>
 
@@ -89,8 +92,8 @@
       <p class="post-related-title">関連記事</p>
       <ul class="post-related-list">
         <li><a href="/blog/posts/ai-bug-report.html">AIにバグの状況を説明したら、再現手順まで書いてくれた話</a></li>
-        <li><a href="/blog/posts/test-patterns.html">テストパターン集をつくった</a></li>
-        <li><a href="/blog/posts/startup-qa.html">スタートアップのQAって、何から始めたらいいんだろう</a></li>
+        <li><a href="/blog/posts/repro-steps.html">「再現しません」で突き返されないバグ報告</a></li>
+        <li><a href="/blog/posts/spec-or-bug.html">「仕様です」の一言で、片づけないために</a></li>
       </ul>
     </div>
 
