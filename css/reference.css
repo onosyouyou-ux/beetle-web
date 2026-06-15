@@ -1,0 +1,97 @@
+/* ============================================================
+   reference.css — Reference系ページ共通スタイル
+   用語辞典 / テスト技法カタログ / リリース前チェックリスト / HTTPステータス一覧
+   変数は /style/common.css の --tp-* を流用
+   ============================================================ */
+
+body{font-family:'M PLUS 1p','Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cream);color:var(--tp-text);line-height:1.7}
+
+/* パンくず（test-patterns と統一） */
+.bc{background:var(--tp-dark);padding:0 2rem;font-size:13px;color:#888;display:flex;gap:10px;align-items:center;height:52px;position:sticky;top:0;z-index:100}
+.bc span{color:#444;white-space:nowrap}
+.bc a{color:#aaa;text-decoration:none;white-space:nowrap}
+.bc a:hover{color:#fff}
+
+/* ヒーロー */
+.hero{background:var(--tp-dark);padding:56px max(32px,calc((100% - 860px) / 2)) 48px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(232,90,26,.22) 0%,transparent 65%);pointer-events:none}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(0,0,0,.4) 0%,transparent 60%);pointer-events:none}
+.hero-badge{display:inline-block;background:var(--tp-orange);color:#fff;font-size:11px;font-weight:700;padding:4px 14px;border-radius:99px;letter-spacing:.1em;margin-bottom:18px;position:relative;z-index:1}
+.hero h1{font-size:48px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:14px;font-family:'Syne','M PLUS 1p','Noto Sans JP',sans-serif;letter-spacing:.06em;text-shadow:2px 2px 0px rgba(0,0,0,.6),0 4px 16px rgba(0,0,0,.5);position:relative;z-index:1}
+.hero h1 em{color:var(--tp-orange);font-style:normal;font-family:'M PLUS 1p','Noto Sans JP',sans-serif;text-shadow:2px 2px 0px rgba(100,20,0,.6),0 4px 20px rgba(232,90,26,.4)}
+.hero p{font-size:14px;color:#aaa;max-width:520px;margin:0 auto;line-height:1.8;position:relative;z-index:1}
+
+/* アンカーチップバー */
+.ref-nav{background:#fff;border-top:1px solid var(--tp-border);border-bottom:1px solid var(--tp-border);padding:12px max(16px,calc((100% - 1036px) / 2));display:flex;flex-wrap:wrap;gap:6px;position:sticky;top:52px;z-index:90}
+.ref-nav a{font-size:12px;padding:4px 12px;border-radius:99px;border:1px solid var(--tp-border2);color:var(--tp-text2);transition:all .12s}
+.ref-nav a:hover{background:var(--tp-orange);color:#fff;border-color:var(--tp-orange)}
+
+/* コンテンツラッパ */
+.sw{max-width:1100px;margin:0 auto;padding:32px}
+
+/* セクション見出し */
+.ref-section{margin-bottom:44px;scroll-margin-top:120px}
+.ref-sec-hd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding-bottom:8px;border-bottom:2px solid var(--tp-cream2);margin-bottom:18px}
+.ref-sec-hd h2{font-size:20px;font-weight:800}
+.ref-sec-hd .d{font-size:12px;font-weight:400;color:var(--tp-text3)}
+
+/* リード文 */
+.ref-lead{max-width:780px;margin:0 auto 8px;padding:0 32px;font-size:14px;color:var(--tp-text2);line-height:1.9}
+
+/* ====== カード共通 ====== */
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.ref-card{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:18px 20px;transition:all .15s}
+.ref-card:hover{border-color:var(--tp-orange-bd);box-shadow:0 2px 12px rgba(232,90,26,.08)}
+
+/* ====== 用語辞典 ====== */
+.gl-card .gl-term{font-size:17px;font-weight:800;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.gl-card .gl-read{font-size:12px;color:var(--tp-text3);font-weight:400}
+.gl-card .gl-cat{font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--tp-orange-bg);color:var(--tp-orange);margin-left:auto}
+.gl-card .gl-def{font-size:13px;color:var(--tp-text);line-height:1.75;margin-top:8px}
+.gl-card .gl-ex{font-size:12px;color:var(--tp-text2);background:var(--tp-cream);border-left:3px solid var(--tp-orange);border-radius:6px;padding:7px 12px;margin-top:10px}
+
+/* ====== テスト技法カタログ ====== */
+.tech-card .tech-name{font-size:17px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tech-card .tech-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--tp-blue-bg);color:var(--tp-blue)}
+.tech-row{display:grid;grid-template-columns:64px 1fr;gap:8px;margin-top:10px;font-size:13px;line-height:1.65}
+.tech-row .tech-k{font-size:10px;font-weight:700;color:var(--tp-text3);text-transform:uppercase;letter-spacing:.06em;padding-top:2px}
+.tech-card .tech-ex{font-family:'Consolas','SFMono-Regular',monospace;font-size:12px;background:var(--tp-cream);border-radius:6px;padding:7px 12px}
+
+/* ====== チェックリスト ====== */
+.ck-group{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:18px 22px;margin-bottom:16px}
+.ck-group-hd{font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.ck-group-hd .ck-icon{font-size:18px}
+.ck-group-sub{font-size:12px;color:var(--tp-text2);margin-bottom:14px}
+.ck-list{display:flex;flex-direction:column;gap:9px}
+.ck-item{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.6}
+.ck-item::before{content:"";flex-shrink:0;width:16px;height:16px;margin-top:2px;border:2px solid var(--tp-orange-bd);border-radius:4px;background:#fff}
+.ck-item b{font-weight:700}
+.ck-item .ck-why{display:block;font-size:12px;color:var(--tp-text2);margin-top:2px}
+
+/* ====== HTTPステータス ====== */
+.http-group{margin-bottom:32px}
+.http-group-hd{font-size:14px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.http-group-hd .http-cls{font-family:'Syne',monospace;font-size:13px;padding:2px 10px;border-radius:6px;color:#fff}
+.cls-2{background:var(--tp-green)}.cls-3{background:var(--tp-blue)}.cls-4{background:var(--tp-amber)}.cls-5{background:var(--tp-red)}
+.http-card{display:grid;grid-template-columns:84px 1fr;gap:14px;align-items:start;background:#fff;border:1px solid var(--tp-border);border-radius:10px;padding:14px 18px;margin-bottom:8px;transition:all .15s}
+.http-card:hover{border-color:var(--tp-orange-bd);box-shadow:0 2px 8px rgba(232,90,26,.08)}
+.http-code{font-family:'Syne',monospace;font-size:24px;font-weight:800;line-height:1.1}
+.http-code .http-name{display:block;font-size:11px;font-weight:600;color:var(--tp-text2);font-family:'M PLUS 1p',sans-serif;margin-top:3px}
+.http-body .http-mean{font-size:13px;line-height:1.65}
+.http-body .http-qa{font-size:12px;color:var(--tp-text2);background:var(--tp-cream);border-left:3px solid var(--tp-orange);border-radius:6px;padding:7px 12px;margin-top:8px}
+.http-body .http-qa b{color:var(--tp-orange)}
+
+/* ====== ページ末尾の説明 / 導線（test-tools と統一） ====== */
+.site-description{max-width:780px;margin:8px auto 0;padding:24px 32px;font-size:13px;color:var(--tp-text2);line-height:1.9;text-align:center}
+.to-service{text-align:center;padding:24px 32px 56px;font-size:14px}
+.to-service a{color:var(--tp-orange);font-weight:700}
+.to-service a:hover{text-decoration:underline}
+
+@media(max-width:600px){
+  .hero h1{font-size:30px}
+  .sw{padding:20px 16px}
+  .bc{padding-left:16px;padding-right:16px}
+  .ref-grid{grid-template-columns:1fr}
+  .http-card{grid-template-columns:70px 1fr;gap:10px}
+  .http-code{font-size:20px}
+}

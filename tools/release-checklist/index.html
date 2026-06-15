@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>リリース前チェックリスト集｜公開前に確認する項目まとめ【無料】｜BEETLE</title>
+<meta name="description" content="Webサービス・アプリのリリース前に確認したい項目を、品質・段取り・公開・公開後の4カテゴリでまとめたチェックリスト。noindex外し忘れ・ロールバック手順など、見落としやすいポイントを網羅。完全無料。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="リリース前チェックリスト集 | BEETLE">
+<meta property="og:description" content="リリース前に確認したい項目を品質・段取り・公開・公開後の4カテゴリでまとめたチェックリスト。完全無料。">
+<meta property="og:url" content="https://www.beetle-web.jp/tools/release-checklist/">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="リリース前チェックリスト集 | BEETLE">
+<meta name="twitter:description" content="リリース前に確認したい項目を4カテゴリでまとめたチェックリスト。完全無料。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.png">
+<link rel="canonical" href="https://www.beetle-web.jp/tools/release-checklist/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "リリース前チェックリスト",
+  "url": "https://www.beetle-web.jp/tools/release-checklist/",
+  "description": "Webサービス・アプリのリリース前に確認する項目を、品質・段取り・公開・公開後の4カテゴリでまとめたチェックリスト。"
+}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"ツール一覧","item":"https://www.beetle-web.jp/test-tools.html"},{"@type":"ListItem","position":3,"name":"リリース前チェックリスト集","item":"https://www.beetle-web.jp/tools/release-checklist/"}]}
+</script>
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/style/common.css">
+<link rel="stylesheet" href="/css/reference.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" style="height:28px;vertical-align:middle;border-radius:6px;"></a>
+  <span>›</span>
+  <a href="/test-tools.html">ツール一覧</a>
+  <span>›</span>
+  <span style="color:#ddd;font-size:13px;">リリース前チェックリスト集</span>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">REFERENCE</div>
+  <h1>リリース前<em>チェックリスト</em></h1>
+  <p>「出す前に、これ確認した？」<br>公開のたびに見返したい項目を、4つのフェーズでまとめたよ。</p>
+</div>
+
+<div class="ref-nav">
+  <a href="#r-quality">機能・品質の最終確認</a>
+  <a href="#r-ops">リリースの段取り</a>
+  <a href="#r-web">公開まわり（Web）</a>
+  <a href="#r-after">公開後の確認</a>
+</div>
+
+<p class="ref-lead">リリースの事故は、難しい技術ではなく「確認したつもり」から起きます。プロジェクトに合わせて削ったり足したりしながら、毎回の出発前点検として使ってください。</p>
+
+<div class="sw">
+
+  <section id="r-quality" class="ref-section">
+    <div class="ck-group">
+      <div class="ck-group-hd"><span class="ck-icon">✅</span>機能・品質の最終確認</div>
+      <div class="ck-group-sub">「動くはず」を「動いた」に変えるパート。</div>
+      <div class="ck-list">
+        <div class="ck-item"><span><b>主要シナリオが本番相当の環境で通る</b><span class="ck-why">ローカルで動いても本番構成で動くとは限らない。ステージングで通しで確認。</span></span></div>
+        <div class="ck-item"><span><b>回帰テストを実施した</b><span class="ck-why">今回の変更で、既存の機能が壊れていないか。影響範囲の周辺は特に。</span></span></div>
+        <div class="ck-item"><span><b>異常系（エラー時の挙動）を確認した</b><span class="ck-why">通信断・入力ミス・権限なしなど、失敗したときに壊れないか。</span></span></div>
+        <div class="ck-item"><span><b>対応ブラウザ・端末で表示を確認した</b><span class="ck-why">Safari / Android / 実機の小さい画面でのレイアウト崩れ。</span></span></div>
+        <div class="ck-item"><span><b>文言・リンク・画像の差し替え漏れがない</b><span class="ck-why">「サンプルテキスト」「test@example.com」「ダミー画像」の残り。</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="r-ops" class="ref-section">
+    <div class="ck-group">
+      <div class="ck-group-hd"><span class="ck-icon">🛠️</span>リリースの段取り</div>
+      <div class="ck-group-sub">「誰が・いつ・どう戻すか」を出す前に決めておく。</div>
+      <div class="ck-list">
+        <div class="ck-item"><span><b>リリース日時・担当・連絡経路が共有されている</b><span class="ck-why">いつ出して、何かあったら誰に連絡するか。</span></span></div>
+        <div class="ck-item"><span><b>ロールバック手順が用意され、誰が戻すか決まっている</b><span class="ck-why">出す前に決める。問題が起きてから考えるのでは遅い。</span></span></div>
+        <div class="ck-item"><span><b>DBマイグレーションの順番・後戻り可否を確認</b><span class="ck-why">一度流すと戻せない変更がないか。バックアップは取れているか。</span></span></div>
+        <div class="ck-item"><span><b>環境変数・APIキー・シークレットが本番用になっている</b><span class="ck-why">テスト用のキーのまま公開、は典型的な事故。</span></span></div>
+        <div class="ck-item"><span><b>外部サービス（決済・メール等）が本番設定になっている</b><span class="ck-why">サンドボックスのまま、Webhook先がテスト向き、を防ぐ。</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="r-web" class="ref-section">
+    <div class="ck-group">
+      <div class="ck-group-hd"><span class="ck-icon">🌐</span>公開まわり（Web）</div>
+      <div class="ck-group-sub">検索・SNS・解析まわりの取りこぼし防止。</div>
+      <div class="ck-list">
+        <div class="ck-item"><span><b>noindex の外し忘れがない</b><span class="ck-why">テスト中に付けた検索除外を外し忘れ → 公開したのに検索に出ない、を防ぐ。最重要級。</span></span></div>
+        <div class="ck-item"><span><b>旧URLからのリダイレクトを設定した</b><span class="ck-why">URL構成を変えたとき、古いリンク・検索流入を切らさない。</span></span></div>
+        <div class="ck-item"><span><b>sitemap.xml / robots.txt を更新した</b><span class="ck-why">新規ページの追加・クロール許可。更新後はSearch Consoleに送信。</span></span></div>
+        <div class="ck-item"><span><b>OGP・メタ情報・favicon を確認した</b><span class="ck-why">SNSシェア時のタイトル・画像が正しく出るか。</span></span></div>
+        <div class="ck-item"><span><b>アクセス解析（GA等）が本番で動いている</b><span class="ck-why">計測タグが入っているか、本番のIDになっているか。</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="r-after" class="ref-section">
+    <div class="ck-group">
+      <div class="ck-group-hd"><span class="ck-icon">📡</span>公開後の確認</div>
+      <div class="ck-group-sub">出して終わりじゃない。出した直後が一番危ない。</div>
+      <div class="ck-list">
+        <div class="ck-item"><span><b>本番で主要動線をスモークテストした</b><span class="ck-why">ログイン・購入・送信など、お金と信用に直結する動線を実際に1回触る。</span></span></div>
+        <div class="ck-item"><span><b>エラーログ・監視ダッシュボードを確認した</b><span class="ck-why">公開直後にエラーが急増していないか。</span></span></div>
+        <div class="ck-item"><span><b>表示速度・初回ロードに問題がない</b><span class="ck-why">本番のデータ量・アクセスで重くなっていないか。</span></span></div>
+        <div class="ck-item"><span><b>障害時の連絡先・問い合わせが機能している</b><span class="ck-why">いざという時の受け皿が動くか。</span></span></div>
+        <div class="ck-item"><span><b>しばらく様子を見る人を決めておく</b><span class="ck-why">特に金曜・連休前は、誰も見ていない時間に問題が育つ。</span></span></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="site-description">
+  <p>Webサービス・アプリのリリースで見落としやすい項目を、品質・段取り・公開・公開後の4フェーズで整理しています。</p>
+  <p>金曜やリリース前の不安については、コラム「<a href="/blog/posts/friday-deploy.html">金曜17時のデプロイ</a>」もどうぞ。</p>
+</div>
+
+<div class="to-service">
+  <p>QA支援サービスについては → <a href="/">BEETLE合同会社トップ</a></p>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+</body>
+</html>

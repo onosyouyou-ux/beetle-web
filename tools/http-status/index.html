@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTTPステータスコード一覧｜404・500・403の意味とQA観点【無料】｜BEETLE</title>
+<meta name="description" content="200・301・400・401・403・404・429・500・502・503など、QAが遭遇するHTTPステータスコードの意味と「テスト時に何を確認すべきか」をまとめた早見表。401と403の違い、CORSエラーの正体も解説。完全無料。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="HTTPステータスコード一覧（QA観点つき） | BEETLE">
+<meta property="og:description" content="QAが遭遇するHTTPステータスコードの意味と、テスト時に何を確認すべきかをまとめた早見表。完全無料。">
+<meta property="og:url" content="https://www.beetle-web.jp/tools/http-status/">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HTTPステータスコード一覧（QA観点つき） | BEETLE">
+<meta name="twitter:description" content="QAが遭遇するHTTPステータスコードの意味とテスト観点をまとめた早見表。完全無料。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.png">
+<link rel="canonical" href="https://www.beetle-web.jp/tools/http-status/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "HTTPステータスコード一覧（QA観点つき）",
+  "url": "https://www.beetle-web.jp/tools/http-status/",
+  "description": "QAが遭遇するHTTPステータスコードの意味と、テスト時に何を確認すべきかをまとめた早見表。",
+  "author": { "@type": "Organization", "name": "BEETLE合同会社" },
+  "publisher": { "@type": "Organization", "name": "BEETLE合同会社", "url": "https://www.beetle-web.jp" }
+}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"ツール一覧","item":"https://www.beetle-web.jp/test-tools.html"},{"@type":"ListItem","position":3,"name":"HTTPステータスコード一覧","item":"https://www.beetle-web.jp/tools/http-status/"}]}
+</script>
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/style/common.css">
+<link rel="stylesheet" href="/css/reference.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" style="height:28px;vertical-align:middle;border-radius:6px;"></a>
+  <span>›</span>
+  <a href="/test-tools.html">ツール一覧</a>
+  <span>›</span>
+  <span style="color:#ddd;font-size:13px;">HTTPステータス一覧</span>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">REFERENCE</div>
+  <h1>HTTP<em>ステータス一覧</em></h1>
+  <p>「この404、どういう意味のやつ？」<br>QAが遭遇するステータスコードを、テスト観点つきでまとめたよ。</p>
+</div>
+
+<div class="ref-nav">
+  <a href="#h-2xx">2xx 成功</a>
+  <a href="#h-3xx">3xx リダイレクト</a>
+  <a href="#h-4xx">4xx クライアントエラー</a>
+  <a href="#h-5xx">5xx サーバーエラー</a>
+  <a href="#h-misc">混同しやすいエラー</a>
+</div>
+
+<p class="ref-lead">ステータスコードは「誰が悪いのか」を表す番号です。4xx はリクエスト側（＝多くの場合フロントや入力）、5xx はサーバー側。切り分けの第一歩として、各コードでQAが何を確認すべきかを添えました。</p>
+
+<div class="sw">
+
+  <section id="h-2xx" class="ref-section http-group">
+    <div class="http-group-hd"><span class="http-cls cls-2">2xx</span> 成功 — リクエストは正常に処理された</div>
+    <div class="http-card"><div class="http-code">200<span class="http-name">OK</span></div><div class="http-body"><div class="http-mean">リクエストが成功し、結果が返ってきた状態。一番よく見る正常応答。</div><div class="http-qa"><b>QA</b> 200でも中身が空・エラー文言が本文に入っている「中身だけ失敗」がある。ステータスだけで成功判定しない。</div></div></div>
+    <div class="http-card"><div class="http-code">201<span class="http-name">Created</span></div><div class="http-body"><div class="http-mean">リクエストが成功し、新しいリソースが作成された。登録・投稿系のAPIで返る。</div><div class="http-qa"><b>QA</b> 作成後に実際にデータが増えているか、レスポンスに作成されたIDが含まれるかを確認。</div></div></div>
+    <div class="http-card"><div class="http-code">204<span class="http-name">No Content</span></div><div class="http-body"><div class="http-mean">成功したが、返す本文がない。削除やお気に入り解除などで使われる。</div><div class="http-qa"><b>QA</b> 本文が空でも正常。フロントが本文を期待して落ちないか確認。</div></div></div>
+  </section>
+
+  <section id="h-3xx" class="ref-section http-group">
+    <div class="http-group-hd"><span class="http-cls cls-3">3xx</span> リダイレクト — 別の場所へ案内</div>
+    <div class="http-card"><div class="http-code">301<span class="http-name">Moved Permanently</span></div><div class="http-body"><div class="http-mean">恒久的な移転。URLが完全に変わったときに使う。検索エンジンも評価を引き継ぐ。</div><div class="http-qa"><b>QA</b> URL構成を変えたリリースで、旧URLが301で新URLに飛ぶか。SEO評価の引き継ぎに重要。</div></div></div>
+    <div class="http-card"><div class="http-code">302<span class="http-name">Found</span></div><div class="http-body"><div class="http-mean">一時的な移転。元のURLは生きている前提。ログイン後のリダイレクト等で使われる。</div><div class="http-qa"><b>QA</b> 「恒久移転なのに302」だと検索評価が移らない。301/302の使い分けが意図通りか確認。</div></div></div>
+    <div class="http-card"><div class="http-code">304<span class="http-name">Not Modified</span></div><div class="http-body"><div class="http-mean">前回から変わっていないので、キャッシュを使ってという応答。表示は速くなる。</div><div class="http-qa"><b>QA</b> 更新したのに古い表示が出る「キャッシュ事故」の原因になりがち。強制リロードで切り分け。</div></div></div>
+  </section>
+
+  <section id="h-4xx" class="ref-section http-group">
+    <div class="http-group-hd"><span class="http-cls cls-4">4xx</span> クライアントエラー — リクエスト側に問題</div>
+    <div class="http-card"><div class="http-code">400<span class="http-name">Bad Request</span></div><div class="http-body"><div class="http-mean">リクエストの形式がおかしい。必須パラメータ不足・型違いなど。</div><div class="http-qa"><b>QA</b> 不正な入力で500ではなく400が返るか。エラー文言がユーザーに分かる内容か。</div></div></div>
+    <div class="http-card"><div class="http-code">401<span class="http-name">Unauthorized</span></div><div class="http-body"><div class="http-mean">認証されていない＝「あなたが誰か分からない」。未ログイン・トークン切れ。</div><div class="http-qa"><b>QA</b> トークン切れで401 → ログイン画面へ誘導されるか。403との違いに注意（401＝未認証）。</div></div></div>
+    <div class="http-card"><div class="http-code">403<span class="http-name">Forbidden</span></div><div class="http-body"><div class="http-mean">認証はされているが権限がない＝「誰かは分かるが、それは許されていない」。</div><div class="http-qa"><b>QA</b> 一般ユーザーが管理APIを直接叩いて403になるか。URL直打ち・API直叩きでの権限テスト必須。</div></div></div>
+    <div class="http-card"><div class="http-code">404<span class="http-name">Not Found</span></div><div class="http-body"><div class="http-mean">リソースが存在しない。URLの打ち間違い・削除済みデータへのアクセスなど。</div><div class="http-qa"><b>QA</b> 存在しないID・削除済みデータで404が返り、専用の404画面が出るか。500で落ちないこと。</div></div></div>
+    <div class="http-card"><div class="http-code">405<span class="http-name">Method Not Allowed</span></div><div class="http-body"><div class="http-mean">そのURLに対して、使ったメソッド（GET/POST等）が許可されていない。</div><div class="http-qa"><b>QA</b> API仕様と実装でメソッドがズレていないか。GET専用にPOSTした場合の挙動。</div></div></div>
+    <div class="http-card"><div class="http-code">409<span class="http-name">Conflict</span></div><div class="http-body"><div class="http-mean">現在の状態と矛盾する。重複登録・同時編集の衝突など。</div><div class="http-qa"><b>QA</b> メール重複登録・2人同時編集の保存で409が返り、適切なメッセージが出るか。</div></div></div>
+    <div class="http-card"><div class="http-code">422<span class="http-name">Unprocessable Entity</span></div><div class="http-body"><div class="http-mean">形式は正しいが、内容（バリデーション）が通らない。多くのAPIで入力エラーに使う。</div><div class="http-qa"><b>QA</b> どの項目がなぜダメか、レスポンスにフィールド単位のエラーが含まれるか。</div></div></div>
+    <div class="http-card"><div class="http-code">429<span class="http-name">Too Many Requests</span></div><div class="http-body"><div class="http-mean">短時間にリクエストが多すぎる。レート制限に引っかかった状態。</div><div class="http-qa"><b>QA</b> 連打・大量送信で429が返るか。ユーザーに「時間を置いて」と伝わるか。</div></div></div>
+  </section>
+
+  <section id="h-5xx" class="ref-section http-group">
+    <div class="http-group-hd"><span class="http-cls cls-5">5xx</span> サーバーエラー — サーバー側に問題</div>
+    <div class="http-card"><div class="http-code">500<span class="http-name">Internal Server Error</span></div><div class="http-body"><div class="http-mean">サーバー内部で想定外のエラー。原因は様々で、最も「中で何か壊れた」を表す汎用コード。</div><div class="http-qa"><b>QA</b> 入力ミスで500が出るのは黙ってバグ。本来400番台で返すべきものが500になっていないか要チェック。</div></div></div>
+    <div class="http-card"><div class="http-code">502<span class="http-name">Bad Gateway</span></div><div class="http-body"><div class="http-mean">前段のサーバー（ロードバランサ等）が、後ろのサーバーから不正な応答を受けた。</div><div class="http-qa"><b>QA</b> デプロイ直後・再起動中に出やすい。再現条件（タイミング）をログとあわせて記録。</div></div></div>
+    <div class="http-card"><div class="http-code">503<span class="http-name">Service Unavailable</span></div><div class="http-body"><div class="http-mean">一時的にサービスが使えない。メンテナンス中・過負荷など。</div><div class="http-qa"><b>QA</b> メンテナンス画面が正しく出るか。復旧後に自動で通常表示へ戻るか。</div></div></div>
+    <div class="http-card"><div class="http-code">504<span class="http-name">Gateway Timeout</span></div><div class="http-body"><div class="http-mean">後ろのサーバーからの応答が時間内に返ってこなかった。処理が重い・詰まっている。</div><div class="http-qa"><b>QA</b> 重い処理・大量データで504になるか。フロントでローディングが止まりタイムアウト表示が出るか。</div></div></div>
+  </section>
+
+  <section id="h-misc" class="ref-section">
+    <div class="ref-sec-hd"><h2>混同しやすいエラー</h2><span class="d">ステータスコードに見えて、別物のエラー</span></div>
+    <div class="ref-grid">
+      <div class="ref-card gl-card"><div class="gl-term">CORSエラー<span class="gl-read">しーおーあーるえす</span><span class="gl-cat">ブラウザ</span></div><div class="gl-def">別オリジン（ドメイン）へのアクセスをブラウザがブロックした状態。サーバーは正常に応答していることも多く、HTTPステータスとは別レイヤーの制限。</div><div class="gl-ex">確認: サーバーの許可ヘッダ（Access-Control-Allow-Origin）の設定。フロントの叩き先URL。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">Mixed Content<span class="gl-read">みっくすどこんてんつ</span><span class="gl-cat">ブラウザ</span></div><div class="gl-def">https のページから http のリソースを読み込もうとしてブロックされる。画像が出ない・スクリプトが動かない原因に。</div><div class="gl-ex">確認: 本番（https）で http:// のURL直書きが残っていないか。</div></div>
+      <div class="ref-card gl-card"><div class="gl-term">ERR_CONNECTION / タイムアウト<span class="gl-read">せつぞくえらー</span><span class="gl-cat">ネットワーク</span></div><div class="gl-def">そもそもサーバーに到達できていない状態。ステータスコードすら返らない。URL誤り・サーバー停止・DNS・通信断など。</div><div class="gl-ex">確認: 機内モード等で通信を切ったとき、アプリがクラッシュせずエラー表示できるか。</div></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="site-description">
+  <p>QAが実際に遭遇するHTTPステータスコードを中心に、意味と「テスト時に何を確認すべきか」をまとめています。</p>
+  <p>APIまわりの観点は <a href="/tools/test-patterns/">TESTパターン集</a> の「API関数」セクションもあわせてどうぞ。</p>
+</div>
+
+<div class="to-service">
+  <p>QA支援サービスについては → <a href="/">BEETLE合同会社トップ</a></p>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+</body>
+</html>

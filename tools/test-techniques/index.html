@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>テスト技法カタログ｜同値分割・境界値・デシジョンテーブルを例つき解説【無料】｜BEETLE</title>
+<meta name="description" content="同値分割・境界値分析・デシジョンテーブル・状態遷移・ペアワイズなど、代表的なテスト設計技法を「なに・例・使いどころ」つきで整理したカタログ。テストケースの作り方に迷ったら。完全無料。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="テスト技法カタログ | BEETLE">
+<meta property="og:description" content="同値分割・境界値・デシジョンテーブル・状態遷移・ペアワイズなど代表的なテスト設計技法を例つきで整理。完全無料。">
+<meta property="og:url" content="https://www.beetle-web.jp/tools/test-techniques/">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="テスト技法カタログ | BEETLE">
+<meta name="twitter:description" content="代表的なテスト設計技法を「なに・例・使いどころ」つきで整理したカタログ。完全無料。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.png">
+<link rel="canonical" href="https://www.beetle-web.jp/tools/test-techniques/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "テスト技法カタログ",
+  "url": "https://www.beetle-web.jp/tools/test-techniques/",
+  "description": "代表的なテスト設計技法を「なに・例・使いどころ」つきで整理したカタログ。",
+  "author": { "@type": "Organization", "name": "BEETLE合同会社" },
+  "publisher": { "@type": "Organization", "name": "BEETLE合同会社", "url": "https://www.beetle-web.jp" }
+}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"ツール一覧","item":"https://www.beetle-web.jp/test-tools.html"},{"@type":"ListItem","position":3,"name":"テスト技法カタログ","item":"https://www.beetle-web.jp/tools/test-techniques/"}]}
+</script>
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/style/common.css">
+<link rel="stylesheet" href="/css/reference.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" style="height:28px;vertical-align:middle;border-radius:6px;"></a>
+  <span>›</span>
+  <a href="/test-tools.html">ツール一覧</a>
+  <span>›</span>
+  <span style="color:#ddd;font-size:13px;">テスト技法カタログ</span>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">REFERENCE</div>
+  <h1>テスト技法<em>カタログ</em></h1>
+  <p>「テストケース、勘で書いてない？」<br>代表的なテスト設計技法を、なに・例・使いどころ つきでまとめたよ。</p>
+</div>
+
+<div class="ref-nav">
+  <a href="#t-input">入力値の設計技法</a>
+  <a href="#t-comb">振る舞い・組合せの技法</a>
+  <a href="#t-exp">経験ベースの技法</a>
+</div>
+
+<p class="ref-lead">テストケースは数を増やせばいいわけじゃない。少ない手数で抜けなく確認するために、先人が整理した「型」がテスト技法です。代表的なものを実務で使う粒度でまとめました。</p>
+
+<div class="sw">
+
+  <section id="t-input" class="ref-section">
+    <div class="ref-sec-hd"><h2>入力値の設計技法</h2><span class="d">「どの値を入れて試すか」を絞り込む</span></div>
+    <div class="ref-grid">
+
+      <div class="ref-card tech-card">
+        <div class="tech-name">同値分割<span class="tech-tag">入力設計</span></div>
+        <div class="tech-row"><span class="tech-k">なに</span><span>同じ結果になる入力値をグループ（同値クラス）にまとめ、各グループから代表1つだけ試す。全部試さず網羅する考え方。</span></div>
+        <div class="tech-row"><span class="tech-k">例</span><span class="tech-ex">年齢 0–17＝不可 / 18–64＝可 / 65–＝割引<br>→ 各帯から1つ（例 10・30・70）試せば十分</span></div>
+        <div class="tech-row"><span class="tech-k">使う時</span><span>入力に「範囲」や「区分」があるとき。まず最初に切る基本技法。</span></div>
+      </div>
+
+      <div class="ref-card tech-card">
+        <div class="tech-name">境界値分析<span class="tech-tag">入力設計</span></div>
+        <div class="tech-row"><span class="tech-k">なに</span><span>バグは境目で起きやすい。同値クラスの「境界のすぐ内側・ちょうど・すぐ外側」を狙って試す。</span></div>
+        <div class="tech-row"><span class="tech-k">例</span><span class="tech-ex">上限100文字なら 99 / 100 / 101 を試す<br>0以上なら -1 / 0 / 1</span></div>
+        <div class="tech-row"><span class="tech-k">使う時</span><span>文字数・金額・日付・件数など上下限のある入力。同値分割とセットで使う。</span></div>
+      </div>
+
+      <div class="ref-card tech-card">
+        <div class="tech-name">デシジョンテーブル<span class="tech-tag">入力設計</span></div>
+        <div class="tech-row"><span class="tech-k">なに</span><span>複数の条件の組合せと、それぞれに対する結果を表で整理する。条件分岐の抜け漏れを可視化できる。</span></div>
+        <div class="tech-row"><span class="tech-k">例</span><span class="tech-ex">会員? × クーポン有? × 5千円以上?<br>→ 2×2×2=8通りの「送料/割引」を表で確認</span></div>
+        <div class="tech-row"><span class="tech-k">使う時</span><span>「○○かつ△△のとき□□」のような条件が絡み合う仕様。料金・権限・割引判定など。</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="t-comb" class="ref-section">
+    <div class="ref-sec-hd"><h2>振る舞い・組合せの技法</h2><span class="d">状態の流れや、爆発する組合せを扱う</span></div>
+    <div class="ref-grid">
+
+      <div class="ref-card tech-card">
+        <div class="tech-name">状態遷移テスト<span class="tech-tag">振る舞い</span></div>
+        <div class="tech-row"><span class="tech-k">なに</span><span>「状態」と「状態が変わるきっかけ」を図にして、正しい遷移・あり得ない遷移を確認する。</span></div>
+        <div class="tech-row"><span class="tech-k">例</span><span class="tech-ex">注文: 受付→発送→完了<br>「完了」から「キャンセル」できてしまわないか試す</span></div>
+        <div class="tech-row"><span class="tech-k">使う時</span><span>ステータスを持つ機能。注文・申請・予約・ログイン状態など。</span></div>
+      </div>
+
+      <div class="ref-card tech-card">
+        <div class="tech-name">ペアワイズ（全ペア）<span class="tech-tag">組合せ</span></div>
+        <div class="tech-row"><span class="tech-k">なに</span><span>全組合せは多すぎるとき、「どの2項目のペアも1度は登場する」最小セットに絞る。多くの不具合は2要素の組合せで出るという経験則が前提。</span></div>
+        <div class="tech-row"><span class="tech-k">例</span><span class="tech-ex">OS3×ブラウザ3×権限3＝27通り<br>→ ペアワイズなら約9通りに圧縮</span></div>
+        <div class="tech-row"><span class="tech-k">使う時</span><span>環境・設定の組合せが爆発するとき。動作環境テストの定番。</span></div>
+      </div>
+
+      <div class="ref-card tech-card">
+        <div class="tech-name">直交表<span class="tech-tag">組合せ</span></div>
+        <div class="tech-row"><span class="tech-k">なに</span><span>各要素が均等に組み合わさるよう設計された表を使い、少ない件数で組合せを網羅する。ペアワイズの数学的な土台。</span></div>
+        <div class="tech-row"><span class="tech-k">例</span><span class="tech-ex">L8・L9 などの直交表に項目を割り付け<br>→ ツールで自動生成するのが現実的</span></div>
+        <div class="tech-row"><span class="tech-k">使う時</span><span>組合せを厳密に絞りたいとき。考え方はペアワイズと近い。</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="t-exp" class="ref-section">
+    <div class="ref-sec-hd"><h2>経験ベースの技法</h2><span class="d">型だけでは拾えないバグを、人の勘で拾う</span></div>
+    <div class="ref-grid">
+
+      <div class="ref-card tech-card">
+        <div class="tech-name">エラー推測<span class="tech-tag">経験ベース</span></div>
+        <div class="tech-row"><span class="tech-k">なに</span><span>「ここ怪しいな」という経験則からバグの出そうな入力・操作を狙い撃ちする。過去のバグ傾向が武器になる。</span></div>
+        <div class="tech-row"><span class="tech-k">例</span><span class="tech-ex">空入力 / 0 / 全角 / 絵文字 / 連打 /<br>戻るボタン / 通信断 を意図的に試す</span></div>
+        <div class="tech-row"><span class="tech-k">使う時</span><span>正攻法のケースを作った後の上乗せに。異常系の発想源。</span></div>
+      </div>
+
+      <div class="ref-card tech-card">
+        <div class="tech-name">探索的テスト<span class="tech-tag">経験ベース</span></div>
+        <div class="tech-row"><span class="tech-k">なに</span><span>事前の台本に縛られず、操作しながら気づいた点をその場で掘り下げる。設計と実行を同時に行う。</span></div>
+        <div class="tech-row"><span class="tech-k">例</span><span class="tech-ex">30分・対象「カート機能」と決めて<br>自由に触り、見つけた違和感を記録</span></div>
+        <div class="tech-row"><span class="tech-k">使う時</span><span>仕様が固まりきらない時期や、ケースで縛りすぎたくない機能。</span></div>
+      </div>
+
+      <div class="ref-card tech-card">
+        <div class="tech-name">シナリオ（ユースケース）テスト<span class="tech-tag">経験ベース</span></div>
+        <div class="tech-row"><span class="tech-k">なに</span><span>実際のユーザーの一連の行動に沿って通しで確認する。単体では問題なくても流れで壊れる不具合を拾う。</span></div>
+        <div class="tech-row"><span class="tech-k">例</span><span class="tech-ex">登録→ログイン→購入→キャンセル→<br>再購入 を一連で操作して整合性を確認</span></div>
+        <div class="tech-row"><span class="tech-k">使う時</span><span>結合〜システムテスト。機能をまたぐ業務フローの確認に。</span></div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<div class="site-description">
+  <p>テスト設計に迷ったときの引き出しとして、代表的な技法を実務で使う粒度でまとめています。</p>
+  <p>具体的な観点やパターンが知りたいときは <a href="/tools/test-patterns/">TESTパターン集</a> もあわせてどうぞ。</p>
+</div>
+
+<div class="to-service">
+  <p>QA支援サービスについては → <a href="/">BEETLE合同会社トップ</a></p>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+</body>
+</html>

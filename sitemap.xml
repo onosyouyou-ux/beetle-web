@@ -51,6 +51,30 @@
   </url>
 
   <url>
+    <loc>https://www.beetle-web.jp/tools/test-techniques/</loc>
+    <lastmod>2026-06-15</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/tools/glossary/</loc>
+    <lastmod>2026-06-15</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/tools/release-checklist/</loc>
+    <lastmod>2026-06-15</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/tools/http-status/</loc>
+    <lastmod>2026-06-15</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://www.beetle-web.jp/tools/bug-checker/landing.html</loc>
     <lastmod>2026-06-08</lastmod>
     <priority>0.8</priority>
