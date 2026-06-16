@@ -57,7 +57,7 @@ a{text-decoration:none;}
 .brand-hero { background: #1c1c2e; position: relative; overflow: hidden; }
 .brand-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 14% 50%, rgba(192,99,76,0.22) 0%, transparent 55%); pointer-events: none; }
 .brand-hero::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: linear-gradient(90deg, var(--color-accent) 0%, #e0a187 50%, transparent 100%); }
-.brand-hero-inner { max-width: 1100px; margin: 0 auto; padding: 30px max(24px, calc((100% - 1052px) / 2)); display: flex; align-items: center; gap: 26px; position: relative; z-index: 1; }
+.brand-hero-inner { max-width: 1100px; margin: 0 auto; padding: 30px 24px; display: flex; align-items: center; gap: 26px; position: relative; z-index: 1; }
 .brand-hero-logo { display: flex; align-items: center; gap: 11px; flex-shrink: 0; }
 .brand-hero-logo img { width: 40px; height: 40px; border-radius: 9px; }
 .brand-hero-logo .bh-word { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: 0.08em; color: #fff; }

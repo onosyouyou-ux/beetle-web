@@ -16,9 +16,9 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 .hero-body{font-size:15px;color:var(--tp-text2);line-height:1.9;margin-bottom:8px}
 .hero-body-note{font-size:15px;color:var(--tp-text);font-weight:700}
 
-.intro-note{max-width:760px;margin:0 auto;padding:20px 24px 4px;text-align:center}
+.intro-note{max-width:1040px;margin:0 auto;padding:20px 24px 4px;text-align:center}
 .intro-note p{font-size:13px;line-height:1.9;color:var(--tp-text2);margin:0}
-.intro-note b{color:var(--tp-text);font-weight:700}
+.intro-note b{color:var(--tp-text);font-weight:700;white-space:nowrap}
 
 .marquee-wrap{overflow:hidden;padding:10px 0;background:var(--tp-cream2);border-bottom:1px solid var(--tp-border)}
 .marquee{display:flex;gap:40px;animation:scroll 22s linear infinite;white-space:nowrap}
