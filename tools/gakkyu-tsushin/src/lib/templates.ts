@@ -78,37 +78,32 @@ export function eventById(id: EventId): NewsletterEvent {
   return EVENTS.find((e) => e.id === id) ?? EVENTS[2];
 }
 
-// プリセットイラストのカテゴリ（フェーズ1は選択値の保持のみ。実画像はフェーズ2）
-export const ILLUSTRATIONS: { id: string; label: string }[] = [
-  { id: '', label: '（なし）' },
-  { id: 'undokai', label: '運動会' },
-  { id: 'ensoku', label: '遠足' },
-  { id: 'shugaku', label: '修学旅行' },
-  { id: 'nyugaku', label: '入学式' },
-  { id: 'sotsugyo', label: '卒業式' },
-  { id: 'bunkasai', label: '文化祭' },
-  { id: 'gakugeikai', label: '学芸会' },
-  { id: 'taiikusai', label: '体育祭' },
-  { id: 'gassho', label: '合唱' },
-  { id: 'club', label: 'クラブ活動' },
-  { id: 'iinkai', label: '委員会活動' },
-  { id: 'haru', label: '春の自然' },
-  { id: 'natsu', label: '夏の自然' },
-  { id: 'aki', label: '秋の自然' },
-  { id: 'fuyu', label: '冬の自然' },
-  { id: 'jugyo', label: '授業' },
-  { id: 'test', label: 'テスト' },
-  { id: 'benkyo', label: '勉強' },
-  { id: 'kyushoku', label: '給食' },
-  { id: 'dokusho', label: '読書' },
-  { id: 'toshoshitsu', label: '図書室' },
-  { id: 'seiso', label: '清掃活動' },
-  { id: 'hokenshitsu', label: 'けが/保健室' },
-  { id: 'anzen', label: '安全/登下校' },
-  { id: 'aisatsu', label: 'あいさつ/マナー' },
-  { id: 'volunteer', label: 'ボランティア活動' },
-  { id: 'chiiki', label: '地域交流' },
-  { id: 'kogai', label: '校外学習' },
-  { id: 'camp', label: 'キャンプ' },
-  { id: 'yume', label: '将来の夢' },
+// プリセットイラスト。実画像は public/illust/{id}/ に配置。
+export interface Illustration {
+  id: string;        // '' = なし
+  label: string;
+  files: string[];   // /illust/{id}/ 配下のファイル名（複数バリエーション）
+}
+
+export const ILLUSTRATIONS: Illustration[] = [
+  { id: '', label: '（なし）', files: [] },
+  { id: 'undokai', label: '運動会', files: ['undokai-01.jpg', 'undokai-02.jpg', 'undokai-03.jpg', 'undokai-04.jpg', 'undokai-05.jpg', 'undokai-06.jpg', 'undokai-07.jpg', 'undokai-08.jpg', 'undokai-09.jpg', 'undokai-10.jpg', 'undokai-11.jpg'] },
+  { id: 'gakko', label: '学校生活', files: ['gakko-01.jpg', 'gakko-02.jpg', 'gakko-03.jpg', 'gakko-04.jpg', 'gakko-05.jpg', 'gakko-06.jpg', 'gakko-07.jpg', 'gakko-08.jpg', 'gakko-09.jpg', 'gakko-10.jpg', 'gakko-11.jpg', 'gakko-12.jpg', 'gakko-13.jpg', 'gakko-14.jpg'] },
+  { id: 'gyoji', label: '行事', files: ['gyoji-01.jpg', 'gyoji-02.jpg', 'gyoji-03.jpg', 'gyoji-04.jpg', 'gyoji-05.jpg', 'gyoji-06.jpg', 'gyoji-07.jpg', 'gyoji-08.jpg', 'gyoji-09.jpg', 'gyoji-10.jpg', 'gyoji-11.jpg'] },
+  { id: 'nyugaku', label: '入学式', files: ['nyugaku-01.jpg', 'nyugaku-02.jpg', 'nyugaku-03.jpg', 'nyugaku-04.jpg'] },
 ];
+
+export function illustById(id: string): Illustration | undefined {
+  return ILLUSTRATIONS.find((il) => il.id === id);
+}
+
+export function illustSrc(id: string, file: string): string {
+  return `/illust/${id}/${file}`;
+}
+
+// カテゴリ内からランダムに1枚選ぶ（なし/該当なしは空文字）
+export function pickIllustFile(id: string): string {
+  const il = illustById(id);
+  if (!il || il.files.length === 0) return '';
+  return il.files[Math.floor(Math.random() * il.files.length)];
+}

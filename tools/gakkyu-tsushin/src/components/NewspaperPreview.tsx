@@ -1,6 +1,6 @@
 'use client';
 
-import { FONTS, SIZES, VISUAL_SIZES, ILLUSTRATIONS, type FontId, type SizeId, type VisualSizeId } from '@/lib/templates';
+import { FONTS, SIZES, VISUAL_SIZES, illustSrc, type FontId, type SizeId, type VisualSizeId } from '@/lib/templates';
 import type { NewsletterResult } from '@/lib/claude';
 
 interface Props {
@@ -11,10 +11,6 @@ interface Props {
   meta: string;
   photo: string | null;
   photoSize: VisualSizeId;
-}
-
-function illustLabel(id: string): string {
-  return ILLUSTRATIONS.find((i) => i.id === id)?.label ?? '';
 }
 
 export default function NewspaperPreview({ result, font, size, title, meta, photo, photoSize }: Props) {
@@ -44,9 +40,10 @@ export default function NewspaperPreview({ result, font, size, title, meta, phot
         <div className="paper-body">
           {result.articles.map((a, i) => (
             <div className="paper-article" key={i}>
-              {a.illustration && (
+              {a.illustration && a.illustFile && (
                 <div className="paper-illust">
-                  <span>🖼 {illustLabel(a.illustration)}</span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={illustSrc(a.illustration, a.illustFile)} alt="" />
                 </div>
               )}
               <div className="paper-article-head">{a.heading}</div>

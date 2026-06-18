@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
       articles: articles.map((a) => ({
         text: String(a?.text ?? ''),
         illustration: String(a?.illustration ?? ''),
+        illustFile: String(a?.illustFile ?? ''),
       })),
       events: String(events ?? ''),
       items: String(items ?? ''),

@@ -16,7 +16,7 @@ import type { ToneId, EventId, FontId, SizeId, VisualSizeId } from '@/lib/templa
 let _uid = 0;
 const newId = () => `a${++_uid}`;
 
-const emptyArticle = (): ArticleItem => ({ id: newId(), text: '', illustration: '' });
+const emptyArticle = (): ArticleItem => ({ id: newId(), text: '', illustration: '', illustFile: '' });
 
 export default function Home() {
   const [articles, setArticles] = useState<ArticleItem[]>(() => [emptyArticle(), emptyArticle()]);
@@ -69,7 +69,7 @@ export default function Home() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          articles: articles.map((a) => ({ text: a.text, illustration: a.illustration })),
+          articles: articles.map((a) => ({ text: a.text, illustration: a.illustration, illustFile: a.illustFile })),
           events: fixed.events,
           items: fixed.items,
           caution: fixed.caution,

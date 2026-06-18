@@ -11,6 +11,7 @@ export interface Article {
   heading: string;       // 見出し（10字以内）
   body: string;          // 本文（50〜100字）
   illustration: string;  // イラストカテゴリID（先生の選択をそのまま返す）
+  illustFile: string;    // 選択中の具体的な画像ファイル名（アプリ側で管理）
 }
 
 export interface NewsletterResult {
@@ -24,6 +25,7 @@ export interface NewsletterResult {
 export interface ArticleInput {
   text: string;          // 先生が書いた素材（箇条書きOK）
   illustration: string;  // 選択中のイラストカテゴリID
+  illustFile: string;    // 選択中の画像ファイル名
 }
 
 export interface GenerateInput {
@@ -127,6 +129,7 @@ export async function generateNewsletter(input: GenerateInput): Promise<Newslett
   // 先生が選んだイラストを各記事に戻す（AIには触らせない）
   result.articles.forEach((a, i) => {
     a.illustration = input.articles[i]?.illustration ?? '';
+    a.illustFile = input.articles[i]?.illustFile ?? '';
   });
   result.events = result.events ?? '';
   result.items = result.items ?? '';

@@ -1,11 +1,12 @@
 'use client';
 
-import { ILLUSTRATIONS } from '@/lib/templates';
+import { ILLUSTRATIONS, illustById, illustSrc, pickIllustFile } from '@/lib/templates';
 
 export interface ArticleItem {
   id: string;
   text: string;
-  illustration: string;
+  illustration: string;  // カテゴリID（'' = なし）
+  illustFile: string;    // 選択中の画像ファイル名
 }
 
 interface Props {
@@ -17,6 +18,16 @@ interface Props {
 }
 
 export default function ArticleBox({ index, item, canDelete, onChange, onDelete }: Props) {
+  const cat = illustById(item.illustration);
+  const hasImages = !!cat && cat.files.length > 0;
+
+  function selectCategory(id: string) {
+    onChange({ illustration: id, illustFile: pickIllustFile(id) });
+  }
+  function shuffle() {
+    if (item.illustration) onChange({ illustFile: pickIllustFile(item.illustration) });
+  }
+
   return (
     <div className="border border-[#e8e4de] rounded-xl bg-white p-3.5">
       <div className="flex items-center justify-between mb-2">
@@ -41,9 +52,10 @@ export default function ArticleBox({ index, item, canDelete, onChange, onDelete 
       />
 
       <div className="flex items-center gap-2 mt-2">
+        <span className="text-[12px] text-[#777] shrink-0">イラスト</span>
         <select
           value={item.illustration}
-          onChange={(e) => onChange({ illustration: e.target.value })}
+          onChange={(e) => selectCategory(e.target.value)}
           aria-label="イラスト選択"
           className="border border-[#dddddd] rounded-lg bg-white text-[12px] px-2 py-1.5 text-[#1c1c2e] focus:outline-none focus:border-[#C0634C] cursor-pointer"
         >
@@ -54,14 +66,25 @@ export default function ArticleBox({ index, item, canDelete, onChange, onDelete 
           ))}
         </select>
 
-        <button
-          type="button"
-          disabled
-          title="フェーズ2で対応予定"
-          className="text-[12px] text-[#bbb] border border-[#e8e4de] rounded-lg px-2.5 py-1.5 cursor-not-allowed"
-        >
-          ✨ イラスト化
-        </button>
+        {hasImages && (
+          <button
+            type="button"
+            onClick={shuffle}
+            title="同じカテゴリの別の絵に変える"
+            className="text-[12px] text-[#1c1c2e] border border-[#dddddd] rounded-lg px-2.5 py-1.5 hover:border-[#C0634C] hover:text-[#C0634C] transition-colors"
+          >
+            🔀 別の絵
+          </button>
+        )}
+
+        {hasImages && item.illustFile && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={illustSrc(item.illustration, item.illustFile)}
+            alt=""
+            className="w-9 h-9 object-cover rounded-md border border-[#e8e4de] ml-auto"
+          />
+        )}
       </div>
     </div>
   );
