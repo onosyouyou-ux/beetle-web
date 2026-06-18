@@ -314,9 +314,16 @@ a { color: inherit; text-decoration: none; }
 .btn-cta-sub:hover { border-color: var(--white); }
 
 /* ─── FOOTER ─── */
-.footer { background: var(--navy); color: rgba(255,255,255,0.4); padding: 40px; display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; }
-.footer-logo { font-family: var(--font-en); font-weight: 800; font-size: 1rem; color: var(--white); letter-spacing: 0.08em; }
+.footer { background: var(--navy); }
+.footer-inner { max-width: 1232px; margin: 0 auto; padding: 28px 40px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+.footer-logo-box { flex-shrink: 0; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 16px 30px; }
+.footer-logo { font-family: var(--font-en); font-weight: 800; font-size: 1.7rem; color: var(--white); letter-spacing: 0.08em; }
 .footer-logo span { color: var(--orange); }
+.footer-meta { flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; }
+.footer-copy { font-size: 0.82rem; color: rgba(255,255,255,0.5); }
+.footer-privacy { font-size: 0.76rem; color: rgba(255,255,255,0.4); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2); align-self: flex-start; transition: color .15s, border-color .15s; }
+.footer-privacy:hover { color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.5); }
+.footer-skyline { height: 116px; width: auto; max-width: 44%; opacity: 0.9; }
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 768px) {
@@ -361,7 +368,10 @@ a { color: inherit; text-decoration: none; }
   .cta-section { padding: 48px 20px; }
   .cta-btns { flex-wrap: nowrap; }
   .cta-btns .btn-cta-main, .cta-btns .btn-cta-sub { flex: 1; white-space: nowrap; padding: 14px 10px; font-size: 0.85rem; }
-  .footer { flex-direction: column; gap: 12px; text-align: center; }
+  .footer-inner { flex-direction: column; gap: 18px; padding: 28px 20px; text-align: center; }
+  .footer-meta { align-items: center; }
+  .footer-privacy { align-self: center; }
+  .footer-skyline { max-width: 100%; height: auto; width: 100%; }
 }
 
 /* ─── BACK TO TOP ─── */
