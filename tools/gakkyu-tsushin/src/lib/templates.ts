@@ -5,6 +5,7 @@ export type ToneId = 'lower' | 'upper' | 'friendly';
 export type EventId = 'undokai' | 'ensoku' | 'normal' | 'sotsugyo';
 export type FontId = 'round' | 'gothic' | 'mincho';
 export type SizeId = 'small' | 'medium' | 'large';
+export type VisualSizeId = 'small' | 'medium' | 'large';
 
 export interface Tone {
   id: ToneId;
@@ -60,6 +61,13 @@ export const SIZES: { id: SizeId; label: string; className: string }[] = [
   { id: 'small', label: '小', className: 'size-small' },
   { id: 'medium', label: '中', className: 'size-medium' },
   { id: 'large', label: '大', className: 'size-large' },
+];
+
+// メインビジュアル写真の大きさ（帯の高さ＝アスペクト比で切替）
+export const VISUAL_SIZES: { id: VisualSizeId; label: string; className: string }[] = [
+  { id: 'small', label: '小', className: 'vis-small' },
+  { id: 'medium', label: '中', className: 'vis-medium' },
+  { id: 'large', label: '大', className: 'vis-large' },
 ];
 
 export function toneById(id: ToneId): Tone {

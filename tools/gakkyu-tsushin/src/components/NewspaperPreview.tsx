@@ -1,6 +1,6 @@
 'use client';
 
-import { FONTS, SIZES, ILLUSTRATIONS, type FontId, type SizeId } from '@/lib/templates';
+import { FONTS, SIZES, VISUAL_SIZES, ILLUSTRATIONS, type FontId, type SizeId, type VisualSizeId } from '@/lib/templates';
 import type { NewsletterResult } from '@/lib/claude';
 
 interface Props {
@@ -9,15 +9,18 @@ interface Props {
   size: SizeId;
   title: string;
   meta: string;
+  photo: string | null;
+  photoSize: VisualSizeId;
 }
 
 function illustLabel(id: string): string {
   return ILLUSTRATIONS.find((i) => i.id === id)?.label ?? '';
 }
 
-export default function NewspaperPreview({ result, font, size, title, meta }: Props) {
+export default function NewspaperPreview({ result, font, size, title, meta, photo, photoSize }: Props) {
   const fontClass = FONTS.find((f) => f.id === font)?.className ?? 'font-round';
   const sizeClass = SIZES.find((s) => s.id === size)?.className ?? 'size-medium';
+  const visClass = VISUAL_SIZES.find((v) => v.id === photoSize)?.className ?? 'vis-medium';
 
   return (
     <div className={`paper ${fontClass} ${sizeClass}`}>
@@ -25,6 +28,13 @@ export default function NewspaperPreview({ result, font, size, title, meta }: Pr
         <div className="paper-title">{title || 'クラスだより'}</div>
         <div className="paper-meta">{meta || '○年○組　○月号'}</div>
       </div>
+
+      {photo && (
+        <div className={`paper-visual ${visClass}`}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={photo} alt="" />
+        </div>
+      )}
 
       {!result ? (
         <div className="paper-empty">

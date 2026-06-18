@@ -9,8 +9,9 @@ import ArticleBox, { type ArticleItem } from '@/components/ArticleBox';
 import FixedFields, { type FixedFieldValues } from '@/components/FixedFields';
 import RevisionBox from '@/components/RevisionBox';
 import WhitespaceHint from '@/components/WhitespaceHint';
+import MainVisual from '@/components/MainVisual';
 import type { NewsletterResult } from '@/lib/claude';
-import type { ToneId, EventId, FontId, SizeId } from '@/lib/templates';
+import type { ToneId, EventId, FontId, SizeId, VisualSizeId } from '@/lib/templates';
 
 let _uid = 0;
 const newId = () => `a${++_uid}`;
@@ -28,6 +29,9 @@ export default function Home() {
 
   const [title, setTitle] = useState('');
   const [meta, setMeta] = useState('');
+
+  const [photo, setPhoto] = useState<string | null>(null);
+  const [photoSize, setPhotoSize] = useState<VisualSizeId>('medium');
 
   const [result, setResult] = useState<NewsletterResult | null>(null);
   const [revision, setRevision] = useState('');
@@ -113,7 +117,7 @@ export default function Home() {
                 if (p.size !== undefined) setSize(p.size);
               }}
             />
-            <NewspaperPreview result={result} font={font} size={size} title={title} meta={meta} />
+            <NewspaperPreview result={result} font={font} size={size} title={title} meta={meta} photo={photo} photoSize={photoSize} />
 
             <RevisionBox
               value={revision}
@@ -143,6 +147,15 @@ export default function Home() {
                 className="border border-[#dddddd] rounded-lg px-3 py-2 text-[14px] text-[#1c1c2e] focus:outline-none focus:border-[#C0634C]"
               />
             </div>
+
+            <MainVisual
+              photo={photo}
+              size={photoSize}
+              onChange={(p) => {
+                if (p.photo !== undefined) setPhoto(p.photo);
+                if (p.size !== undefined) setPhotoSize(p.size);
+              }}
+            />
 
             {/* 記事ボックス */}
             <div className="space-y-3">

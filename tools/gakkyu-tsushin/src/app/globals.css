@@ -184,6 +184,25 @@ body {
   white-space: nowrap;
 }
 
+/* メインビジュアル写真（タイトル下） */
+.paper-visual {
+  width: 100%;
+  margin-bottom: 0.9em;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f1efe9;
+  flex-shrink: 0;
+}
+.paper-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.paper-visual.vis-small  { aspect-ratio: 5 / 1; }
+.paper-visual.vis-medium { aspect-ratio: 3 / 1; }
+.paper-visual.vis-large  { aspect-ratio: 2 / 1; }
+
 .paper-body {
   flex: 1;
   column-count: 2;
