@@ -13,11 +13,14 @@ interface Props {
   index: number;
   item: ArticleItem;
   canDelete: boolean;
+  active: boolean;
   onChange: (patch: Partial<Omit<ArticleItem, 'id'>>) => void;
   onDelete: () => void;
+  onActivate: () => void;
+  onOpenTray: () => void;
 }
 
-export default function ArticleBox({ index, item, canDelete, onChange, onDelete }: Props) {
+export default function ArticleBox({ index, item, canDelete, active, onChange, onDelete, onActivate, onOpenTray }: Props) {
   const cat = illustById(item.illustration);
   const hasImages = !!cat && cat.files.length > 0;
 
@@ -29,7 +32,13 @@ export default function ArticleBox({ index, item, canDelete, onChange, onDelete 
   }
 
   return (
-    <div className="border border-[#e8e4de] rounded-xl bg-white p-3.5">
+    <div
+      onFocusCapture={onActivate}
+      onClick={onActivate}
+      className={`rounded-xl bg-white p-3.5 border transition-colors ${
+        active ? 'border-[#C0634C] ring-1 ring-[#C0634C]' : 'border-[#e8e4de]'
+      }`}
+    >
       <div className="flex items-center justify-between mb-2">
         <span className="field-label mb-0">記事{index + 1}</span>
         {canDelete && (
@@ -65,6 +74,15 @@ export default function ArticleBox({ index, item, canDelete, onChange, onDelete 
             </option>
           ))}
         </select>
+
+        <button
+          type="button"
+          onClick={() => { onActivate(); onOpenTray(); }}
+          title="一覧から好きな1枚を選ぶ"
+          className="text-[12px] text-[#1c1c2e] border border-[#dddddd] rounded-lg px-2.5 py-1.5 hover:border-[#C0634C] hover:text-[#C0634C] transition-colors"
+        >
+          🖼 一覧から選ぶ
+        </button>
 
         {hasImages && (
           <button

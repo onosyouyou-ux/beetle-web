@@ -10,6 +10,7 @@ import FixedFields, { type FixedFieldValues } from '@/components/FixedFields';
 import RevisionBox from '@/components/RevisionBox';
 import WhitespaceHint from '@/components/WhitespaceHint';
 import MainVisual from '@/components/MainVisual';
+import IllustTray from '@/components/IllustTray';
 import type { NewsletterResult } from '@/lib/claude';
 import type { ToneId, EventId, FontId, SizeId, VisualSizeId } from '@/lib/templates';
 
@@ -20,6 +21,8 @@ const emptyArticle = (): ArticleItem => ({ id: newId(), text: '', illustration: 
 
 export default function Home() {
   const [articles, setArticles] = useState<ArticleItem[]>(() => [emptyArticle(), emptyArticle()]);
+  const [activeArticleId, setActiveArticleId] = useState<string>(() => articles[0]?.id ?? '');
+  const [trayOpen, setTrayOpen] = useState(false);
   const [fixed, setFixed] = useState<FixedFieldValues>({ events: '', items: '', caution: '' });
 
   const [tone, setTone] = useState<ToneId>('lower');
@@ -51,11 +54,24 @@ export default function Home() {
     setArticles((prev) => prev.map((a) => (a.id === id ? { ...a, ...patch } : a)));
   }
   function deleteArticle(id: string) {
-    setArticles((prev) => (prev.length > 1 ? prev.filter((a) => a.id !== id) : prev));
+    setArticles((prev) => {
+      if (prev.length <= 1) return prev;
+      const next = prev.filter((a) => a.id !== id);
+      if (id === activeArticleId) setActiveArticleId(next[0].id);
+      return next;
+    });
   }
   function addArticle() {
-    setArticles((prev) => [...prev, emptyArticle()]);
+    setArticles((prev) => {
+      const a = emptyArticle();
+      setActiveArticleId(a.id);
+      return [...prev, a];
+    });
   }
+
+  // 入り先（編集中の記事）。消えていたら先頭に戻す。
+  const activeArticle = articles.find((a) => a.id === activeArticleId) ?? articles[0];
+  const activeIndex = articles.findIndex((a) => a.id === activeArticle.id);
 
   async function callGenerate(withRevision: boolean) {
     if (filledArticleCount === 0) {
@@ -100,7 +116,7 @@ export default function Home() {
     <>
       <AppHeader />
 
-      <main className="max-w-[1180px] mx-auto px-4 sm:px-6 py-6">
+      <main className="max-w-[1180px] mx-auto px-4 sm:px-6 py-6 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* ── 左：プレビュー ── */}
           <section className="lg:sticky lg:top-[64px] lg:self-start">
@@ -165,8 +181,11 @@ export default function Home() {
                   index={i}
                   item={a}
                   canDelete={articles.length > 1}
+                  active={a.id === activeArticle.id}
                   onChange={(patch) => updateArticle(a.id, patch)}
                   onDelete={() => deleteArticle(a.id)}
+                  onActivate={() => setActiveArticleId(a.id)}
+                  onOpenTray={() => setTrayOpen(true)}
                 />
               ))}
               <button
@@ -202,6 +221,18 @@ export default function Home() {
       </main>
 
       <AppFooter />
+
+      {/* 常設バーの高さぶん、フッターが隠れないように下に余白 */}
+      <div aria-hidden className="h-12 bg-[#1c1c2e]" />
+
+      <IllustTray
+        open={trayOpen}
+        onToggle={() => setTrayOpen((v) => !v)}
+        targetLabel={`記事${activeIndex + 1}`}
+        current={{ illustration: activeArticle.illustration, illustFile: activeArticle.illustFile }}
+        onSelect={(catId, file) => updateArticle(activeArticle.id, { illustration: catId, illustFile: file })}
+        onClear={() => updateArticle(activeArticle.id, { illustration: '', illustFile: '' })}
+      />
     </>
   );
 }
