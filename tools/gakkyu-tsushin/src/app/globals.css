@@ -197,6 +197,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform-origin: center;
   display: block;
 }
 .paper-visual.vis-small  { aspect-ratio: 5 / 1; }
@@ -274,12 +275,19 @@ body {
 .paper-empty {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   color: #b8b3a9;
   font-size: 0.95em;
   text-align: center;
   line-height: 1.8;
+}
+.paper-empty-sub {
+  display: inline-block;
+  margin-top: 0.6em;
+  font-size: 0.88em;
+  color: #c7c2b8;
 }
 
 /* ── ローディングのスピナー ── */
