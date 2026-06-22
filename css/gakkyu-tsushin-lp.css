@@ -52,17 +52,22 @@ img{max-width:100%;display:block;}
 .lp-btn .arr{font-size:18px;}
 .lp-note{margin-top:12px;font-size:12px;color:#9a938a;text-align:center;}
 
-/* ── ヒーロー ── */
+/* ── ヒーロー（背景画像＋テキスト重ね） ── */
 .lp-hero{background:linear-gradient(160deg,var(--lp-cream) 0%,#fffaf2 70%);border-bottom:1px solid #f0e4cf;overflow:hidden;}
-.lp-hero-in{max-width:1080px;margin:0 auto;padding:56px 20px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
+.lp-hero-in{position:relative;max-width:1120px;margin:0 auto;}
+.lp-hero-bg{width:100%;display:block;}
+.lp-hero-copy{position:absolute;top:50%;left:5%;transform:translateY(-50%);width:42%;}
 .lp-eyebrow{color:var(--lp-orange);font-weight:800;letter-spacing:.16em;font-size:12px;margin-bottom:14px;}
-.lp-title{font-size:44px;font-weight:900;line-height:1.18;letter-spacing:-.01em;margin:0 0 18px;}
-.lp-lead{font-size:15px;color:var(--lp-sub);line-height:1.95;margin:0 0 28px;}
+.lp-title{font-size:42px;font-weight:900;line-height:1.18;letter-spacing:-.01em;margin:0 0 18px;}
+.lp-lead{font-size:15px;color:var(--lp-sub);line-height:1.95;margin:0 0 26px;}
 .lp-hero-cta{text-align:left;}
 .lp-hero-cta .lp-note{text-align:left;}
+@media(max-width:1024px){.lp-title{font-size:34px;}.lp-lead{font-size:13px;line-height:1.8;margin-bottom:16px;}.lp-hero-copy{width:44%;}.lp-btn{padding:12px 28px;font-size:15px;}}
 @media(max-width:860px){
-  .lp-hero-in{grid-template-columns:1fr;gap:28px;padding:40px 20px;}
-  .lp-title{font-size:32px;}
+  .lp-hero-copy{position:static;transform:none;width:auto;padding:34px 20px 6px;}
+  .lp-title{font-size:30px;}
+  .lp-lead{font-size:14px;line-height:1.9;}
+  .lp-btn{padding:15px 40px;font-size:16px;}
 }
 
 /* ── プレビュー（HTML疑似） ── */
