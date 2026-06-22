@@ -14,10 +14,15 @@
   --color-border-input:  #dddddd;
 }
 
+html { scroll-behavior: smooth; }
+
 body {
   background: var(--color-bg-primary);
   color: var(--color-text-primary);
 }
+
+/* アンカー遷移時に固定ヘッダー分の余白を確保 */
+[id] { scroll-margin-top: 72px; }
 
 /* ── Top nav (dark bar) ── */
 .bc-nav {
