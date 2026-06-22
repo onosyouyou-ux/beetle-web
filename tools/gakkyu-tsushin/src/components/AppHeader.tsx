@@ -30,8 +30,8 @@ export default function AppHeader() {
           <div className="page-header-inner">
             <div className="page-header-title">学級通信メーカー</div>
             <p className="page-header-desc">
-              記事の素材を入力するだけ。AIが文章を整え、学級通信の紙面に流し込みます。<br />
-              写真ではなくイラストを使うので、子どもの顔出し（個人情報・肖像権）の心配がありません。
+              今月の出来事をメモするだけ。AIが見出しと文章を整えて、学級通信の紙面に流し込みます。<br />
+              写真なしでもイラスト付きで作れるので、子どもの顔出し（個人情報・肖像権）が気になるクラスだよりにも。写真も使えます。
             </p>
           </div>
         </div>

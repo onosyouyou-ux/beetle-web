@@ -66,7 +66,7 @@ export default function MainVisual({ photo, size, crop, onChange }: Props) {
 
   return (
     <div>
-      <div className="field-label">メインビジュアル（写真）</div>
+      <div className="field-label">メインビジュアル（写真・任意）</div>
 
       <input ref={inputRef} type="file" accept="image/*" onChange={onFile} className="hidden" />
 
@@ -76,8 +76,8 @@ export default function MainVisual({ photo, size, crop, onChange }: Props) {
           onClick={pickFile}
           className="w-full border border-dashed border-[#cbc8c0] rounded-xl bg-white text-[13px] text-[#777] py-5 hover:border-[#C0634C] hover:text-[#C0634C] transition-colors"
         >
-          📷 写真を選ぶ
-          <span className="block text-[11px] text-[#aaa] mt-1">タイトル下に大きく載せる1枚（{MAX_MB}MBまで）</span>
+          📷 写真を選ぶ（任意）
+          <span className="block text-[11px] text-[#aaa] mt-1">写真は任意。なくてもイラストで作れます（{MAX_MB}MBまで）</span>
         </button>
       ) : (
         <div className="border border-[#e8e4de] rounded-xl bg-white p-3 space-y-2.5">
