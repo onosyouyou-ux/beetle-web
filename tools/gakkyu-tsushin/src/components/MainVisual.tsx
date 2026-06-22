@@ -137,13 +137,15 @@ export default function MainVisual({ photo, size, crop, onChange }: Props) {
                     key={v.id}
                     type="button"
                     onClick={() => onChange({ size: v.id })}
-                    className={`text-[12px] rounded-md px-2.5 py-1 border transition-colors ${
+                    title={`A4印刷時のおよそ ${v.hint}`}
+                    className={`flex flex-col items-center leading-tight rounded-md px-2.5 py-1 border transition-colors ${
                       size === v.id
                         ? 'border-[#C0634C] text-[#C0634C] font-bold bg-[#fdf3f0]'
                         : 'border-[#dddddd] text-[#555] hover:border-[#C0634C]'
                     }`}
                   >
-                    {v.label}
+                    <span className="text-[12px]">{v.label}</span>
+                    <span className="text-[9px] text-[#999] font-normal">{v.hint}</span>
                   </button>
                 ))}
               </div>

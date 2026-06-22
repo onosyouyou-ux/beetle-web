@@ -73,11 +73,12 @@ export const SIZES: { id: SizeId; label: string; className: string }[] = [
   { id: 'large', label: '大', className: 'size-large' },
 ];
 
-// メインビジュアル写真の大きさ（帯の高さ＝アスペクト比で切替）
-export const VISUAL_SIZES: { id: VisualSizeId; label: string; className: string }[] = [
-  { id: 'small', label: '小', className: 'vis-small' },
-  { id: 'medium', label: '中', className: 'vis-medium' },
-  { id: 'large', label: '大', className: 'vis-large' },
+// メインビジュアル写真の大きさ（帯の高さ＝アスペクト比で切替）。
+// hint は A4印刷時のおよその寸法（横はばは紙面いっぱい＝約19cm 固定、縦が変わる）。
+export const VISUAL_SIZES: { id: VisualSizeId; label: string; className: string; hint: string }[] = [
+  { id: 'small', label: '小', className: 'vis-small', hint: '約19×4cm' },
+  { id: 'medium', label: '中', className: 'vis-medium', hint: '約19×6cm' },
+  { id: 'large', label: '大', className: 'vis-large', hint: '約19×9cm' },
 ];
 
 export function toneById(id: ToneId): Tone {
