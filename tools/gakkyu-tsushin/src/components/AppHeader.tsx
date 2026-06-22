@@ -14,6 +14,14 @@ export default function AppHeader() {
         <span className="sep">›</span>
         <span className="bc-current">学級通信メーカー</span>
         <span className="bc-spacer" />
+        <a
+          className="bc-ref-btn"
+          href="https://www.beetle-web.jp/tools/gakkyu-tsushin/landing.html"
+          target="_blank"
+          rel="noopener"
+        >
+          使い方
+        </a>
       </nav>
 
       <div className="page-header">

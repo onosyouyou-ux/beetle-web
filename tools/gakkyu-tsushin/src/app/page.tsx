@@ -10,10 +10,8 @@ import FixedFields, { type FixedFieldValues } from '@/components/FixedFields';
 import RevisionBox from '@/components/RevisionBox';
 import WhitespaceHint from '@/components/WhitespaceHint';
 import MainVisual from '@/components/MainVisual';
-import SavedBar from '@/components/SavedBar';
 import { downloadPaperPdf } from '@/lib/pdf';
 import type { NewsletterResult } from '@/lib/claude';
-import type { NewsletterSnapshot } from '@/lib/storage';
 import { DEFAULT_CROP, type ToneId, type EventId, type FontId, type SizeId, type VisualSizeId, type PhotoCrop } from '@/lib/templates';
 
 let _uid = 0;
@@ -143,27 +141,6 @@ export default function Home() {
     }
   }
 
-  function buildSnapshot() {
-    return { title, meta, articles, fixed, tone, event, font, size, photo, photoSize, photoCrop, result };
-  }
-  function loadSnapshot(s: NewsletterSnapshot) {
-    setTitle(s.title ?? '');
-    setMeta(s.meta ?? '');
-    setArticles(s.articles?.length ? s.articles : [emptyArticle()]);
-    setFixed(s.fixed ?? { events: '', items: '', caution: '' });
-    setTone(s.tone ?? 'lower');
-    setEvent(s.event ?? 'normal');
-    setFont(s.font ?? 'round');
-    setSize(s.size ?? 'medium');
-    setPhoto(s.photo ?? null);
-    setPhotoSize(s.photoSize ?? 'medium');
-    setPhotoCrop(s.photoCrop ?? { ...DEFAULT_CROP });
-    setResult(s.result ?? null);
-    setRevision('');
-    setError('');
-    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
   function focusFixed() {
     eventsRef.current?.focus();
     eventsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -224,8 +201,6 @@ export default function Home() {
           {/* ── 右：入力 ── */}
           <section className="space-y-4">
             <div className="field-label">入力エリア</div>
-
-            <SavedBar buildSnapshot={buildSnapshot} onLoad={loadSnapshot} />
 
             {/* 紙面の見出し */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

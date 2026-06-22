@@ -115,6 +115,22 @@ export const ILLUSTRATIONS: Illustration[] = [
       ...illustSet('nyugaku', 'nyugaku', 4),
     ],
   },
+  {
+    id: 'season',
+    label: '季節の行事',
+    files: [
+      '/illust/season/oshogatsu.jpg',    // お正月
+      '/illust/season/setsubun.jpg',     // 節分
+      '/illust/season/hinamatsuri.jpg',  // ひなまつり
+      '/illust/season/ohanami.jpg',      // お花見
+      '/illust/season/kodomonohi.jpg',   // こどもの日
+      '/illust/season/tanabata.jpg',     // 七夕
+      '/illust/season/natsumatsuri.jpg', // 夏祭り
+      '/illust/season/otsukimi.jpg',     // お月見
+      '/illust/season/halloween.jpg',    // ハロウィン
+      '/illust/season/christmas.jpg',    // クリスマス
+    ],
+  },
 ];
 
 export function illustById(id: string): Illustration | undefined {
