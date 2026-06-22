@@ -5,22 +5,22 @@ interface Props {
 }
 
 const PAINS = [
-  { icon: '🕗', text: '今月の出来事はあるけど、文章にする時間がない' },
-  { icon: '💭', text: '見出しを考えるのが地味に大変' },
-  { icon: '💻', text: 'Wordでレイアウトを整えるのが面倒' },
-  { icon: '📷', text: '子どもの写真を使うのは少し気になる' },
+  { img: '/illust/lp/pain-time.jpg', text: '今月の出来事はあるけど、文章にする時間がない' },
+  { img: '/illust/lp/pain-heading.jpg', text: '見出しを考えるのが地味に大変' },
+  { img: '/illust/lp/pain-layout.jpg', text: 'Wordでレイアウトを整えるのが面倒' },
+  { img: '/illust/lp/pain-photo.jpg', text: '子どもの写真を使うのは少し気になる' },
 ];
 
 const FEATURES = [
-  { tag: 'A', icon: '✏️', name: 'メモから文章化', desc: '箇条書きでもOK。AIが読みやすい文章に整えます。', tint: 'bg-[#fef6ef] border-[#f3e2d3]' },
-  { tag: 'B', icon: '🎨', name: 'イラストで安心', desc: '写真なしでも使えるから、顔出しが気になる場面でも安心。', tint: 'bg-[#f0f7fb] border-[#d8e9f2]' },
-  { tag: 'C', icon: '📄', name: 'PDFですぐ配れる', desc: '仕上がった紙面をそのままダウンロードして印刷できます。', tint: 'bg-[#f3f8f0] border-[#dcebd5]' },
+  { tag: 'A', img: '/illust/lp/feat-write.jpg', name: 'メモから文章化', desc: '箇条書きでもOK。AIが読みやすい文章に整えます。', tint: 'bg-[#fef6ef] border-[#f3e2d3]' },
+  { tag: 'B', img: '/illust/lp/feat-illust.jpg', name: 'イラストで安心', desc: '写真なしでも使えるから、顔出しが気になる場面でも安心。', tint: 'bg-[#f0f7fb] border-[#d8e9f2]' },
+  { tag: 'C', img: '/illust/lp/feat-pdf.jpg', name: 'PDFですぐ配れる', desc: '仕上がった紙面をそのままダウンロードして印刷できます。', tint: 'bg-[#f3f8f0] border-[#dcebd5]' },
 ];
 
 const STEPS = [
-  { n: '1', icon: '📝', title: '今月の出来事をメモする', note: '箇条書きでOK。思いついたことを書き出します。' },
-  { n: '2', icon: '✨', title: 'AIで見出しと文章を整える', note: 'AIが見出しを考え、読みやすい文章にまとめます。' },
-  { n: '3', icon: '🖨', title: 'PDFで保存して印刷する', note: 'A4の紙面をPDFで保存して、そのまま印刷できます。' },
+  { n: '1', img: '/illust/lp/step-memo.jpg', title: '今月の出来事をメモする', note: '箇条書きでOK。思いついたことを書き出します。' },
+  { n: '2', img: '/illust/lp/step-ai.jpg', title: 'AIで見出しと文章を整える', note: 'AIが見出しを考え、読みやすい文章にまとめます。' },
+  { n: '3', img: '/illust/lp/step-pdf.jpg', title: 'PDFで保存して印刷する', note: 'A4の紙面をPDFで保存して、そのまま印刷できます。' },
 ];
 
 export default function AppIntro({ onStart }: Props) {
@@ -92,9 +92,10 @@ export default function AppIntro({ onStart }: Props) {
           <h2 className="text-center text-[20px] sm:text-[24px] font-extrabold text-[#1c1c2e]">こんなことで止まっていませんか？</h2>
           <div className="mt-7 grid grid-cols-2 lg:grid-cols-4 gap-3">
             {PAINS.map((p) => (
-              <div key={p.text} className="rounded-2xl bg-white border border-[#eee6d8] p-5 text-center">
-                <div className="text-[34px]">{p.icon}</div>
-                <div className="mt-2 text-[13px] text-[#5a544c] leading-relaxed">{p.text}</div>
+              <div key={p.text} className="rounded-2xl bg-white border border-[#eee6d8] p-4 text-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={p.img} alt="" className="w-full aspect-[4/3] object-contain" />
+                <div className="mt-1 text-[13px] text-[#5a544c] leading-relaxed">{p.text}</div>
               </div>
             ))}
           </div>
@@ -105,13 +106,14 @@ export default function AppIntro({ onStart }: Props) {
           <h2 className="text-center text-[20px] sm:text-[24px] font-extrabold text-[#1c1c2e]">学級通信メーカーでできること</h2>
           <div className="mt-7 grid grid-cols-1 md:grid-cols-3 gap-4">
             {FEATURES.map((f) => (
-              <div key={f.tag} className={`rounded-2xl border p-6 ${f.tint}`}>
-                <div className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-[#C0634C] text-white text-[12px] font-bold flex items-center justify-center">{f.tag}</span>
-                  <span className="text-[26px]">{f.icon}</span>
+              <div key={f.tag} className={`rounded-2xl border p-5 ${f.tint}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={f.img} alt="" className="w-full aspect-[4/3] object-contain rounded-xl bg-white" />
+                <div className="mt-3 flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-[#C0634C] text-white text-[12px] font-bold flex items-center justify-center shrink-0">{f.tag}</span>
                   <span className="text-[15px] font-extrabold text-[#1c1c2e]">{f.name}</span>
                 </div>
-                <p className="mt-3 text-[13px] text-[#5a544c] leading-relaxed">{f.desc}</p>
+                <p className="mt-2 text-[13px] text-[#5a544c] leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -127,8 +129,9 @@ export default function AppIntro({ onStart }: Props) {
                   <span className="w-9 h-9 rounded-full bg-gradient-to-br from-[#C0634C] to-[#dd8a5c] text-white font-extrabold flex items-center justify-center shadow-[0_4px_12px_rgba(192,99,76,0.3)]">{s.n}</span>
                   <span className="text-[14px] font-bold text-[#1c1c2e]">{s.title}</span>
                 </div>
-                <div className="mt-3 flex items-start gap-2">
-                  <span className="text-[22px] leading-none">{s.icon}</span>
+                <div className="mt-3 flex items-center gap-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={s.img} alt="" className="w-16 h-12 object-contain shrink-0" />
                   <p className="text-[12px] text-[#6a635a] leading-relaxed">{s.note}</p>
                 </div>
                 {i < STEPS.length - 1 && (
