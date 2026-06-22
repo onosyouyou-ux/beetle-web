@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
-// 本体ドメイン配下の正規URL。
-const SITE_URL = 'https://www.beetle-web.jp/tools/gakkyu-tsushin/';
+// アプリは vercel.app 配信（SEOの正規面は本体ドメインの静的ランディング）。
+const SITE_URL = 'https://gakkyu-tsushin.vercel.app';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

@@ -97,13 +97,9 @@ export interface Illustration {
   files: string[];   // 例: '/illust/gakko/gakko-01.jpg'
 }
 
-// 本体ドメイン配下で配信するための basePath。
-// next.config.mjs の basePath と必ず一致させること。public配下の資産やAPIはこの接頭辞が要る。
-export const BASE_PATH = '/tools/gakkyu-tsushin';
-
-// {BASE_PATH}/illust/{dir}/{prefix}-01.jpg … を n 枚ぶん生成
+// /illust/{dir}/{prefix}-01.jpg … を n 枚ぶん生成
 function illustSet(dir: string, prefix: string, n: number): string[] {
-  return Array.from({ length: n }, (_, i) => `${BASE_PATH}/illust/${dir}/${prefix}-${String(i + 1).padStart(2, '0')}.jpg`);
+  return Array.from({ length: n }, (_, i) => `/illust/${dir}/${prefix}-${String(i + 1).padStart(2, '0')}.jpg`);
 }
 
 export const ILLUSTRATIONS: Illustration[] = [

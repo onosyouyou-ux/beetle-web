@@ -1,0 +1,178 @@
+/* 学級通信メーカー ランディング（あたたかい・先生向けの明るいトーン） */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
+  background:linear-gradient(165deg,#fbf7f0 0%,#f6efe4 55%,#f3ead9 100%);
+  min-height:100vh;
+  color:#2a2722;
+  overflow-x:hidden;
+}
+
+body::before{content:'';position:fixed;width:300px;height:300px;background:rgba(192,99,76,0.10);border-radius:50%;top:-90px;left:-90px;pointer-events:none;animation:float 6s ease-in-out infinite alternate;}
+body::after{content:'';position:fixed;width:220px;height:220px;background:rgba(225,170,90,0.12);border-radius:50%;bottom:-60px;right:-60px;pointer-events:none;animation:float 8s ease-in-out infinite alternate-reverse;}
+@keyframes float{from{transform:translateY(0)}to{transform:translateY(-30px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+.container{
+  max-width:640px;
+  margin:0 auto;
+  padding:0 20px 60px;
+  position:relative;z-index:1;
+}
+
+.hero{
+  text-align:center;
+  padding:48px 0 36px;
+  animation:fadeUp .7s ease both;
+}
+.hero-emoji{
+  font-size:78px;
+  display:block;
+  margin-bottom:12px;
+  animation:bounce 2.6s ease-in-out infinite;
+}
+.hero-label{
+  display:inline-block;
+  background:rgba(192,99,76,0.12);
+  border:1px solid rgba(192,99,76,0.35);
+  border-radius:4px;
+  padding:3px 10px;
+  font-size:11px;font-weight:700;letter-spacing:2px;
+  color:#a9543f;
+  margin-bottom:14px;
+}
+.hero-title{
+  font-size:clamp(28px,7vw,46px);
+  font-weight:900;
+  color:#1c1c2e;
+  margin-bottom:12px;
+  letter-spacing:1px;
+}
+.hero-sub{
+  font-size:clamp(14px,3.5vw,17px);
+  color:#5a544c;
+  line-height:1.9;
+  margin-bottom:32px;
+}
+.hero-sub strong{color:#c0634c;}
+
+.cta-btn{
+  display:inline-block;
+  background:linear-gradient(135deg,#c0634c 0%,#dd8a5c 100%);
+  color:#fff;
+  font-size:clamp(16px,4vw,19px);
+  font-weight:900;
+  padding:18px 48px;
+  border-radius:99px;
+  text-decoration:none;
+  box-shadow:0 8px 28px rgba(192,99,76,0.35),0 0 0 4px rgba(192,99,76,0.08);
+  transition:transform .18s,box-shadow .18s;
+  letter-spacing:1px;
+  animation:popIn .6s .3s ease both;
+}
+.cta-btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 14px 38px rgba(192,99,76,0.45),0 0 0 6px rgba(192,99,76,0.12);}
+.cta-btn:active{transform:translateY(0) scale(0.98);}
+
+.arrow-down{
+  display:block;
+  margin:40px auto 0;
+  font-size:28px;
+  color:#c0634c;
+  opacity:.55;
+  animation:bounce 2s ease-in-out infinite;
+}
+
+.section-title{
+  text-align:center;
+  font-size:clamp(17px,4vw,22px);
+  font-weight:900;
+  margin-bottom:24px;
+  color:#1c1c2e;
+  letter-spacing:1px;
+}
+
+.pain-section{
+  margin-bottom:48px;
+  animation:fadeUp .6s .1s ease both;
+}
+.pain-bubble{display:flex;align-items:flex-end;gap:12px;margin-bottom:20px;}
+.pain-icon{font-size:48px;flex-shrink:0;}
+.pain-speech{
+  background:#fff;
+  color:#333;
+  border-radius:20px 20px 20px 4px;
+  padding:14px 18px;
+  font-size:clamp(14px,3.5vw,16px);
+  font-weight:700;
+  line-height:1.5;
+  box-shadow:0 4px 16px rgba(0,0,0,0.08);
+}
+.pain-speech-label{display:block;font-size:11px;color:#aaa;font-weight:500;margin-bottom:4px;}
+.pain-detail{
+  display:flex;gap:12px;
+  background:#fff;
+  border:1px solid #ece6dc;
+  border-radius:20px;padding:20px;margin-bottom:16px;
+}
+.pain-detail-icon{font-size:36px;flex-shrink:0;margin-top:2px;}
+.pain-detail-text{font-size:clamp(13px,3vw,15px);color:#5a544c;line-height:1.85;}
+.pain-detail-text strong{color:#1c1c2e;}
+.pain-solution{
+  display:flex;gap:12px;
+  background:rgba(192,99,76,0.08);
+  border:2px solid rgba(192,99,76,0.35);
+  border-radius:20px;padding:20px;
+}
+.pain-solution-icon{font-size:36px;flex-shrink:0;margin-top:2px;}
+.pain-solution-text{font-size:clamp(14px,3.5vw,16px);color:#3a352e;line-height:1.85;}
+.pain-solution-text strong{font-size:clamp(16px,4vw,19px);display:block;margin-bottom:4px;color:#c0634c;}
+
+.features{display:flex;flex-direction:column;gap:16px;margin-bottom:48px;}
+.feature-card{
+  background:#fff;
+  border:1px solid #ece6dc;
+  border-radius:20px;padding:22px 20px;
+  display:flex;gap:18px;align-items:flex-start;
+  box-shadow:0 4px 18px rgba(0,0,0,0.04);
+  animation:fadeUp .6s ease both;
+}
+.feature-card:nth-child(2){animation-delay:.1s;}
+.feature-card:nth-child(3){animation-delay:.2s;}
+.feature-icon{font-size:42px;flex-shrink:0;line-height:1;}
+.feature-name{font-size:clamp(15px,3.8vw,18px);font-weight:900;margin-bottom:6px;color:#1c1c2e;}
+.feature-desc{font-size:clamp(13px,3vw,14px);color:#6a635a;line-height:1.75;}
+.feature-tag{
+  display:inline-block;
+  background:rgba(192,99,76,0.10);
+  border:1px solid rgba(192,99,76,0.3);
+  border-radius:99px;padding:2px 10px;
+  font-size:11px;font-weight:700;margin-top:8px;letter-spacing:.5px;
+  color:#a9543f;margin-right:6px;
+}
+
+.steps{display:flex;flex-direction:column;gap:0;margin-bottom:48px;}
+.step{display:flex;gap:16px;align-items:flex-start;animation:fadeUp .6s ease both;}
+.step:nth-child(2){animation-delay:.1s;}
+.step:nth-child(3){animation-delay:.2s;}
+.step-line{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.step-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#c0634c,#dd8a5c);color:#fff;font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(192,99,76,0.35);}
+.step-connector{width:2px;flex:1;min-height:24px;background:#e3dcd0;margin:4px 0;}
+.step:last-child .step-connector{display:none;}
+.step-content{padding:4px 0 28px;}
+.step-label{font-size:clamp(14px,3.5vw,16px);font-weight:900;color:#1c1c2e;margin-bottom:4px;}
+.step-note{font-size:clamp(12px,3vw,14px);color:#6a635a;line-height:1.65;}
+
+.badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:40px;}
+.badge{
+  background:#fff;
+  border:1px solid #e6e0d6;
+  border-radius:99px;padding:8px 18px;
+  font-size:13px;font-weight:700;color:#5a544c;
+}
+
+.cta-bottom{text-align:center;animation:fadeUp .6s .2s ease both;}
+.cta-bottom .cta-btn{font-size:clamp(17px,4.5vw,21px);padding:20px 56px;}
+.cta-note{margin-top:14px;font-size:12px;color:#9a938a;}

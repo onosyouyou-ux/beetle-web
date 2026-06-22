@@ -14,7 +14,7 @@ import SavedBar from '@/components/SavedBar';
 import { downloadPaperPdf } from '@/lib/pdf';
 import type { NewsletterResult } from '@/lib/claude';
 import type { NewsletterSnapshot } from '@/lib/storage';
-import { BASE_PATH, DEFAULT_CROP, type ToneId, type EventId, type FontId, type SizeId, type VisualSizeId, type PhotoCrop } from '@/lib/templates';
+import { DEFAULT_CROP, type ToneId, type EventId, type FontId, type SizeId, type VisualSizeId, type PhotoCrop } from '@/lib/templates';
 
 let _uid = 0;
 const newId = () => `a${++_uid}`;
@@ -104,7 +104,7 @@ export default function Home() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`${BASE_PATH}/api/generate/`, {
+      const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -3,24 +3,26 @@ import Script from 'next/script';
 import './globals.css';
 
 const GA_ID = 'G-N6JXJGQ1Q6';
-// 本体ドメイン配下で配信。正規URLはすべてブランドURLを向ける（vercel.appは向けない）。
-const SITE_URL = 'https://www.beetle-web.jp/tools/gakkyu-tsushin/';
+// アプリ本体は vercel.app 配信。集客(SEO)は本体ドメインの静的ランディングが担当。
+// アプリ画面はランディングを正規URLとして指す（評価をランディングに集約）。
+const APP_URL = 'https://gakkyu-tsushin.vercel.app';
+const LANDING_URL = 'https://www.beetle-web.jp/tools/gakkyu-tsushin/landing.html';
 const TITLE = '学級通信メーカー';
 const DESC = '記事の素材を入力するだけ。AIが学級通信に整えます。写真ではなくイラストで、子どもの顔出しの心配なし。';
 const OG_IMAGE = 'https://www.beetle-web.jp/assets/images/OG.png';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
+  metadataBase: new URL(APP_URL),
   title: TITLE,
   description: DESC,
-  icons: { icon: '/tools/gakkyu-tsushin/favicon.svg' },
-  alternates: { canonical: SITE_URL },
+  icons: { icon: '/favicon.svg' },
+  alternates: { canonical: LANDING_URL },
   openGraph: {
     type: 'website',
     siteName: 'BEETLE合同会社',
     title: `${TITLE} | BEETLE`,
     description: DESC,
-    url: SITE_URL,
+    url: LANDING_URL,
     locale: 'ja_JP',
     images: [{ url: OG_IMAGE, width: 1200, height: 630 }],
   },
