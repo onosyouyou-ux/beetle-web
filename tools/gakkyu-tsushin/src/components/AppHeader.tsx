@@ -15,12 +15,12 @@ export default function AppHeader() {
         <span className="bc-current">学級通信メーカー</span>
         <span className="bc-spacer" />
         <a
-          className="bc-ref-btn"
+          className="shrink-0 inline-flex items-center gap-1 rounded-full bg-[#C0634C] !text-white text-[12px] font-bold px-4 py-1.5 hover:bg-[#a9543f] transition-colors no-underline"
           href="https://www.beetle-web.jp/tools/gakkyu-tsushin/landing.html"
           target="_blank"
           rel="noopener"
         >
-          使い方
+          📖 使い方
         </a>
       </nav>
 
