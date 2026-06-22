@@ -23,8 +23,7 @@ img{max-width:100%;display:block;}
 /* ── ヘッダー ── */
 .lp-nav{
   position:sticky;top:0;z-index:50;
-  background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);
-  border-bottom:1px solid var(--lp-line);
+  background:var(--lp-cream);
 }
 .lp-nav-in{max-width:1080px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:16px;}
 .lp-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
