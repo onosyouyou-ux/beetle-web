@@ -10,9 +10,11 @@ import FixedFields, { type FixedFieldValues } from '@/components/FixedFields';
 import RevisionBox from '@/components/RevisionBox';
 import WhitespaceHint from '@/components/WhitespaceHint';
 import MainVisual from '@/components/MainVisual';
-import IllustTray from '@/components/IllustTray';
+import SavedBar from '@/components/SavedBar';
+import { downloadPaperPdf } from '@/lib/pdf';
 import type { NewsletterResult } from '@/lib/claude';
-import type { ToneId, EventId, FontId, SizeId, VisualSizeId } from '@/lib/templates';
+import type { NewsletterSnapshot } from '@/lib/storage';
+import { BASE_PATH, DEFAULT_CROP, type ToneId, type EventId, type FontId, type SizeId, type VisualSizeId, type PhotoCrop } from '@/lib/templates';
 
 let _uid = 0;
 const newId = () => `a${++_uid}`;
@@ -21,8 +23,6 @@ const emptyArticle = (): ArticleItem => ({ id: newId(), text: '', illustration: 
 
 export default function Home() {
   const [articles, setArticles] = useState<ArticleItem[]>(() => [emptyArticle(), emptyArticle()]);
-  const [activeArticleId, setActiveArticleId] = useState<string>(() => articles[0]?.id ?? '');
-  const [trayOpen, setTrayOpen] = useState(false);
   const [fixed, setFixed] = useState<FixedFieldValues>({ events: '', items: '', caution: '' });
 
   const [tone, setTone] = useState<ToneId>('lower');
@@ -35,13 +35,17 @@ export default function Home() {
 
   const [photo, setPhoto] = useState<string | null>(null);
   const [photoSize, setPhotoSize] = useState<VisualSizeId>('medium');
+  const [photoCrop, setPhotoCrop] = useState<PhotoCrop>({ ...DEFAULT_CROP });
 
+  // AIで整えた結果。null のあいだはプレビューに入力文をそのまま流す。
   const [result, setResult] = useState<NewsletterResult | null>(null);
   const [revision, setRevision] = useState('');
   const [loading, setLoading] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
   const [error, setError] = useState('');
 
   const eventsRef = useRef<HTMLTextAreaElement>(null);
+  const paperRef = useRef<HTMLDivElement>(null);
 
   const filledArticleCount = useMemo(
     () => articles.filter((a) => a.text.trim()).length,
@@ -50,28 +54,47 @@ export default function Home() {
   const fixedEmpty = !fixed.events.trim() && !fixed.items.trim() && !fixed.caution.trim();
   const showHint = filledArticleCount > 0 && filledArticleCount < 3 && fixedEmpty;
 
+  // 入力文を編集したら AI 結果は破棄して「入力文そのまま」に戻す。
   function updateArticle(id: string, patch: Partial<Omit<ArticleItem, 'id'>>) {
+    if ('text' in patch) setResult(null);
     setArticles((prev) => prev.map((a) => (a.id === id ? { ...a, ...patch } : a)));
   }
   function deleteArticle(id: string) {
-    setArticles((prev) => {
-      if (prev.length <= 1) return prev;
-      const next = prev.filter((a) => a.id !== id);
-      if (id === activeArticleId) setActiveArticleId(next[0].id);
-      return next;
-    });
+    setResult(null);
+    setArticles((prev) => (prev.length <= 1 ? prev : prev.filter((a) => a.id !== id)));
   }
   function addArticle() {
-    setArticles((prev) => {
-      const a = emptyArticle();
-      setActiveArticleId(a.id);
-      return [...prev, a];
-    });
+    setResult(null);
+    setArticles((prev) => [...prev, emptyArticle()]);
+  }
+  function updateFixed(patch: Partial<FixedFieldValues>) {
+    setResult(null);
+    setFixed((prev) => ({ ...prev, ...patch }));
   }
 
-  // 入り先（編集中の記事）。消えていたら先頭に戻す。
-  const activeArticle = articles.find((a) => a.id === activeArticleId) ?? articles[0];
-  const activeIndex = articles.findIndex((a) => a.id === activeArticle.id);
+  // プレビューに渡すデータ。AI結果があればそれを、無ければ入力文をそのまま使う。
+  // イラストは常に最新の選択を反映する。
+  const preview = useMemo<NewsletterResult>(() => {
+    if (result) {
+      return {
+        ...result,
+        articles: result.articles.map((a, i) => ({
+          ...a,
+          illustration: articles[i]?.illustration ?? '',
+          illustFile: articles[i]?.illustFile ?? '',
+        })),
+      };
+    }
+    return {
+      articles: articles
+        .filter((a) => a.text.trim())
+        .map((a) => ({ heading: '', body: a.text.trim(), illustration: a.illustration, illustFile: a.illustFile })),
+      events: fixed.events,
+      items: fixed.items,
+      caution: fixed.caution,
+      fill: '',
+    };
+  }, [result, articles, fixed]);
 
   async function callGenerate(withRevision: boolean) {
     if (filledArticleCount === 0) {
@@ -81,7 +104,7 @@ export default function Home() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/generate', {
+      const res = await fetch(`${BASE_PATH}/api/generate/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -105,6 +128,40 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function handleDownloadPdf() {
+    if (!paperRef.current) return;
+    setPdfLoading(true);
+    try {
+      const name = `${(title.trim() || 'クラスだより').replace(/[\\/:*?"<>|]/g, '_')}.pdf`;
+      await downloadPaperPdf(paperRef.current, name);
+    } catch {
+      setError('PDFの作成に失敗しました。もう一度お試しください。');
+    } finally {
+      setPdfLoading(false);
+    }
+  }
+
+  function buildSnapshot() {
+    return { title, meta, articles, fixed, tone, event, font, size, photo, photoSize, photoCrop, result };
+  }
+  function loadSnapshot(s: NewsletterSnapshot) {
+    setTitle(s.title ?? '');
+    setMeta(s.meta ?? '');
+    setArticles(s.articles?.length ? s.articles : [emptyArticle()]);
+    setFixed(s.fixed ?? { events: '', items: '', caution: '' });
+    setTone(s.tone ?? 'lower');
+    setEvent(s.event ?? 'normal');
+    setFont(s.font ?? 'round');
+    setSize(s.size ?? 'medium');
+    setPhoto(s.photo ?? null);
+    setPhotoSize(s.photoSize ?? 'medium');
+    setPhotoCrop(s.photoCrop ?? { ...DEFAULT_CROP });
+    setResult(s.result ?? null);
+    setRevision('');
+    setError('');
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function focusFixed() {
@@ -133,7 +190,27 @@ export default function Home() {
                 if (p.size !== undefined) setSize(p.size);
               }}
             />
-            <NewspaperPreview result={result} font={font} size={size} title={title} meta={meta} photo={photo} photoSize={photoSize} />
+            <NewspaperPreview
+              ref={paperRef}
+              data={preview}
+              font={font}
+              size={size}
+              title={title}
+              meta={meta}
+              photo={photo}
+              photoSize={photoSize}
+              crop={photoCrop}
+            />
+
+            <button
+              type="button"
+              onClick={handleDownloadPdf}
+              disabled={pdfLoading}
+              className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl bg-[#C0634C] text-white text-[15px] font-bold py-3 hover:bg-[#a9543f] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {pdfLoading ? <span className="spin inline-block">↻</span> : '⬇'}
+              {pdfLoading ? 'PDFを作成中...' : 'PDFをダウンロード'}
+            </button>
 
             <RevisionBox
               value={revision}
@@ -147,6 +224,8 @@ export default function Home() {
           {/* ── 右：入力 ── */}
           <section className="space-y-4">
             <div className="field-label">入力エリア</div>
+
+            <SavedBar buildSnapshot={buildSnapshot} onLoad={loadSnapshot} />
 
             {/* 紙面の見出し */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -167,9 +246,11 @@ export default function Home() {
             <MainVisual
               photo={photo}
               size={photoSize}
+              crop={photoCrop}
               onChange={(p) => {
                 if (p.photo !== undefined) setPhoto(p.photo);
                 if (p.size !== undefined) setPhotoSize(p.size);
+                if (p.crop !== undefined) setPhotoCrop(p.crop);
               }}
             />
 
@@ -181,11 +262,8 @@ export default function Home() {
                   index={i}
                   item={a}
                   canDelete={articles.length > 1}
-                  active={a.id === activeArticle.id}
                   onChange={(patch) => updateArticle(a.id, patch)}
                   onDelete={() => deleteArticle(a.id)}
-                  onActivate={() => setActiveArticleId(a.id)}
-                  onOpenTray={() => setTrayOpen(true)}
                 />
               ))}
               <button
@@ -197,7 +275,7 @@ export default function Home() {
               </button>
             </div>
 
-            <FixedFields ref={eventsRef} values={fixed} onChange={(p) => setFixed((prev) => ({ ...prev, ...p }))} />
+            <FixedFields ref={eventsRef} values={fixed} onChange={updateFixed} />
 
             {showHint && <WhitespaceHint onAdd={focusFixed} />}
 
@@ -214,25 +292,16 @@ export default function Home() {
               className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#1c1c2e] text-white text-[15px] font-bold py-3.5 hover:bg-[#2a2a44] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? <span className="spin inline-block">↻</span> : '✦'}
-              {loading ? '生成中...' : '新聞を生成する'}
+              {loading ? 'AIが整えています...' : 'AIで整える（見出し＆文章を作成）'}
             </button>
+            <p className="text-[12px] text-[#999] text-center -mt-1">
+              押さなくても入力した文章はそのまま紙面に反映されます。
+            </p>
           </section>
         </div>
       </main>
 
       <AppFooter />
-
-      {/* 常設バーの高さぶん、フッターが隠れないように下に余白 */}
-      <div aria-hidden className="h-12 bg-[#1c1c2e]" />
-
-      <IllustTray
-        open={trayOpen}
-        onToggle={() => setTrayOpen((v) => !v)}
-        targetLabel={`記事${activeIndex + 1}`}
-        current={{ illustration: activeArticle.illustration, illustFile: activeArticle.illustFile }}
-        onSelect={(catId, file) => updateArticle(activeArticle.id, { illustration: catId, illustFile: file })}
-        onClear={() => updateArticle(activeArticle.id, { illustration: '', illustFile: '' })}
-      />
     </>
   );
 }

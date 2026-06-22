@@ -7,6 +7,16 @@ export type FontId = 'round' | 'gothic' | 'mincho';
 export type SizeId = 'small' | 'medium' | 'large';
 export type VisualSizeId = 'small' | 'medium' | 'large';
 
+// メインビジュアルのトリミング情報。
+// posX/posY は object-position(%)、zoom は拡大率（1=ぴったりcover）。
+export interface PhotoCrop {
+  posX: number;  // 0–100
+  posY: number;  // 0–100
+  zoom: number;  // 1–3
+}
+
+export const DEFAULT_CROP: PhotoCrop = { posX: 50, posY: 50, zoom: 1 };
+
 export interface Tone {
   id: ToneId;
   label: string;
@@ -78,30 +88,43 @@ export function eventById(id: EventId): NewsletterEvent {
   return EVENTS.find((e) => e.id === id) ?? EVENTS[2];
 }
 
-// プリセットイラスト。実画像は public/illust/{id}/ に配置。
+// プリセットイラスト。実画像は public/illust/{dir}/ に配置。
+// files は「完全な src パス」（/illust/{dir}/{file}）で持つ。
+// カテゴリは複数ディレクトリを束ねられる（例：行事＝運動会＋行事＋入学式）。
 export interface Illustration {
   id: string;        // '' = なし
   label: string;
-  files: string[];   // /illust/{id}/ 配下のファイル名（複数バリエーション）
+  files: string[];   // 例: '/illust/gakko/gakko-01.jpg'
+}
+
+// 本体ドメイン配下で配信するための basePath。
+// next.config.mjs の basePath と必ず一致させること。public配下の資産やAPIはこの接頭辞が要る。
+export const BASE_PATH = '/tools/gakkyu-tsushin';
+
+// {BASE_PATH}/illust/{dir}/{prefix}-01.jpg … を n 枚ぶん生成
+function illustSet(dir: string, prefix: string, n: number): string[] {
+  return Array.from({ length: n }, (_, i) => `${BASE_PATH}/illust/${dir}/${prefix}-${String(i + 1).padStart(2, '0')}.jpg`);
 }
 
 export const ILLUSTRATIONS: Illustration[] = [
   { id: '', label: '（なし）', files: [] },
-  { id: 'undokai', label: '運動会', files: ['undokai-01.jpg', 'undokai-02.jpg', 'undokai-03.jpg', 'undokai-04.jpg', 'undokai-05.jpg', 'undokai-06.jpg', 'undokai-07.jpg', 'undokai-08.jpg', 'undokai-09.jpg', 'undokai-10.jpg', 'undokai-11.jpg'] },
-  { id: 'gakko', label: '学校生活', files: ['gakko-01.jpg', 'gakko-02.jpg', 'gakko-03.jpg', 'gakko-04.jpg', 'gakko-05.jpg', 'gakko-06.jpg', 'gakko-07.jpg', 'gakko-08.jpg', 'gakko-09.jpg', 'gakko-10.jpg', 'gakko-11.jpg', 'gakko-12.jpg', 'gakko-13.jpg', 'gakko-14.jpg'] },
-  { id: 'gyoji', label: '行事', files: ['gyoji-01.jpg', 'gyoji-02.jpg', 'gyoji-03.jpg', 'gyoji-04.jpg', 'gyoji-05.jpg', 'gyoji-06.jpg', 'gyoji-07.jpg', 'gyoji-08.jpg', 'gyoji-09.jpg', 'gyoji-10.jpg', 'gyoji-11.jpg'] },
-  { id: 'nyugaku', label: '入学式', files: ['nyugaku-01.jpg', 'nyugaku-02.jpg', 'nyugaku-03.jpg', 'nyugaku-04.jpg'] },
+  { id: 'gakko', label: '学校生活', files: illustSet('gakko', 'gakko', 14) },
+  {
+    id: 'gyoji',
+    label: '行事',
+    files: [
+      ...illustSet('gyoji', 'gyoji', 11),
+      ...illustSet('undokai', 'undokai', 11),
+      ...illustSet('nyugaku', 'nyugaku', 4),
+    ],
+  },
 ];
 
 export function illustById(id: string): Illustration | undefined {
   return ILLUSTRATIONS.find((il) => il.id === id);
 }
 
-export function illustSrc(id: string, file: string): string {
-  return `/illust/${id}/${file}`;
-}
-
-// カテゴリ内からランダムに1枚選ぶ（なし/該当なしは空文字）
+// カテゴリ内からランダムに1枚選ぶ（なし/該当なしは空文字）。戻り値は完全な src パス。
 export function pickIllustFile(id: string): string {
   const il = illustById(id);
   if (!il || il.files.length === 0) return '';
