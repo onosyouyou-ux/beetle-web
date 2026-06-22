@@ -154,6 +154,32 @@ JS不要の `<details>/<summary>` を使う。CSS アニメーションも追加
 
 FAQ をページに追加するときは **JSON-LD の FAQPage も同内容で更新**すること（SEO連動）。
 
+## ツール共通化規約（SEO・URL）
+
+全ツールを「共通の型」に揃える方針。**アプリ（デプロイ単位）は別のままでよい**が、URL と SEO 宣言は必ず本体ドメインに寄せる。
+
+### 公開URLは必ず本体ドメイン配下
+- 公開URLは `https://www.beetle-web.jp/tools/{名前}/` に統一。`*.vercel.app` を直接リンク・直接公開しない。
+- 静的ツール（eigo など）はそのまま `tools/{名前}/` に置く。
+- インタラクティブ系（Next.js：bug-checker・gakkyu-tsushin など）は **別 Vercel プロジェクトのまま**でよいが、本体から **リライト（透過プロキシ）** で `/tools/{名前}/` 配下に出す。
+  - ❌ リダイレクトにしない（クロスホスト 3xx だと SEO 評価が `*.vercel.app` に逃げ、本体ドメインに集約されない）。
+  - 実装: 本体 repo root の `vercel.json` に
+    `{ "source": "/tools/{名前}/:path*", "destination": "https://{名前}.vercel.app/:path*" }`
+  - 各ツールの `next.config` に `basePath: '/tools/{名前}'`（プロキシ時に `_next` などの資産パスが解決するように）。
+
+### SEO 宣言は全部「本体ブランドURL」を向ける
+- 各ツールの `metadataBase` / `alternates.canonical` / `sitemap.ts` / `robots.ts` は
+  `https://www.beetle-web.jp/tools/{名前}` を指す（`*.vercel.app` を向けない）。
+- 素の `*.vercel.app` は重複コンテンツ防止のため **noindex**（middleware で host が vercel.app のとき `X-Robots-Tag: noindex`）か、本体へ 308 リダイレクト。
+- 本体 `sitemap.xml` に `/tools/{名前}/` を登録。トップ・ツール一覧からのリンクも `/tools/{名前}/...` に統一。
+
+### レイアウト
+- ヘッダー / フッター / `page-header` / デザイン変数 / フォントは「ページレイアウト型 > Tool系」に準拠して揃える。
+
+### 既知の未対応（移行ToDo）
+- **bug-checker**: 現状 `/tools/bug-checker/` は vercel.app への**リダイレクト**、canonical も vercel.app。→ リライト＋本体 canonical へ移行すると評価を本体に集約できる。
+- **gakkyu-tsushin**: 現状 `gakkyu-tsushin.vercel.app` を直リンク・本体 sitemap 未登録・全 SEO 参照が vercel.app。→ 上記の型へ移行。
+
 ## デプロイ
 
 ホスティング: **GitHub Pages**（`main` ブランチを直接公開）
