@@ -2,8 +2,6 @@
 
 import { useMemo, useRef, useState } from 'react';
 import AppHeader from '@/components/AppHeader';
-import AppIntro from '@/components/AppIntro';
-import BottomCta from '@/components/BottomCta';
 import AppFooter from '@/components/AppFooter';
 import PreviewControls from '@/components/PreviewControls';
 import NewspaperPreview from '@/components/NewspaperPreview';
@@ -46,7 +44,6 @@ export default function Home() {
 
   const eventsRef = useRef<HTMLTextAreaElement>(null);
   const paperRef = useRef<HTMLDivElement>(null);
-  const creatorRef = useRef<HTMLElement>(null);
 
   const filledArticleCount = useMemo(
     () => articles.filter((a) => a.text.trim()).length,
@@ -153,9 +150,7 @@ export default function Home() {
     <>
       <AppHeader />
 
-      <AppIntro onStart={() => creatorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
-
-      <main id="creator" ref={creatorRef} className="max-w-[1180px] mx-auto px-4 sm:px-6 py-6 pb-16">
+      <main className="max-w-[1180px] mx-auto px-4 sm:px-6 py-6 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* ── 左：プレビュー ── */}
           <section className="lg:sticky lg:top-[64px] lg:self-start">
@@ -280,8 +275,6 @@ export default function Home() {
           </section>
         </div>
       </main>
-
-      <BottomCta onStart={() => creatorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
 
       <AppFooter />
     </>
