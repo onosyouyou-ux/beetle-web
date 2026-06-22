@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/tools/gakkyu-tsushin",
+      "destination": "https://gakkyu-tsushin.vercel.app/tools/gakkyu-tsushin"
+    },
+    {
+      "source": "/tools/gakkyu-tsushin/:path*",
+      "destination": "https://gakkyu-tsushin.vercel.app/tools/gakkyu-tsushin/:path*"
+    }
+  ]
+}
