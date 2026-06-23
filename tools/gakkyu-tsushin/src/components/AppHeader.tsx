@@ -17,7 +17,7 @@ export default function AppHeader() {
         <span className="bc-spacer" />
         <a
           className="shrink-0 inline-flex items-center gap-1 rounded-full bg-[#C0634C] !text-white text-[12px] font-bold px-4 py-1.5 hover:bg-[#a9543f] transition-colors no-underline"
-          href="https://www.beetle-web.jp/tools/gakkyu-tsushin/landing.html"
+          href="https://www.beetle-web.jp/tools/gakkyu-tsushin/"
           target="_blank"
           rel="noopener"
         >

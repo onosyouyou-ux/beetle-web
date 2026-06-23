@@ -6,7 +6,7 @@ const GA_ID = 'G-N6JXJGQ1Q6';
 // アプリ本体は vercel.app 配信。集客(SEO)は本体ドメインの静的ランディングが担当。
 // アプリ画面はランディングを正規URLとして指す（評価をランディングに集約）。
 const APP_URL = 'https://gakkyu-tsushin.vercel.app';
-const LANDING_URL = 'https://www.beetle-web.jp/tools/gakkyu-tsushin/landing.html';
+const LANDING_URL = 'https://www.beetle-web.jp/tools/gakkyu-tsushin/';
 const TITLE = '学級通信メーカー';
 const DESC = '記事の素材を入力するだけ。AIが学級通信に整えます。写真ではなくイラストで、子どもの顔出しの心配なし。';
 const OG_IMAGE = 'https://www.beetle-web.jp/assets/images/OG.png';
