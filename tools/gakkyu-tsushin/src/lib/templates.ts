@@ -119,18 +119,27 @@ export const ILLUSTRATIONS: Illustration[] = [
     id: 'season',
     label: '季節の行事',
     files: [
-      '/illust/season/oshogatsu.jpg',    // お正月
-      '/illust/season/setsubun.jpg',     // 節分
-      '/illust/season/hinamatsuri.jpg',  // ひなまつり
-      '/illust/season/ohanami.jpg',      // お花見
-      '/illust/season/kodomonohi.jpg',   // こどもの日
-      '/illust/season/tanabata.jpg',     // 七夕
-      '/illust/season/natsumatsuri.jpg', // 夏祭り
-      '/illust/season/otsukimi.jpg',     // お月見
-      '/illust/season/halloween.jpg',    // ハロウィン
-      '/illust/season/christmas.jpg',    // クリスマス
+      '/illust/season/oshogatsu.jpg',
+      '/illust/season/setsubun.jpg',
+      '/illust/season/hinamatsuri.jpg',
+      '/illust/season/ohanami.jpg',
+      '/illust/season/kodomonohi.jpg',
+      '/illust/season/tanabata.jpg',
+      '/illust/season/natsumatsuri.jpg',
+      '/illust/season/otsukimi.jpg',
+      '/illust/season/halloween.jpg',
+      '/illust/season/christmas.jpg',
     ],
   },
+  { id: 'haru',     label: '春のくらし',  files: illustSet('haru',     'haru',     8)  },
+  { id: 'natsu',    label: '夏のくらし',  files: illustSet('natsu',    'natsu',    8)  },
+  { id: 'aki',      label: '秋のくらし',  files: illustSet('aki',      'aki',      8)  },
+  { id: 'fuyu',     label: '冬のくらし',  files: illustSet('fuyu',     'fuyu',     16) },
+  { id: 'ryori',    label: '料理・食',    files: illustSet('ryori',    'ryori',    8)  },
+  { id: 'bunka',    label: '伝統・文化',  files: illustSet('bunka',    'bunka',    8)  },
+  { id: 'kengatsu', label: '見学・体験',  files: illustSet('kengatsu', 'kengatsu', 8)  },
+  { id: 'kenko',    label: '健康・環境',  files: illustSet('kenko',    'kenko',    8)  },
+  { id: 'shizen',   label: '自然観察',    files: illustSet('shizen',   'shizen',   8)  },
 ];
 
 export function illustById(id: string): Illustration | undefined {
