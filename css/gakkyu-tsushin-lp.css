@@ -155,21 +155,32 @@ img{max-width:100%;display:block;}
 .lp-tool .col{min-width:0;}
 .lp-tool .bar{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#888;margin-bottom:6px;}
 .lp-tool .mini-paper{border:1px solid #eee;border-radius:8px;padding:10px;}
+.lp-tool .mp-top{display:flex;justify-content:space-between;font-size:9px;color:#999;margin-bottom:2px;}
 .lp-tool .mp-title{text-align:center;font-family:'Shippori Mincho',serif;font-weight:800;color:#5a3a2e;font-size:20px;}
-.lp-tool .mp-img{height:64px;border-radius:6px;background:linear-gradient(180deg,#bfe0f5,#cfeccd);display:flex;align-items:center;justify-content:center;font-size:22px;margin:6px 0;}
+.lp-tool .mp-img{height:64px;border-radius:6px;overflow:hidden;margin:6px 0;}
+.lp-tool .mp-img img{width:100%;height:100%;object-fit:cover;display:block;border-radius:6px;}
 .lp-tool .mp-lines i{display:block;height:4px;background:#eee;border-radius:3px;margin-bottom:3px;}
+.lp-tool .mp-2col{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;}
+.lp-tool .mp-box{border:1px solid #eee;border-radius:4px;padding:4px;}
+.lp-tool .mp-box b{display:block;font-size:8px;color:#555;margin-bottom:3px;}
+.lp-tool .mp-box i{display:block;height:3px;background:#eee;border-radius:2px;margin-bottom:2px;}
+.lp-tool .mp-illust{width:36px;height:auto;margin-top:4px;display:block;}
 .lp-tool h4{font-size:11px;margin:0 0 6px;color:var(--lp-ink);}
 .lp-tool .edit .blk{border:1px solid #eee;border-radius:8px;padding:8px;margin-bottom:8px;font-size:10px;color:#777;}
 .lp-tool .edit .blk b{display:block;color:#555;margin-bottom:2px;font-size:10px;}
 .lp-tool .edit .ai{background:var(--lp-orange);color:#fff;text-align:center;border-radius:8px;padding:8px;font-weight:700;font-size:11px;}
 .lp-tool .ill{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
-.lp-tool .ill i{aspect-ratio:1;border-radius:6px;background:#f3efe7;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.lp-tool .ill i{aspect-ratio:1;border-radius:6px;background:#f3efe7;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.lp-tool .ill i img{width:100%;height:100%;object-fit:contain;}
+.lp-more{text-align:right;font-size:10px;color:var(--lp-orange);margin-top:4px;}
+.lp-preview-btn{background:#fff;border:1px solid #ccc;color:#555;text-align:center;border-radius:8px;padding:6px;font-size:10px;margin-top:8px;}
 @media(max-width:860px){.lp-tool{grid-template-columns:1fr;}}
 
 /* ── 下部CTA ── */
 .lp-bottom{background:linear-gradient(180deg,#fffaf2,#fdeede);border-top:1px solid #f0e4cf;}
-.lp-bottom-in{max-width:1080px;margin:0 auto;padding:54px 20px;display:flex;align-items:center;justify-content:center;gap:28px;}
-.lp-bottom .fig{font-size:60px;line-height:1;flex-shrink:0;}
-.lp-bottom .mid{text-align:center;}
+.lp-bottom-in{max-width:1080px;margin:0 auto;padding:54px 20px;display:flex;align-items:flex-end;justify-content:center;gap:28px;}
+.lp-bottom .fig{flex-shrink:0;width:200px;}
+.lp-bottom .fig img{width:100%;display:block;}
+.lp-bottom .mid{text-align:center;padding-bottom:24px;}
 .lp-bottom h2{font-size:27px;font-weight:900;margin:0 0 20px;}
 @media(max-width:720px){.lp-bottom .fig{display:none;}.lp-bottom h2{font-size:22px;}}
