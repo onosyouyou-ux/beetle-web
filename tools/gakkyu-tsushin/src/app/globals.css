@@ -309,7 +309,7 @@ body {
   margin: 0 auto;
   padding: 28px 24px 30px;
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: 1fr 380px;
   gap: 36px;
   align-items: center;
 }
@@ -330,24 +330,34 @@ body {
   max-width: 500px;
   margin: 0;
 }
-.hero-paper-wrap {
-  width: 340px;
-  height: 481px;
-  overflow: hidden;
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.06);
+/* ── Hero static visual + decorations ── */
+.hero-visual {
+  position: relative;
   flex-shrink: 0;
   pointer-events: none;
   user-select: none;
+  padding: 24px 36px 24px 20px;
 }
-.hero-paper-inner {
-  width: 680px;
-  transform: scale(0.5);
-  transform-origin: top left;
+.hero-img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.07);
+  display: block;
 }
+.deco {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+}
+.deco-clip   { width: 72px;  top: 2px;     left: -4px;   }
+.deco-leaf   { width: 58px;  top: 48%;     left: -8px;   transform: translateY(-50%); }
+.deco-note   { width: 44px;  top: 20px;    right: 18px;  }
+.deco-flower { width: 66px;  top: -6px;    right: 8px;   }
+.deco-pencil { width: 54px;  top: 36%;     right: 0px;   transform: translateY(-50%) rotate(12deg); }
+.deco-sticky { width: 70px;  bottom: 18px; right: 6px;   }
 @media (max-width: 960px) {
   .hero-inner { grid-template-columns: 1fr; }
-  .hero-paper-wrap { display: none; }
+  .hero-visual { display: none; }
 }
 
 /* ── Button chips (PreviewControls) ── */

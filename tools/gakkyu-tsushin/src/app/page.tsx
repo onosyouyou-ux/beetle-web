@@ -157,20 +157,22 @@ export default function Home() {
               写真なしでもイラスト付きで作れるので、子どもの顔出しが気になるクラスだよりにも。
             </p>
           </div>
-          {/* ライブプレビュー（縮小表示・操作不可） */}
-          <div className="hero-paper-wrap" aria-hidden="true">
-            <div className="hero-paper-inner">
-              <NewspaperPreview
-                data={preview}
-                font={font}
-                size={size}
-                title={title}
-                meta={meta}
-                photo={photo}
-                photoSize={photoSize}
-                crop={photoCrop}
-              />
-            </div>
+          {/* 静的プレビュー画像＋装飾 */}
+          <div className="hero-visual" aria-hidden="true">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/hero-preview.jpg" alt="" className="hero-img" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icons/04_notepaper_clip.png" alt="" className="deco deco-clip" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icons/05_leaf_sprig.png" alt="" className="deco deco-leaf" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icons/06_music_note.png" alt="" className="deco deco-note" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icons/07_flower.png" alt="" className="deco deco-flower" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icons/08_green_pencil.png" alt="" className="deco deco-pencil" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icons/09_smile_sticky.png" alt="" className="deco deco-sticky" />
           </div>
         </div>
       </section>
