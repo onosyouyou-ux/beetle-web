@@ -24,6 +24,7 @@ export interface NewsletterResult {
 
 export interface ArticleInput {
   text: string;          // 先生が書いた素材（箇条書きOK）
+  heading?: string;      // 見出しヒント（空でもOK）
   illustration: string;  // 選択中のイラストカテゴリID
   illustFile: string;    // 選択中の画像ファイル名
 }
@@ -78,7 +79,10 @@ function buildUserMessage(input: GenerateInput): string {
   const ev = eventById(input.event);
 
   const articlesText = input.articles
-    .map((a, i) => `記事${i + 1}:\n${a.text.trim() || '（空）'}`)
+    .map((a, i) => {
+      const headingHint = a.heading?.trim() ? `（見出しの希望: ${a.heading.trim()}）` : '';
+      return `記事${i + 1}${headingHint}:\n${a.text.trim() || '（空）'}`;
+    })
     .join('\n\n');
 
   const parts: string[] = [

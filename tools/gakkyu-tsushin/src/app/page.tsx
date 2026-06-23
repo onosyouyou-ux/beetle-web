@@ -17,7 +17,7 @@ import { DEFAULT_CROP, type ToneId, type EventId, type FontId, type SizeId, type
 let _uid = 0;
 const newId = () => `a${++_uid}`;
 
-const emptyArticle = (): ArticleItem => ({ id: newId(), text: '', illustration: '', illustFile: '' });
+const emptyArticle = (): ArticleItem => ({ id: newId(), heading: '', text: '', illustration: '', illustFile: '' });
 
 export default function Home() {
   const [articles, setArticles] = useState<ArticleItem[]>(() => [emptyArticle(), emptyArticle()]);
@@ -35,7 +35,6 @@ export default function Home() {
   const [photoSize, setPhotoSize] = useState<VisualSizeId>('medium');
   const [photoCrop, setPhotoCrop] = useState<PhotoCrop>({ ...DEFAULT_CROP });
 
-  // AIで整えた結果。null のあいだはプレビューに入力文をそのまま流す。
   const [result, setResult] = useState<NewsletterResult | null>(null);
   const [revision, setRevision] = useState('');
   const [loading, setLoading] = useState(false);
@@ -52,7 +51,6 @@ export default function Home() {
   const fixedEmpty = !fixed.events.trim() && !fixed.items.trim() && !fixed.caution.trim();
   const showHint = filledArticleCount > 0 && filledArticleCount < 3 && fixedEmpty;
 
-  // 入力文を編集したら AI 結果は破棄して「入力文そのまま」に戻す。
   function updateArticle(id: string, patch: Partial<Omit<ArticleItem, 'id'>>) {
     if ('text' in patch) setResult(null);
     setArticles((prev) => prev.map((a) => (a.id === id ? { ...a, ...patch } : a)));
@@ -70,8 +68,6 @@ export default function Home() {
     setFixed((prev) => ({ ...prev, ...patch }));
   }
 
-  // プレビューに渡すデータ。AI結果があればそれを、無ければ入力文をそのまま使う。
-  // イラストは常に最新の選択を反映する。
   const preview = useMemo<NewsletterResult>(() => {
     if (result) {
       return {
@@ -86,7 +82,7 @@ export default function Home() {
     return {
       articles: articles
         .filter((a) => a.text.trim())
-        .map((a) => ({ heading: '', body: a.text.trim(), illustration: a.illustration, illustFile: a.illustFile })),
+        .map((a) => ({ heading: a.heading || '', body: a.text.trim(), illustration: a.illustration, illustFile: a.illustFile })),
       events: fixed.events,
       items: fixed.items,
       caution: fixed.caution,
@@ -106,7 +102,7 @@ export default function Home() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          articles: articles.map((a) => ({ text: a.text, illustration: a.illustration, illustFile: a.illustFile })),
+          articles: articles.map((a) => ({ text: a.text, heading: a.heading, illustration: a.illustration, illustFile: a.illustFile })),
           events: fixed.events,
           items: fixed.items,
           caution: fixed.caution,
@@ -150,11 +146,58 @@ export default function Home() {
     <>
       <AppHeader />
 
+      {/* ── ヒーロー ── */}
+      <section className="hero-band">
+        <div className="hero-inner">
+          <div className="hero-copy">
+            <div className="page-header-en">NEWSLETTER MAKER</div>
+            <h1 className="hero-title">学級通信メーカー</h1>
+            <p className="hero-desc">
+              今月の出来事をメモするだけ。AIが見出しと文章を整えて、学級通信の紙面に流し込みます。<br />
+              写真なしでもイラスト付きで作れるので、子どもの顔出しが気になるクラスだよりにも。
+            </p>
+          </div>
+          {/* ライブプレビュー（縮小表示・操作不可） */}
+          <div className="hero-paper-wrap" aria-hidden="true">
+            <div className="hero-paper-inner">
+              <NewspaperPreview
+                data={preview}
+                font={font}
+                size={size}
+                title={title}
+                meta={meta}
+                photo={photo}
+                photoSize={photoSize}
+                crop={photoCrop}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <main className="max-w-[1180px] mx-auto px-4 sm:px-6 py-6 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
           {/* ── 左：プレビュー ── */}
-          <section className="lg:sticky lg:top-[64px] lg:self-start">
-            <div className="field-label">プレビュー</div>
+          <section className="lg:sticky lg:top-[56px] lg:self-start">
+            <div className="sec-label">🔍 プレビュー</div>
+
+            {/* タイトル・号情報 */}
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="タイトル（例：クラスだより）"
+                className="border border-[#dddddd] rounded-lg px-3 py-2 text-[13px] text-[#1c1c2e] focus:outline-none focus:border-[#C0634C]"
+              />
+              <input
+                value={meta}
+                onChange={(e) => setMeta(e.target.value)}
+                placeholder="クラス・号（例：3年1組 6月号）"
+                className="border border-[#dddddd] rounded-lg px-3 py-2 text-[13px] text-[#1c1c2e] focus:outline-none focus:border-[#C0634C]"
+              />
+            </div>
+
             <PreviewControls
               tone={tone}
               event={event}
@@ -179,16 +222,6 @@ export default function Home() {
               crop={photoCrop}
             />
 
-            <button
-              type="button"
-              onClick={handleDownloadPdf}
-              disabled={pdfLoading}
-              className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl bg-[#C0634C] text-white text-[15px] font-bold py-3 hover:bg-[#a9543f] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {pdfLoading ? <span className="spin inline-block">↻</span> : '⬇'}
-              {pdfLoading ? 'PDFを作成中...' : 'PDFをダウンロード'}
-            </button>
-
             <RevisionBox
               value={revision}
               onChange={setRevision}
@@ -198,25 +231,9 @@ export default function Home() {
             />
           </section>
 
-          {/* ── 右：入力 ── */}
+          {/* ── 右：入力エリア ── */}
           <section className="space-y-4">
-            <div className="field-label">入力エリア</div>
-
-            {/* 紙面の見出し */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="新聞のタイトル（例：なかよし新聞）"
-                className="border border-[#dddddd] rounded-lg px-3 py-2 text-[14px] text-[#1c1c2e] focus:outline-none focus:border-[#C0634C]"
-              />
-              <input
-                value={meta}
-                onChange={(e) => setMeta(e.target.value)}
-                placeholder="クラス・号数（例：3年2組 6月号）"
-                className="border border-[#dddddd] rounded-lg px-3 py-2 text-[14px] text-[#1c1c2e] focus:outline-none focus:border-[#C0634C]"
-              />
-            </div>
+            <div className="sec-label">✏ 入力エリア</div>
 
             <MainVisual
               photo={photo}
@@ -230,48 +247,67 @@ export default function Home() {
             />
 
             {/* 記事ボックス */}
-            <div className="space-y-3">
-              {articles.map((a, i) => (
-                <ArticleBox
-                  key={a.id}
-                  index={i}
-                  item={a}
-                  canDelete={articles.length > 1}
-                  onChange={(patch) => updateArticle(a.id, patch)}
-                  onDelete={() => deleteArticle(a.id)}
-                />
-              ))}
-              <button
-                type="button"
-                onClick={addArticle}
-                className="w-full border border-dashed border-[#cbc8c0] rounded-xl text-[14px] text-[#555] py-3 hover:border-[#C0634C] hover:text-[#C0634C] transition-colors"
-              >
-                ＋ 記事を追加
-              </button>
+            <div>
+              <div className="text-[13px] font-bold text-[#1c1c2e] mb-2">記事</div>
+              <div className="space-y-3">
+                {articles.map((a, i) => (
+                  <ArticleBox
+                    key={a.id}
+                    index={i}
+                    item={a}
+                    canDelete={articles.length > 1}
+                    onChange={(patch) => updateArticle(a.id, patch)}
+                    onDelete={() => deleteArticle(a.id)}
+                  />
+                ))}
+                <button
+                  type="button"
+                  onClick={addArticle}
+                  className="w-full border border-dashed border-[#cbc8c0] rounded-xl text-[14px] text-[#555] py-3 hover:border-[#C0634C] hover:text-[#C0634C] transition-colors"
+                >
+                  ＋ 記事を追加
+                </button>
+              </div>
             </div>
 
             <FixedFields ref={eventsRef} values={fixed} onChange={updateFixed} />
 
             {showHint && <WhitespaceHint onAdd={focusFixed} />}
 
-            {error && (
-              <div className="text-[13px] text-[#a32d2d] bg-[#fcebeb] border border-[#f7c1c1] rounded-lg px-3 py-2.5">
-                {error}
-              </div>
-            )}
+            {/* 仕上げ */}
+            <div>
+              <div className="text-[13px] font-bold text-[#1c1c2e] mb-3">仕上げ</div>
 
-            <button
-              type="button"
-              onClick={() => callGenerate(false)}
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#1c1c2e] text-white text-[15px] font-bold py-3.5 hover:bg-[#2a2a44] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {loading ? <span className="spin inline-block">↻</span> : '✦'}
-              {loading ? 'AIが整えています...' : 'AIで整える（見出し＆文章を作成）'}
-            </button>
-            <p className="text-[12px] text-[#999] text-center -mt-1">
-              押さなくても入力した文章はそのまま紙面に反映されます。
-            </p>
+              {error && (
+                <div className="text-[13px] text-[#a32d2d] bg-[#fcebeb] border border-[#f7c1c1] rounded-lg px-3 py-2.5 mb-3">
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={() => callGenerate(false)}
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#ef8a3c] text-white text-[15px] font-bold py-3.5 hover:bg-[#e07428] transition-colors disabled:opacity-60 disabled:cursor-not-allowed mb-3"
+              >
+                {loading ? <span className="spin inline-block">↻</span> : '✦'}
+                {loading ? 'AIが整えています...' : 'AIで整える（見出し＆文章を作成）'}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleDownloadPdf}
+                disabled={pdfLoading}
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#1c1c2e] text-white text-[15px] font-bold py-3.5 hover:bg-[#2a2a44] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {pdfLoading ? <span className="spin inline-block">↻</span> : '⬇'}
+                {pdfLoading ? 'PDFを作成中...' : 'PDFをダウンロード'}
+              </button>
+
+              <p className="text-[12px] text-[#999] text-center mt-2">
+                押さなくても入力した文章はそのまま紙面に反映されます。
+              </p>
+            </div>
           </section>
         </div>
       </main>

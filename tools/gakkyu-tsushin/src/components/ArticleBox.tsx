@@ -6,6 +6,7 @@ import IllustPicker from '@/components/IllustPicker';
 
 export interface ArticleItem {
   id: string;
+  heading: string;       // 見出しヒント（空でもOK）
   text: string;
   illustration: string;  // カテゴリID（'' = なし）
   illustFile: string;    // 選択中の画像の完全パス（'' = なし）
@@ -42,11 +43,17 @@ export default function ArticleBox({ index, item, canDelete, onChange, onDelete 
       <div className="flex gap-3">
         {/* 左：入力 */}
         <div className="flex-1 min-w-0">
+          <input
+            value={item.heading}
+            onChange={(e) => onChange({ heading: e.target.value })}
+            placeholder={`見出し（例：がんばった運動会！）`}
+            className="w-full border border-[#dddddd] rounded-lg px-3 py-2 text-[14px] text-[#1c1c2e] focus:outline-none focus:border-[#C0634C] mb-2"
+          />
           <textarea
             value={item.text}
             onChange={(e) => onChange({ text: e.target.value })}
-            rows={4}
-            placeholder="運動会の練習が始まりました。みんな頑張っています。リレーが盛り上がっています。&#10;（箇条書きでOK）"
+            rows={3}
+            placeholder={"メモ（箇条書きや自由入力）\n例）運動会の練習をがんばった / リレーが盛り上がった"}
             className="w-full resize-y border border-[#dddddd] rounded-lg px-3 py-2.5 text-[14px] leading-relaxed text-[#1c1c2e] focus:outline-none focus:border-[#C0634C]"
           />
 

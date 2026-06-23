@@ -20,6 +20,7 @@ export async function POST(request: NextRequest) {
     const result = await generateNewsletter({
       articles: articles.map((a) => ({
         text: String(a?.text ?? ''),
+        heading: a?.heading ? String(a.heading) : undefined,
         illustration: String(a?.illustration ?? ''),
         illustFile: String(a?.illustFile ?? ''),
       })),

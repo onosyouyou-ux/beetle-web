@@ -298,3 +298,99 @@ body {
 /* ── ローディングのスピナー ── */
 @keyframes spin { to { transform: rotate(360deg); } }
 .spin { animation: spin 0.7s linear infinite; }
+
+/* ── Hero band ── */
+.hero-band {
+  background: linear-gradient(155deg, #fdf3e3 0%, #fffaf2 65%);
+  border-bottom: 1px solid #f0e4cf;
+}
+.hero-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 24px 30px;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 36px;
+  align-items: center;
+}
+.hero-copy { min-width: 0; }
+.hero-title {
+  font-family: 'M PLUS 1p', sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  color: var(--color-text-primary);
+  margin: 8px 0 12px;
+}
+.hero-desc {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+  max-width: 500px;
+  margin: 0;
+}
+.hero-paper-wrap {
+  width: 340px;
+  height: 481px;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.06);
+  flex-shrink: 0;
+  pointer-events: none;
+  user-select: none;
+}
+.hero-paper-inner {
+  width: 680px;
+  transform: scale(0.5);
+  transform-origin: top left;
+}
+@media (max-width: 960px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-paper-wrap { display: none; }
+}
+
+/* ── Button chips (PreviewControls) ── */
+.ctrl-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.ctrl-row { display: flex; align-items: center; gap: 10px; }
+.ctrl-lbl {
+  width: 72px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #888;
+  flex-shrink: 0;
+  letter-spacing: .03em;
+}
+.ctrl-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip {
+  padding: 5px 13px;
+  border: 1.5px solid #ddd;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 12px;
+  color: #555;
+  cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+.chip:hover { border-color: var(--color-accent); color: var(--color-accent); }
+.chip.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ── Section label ── */
+.sec-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--color-border);
+  margin-bottom: 14px;
+}
