@@ -176,6 +176,25 @@ img{max-width:100%;display:block;}
 .lp-preview-btn{background:#fff;border:1px solid #ccc;color:#555;text-align:center;border-radius:8px;padding:6px;font-size:10px;margin-top:8px;}
 @media(max-width:860px){.lp-tool{grid-template-columns:1fr;}}
 
+/* ── FAQ ── */
+.lp-faq{max-width:720px;margin:0 auto;}
+.faq-item{border-bottom:1px solid var(--lp-line);}
+.faq-item:first-child{border-top:1px solid var(--lp-line);}
+.faq-q{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 4px;cursor:pointer;list-style:none;
+  font-weight:700;font-size:15px;gap:12px;
+}
+.faq-q::-webkit-details-marker{display:none;}
+.faq-icon{
+  flex-shrink:0;width:26px;height:26px;border-radius:999px;
+  background:var(--lp-orange);color:#fff;font-size:18px;font-weight:400;line-height:1;
+  display:flex;align-items:center;justify-content:center;transition:transform .2s;
+}
+details[open] .faq-icon{transform:rotate(45deg);}
+.faq-a{padding:0 4px 16px;font-size:14px;color:var(--lp-sub);line-height:1.9;}
+@media(max-width:860px){.faq-q{font-size:14px;}}
+
 /* ── 下部CTA ── */
 .lp-bottom{background:linear-gradient(180deg,#fffaf2,#fdeede);border-top:1px solid #f0e4cf;}
 .lp-bottom-in{max-width:1080px;margin:0 auto;padding:54px 20px;display:flex;align-items:flex-end;justify-content:center;gap:28px;}
