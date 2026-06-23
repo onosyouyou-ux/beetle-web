@@ -58,7 +58,6 @@ export const EVENTS: NewsletterEvent[] = [
   { id: 'undokai', label: '運動会', prompt: '運動会号。がんばりや活気が伝わる見出し。' },
   { id: 'ensoku', label: '遠足', prompt: '遠足号。わくわく感や思い出が伝わる見出し。' },
   { id: 'normal', label: '通常号', prompt: '通常号。日々のできごとを落ち着いて伝える。' },
-  { id: 'sotsugyo', label: '卒業', prompt: '卒業号。感謝や門出を感じさせる、少し改まった見出し。' },
 ];
 
 export const FONTS: { id: FontId; label: string; className: string }[] = [
