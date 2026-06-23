@@ -182,7 +182,11 @@ export default function Home() {
 
           {/* ── 左：プレビュー ── */}
           <section className="lg:sticky lg:top-[56px] lg:self-start">
-            <div className="sec-label">🔍 プレビュー</div>
+            <div className="sec-label">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icons/10_preview_search.png" alt="" className="sec-icon" />
+              プレビュー
+            </div>
 
             {/* タイトル・号情報 */}
             <div className="grid grid-cols-2 gap-2 mb-3">
@@ -235,7 +239,11 @@ export default function Home() {
 
           {/* ── 右：入力エリア ── */}
           <section className="space-y-4">
-            <div className="sec-label">✏ 入力エリア</div>
+            <div className="sec-label">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icons/11_input_pencil.png" alt="" className="sec-icon" />
+              入力エリア
+            </div>
 
             <MainVisual
               photo={photo}
