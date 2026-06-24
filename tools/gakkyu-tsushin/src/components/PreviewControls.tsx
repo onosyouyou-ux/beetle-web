@@ -1,57 +1,55 @@
 'use client';
 
-import { TONES, EVENTS, FONTS, SIZES, type ToneId, type EventId, type FontId, type SizeId } from '@/lib/templates';
+import { TONES, FONTS, SIZES, type ToneId, type FontId, type SizeId } from '@/lib/templates';
 
 interface Props {
   tone: ToneId;
-  event: EventId;
   font: FontId;
   size: SizeId;
-  onChange: (patch: { tone?: ToneId; event?: EventId; font?: FontId; size?: SizeId }) => void;
+  onChange: (patch: { tone?: ToneId; font?: FontId; size?: SizeId }) => void;
 }
 
-export default function PreviewControls({ tone, event, font, size, onChange }: Props) {
+export default function PreviewControls({ tone, font, size, onChange }: Props) {
   return (
     <div className="ctrl-grid">
       <div className="ctrl-row">
-        <span className="ctrl-lbl">テーマ</span>
-        <div className="ctrl-chips">
+        <label className="ctrl-lbl" htmlFor="ctrl-tone">テーマ</label>
+        <select
+          id="ctrl-tone"
+          value={tone}
+          onChange={(e) => onChange({ tone: e.target.value as ToneId })}
+          className="ctrl-select"
+        >
           {TONES.map((t) => (
-            <button key={t.id} type="button" className={`chip${tone === t.id ? ' active' : ''}`} onClick={() => onChange({ tone: t.id })}>
-              {t.label}
-            </button>
+            <option key={t.id} value={t.id}>{t.label}</option>
           ))}
-        </div>
+        </select>
       </div>
       <div className="ctrl-row">
-        <span className="ctrl-lbl">号の種類</span>
-        <div className="ctrl-chips">
-          {EVENTS.map((ev) => (
-            <button key={ev.id} type="button" className={`chip${event === ev.id ? ' active' : ''}`} onClick={() => onChange({ event: ev.id })}>
-              {ev.label}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="ctrl-row">
-        <span className="ctrl-lbl">フォント</span>
-        <div className="ctrl-chips">
+        <label className="ctrl-lbl" htmlFor="ctrl-font">フォント</label>
+        <select
+          id="ctrl-font"
+          value={font}
+          onChange={(e) => onChange({ font: e.target.value as FontId })}
+          className="ctrl-select"
+        >
           {FONTS.map((f) => (
-            <button key={f.id} type="button" className={`chip${font === f.id ? ' active' : ''}`} onClick={() => onChange({ font: f.id })}>
-              {f.label}
-            </button>
+            <option key={f.id} value={f.id}>{f.label}</option>
           ))}
-        </div>
+        </select>
       </div>
       <div className="ctrl-row">
-        <span className="ctrl-lbl">サイズ</span>
-        <div className="ctrl-chips">
+        <label className="ctrl-lbl" htmlFor="ctrl-size">サイズ</label>
+        <select
+          id="ctrl-size"
+          value={size}
+          onChange={(e) => onChange({ size: e.target.value as SizeId })}
+          className="ctrl-select"
+        >
           {SIZES.map((s) => (
-            <button key={s.id} type="button" className={`chip${size === s.id ? ' active' : ''}`} onClick={() => onChange({ size: s.id })}>
-              {s.label}
-            </button>
+            <option key={s.id} value={s.id}>{s.label}</option>
           ))}
-        </div>
+        </select>
       </div>
     </div>
   );

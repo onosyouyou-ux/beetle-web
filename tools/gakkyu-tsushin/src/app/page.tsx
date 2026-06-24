@@ -318,13 +318,13 @@ export default function Home() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="タイトル（例：クラスだより）"
-                className="border border-[#dddddd] rounded-lg px-3 py-2 text-[13px] text-[#1c1c2e] focus:outline-none focus:border-[#C0634C]"
+                className="input-base"
               />
               <input
                 value={meta}
                 onChange={(e) => setMeta(e.target.value)}
                 placeholder="クラス・号（例：3年1組 6月号）"
-                className="border border-[#dddddd] rounded-lg px-3 py-2 text-[13px] text-[#1c1c2e] focus:outline-none focus:border-[#C0634C]"
+                className="input-base"
               />
             </div>
 
@@ -376,7 +376,10 @@ export default function Home() {
 
             {/* 記事ボックス */}
             <div>
-              <div className="text-[13px] font-bold text-[#1c1c2e] mb-2">記事</div>
+              <div className="flex items-baseline gap-2 mb-2">
+                <div className="text-[13px] font-bold text-[#1c1c2e]">記事</div>
+                <span className="text-[11px] text-[#aaa]">全体で700〜1100字程度を想定</span>
+              </div>
               <div className="space-y-3">
                 {articles.map((a, i) => (
                   <ArticleBox

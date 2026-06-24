@@ -13,8 +13,7 @@ interface Props {
   onChange: (patch: Partial<FixedFieldValues>) => void;
 }
 
-const taClass =
-  'w-full resize-y border border-[#dddddd] rounded-lg px-3 py-2.5 text-[14px] leading-relaxed text-[#1c1c2e] focus:outline-none focus:border-[#C0634C]';
+const taClass = 'textarea-base';
 
 // 余白提案の「追加する」から行事欄にフォーカスできるよう ref を渡す
 const FixedFields = forwardRef<HTMLTextAreaElement, Props>(function FixedFields({ values, onChange }, ref) {

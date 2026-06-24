@@ -2,7 +2,6 @@
 // プルダウンの選択肢と、Claude へのトーン指示の両方に使う。
 
 export type ToneId = 'lower' | 'upper' | 'friendly';
-export type EventId = 'undokai' | 'ensoku' | 'normal' | 'sotsugyo';
 export type FontId = 'round' | 'gothic' | 'mincho';
 export type SizeId = 'small' | 'medium' | 'large';
 export type VisualSizeId = 'small' | 'medium' | 'large';
@@ -26,13 +25,6 @@ export interface Tone {
   defaultFont: FontId;
 }
 
-export interface NewsletterEvent {
-  id: EventId;
-  label: string;
-  /** Claude に渡すイベントの雰囲気指示 */
-  prompt: string;
-}
-
 export const TONES: Tone[] = [
   {
     id: 'lower',
@@ -54,12 +46,6 @@ export const TONES: Tone[] = [
   },
 ];
 
-export const EVENTS: NewsletterEvent[] = [
-  { id: 'undokai', label: '運動会', prompt: '運動会号。がんばりや活気が伝わる見出し。' },
-  { id: 'ensoku', label: '遠足', prompt: '遠足号。わくわく感や思い出が伝わる見出し。' },
-  { id: 'normal', label: '通常号', prompt: '通常号。日々のできごとを落ち着いて伝える。' },
-];
-
 export const FONTS: { id: FontId; label: string; className: string }[] = [
   { id: 'round', label: 'ゴシック（丸）', className: 'font-round' },
   { id: 'gothic', label: 'ゴシック', className: 'font-gothic' },
@@ -74,18 +60,14 @@ export const SIZES: { id: SizeId; label: string; className: string }[] = [
 
 // メインビジュアル写真の大きさ（帯の高さ＝アスペクト比で切替）。
 // hint は A4印刷時のおよその寸法（横はばは紙面いっぱい＝約19cm 固定、縦が変わる）。
-export const VISUAL_SIZES: { id: VisualSizeId; label: string; className: string; hint: string }[] = [
-  { id: 'small', label: '小', className: 'vis-small', hint: '約19×4cm' },
-  { id: 'medium', label: '中', className: 'vis-medium', hint: '約19×6cm' },
-  { id: 'large', label: '大', className: 'vis-large', hint: '約19×9cm' },
+export const VISUAL_SIZES: { id: VisualSizeId; label: string; hint: string }[] = [
+  { id: 'small', label: '小', hint: '約19×4cm' },
+  { id: 'medium', label: '中', hint: '約19×6cm' },
+  { id: 'large', label: '大', hint: '約19×9cm' },
 ];
 
 export function toneById(id: ToneId): Tone {
   return TONES.find((t) => t.id === id) ?? TONES[0];
-}
-
-export function eventById(id: EventId): NewsletterEvent {
-  return EVENTS.find((e) => e.id === id) ?? EVENTS[2];
 }
 
 // プリセットイラスト。実画像は public/illust/{dir}/ に配置。

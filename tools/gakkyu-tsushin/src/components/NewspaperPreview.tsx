@@ -1,7 +1,7 @@
 'use client';
 
 import { forwardRef } from 'react';
-import { FONTS, SIZES, VISUAL_SIZES, DEFAULT_CROP, type FontId, type SizeId, type VisualSizeId, type PhotoCrop } from '@/lib/templates';
+import { FONTS, SIZES, type FontId, type SizeId } from '@/lib/templates';
 import type { NewsletterResult } from '@/lib/claude';
 
 interface Props {
@@ -11,18 +11,14 @@ interface Props {
   title: string;
   meta: string;
   photo: string | null;
-  photoSize: VisualSizeId;
-  crop: PhotoCrop;
 }
 
 const NewspaperPreview = forwardRef<HTMLDivElement, Props>(function NewspaperPreview(
-  { data, font, size, title, meta, photo, photoSize, crop },
+  { data, font, size, title, meta, photo },
   ref,
 ) {
   const fontClass = FONTS.find((f) => f.id === font)?.className ?? 'font-round';
   const sizeClass = SIZES.find((s) => s.id === size)?.className ?? 'size-medium';
-  const visClass = VISUAL_SIZES.find((v) => v.id === photoSize)?.className ?? 'vis-medium';
-  const c = crop ?? DEFAULT_CROP;
 
   const articles = data?.articles ?? [];
   const isEmpty =
@@ -39,13 +35,9 @@ const NewspaperPreview = forwardRef<HTMLDivElement, Props>(function NewspaperPre
       </div>
 
       {photo && (
-        <div className={`paper-visual ${visClass}`}>
+        <div className="paper-visual">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={photo}
-            alt=""
-            style={{ objectPosition: `${c.posX}% ${c.posY}%`, transform: `scale(${c.zoom})` }}
-          />
+          <img src={photo} alt="" style={{ display: 'block', width: '100%', height: 'auto' }} />
         </div>
       )}
 
@@ -92,7 +84,7 @@ const NewspaperPreview = forwardRef<HTMLDivElement, Props>(function NewspaperPre
 
           {data?.fill?.trim() && (
             <div className="paper-fill">
-              <span className="paper-fill-label">☘ ひとこと</span>
+              <span className="paper-fill-label">✏ 先生から</span>
               {data.fill}
             </div>
           )}

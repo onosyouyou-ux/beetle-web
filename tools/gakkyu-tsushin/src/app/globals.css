@@ -10,6 +10,7 @@
   --color-text-secondary:#555555;
   --color-text-muted:    #999999;
   --color-accent:        #C0634C;
+  --color-orange:        #ef8a3c;
   --color-border:        #e8e4de;
   --color-border-input:  #dddddd;
 }
@@ -19,6 +20,69 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--color-bg-primary);
   color: var(--color-text-primary);
+}
+
+/* ── フォーム要素：フォーカス時だけオレンジ ── */
+input[type="text"]:focus,
+input:not([type]):focus,
+textarea:focus,
+select:focus {
+  border-color: var(--color-orange) !important;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(239, 138, 60, 0.15);
+}
+
+/* ── 共通入力スタイル ── */
+.input-base {
+  width: 100%;
+  border: 1px solid var(--color-border-input);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background: #fff;
+}
+
+.textarea-base {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid var(--color-border-input);
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--color-text-primary);
+  background: #fff;
+}
+.textarea-base:disabled {
+  background: #f4f3f0;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+/* ── 記事ボックスのカラーテーマ ── */
+.article-box-orange {
+  border-color: #f5c08a;
+  background: #fffaf5;
+}
+.article-box-blue {
+  border-color: #9fc5e8;
+  background: #f5f8ff;
+}
+.article-box-green {
+  border-color: #8ecfab;
+  background: #f4faf6;
+}
+
+/* ── ヒントチップ ── */
+.hint-chip {
+  font-size: 11px;
+  color: #888;
+  background: #f5f3ef;
+  border: 1px solid #e8e4de;
+  border-radius: 999px;
+  padding: 2px 9px;
+  white-space: nowrap;
 }
 
 /* アンカー遷移時に固定ヘッダー分の余白を確保 */
@@ -144,11 +208,12 @@ body {
 .paper {
   background: #fff;
   width: 100%;
-  aspect-ratio: 1 / 1.414;   /* A4縦 */
+  /* A4縦の縦横比を固定。内容があふれる場合は overflow:hidden で切る */
+  aspect-ratio: 210 / 297;
+  overflow: hidden;
   border: 1px solid var(--color-border);
   box-shadow: 0 2px 14px rgba(0,0,0,0.06);
   padding: 5% 5.5%;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   /* フォント切替の基準サイズ。size-* で上書き */
@@ -173,7 +238,7 @@ body {
   align-items: flex-end;
   border-bottom: 3px double #333;
   padding-bottom: 0.6em;
-  margin-bottom: 0.9em;
+  margin-bottom: 1.4em;
 }
 .paper-title {
   font-size: 2.1em;
@@ -190,30 +255,27 @@ body {
 }
 
 /* メインビジュアル写真（タイトル下） */
+/* 画像はアップロード時に Canvas でトリミング済みなので CSS によるクロップは不要 */
 .paper-visual {
   width: 100%;
   margin-bottom: 0.9em;
   border-radius: 6px;
   overflow: hidden;
-  background: #f1efe9;
   flex-shrink: 0;
 }
 .paper-visual img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform-origin: center;
   display: block;
+  width: 100%;
+  height: auto;
 }
-.paper-visual.vis-small  { aspect-ratio: 5 / 1; }
-.paper-visual.vis-medium { aspect-ratio: 3 / 1; }
-.paper-visual.vis-large  { aspect-ratio: 2 / 1; }
 
 .paper-body {
-  flex: 1;
+  flex: 1;           /* paper の残り高さをすべて使う */
+  min-height: 0;     /* flex child が縮まるよう */
   column-count: 2;
   column-gap: 1.4em;
   column-rule: 1px solid #e2e0da;
+  column-fill: auto; /* 1カラム目から順に埋める（balance は余白が生じやすい） */
 }
 
 .paper-article { break-inside: avoid; margin-bottom: 1.1em; }
@@ -268,7 +330,7 @@ body {
 .paper-box.caution .paper-box-title { color: #a32d2d; }
 
 .paper-fill {
-  break-inside: avoid;
+  column-span: all;   /* 両カラムにまたがることで上部コンテンツの分散が改善する */
   font-size: 0.9em;
   color: #6b6760;
   border-top: 1px dotted #ccc8bf;
@@ -360,37 +422,29 @@ body {
   .hero-visual { display: none; }
 }
 
-/* ── Button chips (PreviewControls) ── */
-.ctrl-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
-.ctrl-row { display: flex; align-items: center; gap: 10px; }
+/* ── PreviewControls ── */
+.ctrl-grid { display: flex; flex-direction: row; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.ctrl-row { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 80px; }
 .ctrl-lbl {
-  width: 72px;
+  width: auto;
   font-size: 11px;
   font-weight: 700;
   color: #888;
   flex-shrink: 0;
   letter-spacing: .03em;
 }
-.ctrl-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-.chip {
-  padding: 5px 13px;
-  border: 1.5px solid #ddd;
-  border-radius: 999px;
+.ctrl-select {
+  flex: 1;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 13px;
+  color: #1c1c2e;
   background: #fff;
-  font-size: 12px;
-  color: #555;
   cursor: pointer;
-  transition: border-color .15s, color .15s, background .15s;
-  white-space: nowrap;
-  line-height: 1.4;
+  outline: none;
 }
-.chip:hover { border-color: var(--color-accent); color: var(--color-accent); }
-.chip.active {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  color: #fff;
-  font-weight: 700;
-}
+.ctrl-select:focus { border-color: var(--color-accent); }
 
 /* ── Section label ── */
 .sec-label {

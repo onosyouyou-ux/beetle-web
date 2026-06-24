@@ -17,8 +17,8 @@ export default function RevisionBox({ value, onChange, onRegenerate, disabled, l
         onChange={(e) => onChange(e.target.value)}
         rows={2}
         disabled={disabled}
-        placeholder="例：「運動会練習」の記事をもう少し温かい表現に。遠足の日付を6日に直して。"
-        className="w-full resize-y border border-[#dddddd] rounded-lg px-3 py-2.5 text-[13px] leading-relaxed text-[#1c1c2e] focus:outline-none focus:border-[#C0634C] disabled:bg-[#f4f3f0] disabled:text-[#aaa]"
+        placeholder="例：「係活動」の記事をもう少し温かい表現に。給食の話題の日付を6日に直して。"
+        className="textarea-base"
       />
       <button
         type="button"

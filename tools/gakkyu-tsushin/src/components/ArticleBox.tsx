@@ -61,14 +61,14 @@ export default function ArticleBox({ index, item, canDelete, onChange, onDelete,
             value={item.heading}
             onChange={(e) => onChange({ heading: e.target.value })}
             placeholder="見出し（例：みんなで楽しんだ図書の時間！）"
-            className="w-full border border-[#dddddd] rounded-lg px-3 py-2 text-[14px] text-[#1c1c2e] focus:outline-none focus:border-[#C0634C] mb-2"
+            className="input-base mb-2"
           />
           <textarea
             value={item.text}
             onChange={(e) => onChange({ text: e.target.value })}
             rows={3}
             placeholder={"メモ（箇条書きや自由入力）\n例）係の仕事を毎日きちんとやっていた / 友だちと協力して掃除をがんばった"}
-            className="w-full resize-y border border-[#dddddd] rounded-lg px-3 py-2.5 text-[14px] leading-relaxed text-[#1c1c2e] focus:outline-none focus:border-[#C0634C]"
+            className="textarea-base"
           />
 
           {/* ── ボタン行 ── */}

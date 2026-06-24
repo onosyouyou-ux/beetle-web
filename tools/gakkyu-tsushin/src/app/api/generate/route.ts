@@ -6,7 +6,7 @@ export const maxDuration = 30;
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as Partial<GenerateInput>;
-    const { articles, events, items, caution, tone, event, revision, previous } = body;
+    const { articles, events, items, caution, tone, revision, previous } = body;
 
     if (!Array.isArray(articles) || articles.length === 0) {
       return NextResponse.json({ error: '記事を1件以上入力してください' }, { status: 400 });
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const result = await generateNewsletter({
       articles: articles.map((a) => ({
         text: String(a?.text ?? ''),
-        heading: a?.heading ? String(a.heading) : undefined,
+        heading: String(a?.heading ?? ''),
         illustration: String(a?.illustration ?? ''),
         illustFile: String(a?.illustFile ?? ''),
       })),
@@ -28,7 +28,6 @@ export async function POST(request: NextRequest) {
       items: String(items ?? ''),
       caution: String(caution ?? ''),
       tone: tone ?? 'lower',
-      event: event ?? 'normal',
       revision: revision ? String(revision) : undefined,
       previous: previous,
     });

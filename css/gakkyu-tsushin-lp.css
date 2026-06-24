@@ -2,7 +2,7 @@
 :root{
   --lp-orange:#ef8a3c;
   --lp-orange-d:#e0772a;
-  --lp-accent:#C0634C;
+  /* --lp-accent は common.css の --color-accent に統一 */
   --lp-cream:#fdf3e3;
   --lp-ink:#1c1c2e;
   --lp-sub:#5a544c;
@@ -119,7 +119,7 @@ img{max-width:100%;display:block;}
 .lp-feat .c.fc .tag{background:#67b06a;}
 .lp-feat .c img{height:82px;width:auto;max-width:92px;margin:0;object-fit:contain;justify-self:center;}
 .lp-feat .hd{display:flex;align-items:center;gap:8px;margin-top:0;}
-.lp-feat .tag{width:24px;height:24px;border-radius:999px;background:var(--lp-accent);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.lp-feat .tag{width:24px;height:24px;border-radius:999px;background:var(--color-accent);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .lp-feat .nm{font-weight:800;font-size:16px;}
 .lp-feat .c p{margin:8px 0 0;font-size:13px;color:var(--lp-sub);}
 @media(max-width:860px){.lp-feat{grid-template-columns:1fr;}}
@@ -203,3 +203,9 @@ details[open] .faq-icon{transform:rotate(45deg);}
 .lp-bottom .mid{text-align:center;padding-bottom:24px;}
 .lp-bottom h2{font-size:27px;font-weight:900;margin:0 0 20px;}
 @media(max-width:720px){.lp-bottom .fig{display:none;}.lp-bottom h2{font-size:22px;}}
+
+/* ── 絵文字アイコン（img 代替） ── */
+.pain-em{font-size:52px;height:104px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;}
+.feat-em{font-size:50px;height:82px;width:92px;display:flex;align-items:center;justify-content:center;justify-self:center;}
+.step-em{font-size:34px;height:58px;width:58px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#f8f4ee;border-radius:10px;}
+.mp-img-em{background:linear-gradient(180deg,#bfe0f5,#cfeccd);display:flex;align-items:center;justify-content:center;font-size:24px;}
