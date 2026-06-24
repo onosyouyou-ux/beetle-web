@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import AppHeader from '@/components/AppHeader';
 import AppFooter from '@/components/AppFooter';
 import PreviewControls from '@/components/PreviewControls';
@@ -12,19 +12,18 @@ import WhitespaceHint from '@/components/WhitespaceHint';
 import MainVisual from '@/components/MainVisual';
 import { downloadPaperPdf } from '@/lib/pdf';
 import type { NewsletterResult } from '@/lib/claude';
-import { DEFAULT_CROP, type ToneId, type EventId, type FontId, type SizeId, type VisualSizeId, type PhotoCrop } from '@/lib/templates';
+import { type ToneId, type FontId, type SizeId, type VisualSizeId } from '@/lib/templates';
 
 let _uid = 0;
 const newId = () => `a${++_uid}`;
 
-const emptyArticle = (): ArticleItem => ({ id: newId(), heading: '', text: '', illustration: '', illustFile: '' });
+const emptyArticle = (): ArticleItem => ({ id: newId(), heading: '', text: '', illustration: '', illustFile: '', locked: false, lockedContent: null });
 
 export default function Home() {
   const [articles, setArticles] = useState<ArticleItem[]>(() => [emptyArticle(), emptyArticle()]);
   const [fixed, setFixed] = useState<FixedFieldValues>({ events: '', items: '', caution: '' });
 
   const [tone, setTone] = useState<ToneId>('lower');
-  const [event, setEvent] = useState<EventId>('normal');
   const [font, setFont] = useState<FontId>('round');
   const [size, setSize] = useState<SizeId>('medium');
 
@@ -33,19 +32,38 @@ export default function Home() {
 
   const [photo, setPhoto] = useState<string | null>(null);
   const [photoSize, setPhotoSize] = useState<VisualSizeId>('medium');
-  const [photoCrop, setPhotoCrop] = useState<PhotoCrop>({ ...DEFAULT_CROP });
 
   const [result, setResult] = useState<NewsletterResult | null>(null);
   const [revision, setRevision] = useState('');
   const [loading, setLoading] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
+  const [refiningId, setRefiningId] = useState<string | null>(null);
   const [error, setError] = useState('');
 
   const eventsRef = useRef<HTMLTextAreaElement>(null);
   const paperRef = useRef<HTMLDivElement>(null);
 
+  const hasDirtyContent = useMemo(
+    () => articles.some((a) => a.text.trim() || a.heading.trim()) ||
+          fixed.events.trim() !== '' || fixed.items.trim() !== '' || fixed.caution.trim() !== '',
+    [articles, fixed],
+  );
+
+  useEffect(() => {
+    if (!hasDirtyContent) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [hasDirtyContent]);
+
   const filledArticleCount = useMemo(
     () => articles.filter((a) => a.text.trim()).length,
+    [articles],
+  );
+  const unlockedFilledCount = useMemo(
+    () => articles.filter((a) => !a.locked && a.text.trim()).length,
     [articles],
   );
   const fixedEmpty = !fixed.events.trim() && !fixed.items.trim() && !fixed.caution.trim();
@@ -53,6 +71,22 @@ export default function Home() {
 
   function updateArticle(id: string, patch: Partial<Omit<ArticleItem, 'id'>>) {
     if ('text' in patch) setResult(null);
+    // ロックON: 現在のプレビュー内容を lockedContent に保存
+    if ('locked' in patch) {
+      if (patch.locked) {
+        const idx = articles.findIndex((a) => a.id === id);
+        const curr = result?.articles[idx];
+        const orig = articles[idx];
+        patch = {
+          ...patch,
+          lockedContent: curr
+            ? { heading: curr.heading, body: curr.body }
+            : { heading: orig?.heading || '', body: orig?.text.trim() || '' },
+        };
+      } else {
+        patch = { ...patch, lockedContent: null };
+      }
+    }
     setArticles((prev) => prev.map((a) => (a.id === id ? { ...a, ...patch } : a)));
   }
   function deleteArticle(id: string) {
@@ -72,17 +106,34 @@ export default function Home() {
     if (result) {
       return {
         ...result,
-        articles: result.articles.map((a, i) => ({
-          ...a,
-          illustration: articles[i]?.illustration ?? '',
-          illustFile: articles[i]?.illustFile ?? '',
-        })),
+        articles: result.articles.map((a, i) => {
+          const orig = articles[i];
+          // ロック中: lockedContent があればそれを優先表示
+          if (orig?.locked && orig.lockedContent) {
+            return {
+              heading: orig.lockedContent.heading,
+              body: orig.lockedContent.body,
+              illustration: orig.illustration,
+              illustFile: orig.illustFile,
+            };
+          }
+          return {
+            ...a,
+            illustration: orig?.illustration ?? '',
+            illustFile: orig?.illustFile ?? '',
+          };
+        }),
       };
     }
     return {
       articles: articles
         .filter((a) => a.text.trim())
-        .map((a) => ({ heading: a.heading || '', body: a.text.trim(), illustration: a.illustration, illustFile: a.illustFile })),
+        .map((a) => ({
+          heading: a.locked && a.lockedContent ? a.lockedContent.heading : (a.heading || ''),
+          body: a.locked && a.lockedContent ? a.lockedContent.body : a.text.trim(),
+          illustration: a.illustration,
+          illustFile: a.illustFile,
+        })),
       events: fixed.events,
       items: fixed.items,
       caution: fixed.caution,
@@ -91,8 +142,8 @@ export default function Home() {
   }, [result, articles, fixed]);
 
   async function callGenerate(withRevision: boolean) {
-    if (filledArticleCount === 0) {
-      setError('記事の内容を入力してください。');
+    if (unlockedFilledCount === 0) {
+      setError('AIで整える記事がありません。記事を入力するか、ロックを解除してください。');
       return;
     }
     setLoading(true);
@@ -107,7 +158,6 @@ export default function Home() {
           items: fixed.items,
           caution: fixed.caution,
           tone,
-          event,
           ...(withRevision && result ? { revision, previous: result } : {}),
         }),
       });
@@ -116,11 +166,85 @@ export default function Home() {
         setError(data.error ?? '生成に失敗しました。');
         return;
       }
-      setResult(data as NewsletterResult);
+      const aiResult = data as NewsletterResult;
+      // ロック中の記事は lockedContent を優先する
+      const mergedArticles = aiResult.articles.map((a, i) => {
+        const orig = articles[i];
+        if (orig?.locked && orig.lockedContent) {
+          return {
+            heading: orig.lockedContent.heading,
+            body: orig.lockedContent.body,
+            illustration: orig.illustration,
+            illustFile: orig.illustFile,
+          };
+        }
+        return { ...a, illustration: orig?.illustration ?? '', illustFile: orig?.illustFile ?? '' };
+      });
+      setResult({ ...aiResult, articles: mergedArticles });
     } catch {
       setError('通信に失敗しました。もう一度お試しください。');
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function refineArticle(id: string) {
+    const idx = articles.findIndex((a) => a.id === id);
+    const article = articles[idx];
+    if (!article || !article.text.trim()) return;
+
+    // ロック解除してAI修正結果を表示できるようにする
+    setArticles((prev) => prev.map((a) => a.id === id ? { ...a, locked: false, lockedContent: null } : a));
+
+    const capturedArticles = articles;
+    const capturedFixed = fixed;
+
+    setRefiningId(id);
+    setError('');
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          articles: [{ text: article.text, heading: article.heading, illustration: article.illustration, illustFile: article.illustFile }],
+          events: '',
+          items: '',
+          caution: '',
+          tone,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setError(data.error ?? 'AI修正に失敗しました。'); return; }
+
+      const aiArticle = (data as NewsletterResult).articles?.[0];
+      if (!aiArticle) return;
+
+      setResult((prev) => {
+        const base: NewsletterResult = prev ?? {
+          articles: capturedArticles.map((a) => ({
+            heading: a.locked && a.lockedContent ? a.lockedContent.heading : (a.heading || ''),
+            body: a.locked && a.lockedContent ? a.lockedContent.body : a.text.trim(),
+            illustration: a.illustration,
+            illustFile: a.illustFile,
+          })),
+          events: capturedFixed.events,
+          items: capturedFixed.items,
+          caution: capturedFixed.caution,
+          fill: '',
+        };
+        const newArticles = [...base.articles];
+        newArticles[idx] = {
+          heading: aiArticle.heading || '',
+          body: aiArticle.body || '',
+          illustration: article.illustration,
+          illustFile: article.illustFile,
+        };
+        return { ...base, articles: newArticles };
+      });
+    } catch {
+      setError('通信に失敗しました。もう一度お試しください。');
+    } finally {
+      setRefiningId(null);
     }
   }
 
@@ -206,12 +330,10 @@ export default function Home() {
 
             <PreviewControls
               tone={tone}
-              event={event}
               font={font}
               size={size}
               onChange={(p) => {
                 if (p.tone !== undefined) setTone(p.tone);
-                if (p.event !== undefined) setEvent(p.event);
                 if (p.font !== undefined) setFont(p.font);
                 if (p.size !== undefined) setSize(p.size);
               }}
@@ -224,8 +346,6 @@ export default function Home() {
               title={title}
               meta={meta}
               photo={photo}
-              photoSize={photoSize}
-              crop={photoCrop}
             />
 
             <RevisionBox
@@ -248,11 +368,9 @@ export default function Home() {
             <MainVisual
               photo={photo}
               size={photoSize}
-              crop={photoCrop}
               onChange={(p) => {
                 if (p.photo !== undefined) setPhoto(p.photo);
                 if (p.size !== undefined) setPhotoSize(p.size);
-                if (p.crop !== undefined) setPhotoCrop(p.crop);
               }}
             />
 
@@ -268,6 +386,8 @@ export default function Home() {
                     canDelete={articles.length > 1}
                     onChange={(patch) => updateArticle(a.id, patch)}
                     onDelete={() => deleteArticle(a.id)}
+                    onAiRefine={() => refineArticle(a.id)}
+                    isRefining={refiningId === a.id}
                   />
                 ))}
                 <button
