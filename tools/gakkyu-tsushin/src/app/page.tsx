@@ -360,7 +360,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => {
-                    const msg = '紙面に収まるように各記事の本文を短くまとめてください。事実は守りつつ、文章量を削ってください。';
+                    const msg = '紙面からはみ出ているので文章量を大幅に減らしてください。各記事の本文を短く削り、行事・持ち物・注意事項も可能なら簡潔にまとめてください。事実は守ること。';
                     callGenerate(result !== null, result !== null ? msg : undefined);
                   }}
                   className="shrink-0 text-[13px] font-bold text-white bg-[#ef8a3c] rounded-lg px-3 py-1.5 hover:bg-[#e07428] transition-colors"

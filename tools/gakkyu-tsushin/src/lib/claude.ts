@@ -52,28 +52,32 @@ function calcCharBudget(input: GenerateInput): { min: number; max: number } {
   const photoDeduct: Record<string, number> = { none: 0, small: 130, medium: 220, large: 340 };
   base -= photoDeduct[input.photoSize ?? 'none'] ?? 0;
 
-  // 固定欄：各ボックスのコンテンツ量 + ボックス自体のオーバーヘッド（タイトル・余白等）
-  const eventsLen = input.events.trim().length;
-  const itemsLen  = input.items.trim().length;
-  const cautionLen = input.caution.trim().length;
+  // 記事3本以上は見出し・余白のオーバーヘッドが増える（基準は2本）
+  if (input.articles.length > 2) {
+    base -= (input.articles.length - 2) * 55;
+  }
+
+  // 固定欄：前回AI出力の実際の長さを使う（入力より長くなるため）。
+  // 各ボックスのコンテンツ + タイトル行・余白・ボーダー相当のオーバーヘッド（65字分）
+  const eventsLen  = (input.previous?.events  ?? input.events).trim().length;
+  const itemsLen   = (input.previous?.items   ?? input.items).trim().length;
+  const cautionLen = (input.previous?.caution ?? input.caution).trim().length;
   const fixedBoxes = (eventsLen > 0 ? 1 : 0) + (itemsLen > 0 ? 1 : 0) + (cautionLen > 0 ? 1 : 0);
   const fixedDeduct = Math.min(
-    Math.round((eventsLen + itemsLen + cautionLen) * 1.3 + fixedBoxes * 40),
-    450,
+    (eventsLen + itemsLen + cautionLen) + fixedBoxes * 65,
+    600,
   );
   base -= fixedDeduct;
-
-  // 見出しのオーバーヘッド（見出し＋余白で本文換算約35字分）
-  base -= input.articles.length * 35;
 
   // イラストのオーバーヘッド（カラム幅38%フロート、数行分≈60字分）
   const illustCount = input.articles.filter((a) => a.illustration).length;
   base -= illustCount * 60;
 
-  const target = Math.max(input.articles.length * 80, base);
+  // 20%の安全マージンを取って収まりきれない事態を防ぐ
+  const target = Math.round(Math.max(input.articles.length * 70, base) * 0.82);
   return {
-    min: Math.max(input.articles.length * 60, target - 80),
-    max: Math.min(1100, target + 80),
+    min: Math.max(input.articles.length * 55, Math.round(target * 0.88)),
+    max: target,
   };
 }
 
@@ -88,7 +92,7 @@ const SYSTEM_PROMPT = `あなたは小学校の先生を支える、学級通信
 【作り方】
 - 先生が入力した記事の数だけ、見出し（10字以内）＋本文を作る。
 - 本文の分量は記事ごとに固定しない。素材が充実している記事は長く、薄い記事は短くしてよい。ただし1記事あたり最低60字は書くこと。
-- 全記事の本文合計は【目標文字数】に示された字数範囲に収める（紙面に固定欄・写真が入る場合は少なく、何もない場合は多く）。
+- 全記事の本文合計は【目標文字数】の上限を絶対に超えないこと。1字でも超えると紙面から内容が切れる。
 - 見出しは内容が一目で分かる短いもの。
 - events / items / caution は、先生が入力したテキストを読みやすく整える（無ければ空文字）。事実は足さない。
 - fill は、記事の内容を受けた先生からの一言コメント。「子どもたちの様子を見ていて感じたこと」「保護者へ伝えたい気持ち」を1〜2文で書く。記事の内容（先生が書いた事実）に基づいた温かみのある言葉にする。架空の事実は足さない。
@@ -100,7 +104,7 @@ const SYSTEM_PROMPT = `あなたは小学校の先生を支える、学級通信
 
 【「余白を埋めて」「内容をふやして」と頼まれたとき】
 新しい事実の創作は引き続き禁止だが、次の手段で紙面を充実させてよい。修正指示にこの趣旨が含まれるときは、はっきり分量を増やすこと（前回とほぼ同じ長さで返さない）。
-- 本文を、すでに書かれた事実の範囲で、より丁寧・具体的な描写や子どもの様子・気持ちの表現に膨らませる。合計が【目標文字数】の上限を超えない範囲で各記事を伸ばしてよい。新しい行事・固有名詞・数字・成果は足さない。
+- 本文を、すでに書かれた事実の範囲で、より丁寧・具体的な描写や子どもの様子・気持ちの表現に膨らませる。ただし合計は【目標文字数】の上限を絶対に超えないこと。新しい行事・固有名詞・数字・成果は足さない。
 - fill（先生からのひとこと）を2〜3文に伸ばす。記事の内容から感じた先生の気持ちや子どもへの思いを丁寧に書く。
 - events / items / caution も、書かれた事実の範囲で言い回しを丁寧にして読みやすくする。
 - これらはあくまで「書かれた事実をふくらませる」範囲であり、事実そのものの創作ではない。
@@ -138,7 +142,7 @@ function buildUserMessage(input: GenerateInput): string {
     '',
     `【クラスの雰囲気】${tone.label} — ${tone.prompt}`,
     '',
-    `【目標文字数】${budget.min}〜${budget.max}字（全記事の本文合計。写真・固定欄・イラストを考慮した紙面残量から算出）`,
+    `【目標文字数】全記事の本文合計を${budget.max}字以内に厳守（超えると紙面に収まらない）。推奨 ${budget.min}〜${budget.max}字。`,
     '',
     `【記事の素材（この数だけ見出し＋本文を作る）】`,
     articlesText,
