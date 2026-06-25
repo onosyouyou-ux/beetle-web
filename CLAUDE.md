@@ -186,15 +186,25 @@ FAQ をページに追加するときは **JSON-LD の FAQPage も同内容で�
 
 ## デプロイ
 
-ホスティング: **GitHub Pages**（`main` ブランチを直接公開）
+### beetle-web 本体（GitHub Pages）
 
 ```
 git push origin main
 ```
 
-プッシュすると自動デプロイが走る。反映まで通常 1〜2 分。
-
+プッシュすると自動デプロイが走る。反映まで通常 1〜2 分。  
 デプロイ状況は GitHub リポジトリの **Actions** タブで確認できる。
+
+### gakkyu-tsushin（Vercel）
+
+BashツールはWindows側のGit Bashで動くため、WSLパスに直接 `cd` できない。  
+PowerShell から `wsl` 経由で実行する：
+
+```powershell
+wsl -e bash -c "cd /home/owner/projects/beetle-web/tools/gakkyu-tsushin && npx vercel --prod"
+```
+
+URL: https://gakkyu-tsushin.vercel.app
 
 ## ブランチ運用
 
