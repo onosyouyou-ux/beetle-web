@@ -24,5 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.style.bottom = '28px';
       }
     }, { passive: true });
+
+    fetch('/version.json')
+      .then(r => r.json())
+      .then(d => {
+        const el = document.getElementById('site-version');
+        if (el) el.textContent = `v${d.v} · ${d.sha}`;
+      })
+      .catch(() => {});
   });
 });

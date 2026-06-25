@@ -38,6 +38,7 @@ a{text-decoration:none;}
 .footer-copy { font-size: 12px; color: #888; white-space: nowrap; display: flex; align-items: center; gap: 1rem; }
 .footer-copy a { color: #888; text-decoration: none; transition: color .15s; }
 .footer-copy a:hover { color: #fff; }
+.footer-version { font-size: 10px; color: #555; opacity: 0.6; letter-spacing: .04em; }
 .footer-sitemap-mobile { display: none; }
 @media (max-width: 600px) {
   .footer-sitemap-mobile { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; background: #1a1a1a; border-bottom: 1px solid #2a2a2a; padding: 1.25rem 1.5rem; }
