@@ -12,6 +12,7 @@ import WhitespaceHint from '@/components/WhitespaceHint';
 import MainVisual from '@/components/MainVisual';
 import { downloadPaperPdf } from '@/lib/pdf';
 import type { NewsletterResult } from '@/lib/claude';
+import { calcCharBudget } from '@/lib/budget';
 import { type ToneId, type FontId, type SizeId, type VisualSizeId } from '@/lib/templates';
 
 let _uid = 0;
@@ -209,15 +210,37 @@ export default function Home() {
     setRefiningId(id);
     setError('');
     try {
+      // 全体予算を計算して、他記事の現在文字数を引いた残枠をこの記事に渡す
+      const currentEvents  = (result?.events  ?? fixed.events).trim();
+      const currentItems   = (result?.items   ?? fixed.items).trim();
+      const currentCaution = (result?.caution ?? fixed.caution).trim();
+      const totalBudget = calcCharBudget({
+        articleCount: articles.length,
+        photoSize: photo ? photoSize : 'none',
+        eventsLen:   currentEvents.length,
+        itemsLen:    currentItems.length,
+        cautionLen:  currentCaution.length,
+        illustCount: articles.filter((a) => a.illustration).length,
+      });
+      const otherBodyChars = result
+        ? result.articles.filter((_, i) => i !== idx).reduce((s, a) => s + (a.body?.length ?? 0), 0)
+        : articles.filter((_, i) => i !== idx).reduce((s, a) => s + a.text.trim().length, 0);
+      const singleBudget = {
+        min: Math.max(55, totalBudget.min - otherBodyChars),
+        max: Math.max(80, totalBudget.max - otherBodyChars),
+      };
+
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           articles: [{ text: article.text, heading: article.heading, illustration: article.illustration, illustFile: article.illustFile }],
-          events: '',
-          items: '',
-          caution: '',
+          events: currentEvents,
+          items:  currentItems,
+          caution: currentCaution,
           tone,
+          photoSize: photo ? photoSize : 'none',
+          articleBudgetOverride: singleBudget,
         }),
       });
       const data = await res.json();

@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { toneById, type ToneId, type VisualSizeId } from './templates';
+import { calcCharBudget } from './budget';
 
 let _client: Anthropic | null = null;
 function getClient(): Anthropic {
@@ -40,45 +41,20 @@ export interface GenerateInput {
   photoSize?: PhotoSizeInput;
   revision?: string;
   previous?: NewsletterResult;
+  // 個別AI修正時に呼び元が計算した予算を直接渡す（省略時はサーバー側で計算）
+  articleBudgetOverride?: { min: number; max: number };
 }
 
-// 写真サイズ・固定欄の文字量から記事本文の目標文字数を計算する。
-// 固定欄は列フロー内にあるため、その分の面積を差し引く。
-function calcCharBudget(input: GenerateInput): { min: number; max: number } {
-  // 写真なし・固定欄なし・2記事のフル紙面の基準値
-  let base = 950;
-
-  // 写真の高さ分を差し引く（小4cm/中6cm/大9cm、A4縦約23cmの本文エリア比で換算）
-  const photoDeduct: Record<string, number> = { none: 0, small: 130, medium: 220, large: 340 };
-  base -= photoDeduct[input.photoSize ?? 'none'] ?? 0;
-
-  // 記事3本以上は見出し・余白のオーバーヘッドが増える（基準は2本）
-  if (input.articles.length > 2) {
-    base -= (input.articles.length - 2) * 55;
-  }
-
-  // 固定欄：前回AI出力の実際の長さを使う（入力より長くなるため）。
-  // 各ボックスのコンテンツ + タイトル行・余白・ボーダー相当のオーバーヘッド（65字分）
-  const eventsLen  = (input.previous?.events  ?? input.events).trim().length;
-  const itemsLen   = (input.previous?.items   ?? input.items).trim().length;
-  const cautionLen = (input.previous?.caution ?? input.caution).trim().length;
-  const fixedBoxes = (eventsLen > 0 ? 1 : 0) + (itemsLen > 0 ? 1 : 0) + (cautionLen > 0 ? 1 : 0);
-  const fixedDeduct = Math.min(
-    (eventsLen + itemsLen + cautionLen) + fixedBoxes * 65,
-    600,
-  );
-  base -= fixedDeduct;
-
-  // イラストのオーバーヘッド（カラム幅38%フロート、数行分≈60字分）
-  const illustCount = input.articles.filter((a) => a.illustration).length;
-  base -= illustCount * 60;
-
-  // 20%の安全マージンを取って収まりきれない事態を防ぐ
-  const target = Math.round(Math.max(input.articles.length * 70, base) * 0.82);
-  return {
-    min: Math.max(input.articles.length * 55, Math.round(target * 0.88)),
-    max: target,
-  };
+function getBudget(input: GenerateInput): { min: number; max: number } {
+  if (input.articleBudgetOverride) return input.articleBudgetOverride;
+  return calcCharBudget({
+    articleCount: input.articles.length,
+    photoSize: input.photoSize ?? 'none',
+    eventsLen:  (input.previous?.events  ?? input.events).trim().length,
+    itemsLen:   (input.previous?.items   ?? input.items).trim().length,
+    cautionLen: (input.previous?.caution ?? input.caution).trim().length,
+    illustCount: input.articles.filter((a) => a.illustration).length,
+  });
 }
 
 const SYSTEM_PROMPT = `あなたは小学校の先生を支える、学級通信づくりのアシスタントです。
@@ -124,7 +100,7 @@ articles の illustration は空文字でよい（イラストはアプリ側で
 
 function buildUserMessage(input: GenerateInput): string {
   const tone = toneById(input.tone);
-  const budget = calcCharBudget(input);
+  const budget = getBudget(input);
 
   const now = new Date();
   const month = now.getMonth() + 1;
