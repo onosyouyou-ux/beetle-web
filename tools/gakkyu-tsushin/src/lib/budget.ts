@@ -1,13 +1,14 @@
 import type { PhotoSizeInput } from './claude';
 
-// 1カラムあたりの文字数容量（size-medium、~550px幅で実寸から推算）
-// body_height = A4比率(778px) - header(50px) - photo高さ
-// 1行文字数 ≈ 20字（日本語全角13px）、行高 24px
+// 1カラムあたりの文字数容量（size-medium、実測に近い550px幅で再計算）
+// paper padding 5.5%両側 → 有効幅 489px、カラム幅 ≈ 235px
+// chars/line ≈ 235/13px = 18字（日本語全角）、line-height 24px
+// body_height = 有効高700px - header56px - photo高
 const COL_CAP: Record<string, number> = {
-  none:   535,   // body 728px → (728/24)×20
-  small:  445,   // body 618px
-  medium: 385,   // body 545px
-  large:  305,   // body 453px
+  none:   485,   // body 644px → (644/24)×18
+  small:  403,   // body 534px → photo 110+margin
+  medium: 353,   // body 469px → photo 163+margin
+  large:  291,   // body 388px → photo 245+margin
 };
 
 const SAFETY       = 0.82;

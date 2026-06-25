@@ -128,31 +128,28 @@ export default function Home() {
     if (result) {
       return {
         ...result,
-        articles: result.articles.map((a, i) => {
+        // 常に3スロット分マップ。AI が空で返した記事は元入力を fallback 表示する
+        articles: [0, 1, 2].map((i) => {
           const orig = articles[i];
-          // ロック中: lockedContent があればそれを優先表示
+          const aiA  = result.articles[i];
+          // ロック中: lockedContent を優先
           if (orig?.locked && orig.lockedContent) {
-            return {
-              heading: orig.lockedContent.heading,
-              body: orig.lockedContent.body,
-              illustration: orig.illustration,
-              illustFile: orig.illustFile,
-            };
+            return { heading: orig.lockedContent.heading, body: orig.lockedContent.body, illustration: orig.illustration, illustFile: orig.illustFile };
           }
-          return {
-            ...a,
-            illustration: orig?.illustration ?? '',
-            illustFile: orig?.illustFile ?? '',
-          };
+          // AI が見出し or 本文を返していればそちらを使う
+          if (aiA && (aiA.heading?.trim() || aiA.body?.trim())) {
+            return { ...aiA, illustration: orig?.illustration ?? '', illustFile: orig?.illustFile ?? '' };
+          }
+          // AI が空で返した（budget=0 など）→ 元入力を表示
+          return { heading: orig?.heading || '', body: orig?.text.trim() || '', illustration: orig?.illustration || '', illustFile: orig?.illustFile || '' };
         }),
       };
     }
+    // 未生成：全スロットをそのまま（空記事は NewspaperPreview 側でスキップ）
     return {
-      articles: articles
-        .filter((a) => a.text.trim())
-        .map((a) => ({
-          heading: a.locked && a.lockedContent ? a.lockedContent.heading : (a.heading || ''),
-          body: a.locked && a.lockedContent ? a.lockedContent.body : a.text.trim(),
+      articles: articles.map((a) => ({
+        heading: a.locked && a.lockedContent ? a.lockedContent.heading : (a.heading || ''),
+        body: a.locked && a.lockedContent ? a.lockedContent.body : a.text.trim(),
           illustration: a.illustration,
           illustFile: a.illustFile,
         })),

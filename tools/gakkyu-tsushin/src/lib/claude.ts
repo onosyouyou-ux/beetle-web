@@ -112,12 +112,18 @@ function buildUserMessage(input: GenerateInput): string {
     const left  = calcLeftBudget(photo, leftCount);
     const right = calcRightArticleBudget(photo, eventsLen, itemsLen, cautionLen);
     const hasA3 = input.articles.length >= 3 && !!input.articles[2]?.text.trim();
+    // 記事1・2の1本あたりの目安（超過しやすいので個別の上限も示す）
+    const leftPerArticle = Math.round(left.max * 0.65);
+    // 記事3は固定欄の量によってはスペースゼロになるが、最低80字は確保して非表示を防ぐ
+    const right3Max = hasA3 ? Math.max(80, right.max) : 0;
+    const right3Min = hasA3 ? Math.max(60, right.min) : 0;
     budgetText = [
       `記事1・2の本文合計（左カラム）：${left.max}字以内（推奨 ${left.min}〜${left.max}字）`,
+      `　各記事は ${leftPerArticle}字以下を目安（合計を守れる範囲で多少の偏りはOK）`,
       hasA3
-        ? `記事3の本文（右カラム）：${right.max}字以内（推奨 ${right.min}〜${right.max}字）${right.max < 60 ? '　※固定欄が多いため短めに' : ''}`
+        ? `記事3の本文（右カラム）：${right3Max}字以内（推奨 ${right3Min}〜${right3Max}字）${right.max < 80 ? '　※固定欄が多いため特に短く' : ''}`
         : `記事3：なし（右カラムは固定欄と先生コメントのみ）`,
-      '各カラムの上限を1字でも超えると紙面から内容が切れる。厳守すること。',
+      '左カラム合計と記事3の上限を各1字でも超えると紙面から内容が切れる。絶対に超えないこと。',
     ].join('\n');
   }
 
