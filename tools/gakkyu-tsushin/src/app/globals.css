@@ -277,7 +277,7 @@ select:focus {
   column-count: 2;
   column-gap: 1.4em;
   column-rule: 1px solid #e2e0da;
-  column-fill: auto; /* 1カラム目から順に埋める（balance は余白が生じやすい） */
+  column-fill: balance; /* 両列に均等分配→記事2が消えない（auto だと記事1で両列が埋まる） */
 }
 
 .paper-article { break-inside: avoid; margin-bottom: 1.1em; }

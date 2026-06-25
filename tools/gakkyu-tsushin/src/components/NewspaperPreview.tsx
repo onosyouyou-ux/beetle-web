@@ -80,7 +80,7 @@ const NewspaperPreview = forwardRef<HTMLDivElement, Props>(function NewspaperPre
               )}
               {data?.items?.trim() && (
                 <div className="paper-box">
-                  <div className="paper-box-title">🎒 おうちの方へ</div>
+                  <div className="paper-box-title">🎒 忘れ物・持ち物連絡</div>
                   <div className="paper-box-body">{data.items}</div>
                 </div>
               )}
