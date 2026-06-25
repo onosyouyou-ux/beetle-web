@@ -84,6 +84,32 @@ select:focus {
   padding: 2px 9px;
   white-space: nowrap;
 }
+/* data-tooltip でホバー時に即表示されるツールチップ */
+[data-tooltip] {
+  position: relative;
+  cursor: help;
+}
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1c1c2e;
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.5;
+  padding: 5px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 50;
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+}
 
 /* アンカー遷移時に固定ヘッダー分の余白を確保 */
 [id] { scroll-margin-top: 72px; }

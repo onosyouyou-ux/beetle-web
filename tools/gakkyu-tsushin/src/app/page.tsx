@@ -39,6 +39,7 @@ export default function Home() {
   const [pdfLoading, setPdfLoading] = useState(false);
   const [refiningId, setRefiningId] = useState<string | null>(null);
   const [error, setError] = useState('');
+  const [isOverflow, setIsOverflow] = useState(false);
 
   const eventsRef = useRef<HTMLTextAreaElement>(null);
   const paperRef = useRef<HTMLDivElement>(null);
@@ -141,12 +142,13 @@ export default function Home() {
     };
   }, [result, articles, fixed]);
 
-  async function callGenerate(withRevision: boolean) {
+  async function callGenerate(withRevision: boolean, revisionOverride?: string) {
     if (unlockedFilledCount === 0) {
       setError('AIで整える記事がありません。記事を入力するか、ロックを解除してください。');
       return;
     }
     setLoading(true);
+    setIsOverflow(false);
     setError('');
     try {
       const res = await fetch('/api/generate', {
@@ -159,7 +161,7 @@ export default function Home() {
           caution: fixed.caution,
           tone,
           photoSize: photo ? photoSize : 'none',
-          ...(withRevision && result ? { revision, previous: result } : {}),
+          ...(withRevision && result ? { revision: revisionOverride ?? revision, previous: result } : {}),
         }),
       });
       const data = await res.json();
@@ -347,7 +349,26 @@ export default function Home() {
               title={title}
               meta={meta}
               photo={photo}
+              onOverflowChange={setIsOverflow}
             />
+
+            {isOverflow && !loading && (
+              <div className="flex items-center justify-between gap-3 bg-[#fff8ec] border border-[#f5c08a] rounded-xl px-4 py-3 mt-2">
+                <p className="text-[13px] text-[#7a4a00] leading-snug">
+                  記事が紙面をはみ出しています。AIが紙面サイズに合わせて短く整えます。
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const msg = '紙面に収まるように各記事の本文を短くまとめてください。事実は守りつつ、文章量を削ってください。';
+                    callGenerate(result !== null, result !== null ? msg : undefined);
+                  }}
+                  className="shrink-0 text-[13px] font-bold text-white bg-[#ef8a3c] rounded-lg px-3 py-1.5 hover:bg-[#e07428] transition-colors"
+                >
+                  AIで短く整える
+                </button>
+              </div>
+            )}
 
             <RevisionBox
               value={revision}

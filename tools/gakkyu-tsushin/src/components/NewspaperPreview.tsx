@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useRef } from 'react';
 import { FONTS, SIZES, type FontId, type SizeId } from '@/lib/templates';
 import type { NewsletterResult } from '@/lib/claude';
 
@@ -11,14 +11,27 @@ interface Props {
   title: string;
   meta: string;
   photo: string | null;
+  onOverflowChange?: (isOverflow: boolean) => void;
 }
 
 const NewspaperPreview = forwardRef<HTMLDivElement, Props>(function NewspaperPreview(
-  { data, font, size, title, meta, photo },
+  { data, font, size, title, meta, photo, onOverflowChange },
   ref,
 ) {
   const fontClass = FONTS.find((f) => f.id === font)?.className ?? 'font-round';
   const sizeClass = SIZES.find((s) => s.id === size)?.className ?? 'size-medium';
+  const bodyRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!onOverflowChange) return;
+    const timer = setTimeout(() => {
+      const el = bodyRef.current;
+      if (!el) return;
+      // column-count:2 のとき 3列目以降に溢れると scrollWidth > clientWidth になる
+      onOverflowChange(el.scrollWidth > el.clientWidth + 2);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [data, font, size, onOverflowChange]);
 
   const articles = data?.articles ?? [];
   const isEmpty =
@@ -47,7 +60,7 @@ const NewspaperPreview = forwardRef<HTMLDivElement, Props>(function NewspaperPre
           <span className="paper-empty-sub">「AIで整える」を押すと見出しも付きます。</span>
         </div>
       ) : (
-        <div className="paper-body">
+        <div ref={bodyRef} className="paper-body">
           {articles.map((a, i) => (
             <div className="paper-article" key={i}>
               {a.heading?.trim() && <div className="paper-article-head">{a.heading}</div>}
