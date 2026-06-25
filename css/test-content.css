@@ -116,3 +116,7 @@ body { background: var(--color-bg); font-family: sans-serif; color: var(--color-
 .uc { background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 8px; padding: 10px 12px; }
 .uc-title { font-size: 12px; font-weight: 600; color: var(--color-text); margin-bottom: 3px; }
 .uc-desc { font-size: 11px; color: #999; line-height: 1.5; }
+
+@media (max-width: 600px) {
+  .input-grid { grid-template-columns: 1fr; }
+}

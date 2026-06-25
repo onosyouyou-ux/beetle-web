@@ -193,7 +193,7 @@ function mSvg(b, t) {
   const padLen = b - baseLen - 7;
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
   const rnd = new Uint8Array(padLen);
-  crypto.getRandomValues(rnd);
+  fillRandom(rnd);
   let pad = '<!--';
   for (let i = 0; i < padLen; i++) pad += chars[rnd[i] & 63];
   pad += '-->';
