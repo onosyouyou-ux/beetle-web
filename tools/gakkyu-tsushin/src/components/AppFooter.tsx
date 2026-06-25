@@ -15,6 +15,9 @@ export default function AppFooter() {
       <div className="sfa-right">
         <a href="https://www.beetle-web.jp/privacy" target="_blank" rel="noopener">プライバシーポリシー</a>
         <span>© BEETLE</span>
+        <span className="sfa-version">
+          {process.env.NEXT_PUBLIC_BUILD_DATE} · {process.env.NEXT_PUBLIC_COMMIT_SHA}
+        </span>
       </div>
     </footer>
   );
