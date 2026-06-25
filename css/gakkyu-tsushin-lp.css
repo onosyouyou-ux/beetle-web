@@ -66,6 +66,7 @@ img{max-width:100%;display:block;}
 @media(max-width:860px){
   .lp-hero-in{grid-template-columns:1fr;gap:24px;padding:34px 20px 38px;}
   .lp-title{font-size:30px;}
+  .lp-title br{display:none;}
 }
 
 /* ── プレビュー（HTML疑似） ── */
