@@ -357,20 +357,35 @@ export default function Home() {
             />
 
             {isOverflow && !loading && (
-              <div className="flex items-center justify-between gap-3 bg-[#fff8ec] border border-[#f5c08a] rounded-xl px-4 py-3 mt-2">
-                <p className="text-[13px] text-[#7a4a00] leading-snug">
-                  記事が紙面をはみ出しています。AIが紙面サイズに合わせて短く整えます。
-                </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const msg = '紙面からはみ出ているので文章量を大幅に減らしてください。各記事の本文を短く削り、行事・持ち物・注意事項も可能なら簡潔にまとめてください。事実は守ること。';
-                    callGenerate(result !== null, result !== null ? msg : undefined);
-                  }}
-                  className="shrink-0 text-[13px] font-bold text-white bg-[#ef8a3c] rounded-lg px-3 py-1.5 hover:bg-[#e07428] transition-colors"
-                >
-                  AIで短く整える
-                </button>
+              <div className="bg-[#fff8ec] border border-[#f5c08a] rounded-xl px-4 py-3 mt-2 space-y-2">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-[13px] text-[#7a4a00] leading-snug">
+                    記事が紙面をはみ出しています。
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const msg = '紙面からはみ出ているので文章量を大幅に減らしてください。各記事の本文を短く削り、行事・持ち物・注意事項も可能なら簡潔にまとめてください。事実は守ること。';
+                      callGenerate(result !== null, result !== null ? msg : undefined);
+                    }}
+                    className="shrink-0 text-[13px] font-bold text-white bg-[#ef8a3c] rounded-lg px-3 py-1.5 hover:bg-[#e07428] transition-colors"
+                  >
+                    AIで短く整える
+                  </button>
+                </div>
+                {size !== 'small' && (
+                  <p className="text-[11px] text-[#7a4a00]">
+                    または{' '}
+                    <button
+                      type="button"
+                      onClick={() => setSize('small')}
+                      className="underline hover:text-[#C0634C] transition-colors"
+                    >
+                      文字サイズを「小」に変更する
+                    </button>
+                    {' '}と収まることがあります。
+                  </p>
+                )}
               </div>
             )}
 
@@ -420,8 +435,21 @@ export default function Home() {
                 )}
               </div>
               {totalArticleChars > 1200 && (
-                <div className="text-[12px] text-[#a32d2d] bg-[#fcebeb] border border-[#f7c1c1] rounded-lg px-3 py-2 mb-2">
-                  入力量が紙面の目安を大幅に超えています。AIで整えても収まらない可能性があります。記事を減らすか、内容を簡潔にまとめてください。
+                <div className="text-[12px] text-[#a32d2d] bg-[#fcebeb] border border-[#f7c1c1] rounded-lg px-3 py-2 mb-2 space-y-1">
+                  <p>入力量が紙面の目安を大幅に超えています。AIで整えても収まらない可能性があります。記事を減らすか、内容を簡潔にまとめてください。</p>
+                  {size !== 'small' && (
+                    <p>
+                      または{' '}
+                      <button
+                        type="button"
+                        onClick={() => setSize('small')}
+                        className="underline hover:text-[#7a0000] transition-colors"
+                      >
+                        文字サイズを「小」に変更する
+                      </button>
+                      {' '}と収まることがあります。
+                    </p>
+                  )}
                 </div>
               )}
               <div className="space-y-3">
