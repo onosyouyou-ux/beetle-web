@@ -298,13 +298,22 @@ select:focus {
 }
 
 .paper-body {
-  flex: 1;           /* paper の残り高さをすべて使う */
-  min-height: 0;     /* flex child が縮まるよう */
-  overflow: hidden;  /* 3列目以降への溢れを抑制 */
-  column-count: 2;
-  column-gap: 1.4em;
-  column-rule: 1px solid #e2e0da;
-  column-fill: balance; /* 両列に均等分配→記事2が消えない（auto だと記事1で両列が埋まる） */
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+}
+
+/* 左カラム：記事1・2 / 右カラム：記事3＋固定欄＋先生から */
+.paper-col {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+.paper-col:first-child {
+  padding-right: 0.7em;
+  margin-right: 0.7em;
+  border-right: 1px solid #e2e0da;
 }
 
 .paper-article { break-inside: avoid; margin-bottom: 1.1em; }
@@ -359,7 +368,6 @@ select:focus {
 .paper-box.caution .paper-box-title { color: #a32d2d; }
 
 .paper-fill {
-  column-span: all;   /* 両カラムにまたがることで上部コンテンツの分散が改善する */
   font-size: 0.9em;
   color: #6b6760;
   border-top: 1px dotted #ccc8bf;

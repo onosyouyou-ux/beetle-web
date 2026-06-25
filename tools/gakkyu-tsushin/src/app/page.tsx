@@ -12,7 +12,7 @@ import WhitespaceHint from '@/components/WhitespaceHint';
 import MainVisual from '@/components/MainVisual';
 import { downloadPaperPdf } from '@/lib/pdf';
 import type { NewsletterResult } from '@/lib/claude';
-import { calcCharBudget } from '@/lib/budget';
+import { calcLeftBudget, calcRightArticleBudget } from '@/lib/budget';
 import { type ToneId, type FontId, type SizeId, type VisualSizeId } from '@/lib/templates';
 
 let _uid = 0;
@@ -21,7 +21,8 @@ const newId = () => `a${++_uid}`;
 const emptyArticle = (): ArticleItem => ({ id: newId(), heading: '', text: '', illustration: '', illustFile: '', locked: false, lockedContent: null });
 
 export default function Home() {
-  const [articles, setArticles] = useState<ArticleItem[]>(() => [emptyArticle(), emptyArticle()]);
+  // 記事は3本固定（左カラム：1・2、右カラム：3）
+  const [articles, setArticles] = useState<ArticleItem[]>(() => [emptyArticle(), emptyArticle(), emptyArticle()]);
   const [fixed, setFixed] = useState<FixedFieldValues>({ events: '', items: '', caution: '' });
 
   const [tone, setTone] = useState<ToneId>('lower');
@@ -72,14 +73,20 @@ export default function Home() {
     () => articles.filter((a) => !a.locked && a.text.trim()).length,
     [articles],
   );
-  const charBudget = useMemo(() => calcCharBudget({
-    articleCount: Math.max(1, articles.filter((a) => a.text.trim()).length || articles.length),
-    photoSize: photo ? photoSize : 'none',
-    eventsLen: fixed.events.trim().length,
-    itemsLen: fixed.items.trim().length,
-    cautionLen: fixed.caution.trim().length,
-    illustCount: articles.filter((a) => a.illustration).length,
-  }), [articles, photo, photoSize, fixed]);
+  // 左カラム（記事1+2）の予算
+  const leftBudget = useMemo(() => {
+    const leftCount = Math.max(1, articles.slice(0, 2).filter((a) => a.text.trim()).length);
+    return calcLeftBudget(photo ? photoSize : 'none', leftCount);
+  }, [articles, photo, photoSize]);
+
+  // 右カラム（記事3）の予算
+  const rightBudget = useMemo(() =>
+    calcRightArticleBudget(
+      photo ? photoSize : 'none',
+      fixed.events.trim().length,
+      fixed.items.trim().length,
+      fixed.caution.trim().length,
+    ), [photo, photoSize, fixed]);
 
   const fixedEmpty = !fixed.events.trim() && !fixed.items.trim() && !fixed.caution.trim();
   const showHint = filledArticleCount > 0 && filledArticleCount < 3 && fixedEmpty;
@@ -219,25 +226,30 @@ export default function Home() {
     setRefiningId(id);
     setError('');
     try {
-      // 全体予算を計算して、他記事の現在文字数を引いた残枠をこの記事に渡す
+      // カラム別予算でこの記事の残枠を計算する
       const currentEvents  = (result?.events  ?? fixed.events).trim();
       const currentItems   = (result?.items   ?? fixed.items).trim();
       const currentCaution = (result?.caution ?? fixed.caution).trim();
-      const totalBudget = calcCharBudget({
-        articleCount: articles.length,
-        photoSize: photo ? photoSize : 'none',
-        eventsLen:   currentEvents.length,
-        itemsLen:    currentItems.length,
-        cautionLen:  currentCaution.length,
-        illustCount: articles.filter((a) => a.illustration).length,
-      });
-      const otherBodyChars = result
-        ? result.articles.filter((_, i) => i !== idx).reduce((s, a) => s + (a.body?.length ?? 0), 0)
-        : articles.filter((_, i) => i !== idx).reduce((s, a) => s + a.text.trim().length, 0);
-      const singleBudget = {
-        min: Math.max(55, totalBudget.min - otherBodyChars),
-        max: Math.max(80, totalBudget.max - otherBodyChars),
-      };
+      const ps = photo ? photoSize : 'none';
+
+      let singleBudget: { min: number; max: number };
+      if (idx >= 2) {
+        // 記事3：右カラム予算をそのまま使う
+        singleBudget = calcRightArticleBudget(
+          ps, currentEvents.length, currentItems.length, currentCaution.length,
+        );
+      } else {
+        // 記事1・2：左カラム予算から相手記事の文字数を差し引く
+        const leftBgt = calcLeftBudget(ps, 2);
+        const partnerIdx = idx === 0 ? 1 : 0;
+        const partnerChars = result
+          ? (result.articles[partnerIdx]?.body?.length ?? 0)
+          : articles[partnerIdx]?.text.trim().length ?? 0;
+        singleBudget = {
+          min: Math.max(55, leftBgt.min - partnerChars),
+          max: Math.max(80, leftBgt.max - partnerChars),
+        };
+      }
 
       const res = await fetch('/api/generate', {
         method: 'POST',
@@ -447,64 +459,47 @@ export default function Home() {
               }}
             />
 
-            {/* 記事ボックス */}
+            {/* ── 記事（左カラム：1・2） ── */}
             <div>
-              <div className="flex items-baseline gap-2 mb-2 flex-wrap">
-                <div className="text-[13px] font-bold text-[#1c1c2e]">記事</div>
-                {totalArticleChars === 0 ? (
-                  <span className="text-[11px] text-[#aaa]">目安 {charBudget.min}〜{charBudget.max}字</span>
-                ) : (
-                  <span className={`text-[11px] font-bold ${
-                    totalArticleChars > charBudget.max * 1.5 ? 'text-[#a32d2d]' :
-                    totalArticleChars > charBudget.max       ? 'text-[#cc7700]' :
-                    'text-[#4a9a6a]'
-                  }`}>
-                    {totalArticleChars}字
-                    {totalArticleChars <= charBudget.max && ` ／ 目安 ${charBudget.min}〜${charBudget.max}字`}
-                    {totalArticleChars > charBudget.max && totalArticleChars <= charBudget.max * 1.5 && ' ／ 上限に近づいています'}
-                    {totalArticleChars > charBudget.max * 1.5 && ' ／ 入力量が多すぎます'}
-                  </span>
-                )}
+              <div className="flex items-baseline gap-2 mb-2">
+                <div className="text-[13px] font-bold text-[#1c1c2e]">記事1・2</div>
+                <span className="text-[11px] text-[#888]">左カラム　目安 {leftBudget.min}〜{leftBudget.max}字</span>
               </div>
-              {totalArticleChars > Math.round(charBudget.max * 1.5) && (
-                <div className="text-[12px] text-[#a32d2d] bg-[#fcebeb] border border-[#f7c1c1] rounded-lg px-3 py-2 mb-2 space-y-1">
-                  <p>入力量が紙面の目安を大幅に超えています。AIで整えても収まらない可能性があります。記事を減らすか、内容を簡潔にまとめてください。</p>
-                  {size !== 'small' && (
-                    <p>
-                      または{' '}
-                      <button
-                        type="button"
-                        onClick={() => setSize('small')}
-                        className="underline hover:text-[#7a0000] transition-colors"
-                      >
-                        文字サイズを「小」に変更する
-                      </button>
-                      {' '}と収まることがあります。
-                    </p>
-                  )}
-                </div>
-              )}
               <div className="space-y-3">
-                {articles.map((a, i) => (
+                {articles.slice(0, 2).map((a, i) => (
                   <ArticleBox
                     key={a.id}
                     index={i}
                     item={a}
-                    canDelete={articles.length > 1}
+                    canDelete={false}
                     onChange={(patch) => updateArticle(a.id, patch)}
-                    onDelete={() => deleteArticle(a.id)}
+                    onDelete={() => {}}
                     onAiRefine={() => refineArticle(a.id)}
                     isRefining={refiningId === a.id}
                   />
                 ))}
-                <button
-                  type="button"
-                  onClick={addArticle}
-                  className="w-full border border-dashed border-[#cbc8c0] rounded-xl text-[14px] text-[#555] py-3 hover:border-[#C0634C] hover:text-[#C0634C] transition-colors"
-                >
-                  ＋ 記事を追加
-                </button>
               </div>
+            </div>
+
+            {/* ── 記事3（右カラム） ── */}
+            <div>
+              <div className="flex items-baseline gap-2 mb-2">
+                <div className="text-[13px] font-bold text-[#1c1c2e]">記事3</div>
+                <span className={`text-[11px] ${rightBudget.max < 60 ? 'text-[#cc7700]' : 'text-[#888]'}`}>
+                  右カラム　目安 {rightBudget.max}字
+                  {rightBudget.max < 60 && '　固定欄が多いため省略推奨'}
+                </span>
+              </div>
+              <ArticleBox
+                key={articles[2].id}
+                index={2}
+                item={articles[2]}
+                canDelete={false}
+                onChange={(patch) => updateArticle(articles[2].id, patch)}
+                onDelete={() => {}}
+                onAiRefine={() => refineArticle(articles[2].id)}
+                isRefining={refiningId === articles[2].id}
+              />
             </div>
 
             <FixedFields ref={eventsRef} values={fixed} onChange={updateFixed} />

@@ -20,25 +20,30 @@ const NewspaperPreview = forwardRef<HTMLDivElement, Props>(function NewspaperPre
 ) {
   const fontClass = FONTS.find((f) => f.id === font)?.className ?? 'font-round';
   const sizeClass = SIZES.find((s) => s.id === size)?.className ?? 'size-medium';
-  const bodyRef = useRef<HTMLDivElement>(null);
+  const leftColRef  = useRef<HTMLDivElement>(null);
+  const rightColRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!onOverflowChange) return;
     const timer = setTimeout(() => {
-      const el = bodyRef.current;
-      if (!el) return;
-      // column-count:2 のとき 3列目以降に溢れると scrollWidth > clientWidth になる
-      onOverflowChange(el.scrollWidth > el.clientWidth + 2);
+      const leftEl  = leftColRef.current;
+      const rightEl = rightColRef.current;
+      const leftOver  = leftEl  ? leftEl.scrollHeight  > leftEl.clientHeight  + 2 : false;
+      const rightOver = rightEl ? rightEl.scrollHeight > rightEl.clientHeight + 2 : false;
+      onOverflowChange(leftOver || rightOver);
     }, 150);
     return () => clearTimeout(timer);
   }, [data, font, size, onOverflowChange]);
 
   const articles = data?.articles ?? [];
   const isEmpty =
-    articles.length === 0 &&
+    articles.every((a) => !a.body?.trim() && !a.heading?.trim()) &&
     !data?.events?.trim() &&
     !data?.items?.trim() &&
     !data?.caution?.trim();
+
+  const leftArticles = articles.slice(0, 2);
+  const article3     = articles[2];
 
   return (
     <div ref={ref} className={`paper ${fontClass} ${sizeClass}`}>
@@ -60,45 +65,66 @@ const NewspaperPreview = forwardRef<HTMLDivElement, Props>(function NewspaperPre
           <span className="paper-empty-sub">「AIで整える」を押すと見出しも付きます。</span>
         </div>
       ) : (
-        <div ref={bodyRef} className="paper-body">
-          {articles.map((a, i) => (
-            <div className="paper-article" key={i}>
-              {a.heading?.trim() && <div className="paper-article-head">{a.heading}</div>}
-              {a.illustFile && (
-                <div className="paper-illust">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={a.illustFile} alt="" />
+        <div className="paper-body">
+          {/* 左カラム：記事1・2 */}
+          <div className="paper-col" ref={leftColRef}>
+            {leftArticles.map((a, i) =>
+              (a.heading?.trim() || a.body?.trim()) ? (
+                <div className="paper-article" key={i}>
+                  {a.heading?.trim() && <div className="paper-article-head">{a.heading}</div>}
+                  {a.illustFile && (
+                    <div className="paper-illust">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={a.illustFile} alt="" />
+                    </div>
+                  )}
+                  <div className="paper-article-body">{a.body}</div>
                 </div>
-              )}
-              <div className="paper-article-body">{a.body}</div>
-            </div>
-          ))}
+              ) : null
+            )}
+          </div>
 
-          {data?.events?.trim() && (
-            <div className="paper-box">
-              <div className="paper-box-title">📅 今月の行事</div>
-              <div className="paper-box-body">{data.events}</div>
-            </div>
-          )}
-          {data?.items?.trim() && (
-            <div className="paper-box">
-              <div className="paper-box-title">🎒 忘れ物・持ち物連絡</div>
-              <div className="paper-box-body">{data.items}</div>
-            </div>
-          )}
-          {data?.caution?.trim() && (
-            <div className="paper-box caution">
-              <div className="paper-box-title">⚠ 注意事項</div>
-              <div className="paper-box-body">{data.caution}</div>
-            </div>
-          )}
+          {/* 右カラム：記事3 + 固定欄 + 先生から */}
+          <div className="paper-col" ref={rightColRef}>
+            {article3 && (article3.heading?.trim() || article3.body?.trim()) && (
+              <div className="paper-article">
+                {article3.heading?.trim() && <div className="paper-article-head">{article3.heading}</div>}
+                {article3.illustFile && (
+                  <div className="paper-illust">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={article3.illustFile} alt="" />
+                  </div>
+                )}
+                <div className="paper-article-body">{article3.body}</div>
+              </div>
+            )}
 
-          {data?.fill?.trim() && (
-            <div className="paper-fill">
-              <span className="paper-fill-label">✏ 先生から</span>
-              {data.fill}
-            </div>
-          )}
+            {data?.events?.trim() && (
+              <div className="paper-box">
+                <div className="paper-box-title">📅 今月の行事</div>
+                <div className="paper-box-body">{data.events}</div>
+              </div>
+            )}
+            {data?.items?.trim() && (
+              <div className="paper-box">
+                <div className="paper-box-title">🎒 忘れ物・持ち物連絡</div>
+                <div className="paper-box-body">{data.items}</div>
+              </div>
+            )}
+            {data?.caution?.trim() && (
+              <div className="paper-box caution">
+                <div className="paper-box-title">⚠ 注意事項</div>
+                <div className="paper-box-body">{data.caution}</div>
+              </div>
+            )}
+
+            {data?.fill?.trim() && (
+              <div className="paper-fill">
+                <span className="paper-fill-label">✏ 先生から</span>
+                {data.fill}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
