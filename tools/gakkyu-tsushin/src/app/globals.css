@@ -272,6 +272,7 @@ select:focus {
 .paper-body {
   flex: 1;           /* paper の残り高さをすべて使う */
   min-height: 0;     /* flex child が縮まるよう */
+  overflow: hidden;  /* 3列目以降への溢れを抑制 */
   column-count: 2;
   column-gap: 1.4em;
   column-rule: 1px solid #e2e0da;
