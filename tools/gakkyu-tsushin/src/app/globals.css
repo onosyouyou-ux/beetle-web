@@ -305,6 +305,22 @@ select:focus {
   display: block;
 }
 
+/* 固定欄エリア（列フローの外に出して常に下部に表示） */
+.paper-fixed {
+  flex-shrink: 0;
+  display: flex;
+  gap: 0.5em;
+  padding-top: 0.6em;
+  margin-top: 0.4em;
+  border-top: 1px dashed #d0c8bc;
+  overflow: hidden;
+}
+.paper-fixed .paper-box {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
 /* 固定欄ボックス */
 .paper-box {
   break-inside: avoid;
