@@ -160,9 +160,9 @@ export default function MainVisual({ photo, size, onChange }: Props) {
           </button>
           <div className="flex flex-wrap gap-1.5 mt-2">
             <span className="hint-chip">📄 JPG / PNG</span>
-            <span className="hint-chip">大サイズ → 〜4MB（2:1横長）</span>
-            <span className="hint-chip">中サイズ → 〜2MB（3:1横長）</span>
-            <span className="hint-chip">小サイズ → 〜1MB（5:1横長）</span>
+            <span className="hint-chip" title="A4印刷時のおよそ 約19×9cm（幅いっぱい・高さ9cm）">大サイズ → 〜4MB（2:1横長）</span>
+            <span className="hint-chip" title="A4印刷時のおよそ 約19×6cm（幅いっぱい・高さ6cm）">中サイズ → 〜2MB（3:1横長）</span>
+            <span className="hint-chip" title="A4印刷時のおよそ 約19×4cm（幅いっぱい・高さ4cm）">小サイズ → 〜1MB（5:1横長）</span>
           </div>
         </div>
       ) : (

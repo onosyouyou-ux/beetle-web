@@ -50,13 +50,13 @@ const NewspaperPreview = forwardRef<HTMLDivElement, Props>(function NewspaperPre
         <div className="paper-body">
           {articles.map((a, i) => (
             <div className="paper-article" key={i}>
+              {a.heading?.trim() && <div className="paper-article-head">{a.heading}</div>}
               {a.illustFile && (
                 <div className="paper-illust">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={a.illustFile} alt="" />
                 </div>
               )}
-              {a.heading?.trim() && <div className="paper-article-head">{a.heading}</div>}
               <div className="paper-article-body">{a.body}</div>
             </div>
           ))}
