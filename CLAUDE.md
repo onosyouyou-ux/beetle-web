@@ -182,7 +182,7 @@ FAQ をページに追加するときは **JSON-LD の FAQPage も同内容で�
 
 ### 状況
 - **bug-checker**: この型（静的ランディング `tools/bug-checker/landing.html` ＋アプリ vercel.app）で運用中。
-- **gakkyu-tsushin**: 2026-06-22 にこの型へ統一（`tools/gakkyu-tsushin/landing.html` 新設、アプリは vercel.app、canonical はランディング）。
+- **gakkyu-tsushin**: `tools/gakkyu-tsushin/index.html` がランディングページ（canonical: `/tools/gakkyu-tsushin/`）。アプリは vercel.app。`landing.html` は不要なため削除済み。
 
 ## デプロイ
 
