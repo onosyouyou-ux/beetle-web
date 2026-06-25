@@ -157,15 +157,13 @@ export default function MainVisual({ photo, size, onChange }: Props) {
               <path d="M12 2a7 7 0 0 1 6.93 5.98A5.5 5.5 0 0 1 17.5 19H7a5 5 0 0 1-.24-9.98A7 7 0 0 1 12 2Zm0 2a5 5 0 0 0-4.9 4.01l-.06.42-.43.04A3 3 0 0 0 7 14h10.5a3.5 3.5 0 0 0 .24-6.99l-.49-.02-.09-.48A5 5 0 0 0 12 4Zm0 4a1 1 0 0 1 .993.883L13 9v2h2a1 1 0 0 1 .117 1.993L15 13h-2v2a1 1 0 0 1-1.993.117L11 15v-2H9a1 1 0 0 1-.117-1.993L9 11h2V9a1 1 0 0 1 1-1Z"/>
             </svg>
             <span className="text-[14px] font-bold text-[#ef8a3c]">写真を選ぶ（任意）</span>
-          </button>
-          <div className="flex flex-wrap gap-1.5 mt-2">
             <span
               className="hint-chip"
-              data-tooltip={"📄 JPG / PNG（最大8MB）\n\n• 大サイズ → 〜4MB　印刷時 約19×9cm\n• 中サイズ → 〜2MB　印刷時 約19×6cm\n• 小サイズ → 〜1MB　印刷時 約19×4cm"}
+              data-tooltip={"• 大サイズ → 〜4MB　印刷時 約19×9cm\n• 中サイズ → 〜2MB　印刷時 約19×6cm\n• 小サイズ → 〜1MB　印刷時 約19×4cm"}
             >
               📄 JPG / PNG
             </span>
-          </div>
+          </button>
         </div>
       ) : (
         <div className="border border-[#e8e4de] rounded-xl bg-white p-3 space-y-2.5">
