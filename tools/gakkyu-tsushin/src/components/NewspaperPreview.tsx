@@ -47,52 +47,46 @@ const NewspaperPreview = forwardRef<HTMLDivElement, Props>(function NewspaperPre
           <span className="paper-empty-sub">「AIで整える」を押すと見出しも付きます。</span>
         </div>
       ) : (
-        <>
-          <div className="paper-body">
-            {articles.map((a, i) => (
-              <div className="paper-article" key={i}>
-                {a.illustFile && (
-                  <div className="paper-illust">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={a.illustFile} alt="" />
-                  </div>
-                )}
-                {a.heading?.trim() && <div className="paper-article-head">{a.heading}</div>}
-                <div className="paper-article-body">{a.body}</div>
-              </div>
-            ))}
+        <div className="paper-body">
+          {articles.map((a, i) => (
+            <div className="paper-article" key={i}>
+              {a.illustFile && (
+                <div className="paper-illust">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={a.illustFile} alt="" />
+                </div>
+              )}
+              {a.heading?.trim() && <div className="paper-article-head">{a.heading}</div>}
+              <div className="paper-article-body">{a.body}</div>
+            </div>
+          ))}
 
-            {data?.fill?.trim() && (
-              <div className="paper-fill">
-                <span className="paper-fill-label">✏ 先生から</span>
-                {data.fill}
-              </div>
-            )}
-          </div>
-
-          {(data?.events?.trim() || data?.items?.trim() || data?.caution?.trim()) && (
-            <div className="paper-fixed">
-              {data?.events?.trim() && (
-                <div className="paper-box">
-                  <div className="paper-box-title">📅 今月の行事</div>
-                  <div className="paper-box-body">{data.events}</div>
-                </div>
-              )}
-              {data?.items?.trim() && (
-                <div className="paper-box">
-                  <div className="paper-box-title">🎒 忘れ物・持ち物連絡</div>
-                  <div className="paper-box-body">{data.items}</div>
-                </div>
-              )}
-              {data?.caution?.trim() && (
-                <div className="paper-box caution">
-                  <div className="paper-box-title">⚠ 注意事項</div>
-                  <div className="paper-box-body">{data.caution}</div>
-                </div>
-              )}
+          {data?.events?.trim() && (
+            <div className="paper-box">
+              <div className="paper-box-title">📅 今月の行事</div>
+              <div className="paper-box-body">{data.events}</div>
             </div>
           )}
-        </>
+          {data?.items?.trim() && (
+            <div className="paper-box">
+              <div className="paper-box-title">🎒 忘れ物・持ち物連絡</div>
+              <div className="paper-box-body">{data.items}</div>
+            </div>
+          )}
+          {data?.caution?.trim() && (
+            <div className="paper-box caution">
+              <div className="paper-box-title">⚠ 注意事項</div>
+              <div className="paper-box-body">{data.caution}</div>
+            </div>
+          )}
+
+          {data?.fill?.trim() && (
+            <div className="paper-fill">
+              <span className="paper-fill-label">✏ 先生から</span>
+              {data.fill}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

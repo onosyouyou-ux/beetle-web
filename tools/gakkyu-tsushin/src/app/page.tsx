@@ -158,6 +158,7 @@ export default function Home() {
           items: fixed.items,
           caution: fixed.caution,
           tone,
+          photoSize: photo ? photoSize : 'none',
           ...(withRevision && result ? { revision, previous: result } : {}),
         }),
       });
