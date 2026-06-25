@@ -72,6 +72,15 @@ export default function Home() {
     () => articles.filter((a) => !a.locked && a.text.trim()).length,
     [articles],
   );
+  const charBudget = useMemo(() => calcCharBudget({
+    articleCount: Math.max(1, articles.filter((a) => a.text.trim()).length || articles.length),
+    photoSize: photo ? photoSize : 'none',
+    eventsLen: fixed.events.trim().length,
+    itemsLen: fixed.items.trim().length,
+    cautionLen: fixed.caution.trim().length,
+    illustCount: articles.filter((a) => a.illustration).length,
+  }), [articles, photo, photoSize, fixed]);
+
   const fixedEmpty = !fixed.events.trim() && !fixed.items.trim() && !fixed.caution.trim();
   const showHint = filledArticleCount > 0 && filledArticleCount < 3 && fixedEmpty;
 
@@ -443,21 +452,21 @@ export default function Home() {
               <div className="flex items-baseline gap-2 mb-2 flex-wrap">
                 <div className="text-[13px] font-bold text-[#1c1c2e]">記事</div>
                 {totalArticleChars === 0 ? (
-                  <span className="text-[11px] text-[#aaa]">全体で700〜1100字程度を想定</span>
+                  <span className="text-[11px] text-[#aaa]">目安 {charBudget.min}〜{charBudget.max}字</span>
                 ) : (
                   <span className={`text-[11px] font-bold ${
-                    totalArticleChars > 1200 ? 'text-[#a32d2d]' :
-                    totalArticleChars > 900  ? 'text-[#cc7700]' :
+                    totalArticleChars > charBudget.max * 1.5 ? 'text-[#a32d2d]' :
+                    totalArticleChars > charBudget.max       ? 'text-[#cc7700]' :
                     'text-[#4a9a6a]'
                   }`}>
                     {totalArticleChars}字
-                    {totalArticleChars <= 900  && ' ／ 目安 700〜1100字'}
-                    {totalArticleChars > 900 && totalArticleChars <= 1200 && ' ／ 上限に近づいています'}
-                    {totalArticleChars > 1200 && ' ／ 入力量が多すぎます'}
+                    {totalArticleChars <= charBudget.max && ` ／ 目安 ${charBudget.min}〜${charBudget.max}字`}
+                    {totalArticleChars > charBudget.max && totalArticleChars <= charBudget.max * 1.5 && ' ／ 上限に近づいています'}
+                    {totalArticleChars > charBudget.max * 1.5 && ' ／ 入力量が多すぎます'}
                   </span>
                 )}
               </div>
-              {totalArticleChars > 1200 && (
+              {totalArticleChars > Math.round(charBudget.max * 1.5) && (
                 <div className="text-[12px] text-[#a32d2d] bg-[#fcebeb] border border-[#f7c1c1] rounded-lg px-3 py-2 mb-2 space-y-1">
                   <p>入力量が紙面の目安を大幅に超えています。AIで整えても収まらない可能性があります。記事を減らすか、内容を簡潔にまとめてください。</p>
                   {size !== 'small' && (

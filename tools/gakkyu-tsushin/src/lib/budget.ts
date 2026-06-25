@@ -12,7 +12,7 @@ export interface BudgetParams {
 export function calcCharBudget(p: BudgetParams): { min: number; max: number } {
   let base = 950;
 
-  const photoDeduct: Record<string, number> = { none: 0, small: 130, medium: 220, large: 340 };
+  const photoDeduct: Record<string, number> = { none: 0, small: 185, medium: 305, large: 460 };
   base -= photoDeduct[p.photoSize] ?? 0;
 
   // 3記事以上は見出し・余白オーバーヘッドが増える（基準は2本）
