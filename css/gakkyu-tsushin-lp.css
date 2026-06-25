@@ -67,6 +67,10 @@ img{max-width:100%;display:block;}
   .lp-hero-in{grid-template-columns:1fr;gap:24px;padding:34px 20px 38px;}
   .lp-title{font-size:30px;}
   .lp-title br{display:none;}
+  .lp-hero-fig{display:none;}
+  .lp-hero-cta{text-align:center;}
+  .lp-hero-cta .lp-note{text-align:center;}
+  .lp-tool .ill i:nth-child(n+7){display:none;}
 }
 
 /* ── プレビュー（HTML疑似） ── */
