@@ -159,10 +159,12 @@ export default function MainVisual({ photo, size, onChange }: Props) {
             <span className="text-[14px] font-bold text-[#ef8a3c]">写真を選ぶ（任意）</span>
           </button>
           <div className="flex flex-wrap gap-1.5 mt-2">
-            <span className="hint-chip">📄 JPG / PNG</span>
-            <span className="hint-chip" data-tooltip="A4印刷時のおよそ 約19×9cm（幅いっぱい・高さ9cm）">大サイズ → 〜4MB（2:1横長）</span>
-            <span className="hint-chip" data-tooltip="A4印刷時のおよそ 約19×6cm（幅いっぱい・高さ6cm）">中サイズ → 〜2MB（3:1横長）</span>
-            <span className="hint-chip" data-tooltip="A4印刷時のおよそ 約19×4cm（幅いっぱい・高さ4cm）">小サイズ → 〜1MB（5:1横長）</span>
+            <span
+              className="hint-chip"
+              data-tooltip={"📄 JPG / PNG（最大8MB）\n\n• 大サイズ → 〜4MB　印刷時 約19×9cm\n• 中サイズ → 〜2MB　印刷時 約19×6cm\n• 小サイズ → 〜1MB　印刷時 約19×4cm"}
+            >
+              📄 JPG / PNG
+            </span>
           </div>
         </div>
       ) : (

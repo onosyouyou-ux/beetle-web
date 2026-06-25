@@ -98,10 +98,11 @@ select:focus {
   background: #1c1c2e;
   color: #fff;
   font-size: 11px;
-  line-height: 1.5;
-  padding: 5px 10px;
+  line-height: 1.7;
+  padding: 7px 12px;
   border-radius: 6px;
-  white-space: nowrap;
+  white-space: pre-line;
+  min-width: 200px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s;
