@@ -158,10 +158,10 @@ export default function MainVisual({ photo, size, onChange }: Props) {
             </svg>
             <span className="text-[14px] font-bold text-[#ef8a3c]">写真を選ぶ（任意）</span>
             <span
-              className="hint-chip"
+              className="text-[11px] text-[#bbb]"
               data-tooltip={"• 大サイズ → 〜4MB　印刷時 約19×9cm\n• 中サイズ → 〜2MB　印刷時 約19×6cm\n• 小サイズ → 〜1MB　印刷時 約19×4cm"}
             >
-              📄 JPG / PNG
+              JPG / PNG
             </span>
           </button>
         </div>
