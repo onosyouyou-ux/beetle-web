@@ -308,7 +308,7 @@ export default function Home() {
           <section className="lg:sticky lg:top-[56px] lg:self-start">
             <div className="sec-label">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icons/10_preview_search.png" alt="" className="sec-icon" />
+              <img src="/icons/10_preview_search.svg" alt="" className="sec-icon" />
               プレビュー
             </div>
 
@@ -361,7 +361,7 @@ export default function Home() {
           <section className="space-y-4">
             <div className="sec-label">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icons/11_input_pencil.png" alt="" className="sec-icon" />
+              <img src="/icons/11_input_pencil.svg" alt="" className="sec-icon" />
               入力エリア
             </div>
 
