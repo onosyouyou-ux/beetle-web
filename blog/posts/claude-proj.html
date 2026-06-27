@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>proj コマンド1つで Claude Code をプロジェクト別に起動する | BEETLE合同会社</title>
+<meta name="description" content="WSL環境で proj と打つだけで、VS Code と Claude Code が同時に立ち上がる仕組みを作った。ポイントは Claude Code の環境変数を env -u でクリアすること。">
+<link rel="canonical" href="https://www.beetle-web.jp/blog/posts/claude-proj.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="proj コマンド1つで Claude Code をプロジェクト別に起動する | BEETLE合同会社">
+<meta property="og:description" content="WSL環境で proj と打つだけで、VS Code と Claude Code が同時に立ち上がる仕組みを作った。ポイントは Claude Code の環境変数を env -u でクリアすること。">
+<meta property="og:url" content="https://www.beetle-web.jp/blog/posts/claude-proj.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/blog/claude-proj.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="proj コマンド1つで Claude Code をプロジェクト別に起動する | BEETLE合同会社">
+<meta name="twitter:description" content="WSL環境で proj と打つだけで、VS Code と Claude Code が同時に立ち上がる仕組みを作った。ポイントは Claude Code の環境変数を env -u でクリアすること。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/blog/claude-proj.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"proj コマンド1つで Claude Code をプロジェクト別に起動する","datePublished":"2026-06-27","dateModified":"2026-06-27","description":"WSL環境で proj と打つだけで、VS Code と Claude Code が同時に立ち上がる仕組みを作った。ポイントは Claude Code の環境変数を env -u でクリアすること。","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/claude-proj.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"proj コマンド1つで Claude Code をプロジェクト別に起動する","item":"https://www.beetle-web.jp/blog/posts/claude-proj.html"}]}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-06-27</span>
+        <span class="post-tag tips">Tips</span>
+      </div>
+      <h1 class="post-h1">proj コマンド1つで Claude Code をプロジェクト別に起動する</h1>
+    </div>
+
+    <div class="post-body">
+
+      <p class="lead">Claude Code を使い始めてから、地味に面倒なことがひとつあった。プロジェクトを切り替えるたびに <code>cd</code> して <code>claude</code> を打つ。それだけなんだけど、複数プロジェクトを並走させていると管理が煩雑になってくる。</p>
+
+      <p>そこで作ったのが <code>proj</code> コマンド。ターミナルで <code>proj</code> と打つとメニューが出て、番号を選ぶだけで VS Code と Claude Code が同時に立ち上がる。</p>
+
+      <pre><code>=== プロジェクト ===
+   1. beetle-web  — BEETLEのウェブサイト
+   2. gakkyu-tsushin  — 学級通信ジェネレーター
+   a. 新規プロジェクトを追加
+   q. 終了
+
+番号を入力: 1
+▶ beetle-web を開いています...
+✓ 新しいタブで Claude Code を開きました: beetle-web</code></pre>
+
+      <hr class="post-rule">
+
+      <p>実装でひとつ詰まったのが、<strong>Claude Code の中から別プロジェクトを開こうとするとうまく起動しない</strong>という問題だった。</p>
+
+      <p>Claude Code はプロセス起動時にいくつかの環境変数をセットする。子プロセスとして <code>claude</code> を呼ぶと、その変数が引き継がれてしまって正常に動かない。</p>
+
+      <p>実際に Claude Code 内で確認してみると、こういう変数が並んでいた。</p>
+
+      <pre><code>CLAUDE_CODE_CHILD_SESSION=1
+AI_AGENT=claude-code_2-1-193_agent
+CLAUDE_CODE_SESSION_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+CLAUDECODE=1
+CLAUDE_CODE_ENTRYPOINT=cli
+CLAUDE_CODE_EXECPATH=/path/to/claude.exe</code></pre>
+
+      <p>解決策は <code>env -u</code> でこれらを明示的に除いてから起動すること。</p>
+
+      <pre><code>env -u CLAUDECODE \
+    -u CLAUDE_CODE_ENTRYPOINT \
+    -u CLAUDE_CODE_SESSION_ID \
+    -u CLAUDE_CODE_CHILD_SESSION \
+    -u CLAUDE_CODE_EXECPATH \
+    -u AI_AGENT \
+    claude</code></pre>
+
+      <p>これで「Claude Code の中から Claude Code を起動する」がクリーンに動く。</p>
+
+      <hr class="post-rule">
+
+      <p>もうひとつ工夫したのが Windows Terminal との連携。<code>wt.exe</code> を WSL 側から呼ぶと、既存のウィンドウに新しいタブを開いてそのまま <code>claude</code> を実行できる。</p>
+
+      <pre><code>wt.exe -w 0 new-tab wsl.exe --cd "$project_dir" -- claude</code></pre>
+
+      <p>SSH 経由など <code>wt.exe</code> がない環境では <code>env -u</code> の方にフォールバックするようにしている。</p>
+
+      <hr class="post-rule">
+
+      <p>新規プロジェクトを追加するときは <code>CLAUDE.md</code> も自動生成するようにした。Claude Code はプロジェクトルートの <code>CLAUDE.md</code> を読んでコンテキストを把握するので、最低限の骨格を最初から用意しておくと初回から話が早い。</p>
+
+      <p>セットアップは <code>~/project-manager.sh</code> として保存して <code>.bashrc</code> にエイリアスを追加するだけ。スクリプト全文は <a href="https://gist.github.com/onosyouyou-ux/6b726069b54c4ededf042807ff480dc8" target="_blank" rel="noopener">Gist に置いてあります</a>。</p>
+
+      <hr class="post-rule">
+
+      <p>ワンオペで複数プロジェクトを回していると、「開くまでの摩擦を減らす」系の工夫がじわじわ効いてくる。大したことじゃないんだけど、毎日やることだから積み重なる。</p>
+
+    </div>
+
+    <div class="post-related">
+      <p class="post-related-title">関連記事</p>
+      <ul class="post-related-list">
+        <li><a href="/blog/posts/claude-abc.html">Claude：A氏、Claude：B氏、Claude：C氏</a></li>
+        <li><a href="/blog/posts/ai-marunage.html">AIをうまく使う方法は、丸投げだった。</a></li>
+        <li><a href="/blog/posts/ai-instruction.html">AIは武器か、平均点製造機か。</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>
