@@ -39,7 +39,7 @@ body{font-family:'M PLUS 1p','Noto Sans JP',sans-serif;font-size:14px;background
 .ref-lead{max-width:780px;margin:0 auto 8px;padding:0 32px;font-size:14px;color:var(--tp-text2);line-height:1.9}
 
 /* ====== カード共通 ====== */
-.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.ref-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .ref-card{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:18px 20px;transition:all .15s}
 .ref-card:hover{border-color:var(--tp-orange-bd);box-shadow:0 2px 12px rgba(232,90,26,.08)}
 
@@ -91,6 +91,9 @@ body{font-family:'M PLUS 1p','Noto Sans JP',sans-serif;font-size:14px;background
 .to-service a{color:var(--tp-orange);font-weight:700}
 .to-service a:hover{text-decoration:underline}
 
+@media(max-width:900px){
+  .ref-grid{grid-template-columns:repeat(2,1fr)}
+}
 @media(max-width:600px){
   .hero h1{font-size:30px}
   .sw{padding:20px 16px}
