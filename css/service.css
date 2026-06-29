@@ -87,7 +87,7 @@ body { font-family: 'Noto Sans JP', sans-serif; font-size: 14px; background: var
 .sv-plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .sv-plan { background: #fff; border: 1px solid var(--tp-border); border-radius: 12px; padding: 22px 20px; }
 .sv-plan-name { font-size: 11px; font-weight: 700; color: var(--tp-text3); letter-spacing: .06em; margin-bottom: 8px; }
-.sv-plan-price { font-family: 'Syne', sans-serif; font-size: 1.25rem; font-weight: 800; color: var(--tp-text); margin-bottom: 10px; }
+.sv-plan-price { font-family: 'Noto Sans JP', sans-serif; font-size: 1.35rem; font-weight: 900; color: var(--tp-text); margin-bottom: 10px; letter-spacing: -0.01em; }
 .sv-plan-desc { font-size: 12px; color: var(--tp-text2); line-height: 1.75; }
 
 /* ─── CTA ─── */
