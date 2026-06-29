@@ -22,12 +22,3 @@
   backToTop.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
-
-  const carousel = document.querySelector('.tools-carousel');
-  const cardWidth = () => carousel.querySelector('.tool-card').offsetWidth + 20;
-  document.querySelector('.carousel-btn.prev').addEventListener('click', () => {
-    carousel.scrollBy({ left: -cardWidth(), behavior: 'smooth' });
-  });
-  document.querySelector('.carousel-btn.next').addEventListener('click', () => {
-    carousel.scrollBy({ left: cardWidth(), behavior: 'smooth' });
-  });
