@@ -5,15 +5,7 @@ body { font-family: 'Noto Sans JP', sans-serif; font-size: 14px; background: var
 .sv-breadcrumb a { font-size: 12px; color: var(--tp-text2); padding: 0 24px; display: inline-block; transition: color .15s; }
 .sv-breadcrumb a:hover { color: var(--tp-orange); }
 
-/* ─── HERO ─── */
-.hero { background: var(--tp-dark); padding: 56px 0 52px; border-bottom: 3px solid var(--tp-orange); position: relative; overflow: hidden; }
-.hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--tp-orange) 0%, #e0a187 55%, transparent 100%); }
-.hero-eyebrow { font-size: 11px; font-weight: 700; color: var(--tp-orange); letter-spacing: .18em; text-transform: uppercase; margin-bottom: 16px; }
-.hero-inner { border-left: 3px solid var(--tp-orange); padding-left: 18px; }
-.hero h1 { font-size: 2rem; font-weight: 800; color: #fff; line-height: 1.35; letter-spacing: -.01em; margin-bottom: 16px; }
-.hero-body { font-size: 15px; color: rgba(255,255,255,0.72); line-height: 1.9; margin-bottom: 10px; }
-.hero-quote { font-size: 14px; color: rgba(255,255,255,0.88); font-weight: 700; line-height: 1.9; margin-bottom: 0; }
-.hero-btns { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 28px; }
+/* ─── BTN ─── */
 .btn-main { background: var(--tp-orange); color: #fff; font-size: 13px; font-weight: 700; padding: 11px 28px; border-radius: 6px; display: inline-block; transition: opacity .15s; }
 .btn-main:hover { opacity: 0.85; }
 
