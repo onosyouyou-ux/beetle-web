@@ -17,6 +17,10 @@ body { font-family: 'Noto Sans JP', sans-serif; font-size: 14px; background: var
 .btn-main { background: var(--tp-orange); color: #fff; font-size: 13px; font-weight: 700; padding: 11px 28px; border-radius: 6px; display: inline-block; transition: opacity .15s; }
 .btn-main:hover { opacity: 0.85; }
 
+/* ─── INTRO (hero直下テキスト) ─── */
+.sv-intro { padding: 28px 0; border-bottom: 1px solid var(--tp-border); background: var(--tp-cream2); }
+.sv-intro-text { font-size: 15px; color: var(--tp-text); line-height: 1.9; font-weight: 700; padding: 0 24px; max-width: 860px; margin: 0 auto; }
+
 /* ─── SECTION BASE ─── */
 .section { padding: 52px 0; border-bottom: 1px solid var(--tp-border); }
 .section:last-child { border-bottom: none; }
