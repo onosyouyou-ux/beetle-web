@@ -42,9 +42,31 @@ body { font-family: 'Noto Sans JP', sans-serif; font-size: 14px; background: var
 .sv-step-num { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; color: var(--tp-orange); letter-spacing: .12em; flex-shrink: 0; width: 28px; padding-top: 2px; }
 .sv-step-body { font-size: 14px; color: var(--tp-text); line-height: 1.7; }
 
-/* ─── DELIVERABLES ─── */
+/* ─── DELIVERABLES (chips) ─── */
 .sv-deliverables { display: flex; flex-wrap: wrap; gap: 8px; }
 .sv-deliverable { background: #fff; border: 1px solid var(--tp-border); padding: 8px 16px; font-size: 13px; border-radius: 99px; color: var(--tp-text); }
+
+/* ─── DELIVERABLES (detailed list) ─── */
+.sv-deliv-list { display: flex; flex-direction: column; }
+.sv-deliv-item { display: grid; grid-template-columns: 180px 1fr; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--tp-border); }
+.sv-deliv-item:first-child { border-top: 1px solid var(--tp-border); }
+.sv-deliv-label { font-size: 13px; font-weight: 700; color: var(--tp-text); line-height: 1.5; }
+.sv-deliv-body { font-size: 13px; color: var(--tp-text2); line-height: 1.75; }
+
+/* ─── HERO KICKER ─── */
+.hero-kicker { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; color: var(--tp-text); margin: 14px 0 8px; }
+.hero-body-note { font-size: 14px; color: var(--tp-text); font-weight: 700; margin-bottom: 0; }
+
+/* ─── COVERAGE ─── */
+.sv-coverage { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.sv-coverage-col { background: #fff; border: 1px solid var(--tp-border); border-radius: 12px; padding: 20px 24px; }
+.sv-coverage-title { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 14px; }
+.sv-coverage-title.ok { color: var(--tp-green); }
+.sv-coverage-title.ng { color: var(--tp-text3); }
+.sv-coverage-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.sv-coverage-list li { font-size: 13px; color: var(--tp-text2); display: flex; gap: 8px; line-height: 1.5; align-items: flex-start; }
+.sv-coverage-list.ok li::before { content: '✓'; color: var(--tp-green); flex-shrink: 0; font-weight: 700; }
+.sv-coverage-list.ng li::before { content: '×'; color: var(--tp-text3); flex-shrink: 0; font-weight: 700; }
 
 /* ─── PRICING ─── */
 .pricing-note { font-size: 13px; color: var(--tp-text2); line-height: 1.9; margin-bottom: 20px; }
@@ -79,4 +101,6 @@ body { font-family: 'Noto Sans JP', sans-serif; font-size: 14px; background: var
   .hero { padding: 40px 0 36px; }
   .sv-item { grid-template-columns: 1fr; gap: 6px; }
   .sv-plans { grid-template-columns: 1fr; }
+  .sv-deliv-item { grid-template-columns: 1fr; gap: 4px; }
+  .sv-coverage { grid-template-columns: 1fr; }
 }
