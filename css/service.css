@@ -1,0 +1,86 @@
+:root {
+  --sv-navy: #1c1c2e;
+  --sv-bg: #f7f5f0;
+  --sv-white: #fff;
+  --sv-gray: #6b6b7b;
+  --sv-gray-lt: #e8e6e0;
+}
+
+body { background: var(--sv-bg); font-family: 'Noto Sans JP', sans-serif; color: var(--sv-navy); line-height: 1.7; }
+
+/* ─── HERO ─── */
+.sv-hero { background: var(--sv-navy); padding: 72px max(32px, calc((100% - 820px) / 2)) 64px; }
+.sv-label { font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 20px; }
+.sv-title { font-size: 2.2rem; font-weight: 900; line-height: 1.35; color: var(--sv-white); margin-bottom: 24px; }
+.sv-lead { font-size: 1rem; line-height: 1.85; color: rgba(255,255,255,0.78); max-width: 640px; margin-bottom: 20px; }
+.sv-quote { font-size: 0.93rem; color: rgba(255,255,255,0.58); line-height: 2; border-left: 3px solid var(--color-accent); padding-left: 18px; margin-bottom: 36px; max-width: 580px; }
+.sv-hero-btns { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-top: 36px; }
+.sv-btn-main { background: var(--color-accent); color: var(--sv-white); font-weight: 700; font-size: 0.9rem; padding: 14px 32px; border-radius: 4px; transition: opacity .2s; display: inline-block; }
+.sv-btn-main:hover { opacity: 0.85; }
+.sv-btn-sub { color: rgba(255,255,255,0.6); font-size: 0.87rem; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.25); transition: color .2s, border-color .2s; display: inline-block; }
+.sv-btn-sub:hover { color: var(--sv-white); border-color: rgba(255,255,255,0.7); }
+
+/* ─── SECTION BASE ─── */
+.sv-section { padding: 60px max(32px, calc((100% - 820px) / 2)); border-bottom: 1px solid var(--sv-gray-lt); }
+.sv-section:last-child { border-bottom: none; }
+.sv-section-tag { font-family: 'Syne', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 8px; }
+.sv-section-title { font-size: 1.35rem; font-weight: 900; color: var(--sv-navy); margin-bottom: 32px; line-height: 1.5; }
+
+/* ─── PROBLEMS ─── */
+.sv-problems { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.sv-problems li { display: flex; gap: 12px; align-items: flex-start; font-size: 0.97rem; line-height: 1.65; }
+.sv-problems li::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: var(--color-accent); flex-shrink: 0; margin-top: 8px; }
+
+/* ─── SERVICE ITEMS ─── */
+.sv-items { display: flex; flex-direction: column; }
+.sv-item { display: grid; grid-template-columns: 180px 1fr; gap: 24px; padding: 26px 0; border-top: 1px solid var(--sv-gray-lt); }
+.sv-item:last-child { border-bottom: 1px solid var(--sv-gray-lt); }
+.sv-item-label { font-weight: 700; font-size: 0.93rem; color: var(--sv-navy); padding-top: 2px; line-height: 1.5; }
+.sv-item-body { font-size: 0.93rem; color: var(--sv-gray); line-height: 1.8; }
+
+/* ─── FLOW STEPS ─── */
+.sv-steps { display: flex; flex-direction: column; }
+.sv-step { display: flex; gap: 20px; align-items: flex-start; padding: 22px 0; border-top: 1px solid var(--sv-gray-lt); }
+.sv-step:last-child { border-bottom: 1px solid var(--sv-gray-lt); }
+.sv-step-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; color: var(--color-accent); opacity: 0.35; flex-shrink: 0; width: 40px; line-height: 1.2; }
+.sv-step-body { font-size: 0.95rem; color: var(--sv-navy); line-height: 1.7; padding-top: 4px; }
+
+/* ─── DELIVERABLES ─── */
+.sv-deliverables { display: flex; flex-wrap: wrap; gap: 10px; }
+.sv-deliverable { background: var(--sv-white); border: 1px solid var(--sv-gray-lt); padding: 10px 20px; font-size: 0.88rem; border-radius: 4px; color: var(--sv-navy); font-weight: 500; }
+
+/* ─── PRICING ─── */
+.sv-pricing-note { font-size: 0.9rem; color: var(--sv-gray); margin-bottom: 24px; line-height: 1.8; }
+.sv-price-card { background: var(--sv-white); border: 1.5px solid var(--sv-gray-lt); border-radius: 6px; padding: 36px 40px; }
+.sv-price-main { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.sv-price-amount { font-family: 'Syne', sans-serif; font-size: 2.4rem; font-weight: 800; color: var(--sv-navy); }
+.sv-price-unit { font-size: 0.85rem; color: var(--sv-gray); }
+.sv-price-sub { font-size: 0.82rem; color: var(--sv-gray); margin-bottom: 24px; }
+.sv-price-suits-title { font-size: 0.78rem; font-weight: 700; color: var(--sv-gray); letter-spacing: 0.06em; margin-bottom: 10px; text-transform: uppercase; }
+.sv-price-suits { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.sv-price-suits li { font-size: 0.9rem; display: flex; gap: 8px; align-items: flex-start; line-height: 1.55; }
+.sv-price-suits li::before { content: '・'; color: var(--color-accent); flex-shrink: 0; }
+.sv-price-remarks { margin-top: 20px; font-size: 0.8rem; color: var(--sv-gray); line-height: 1.8; border-top: 1px solid var(--sv-gray-lt); padding-top: 16px; }
+
+/* ─── PLANS (月額用) ─── */
+.sv-plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.sv-plan { background: var(--sv-white); border: 1px solid var(--sv-gray-lt); border-radius: 6px; padding: 28px 24px; }
+.sv-plan-name { font-weight: 700; font-size: 0.85rem; color: var(--sv-gray); margin-bottom: 10px; letter-spacing: 0.04em; }
+.sv-plan-price { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--sv-navy); margin-bottom: 12px; }
+.sv-plan-desc { font-size: 0.82rem; color: var(--sv-gray); line-height: 1.75; }
+
+/* ─── CTA ─── */
+.sv-cta { background: var(--sv-navy); padding: 64px max(32px, calc((100% - 820px) / 2)); text-align: center; }
+.sv-cta-title { font-size: 1.45rem; font-weight: 900; color: var(--sv-white); margin-bottom: 16px; line-height: 1.55; }
+.sv-cta-body { font-size: 0.95rem; color: rgba(255,255,255,0.7); line-height: 1.9; margin-bottom: 32px; }
+.sv-cta-btn { background: var(--color-accent); color: var(--sv-white); font-weight: 700; font-size: 0.95rem; padding: 16px 40px; border-radius: 4px; display: inline-block; transition: opacity .2s; }
+.sv-cta-btn:hover { opacity: 0.85; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 700px) {
+  .sv-title { font-size: 1.6rem; }
+  .sv-item { grid-template-columns: 1fr; gap: 6px; }
+  .sv-item-label { font-weight: 900; }
+  .sv-plans { grid-template-columns: 1fr; }
+  .sv-price-card { padding: 28px 24px; }
+}
