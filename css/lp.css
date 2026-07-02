@@ -410,8 +410,8 @@ a { color: inherit; text-decoration: none; }
 .hero-stat    { animation: fadeUp .6s .5s ease both; }
 
 /* ─── SERVICE PEEK（カード右上の黒丸キャラ） ─── */
-.service-peek { position: absolute; top: 14px; right: 14px; width: 52px; text-align: center; pointer-events: none; }
-.service-peek-circle { display: block; width: 52px; height: 52px; border-radius: 50%; background: #1c1c2e; overflow: hidden; position: relative; }
-.service-peek-img { position: absolute; top: 2px; left: 2px; width: 48px; height: 48px; border-radius: 50%; object-fit: cover; opacity: 0; transform: translate(0, 110%); }
-.service-peek-label { display: block; margin-top: 6px; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; color: var(--navy); opacity: 0; transform: translateY(-3px); transition: opacity .25s ease .15s, transform .25s ease .15s; }
+.service-peek { position: absolute; top: 14px; right: 14px; width: 38px; text-align: center; pointer-events: none; }
+.service-peek-circle { display: block; width: 38px; height: 38px; border-radius: 50%; background: #1c1c2e; overflow: hidden; position: relative; }
+.service-peek-img { position: absolute; top: 2px; left: 2px; width: 34px; height: 34px; border-radius: 50%; object-fit: cover; opacity: 0; transform: translate(0, 110%); }
+.service-peek-label { display: block; margin-top: 5px; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.12em; color: var(--navy); opacity: 0; transform: translateY(-3px); transition: opacity .25s ease .15s, transform .25s ease .15s; }
 .service-card:hover .service-peek-label { opacity: 1; transform: translateY(0); }
