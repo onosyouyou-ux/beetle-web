@@ -83,7 +83,7 @@ a{text-decoration:none;}
 }
 
 /* フッター上のキャラバナー（ロゴは画像に焼き込み済み） */
-.footer-heroes { background: linear-gradient(to bottom, #f7f5f0 0, #000 72px); padding-top: 72px; overflow: hidden; display: flex; justify-content: center; }
+.footer-heroes { background: #000; overflow: hidden; display: flex; justify-content: center; box-shadow: 0 -10px 24px rgba(28,28,46,0.25); }
 .footer-heroes img { display: block; width: 100%; height: auto; }
 @media (max-width: 700px) {
   .footer-heroes img { width: auto; height: 120px; }
