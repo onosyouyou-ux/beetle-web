@@ -67,10 +67,12 @@
     });
   }, { passive: true });
 
-  // ホバー前にキャラ画像を先読み（ページ読み込み完了後）
-  window.addEventListener('load', () => {
-    peekImgs.forEach((src) => { const im = new Image(); im.src = src; });
-  });
+  // ホバー前にキャラ画像を先読み（ホバーのあるPCのみ。スマホは表示分しか使わない）
+  if (!window.matchMedia('(hover: none)').matches) {
+    window.addEventListener('load', () => {
+      peekImgs.forEach((src) => { const im = new Image(); im.src = src; });
+    });
+  }
 
   // タッチ端末はホバーがないため、最初からランダムのキャラを表示
   if (window.matchMedia('(hover: none)').matches) {

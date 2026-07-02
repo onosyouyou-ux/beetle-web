@@ -47,6 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const card = img.closest('a') || img.closest('.service-peek').parentElement;
     if (!card) return;
     peekCards.push(card);
+    // data-peek-fixed 指定があればランダムにせず固定画像を使う（ブログ一覧＝著者アバター）
+    const fixedSrc = img.closest('.service-peek').dataset.peekFixed || null;
     let hoverId = 0;
     card.addEventListener('mouseenter', () => {
       const id = ++hoverId;
@@ -54,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
       img.style.transition = 'none';
       img.style.transform = peekDirs[Math.floor(Math.random() * peekDirs.length)];
       img.style.opacity = '0';
-      img.src = peekImgs[Math.floor(Math.random() * peekImgs.length)];
+      img.src = fixedSrc || peekImgs[Math.floor(Math.random() * peekImgs.length)];
       const start = () => {
         if (id !== hoverId) return;
         void img.offsetWidth;
@@ -78,16 +80,20 @@ document.addEventListener('DOMContentLoaded', () => {
       if (img) img.style.opacity = '0';
     });
   }, { passive: true });
-  // 先読み
-  window.addEventListener('load', () => {
-    peekImgs.forEach((src) => { const im = new Image(); im.src = src; });
-  });
-  // タッチ端末は最初からランダム表示
-  if (window.matchMedia('(hover: none)').matches) {
+  const touchDevice = window.matchMedia('(hover: none)').matches;
+  // 先読み（ホバーのあるPCのみ。スマホは表示分しか使わないため通信の無駄を省く）
+  if (!touchDevice) {
+    window.addEventListener('load', () => {
+      peekImgs.forEach((src) => { const im = new Image(); im.src = src; });
+    });
+  }
+  // タッチ端末は最初から表示（固定指定があればその画像、なければランダム）
+  if (touchDevice) {
     peekCards.forEach((card) => {
       const img = card.querySelector('.service-peek-img');
       if (!img) return;
-      img.src = peekImgs[Math.floor(Math.random() * peekImgs.length)];
+      const fixedSrc = img.closest('.service-peek').dataset.peekFixed || null;
+      img.src = fixedSrc || peekImgs[Math.floor(Math.random() * peekImgs.length)];
       img.style.transform = 'translate(0,0)';
       img.style.opacity = '1';
       card.classList.add('peek-static');
