@@ -88,3 +88,11 @@ a{text-decoration:none;}
 @media (max-width: 700px) {
   .footer-heroes img { width: auto; height: 120px; }
 }
+
+/* ─── クリック可能カードの丸アイコンキャラ（LPと共通の演出、44px） ─── */
+.service-peek { position: absolute; top: 14px; right: 14px; width: 44px; text-align: center; pointer-events: none; z-index: 2; }
+.service-peek-circle { display: block; box-sizing: border-box; width: 44px; height: 44px; border-radius: 50%; background: #fff; border: 1px solid rgba(28,28,46,0.35); overflow: hidden; position: relative; }
+.service-peek-img { position: absolute; top: -1px; left: -1px; width: calc(100% + 2px); height: calc(100% + 2px); border-radius: 50%; object-fit: cover; opacity: 0; transform: translate(0, 110%); }
+.service-peek-label { display: block; margin-top: 5px; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; color: var(--color-accent); white-space: nowrap; opacity: 0; transform: translateY(-3px); transition: opacity .3s ease .3s, transform .3s ease .3s; }
+.peek-on .service-peek-label { opacity: 1; transform: translateY(0); }
+.peek-static .service-peek-label { opacity: 1; transform: none; }
