@@ -19,7 +19,7 @@
 <meta name="twitter:description" content="「結合テストってどう書くの？」に毎回うまく答えられなかった。だから自分でまとめた。単体・結合・シナリオ、100以上のテストパターン集制作の話。">
 <meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/blog/test-patterns.jpg">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","headline":"テストパターン集をつくった","datePublished":"2026-05-24","dateModified":"2026-06-10","description":"「結合テストってどう書くの？」に毎回うまく答えられなかった。だから自分でまとめた。単体・結合・シナリオ、100以上のテストパターン集制作の話。","image":"https://www.beetle-web.jp/assets/images/blog/test-patterns.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/test-patterns.html"}
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"テストパターン集をつくった","datePublished":"2026-05-24","dateModified":"2026-07-02","description":"「結合テストってどう書くの？」に毎回うまく答えられなかった。だから自分でまとめた。単体・結合・シナリオ、100以上のテストパターン集制作の話。","image":"https://www.beetle-web.jp/assets/images/blog/test-patterns.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/test-patterns.html"}
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"テストパターン集をつくった","item":"https://www.beetle-web.jp/blog/posts/test-patterns.html"}]}
@@ -77,6 +77,46 @@
       <p>JSTQBを読んでも境界値の話が出てくるだけで、「ユーザーを削除したらログインも弾かれるか確認する」という具体が出てこない。型は覚えた。でも現場で使えない。</p>
 
       <p>このパターン集はその穴を埋めるために作った。ゼロから考えなくていい、すぐ使える出発点として。</p>
+
+      <h2>単体・結合・シナリオの境界線</h2>
+
+      <p>「ユーザー削除」のテストを例にすると、3つの層はこう分かれる。</p>
+
+      <ul>
+        <li><strong>単体</strong> — 削除ボタンを押すと確認ダイアログが出るか。権限のないユーザーにボタンが表示されていないか。</li>
+        <li><strong>結合</strong> — 削除したユーザーでログインできなくなるか。そのユーザーが作ったデータはどう扱われるか。</li>
+        <li><strong>シナリオ</strong> — 管理者が削除 → 本人がログインを試みる → 残った注文履歴を別の管理者が参照する。この一連の流れが最後まで破綻しないか。</li>
+      </ul>
+
+      <p>同じ「削除」でも、見ているものがまったく違う。新人が結合テストを書けないのは能力の問題ではなくて、この違いを一度も見たことがないだけだ。</p>
+
+      <h2>ネットには「ログイン」しか転がっていない</h2>
+
+      <p>「結合テスト 例」で検索して出てくるのは、ログインとECの決済ばかり。でも現場で詰まるのはそこじゃない。</p>
+
+      <p>在庫の引き当て、ステータス遷移、通知メール、承認フロー、同時操作、削除の波及。仕様書に書かれない場所ほどよく壊れるのに、そこの手本がどこにもない。</p>
+
+      <p>だからパターン集には、ユーザー管理・権限・在庫・通知・キャッシュ・プラン課金・インポートなど26カテゴリを入れた。シナリオテストは「新規登録→注文」「申請→承認」「予約→キャンセル待ち」「サブスク全周期」など16本。どれも実際の現場で書いてきたものがベースになっている。</p>
+
+      <h2>網羅表ではなく、出発点として使ってほしい</h2>
+
+      <p>ひとつ注意してほしいのは、これは「全部やるためのリスト」ではないということ。</p>
+
+      <p>パターンを全部消化しようとすると、テストは終わらない。おすすめの使い方は逆で、対象の機能に近いカテゴリを開いて、「うちの仕様だとこれは関係ない」と削っていく。残ったものに、自分の仕様特有の観点を2〜3個足す。それでもう実戦レベルの観点リストになる。</p>
+
+      <p>ゼロから書こうとするから手が止まる。削る作業なら、誰でも進められる。</p>
+
+      <h2>AIと組み合わせると効く</h2>
+
+      <p>最近はテスト項目書をAIに作らせる現場も増えた。ただ、仕様書だけ渡すと、AIは一般論の観点で埋めてくる。きれいだけど、どこの現場でも通用する分、どこの現場にも刺さらない。</p>
+
+      <p>そこで、このパターン集の該当カテゴリをプロンプトに貼って「この観点をベースに、この仕様に合わせて作って」と渡す。すると出力が一気に現場寄りになる。観点の抜けをAIに埋めさせるのではなく、観点はこちらで握って、展開だけを任せる。この順番が大事だと思っている。</p>
+
+      <h2>「どう書くの」と聞かれたら、これを渡してほしい</h2>
+
+      <p>結合テストの書き方は、講義で教わるより、具体例を10個見るほうが早い。</p>
+
+      <p>新人に「結合テストってどう書くんですか」と聞かれて言葉に詰まったら、説明する代わりにこのページを渡してもらえたら、作った甲斐がある。もちろん無料で、登録もいらない。</p>
 
     </div>
 
