@@ -422,3 +422,11 @@ a { color: inherit; text-decoration: none; }
 .column-tag.tips { background: #e8f5e9; color: #2e7d32; }
 .column-tag.essay { background: #fdf0e8; color: var(--color-accent); }
 .column-card .column-card-title { padding-right: 48px; }
+
+/* セクション別の黒丸サイズ（サービス=大きめ、ツール=小さめ、コラム=標準56px） */
+.service-card .service-peek { width: 64px; }
+.service-card .service-peek-circle { width: 64px; height: 64px; }
+.service-card .service-peek-img { width: 60px; height: 60px; }
+.tool-card .service-peek { width: 44px; }
+.tool-card .service-peek-circle { width: 44px; height: 44px; }
+.tool-card .service-peek-img { width: 40px; height: 40px; }
