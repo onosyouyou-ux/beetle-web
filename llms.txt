@@ -21,6 +21,19 @@
 - [TESTパターン集](https://www.beetle-web.jp/tools/test-patterns/): 単体・結合・シナリオの3カテゴリ、100超のテスト観点をまとめたQAリファレンス。テストケース設計の出発点として活用できる。
 - [えいごよんで！](https://www.beetle-web.jp/tools/eigo/): 英単語・英文を入力するだけでネイティブ発音をブラウザ上で確認できる無料ツール。写真からの単語取り込みにも対応。
 - [AIバグ確認ツール「これってバグなの？」](https://www.beetle-web.jp/tools/bug-checker/landing.html): スクショを貼るだけでAIがバグか仕様か判定し、起票内容（タイトル・再現手順・期待値・実際の動作）を自動生成する。
+- [学級通信メーカー](https://www.beetle-web.jp/tools/gakkyu-tsushin/): メモを箇条書きで入れるだけで、AIが学級通信（クラスだより・園だより）の見出しと文章を作成。写真なしでもイラスト付きでPDF出力できる。
+- [QA・バグ用語辞典](https://www.beetle-web.jp/tools/glossary/): 「デグレ」「リグレッション」「スモークテスト」「Severity」など、QA・テストの現場でよく使う用語の意味と使いどころをまとめた辞典。
+- [HTTPステータスコード一覧](https://www.beetle-web.jp/tools/http-status/): QAが遭遇するHTTPステータスコードの意味と「テスト時に何を確認すべきか」をまとめた早見表。401と403の違い、CORSエラーの正体も解説。
+- [リリース前チェックリスト集](https://www.beetle-web.jp/tools/release-checklist/): Webサービス・アプリのリリース前に確認したい項目を、品質・段取り・公開・公開後の4カテゴリでまとめたチェックリスト。
+- [テスト技法カタログ](https://www.beetle-web.jp/tools/test-techniques/): 同値分割・境界値分析・デシジョンテーブル・状態遷移・ペアワイズなど、代表的なテスト設計技法を「なに・例・使いどころ」つきで整理。
+- [UIコンポーネント名称一覧](https://www.beetle-web.jp/tools/ui-parts/): ボタン・モーダル・トグルなどUIコンポーネント23種の正式名称・説明・よくあるバグを一覧化した名鑑。
+
+## 提供サービス
+
+- [リリース前QAスポット診断](https://www.beetle-web.jp/service-release-qa-spot.html): リリース前のテスト代行・スポットQA。主要導線を3営業日〜・80,000円〜で確認。仕様書やテストケースがなくても対応可能。
+- [仕様書なしテスト設計パック](https://www.beetle-web.jp/service-test-design.html): 画面・Slack・簡単な説明からテスト観点と確認項目を作成。120,000円〜。
+- [AI修正後デグレ確認パック](https://www.beetle-web.jp/service-degre-check.html): 修正内容から影響範囲を洗い出し、横展開・デグレードの確認を行う。50,000円〜。
+- [月額QA伴走プラン](https://www.beetle-web.jp/service-monthly-qa.html): 週単位・月単位でリリース前確認・バグ起票・仕様整理・テスト観点作成を継続支援。月額150,000円〜。
 
 ## コラム一覧
 
@@ -32,3 +45,10 @@
 - [Claude：A氏、Claude：B氏、Claude：C氏](https://www.beetle-web.jp/blog/posts/claude-abc.html): AIの一貫性のなさと、うまく付き合うためのヒント。
 - [この話は、誰に語り継がれるのだろうか](https://www.beetle-web.jp/blog/posts/sarukani.html): さるかに合戦から考える、仕事と情報の非対称性。
 - [ボールのキャッチは下手でいい](https://www.beetle-web.jp/blog/posts/catch-ball.html): 手を挙げることと、ボールを受け取ることの意味。
+- [バグか仕様か — 「仕様です」の一言で片づけないために](https://www.beetle-web.jp/blog/posts/spec-or-bug.html): バグか仕様かの判断基準をQA現場の視点から整理。
+- [バグ報告の書き方 — 「再現しません」で突き返されないために](https://www.beetle-web.jp/blog/posts/repro-steps.html): 再現手順・環境情報・期待値の書き方を現場目線で。
+- [AIをうまく使う方法は、丸投げだった。](https://www.beetle-web.jp/blog/posts/ai-marunage.html): 完璧な指示書を作るのをやめて、まず投げる。AIとの自然な付き合い方。
+- [金曜17時、「これ今日出しちゃっていいですか？」](https://www.beetle-web.jp/blog/posts/friday-deploy.html): 週末前の駆け込みリリースと、リリース可否の考え方。
+- [プログラマーになるな。検証できるエンジニアになれ。](https://www.beetle-web.jp/blog/posts/verify-engineer.html): AI時代に必要なのは、検証できるエンジニアだという話。
+- [AI生成テスト項目書の落とし穴](https://www.beetle-web.jp/blog/posts/ai-test-items.html): きれいなテスト項目書が品質を保証しない理由を現役QAが解説。
+- [proj コマンド1つで Claude Code をプロジェクト別に起動する](https://www.beetle-web.jp/blog/posts/claude-proj.html): WSL環境でVS CodeとClaude Codeを同時に立ち上げる仕組み。

@@ -36,13 +36,15 @@ git branch -D fix/やること名
 **beetle-web 本体（GitHub Pages）**
 `git push origin main` で自動デプロイが走る。反映まで通常 1〜2 分。
 デプロイ状況は GitHub リポジトリの **Actions** タブで確認できる。
+プッシュ前に `version.json`（フッターのバージョン表示。`js/common.js` が読む）の日付を更新する。
 
 **gakkyu-tsushin アプリ（Vercel）**
+Vercel プロジェクトは**リポジトリ root に紐付いている**（root の `.vercel/project.json` が gakkyu-tsushin を指す。root の `.vercel/` と `.env.local` は Vercel CLI が管理するので**消さないこと**）。
 BashツールはWindows側のGit Bashで動くため、WSLパスに直接 `cd` できない。
 PowerShell から `wsl` 経由で実行する：
 
 ```powershell
-wsl -e bash -c "cd /home/owner/projects/beetle-web/tools/gakkyu-tsushin && npx vercel --prod"
+wsl -e bash -c "cd /home/owner/projects/beetle-web && npx vercel --prod"
 ```
 
 URL: https://gakkyu-tsushin.vercel.app
