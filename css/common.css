@@ -83,8 +83,8 @@ a{text-decoration:none;}
 }
 
 /* フッター上のキャラバナー（ロゴは画像に焼き込み済み） */
-.footer-heroes { background: linear-gradient(to bottom, #f7f5f0 0, #000 48px); padding-top: 48px; overflow: hidden; display: flex; justify-content: center; }
-.footer-heroes img { display: block; width: 100%; height: auto; }
+.footer-heroes { background: linear-gradient(to bottom, #f7f5f0 0, #000 72px); padding-top: 72px; overflow: hidden; display: flex; justify-content: center; }
+.footer-heroes img { display: block; width: 100%; height: auto; max-height: 360px; object-fit: cover; object-position: bottom; }
 @media (max-width: 700px) {
-  .footer-heroes img { width: auto; height: 64px; }
+  .footer-heroes img { width: auto; height: 200px; max-height: none; }
 }
