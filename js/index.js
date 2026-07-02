@@ -36,7 +36,7 @@
       img.style.transform = peekDirs[Math.floor(Math.random() * peekDirs.length)];
       img.style.opacity = '0';
       void img.offsetWidth;
-      img.style.transition = 'transform .4s cubic-bezier(.34,1.56,.64,1), opacity .15s ease';
+      img.style.transition = 'transform .65s cubic-bezier(.34,1.56,.64,1), opacity .25s ease';
       img.style.transform = 'translate(0,0)';
       img.style.opacity = '1';
     });
