@@ -30,15 +30,23 @@
   document.querySelectorAll('.service-card, .tool-card, .column-card').forEach((card) => {
     const img = card.querySelector('.service-peek-img');
     if (!img) return;
+    let hoverId = 0;
     card.addEventListener('mouseenter', () => {
-      img.src = peekImgs[Math.floor(Math.random() * peekImgs.length)];
+      const id = ++hoverId;
+      // まず隠してから画像を差し替え、デコード完了を待って動かす
+      // （読み込みが間に合わず前回の顔のまま飛び出すのを防ぐ）
       img.style.transition = 'none';
       img.style.transform = peekDirs[Math.floor(Math.random() * peekDirs.length)];
       img.style.opacity = '0';
-      void img.offsetWidth;
-      img.style.transition = 'transform .65s cubic-bezier(.34,1.56,.64,1), opacity .25s ease';
-      img.style.transform = 'translate(0,0)';
-      img.style.opacity = '1';
+      img.src = peekImgs[Math.floor(Math.random() * peekImgs.length)];
+      const start = () => {
+        if (id !== hoverId) return; // 次のホバーが始まっていたら何もしない
+        void img.offsetWidth;
+        img.style.transition = 'transform .65s cubic-bezier(.34,1.56,.64,1), opacity .25s ease';
+        img.style.transform = 'translate(0,0)';
+        img.style.opacity = '1';
+      };
+      if (img.decode) { img.decode().then(start).catch(start); } else { start(); }
     });
     card.addEventListener('mouseleave', () => {
       img.style.opacity = '0';
