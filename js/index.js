@@ -27,7 +27,7 @@
   const peekImgs = Array.from({ length: 22 }, (_, i) =>
     `/assets/images/peek/peek-${String(i + 1).padStart(2, '0')}.jpg`);
   const peekDirs = ['translate(0,-110%)', 'translate(0,110%)', 'translate(-110%,0)', 'translate(110%,0)'];
-  document.querySelectorAll('.service-card').forEach((card) => {
+  document.querySelectorAll('.service-card, .tool-card').forEach((card) => {
     const img = card.querySelector('.service-peek-img');
     if (!img) return;
     card.addEventListener('mouseenter', () => {
@@ -52,7 +52,7 @@
 
   // タッチ端末はホバーがないため、最初からランダムのキャラを表示
   if (window.matchMedia('(hover: none)').matches) {
-    document.querySelectorAll('.service-card').forEach((card) => {
+    document.querySelectorAll('.service-card, .tool-card').forEach((card) => {
       const img = card.querySelector('.service-peek-img');
       if (!img) return;
       img.src = peekImgs[Math.floor(Math.random() * peekImgs.length)];
