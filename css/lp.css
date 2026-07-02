@@ -322,7 +322,7 @@ a { color: inherit; text-decoration: none; }
 
 /* スカイラインバー */
 .footer-skyline-bar { background: #0a0a0f; }
-.footer-skyline-inner { padding: 56px 20px 40px; text-align: center; }
+.footer-skyline-inner { padding: 32px 20px 24px; text-align: center; }
 .footer-logo { font-family: var(--font-en); font-weight: 800; font-size: 1.7rem; color: var(--white); letter-spacing: 0.08em; text-decoration: none; flex-shrink: 0; }
 .footer-logo span { color: var(--color-accent); }
 
