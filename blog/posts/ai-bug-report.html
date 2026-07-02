@@ -19,7 +19,7 @@
 <meta name="twitter:description" content="スクショ1枚でAIがバグの再現手順まで書いてくれた実体験。バグ起票AIツール「これってバグなの？」開発のきっかけになった話。">
 <meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/blog/ai-bug-report.jpg">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","headline":"AIにバグの状況を説明したら、再現手順まで書いてくれた話","datePublished":"2026-05-20","dateModified":"2026-06-10","description":"スクショ1枚でAIがバグの再現手順まで書いてくれた実体験。バグ起票AIツール「これってバグなの？」開発のきっかけになった話。","image":"https://www.beetle-web.jp/assets/images/blog/ai-bug-report.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/ai-bug-report.html"}
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"AIにバグの状況を説明したら、再現手順まで書いてくれた話","datePublished":"2026-05-20","dateModified":"2026-07-02","description":"スクショ1枚でAIがバグの再現手順まで書いてくれた実体験。バグ起票AIツール「これってバグなの？」開発のきっかけになった話。","image":"https://www.beetle-web.jp/assets/images/blog/ai-bug-report.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/ai-bug-report.html"}
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"AIにバグの状況を説明したら、再現手順まで書いてくれた話","item":"https://www.beetle-web.jp/blog/posts/ai-bug-report.html"}]}
@@ -58,6 +58,8 @@
 
       <p class="lead">スクリーンショット1枚とちょっとした説明を渡しただけで、起票できるレベルの内容が返ってきた。このツールを作ろうと思ったきっかけ。</p>
 
+      <h2>半信半疑で試した</h2>
+
       <p>最初は半信半疑だった。「スクショ貼ってバグを説明したら、AIが起票内容を書いてくれる」なんて話、なんとなく胡散臭いというか、どうせそれっぽいことしか言わないだろう、と思っていた。</p>
 
       <p>試してみたのは、ある操作後にエラーが出るケースだった。エラーの画面のスクショを貼って、「この画面、おかしくないですか」くらいの雑な説明を添えた。30秒もしないうちに返ってきたのが、こんな内容だった。</p>
@@ -66,11 +68,39 @@
 
       <p>思ってたより、ずっとうまくいった。</p>
 
+      <h2>起票は、地味に時間を食う</h2>
+
       <p>バグの起票って、地味に時間がかかる。現象を整理して、言葉にして、再現手順を思い出して、開発者に伝わるように書く。慣れてる人でも5〜10分はかかる作業だ。慣れてない人だとそれ以上。しかも「ちゃんと書けてるかな」という不安もある。</p>
 
       <p>AIに渡すと、そこが一気に省ける。自分はスクショを撮って、何が起きたかをざっくり説明するだけでいい。あとは確認して、直して、貼るだけ。</p>
 
       <p>それが、このツールを作ろうと思ったきっかけだった。</p>
+
+      <h2>渡し方にコツがある</h2>
+
+      <p>何度か使ってわかったのは、渡し方で精度がだいぶ変わるということ。コツは3つある。</p>
+
+      <ul>
+        <li><strong>現象が写っている1枚を選ぶ</strong> — エラーメッセージ、入力していた値、押したボタン。判断材料が画面に残っている状態のスクショがいい。トリミングしすぎて文脈が消えると、AIも推測で埋めるしかなくなる。</li>
+        <li><strong>「何をしたときか」だけは書く</strong> — 説明は一言でいい。ただ「保存を押したらこうなった」の一言があるかないかで、再現手順の精度が全然違う。</li>
+        <li><strong>期待値が自明でないときは一言足す</strong> — 「本当は一覧に戻るはず」みたいな期待値は、画面からは読み取れない。そこだけ人間が補う。</li>
+      </ul>
+
+      <h2>そのまま貼ってはいけない</h2>
+
+      <p>ひとつだけ、QAとして言っておきたい注意がある。AIが書いた再現手順は「もっともらしい推測」のことがある。画面から読み取れない部分は、それらしく補完されている。</p>
+
+      <p>だから、起票する前に自分で一度なぞる。手順どおりに操作して、本当に再現するかを確認してから貼る。環境情報も自分の環境に合わせて直す。AIは下書き係で、報告の責任は自分にある。ここを飛ばすと「再現しません」で突き返されて、かえって遅くなる。</p>
+
+      <p>それでも、ゼロから書くよりずっと速い。下書きの8割ができていて、残り2割を確認して直すだけなのだから。</p>
+
+      <h2>慣れていない人ほど効く</h2>
+
+      <p>このやり方、実は新人にこそ効くと思っている。</p>
+
+      <p>報告に慣れていない人は「何を書けばいいかわからない」で手が止まる。AIが最初から型（タイトル・再現手順・期待値・実際の動作）で返してくれると、止まらずに済むだけでなく、良い報告の型を毎回読むことになる。使っているうちに、書き方そのものが身につく。</p>
+
+      <p>報告の型を自分で身につけたい人は、<a href="/blog/posts/repro-steps.html">バグ報告の書き方 — 「再現しません」で突き返されないために</a>も合わせてどうぞ。</p>
 
     </div>
 
