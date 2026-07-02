@@ -66,6 +66,11 @@ beetle-web/
 
 ナビ・フッターを変更したいときは `partials/header.html` か `partials/footer.html` だけ編集すればOK。各ページは触らなくていい。
 
+**SEOチェックリスト（新しいページを作ったら必ず）**
+- `sitemap.xml` に URL を追加（`lastmod` は作成日）。過去にサービスページ4枚が未登録のまま放置された失敗あり
+- `canonical`・`meta description`・OGP・JSON-LD を入れる
+- `<img>` には `width`/`height` を付ける。ファーストビュー外の画像は `loading="lazy"` も付ける
+
 ## ページレイアウト型
 
 依頼時に「Reference系で」「Tool系で」と指定すると、ヘッダー・フッター・スタイルが型通りに揃う。

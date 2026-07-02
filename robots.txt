@@ -3,6 +3,5 @@ Allow: /
 Disallow: /logo-preview.html
 Disallow: /tools/mock.html
 Disallow: /tools/bug-checker/og-preview.html
-Disallow: /test-tools.html
 
 Sitemap: https://www.beetle-web.jp/sitemap.xml
