@@ -43,6 +43,16 @@ document.addEventListener('DOMContentLoaded', () => {
     `/assets/images/peek/peek-${String(i + 1).padStart(2, '0')}.jpg`);
   const peekDirs = ['translate(0,-110%)', 'translate(0,110%)', 'translate(-110%,0)', 'translate(110%,0)'];
   const peekCards = [];
+  // 表示中のキャラを全部引っ込める（exceptだけ残す）。
+  // タブ切替や放置でmouseleaveを取りこぼしても複数表示にならないための保険
+  const resetPeeks = (except) => {
+    peekCards.forEach((card) => {
+      if (card === except || card.classList.contains('peek-static')) return;
+      card.classList.remove('peek-on');
+      const im = card.querySelector('.service-peek-img');
+      if (im) im.style.opacity = '0';
+    });
+  };
   peekImgEls.forEach((img) => {
     const card = img.closest('a') || img.closest('.service-peek').parentElement;
     if (!card) return;
@@ -52,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let hoverId = 0;
     card.addEventListener('mouseenter', () => {
       const id = ++hoverId;
+      resetPeeks(card);
       card.classList.add('peek-on');
       img.style.transition = 'none';
       img.style.transform = peekDirs[Math.floor(Math.random() * peekDirs.length)];
@@ -71,15 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
       img.style.opacity = '0';
     });
   });
-  // 高速スクロールでmouseleaveが発火せず残るのを防ぐ
-  window.addEventListener('scroll', () => {
-    peekCards.forEach((card) => {
-      if (!card.classList.contains('peek-on')) return;
-      card.classList.remove('peek-on');
-      const img = card.querySelector('.service-peek-img');
-      if (img) img.style.opacity = '0';
-    });
-  }, { passive: true });
+  // スクロール・タブ切替・ウィンドウ離脱でも表示を解除（mouseleave取りこぼし対策）
+  window.addEventListener('scroll', () => resetPeeks(null), { passive: true });
+  window.addEventListener('blur', () => resetPeeks(null));
+  document.addEventListener('visibilitychange', () => { if (document.hidden) resetPeeks(null); });
   const touchDevice = window.matchMedia('(hover: none)').matches;
   // 先読み（ホバーのあるPCのみ。スマホは表示分しか使わないため通信の無駄を省く）
   if (!touchDevice) {
