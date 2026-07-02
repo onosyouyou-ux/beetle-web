@@ -27,12 +27,14 @@
   const peekImgs = Array.from({ length: 22 }, (_, i) =>
     `/assets/images/peek/peek-${String(i + 1).padStart(2, '0')}.jpg`);
   const peekDirs = ['translate(0,-110%)', 'translate(0,110%)', 'translate(-110%,0)', 'translate(110%,0)'];
-  document.querySelectorAll('.service-card, .tool-card, .column-card').forEach((card) => {
+  const peekCards = document.querySelectorAll('.service-card, .tool-card, .column-card');
+  peekCards.forEach((card) => {
     const img = card.querySelector('.service-peek-img');
     if (!img) return;
     let hoverId = 0;
     card.addEventListener('mouseenter', () => {
       const id = ++hoverId;
+      card.classList.add('peek-on');
       // まず隠してから画像を差し替え、デコード完了を待って動かす
       // （読み込みが間に合わず前回の顔のまま飛び出すのを防ぐ）
       img.style.transition = 'none';
@@ -49,9 +51,21 @@
       if (img.decode) { img.decode().then(start).catch(start); } else { start(); }
     });
     card.addEventListener('mouseleave', () => {
+      card.classList.remove('peek-on');
       img.style.opacity = '0';
     });
   });
+
+  // 高速スクロールでmouseleaveが発火せずキャラが残るのを防ぐ
+  // （スクロールしたら表示中のキャラを全解除）
+  window.addEventListener('scroll', () => {
+    peekCards.forEach((card) => {
+      if (!card.classList.contains('peek-on')) return;
+      card.classList.remove('peek-on');
+      const img = card.querySelector('.service-peek-img');
+      if (img) img.style.opacity = '0';
+    });
+  }, { passive: true });
 
   // ホバー前にキャラ画像を先読み（ページ読み込み完了後）
   window.addEventListener('load', () => {
