@@ -375,9 +375,9 @@ a { color: inherit; text-decoration: none; }
   .why-card { padding: 20px; column-gap: 10px; }
   .why-card-num { font-size: 1.3rem; }
   .dodont-grid { grid-template-columns: 1fr; }
-  .column-cards { grid-template-columns: 1fr 1fr; }
+  .column-cards { grid-template-columns: 1fr; }
   .column-card { padding: 20px 18px; }
-  .tools-grid { grid-template-columns: repeat(2, 1fr); }
+  .tools-grid { grid-template-columns: 1fr; }
   .about-layout { grid-template-columns: 1fr; gap: 32px; }
   .cta-section { padding: 56px 20px; background-position: 62% center; aspect-ratio: auto; }
   .cta-btns { flex-wrap: nowrap; }
@@ -425,3 +425,12 @@ a { color: inherit; text-decoration: none; }
 .tool-card .service-peek, .column-card .service-peek { width: 44px; }
 .tool-card .service-peek-circle, .column-card .service-peek-circle { width: 44px; height: 44px; }
 .column-card .service-peek-label { display: none; }
+
+/* スマホ：丸アイコンを小さめに・「クリック」ラベルは出さない */
+@media (max-width: 768px) {
+  .service-card .service-peek { width: 48px; }
+  .service-card .service-peek-circle { width: 48px; height: 48px; }
+  .tool-card .service-peek, .column-card .service-peek { width: 36px; }
+  .tool-card .service-peek-circle, .column-card .service-peek-circle { width: 36px; height: 36px; }
+  .service-peek-label { display: none; }
+}
