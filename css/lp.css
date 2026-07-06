@@ -269,6 +269,7 @@ a { color: inherit; text-decoration: none; }
 /* ─── TOOLS ─── */
 .tools-section { background: var(--bg); border-top: 1px solid var(--gray-lt); }
 .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px; }
+.tools-grid .tool-card:nth-last-child(1):nth-child(3n+1) { grid-column: 1 / -1; }
 .tool-card { background: var(--white); border: 1px solid var(--gray-lt); padding: 32px 28px; border-radius: 2px; display: flex; flex-direction: column; gap: 10px; transition: box-shadow .2s; position: relative; }
 .tool-ribbon { align-self: flex-start; font-family: var(--font-en); font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; color: var(--white); }
 .tool-ribbon.reference { background: var(--navy); }
