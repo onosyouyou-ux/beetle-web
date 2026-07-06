@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【検証実話】生成AIに「削除」と頼んだら、物理削除で実装されていた話 | BEETLE</title>
+<meta name="description" content="画面上は正しく削除できている。でもDBを見ると、レコードそのものが消えていた。生成AIに「削除」とだけ頼むと物理削除で実装されることがある。論理削除にしたいなら、どこまで仕様に書くべきかをQA視点で整理した。">
+<link rel="canonical" href="https://www.beetle-web.jp/blog/posts/physical-delete.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="【検証実話】生成AIに「削除」と頼んだら、物理削除で実装されていた話 | BEETLE">
+<meta property="og:description" content="画面上は正しく削除できている。でもDBを見ると、レコードそのものが消えていた。「削除」という言葉の意味を仕様に書かないと、AIは物理削除を選ぶことがある。">
+<meta property="og:url" content="https://www.beetle-web.jp/blog/posts/physical-delete.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/blog/physical-delete.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="【検証実話】生成AIに「削除」と頼んだら、物理削除で実装されていた話 | BEETLE合同会社">
+<meta name="twitter:description" content="画面上は正しく削除できている。でもDBを見ると、レコードそのものが消えていた。「削除」という言葉の意味を仕様に書かないと、AIは物理削除を選ぶことがある。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/blog/physical-delete.jpg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"【検証実話】生成AIに「削除」と頼んだら、物理削除で実装されていた話","datePublished":"2026-07-02","dateModified":"2026-07-02","description":"画面上は正しく削除できている。でもDBを見ると、レコードそのものが消えていた。「削除」という言葉の意味を仕様に書かないと、AIは物理削除を選ぶことがある。","image":"https://www.beetle-web.jp/assets/images/blog/physical-delete.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/physical-delete.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"【検証実話】生成AIに「削除」と頼んだら、物理削除で実装されていた話","item":"https://www.beetle-web.jp/blog/posts/physical-delete.html"}]}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-07-02</span>
+        <span class="post-tag ai">AI</span>
+      </div>
+      <h1 class="post-h1">【検証実話】生成AIに「削除」と頼んだら、物理削除で実装されていた話</h1>
+    </div>
+
+    <img class="post-eyecatch" src="/assets/images/blog/physical-delete.jpg" width="1200" height="628" alt="「削除」と頼んだら、全部消えていた。— 物理削除で候！">
+
+    <div class="post-body">
+
+      <p class="lead">生成AIで実装した機能を検証していると、「動いているのに、なんだか怖い」と感じることがある。</p>
+
+      <p>今回の事例は、管理画面にある削除機能だった。記事やお知らせ、商品情報などの一覧画面によくある、各行に「削除」ボタンが付いているタイプの画面である。特別な機能ではない。むしろ、どのシステムにもありそうな、ごく普通の機能だった。</p>
+
+      <p>私はいつものように動作確認を始めた。削除ボタンを押すと確認ダイアログが表示され、「OK」を押すと一覧からデータが消える。ここまでは期待どおりの動きだったので、「問題なさそうだな」と思った。</p>
+
+      <p>でも、そのあと少しだけ気になってデータベースを確認した。すると、データそのものがなくなっていた。</p>
+
+      <p>「あれ？」</p>
+
+      <p>画面上は正しく削除されているように見える。でも、裏側ではレコードそのものが消えている。その瞬間、「これは削除できているのではなく、物理削除されているのか」と感じた。</p>
+
+      <h2>「削除」とだけ書くと、物理削除になることがある</h2>
+
+      <p>生成AIに「削除機能を作って」と頼めば、削除ボタンを作り、押したら対象データを消す処理を実装してくれる。実装としては自然だし、コードとしても間違っているようには見えない。</p>
+
+      <p>でも、業務システムでいう「削除」は、必ずしもデータベースから完全に消すことではない。</p>
+
+      <p>一覧から非表示にするだけの場合もある。削除フラグを立てるだけの場合もある。削除日時や削除者を残し、必要があれば管理者だけ復元できるようにする場合もある。つまり、「削除」と言っても、物理削除なのか論理削除なのかで意味がまったく変わる。</p>
+
+      <p>ここを明確に指示しないと、AIは素直に物理削除で実装してしまうことがあるのだと思った。</p>
+
+      <h2>論理削除にしたいなら、そう書かないと伝わらない</h2>
+
+      <p>人間同士で開発していると、「これ、本当に消していいんですか？」とか「論理削除ですよね？」という会話がどこかで出ることがある。</p>
+
+      <p>でもAI相手だと、その会話が発生しないまま実装が進むことがある。</p>
+
+      <p>仕様書に「削除」とだけ書いてある。プロンプトにも「削除できるようにしてください」とだけ書いてある。そうなると、AIから見れば、データを消す実装を選んでも不思議ではない。</p>
+
+      <p>論理削除にしたいなら、最初からそう書く必要がある。</p>
+
+      <p>「削除ボタンを押したら、対象データを物理削除しない」<br>
+      「deleted_at に削除日時を入れる」<br>
+      「deleted_by に削除したユーザーIDを入れる」<br>
+      「一覧画面では deleted_at が入っているデータを表示しない」<br>
+      「管理者は削除済みデータを復元できる」</p>
+
+      <p>このくらいまで書いて、ようやくAIに伝わるのだと思う。</p>
+
+      <h2>画面だけ見ていると、合格に見えてしまう</h2>
+
+      <p>この不具合が怖いのは、画面上では正しく動いているように見えるところだ。</p>
+
+      <p>削除ボタンを押す。確認ダイアログが出る。OKを押す。一覧からデータが消える。利用者の操作としては自然だし、テストケースに「削除したデータが一覧に表示されないこと」と書いてあれば、合格になってしまう。</p>
+
+      <p>でも、本当に見るべきだったのはその先だった。</p>
+
+      <p>データは物理削除されていないか。削除フラグや deleted_at で管理されているか。削除者は記録されているか。関連データまで一緒に消えていないか。復元が必要な業務なら、復元できる状態になっているか。</p>
+
+      <p>ここまで確認しないと、業務として安全な削除かどうかは判断できない。</p>
+
+      <p>QAは「できたか」を見るだけでは足りない。「やりすぎていないか」も見ないといけない。今回で言えば、削除できたかではなく、消しすぎていないかを見る必要があった。</p>
+
+      <h2>AI開発では、言葉の意味を分解する必要がある</h2>
+
+      <p>今回の事例で感じたのは、AI開発では「削除」という言葉をそのまま使うのが危ないということだった。</p>
+
+      <p>削除とは、画面から消すことなのか。データベースから消すことなのか。利用者から見えなくすることなのか。管理者だけが見られる状態にすることなのか。あとから戻せるようにすることなのか。</p>
+
+      <p>人間同士なら、会話の中で補えることもある。でもAI相手では、そこを仕様として書かないと抜け落ちる。</p>
+
+      <p>これはAIが悪いというより、こちらが言葉を雑に使っていたのだと思う。</p>
+
+      <p>「削除してください」では足りない。「物理削除ではなく、論理削除にしてください」「削除済みデータは通常一覧に表示しないでください」「復元できるようにしてください」。ここまで書いて、ようやく業務に合った削除機能になる。</p>
+
+      <p>AI開発で怖いのは、機能が動かないことではない。機能としてはちゃんと動いている。でも、業務上の意味が少しだけズレている。今回の削除機能も、まさにそれだった。</p>
+
+      <p>だからこれからは、「何をするか」だけではなく、「その言葉が業務上どういう意味なのか」まで仕様に書く必要があるのだと思った。</p>
+
+    </div>
+
+    <div class="post-related">
+      <p class="post-related-title">関連記事</p>
+      <ul class="post-related-list">
+        <li><a href="/blog/posts/like-updated-at.html">【検証実話】生成AIで実装したら「いいね！」で更新日時まで変わった話</a></li>
+        <li><a href="/blog/posts/ai-test-items.html">生成AIで作ったテスト項目書は、なぜ現場を止めるのか</a></li>
+        <li><a href="/blog/posts/csv-leading-zero.html">郵便番号の0がぜんぶ消えていた。犯人はCSVではなくExcelだった話</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>

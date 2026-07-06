@@ -226,4 +226,28 @@
     <priority>0.6</priority>
   </url>
 
+  <url>
+    <loc>https://www.beetle-web.jp/blog/posts/physical-delete.html</loc>
+    <lastmod>2026-07-02</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/blog/posts/like-updated-at.html</loc>
+    <lastmod>2026-07-02</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/blog/posts/csv-leading-zero.html</loc>
+    <lastmod>2026-07-05</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/blog/posts/naoshimashita.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <priority>0.6</priority>
+  </url>
+
 </urlset>

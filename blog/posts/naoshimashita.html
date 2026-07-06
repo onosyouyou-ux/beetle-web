@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QAで一番怖い報告は「動きません」ではなく「直しました」だった話 | BEETLE</title>
+<meta name="description" content="バグ修正の「直しました」を確認して再試験しクローズした。しかし一週間後、触っていない欄で別の不具合が発覚。原因は「似たようなコードなので共通化しました」という、報告されない変更だった。">
+<link rel="canonical" href="https://www.beetle-web.jp/blog/posts/naoshimashita.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="QAで一番怖い報告は「動きません」ではなく「直しました」だった話 | BEETLE">
+<meta property="og:description" content="「直しました」を確認してクローズした一週間後、触っていない欄で別の不具合が発覚した。原因は「似たようなコードなので共通化しました」という、報告されない変更だった。">
+<meta property="og:url" content="https://www.beetle-web.jp/blog/posts/naoshimashita.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/blog/naoshimashita.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="QAで一番怖い報告は「動きません」ではなく「直しました」だった話 | BEETLE合同会社">
+<meta name="twitter:description" content="「直しました」を確認してクローズした一週間後、触っていない欄で別の不具合が発覚した。原因は「似たようなコードなので共通化しました」という、報告されない変更だった。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/blog/naoshimashita.jpg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"QAで一番怖い報告は「動きません」ではなく「直しました」だった話","datePublished":"2026-07-06","dateModified":"2026-07-06","description":"「直しました」を確認してクローズした一週間後、触っていない欄で別の不具合が発覚した。原因は「似たようなコードなので共通化しました」という、報告されない変更だった。","image":"https://www.beetle-web.jp/assets/images/blog/naoshimashita.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/naoshimashita.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"QAで一番怖い報告は「動きません」ではなく「直しました」だった話","item":"https://www.beetle-web.jp/blog/posts/naoshimashita.html"}]}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-07-06</span>
+        <span class="post-tag qa">QA</span>
+      </div>
+      <h1 class="post-h1">QAで一番怖い報告は「動きません」ではなく「直しました」だった話</h1>
+    </div>
+
+    <img class="post-eyecatch" src="/assets/images/blog/naoshimashita.jpg" width="1200" height="628" alt="「直しました」の3文字だけでは、何が変わったのか分からない">
+
+    <div class="post-body">
+
+      <p class="lead">バグ票を起票して数日後、Slackに短い返事が届く。「直しました」。この3文字ほど、QAをざわつかせる報告はないと思っている。「動きません」なら、これから調べればいい。でも「直しました」は、もう終わったことになっている。</p>
+
+      <h2>修正確認は一発OKだった</h2>
+
+      <p>そのバグは、電話番号の欄にひらがなが入力できてしまうという、よくあるものだった。「でんわばんごう」と入れても、そのまま登録できてしまう。ついでに言うと、この画面は性別の選択肢が「男性・女性」ではなく「男・女」のボタンだった。トイレかよ、と心の中で突っ込んだ。それくらい年季の入ったシステムだった。</p>
+
+      <p>起票して、数日後に「直しました」が届いて、私は該当画面でもう一度ひらがなを入力した。今度はきちんとエラーになった。期待どおりだ。</p>
+
+      <p>再試験は15分で終わり、バグ票をクローズした。その日の私は、いい仕事をしたつもりでいた。</p>
+
+      <h2>数日後、頼んでいない場所が変わっていた</h2>
+
+      <p>一週間ほどして、運用担当から問い合わせが来た。「昔からのお客様の情報が、更新できなくなったんですけど」。編集画面を開いて保存を押すと、触ってもいないFAXの欄でエラーになるという。バグ票は起票されていない。誰もFAXの欄なんて直していないはずだった。</p>
+
+      <p>調べてみると、原因はあの修正だった。開発者は電話番号のチェックを直すついでに、電話・FAX・携帯でバラバラに書かれていた入力チェックをひとつにまとめていた。悪意はない。むしろ親切心だ。「似たようなコードがあったので、共通化しておきました」と言われた。</p>
+
+      <p>でも、それらは似たようなコードではなかった。電話番号は半角の数字とハイフンだけ。FAXの欄は「(代)」や「内123」のような表記が昔からの運用で許されていて、古いデータには全角ハイフンの「－」や全角の「（代）」、なかには番号の後ろに「（株）」と書かれたものまで生きていた。誰かがメモ代わりに使っていたのだろう。</p>
+
+      <p>そもそも電話番号自体、そんなにきれいな世界ではない。市外局番は2桁から5桁まであって、「03-1234-5678」もあれば「0466-12-3456」もある。同じ番号でも、人によってハイフンを打つ位置がずれる。桁と区切りを厳密に見ようとするほど、正しい番号まで弾かれていく。違って見えた数行は、書いた人の癖ではなく仕様だった。共通化は、その違いと歴史を、表記ゆれとして消してしまった。</p>
+
+      <p>バグは確かに直っていた。でも、変更はバグ修正だけではなかった。そして私が再試験したのは、バグ票に書かれた範囲だけだった。</p>
+
+      <h2>「直しました」には、判断材料が何もない</h2>
+
+      <p>なぜ見落としたのか。再試験の範囲を、バグ票から決めていたからだ。バグ票に書いてあるのは事象だけで、何をどう直したかは開発者の頭の中とコミットログの中にしかない。「直しました」という報告は、完了形なのに情報量がほとんどゼロなのだ。</p>
+
+      <p>何を変更したのか。なぜその直し方を選んだのか。どこまで手を入れたのか。全部が抜けている。それでも「直りました」という結果だけは確認できてしまうから、クローズできてしまう。</p>
+
+      <p>もっと怖いのは、報告した本人も影響するとは思っていないことだ。共通化した自覚はあっても、FAXの欄に全角記号交じりの番号が生きていることまでは知らない。誰も嘘をついていないのに、試験の範囲だけが静かにずれていく。</p>
+
+      <h2>再試験の範囲は、報告ではなく差分で決める</h2>
+
+      <p>それ以来、「直しました」が来たら、直した内容を聞き返すことにしている。「どのファイルを変更しましたか」でもいいし、可能ならコミットの差分をそのまま見せてもらう。1ファイルのつもりが5ファイル変わっていれば、再試験は1画面では済まない。</p>
+
+      <p>影響範囲の洗い出し自体は、いまはAIがかなり得意になった。差分を渡せば、影響しそうな機能を列挙してくれる。ただし、その前提には「差分を渡す」という行為がある。「直しました」の3文字だけでは、AIにも人間にも何も判断できない。報告されていない変更に気付けるかどうかは、ツールの性能ではなく、報告を疑う習慣があるかどうかで決まる。</p>
+
+      <h2>まとめ</h2>
+
+      <p>「直しました」は修正の完了報告であって、変更内容の報告ではない。この2つを区別するようになってから、私のデグレの見逃しは目に見えて減った。</p>
+
+      <p>あなたの現場の「直しました」には、何が書かれているだろうか。</p>
+
+    </div>
+
+    <div class="post-related">
+      <p class="post-related-title">関連記事</p>
+      <ul class="post-related-list">
+        <li><a href="/blog/posts/physical-delete.html">【検証実話】生成AIに「削除」と頼んだら、物理削除で実装されていた話</a></li>
+        <li><a href="/blog/posts/ai-test-items.html">生成AIで作ったテスト項目書は、なぜ現場を止めるのか</a></li>
+        <li><a href="/blog/posts/friday-deploy.html">金曜17時、「これ今日出しちゃっていいですか？」</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>

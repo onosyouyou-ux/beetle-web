@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【検証実話】生成AIで実装したら「いいね！」で更新日時まで変わった話 | BEETLE</title>
+<meta name="description" content="ユーザーが「いいね！」を押しただけで記事のupdated_atが更新され、一覧の並び順が変わった。実装としては筋が通っている。でも業務では困る。AI開発で「何を更新してはいけないか」を仕様に書く重要性をQA視点で書いた。">
+<link rel="canonical" href="https://www.beetle-web.jp/blog/posts/like-updated-at.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="【検証実話】生成AIで実装したら「いいね！」で更新日時まで変わった話 | BEETLE">
+<meta property="og:description" content="「いいね！」を押しただけで記事の更新日時が変わり、一覧の並び順が崩れた。「データの更新」と「記事の更新」は同じではない。AI開発時代の“意味のズレ”に気づくQAの話。">
+<meta property="og:url" content="https://www.beetle-web.jp/blog/posts/like-updated-at.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/blog/like-updated-at.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="【検証実話】生成AIで実装したら「いいね！」で更新日時まで変わった話 | BEETLE合同会社">
+<meta name="twitter:description" content="「いいね！」を押しただけで記事の更新日時が変わり、一覧の並び順が崩れた。「データの更新」と「記事の更新」は同じではない。AI開発時代の“意味のズレ”に気づくQAの話。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/blog/like-updated-at.jpg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"【検証実話】生成AIで実装したら「いいね！」で更新日時まで変わった話","datePublished":"2026-07-02","dateModified":"2026-07-02","description":"「いいね！」を押しただけで記事の更新日時が変わり、一覧の並び順が崩れた。「データの更新」と「記事の更新」は同じではない。AI開発時代の“意味のズレ”に気づくQAの話。","image":"https://www.beetle-web.jp/assets/images/blog/like-updated-at.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/like-updated-at.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"【検証実話】生成AIで実装したら「いいね！」で更新日時まで変わった話","item":"https://www.beetle-web.jp/blog/posts/like-updated-at.html"}]}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-07-02</span>
+        <span class="post-tag ai">AI</span>
+      </div>
+      <h1 class="post-h1">【検証実話】生成AIで実装したら「いいね！」で更新日時まで変わった話</h1>
+    </div>
+
+    <img class="post-eyecatch" src="/assets/images/blog/like-updated-at.jpg" width="1200" height="628" alt="いいね！で更新日時まで変わった話 — AI開発時代の“意味のズレ”に気づくQA">
+
+    <div class="post-body">
+
+      <p class="lead">古い記事に「いいね！」を押したあと、バックオフィスの記事一覧を開いた。すると、その記事が一覧の一番上に近い位置へ移動していた。</p>
+
+      <h2>古い記事が突然、一番上に上がってきた</h2>
+
+      <p>「え？」</p>
+
+      <p>最初は見間違いかと思った。記事一覧は更新日時の降順で並ぶ仕様だったので、古い記事が突然上に来る理由が思い当たらなかったからだ。調べてみると、原因は単純だった。ユーザーが「いいね！」を押したタイミングで、記事レコードそのものが更新され、updated_atまで更新されていたのである。</p>
+
+      <h2>機能は動いている。でも、業務では困る</h2>
+
+      <p>一見すると、この実装は間違っていないようにも見える。いいね数は増えている。画面表示も正しい。データベースにも正しく保存されている。だから、プログラムとしては正常に動いている。</p>
+
+      <p>でも、業務として見ると話は変わる。</p>
+
+      <p>記事を書き直したわけではない。タイトルを変更したわけでもない。本文を修正したわけでもない。公開設定を変えたわけでもない。ただ、ユーザーが「いいね！」を押しただけだ。</p>
+
+      <p>それなのに、記事が更新された扱いになってしまうと、管理画面では「最近編集された記事」のように見えてしまう。運営側からすると、かなり紛らわしい。この瞬間、「データが更新された」と「記事が更新された」は、同じではないのだと改めて感じた。</p>
+
+      <h2>AIなら、この実装を選んでも不思議ではない</h2>
+
+      <p>この事例を見ていて思ったのは、「AIが悪い」という話ではない。むしろ、AIならこの実装を選ぶのは自然だと思った。</p>
+
+      <p>データが変わる。だからレコードを更新する。レコードを更新するなら、updated_atも更新する。実装だけを見れば、非常に筋が通っている。実際、人間がコードレビューだけをしていても、違和感なく通ってしまうかもしれない。</p>
+
+      <p>問題は、業務上の意味まで仕様として伝わっていなかったことだった。</p>
+
+      <h2>人間なら空気で補えることが、AIには伝わらない</h2>
+
+      <p>人間同士の開発なら、「いや、それ記事を更新したわけじゃないよね」という会話が自然に出る。「更新日時は変えないほうがいいですよね」と、設計を修正することも珍しくない。</p>
+
+      <p>でも、AIは空気を読まない。正確に言えば、空気ではなく、書かれた仕様を読む。仕様書に書いていない以上、「データが変わるなら更新する」という判断をしても不思議ではない。</p>
+
+      <p>私はこの不具合を見たとき、「AIが仕様を理解していない」のではなく、「こちらが業務上の前提を書いていなかっただけなんだ」と感じた。</p>
+
+      <h2>テストケースにも書かなければ見逃す</h2>
+
+      <p>この不具合は、テストケースにも表れやすい。</p>
+
+      <p>例えば、「いいね！を押すと、いいね数が1増えること」。これは誰でも書ける。でも、本当に確認すべきだったのは、その先だった。</p>
+
+      <p>「いいね！を押しても記事の更新日時は変わらないこと」<br>
+      「お問い合わせを送信しても記事一覧の並び順は変わらないこと」<br>
+      「閲覧数が増えても管理画面で編集済みの記事にならないこと」</p>
+
+      <p>この観点を書けるかどうかで、品質は大きく変わる。カウントが増えたかどうかだけを確認していたら、この不具合はそのままリリースされていたと思う。</p>
+
+      <h2>AI開発では「更新しないもの」を仕様に書く</h2>
+
+      <p>生成AIのおかげで、実装スピードは驚くほど速くなった。その一方で、人間同士なら言葉にしなくても伝わっていた前提が、少しずつ通用しなくなってきているとも感じる。</p>
+
+      <p>「何を更新するか」は仕様に書く。でも、それだけでは足りない。これからは、「何を更新してはいけないか」まで仕様として明文化することが、AI開発では当たり前になっていくのかもしれない。</p>
+
+      <p>今回の不具合は、派手にシステムが壊れたわけではない。それでも、現場では確実に困る。そして、こういう“意味のズレ”は、正常に動いているように見えるからこそ見逃されやすい。</p>
+
+      <p>AI時代のQAは、機能が動くかどうかだけを見る仕事ではない。その動きが、業務上も本当に正しいのか。そこまで考えることが、これからますます大切になるのだと思った。</p>
+
+    </div>
+
+    <div class="post-related">
+      <p class="post-related-title">関連記事</p>
+      <ul class="post-related-list">
+        <li><a href="/blog/posts/physical-delete.html">【検証実話】生成AIに「削除」と頼んだら、物理削除で実装されていた話</a></li>
+        <li><a href="/blog/posts/ai-test-items.html">生成AIで作ったテスト項目書は、なぜ現場を止めるのか</a></li>
+        <li><a href="/blog/posts/spec-or-bug.html">「仕様です」の一言で、片づけないために</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>

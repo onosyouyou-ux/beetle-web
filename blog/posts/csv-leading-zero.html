@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>郵便番号の0がぜんぶ消えていた。犯人はCSVではなくExcelだった話 | BEETLE</title>
+<meta name="description" content="CSV取込後、北海道の郵便番号だけ6桁になっていた。原因は取込処理ではなく、担当者がExcelで開いて保存したことによる先頭0の欠落（0落ち）。データは通り道で変わる。QA視点で原因と再発防止を整理した。">
+<link rel="canonical" href="https://www.beetle-web.jp/blog/posts/csv-leading-zero.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="郵便番号の0がぜんぶ消えていた。犯人はCSVではなくExcelだった話 | BEETLE">
+<meta property="og:description" content="CSV取込後、0で始まる郵便番号だけ6桁に。原因は取込処理ではなく、途中でExcelを経由した“善意の保存”だった。CSVの先頭0が消える理由と対策。">
+<meta property="og:url" content="https://www.beetle-web.jp/blog/posts/csv-leading-zero.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/blog/csv-leading-zero.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="郵便番号の0がぜんぶ消えていた。犯人はCSVではなくExcelだった話 | BEETLE合同会社">
+<meta name="twitter:description" content="CSV取込後、0で始まる郵便番号だけ6桁に。原因は取込処理ではなく、途中でExcelを経由した“善意の保存”だった。CSVの先頭0が消える理由と対策。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/blog/csv-leading-zero.jpg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"郵便番号の0がぜんぶ消えていた。犯人はCSVではなくExcelだった話","datePublished":"2026-07-05","dateModified":"2026-07-05","description":"CSV取込後、0で始まる郵便番号だけ6桁に。原因は取込処理ではなく、途中でExcelを経由した“善意の保存”だった。CSVの先頭0が消える理由と対策。","image":"https://www.beetle-web.jp/assets/images/blog/csv-leading-zero.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/csv-leading-zero.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"郵便番号の0がぜんぶ消えていた。犯人はCSVではなくExcelだった話","item":"https://www.beetle-web.jp/blog/posts/csv-leading-zero.html"}]}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-07-05</span>
+        <span class="post-tag qa">QA</span>
+      </div>
+      <h1 class="post-h1">郵便番号の0がぜんぶ消えていた。犯人はCSVではなくExcelだった話</h1>
+    </div>
+
+    <img class="post-eyecatch" src="/assets/images/blog/csv-leading-zero.jpg" width="1200" height="628" alt="CSVは無実。犯人はExcelで候！— 郵便番号の先頭0が消える">
+
+    <div class="post-body">
+
+      <p class="lead">検証をしていると、データが勝手に変わる瞬間に出会うことがある。今回は顧客マスタのCSV取込機能だった。取込は成功する。エラーも出ない。でも、北海道のお客様だけ郵便番号が6桁になっていた。</p>
+
+      <h2>取込は成功しているのに、桁が足りない</h2>
+
+      <p>事象はこうだ。顧客一覧のCSVを取り込むと、「0600042」と入っているはずの郵便番号が「600042」で登録されていた。北海道や青森など、郵便番号が0で始まる地域だけ桁が足りない。それ以外の地域は正常だった。</p>
+
+      <p>エラーは一件も出ていない。処理としては全件成功している。私はこの手の不具合が一番怖いと思っている。落ちてくれれば誰でも気付く。静かに壊れるデータは、運用が始まってから発覚する。</p>
+
+      <h2>バグ票を書く前に、メモ帳でCSVを開いた</h2>
+
+      <p>最初は取込処理を疑った。数値変換で0を落としているんじゃないか。よくあるパターンだ。</p>
+
+      <p>ただ、バグ票を書く前に一つだけ確認した。取り込んだCSVの原本を、Excelではなくメモ帳で開いたのだ。</p>
+
+      <p>すると、CSVの中身がすでに「600042」だった。</p>
+
+      <p>取込処理は何も悪くなかった。渡された時点で、0は消えていた。犯人はもっと手前にいた。CSVを用意した担当者が、中身を確認するために一度Excelで開いて、列幅を整えて、そのまま保存していた。Excelは「0600042」を数値として解釈する。数値の先頭の0には意味がないので、黙って落とす。</p>
+
+      <p>悪意はどこにもない。むしろ「見やすくしておきました」という善意だった。</p>
+
+      <h2>データは、通り道で変わる</h2>
+
+      <p>なぜ見落とすのか。機能テストは、取込機能そのものばかり見てしまうからだ。</p>
+
+      <p>でも実際のデータは、出力されて、人の手を経由して、取り込まれるという旅をする。その旅の途中にExcelが一度挟まるだけで、郵便番号、社員番号、電話番号の先頭の0は消える。テスト時に気付きにくいのは、テストデータは自分たちで丁寧に作るからだ。きれいな経路しか通っていないデータで試験して、合格を出してしまう。</p>
+
+      <p>これはAIにも気付きにくい観点だと思う。仕様書には「担当者がExcelで開いて保存した場合」なんて書いていない。だからAIが作る試験書にも、この観点は出てこない。運用の癖は、現場にしか落ちていない。</p>
+
+      <h2>再発防止は、機能と運用の両方に打つ</h2>
+
+      <p>対策は取込側だけでは足りなかった。</p>
+
+      <p>取込側には、郵便番号が7桁でなければ警告を出すチェックを入れた。運用側には、CSVをExcelで開いて保存しないこと、確認はメモ帳かビューアで行うことをルール化した。どちらか片方では、またいつか再発する。</p>
+
+      <p>これはバグではなかった。でも、業務では事故になる。QAが守るのは機能ではなく、業務のほうだ。</p>
+
+      <h2>まとめ</h2>
+
+      <p>データは嘘をつかない。でも、表示と善意は嘘をつく。</p>
+
+      <p>あなたの現場のCSVも、誰かのExcelを一度通っていないだろうか。</p>
+
+    </div>
+
+    <div class="post-related">
+      <p class="post-related-title">関連記事</p>
+      <ul class="post-related-list">
+        <li><a href="/blog/posts/physical-delete.html">【検証実話】生成AIに「削除」と頼んだら、物理削除で実装されていた話</a></li>
+        <li><a href="/blog/posts/like-updated-at.html">【検証実話】生成AIで実装したら「いいね！」で更新日時まで変わった話</a></li>
+        <li><a href="/blog/posts/repro-steps.html">「再現しません」で突き返されないバグ報告</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>
