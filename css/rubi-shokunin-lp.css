@@ -5,6 +5,16 @@
 
 .rs-inner { max-width: 860px; margin: 0 auto; padding: 0 20px; }
 
+/* 作成中バナー（仮） */
+.rs-wip {
+  background: #fff4e5;
+  color: #8a5a1f;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  padding: 10px 16px;
+}
+
 /* HERO（仮） */
 .rs-hero { padding: 64px 0 48px; background: #f7f5f0; }
 .rs-eyebrow { font-size: 14px; font-weight: 700; color: var(--color-accent); margin: 0 0 8px; }
