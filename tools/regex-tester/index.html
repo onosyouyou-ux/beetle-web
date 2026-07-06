@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>正規表現テスター｜メール・電話番号など日本向けパターン集＋その場で動作確認【無料】｜BEETLE</title>
+<meta name="description" content="メールアドレス・電話番号・郵便番号などQAでよく使う正規表現パターン集と、その場で文字列にマッチするか確認できるテスターをまとめたツール。「多分マッチする」を「確実にマッチする」に。完全無料・登録不要。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="正規表現テスター（日本向けパターン集つき） | BEETLE">
+<meta property="og:description" content="メール・電話番号・郵便番号などのバリデーション正規表現と、その場でマッチ確認できるテスター。完全無料。">
+<meta property="og:url" content="https://www.beetle-web.jp/tools/regex-tester/">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="正規表現テスター（日本向けパターン集つき） | BEETLE">
+<meta name="twitter:description" content="メール・電話番号・郵便番号などのバリデーション正規表現と、その場でマッチ確認できるテスター。完全無料。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<link rel="canonical" href="https://www.beetle-web.jp/tools/regex-tester/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "正規表現テスター",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "url": "https://www.beetle-web.jp/tools/regex-tester/",
+  "description": "メールアドレス・電話番号・郵便番号など日本向けの正規表現パターン集と、その場でマッチ確認できるテスター。"
+}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"ツール一覧","item":"https://www.beetle-web.jp/test-tools.html"},{"@type":"ListItem","position":3,"name":"正規表現テスター","item":"https://www.beetle-web.jp/tools/regex-tester/"}]}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "入力した文字列は保存されますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "保存しません。すべてブラウザ内（あなたの端末上）で処理していて、サーバーには一切送信していません。" }
+    },
+    {
+      "@type": "Question",
+      "name": "JavaScript以外の正規表現エンジンでも同じ結果になりますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "このツールはJavaScriptの正規表現エンジンで判定しています。PHPやPythonなど言語によって細かい挙動（先読み・後読みの対応範囲など）が異なる場合があるので、実装先の言語でも必ず確認してください。" }
+    },
+    {
+      "@type": "Question",
+      "name": "フラグ欄には何を入れればいいですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "gは全マッチ検出、iは大文字小文字を区別しない、mは複数行モードです。空欄でもマッチ確認はできます。" }
+    }
+  ]
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/style/common.css">
+<link rel="stylesheet" href="/css/reference.css">
+<link rel="stylesheet" href="/css/regex-tester.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" style="height:28px;vertical-align:middle;border-radius:6px;"></a>
+  <span>›</span>
+  <a href="/test-tools.html">ツール一覧</a>
+  <span>›</span>
+  <span style="color:#ddd;font-size:13px;">正規表現テスター</span>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">TOOL</div>
+  <h1>正規表現<em>テスター</em></h1>
+  <p>「多分マッチする」を「確実にマッチする」に。<br>日本向けのパターン集つき、その場で試せる正規表現チェッカー。</p>
+</div>
+
+<div class="ref-nav">
+  <a href="#tester">その場で試す</a>
+  <a href="#patterns">よく使うパターン</a>
+  <a href="#faq">よくある質問</a>
+</div>
+
+<p class="ref-lead">「たぶんこの正規表現でマッチするはず」で実装を進めて、本番で漏れが見つかる——というのはQAでもよくある事故。ここでパターンと文字列を入れて、実際にマッチするかその場で確認してから使ってください。</p>
+
+<div class="sw">
+
+  <section id="tester" class="ref-section">
+    <div class="ref-sec-hd"><h2>その場で試す</h2><span class="d">入力した瞬間にマッチ結果が更新される</span></div>
+    <div class="rt-panel">
+      <div class="rt-row">
+        <label for="rt-pattern">パターン</label>
+        <div class="rt-pattern-wrap">
+          <span class="rt-slash">/</span>
+          <input type="text" id="rt-pattern" placeholder="例: ^[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}$" autocomplete="off" spellcheck="false">
+          <span class="rt-slash">/</span>
+          <input type="text" id="rt-flags" class="rt-flags" placeholder="gi" maxlength="6" autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+      <div class="rt-row">
+        <label for="rt-string">テストする文字列</label>
+        <textarea id="rt-string" rows="4" placeholder="ここに文字列を貼り付け（複数行OK）" spellcheck="false"></textarea>
+      </div>
+      <div class="rt-result">
+        <div class="rt-result-hd"><span id="rt-status" class="rt-status">パターンを入力してね</span></div>
+        <div id="rt-output" class="rt-output"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="patterns" class="ref-section">
+    <div class="ref-sec-hd"><h2>よく使うパターン</h2><span class="d">クリックでテスターに読み込む</span></div>
+    <div class="ref-grid rt-pattern-grid">
+
+      <div class="ref-card rt-card">
+        <div class="rt-card-name">メールアドレス</div>
+        <code class="rt-card-code">^[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}$</code>
+        <button type="button" class="rt-use-btn" data-pattern="^[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}$" data-flags="m" data-sample="taro@example.com&#10;bad-email@&#10;info+test@beetle-web.jp">使ってみる →</button>
+      </div>
+
+      <div class="ref-card rt-card">
+        <div class="rt-card-name">電話番号（日本・ハイフン任意）</div>
+        <code class="rt-card-code">^0\d{1,4}-?\d{1,4}-?\d{4}$</code>
+        <button type="button" class="rt-use-btn" data-pattern="^0\d{1,4}-?\d{1,4}-?\d{4}$" data-flags="m" data-sample="03-1234-5678&#10;09012345678&#10;123-4567">使ってみる →</button>
+      </div>
+
+      <div class="ref-card rt-card">
+        <div class="rt-card-name">郵便番号</div>
+        <code class="rt-card-code">^\d{3}-?\d{4}$</code>
+        <button type="button" class="rt-use-btn" data-pattern="^\d{3}-?\d{4}$" data-flags="m" data-sample="150-0001&#10;1500001&#10;150-01">使ってみる →</button>
+      </div>
+
+      <div class="ref-card rt-card">
+        <div class="rt-card-name">URL（http/https）</div>
+        <code class="rt-card-code">^https?:\/\/[\w\-.~:/?#[\]@!$&amp;'()*+,;=%]+$</code>
+        <button type="button" class="rt-use-btn" data-pattern="^https?:\/\/[\w\-.~:/?#[\]@!$&'()*+,;=%]+$" data-flags="m" data-sample="https://www.beetle-web.jp&#10;ftp://example.com&#10;www.example.com">使ってみる →</button>
+      </div>
+
+      <div class="ref-card rt-card">
+        <div class="rt-card-name">ひらがなのみ</div>
+        <code class="rt-card-code">^[ぁ-んー]+$</code>
+        <button type="button" class="rt-use-btn" data-pattern="^[ぁ-んー]+$" data-flags="m" data-sample="ふりがな&#10;カタカナ&#10;ひらがなmix123">使ってみる →</button>
+      </div>
+
+      <div class="ref-card rt-card">
+        <div class="rt-card-name">カタカナのみ</div>
+        <code class="rt-card-code">^[ァ-ヶー]+$</code>
+        <button type="button" class="rt-use-btn" data-pattern="^[ァ-ヶー]+$" data-flags="m" data-sample="タロウ&#10;ひらがな&#10;タロウ123">使ってみる →</button>
+      </div>
+
+      <div class="ref-card rt-card">
+        <div class="rt-card-name">半角英数字のみ</div>
+        <code class="rt-card-code">^[A-Za-z0-9]+$</code>
+        <button type="button" class="rt-use-btn" data-pattern="^[A-Za-z0-9]+$" data-flags="m" data-sample="abc123&#10;ＡＢＣ123&#10;abc-123">使ってみる →</button>
+      </div>
+
+      <div class="ref-card rt-card">
+        <div class="rt-card-name">全角文字を含む</div>
+        <code class="rt-card-code">[^\x01-\x7E]</code>
+        <button type="button" class="rt-use-btn" data-pattern="[^\x01-\x7E]" data-flags="g" data-sample="全角テスト abc123&#10;半角のみtest">使ってみる →</button>
+      </div>
+
+      <div class="ref-card rt-card">
+        <div class="rt-card-name">前後の空白</div>
+        <code class="rt-card-code">^\s+|\s+$</code>
+        <button type="button" class="rt-use-btn" data-pattern="^\s+|\s+$" data-flags="gm" data-sample="  前後に空白あり  &#10;空白なし">使ってみる →</button>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="faq" class="ref-section">
+    <div class="ref-sec-hd"><h2>よくある質問</h2></div>
+    <details class="faq-item">
+      <summary class="faq-q"><span>入力した文字列は保存されますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">保存しません。すべてブラウザ内（あなたの端末上）で処理していて、サーバーには一切送信していません。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>JavaScript以外の正規表現エンジンでも同じ結果になりますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">このツールはJavaScriptの正規表現エンジンで判定しています。PHPやPythonなど言語によって細かい挙動（先読み・後読みの対応範囲など）が異なる場合があるので、実装先の言語でも必ず確認してください。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>フラグ欄には何を入れればいいですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">gは全マッチ検出、iは大文字小文字を区別しない、mは複数行モードです。空欄でもマッチ確認はできます。</div>
+    </details>
+  </section>
+
+</div>
+
+<div class="site-description">
+  <p>QAの入力バリデーション観点は <a href="/tools/test-patterns/">TESTパターン集</a> の「入力値」セクションもあわせてどうぞ。</p>
+</div>
+
+<div class="to-service">
+  <p>QA支援サービスについては → <a href="/">BEETLE合同会社トップ</a></p>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+<script src="/js/regex-tester.js"></script>
+</body>
+</html>

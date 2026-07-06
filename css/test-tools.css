@@ -35,6 +35,8 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
 .tools-grid-other{grid-template-columns:repeat(2,1fr);justify-content:start}
 .tools-grid-other .tool-card:last-child:nth-child(odd){grid-column:1/-1}
+.tools-grid-ref .tool-card:last-child:nth-child(odd),
+.tools-grid-ref .tool-card:last-child:nth-child(3n+1){grid-column:1/-1}
 .tool-card{position:relative;background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px;display:flex;flex-direction:column;color:inherit;text-decoration:none;transition:all .15s}
 .tool-card:hover{border-color:var(--tp-orange-bd);box-shadow:0 2px 12px rgba(192,99,76,.08);transform:translateY(-2px)}
 .tool-card-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}

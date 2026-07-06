@@ -1,0 +1,51 @@
+/* ============================================================
+   regex-tester.css — 正規表現テスターページ固有スタイル
+   共通変数は /style/common.css の --tp-* を流用
+   ============================================================ */
+
+/* ====== テスターパネル ====== */
+.rt-panel{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px 22px;}
+.rt-row{margin-bottom:16px}
+.rt-row:last-child{margin-bottom:0}
+.rt-row label{display:block;font-size:12px;font-weight:700;color:var(--tp-text2);margin-bottom:6px}
+
+.rt-pattern-wrap{display:flex;align-items:center;gap:4px;background:var(--tp-cream);border:1px solid var(--tp-border2);border-radius:8px;padding:0 10px}
+.rt-slash{font-family:'SFMono-Regular','Consolas',monospace;color:var(--tp-text3);font-size:15px}
+#rt-pattern{flex:1;border:none;background:none;padding:11px 4px;font-family:'SFMono-Regular','Consolas',monospace;font-size:14px;color:var(--tp-text);outline:none;min-width:0}
+.rt-flags{width:60px;border:none;border-left:1px solid var(--tp-border2);background:none;padding:11px 4px 11px 10px;font-family:'SFMono-Regular','Consolas',monospace;font-size:14px;color:var(--tp-orange);outline:none}
+
+#rt-string{width:100%;border:1px solid var(--tp-border2);border-radius:8px;padding:11px 12px;font-family:'SFMono-Regular','Consolas',monospace;font-size:13px;line-height:1.7;resize:vertical;box-sizing:border-box}
+
+.rt-result{margin-top:16px}
+.rt-result-hd{margin-bottom:8px}
+.rt-status{font-size:13px;font-weight:700;color:var(--tp-text2)}
+.rt-status-ok{color:var(--tp-green)}
+.rt-status-none{color:var(--tp-text3)}
+.rt-status-error{color:var(--tp-red)}
+.rt-output{background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:8px;padding:12px 14px;font-family:'SFMono-Regular','Consolas',monospace;font-size:13px;line-height:1.8;white-space:pre-wrap;word-break:break-all;min-height:24px}
+.rt-output mark{background:var(--tp-orange-bg);color:var(--tp-orange);border-radius:3px;padding:0 2px;font-weight:700}
+.rt-placeholder{color:var(--tp-text3)}
+
+/* ====== パターン集カード ====== */
+.rt-pattern-grid{grid-template-columns:repeat(3,1fr)}
+.rt-card{display:flex;flex-direction:column;gap:10px}
+.rt-card-name{font-size:14px;font-weight:800}
+.rt-card-code{font-family:'SFMono-Regular','Consolas',monospace;font-size:12px;background:var(--tp-cream);border-radius:6px;padding:8px 10px;word-break:break-all;color:var(--tp-text2)}
+.rt-use-btn{align-self:flex-start;font-size:12px;font-weight:700;color:var(--tp-orange);background:none;border:none;padding:0;cursor:pointer}
+.rt-use-btn:hover{text-decoration:underline}
+
+/* ====== FAQ（details/summaryベース） ====== */
+.faq-item{border-bottom:1px solid var(--tp-border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 2px;cursor:pointer;font-weight:700;font-size:14px;color:var(--tp-text);list-style:none}
+.faq-q::-webkit-details-marker{display:none}
+.faq-icon{color:var(--tp-orange);font-weight:700}
+details[open] .faq-icon{transform:rotate(45deg)}
+.faq-a{padding:0 2px 14px;font-size:13px;line-height:1.8;color:var(--tp-text2)}
+
+@media(max-width:900px){
+  .rt-pattern-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .rt-flags{width:48px}
+  .rt-pattern-grid{grid-template-columns:1fr}
+}

@@ -94,6 +94,12 @@
   </url>
 
   <url>
+    <loc>https://www.beetle-web.jp/tools/regex-tester/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://www.beetle-web.jp/tools/bug-checker/landing.html</loc>
     <lastmod>2026-06-08</lastmod>
     <priority>0.8</priority>
