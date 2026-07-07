@@ -1,7 +1,7 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;min-height:100vh;}
 body{
-  background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%);
+  background:linear-gradient(135deg,#8b9df2 0%,#9868c4 50%,#f6acfc 100%);
   font-family:'Hiragino Maru Gothic ProN','Comic Sans MS',cursive;
   overflow-x:hidden;
 }
@@ -25,15 +25,22 @@ input,button,textarea{
   font-family:inherit;box-sizing:border-box;
 }
 textarea{resize:none;}
-.slot-input:focus{outline:none;}
-.slot-input::placeholder{color:#ccc;}
+.slot-input:focus{outline:none;box-shadow:0 0 0 3px rgba(124,58,237,0.3);}
+.slot-input::placeholder{color:#8a8598;}
 
 .card{
-  background:rgba(255,255,255,0.95);
+  background:#ffffff;
   border-radius:24px;
   box-shadow:0 16px 48px rgba(0,0,0,0.2);
   width:100%;
 }
+
+/* ボタン・チップ共通の状態表現：有効=くっきり、無効=はっきりグレー */
+#app button:disabled{opacity:.5;filter:grayscale(.5);cursor:not-allowed;}
+#app button:not(:disabled){cursor:pointer;}
+#app button:not(:disabled):hover,#app .chip-btn:hover{filter:brightness(1.07);}
+#app button:not(:disabled):active,#app .chip-btn:active{filter:brightness(0.93);transform:scale(0.98);}
+#app button:focus-visible,#app .chip-btn:focus-visible{outline:3px solid rgba(124,58,237,0.5);outline-offset:2px;}
 
 .slot-row{display:flex;align-items:center;gap:6px;min-width:0;}
 .slot-row input,.slot-row textarea{min-width:0;flex:1;}
@@ -59,6 +66,23 @@ textarea{resize:none;}
 .eigo-note p + p{margin-top:6px;}
 .eigo-note a{color:#764ba2;font-weight:bold;text-decoration:underline;text-underline-offset:2px;}
 .eigo-note a:hover{color:#d6418c;}
+
+.site-footer-app{
+  background:#1c1c2e;
+  padding:1.1rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  position:relative;z-index:1;
+  margin-top:24px;
+}
+.sfa-left{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;}
+.sfa-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:.08em;color:#fff;text-decoration:none;}
+.sfa-logo span{color:#f093fb;}
+.sfa-nav{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.sfa-nav a{font-size:13px;color:#9a97ab;text-decoration:none;transition:color .15s;}
+.sfa-nav a:hover{color:#fff;}
+.sfa-right{display:flex;align-items:center;gap:1rem;font-size:12px;color:#9a97ab;flex-wrap:wrap;}
+.sfa-right a{color:#9a97ab;text-decoration:none;transition:color .15s;}
+.sfa-right a:hover{color:#fff;}
 
 @keyframes float{from{transform:translateY(0)}to{transform:translateY(-20px)}}
 @keyframes starPop{0%{opacity:1;transform:scale(0)}100%{opacity:0;transform:scale(2) translateY(-40px)}}
