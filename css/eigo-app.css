@@ -1,7 +1,7 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;min-height:100vh;}
 body{
-  background:linear-gradient(135deg,#8b9df2 0%,#9868c4 50%,#f6acfc 100%);
+  background:linear-gradient(135deg,#a8d8ff 0%,#6fb3fb 50%,#7ee8e0 100%);
   font-family:'Hiragino Maru Gothic ProN','Comic Sans MS',cursive;
   overflow-x:hidden;
 }
