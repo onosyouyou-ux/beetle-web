@@ -33,7 +33,7 @@ const NewspaperPreview = forwardRef<HTMLDivElement, Props>(function NewspaperPre
       onOverflowChange(leftOver || rightOver);
     }, 150);
     return () => clearTimeout(timer);
-  }, [data, font, size, onOverflowChange]);
+  }, [data, font, size, title, meta, photo, onOverflowChange]);
 
   const articles = data?.articles ?? [];
   const isEmpty =
