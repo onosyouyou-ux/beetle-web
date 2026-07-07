@@ -4,6 +4,9 @@ body{
   background:linear-gradient(135deg,#a8d8ff 0%,#6fb3fb 50%,#7ee8e0 100%);
   font-family:'Hiragino Maru Gothic ProN','Comic Sans MS',cursive;
   overflow-x:hidden;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
 }
 
 body::before,body::after{
@@ -16,6 +19,7 @@ body::after {width:160px;height:160px;background:rgba(84,160,255,0.15);top:30%;r
   position:relative;z-index:1;
   display:flex;flex-direction:column;align-items:center;
   width:100%;
+  flex:1 0 auto;
   padding-top:max(16px, env(safe-area-inset-top));
   padding-left:16px;padding-right:16px;padding-bottom:40px;
 }
