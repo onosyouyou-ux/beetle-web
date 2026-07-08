@@ -2,9 +2,10 @@
    ふりがなメーカー 仮デザイン（元の rubi-shokunin.html を移植）
    ※ 後で正式デザインに差し替える
    ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Syne:wght@800&display=swap');
 
 :root {
+  --color-accent: #C0634C;
   --bg: #EAF6FF;
   --paper: #FFFFFF;
   --ink: #3A3A3A;
@@ -27,10 +28,82 @@ body {
   color: var(--ink);
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
+}
+.app-main {
+  flex: 1 0 auto;
+  display: flex;
   justify-content: center;
   padding: 40px 18px;
+  width: 100%;
 }
 .app { width: 100%; max-width: 620px; }
+
+/* ── ヘッダー（ダークバー・パンくず） ── */
+.bc-nav {
+  background: #1c1c2e;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  font-size: 13px;
+}
+.bc-nav a {
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  transition: color .15s;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.bc-nav a:hover { color: #fff; }
+.bc-nav .sep { color: rgba(255,255,255,0.25); font-size: 11px; flex-shrink: 0; }
+.bc-nav .bc-current { color: rgba(255,255,255,0.9); font-size: 13px; white-space: nowrap; }
+.bc-nav .bc-spacer { flex: 1; }
+.bc-ref-btn {
+  font-size: 12px !important;
+  color: rgba(255,255,255,0.7) !important;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 20px;
+  padding: 4px 14px;
+  transition: border-color .15s, color .15s !important;
+  white-space: nowrap;
+}
+.bc-ref-btn:hover {
+  border-color: rgba(255,255,255,0.6) !important;
+  color: #fff !important;
+}
+
+/* ── フッター（ダークバー） ── */
+.site-footer-app {
+  background: #1c1c2e;
+  padding: 1.1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.sfa-left { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+.sfa-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  color: #fff;
+  text-decoration: none;
+}
+.sfa-logo span { color: var(--color-accent); }
+.sfa-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.sfa-nav a { font-size: 13px; color: #9a97ab; text-decoration: none; transition: color .15s; }
+.sfa-nav a:hover { color: #fff; }
+.sfa-right { display: flex; align-items: center; gap: 1rem; font-size: 12px; color: #9a97ab; flex-wrap: wrap; }
+.sfa-right a { color: #9a97ab; text-decoration: none; transition: color .15s; }
+.sfa-right a:hover { color: #fff; }
 
 .header-row { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; }
 .mascot { flex-shrink: 0; }

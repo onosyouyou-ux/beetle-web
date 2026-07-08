@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
+
+const GA_ID = 'G-N6JXJGQ1Q6';
 
 // アプリ本体は vercel.app 配信。集客(SEO)は本体ドメインの静的ランディングが担当。
 // アプリ画面はランディングを正規URLとして指す（評価をランディングに集約）。
@@ -35,7 +38,50 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
-      <body>{children}</body>
+      <body>
+        <nav className="bc-nav">
+          <a href="https://www.beetle-web.jp" target="_blank" rel="noopener">
+            <img src="https://www.beetle-web.jp/assets/icons/beetle-icon.svg" alt="BEETLE" style={{ height: '22px', borderRadius: '4px' }} />
+          </a>
+          <span className="sep">›</span>
+          <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール一覧</a>
+          <span className="sep">›</span>
+          <span className="bc-current">ふりがなメーカー</span>
+          <span className="bc-spacer" />
+          <a href={LANDING_URL} target="_blank" rel="noopener" className="bc-ref-btn">
+            リファレンス
+          </a>
+        </nav>
+
+        <main className="app-main">{children}</main>
+
+        <footer className="site-footer-app">
+          <div className="sfa-left">
+            <a href="https://www.beetle-web.jp" target="_blank" rel="noopener" className="sfa-logo">
+              BEET<span>LE</span>
+            </a>
+            <nav className="sfa-nav">
+              <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">ホーム</a>
+              <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール</a>
+              <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
+              <a href="mailto:info@beetle-web.jp">お問い合わせ</a>
+            </nav>
+          </div>
+          <div className="sfa-right">
+            <a href="https://www.beetle-web.jp/privacy" target="_blank" rel="noopener">プライバシーポリシー</a>
+            <span>© 2026 BEETLE Co., LLC</span>
+          </div>
+        </footer>
+
+        {/* Google Analytics (gtag はインライン必須の例外) */}
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+        <Script id="ga4" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_ID}');`}
+        </Script>
+      </body>
     </html>
   );
 }

@@ -70,20 +70,14 @@
 .rs-card h3{ margin:0 0 8px; font-size:19px; color:var(--rs-i); }
 .rs-card p{ margin:0; color:var(--rs-m); font-size:14px; line-height:1.8; }
 
-.rs-card-icon{ display:flex; flex-direction:column; justify-content:center; }
-.rs-icon{ font-size:44px; margin:0 0 14px; }
 
 /* 使い方 */
 .rs-steps{ display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
 .rs-step{
-  position:relative; background:#fff; border:1px solid var(--rs-l);
-  border-radius:22px; padding:30px 24px 24px;
+  background:#fff; border:1px solid var(--rs-l);
+  border-radius:22px; padding:22px;
 }
-.rs-num{
-  position:absolute; top:-18px; left:22px; width:40px; height:40px;
-  border-radius:50%; display:grid; place-items:center;
-  background:var(--rs-b); color:#fff; font-weight:900; border:5px solid #fff;
-}
+.rs-step img{ width:100%; height:auto; border-radius:16px; margin-bottom:14px; display:block; }
 .rs-step h3{ margin:0 0 8px; color:var(--rs-i); }
 .rs-step p{ margin:0; color:var(--rs-m); font-size:14px; line-height:1.8; }
 
