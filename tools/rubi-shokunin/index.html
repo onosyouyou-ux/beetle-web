@@ -82,59 +82,111 @@
 <body>
 <div id="site-header"></div>
 
-<!-- ============================================================
-     ▼ ランディング枠（仮）：セクション構成だけ用意。デザインは後で入れる
-     ============================================================ -->
-
-<div class="rs-wip">🚧 このページは作成中です。デザイン・文章は仮のものです。</div>
-
 <!-- HERO -->
 <section class="rs-hero">
-  <div class="rs-inner">
-    <p class="rs-eyebrow">かんじに ふりがなを つけよう！</p>
-    <h1 class="rs-title">ふりがなメーカー</h1>
-    <p class="rs-lead">文章を貼りつけるだけで、AIが漢字にふりがな（ルビ）を自動でつけます。<br>画像から文章を読み込むこともできます。登録不要・無料。</p>
-    <a class="rs-cta" href="https://rubi-shokunin.vercel.app" target="_blank" rel="noopener">ふりがなメーカーを使ってみる →</a>
+  <div class="rs-c rs-hg">
+    <div class="rs-hc">
+      <span class="rs-badge">登録不要・無料</span>
+      <h1 class="rs-h1">漢字に、<br><span>ふりがな</span>をつけよう！</h1>
+      <p class="rs-lead">文章を貼りつけるだけで、漢字にふりがなを自動で追加。すべての漢字にも、むずかしい漢字だけにもつけられます。画像から文章を読み込むこともできます。</p>
+      <a class="rs-btn rs-btn-main" href="https://rubi-shokunin.vercel.app" target="_blank" rel="noopener">ふりがなメーカーを使ってみる →</a>
+    </div>
+    <div class="rs-heroimg">
+      <img src="/assets/images/rubi-shokunin/hero-parent-child.jpg" alt="親子でふりがなメーカーを使うイラスト" width="960" height="720">
+      <span class="rs-float rs-fa">画像からも読める</span>
+      <span class="rs-float rs-fb">小学生の宿題にも</span>
+    </div>
   </div>
 </section>
 
-<!-- 特徴 -->
+<!-- こんなときに便利 -->
 <section class="rs-section">
-  <div class="rs-inner">
-    <h2 class="rs-h2">できること</h2>
-    <div class="rs-cards">
-      <div class="rs-card">
-        <h3>すべての漢字／むずかしい漢字だけ</h3>
-        <p>学年や読む人に合わせて、ふりがなをつける範囲を切り替えられます。（仮テキスト）</p>
-      </div>
-      <div class="rs-card">
-        <h3>画像から読み込み</h3>
-        <p>プリントや本の写真から文章を読み取って、そのままふりがなをつけられます。（仮テキスト）</p>
-      </div>
-      <div class="rs-card">
+  <div class="rs-c">
+    <div class="rs-sh">
+      <div class="rs-k">こんなときに便利</div>
+      <h2 class="rs-h2">読めない漢字を、そのままにしない。</h2>
+      <p>保護者、先生、子ども。使う人に合わせて、文章を読みやすくします。</p>
+    </div>
+    <div class="rs-grid3">
+      <article class="rs-card">
+        <img src="/assets/images/rubi-shokunin/child-reading.jpg" alt="本を読む小学生" width="700" height="525" loading="lazy">
+        <h3>子どもの読書や宿題に</h3>
+        <p>読めない漢字で止まらず、自分で文章を読み進めやすくなります。</p>
+      </article>
+      <article class="rs-card">
+        <img src="/assets/images/rubi-shokunin/teacher-material.jpg" alt="教材やプリントを作る先生・保護者" width="700" height="525" loading="lazy">
+        <h3>教材やプリントづくりに</h3>
+        <p>学年や読む人に合わせて、ふりがなの範囲を調整できます。</p>
+      </article>
+      <article class="rs-card">
+        <img src="/assets/images/rubi-shokunin/camera-book.jpg" alt="本をカメラで読み込む" width="700" height="525" loading="lazy">
+        <h3>画像から文章を読み込み</h3>
+        <p>プリントや本の写真から文章を読み取り、そのまま使えます。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- できること -->
+<section class="rs-section rs-section-alt" id="features">
+  <div class="rs-c">
+    <div class="rs-sh">
+      <div class="rs-k">できること</div>
+      <h2 class="rs-h2">読む人に合わせて、ふりがなを調整。</h2>
+    </div>
+    <div class="rs-grid2">
+      <article class="rs-card">
+        <img src="/assets/images/rubi-shokunin/copy-formats.jpg" alt="HTMLのルビタグ形式と漢字（かんじ）形式でコピーできるイメージ" width="900" height="675" loading="lazy">
         <h3>2つの形式でコピー</h3>
-        <p>HTMLのルビタグ形式と「漢字(よみ)」形式でコピーできます。（仮テキスト）</p>
-      </div>
+        <p>HTMLのルビタグ形式と「漢字（かんじ）」形式から選べます。</p>
+      </article>
+      <article class="rs-card rs-card-icon">
+        <div class="rs-icon">🔤</div>
+        <h3>すべての漢字／むずかしい漢字だけ</h3>
+        <p>低学年向けにも、ふりがなが多すぎない読みやすい文章にも対応します。</p>
+      </article>
     </div>
   </div>
 </section>
 
 <!-- 使い方 -->
-<section class="rs-section rs-section-alt">
-  <div class="rs-inner">
-    <h2 class="rs-h2">使い方</h2>
-    <ol class="rs-steps">
-      <li><strong>文章を貼りつける</strong> — ふりがなをつけたい文章を入力欄へ。画像からの読み込みもOK。</li>
-      <li><strong>範囲を選んでボタンを押す</strong> — 「すべての漢字」か「むずかしい漢字だけ」を選択。</li>
-      <li><strong>結果をコピーして使う</strong> — ふりがな付きの文章をコピーして教材やプリントに。</li>
-    </ol>
+<section class="rs-section" id="steps">
+  <div class="rs-c">
+    <div class="rs-sh">
+      <div class="rs-k">使い方</div>
+      <h2 class="rs-h2">3ステップですぐ完成。</h2>
+      <p>むずかしい設定や会員登録は必要ありません。</p>
+    </div>
+    <div class="rs-steps">
+      <article class="rs-step">
+        <span class="rs-num">1</span>
+        <div class="rs-icon">✍️</div>
+        <h3>文章を入力</h3>
+        <p>文章を貼りつけるか、画像から文章を読み込みます。</p>
+      </article>
+      <article class="rs-step">
+        <span class="rs-num">2</span>
+        <div class="rs-icon">🔘</div>
+        <h3>範囲を選ぶ</h3>
+        <p>すべての漢字、またはむずかしい漢字だけを選びます。</p>
+      </article>
+      <article class="rs-step">
+        <span class="rs-num">3</span>
+        <div class="rs-icon">📋</div>
+        <h3>コピーして使う</h3>
+        <p>教材、プリント、Webページなどに貼りつけます。</p>
+      </article>
+    </div>
   </div>
 </section>
 
 <!-- FAQ -->
-<section class="rs-section">
-  <div class="rs-inner">
-    <h2 class="rs-h2">よくある質問</h2>
+<section class="rs-section rs-section-alt" id="faq">
+  <div class="rs-c">
+    <div class="rs-sh">
+      <div class="rs-k">よくある質問</div>
+      <h2 class="rs-h2">利用前に気になること。</h2>
+    </div>
     <details class="faq-item">
       <summary class="faq-q"><span>無料で使えますか？</span><span class="faq-icon">+</span></summary>
       <div class="faq-a">はい、登録不要・無料でお使いいただけます。</div>
@@ -151,9 +203,13 @@
 </section>
 
 <!-- CTA -->
-<section class="rs-section rs-section-cta">
-  <div class="rs-inner">
-    <a class="rs-cta" href="https://rubi-shokunin.vercel.app" target="_blank" rel="noopener">ふりがなメーカーを使ってみる →</a>
+<section class="rs-section" id="start">
+  <div class="rs-c">
+    <div class="rs-cta">
+      <h2>漢字を、もっと読みやすく。</h2>
+      <p>宿題、読書、教材づくりに。文章を貼りつけるだけで、ふりがな付きの文章を作れます。</p>
+      <a class="rs-btn rs-btn-white" href="https://rubi-shokunin.vercel.app" target="_blank" rel="noopener">無料で使ってみる →</a>
+    </div>
   </div>
 </section>
 

@@ -1,70 +1,118 @@
 /* ============================================================
-   ふりがなメーカー ランディング（枠のみ・仮スタイル）
-   ※ デザインは後で入れる。構造が見える最低限のスタイルだけ。
+   ふりがなメーカー（るび職人）ランディング
    ============================================================ */
 
-.rs-inner { max-width: 860px; margin: 0 auto; padding: 0 20px; }
-
-/* 作成中バナー（仮） */
-.rs-wip {
-  background: #fff4e5;
-  color: #8a5a1f;
-  font-size: 13px;
-  font-weight: 700;
-  text-align: center;
-  padding: 10px 16px;
+:root{
+  --rs-b:#4e8de8; --rs-bd:#2459a8; --rs-o:#f59b45; --rs-y:#ffd866;
+  --rs-i:#24334a; --rs-m:#66758a; --rs-l:#dce8f5;
 }
 
-/* HERO（仮） */
-.rs-hero { padding: 64px 0 48px; background: #f7f5f0; }
-.rs-eyebrow { font-size: 14px; font-weight: 700; color: var(--color-accent); margin: 0 0 8px; }
-.rs-title { font-size: 2.2rem; font-weight: 900; margin: 0 0 16px; color: #1c1c2e; }
-.rs-lead { font-size: 15px; line-height: 1.9; color: #555; margin: 0 0 28px; }
-.rs-cta {
-  display: inline-block;
-  background: var(--color-accent);
-  color: #fff;
-  font-weight: 700;
-  padding: 14px 28px;
-  border-radius: 8px;
-  text-decoration: none;
+.rs-c{ width:min(1100px, calc(100% - 40px)); margin:0 auto; }
+
+/* HERO */
+.rs-hero{
+  padding:64px 0 72px;
+  background:radial-gradient(circle at 10% 10%, #ffd86655, transparent 25%),
+             radial-gradient(circle at 90% 20%, #4e8de833, transparent 28%),
+             linear-gradient(#fff, #f3f9ff);
 }
-.rs-cta:hover { opacity: 0.9; }
-
-/* セクション共通（仮） */
-.rs-section { padding: 56px 0; }
-.rs-section-alt { background: #f7f5f0; }
-.rs-section-cta { text-align: center; }
-.rs-h2 { font-size: 1.5rem; font-weight: 800; color: #1c1c2e; margin: 0 0 28px; }
-
-/* 特徴カード（仮） */
-.rs-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.rs-card { border: 1px solid #e5e5e5; border-radius: 8px; padding: 20px; background: #fff; }
-.rs-card h3 { font-size: 1rem; margin: 0 0 10px; color: #1c1c2e; }
-.rs-card p { font-size: 0.85rem; line-height: 1.8; color: #666; margin: 0; }
-
-/* 使い方（仮） */
-.rs-steps { margin: 0; padding-left: 1.4em; display: flex; flex-direction: column; gap: 14px; font-size: 0.95rem; line-height: 1.8; color: #444; }
-
-/* FAQ（仮・detailsベース） */
-.faq-item { border-bottom: 1px solid #e5e5e5; }
-.faq-q {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 4px;
-  cursor: pointer;
-  font-weight: 700;
-  color: #1c1c2e;
-  list-style: none;
+.rs-hg{ display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; }
+.rs-badge{
+  display:inline-block; padding:6px 14px; border-radius:999px;
+  background:#fff7cf; color:#765600; font-size:13px; font-weight:900;
 }
-.faq-q::-webkit-details-marker { display: none; }
-.faq-icon { color: var(--color-accent); font-weight: 700; }
-details[open] .faq-icon { transform: rotate(45deg); }
-.faq-a { padding: 0 4px 16px; font-size: 0.9rem; line-height: 1.8; color: #555; }
+.rs-h1{
+  font-size:clamp(32px, 4.2vw, 52px); line-height:1.25; letter-spacing:-.02em;
+  margin:16px 0; color:var(--rs-i);
+}
+.rs-h1 span{ color:var(--rs-b); }
+.rs-lead{ font-size:16px; line-height:1.9; color:var(--rs-m); margin:0 0 26px; }
 
-@media (max-width: 768px) {
-  .rs-cards { grid-template-columns: 1fr; }
-  .rs-title { font-size: 1.7rem; }
+.rs-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:54px; padding:0 24px; border-radius:14px;
+  font-weight:900; text-decoration:none;
+}
+.rs-btn-main{ background:var(--rs-o); color:#fff; box-shadow:0 12px 25px #f59b4547; }
+.rs-btn-main:hover{ opacity:.92; }
+.rs-btn-white{ background:#fff; color:var(--rs-bd); }
+.rs-btn-white:hover{ opacity:.92; }
+
+.rs-heroimg{ position:relative; }
+.rs-heroimg img{
+  width:100%; height:auto; display:block; border-radius:24px;
+  box-shadow:0 18px 45px #3056841f;
+}
+.rs-float{
+  position:absolute; padding:8px 14px; border-radius:999px;
+  background:#fff; box-shadow:0 8px 24px #31578924; font-size:13px; font-weight:900;
+  color:var(--rs-i);
+}
+.rs-fa{ right:-8px; top:24px; }
+.rs-fb{ left:-12px; bottom:28px; }
+
+/* section 共通 */
+.rs-section{ padding:76px 0; }
+.rs-section-alt{ background:#f7fafd; }
+.rs-sh{ text-align:center; max-width:720px; margin:0 auto 40px; }
+.rs-k{ color:var(--rs-b); font-size:14px; font-weight:900; letter-spacing:.08em; }
+.rs-h2{ font-size:clamp(26px, 3.4vw, 38px); line-height:1.3; margin:6px 0 0; color:var(--rs-i); }
+.rs-sh p{ color:var(--rs-m); margin:14px 0 0; }
+
+.rs-grid3{ display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
+.rs-grid2{ display:grid; grid-template-columns:repeat(2, 1fr); gap:22px; }
+
+.rs-card{
+  background:#fff; border:1px solid var(--rs-l); border-radius:22px;
+  padding:22px; box-shadow:0 10px 30px #33547a14;
+}
+.rs-card img{ width:100%; height:auto; border-radius:16px; margin-bottom:16px; display:block; }
+.rs-card h3{ margin:0 0 8px; font-size:19px; color:var(--rs-i); }
+.rs-card p{ margin:0; color:var(--rs-m); font-size:14px; line-height:1.8; }
+
+.rs-card-icon{ display:flex; flex-direction:column; justify-content:center; }
+.rs-icon{ font-size:44px; margin:0 0 14px; }
+
+/* 使い方 */
+.rs-steps{ display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
+.rs-step{
+  position:relative; background:#fff; border:1px solid var(--rs-l);
+  border-radius:22px; padding:30px 24px 24px;
+}
+.rs-num{
+  position:absolute; top:-18px; left:22px; width:40px; height:40px;
+  border-radius:50%; display:grid; place-items:center;
+  background:var(--rs-b); color:#fff; font-weight:900; border:5px solid #fff;
+}
+.rs-step h3{ margin:0 0 8px; color:var(--rs-i); }
+.rs-step p{ margin:0; color:var(--rs-m); font-size:14px; line-height:1.8; }
+
+/* FAQ（既存 .faq-item を流用） */
+.faq-item{ max-width:820px; margin:0 auto 14px; background:#fff; border:1px solid var(--rs-l); border-radius:18px; overflow:hidden; }
+.faq-q{ cursor:pointer; padding:20px 24px; font-weight:900; color:var(--rs-i); display:flex; justify-content:space-between; align-items:center; gap:12px; list-style:none; }
+.faq-q::-webkit-details-marker{ display:none; }
+.faq-icon{ color:var(--rs-b); font-weight:700; }
+details[open] .faq-icon{ transform:rotate(45deg); }
+.faq-a{ padding:0 24px 22px; color:var(--rs-m); line-height:1.8; }
+
+/* CTA */
+.rs-cta{
+  padding:56px 28px; border-radius:34px; text-align:center; color:#fff;
+  background:linear-gradient(135deg, #4e8de8, #356fca);
+  box-shadow:0 22px 50px #3463a93d;
+}
+.rs-cta h2{ margin:0; font-size:clamp(24px, 3.2vw, 34px); }
+.rs-cta p{ max-width:640px; margin:12px auto 24px; color:#ffffffe6; }
+
+@media(max-width:900px){
+  .rs-hg{ grid-template-columns:1fr; }
+  .rs-hc{ text-align:center; }
+  .rs-grid3, .rs-steps{ grid-template-columns:1fr; }
+  .rs-grid2{ grid-template-columns:1fr; }
+}
+@media(max-width:600px){
+  .rs-hero{ padding:48px 0 60px; }
+  .rs-h1{ font-size:32px; }
+  .rs-lead{ font-size:15px; }
+  .rs-section{ padding:56px 0; }
 }
