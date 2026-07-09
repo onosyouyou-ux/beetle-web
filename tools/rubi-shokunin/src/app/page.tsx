@@ -140,7 +140,7 @@ export default function Home() {
         </svg>
         <div>
           <p className="eyebrow">かんじに ふりがなを つけよう！</p>
-          <h1 className="title">ふりがなメーカー</h1>
+          <h1 className="title">ルビメーカー</h1>
         </div>
       </div>
       <p className="lead">

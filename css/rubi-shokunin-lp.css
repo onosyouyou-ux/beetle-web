@@ -21,9 +21,14 @@
   display:inline-block; padding:6px 14px; border-radius:999px;
   background:#fff7cf; color:#765600; font-size:13px; font-weight:900;
 }
+.rs-appname{
+  margin:16px 0 0; font-size:15px; font-weight:900; letter-spacing:.08em;
+  color:var(--rs-b);
+}
+.rs-appname::before{ content:""; display:inline-block; width:18px; height:2px; background:var(--rs-b); vertical-align:middle; margin-right:8px; }
 .rs-h1{
   font-size:clamp(32px, 4.2vw, 52px); line-height:1.25; letter-spacing:-.02em;
-  margin:16px 0; color:var(--rs-i);
+  margin:8px 0 16px; color:var(--rs-i);
 }
 .rs-h1 span{ color:var(--rs-b); }
 .rs-lead{ font-size:16px; line-height:1.9; color:var(--rs-m); margin:0 0 26px; }

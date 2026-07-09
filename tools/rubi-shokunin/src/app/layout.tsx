@@ -8,7 +8,7 @@ const GA_ID = 'G-N6JXJGQ1Q6';
 // アプリ画面はランディングを正規URLとして指す（評価をランディングに集約）。
 const APP_URL = 'https://rubi-shokunin.vercel.app';
 const LANDING_URL = 'https://www.beetle-web.jp/tools/rubi-shokunin/';
-const TITLE = 'ふりがなメーカー';
+const TITLE = 'ルビメーカー';
 const DESC = 'ぶんしょうを はりつけるだけで、かんじに ふりがなが つくよ。がぞうからの よみこみにも たいおう。';
 const OG_IMAGE = 'https://www.beetle-web.jp/assets/images/OG.jpg';
 
@@ -46,7 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <span className="sep">›</span>
           <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール一覧</a>
           <span className="sep">›</span>
-          <span className="bc-current">ふりがなメーカー</span>
+          <span className="bc-current">ルビメーカー</span>
           <span className="bc-spacer" />
           <a href={LANDING_URL} target="_blank" rel="noopener" className="bc-ref-btn">
             リファレンス
