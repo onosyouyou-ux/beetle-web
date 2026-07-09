@@ -73,26 +73,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/eigo-lp.css?v=2">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/eigo-lp.css?v=3">
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="https://www.beetle-web.jp" target="_blank" rel="noopener" aria-label="BEETLE合同会社のサイトを開く">
-        <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M8 7.5h8v8.8a4 4 0 0 1-8 0V7.5Z" fill="white"/><path d="M9.5 7.5C9.6 5.5 10.4 4.5 12 4.5s2.4 1 2.5 3" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M8 10H5M19 10h-3M8 14H5M19 14h-3M10 4 8.8 2.8M14 4l1.2-1.2" stroke="white" stroke-width="1.6" stroke-linecap="round"/></svg>
-        </span>
-        <span>BEETLE合同会社</span>
-      </a>
-      <nav class="nav" aria-label="ページ内ナビゲーション">
-        <a href="#use">こんなときに</a>
-        <a href="#features">できること</a>
-        <a href="#steps">使い方</a>
-        <a href="#faq">よくある質問</a>
-        <a class="nav-cta" href="https://www.beetle-web.jp/tools/eigo/">無料で使う</a>
-      </nav>
-    </div>
-  </header>
+  <div id="site-header"></div>
 
   <main>
     <section class="hero">
@@ -236,8 +221,29 @@
     </section>
   </main>
 
-  <footer><div class="container footer-inner"><a class="brand" href="https://www.beetle-web.jp" target="_blank" rel="noopener"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 7.5h8v8.8a4 4 0 0 1-8 0V7.5Z" fill="white"/><path d="M9.5 7.5C9.6 5.5 10.4 4.5 12 4.5s2.4 1 2.5 3" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></span><span>BEETLE合同会社</span></a><div>© BEETLE LLC.</div><div class="footer-links"><a href="https://www.beetle-web.jp/">会社サイト</a><a href="https://www.beetle-web.jp/test-tools.html">無料ツール</a></div></div></footer>
+  <footer class="footer">
+    <div class="footer-skyline-bar">
+      <div class="footer-skyline-inner">
+        <a class="footer-logo" href="/">BEET<span>LE</span></a>
+      </div>
+    </div>
+    <div class="footer-link-bar">
+      <div class="footer-link-inner">
+        <nav class="footer-link-nav">
+          <a href="/">ホーム</a>
+          <a href="/test-tools.html">ツール</a>
+          <a href="/blog/">コラム</a>
+          <a href="/#contact">お問い合わせ</a>
+        </nav>
+        <div class="footer-link-right">
+          <a href="/privacy">プライバシーポリシー</a>
+          <span>© 2026 BEETLE合同会社</span>
+        </div>
+      </div>
+    </div>
+  </footer>
 
+  <script src="/js/common.js"></script>
   <script src="/js/eigo-lp.js"></script>
 </body>
 </html>

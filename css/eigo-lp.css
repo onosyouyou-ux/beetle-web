@@ -49,20 +49,7 @@ a{color:inherit;text-decoration:none}
 .section-head h2{font-size:clamp(30px,4vw,45px);line-height:1.35;margin:0 0 14px;letter-spacing:-.04em}
 .section-head p{margin:0;color:var(--ink-soft);font-size:16px}
 
-/* header */
-.site-header{
-  height:72px;display:flex;align-items:center;background:rgba(255,255,255,.92);
-  border-bottom:1px solid #edf1f7;position:sticky;top:0;z-index:30;
-  backdrop-filter:blur(14px);
-}
-.header-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.08em}
-.brand-mark{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#1c3156,#7658d7);display:grid;place-items:center;box-shadow:0 8px 18px rgba(76,62,159,.18)}
-.brand-mark svg{width:20px;height:20px}
-.brand span{font-size:14px}
-.nav{display:flex;align-items:center;gap:28px;font-size:13px;color:#53627a}
-.nav a:hover{color:var(--primary)}
-.nav-cta{padding:10px 18px;border-radius:999px;background:var(--ink);color:#fff!important;font-weight:800;box-shadow:0 8px 20px rgba(23,43,81,.14)}
+/* header: 共通パーシャル（#site-header + common.css）を使用 */
 
 /* hero */
 .hero{
@@ -200,14 +187,28 @@ a{color:inherit;text-decoration:none}
 .final{padding:82px 0 90px;background:#fff}
 .final-box{border-radius:30px;background:linear-gradient(135deg,#7356d7,#3f83dc);color:#fff;text-align:center;padding:58px 30px;position:relative;overflow:hidden;box-shadow:0 24px 55px rgba(72,81,171,.24)}
 .final-box::before,.final-box::after{content:"";position:absolute;border-radius:50%;border:26px solid rgba(255,255,255,.08)}.final-box::before{width:180px;height:180px;left:-70px;top:-70px}.final-box::after{width:240px;height:240px;right:-90px;bottom:-110px}.final-box h2{font-size:clamp(30px,4vw,44px);line-height:1.35;margin:0 0 12px;position:relative}.final-box p{margin:0 0 24px;opacity:.88;position:relative}.final-box .btn{background:#fff;color:#5d45bd;position:relative;min-width:230px}
-footer{border-top:1px solid #e8edf4;padding:34px 0;color:#738097;font-size:12px}.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}.footer-links{display:flex;gap:20px}
+/* footer: トップページと同じ2段フッター（ロゴ部は詰めた高さで固定） */
+.footer{background:#0a0a0f}
+.footer-skyline-bar{background:#0a0a0f}
+.footer-skyline-inner{padding:16px 20px 12px;text-align:center}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.7rem;color:#fff;letter-spacing:0.08em;text-decoration:none}
+.footer-logo span{color:var(--color-accent)}
+.footer-link-bar{background:#111118;border-top:1px solid rgba(255,255,255,0.07)}
+.footer-link-inner{max-width:1232px;margin:0 auto;padding:14px 40px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.footer-link-nav{display:flex;gap:24px;flex-wrap:wrap}
+.footer-link-nav a{font-size:0.8rem;color:rgba(255,255,255,0.45);text-decoration:none;transition:color .15s}
+.footer-link-nav a:hover{color:rgba(255,255,255,0.85)}
+.footer-link-right{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.footer-link-right a{font-size:0.78rem;color:rgba(255,255,255,0.35);text-decoration:none;transition:color .15s}
+.footer-link-right a:hover{color:rgba(255,255,255,0.7)}
+.footer-link-right span{font-size:0.78rem;color:rgba(255,255,255,0.25)}
 
 @media (max-width:980px){
   .hero-grid,.reason-wrap{grid-template-columns:1fr;gap:44px}.hero-copy{max-width:720px}.hero-visual{min-height:470px}.hero-card{width:min(92%,560px)}
   .cards-3,.steps{grid-template-columns:1fr 1fr}.feature-grid{grid-template-columns:1fr}.feature-card{min-height:290px}.reason-visual{order:2}.reason-copy{order:1}.preview-body{grid-template-columns:1fr}.preview-side{display:grid;grid-template-columns:1.2fr repeat(3,1fr);gap:8px;align-items:center}.preview-side h4,.preview-side p{grid-column:1}.preview-side p{margin:0}.preview-side .side-chip{margin:0;text-align:center}
 }
 @media (max-width:680px){
-  .container{width:min(calc(100% - 28px),var(--container))}.section{padding:70px 0}.site-header{height:64px}.nav a:not(.nav-cta){display:none}.nav-cta{padding:9px 14px}.brand span{font-size:12px}
+  .container{width:min(calc(100% - 28px),var(--container))}.section{padding:70px 0}
   .hero{padding:52px 0 62px}.hero-grid{gap:34px}.hero h1{font-size:43px}.hero-copy{font-size:15px}.cta-row{display:grid;grid-template-columns:1fr}.btn{width:100%}.hero-note{gap:9px}.hero-visual{min-height:390px}.hero-orb{width:360px;height:360px}.hero-card{width:100%;padding:15px;border-radius:24px}.float-label{font-size:10px;padding:6px 9px}.float-label.one{right:-4px;top:20px}.float-label.two{left:-4px;bottom:32px}.float-label.three{right:10px;bottom:-16px}.word-list{gap:7px}.word-item{grid-template-columns:24px 1fr 26px;padding:7px 7px}.word-num{width:22px;height:22px;font-size:9px}.word-text{font-size:12px}.speaker{width:24px;height:24px}.voice-chip{font-size:9px;padding:7px 4px}.app-action{grid-template-columns:1fr}.app-photo{display:none}
   .section-head{margin-bottom:32px}.section-head h2{font-size:31px}.section-head p{font-size:14px}
   .cards-3,.steps{grid-template-columns:1fr}.card-visual{height:220px}
@@ -216,6 +217,6 @@ footer{border-top:1px solid #e8edf4;padding:34px 0;color:#738097;font-size:12px}
   .preview-shell{padding:15px;border-radius:22px}.preview-toolbar{align-items:flex-start;flex-direction:column}.preview-side{display:block}.preview-side p{margin-bottom:16px}.preview-side .side-chip{margin-top:8px;text-align:left}.preview-main{padding:12px}.preview-slots{grid-template-columns:1fr}.preview-controls{grid-template-columns:1fr}.preview-controls span:not(:first-child){display:none}
   .faq-question{padding:17px 16px;font-size:14px}.faq-answer p{padding:0 16px 17px}
   .final{padding:60px 0}.final-box{padding:44px 20px;border-radius:24px}.final-box p{font-size:14px}
-  .footer-inner{flex-direction:column;align-items:flex-start}.footer-links{flex-wrap:wrap}
+  .footer-link-inner{padding:12px 20px;flex-direction:column;gap:10px;align-items:flex-start}
 }
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
