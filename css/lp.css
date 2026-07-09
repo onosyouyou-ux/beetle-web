@@ -42,7 +42,8 @@ a { color: inherit; text-decoration: none; }
 .header-menu-arrow { flex-shrink: 0; opacity: 0.5; transition: transform 0.2s; }
 .header-menu-parent.open .header-menu-arrow { transform: rotate(180deg); }
 .header-menu-children { display: flex; flex-direction: column; border-left: 2px solid rgba(192,99,76,0.3); margin: 4px 12px 8px 24px; border-radius: 0 0 2px 2px; }
-.header-menu-children a { font-family: var(--font-ja); font-size: 0.82rem; font-weight: 600; color: var(--navy); opacity: 0.75; padding: 8px 12px; border-bottom: 1px solid var(--gray-lt); transition: color 0.15s, opacity 0.15s; }
+.header-menu-children a { display: flex; align-items: center; gap: 8px; white-space: nowrap; font-family: var(--font-ja); font-size: 0.8rem; font-weight: 600; color: var(--navy); opacity: 0.75; padding: 8px 12px; border-bottom: 1px solid var(--gray-lt); transition: color 0.15s, opacity 0.15s; }
+.header-menu-children a svg { flex-shrink: 0; color: var(--color-accent); opacity: 0.8; }
 .header-menu-children a:last-child { border-bottom: none; }
 .header-menu-children a:hover { color: var(--color-accent); opacity: 1; }
 .header-menu-item { font-family: var(--font-ja); font-size: 0.88rem; font-weight: 700; color: var(--navy); padding: 14px 20px; border-top: 1px solid var(--gray-lt); transition: background 0.15s, color 0.15s; }
