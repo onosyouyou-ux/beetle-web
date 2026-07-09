@@ -214,3 +214,23 @@ details[open] .faq-icon{transform:rotate(45deg);}
 .feat-em{font-size:50px;height:82px;width:92px;display:flex;align-items:center;justify-content:center;justify-self:center;}
 .step-em{font-size:34px;height:58px;width:58px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#f8f4ee;border-radius:10px;}
 .mp-img-em{background:linear-gradient(180deg,#bfe0f5,#cfeccd);display:flex;align-items:center;justify-content:center;font-size:24px;}
+
+/* footer: トップページと同じ2段フッター（ロゴ部は詰めた高さで固定） */
+.footer{background:#0a0a0f}
+.footer-skyline-bar{background:#0a0a0f}
+.footer-skyline-inner{padding:16px 20px 12px;text-align:center}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.7rem;color:#fff;letter-spacing:0.08em;text-decoration:none}
+.footer-logo span{color:var(--color-accent)}
+.footer-link-bar{background:#111118;border-top:1px solid rgba(255,255,255,0.07)}
+.footer-link-inner{max-width:1232px;margin:0 auto;padding:14px 40px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.footer-link-nav{display:flex;gap:24px;flex-wrap:wrap}
+.footer-link-nav a{font-size:0.8rem;color:rgba(255,255,255,0.45);text-decoration:none;transition:color .15s}
+.footer-link-nav a:hover{color:rgba(255,255,255,0.85)}
+.footer-link-right{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.footer-link-right a{font-size:0.78rem;color:rgba(255,255,255,0.35);text-decoration:none;transition:color .15s}
+.footer-link-right a:hover{color:rgba(255,255,255,0.7)}
+.footer-link-right span{font-size:0.78rem;color:rgba(255,255,255,0.25)}
+@media (max-width:680px){
+  .footer-logo{font-size:1.4rem}
+  .footer-link-inner{padding:12px 20px;flex-direction:column;gap:10px;align-items:flex-start}
+}

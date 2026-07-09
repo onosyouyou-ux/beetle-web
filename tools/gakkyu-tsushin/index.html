@@ -72,23 +72,12 @@
 }
 </script>
 <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="/css/gakkyu-tsushin-lp.css?v=11">
+<link rel="stylesheet" href="/css/gakkyu-tsushin-lp.css?v=12">
 </head>
 <body>
 
-<!-- ── ヘッダー ── -->
-<header class="lp-nav">
-  <div class="lp-nav-in">
-    <a class="lp-logo" href="https://www.beetle-web.jp"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="26" height="26"><span>BEETLE</span></a>
-    <nav class="lp-nav-links">
-      <a href="#features">できること</a>
-      <a href="#steps">使い方</a>
-      <a href="#faq">よくある質問</a>
-      <a href="https://www.beetle-web.jp/#contact">お問い合わせ</a>
-    </nav>
-    <a class="lp-nav-cta" href="https://gakkyu-tsushin.vercel.app" target="_blank" rel="noopener">無料で試す</a>
-  </div>
-</header>
+<!-- ── ヘッダー（共通パーシャル） ── -->
+<div id="site-header"></div>
 
 <!-- ── ヒーロー ── -->
 <section class="lp-hero">
@@ -303,7 +292,27 @@
   </div>
 </section>
 
-<div id="site-footer"></div>
+<footer class="footer">
+  <div class="footer-skyline-bar">
+    <div class="footer-skyline-inner">
+      <a class="footer-logo" href="/">BEET<span>LE</span></a>
+    </div>
+  </div>
+  <div class="footer-link-bar">
+    <div class="footer-link-inner">
+      <nav class="footer-link-nav">
+        <a href="/">ホーム</a>
+        <a href="/test-tools.html">ツール</a>
+        <a href="/blog/">コラム</a>
+        <a href="/#contact">お問い合わせ</a>
+      </nav>
+      <div class="footer-link-right">
+        <a href="/privacy">プライバシーポリシー</a>
+        <span>© 2026 BEETLE合同会社</span>
+      </div>
+    </div>
+  </div>
+</footer>
 <script src="/js/common.js"></script>
 
 </body>
