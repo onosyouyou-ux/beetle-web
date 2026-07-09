@@ -15,15 +15,6 @@ body::before,body::after{
 body::before{width:200px;height:200px;background:rgba(255,107,107,0.15);top:5%;left:-50px;animation:float 5s ease-in-out infinite alternate;}
 body::after {width:160px;height:160px;background:rgba(84,160,255,0.15);top:30%;right:-40px;animation:float 7s ease-in-out infinite alternate;}
 
-/* PC・タブレット横: イラスト背景（スマホは従来のグラデーション） */
-@media (min-width: 768px){
-  body{
-    background:url('/assets/images/eigo-bg-pc.jpg') center / cover no-repeat fixed,
-               linear-gradient(135deg,#a8d8ff 0%,#6fb3fb 50%,#7ee8e0 100%);
-  }
-  body::before,body::after{display:none;}
-}
-
 #app{
   position:relative;z-index:1;
   display:flex;flex-direction:column;align-items:center;
@@ -65,20 +56,6 @@ textarea{resize:none;}
 
 .hist-wrap{display:flex;flex-direction:column;gap:10px;}
 @media(min-width:680px){.hist-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;}}
-
-.eigo-note{
-  position:relative;z-index:1;
-  max-width:520px;margin:0 auto 36px;padding:18px 22px;
-  text-align:center;
-  background:rgba(255,255,255,0.92);
-  border-radius:20px;
-  box-shadow:0 8px 28px rgba(0,0,0,0.14);
-  color:#2d5a75;font-size:14px;line-height:1.9;
-}
-.eigo-note p{margin:0;}
-.eigo-note p + p{margin-top:6px;}
-.eigo-note a{color:#1a6fa8;font-weight:bold;text-decoration:underline;text-underline-offset:2px;}
-.eigo-note a:hover{color:#0d5c8a;}
 
 .site-footer-app{
   background:#1c1c2e;
