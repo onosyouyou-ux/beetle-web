@@ -235,6 +235,9 @@ rt { font-size: 11px; color: var(--blue-dark); letter-spacing: 0; font-weight: 7
 
 .output-actions { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
 .output-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: #ffffff;
   border: 2px solid #CDEEDC;
   color: var(--green-dark);
@@ -274,3 +277,27 @@ rt { font-size: 11px; color: var(--blue-dark); letter-spacing: 0; font-weight: 7
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── 印刷（出力の ふりがな つき ぶんしょう だけ 紙に出す） ── */
+@media print {
+  body { background: #fff; display: block; }
+  .bc-nav,
+  .site-footer-app,
+  .header-row,
+  .lead,
+  .image-row,
+  .options,
+  textarea,
+  .hint,
+  button.run-btn,
+  .output-actions,
+  .seal,
+  .error,
+  .toast { display: none !important; }
+  .app-main { padding: 0; display: block; }
+  .app { max-width: none; }
+  .card { box-shadow: none; padding: 0; border-radius: 0; background: none; }
+  .output-wrap { margin: 0; padding: 0; background: none; border: none; border-radius: 0; }
+  .output { font-size: 18px; line-height: 3; color: #000; }
+  rt { color: #000; font-weight: 500; }
+}
