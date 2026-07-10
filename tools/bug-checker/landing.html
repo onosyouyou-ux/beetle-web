@@ -45,8 +45,20 @@
   "description": "スクショを貼るだけでAIがバグ判定＆起票内容を自動生成するWebツール。タイトル・再現手順・期待値・実際の動作を自動出力。"
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "本当に画像を貼るだけですか？", "acceptedAnswer": { "@type": "Answer", "text": "はい。スクリーンショットを貼り、必要であれば補足メモを加えるだけで使えます。ログイン・インストールは不要です。" } },
+    { "@type": "Question", "name": "判定結果は絶対ですか？", "acceptedAnswer": { "@type": "Answer", "text": "AIの判定は判断の補助です。最終判断は、仕様や実際の文脈にあわせて確認してください。" } },
+    { "@type": "Question", "name": "どんな内容が出力されますか？", "acceptedAnswer": { "@type": "Answer", "text": "バグか否かの整理に加えて、タイトル・再現手順・期待値・実際の結果・環境など、起票の下書きになる情報を出力します。" } },
+    { "@type": "Question", "name": "無料で使えますか？", "acceptedAnswer": { "@type": "Answer", "text": "月1万回まで無料で使えます。会員登録は不要で、ブラウザを開けばすぐに試せます。" } }
+  ]
+}
+</script>
 <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="/css/bug-checker-lp.css">
+<link rel="stylesheet" href="/css/bug-checker-lp.css?v=2">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -55,148 +67,268 @@
   gtag('config', 'G-N6JXJGQ1Q6');
 </script>
 </head>
-<body>
+<body class="bc-lp">
 
 <div id="site-header"></div>
 
-<div class="container">
+<main>
 
   <!-- HERO -->
   <section class="hero">
-    <span class="hero-emoji">🐛</span>
-    <div class="hero-label">BUG DETECTOR</div>
-    <h1 class="hero-title">これってバグなの？</h1>
-    <p class="hero-sub">
-      画像を貼るだけで<strong>バグか否かを即判定</strong>。<br>
-      バグなら<strong>起票内容を自動生成</strong>します。<br>
-      タイトル・再現手順・期待値まで全部出てくる。
-    </p>
-    <a class="cta-btn" href="https://bug-checker.vercel.app" target="_blank" rel="noopener">🔍 バグスキャンを試す</a>
-    <span class="arrow-down">↓</span>
-  </section>
-
-  <!-- ペインポイント -->
-  <section class="pain-section">
-    <div class="pain-bubble">
-      <span class="pain-icon">😵</span>
-      <div class="pain-speech">
-        <span class="pain-speech-label">テスト中のあるある…</span>
-        「これバグ？仕様？どっちだろ…」
+    <div class="wrap hero-grid">
+      <div class="hero-copy content-stack">
+        <div>
+          <span class="eyebrow">Bug Detector</span>
+          <h1>これってバグなの？</h1>
+        </div>
+        <p class="lead">
+          画像を貼るだけで、AIがバグか否かを即判定。<br>
+          バグなら起票内容を自動生成。<br>
+          タイトル・再現手順・期待値まで、最初の整理を一気に進めます。
+        </p>
+        <ul class="hero-badges" aria-label="主要な特徴">
+          <li class="chip">🐛 バグ / 仕様 / 不明 を整理</li>
+          <li class="chip">📋 起票内容を自動生成</li>
+          <li class="chip">⚡ 貼ってすぐ使える</li>
+          <li class="chip">🆓 月1万回まで無料</li>
+        </ul>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://bug-checker.vercel.app" target="_blank" rel="noopener">🔍 バグスキャンを試す</a>
+          <a class="btn btn-secondary" href="#features">できることを見る</a>
+        </div>
+        <div class="mini-badges">
+          <span class="chip">登録不要</span>
+          <span class="chip">ブラウザで動く</span>
+          <span class="chip">インストール不要</span>
+        </div>
       </div>
-    </div>
-    <div class="pain-detail">
-      <span class="pain-detail-icon">😤</span>
-      <p class="pain-detail-text">
-        怪しい挙動を見つけたけど、バグか仕様か判断に迷う。<br>
-        起票しようにも<strong>「何を書けばいいか」</strong>がわからない。<br>
-        毎回ゼロから書くのも地味にしんどい。
-      </p>
-    </div>
-    <div class="pain-solution">
-      <span class="pain-solution-icon">✨</span>
-      <p class="pain-solution-text">
-        <strong>スクショを貼るだけで解決！</strong>
-        このバグ確認ツールがAIで即判定 → 起票テンプレートを一発生成。<br>
-        あとはコピーして貼るだけ。
-      </p>
+      <div class="hero-art paper">
+        <img src="/assets/images/bug-checker-lp/hero.jpg" alt="めがねのQA担当がスクリーンショットを虫めがねで調べ、歌舞伎エンジニアが不安そうに見守る浮世絵風イラスト" width="1600" height="900">
+      </div>
     </div>
   </section>
 
-  <!-- 特徴 -->
-  <h2 class="section-title">✨ できること</h2>
-  <div class="features">
-
-    <div class="feature-card">
-      <span class="feature-icon">🔍</span>
-      <div>
-        <div class="feature-name">AIがバグ確認・即判定</div>
-        <div class="feature-desc">
-          スクショを見てAIが「バグ・仕様・不明」を判定。<br>
-          バグ確認の判断に迷う時間をゼロにします。
+  <!-- 困りごと -->
+  <section id="problems" class="section">
+    <div class="wrap grid-2">
+      <div class="content-stack">
+        <div>
+          <span class="eyebrow">こんなことで困っていませんか</span>
+          <h2>「これバグ？ 仕様？」で止まる時間が、いちばん惜しい。</h2>
         </div>
-        <span class="feature-tag">🐛 バグ / 仕様 / 不明</span>
+        <p class="lead">
+          怪しい挙動を見つけたのに、判断に迷う。起票しようとしても、何を書けばいいか分からない。
+          そんな“現場のあるある”を、このツールは軽くします。
+        </p>
+        <ul class="problem-list">
+          <li class="problem-item">怪しい挙動を見つけたが、バグか仕様か判断に迷う。</li>
+          <li class="problem-item">起票しようにも、何を書けばいいか毎回止まってしまう。</li>
+          <li class="problem-item">確認前の整理が足りず、相談の往復が増えてしまう。</li>
+          <li class="problem-item">毎回ゼロから報告を書くのが、地味にしんどい。</li>
+        </ul>
+      </div>
+      <div class="illustration paper">
+        <img src="/assets/images/bug-checker-lp/problem.jpg" alt="「仕様？」「バグ？」の張り紙に囲まれて歌舞伎エンジニアが混乱し、めがねのQA担当が調査している浮世絵風イラスト" width="1400" height="1050" loading="lazy">
       </div>
     </div>
+  </section>
 
-    <div class="feature-card">
-      <span class="feature-icon">📋</span>
+  <!-- できること -->
+  <section id="features" class="section">
+    <div class="wrap content-stack">
       <div>
-        <div class="feature-name">起票内容を自動生成</div>
-        <div class="feature-desc">
-          タイトル・深刻度・再現手順・期待値・実際の動作まで自動で出力。<br>
-          コピーしてそのままチケットに貼れます。
-        </div>
-        <span class="feature-tag">📝 Jira / Redmine 等に対応</span>
+        <span class="eyebrow">できること</span>
+        <h2>スクショを貼るだけで、判断と起票の初速を上げる。</h2>
+      </div>
+      <p class="lead">
+        このツールは、判定だけで終わりません。判断の補助から、起票の下書きづくりまで、一連の流れを短くします。
+      </p>
+      <div class="cards-3">
+        <article class="feature-card paper">
+          <img src="/assets/images/bug-checker-lp/feature-judgement.jpg" alt="アップロード→AI解析→判定結果の流れと、バグ・仕様・不明の3つの判定札を描いた浮世絵風の図解" width="1400" height="1050" loading="lazy">
+          <div class="feature-body">
+            <h3>AIがバグ確認・即判定</h3>
+            <p>スクリーンショットを見て、AIが「バグ・仕様・不明」を整理。判断に迷う時間を減らします。</p>
+            <ul class="feature-list">
+              <li>🐛 バグ / ✅ 仕様 / ❔ 不明 を切り分け</li>
+              <li>判断材料を先にそろえやすい</li>
+            </ul>
+          </div>
+        </article>
+        <article class="feature-card paper">
+          <img src="/assets/images/bug-checker-lp/feature-report.jpg" alt="パソコンから概要・再現手順・期待される結果・実際の結果・環境が書かれたバグ報告の巻物が出力される浮世絵風イラスト" width="1400" height="1050" loading="lazy">
+          <div class="feature-body">
+            <h3>起票内容を自動生成</h3>
+            <p>タイトル・再現手順・期待値・実際の結果・環境など、起票の下書きになる情報をまとめます。</p>
+            <ul class="feature-list">
+              <li>📋 Jira や Redmine に貼りやすい形</li>
+              <li>毎回ゼロから書く負担を軽くする</li>
+            </ul>
+          </div>
+        </article>
+        <article class="feature-card paper">
+          <img src="/assets/images/bug-checker-lp/feature-easy.jpg" alt="めがねのQA担当が出力された巻物を手にし、歌舞伎エンジニアが驚いている浮世絵風イラスト" width="1400" height="1050" loading="lazy">
+          <div class="feature-body">
+            <h3>貼ってすぐ使える</h3>
+            <p>ログイン不要・インストール不要。ブラウザを開いて、スクリーンショットを貼るだけで始められます。</p>
+            <ul class="feature-list">
+              <li>⚡ 準備いらずでその場で試せる</li>
+              <li>🆓 月1万回まで無料</li>
+            </ul>
+          </div>
+        </article>
       </div>
     </div>
+  </section>
 
-    <div class="feature-card">
-      <span class="feature-icon">⚡</span>
+  <!-- 選ばれる理由 -->
+  <section class="section">
+    <div class="wrap content-stack">
       <div>
-        <div class="feature-name">貼って3秒で完了</div>
-        <div class="feature-desc">
-          ログイン不要・インストール不要。<br>
-          ブラウザを開いてスクショを貼るだけ。
-        </div>
-        <span class="feature-tag">🆓 月1万回まで無料</span>
-        <span class="feature-tag">🔒 登録不要</span>
+        <span class="eyebrow">選ばれる理由</span>
+        <h2>ただの判定ツールではなく、現場の迷いを整理する道具。</h2>
+      </div>
+      <div class="cards-4">
+        <article class="reason-card">
+          <div class="icon-title"><span class="icon">1</span><h3>一次判断が早い</h3></div>
+          <p>仕様確認前に、まず何が論点かを見やすく整理できます。</p>
+        </article>
+        <article class="reason-card">
+          <div class="icon-title"><span class="icon">2</span><h3>起票の出だしが軽い</h3></div>
+          <p>報告の型が見えるので、書き始める負担を減らせます。</p>
+        </article>
+        <article class="reason-card">
+          <div class="icon-title"><span class="icon">3</span><h3>相談の往復を減らす</h3></div>
+          <p>整理された内容を持って相談できるので、会話が進みやすくなります。</p>
+        </article>
+        <article class="reason-card">
+          <div class="icon-title"><span class="icon">4</span><h3>すぐ使える</h3></div>
+          <p>特別な設定なし。ブラウザだけで、その場で使い始められます。</p>
+        </article>
       </div>
     </div>
-
-  </div>
+  </section>
 
   <!-- 使い方 -->
-  <h2 class="section-title">🪄 使い方</h2>
-  <div class="steps">
-    <div class="step">
-      <div class="step-line">
-        <div class="step-num">1</div>
-        <div class="step-connector"></div>
+  <section id="flow" class="section">
+    <div class="wrap content-stack">
+      <div>
+        <span class="eyebrow">使い方</span>
+        <h2>3ステップで完了。</h2>
       </div>
-      <div class="step-content">
-        <div class="step-label">📸 スクショを貼る</div>
-        <div class="step-note">気になる画面のスクリーンショットをドラッグ&ドロップ、またはクリックして選択。</div>
+      <p class="lead">
+        調査の入口として気軽に回せるように、流れはシンプルです。初見でも迷わず使えます。
+      </p>
+      <div class="steps">
+        <article class="step-card">
+          <div class="step-no">1</div>
+          <h3>スクショを貼る</h3>
+          <p>気になる画面のスクリーンショットをドラッグ＆ドロップ、またはクリックして選択します。</p>
+        </article>
+        <article class="step-card">
+          <div class="step-no">2</div>
+          <h3>バグスキャン実行</h3>
+          <p>ボタンを押すだけで、AIが内容を解析し、判断の材料を整理します。</p>
+        </article>
+        <article class="step-card">
+          <div class="step-no">3</div>
+          <h3>起票内容をコピー</h3>
+          <p>生成された内容を、そのままチケットに貼り付けて次のやりとりへ進めます。</p>
+        </article>
+      </div>
+      <div class="flow-badges">
+        <span class="chip">🆓 月1万回まで無料</span>
+        <span class="chip">📱 スマホ対応</span>
+        <span class="chip">🔒 登録不要</span>
+        <span class="chip">🌐 ブラウザで動く</span>
+        <span class="chip">⚡ インストール不要</span>
       </div>
     </div>
-    <div class="step">
-      <div class="step-line">
-        <div class="step-num">2</div>
-        <div class="step-connector"></div>
+  </section>
+
+  <!-- 利用シーン -->
+  <section class="section">
+    <div class="wrap grid-2">
+      <div class="content-stack">
+        <div>
+          <span class="eyebrow">利用シーン</span>
+          <h2>こんな場面で使いやすい。</h2>
+        </div>
+        <div class="cards-1col">
+          <article class="reason-card">
+            <h3>テスト中に怪しい画面を見つけたとき</h3>
+            <p>すぐに切り捨てず、まず判断材料を集めたい場面に向いています。</p>
+          </article>
+          <article class="reason-card">
+            <h3>チームへ相談する前の下準備</h3>
+            <p>感覚ではなく、整理した内容を持って会話を始められます。</p>
+          </article>
+          <article class="reason-card">
+            <h3>起票の書き出しを早くしたいとき</h3>
+            <p>毎回フォーマットに悩むのではなく、最初の土台を先に作れます。</p>
+          </article>
+        </div>
       </div>
-      <div class="step-content">
-        <div class="step-label">🔍 バグスキャン実行</div>
-        <div class="step-note">ボタンを押すだけ。AIが画面を解析してバグか否かを判定します。</div>
+      <div class="illustration paper">
+        <img src="/assets/images/bug-checker-lp/usage-scene.jpg" alt="めがねのQA担当がバグ・仕様・不明の3枚の札を指し示して判断を整理している浮世絵風イラスト" width="1400" height="1050" loading="lazy">
       </div>
     </div>
-    <div class="step">
-      <div class="step-line">
-        <div class="step-num">3</div>
-        <div class="step-connector"></div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <div class="wrap content-stack">
+      <div>
+        <span class="eyebrow">FAQ</span>
+        <h2>よくある質問</h2>
       </div>
-      <div class="step-content">
-        <div class="step-label">📋 起票内容をコピー</div>
-        <div class="step-note">自動生成された起票内容をコピーして、Jira や Redmine に貼り付けて完了。</div>
+      <div class="faq-grid">
+        <article class="faq-card">
+          <h3>Q. 本当に画像を貼るだけですか？</h3>
+          <p>A. はい。スクリーンショットを貼り、必要であれば補足メモを加えるだけで使えます。ログイン・インストールは不要です。</p>
+        </article>
+        <article class="faq-card">
+          <h3>Q. 判定結果は絶対ですか？</h3>
+          <p>A. AIの判定は判断の補助です。最終判断は、仕様や実際の文脈にあわせて確認してください。</p>
+        </article>
+        <article class="faq-card">
+          <h3>Q. どんな内容が出力されますか？</h3>
+          <p>A. バグか否かの整理に加えて、タイトル・再現手順・期待値・実際の結果・環境など、起票の下書きになる情報を出力します。</p>
+        </article>
+        <article class="faq-card">
+          <h3>Q. 無料で使えますか？</h3>
+          <p>A. 月1万回まで無料で使えます。会員登録は不要で、ブラウザを開けばすぐに試せます。</p>
+        </article>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- バッジ -->
-  <div class="badges">
-    <span class="badge">🆓 月1万回まで無料</span>
-    <span class="badge">📱 スマホ対応</span>
-    <span class="badge">🔒 登録不要</span>
-    <span class="badge">🌐 ブラウザで動く</span>
-    <span class="badge">⚡ インストール不要</span>
-  </div>
+  <!-- 最終CTA -->
+  <section id="cta" class="section">
+    <div class="wrap cta-shell">
+      <div class="grid-2">
+        <div class="content-stack">
+          <div>
+            <span class="eyebrow">Try It Now</span>
+            <h2>迷ったら、まず貼ってみる。</h2>
+          </div>
+          <p class="lead">
+            「これってバグなの？」は、判断に迷った瞬間の最初の一手として使えるツールです。
+            仕様確認の前に、起票前に、まずは一度バグスキャンを試してみてください。
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://bug-checker.vercel.app" target="_blank" rel="noopener">🔍 バグスキャンを試す</a>
+          </div>
+          <p class="cta-note">登録不要・インストール不要・月1万回まで無料</p>
+        </div>
+        <div class="cta-art">
+          <img src="/assets/images/bug-checker-lp/final-cta.jpg" alt="めがねのQA担当がチェックリストを示し、歌舞伎エンジニアが納得した表情を見せる浮世絵風イラスト" width="1600" height="900" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <!-- CTA下部 -->
-  <div class="cta-bottom">
-    <a class="cta-btn" href="https://bug-checker.vercel.app" target="_blank" rel="noopener">🔍 さっそく試してみる</a>
-    <p class="cta-note">登録不要・インストール不要・月1万回まで無料</p>
-  </div>
-
-
-</div>
+</main>
 
 <div id="site-footer"></div>
 <script src="/js/common.js"></script>
