@@ -14,15 +14,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--color-bg); font-family: sans-serif; color: var(--color-text); min-height: 100vh; }
 
-/* Tool系 共通ダークヘッダー（bug-checker と統一） */
-.bc-nav { background: #1c1c2e; padding: 0 20px; display: flex; align-items: center; gap: 10px; height: 48px; position: sticky; top: 0; z-index: 100; font-size: 13px; }
-.bc-nav a { color: rgba(255,255,255,0.65); text-decoration: none; transition: color .15s; display: flex; align-items: center; white-space: nowrap; }
-.bc-nav a:hover { color: #fff; }
-.bc-nav .sep { color: rgba(255,255,255,0.25); font-size: 11px; flex-shrink: 0; }
-.bc-nav .bc-current { color: rgba(255,255,255,0.9); font-size: 13px; white-space: nowrap; }
-.bc-nav .bc-spacer { flex: 1; }
-.bc-ref-btn { font-size: 12px; color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 4px 14px; transition: border-color .15s, color .15s; white-space: nowrap; }
-.bc-ref-btn:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
+/* ヘッダーは共通パーシャル（#site-header ＋ common.css の .nav）を使用 */
 
 .page-header { background: var(--color-bg); border-bottom: 1px solid var(--color-border); }
 .page-header-wrap { width: 100%; max-width: 1232px; margin: 0 auto; padding: 24px 16px 20px; }
