@@ -87,5 +87,7 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 .footer-link-right span { font-size: 0.78rem; color: rgba(255,255,255,0.25); }
 @media (max-width: 700px) {
   .footer-lp-logo { font-size: 1.4rem; }
-  .footer-link-inner { padding: 12px 20px; flex-direction: column; gap: 10px; align-items: flex-start; }
+  .footer-link-inner { padding: 12px 20px; flex-direction: column; gap: 10px; align-items: center; text-align: center; }
+  .footer-link-nav { justify-content: center; }
+  .footer-link-right { justify-content: center; }
 }

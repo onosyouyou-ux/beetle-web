@@ -327,6 +327,9 @@ a { color: inherit; text-decoration: none; }
 /* ─── FOOTER ─── */
 .footer { background: #0a0a0f; }
 
+/* スマホ専用：ロゴバー上のキャラバナー */
+.footer-heroes-sp { display: none; }
+
 /* スカイラインバー */
 .footer-skyline-bar { background: #0a0a0f; }
 .footer-skyline-inner { padding: 16px 20px 12px; text-align: center; }
@@ -392,8 +395,11 @@ a { color: inherit; text-decoration: none; }
   .cta-btns { flex-wrap: nowrap; }
   .cta-btns .btn-cta-main, .cta-btns .btn-cta-sub { flex: 1; white-space: nowrap; padding: 14px 10px; font-size: 0.85rem; }
   .footer-logo { font-size: 1.4rem; }
-  .footer-link-inner { padding: 12px 20px; flex-direction: column; gap: 10px; align-items: flex-start; }
-  .footer-link-right { gap: 14px; }
+  .footer-heroes-sp { display: block; background: #000; overflow: hidden; }
+  .footer-heroes-sp img { display: block; width: 100%; height: auto; }
+  .footer-link-inner { padding: 12px 20px; flex-direction: column; gap: 10px; align-items: center; text-align: center; }
+  .footer-link-nav { justify-content: center; }
+  .footer-link-right { gap: 14px; justify-content: center; }
 }
 
 /* ─── BACK TO TOP ─── */

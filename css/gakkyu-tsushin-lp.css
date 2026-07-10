@@ -232,5 +232,7 @@ details[open] .faq-icon{transform:rotate(45deg);}
 .footer-link-right span{font-size:0.78rem;color:rgba(255,255,255,0.25)}
 @media (max-width:680px){
   .footer-logo{font-size:1.4rem}
-  .footer-link-inner{padding:12px 20px;flex-direction:column;gap:10px;align-items:flex-start}
+  .footer-link-inner{padding:12px 20px;flex-direction:column;gap:10px;align-items:center;text-align:center}
+  .footer-link-nav{justify-content:center}
+  .footer-link-right{justify-content:center}
 }
