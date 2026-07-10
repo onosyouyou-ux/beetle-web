@@ -38,16 +38,26 @@ git branch -D fix/やること名
 デプロイ状況は GitHub リポジトリの **Actions** タブで確認できる。
 プッシュ前に `version.json`（フッターのバージョン表示。`js/common.js` が読む）の日付を更新する。
 
-**gakkyu-tsushin アプリ（Vercel）**
-Vercel プロジェクトは**リポジトリ root に紐付いている**（root の `.vercel/project.json` が gakkyu-tsushin を指す。root の `.vercel/` と `.env.local` は Vercel CLI が管理するので**消さないこと**）。
-BashツールはWindows側のGit Bashで動くため、WSLパスに直接 `cd` できない。
-PowerShell から `wsl` 経由で実行する：
+**Vercelアプリ3つ（2026-07-10 実デプロイで確認済み）**
+3プロジェクトで Vercel の Root Directory 設定がばらばらなため、**実行場所を間違えるとエラーになる**。
+BashツールはWindows側のGit Bashで動くため、WSLパスに直接 `cd` できない。PowerShell から `wsl` 経由で実行する。
 
-```powershell
-wsl -e bash -c "cd /home/owner/projects/beetle-web && npx vercel --prod"
-```
+- **gakkyu-tsushin**：root から実行（root の `.vercel/project.json` が gakkyu-tsushin を指す。root の `.vercel/` と `.env.local` は Vercel CLI が管理するので**消さないこと**）
+  ```powershell
+  wsl -e bash -c "cd /home/owner/projects/beetle-web && npx vercel --prod"
+  ```
+- **bug-checker**：Vercel 側 Root Directory が `tools/bug-checker` のため、**アプリのディレクトリから実行するとパス二重エラー**（`…/tools/bug-checker/tools/bug-checker does not exist`）になる。root から環境変数でプロジェクト指定する：
+  ```powershell
+  wsl -e bash -c "cd /home/owner/projects/beetle-web && VERCEL_ORG_ID=team_8TPi9kSLfXez6IXDz6fMHMD5 VERCEL_PROJECT_ID=prj_HJB9hn7GYUUvhm37tbzruCoZw5M9 npx vercel --prod"
+  ```
+- **rubi-shokunin**：Root Directory 未設定のため、**root から実行すると `npm run vercel-build` exited with 1 で失敗**する。アプリのディレクトリから直接実行する：
+  ```powershell
+  wsl -e bash -c "cd /home/owner/projects/beetle-web/tools/rubi-shokunin && npx vercel --prod"
+  ```
 
-URL: https://gakkyu-tsushin.vercel.app
+URL: https://gakkyu-tsushin.vercel.app / https://bug-checker.vercel.app / https://rubi-shokunin.vercel.app
+
+※コミット時に毎回出る `geometric repack ... Permission denied` は Git の自動メンテナンスがWSLパスで失敗しているだけで無害（コミット・プッシュは成功している）。
 
 ## ファイル構成
 
