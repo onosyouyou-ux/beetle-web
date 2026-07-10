@@ -15,8 +15,8 @@ export default function AppHeader({ counter }: { counter: CounterData | null }) 
             <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">ホーム</a>
             <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール</a>
             <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
-            <a className="site-nav-howto" href="https://www.beetle-web.jp/tools/bug-checker/landing.html" target="_blank" rel="noopener">使い方</a>
             <a href="https://www.beetle-web.jp/#contact" target="_blank" rel="noopener">お問い合わせ</a>
+            <a className="site-nav-howto" href="https://www.beetle-web.jp/tools/bug-checker/landing.html" target="_blank" rel="noopener">使い方</a>
           </div>
         </div>
       </nav>
