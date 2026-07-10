@@ -23,10 +23,10 @@ a { color: inherit; text-decoration: none; }
 .header-nav { display: flex; gap: 32px; font-family: var(--font-en); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; margin-left: auto; }
 .header-nav a { opacity: 0.6; transition: opacity .2s, color .2s; }
 .header-nav a:hover { opacity: 1; color: var(--color-accent); }
-.header-cta { background: var(--navy); color: var(--white); font-family: var(--font-ja); font-size: 0.82rem; font-weight: 700; padding: 10px 22px; border-radius: 4px; transition: background .2s; }
+.header-cta { display: inline-flex; align-items: center; height: 40px; box-sizing: border-box; background: var(--navy); color: var(--white); font-family: var(--font-ja); font-size: 0.82rem; font-weight: 700; padding: 0 22px; border-radius: 4px; transition: background .2s; }
 .header-cta:hover { background: var(--color-accent); }
 .header-menu { position: relative; }
-.header-menu-btn { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 5px; background: none; border: 1.5px solid rgba(28,28,46,0.2); border-radius: 4px; cursor: pointer; padding: 8px 10px; flex-shrink: 0; }
+.header-menu-btn { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 5px; height: 40px; box-sizing: border-box; background: none; border: 1.5px solid rgba(28,28,46,0.2); border-radius: 4px; cursor: pointer; padding: 0 10px; flex-shrink: 0; }
 .header-menu-btn span { display: block; height: 2px; background: var(--navy); border-radius: 1px; transition: transform 0.25s ease, opacity 0.2s ease, width 0.2s ease; }
 .header-menu-btn span:nth-child(1) { width: 20px; }
 .header-menu-btn span:nth-child(2) { width: 12px; }
@@ -351,7 +351,9 @@ a { color: inherit; text-decoration: none; }
   .header-cta { margin-left: auto; }
   .header-nav { display: flex; order: 3; width: 100%; overflow-x: auto; scrollbar-width: none; gap: 0; padding: 8px 0 10px; border-top: 1px solid var(--gray-lt); margin-top: 10px; }
   .header-nav::-webkit-scrollbar { display: none; }
-  .header-nav a { white-space: nowrap; font-size: 0.8rem; padding: 2px 14px 2px 0; }
+  .header-nav a { white-space: nowrap; font-size: 0.8rem; padding: 2px 7px; }
+  .header-nav a:first-child { margin-left: auto; }
+  .header-nav a:last-child { margin-right: auto; }
   .nav-sp-hidden { display: none; }
   .hero { padding: 96px 20px 32px; }
   .hero-inner { grid-template-columns: 1fr; }
