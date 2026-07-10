@@ -216,6 +216,7 @@ FAQ をページに追加・変更したときは **JSON-LD の FAQPage も同�
   - CSS は `/css/{名前}-lp.css`、ヘッダー/フッターは `<div id="site-header">`〜`/js/common.js` で共通化。
   - ページ内の CTA ボタンから AIアプリ本体（`https://{名前}.vercel.app`）を別タブで開く。
 - 本体 `sitemap.xml` に `/tools/{名前}/landing.html` を登録。トップ・ツール一覧のリンクも `landing.html` に向ける。
+  - 例外（2026-07-10決定）：ツール一覧 `test-tools.html` の**テスト検証用ツール**のカードはアプリ本体へ直リンク（`target="_blank" rel="noopener"`）。一覧まで来た人は使う気の人なのでランディングを挟まない。
 - レイアウトは「ページレイアウト型 > Tool系」に準拠。
 
 ### アプリ側（`*.vercel.app`）の SEO
