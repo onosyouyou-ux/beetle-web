@@ -22,7 +22,8 @@ export default function AppHeader({ counter }: { counter: CounterData | null }) 
       </nav>
 
       <div className="page-header">
-        <div className="page-header-wrap">
+        <div className="page-header-wrap ph-with-visual">
+          <div className="ph-main">
           <div className="page-header-en">BUG DETECTOR</div>
           <div className="page-header-inner">
             <div className="page-header-title">これってバグなの？</div>
@@ -44,6 +45,9 @@ export default function AppHeader({ counter }: { counter: CounterData | null }) 
               </div>
             )}
           </div>
+          </div>
+          {/* LPメインビジュアル */}
+          <img className="ph-visual" src="/hero-lp.jpg" alt="" aria-hidden="true" width="1600" height="900" />
         </div>
       </div>
     </header>

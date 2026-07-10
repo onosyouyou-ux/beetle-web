@@ -147,6 +147,10 @@ export default function Home() {
         ぶんしょうを はりつけると、かんじに ふりがなが つくよ。がぞうから ぶんしょうを よみこむこともできるよ。
       </p>
 
+      {/* LPメインビジュアル */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="header-visual" src="/hero-lp.jpg" alt="" aria-hidden="true" width="960" height="720" />
+
       <div className="card">
         <div className="image-row">
           <button
