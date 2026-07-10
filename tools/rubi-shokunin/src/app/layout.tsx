@@ -39,18 +39,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ja">
       <body>
-        <nav className="bc-nav">
-          <a href="https://www.beetle-web.jp" target="_blank" rel="noopener">
-            <img src="https://www.beetle-web.jp/assets/icons/beetle-icon.svg" alt="BEETLE" style={{ height: '22px', borderRadius: '4px' }} />
-          </a>
-          <span className="sep">›</span>
-          <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール一覧</a>
-          <span className="sep">›</span>
-          <span className="bc-current">ルビメーカー</span>
-          <span className="bc-spacer" />
-          <a href={LANDING_URL} target="_blank" rel="noopener" className="bc-ref-btn">
-            リファレンス
-          </a>
+        <nav className="site-nav">
+          <div className="site-nav-inner">
+            <a className="site-nav-logo" href="https://www.beetle-web.jp" target="_blank" rel="noopener">BEET<span>LE</span></a>
+            <div className="site-nav-links">
+              <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">ホーム</a>
+              <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール</a>
+              <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
+              <a className="site-nav-howto" href={LANDING_URL} target="_blank" rel="noopener">使い方</a>
+              <a href="https://www.beetle-web.jp/#contact" target="_blank" rel="noopener">お問い合わせ</a>
+            </div>
+          </div>
         </nav>
 
         <main className="app-main">{children}</main>
