@@ -14,11 +14,17 @@
     headerMenuBtn.setAttribute('aria-expanded', 'false');
   });
 
-  // back to top
+  // back to top（フッターにかぶらないよう、フッター上端で止める）
   const backToTop = document.querySelector('.back-to-top');
+  const pageFooter = document.querySelector('.footer');
   window.addEventListener('scroll', () => {
     backToTop.classList.toggle('visible', window.scrollY > 300);
-  });
+    if (!pageFooter) return;
+    const footerTop = pageFooter.getBoundingClientRect().top;
+    backToTop.style.bottom = footerTop < window.innerHeight
+      ? (window.innerHeight - footerTop + 8) + 'px'
+      : '';
+  }, { passive: true });
   backToTop.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });

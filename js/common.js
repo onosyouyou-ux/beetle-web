@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('scrollTopBtn');
     if (!btn) return;
     window.addEventListener('scroll', () => {
-      const footer = document.querySelector('.site-footer');
+      // バナー画像を含むフッター全体（#site-footer）の上で止める
+      const footer = document.getElementById('site-footer');
       if (!footer) return;
       const footerTop = footer.getBoundingClientRect().top;
       if (window.scrollY > 200) {
