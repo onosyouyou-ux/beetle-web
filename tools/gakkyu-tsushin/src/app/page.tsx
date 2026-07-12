@@ -365,13 +365,13 @@ export default function Home() {
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="タイトル（例：クラスだより）"
+                placeholder="例：クラスだより"
                 className="input-base"
               />
               <input
                 value={meta}
                 onChange={(e) => setMeta(e.target.value)}
-                placeholder="クラス・号（例：3年1組 6月号）"
+                placeholder="例：3年1組 6月号"
                 className="input-base"
               />
             </div>
@@ -436,6 +436,7 @@ export default function Home() {
               onRegenerate={() => callGenerate(true)}
               disabled={!result}
               loading={loading}
+              lockedCount={articles.filter((a) => a.locked).length}
             />
           </section>
 

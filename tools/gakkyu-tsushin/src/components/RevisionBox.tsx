@@ -6,9 +6,10 @@ interface Props {
   onRegenerate: () => void;
   disabled: boolean;
   loading: boolean;
+  lockedCount?: number;
 }
 
-export default function RevisionBox({ value, onChange, onRegenerate, disabled, loading }: Props) {
+export default function RevisionBox({ value, onChange, onRegenerate, disabled, loading, lockedCount = 0 }: Props) {
   return (
     <div className="mt-3">
       <div className="field-label">修正指示</div>
@@ -20,6 +21,11 @@ export default function RevisionBox({ value, onChange, onRegenerate, disabled, l
         placeholder="例：「係活動」の記事をもう少し温かい表現に。給食の話題の日付を6日に直して。"
         className="textarea-base"
       />
+      {!disabled && lockedCount > 0 && (
+        <p className="mt-1 text-[11px] leading-relaxed text-[#a35b2d]">
+          🔒 ロック中の記事（{lockedCount}件）には修正指示が反映されません。直したい記事はロックを外してから再生成してください。
+        </p>
+      )}
       <button
         type="button"
         onClick={onRegenerate}

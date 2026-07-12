@@ -40,7 +40,7 @@ export default function IllustPicker({ open, onClose, current, onSelect, onClear
         onClick={(e) => e.stopPropagation()}
       >
         {/* ヘッダー */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-[#e8e4de]">
+        <div className="shrink-0 flex items-center justify-between px-4 py-3 border-b border-[#e8e4de]">
           <span className="text-[14px] font-bold text-[#1c1c2e]">イラストを選ぶ</span>
           <button
             type="button"
@@ -53,7 +53,7 @@ export default function IllustPicker({ open, onClose, current, onSelect, onClear
         </div>
 
         {/* カテゴリタブ */}
-        <div className="flex items-center gap-2 flex-wrap px-4 py-2.5 border-b border-[#f0ece4]">
+        <div className="shrink-0 flex items-center gap-2 flex-wrap px-4 py-2.5 border-b border-[#f0ece4]">
           {CATEGORIES.map((c) => (
             <button
               key={c.id}
@@ -77,8 +77,8 @@ export default function IllustPicker({ open, onClose, current, onSelect, onClear
           </button>
         </div>
 
-        {/* サムネイル一覧 */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5 p-4 overflow-y-auto">
+        {/* サムネイル一覧（枚数が多いカテゴリはここだけスクロール） */}
+        <div className="flex-1 min-h-0 grid grid-cols-3 sm:grid-cols-4 gap-2.5 p-4 content-start overflow-y-auto overscroll-contain">
           {cat?.files.map((file) => {
             const selected = current.illustration === cat.id && current.illustFile === file;
             return (
@@ -86,12 +86,12 @@ export default function IllustPicker({ open, onClose, current, onSelect, onClear
                 key={file}
                 type="button"
                 onClick={() => { onSelect(cat.id, file); onClose(); }}
-                className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-colors ${
+                className={`relative self-start rounded-lg overflow-hidden border-2 transition-colors ${
                   selected ? 'border-[#C0634C]' : 'border-transparent hover:border-[#cbc8c0]'
                 }`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={file} alt="" loading="lazy" className="w-full h-full object-cover" />
+                <img src={file} alt="" loading="lazy" className="block w-full aspect-square object-cover" />
                 {selected && (
                   <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#C0634C] text-white text-[10px] leading-4 text-center">
                     ✓

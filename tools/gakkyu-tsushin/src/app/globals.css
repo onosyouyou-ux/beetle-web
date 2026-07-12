@@ -242,6 +242,21 @@ select:focus {
 .sfa-right a:hover { color: #fff; }
 .sfa-version { font-size: 10px; color: #555; opacity: 0.6; letter-spacing: .04em; }
 
+/* スマホ共通フッター（2026-07決定）：浮世絵バナー→ナビ→プライバシー・© を中央揃え。
+   BEETLEロゴ行はバナーに焼き込み済みのためSPでは非表示 */
+.footer-heroes-sp { display: none; }
+.sfa-nav-sp { display: none; }
+@media (max-width: 600px) {
+  .footer-heroes-sp { display: block; background: #000; overflow: hidden; box-shadow: 0 -10px 24px rgba(28, 28, 46, 0.25); }
+  .footer-heroes-sp img { display: block; width: 100%; height: auto; }
+  .sfa-left { display: none; }
+  .sfa-nav-sp { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem 1.25rem; }
+  .sfa-nav-sp a { font-size: 13px; color: #888; text-decoration: none; transition: color .15s; }
+  .sfa-nav-sp a:hover { color: #fff; }
+  .site-footer-app { flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; padding: 1.25rem 1.5rem; text-align: center; }
+  .sfa-right { justify-content: center; flex-wrap: wrap; font-size: 11px; white-space: normal; }
+}
+
 /* ────────────────────────────────────────────
    新聞プレビュー（A4縦）
    ──────────────────────────────────────────── */
