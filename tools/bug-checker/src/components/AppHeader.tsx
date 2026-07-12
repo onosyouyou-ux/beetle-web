@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 interface CounterData {
   used: number;
   limit: number;
@@ -25,37 +27,60 @@ export default function AppHeader() {
   );
 }
 
-/** ページヘッダー（紙面の中） */
+/** ページヘッダー（紙面の中）。たたむとタイトル1行になる */
 export function PageHero({ counter }: { counter: CounterData | null }) {
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    try { if (localStorage.getItem('bc_hero_collapsed') === '1') setCollapsed(true); } catch {}
+  }, []);
+
+  function toggle() {
+    setCollapsed(c => {
+      try { localStorage.setItem('bc_hero_collapsed', c ? '0' : '1'); } catch {}
+      return !c;
+    });
+  }
+
   return (
     <div className="page-header">
-      <div className="page-header-wrap ph-with-visual">
-        <div className="ph-main">
-          <div className="page-header-en">BUG DETECTOR</div>
-          <div className="page-header-inner">
-            <div className="page-header-title">これってバグなの？</div>
-            <p className="page-header-desc">
-              画像を貼るだけでAIがバグか否かを判定。バグなら起票内容を自動生成します。<br />
-              タイトル・再現手順・期待値まで全部出てきます。
-            </p>
-            {counter && (
-              <div className="mt-3 inline-flex flex-col gap-1 bg-white border border-[#e8e4de] rounded-lg px-3 py-2" style={{ borderWidth: '0.5px' }}>
-                <div className="text-[12px]" style={{ color: 'var(--color-text-muted)' }}>
-                  今月みんなで {counter.used.toLocaleString()} 回使いました（無料枠 {counter.limit.toLocaleString()} 回まで）
-                </div>
-                <div className="w-[200px] h-[3px] rounded-full overflow-hidden" style={{ background: 'var(--color-border)' }}>
-                  <div
-                    className="h-full rounded-full transition-all duration-300"
-                    style={{ width: `${Math.min(100, (counter.used / counter.limit) * 100)}%`, background: 'var(--color-accent)' }}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
+      <button type="button" className="ph-toggle" onClick={toggle} aria-expanded={!collapsed}>
+        {collapsed ? '▼ ひらく' : '▲ たたむ'}
+      </button>
+
+      {collapsed ? (
+        <div className="ph-collapsed">
+          <span className="page-header-en" style={{ marginBottom: 0 }}>BUG DETECTOR</span>
+          <span className="ph-collapsed-title">これってバグなの？</span>
         </div>
-        {/* LPメインビジュアル */}
-        <img className="ph-visual" src="/hero-lp.jpg" alt="" aria-hidden="true" width="1600" height="900" />
-      </div>
+      ) : (
+        <div className="page-header-wrap ph-with-visual">
+          <div className="ph-main">
+            <div className="page-header-en">BUG DETECTOR</div>
+            <div className="page-header-inner">
+              <div className="page-header-title">これってバグなの？</div>
+              <p className="page-header-desc">
+                画像を貼るだけでAIがバグか否かを判定。バグなら起票内容を自動生成します。タイトル・再現手順・期待値まで全部出てきます。
+              </p>
+              {counter && (
+                <div className="mt-2 inline-flex flex-col gap-0.5 bg-white border border-[#e8e4de] rounded-lg px-3 py-1.5" style={{ borderWidth: '0.5px' }}>
+                  <div className="text-[12px]" style={{ color: 'var(--color-text-muted)' }}>
+                    今月みんなで {counter.used.toLocaleString()} 回使いました（無料枠 {counter.limit.toLocaleString()} 回まで）
+                  </div>
+                  <div className="w-[200px] h-[3px] rounded-full overflow-hidden" style={{ background: 'var(--color-border)' }}>
+                    <div
+                      className="h-full rounded-full transition-all duration-300"
+                      style={{ width: `${Math.min(100, (counter.used / counter.limit) * 100)}%`, background: 'var(--color-accent)' }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          {/* LPメインビジュアル */}
+          <img className="ph-visual" src="/hero-lp.jpg" alt="" aria-hidden="true" width="1600" height="900" />
+        </div>
+      )}
     </div>
   );
 }

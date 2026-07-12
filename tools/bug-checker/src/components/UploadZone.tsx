@@ -41,7 +41,7 @@ export default function UploadZone({ preview, onUpload, onReset, disabled }: Pro
 
   if (preview) {
     return (
-      <div className="border border-[#c8c7c0] rounded-xl my-5 overflow-hidden relative">
+      <div className="border border-[#c8c7c0] rounded-xl my-3 overflow-hidden relative">
         <img
           src={preview}
           alt="アップロード済み画像"
@@ -68,7 +68,7 @@ export default function UploadZone({ preview, onUpload, onReset, disabled }: Pro
         onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ''; }}
       />
       <div
-        className={`border border-dashed rounded-xl py-7 px-4 text-center bg-[#fafaf8] my-5 cursor-pointer transition-colors
+        className={`border border-dashed rounded-xl py-5 px-4 text-center bg-[#fafaf8] my-3 cursor-pointer transition-colors
           ${dragging ? 'border-[#888780] bg-white' : 'border-[#c8c7c0]'}
           ${disabled ? 'pointer-events-none opacity-50' : 'hover:border-[#888780] hover:bg-white'}`}
         onClick={() => inputRef.current?.click()}
@@ -76,8 +76,8 @@ export default function UploadZone({ preview, onUpload, onReset, disabled }: Pro
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
       >
-        <div className="text-[28px] text-[#b4b2a9] mb-2 flex justify-center">
-          <IconPhotoScan size={32} />
+        <div className="text-[28px] text-[#b4b2a9] mb-1 flex justify-center">
+          <IconPhotoScan size={26} />
         </div>
         <div className="text-[13px] text-muted">クリックして画像をアップロード</div>
         <div className="text-[11px] text-[#b4b2a9] mt-1">

@@ -120,7 +120,7 @@ export default function HomePage() {
       <AppHeader />
       <div className="app-paper flex-1">
       <PageHero counter={counter} />
-      <div className="mx-auto px-5" style={{ maxWidth: '780px', paddingTop: '24px', paddingBottom: '64px' }}>
+      <div className="mx-auto px-5" style={{ maxWidth: '780px', paddingTop: '12px', paddingBottom: '48px' }}>
         <div className="w-full max-w-[720px] mx-auto">
 
         {limitExceeded && <LimitBanner />}
@@ -132,14 +132,14 @@ export default function HomePage() {
           disabled={scanning}
         />
 
-        <div className="mb-4">
+        <div className="mb-3">
           <div className="field-label">テスト状況・補足メモ</div>
           <textarea
             value={note}
             onChange={e => setNote(e.target.value)}
             disabled={scanning}
             placeholder="操作していた内容・エラーの状況・気になったことなど（任意）"
-            className="w-full border border-[#c8c7c0] rounded-xl px-4 py-3 text-[13px] text-ink bg-[#fafaf8] resize-none h-[72px] outline-none focus:border-[#888780] transition-colors placeholder:text-[#b4b2a9] disabled:opacity-50"
+            className="w-full border border-[#c8c7c0] rounded-xl px-4 py-2.5 text-[13px] text-ink bg-[#fafaf8] resize-none h-[60px] outline-none focus:border-[#888780] transition-colors placeholder:text-[#b4b2a9] disabled:opacity-50"
           />
         </div>
         <ScanButton disabled={!imagePreview || scanning || !!verdict} onClick={handleScan} />
