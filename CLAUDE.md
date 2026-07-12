@@ -150,6 +150,19 @@ Tool系フッターに必須の要素：
 - **アプリのヘッダー統一（2026-07-10決定）**：Vercelアプリ（bug-checker・gakkyu-tsushin・rubi-shokunin）のヘッダーは本体ライトナビと同型の `.site-nav`。「使い方」ピルボタンは**ナビの一番右**（お問い合わせの右）に置き、各ランディングへ誘導。**使い方ページ（ランディング）がないツールはボタンを置かない**（本体配信の静的ツールは共通パーシャル `#site-header` をそのまま使う。例：テストコンテンツ作成ツール）
 - **ツールのビジュアルトーン（2026-07-10決定）**：テスト検証用ツールは**歌舞伎絵（浮世絵）風**、その他ツール（子ども・家庭向け）は**温かい雰囲気**で作り分ける
 
+## ブログ記事のヒーロー画像（ローカルAI生成）
+
+ブログ記事（`blog/posts/`）を新規作成するときは、**ヒーロー画像もセットで生成する**のが標準フロー。ローカルの ComfyUI ＋ 自家製 LoRA（浮世絵QAキャラ）で作る。
+
+- **生成環境**: `D:\ComfyUI`（SDXL + beetleqa LoRA。`D:\ComfyUI\models\loras\` の最新版を使う）。サーバーが寝ていたら `D:\ComfyUI\venv\Scripts\python.exe main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch`（作業dir `D:\ComfyUI`）で起動し、API（`/prompt`→`/history`）で生成。全自動スクリプト `D:\ComfyUI\beetle-image.ps1` も利用可
+- **プロンプトの型**: `beetleqa style, ukiyo-e kabuki illustration, <場面を英語で>, japanese woodblock print texture, warm muted color palette`
+  - キャラ指定: `meganeqa woman with round glasses and black hair bun in blue floral kimono`（メガネQAさん）／ `kabukiengineer man with dramatic kabuki kumadori makeup`（隈取エンジニア）。2人なら `two characters`、1人なら `solo`
+  - ネガティブ: `photo, photorealistic, 3d render, blurry, lowres, watermark, text, letters, three people, crowd, deformed hands`
+  - 推奨設定: steps 28 / cfg 7.0 / dpmpp_2m karras / LoRA強度 0.9
+- **文字は生成させない**（SDXLはニセ文字になる）。タイトル文字は HG行書体で後入れ（PowerShell System.Drawing、クリーム `#f7f0dd` 文字＋濃紺 `#1c1c2e` 縁取り、またはニセ文字を背景色で塗り消して差し替え）。文字スペースが欲しいときはプロンプトに `blank wooden sign board` や `spacious empty sky at the top of the image` を入れる
+- **仕上げ**: 1200×800 にリサイズ・クロップ → `assets/images/blog/{記事スラッグ}.jpg`（JPG・200KB目安）に保存 → 記事の `og:image`（width/height も）と `<img class="post-eyecatch" width="1200" height="800" alt="...">` を設定 → **画像を作ったらすぐコミット**
+- **注意**: LoRA学習（`D:\sd-scripts`）がGPU使用中は生成しない（VRAM競合で両方落ちる）。生成物は必ず目視検品（指の崩れ・意図しない3人目・目立つニセ文字）。ダメならシード変えて再生成
+
 ## コーディング規約
 
 ### CSS・JS はインラインで書かない
