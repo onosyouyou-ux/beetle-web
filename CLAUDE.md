@@ -160,18 +160,23 @@ Vercelアプリは「**紙面固定＋余白は背景**」で作る。レイア�
 - **アプリのヘッダー統一（2026-07-10決定）**：Vercelアプリ（bug-checker・gakkyu-tsushin・rubi-shokunin）のヘッダーは本体ライトナビと同型の `.site-nav`。「使い方」ピルボタンは**ナビの一番右**（お問い合わせの右）に置き、各ランディングへ誘導。**使い方ページ（ランディング）がないツールはボタンを置かない**（本体配信の静的ツールは共通パーシャル `#site-header` をそのまま使う。例：テストコンテンツ作成ツール）
 - **ツールのビジュアルトーン（2026-07-10決定）**：テスト検証用ツールは**歌舞伎絵（浮世絵）風**、その他ツール（子ども・家庭向け）は**温かい雰囲気**で作り分ける
 
-## ブログ記事のヒーロー画像（ローカルAI生成）
+## ブログ記事のヒーロー画像（ChatGPT手動生成 ＋ Claude Code仕上げ。2026-07-12決定）
 
-ブログ記事（`blog/posts/`）を新規作成するときは、**ヒーロー画像もセットで生成する**のが標準フロー。ローカルの ComfyUI ＋ 自家製 LoRA（浮世絵QAキャラ）で作る。
+ブログ記事（`blog/posts/`）を新規作成するときは、**ヒーロー画像もセットで用意する**のが標準フロー。
+絵づくりは **ChatGPT（課金済みPlus・追加コスト0円）で手動生成**し、仕上げ以降を Claude Code が全部やる。
+※ローカルAI（D:\ComfyUI + LoRA）は品質が及ばずヒーロー画像フローからは**外した**（実験・量産用に温存。詳細は `D:\ComfyUI\beetle-image.ps1`）
 
-- **生成環境**: `D:\ComfyUI`（SDXL + beetleqa LoRA。`D:\ComfyUI\models\loras\` の最新版を使う）。サーバーが寝ていたら `D:\ComfyUI\venv\Scripts\python.exe main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch`（作業dir `D:\ComfyUI`）で起動し、API（`/prompt`→`/history`）で生成。全自動スクリプト `D:\ComfyUI\beetle-image.ps1` も利用可
-- **プロンプトの型**: `beetleqa style, ukiyo-e kabuki illustration, <場面を英語で>, japanese woodblock print texture, warm muted color palette`
-  - キャラ指定: `meganeqa woman with round glasses and black hair bun in blue floral kimono`（メガネQAさん）／ `kabukiengineer man with dramatic kabuki kumadori makeup`（隈取エンジニア）。2人なら `two characters`、1人なら `solo`
-  - ネガティブ: `photo, photorealistic, 3d render, blurry, lowres, watermark, text, letters, three people, crowd, deformed hands`
-  - 推奨設定: steps 28 / cfg 7.0 / dpmpp_2m karras / LoRA強度 0.9
-- **ヒーロー画像に文字は入れない（2026-07-12決定）**。SDXLの生成文字はニセ文字になり、後入れ文字も貼った感が出て浮くため、画像は絵だけで完結させる（タイトルは記事HTML側が担う）。ネガティブの `text, letters` でニセ文字を抑制する。どうしても文字が要る場合のみ `beetle-image.ps1 -Text "..."` で後入れできる
-- **仕上げ**: 1200×800 にリサイズ・クロップ → `assets/images/blog/{記事スラッグ}.jpg`（JPG・200KB目安）に保存 → 記事の `og:image`（width/height も）と `<img class="post-eyecatch" width="1200" height="800" alt="...">` を設定 → **画像を作ったらすぐコミット**
-- **注意**: LoRA学習（`D:\sd-scripts`）がGPU使用中は生成しない（VRAM競合で両方落ちる）。生成物は必ず目視検品（指の崩れ・意図しない3人目・目立つニセ文字）。ダメならシード変えて再生成
+**受け渡しルール:**
+1. ユーザーが ChatGPT で画像を作り、`C:\Users\owner\Pictures\ヒーロー画像置き場\` に保存して記事名（または記事スラッグ）を伝える
+2. Claude Code がフォルダの最新画像を拾って仕上げる：
+   - 1200×800 に中央クロップ・リサイズ（PowerShell System.Drawing。WSLにPILは無い）
+   - JPG（200KB目安）で `assets/images/blog/{記事スラッグ}.jpg` に保存 → **すぐコミット**
+   - 記事の `og:image`（width/height も）と `<img class="post-eyecatch" width="1200" height="800" alt="...">` を設定
+   - 使い終わった元画像は置き場に残してよい（次の画像が来たら「最新のファイル」を使う。曖昧なら確認）
+
+**ChatGPTに渡すプロンプトの雛形**（頼まれたら Claude Code が場面文を考えて渡す）:
+- 浮世絵歌舞伎絵スタイル・キャラは2人固定（丸メガネお団子のQA女性＋隈取のエンジニア男性）・note画像生成スペック準拠
+- 横長（1200×800想定）、文字を入れる場合は日本語タイトルも ChatGPT に描かせてよい（ChatGPT は日本語文字が正確）
 
 ## コーディング規約
 
