@@ -47,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール</a>
               <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
               <a href="https://www.beetle-web.jp/#contact" target="_blank" rel="noopener">お問い合わせ</a>
-              <a className="site-nav-howto" href={LANDING_URL} target="_blank" rel="noopener">使い方</a>
+              <a className="site-nav-howto" href={LANDING_URL} target="_blank" rel="noopener">リファレンス</a>
             </div>
           </div>
         </nav>

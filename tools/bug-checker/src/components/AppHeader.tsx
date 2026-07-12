@@ -19,7 +19,7 @@ export default function AppHeader() {
             <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール</a>
             <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
             <a href="https://www.beetle-web.jp/#contact" target="_blank" rel="noopener">お問い合わせ</a>
-            <a className="site-nav-howto" href="https://www.beetle-web.jp/tools/bug-checker/landing.html" target="_blank" rel="noopener">使い方</a>
+            <a className="site-nav-howto" href="https://www.beetle-web.jp/tools/bug-checker/landing.html" target="_blank" rel="noopener">リファレンス</a>
           </div>
         </div>
       </nav>
@@ -60,9 +60,10 @@ export function PageHero({ counter }: { counter: CounterData | null }) {
             <div className="page-header-inner">
               <div className="page-header-title">これってバグなの？</div>
               <p className="page-header-desc">
-                画像を貼るだけでAIがバグか否かを判定。バグなら起票内容を自動生成します。タイトル・再現手順・期待値まで全部出てきます。
+                画像を貼るだけでAIがバグか否かを判定。<br />バグなら起票内容を自動生成します。<br />タイトル・再現手順・期待値まで全部出てきます。
               </p>
-              {counter && (
+              {/* 使用回数は無料枠の8割（8,000回）を超えたら表示（残量アラートとして） */}
+              {counter && counter.used >= counter.limit * 0.8 && (
                 <div className="mt-2 inline-flex flex-col gap-0.5 bg-white border border-[#e8e4de] rounded-lg px-3 py-1.5" style={{ borderWidth: '0.5px' }}>
                   <div className="text-[12px]" style={{ color: 'var(--color-text-muted)' }}>
                     今月みんなで {counter.used.toLocaleString()} 回使いました（無料枠 {counter.limit.toLocaleString()} 回まで）

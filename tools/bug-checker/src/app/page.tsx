@@ -118,10 +118,10 @@ export default function HomePage() {
   return (
     <main className="min-h-screen flex flex-col">
       <AppHeader />
-      <div className="app-paper flex-1">
+      <div className="app-paper flex-1 flex flex-col">
       <PageHero counter={counter} />
-      <div className="mx-auto px-5" style={{ maxWidth: '780px', paddingTop: '12px', paddingBottom: '48px' }}>
-        <div className="w-full max-w-[720px] mx-auto">
+      <div className="mx-auto px-5 w-full" style={{ maxWidth: '900px', paddingTop: '12px', paddingBottom: '24px' }}>
+        <div className="w-full max-w-[860px] mx-auto">
 
         {limitExceeded && <LimitBanner />}
 
@@ -174,25 +174,29 @@ export default function HomePage() {
         {verdict && !limitExceeded && <VerdictCard result={verdict} />}
 
         <div className="content-footer">
-          <div className="content-footer-row">
-            <span className="text-[11px] text-[#b4b2a9] font-mono">リリース日：{releaseDate}</span>
-            {(imagePreview || verdict) && (
+          <p className="content-footer-notice">
+            アップロードされた画像はAI判定のためAnthropicのAPIに送信されます。<br />
+            モデルの学習には利用されません。当サイトにデータベースはなく、画像を保存・収集することもありません。
+          </p>
+          {(imagePreview || verdict) && (
+            <div className="content-footer-row">
               <button
                 onClick={handleReset}
                 className="text-[11px] text-[#888780] hover:text-ink transition-colors font-mono underline underline-offset-2"
               >
                 クリア
               </button>
-            )}
-          </div>
-          <p className="content-footer-notice">
-            アップロードされた画像はAI判定のためAnthropicのAPIに送信されます。モデルの学習には利用されません。
-          </p>
+            </div>
+          )}
         </div>
         </div>
       </div>
+      <p className="paper-release">リリース日：{releaseDate}</p>
       </div>
 
+      <div className="footer-heroes">
+        <img src="/images/footer-heroes.jpg" alt="" aria-hidden="true" width="2172" height="264" loading="lazy" />
+      </div>
       <footer className="site-footer-app">
         <div className="sfa-left">
           <a href="https://www.beetle-web.jp" target="_blank" rel="noopener" className="sfa-logo">

@@ -91,9 +91,9 @@ body {
 .page-header {
   background: var(--color-bg-primary);
   border-bottom: 1px solid var(--color-border);
-  max-width: 720px;
-  margin-left: max(20px, calc((100% - 720px) / 2));
-  margin-right: max(20px, calc((100% - 720px) / 2));
+  max-width: 860px;
+  margin-left: max(20px, calc((100% - 860px) / 2));
+  margin-right: max(20px, calc((100% - 860px) / 2));
   position: relative;
 }
 /* たたむ/ひらくトグル */
@@ -126,7 +126,7 @@ body {
 .ph-with-visual { display: flex; align-items: center; gap: 20px; }
 .ph-main { flex: 1; min-width: 0; }
 .ph-visual {
-  width: 150px; height: auto; flex-shrink: 0;
+  width: min(400px, 44%); height: auto; flex-shrink: 0;
   border-radius: 14px; border: 1px solid var(--color-border);
   box-shadow: 0 6px 18px rgba(28, 28, 46, 0.08);
 }
@@ -248,18 +248,43 @@ body {
   margin-top: 40px;
   padding-top: 12px;
   border-top: 1px solid var(--color-border);
-  padding-bottom: 24px;
+}
+/* 紙面（ボディ）の一番右下に置くリリース日 */
+.paper-release {
+  margin-top: auto;
+  align-self: flex-end;
+  padding: 8px 20px 10px;
+  font-size: 11px;
+  color: #b4b2a9;
+  font-family: var(--font-mono, ui-monospace, monospace);
 }
 .content-footer-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  margin-bottom: 6px;
+  gap: 16px;
+  margin-top: 8px;
 }
 .content-footer-notice {
-  font-size: 10px;
-  color: #b4b2a9;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-accent);
+  border-radius: 8px;
+  padding: 10px 14px;
 }
+
+/* ── フッター上の浮世絵ヒーローズ全員集合バナー ── */
+.footer-heroes {
+  background: #000;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 -10px 24px rgba(28, 28, 46, 0.25);
+}
+.footer-heroes img { display: block; width: 100%; height: auto; }
 
 /* ── Site footer (dark bar) ── */
 .site-footer-app {
