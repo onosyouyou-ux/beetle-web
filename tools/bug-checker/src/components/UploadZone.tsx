@@ -79,7 +79,7 @@ export default function UploadZone({ preview, onUpload, onReset, disabled }: Pro
         <div className="text-[#888780] mb-1 flex justify-center">
           <IconPhotoScan size={34} />
         </div>
-        <div className="text-[15px] font-bold text-ink">クリックして画像をアップロード</div>
+        <div className="text-[15px] font-bold text-[var(--color-accent)]">クリックして画像をアップロード</div>
         <div className="text-[12px] text-[#888780] mt-1">
           スクリーンショット・エラー画面・UIの不具合など PNG / JPEG / WebP / GIF（5MBまで）
         </div>

@@ -96,20 +96,22 @@ body {
   margin-right: max(20px, calc((100% - 860px) / 2));
   position: relative;
 }
-/* たたむ/ひらくトグル */
+/* たたむ/ひらくトグル（展開時は独立した1列、たたみ時はタイトル行の右端） */
 .ph-toggle {
-  position: absolute;
-  top: 8px;
-  right: 0;
   font-size: 11px;
   color: var(--color-text-muted);
   background: none;
   border: none;
   cursor: pointer;
   padding: 4px 6px;
-  z-index: 1;
 }
 .ph-toggle:hover { color: var(--color-text-primary); }
+.ph-toggle-row {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 6px;
+}
+.ph-collapsed .ph-toggle { margin-left: auto; }
 /* たたんだ状態：タイトル1行 */
 .ph-collapsed {
   display: flex;
@@ -123,18 +125,17 @@ body {
   font-size: 15px;
   color: var(--color-text-primary);
 }
-.ph-with-visual { display: flex; align-items: stretch; gap: 20px; }
+/* 下端をテキストと揃える。画像幅はテキスト高（4行＋タイトルで約180px）と釣り合う320pxが上限 */
+.ph-with-visual { display: flex; align-items: flex-end; gap: 20px; }
 .ph-main { flex: 1; min-width: 0; }
 .ph-visual {
-  width: min(420px, 46%); flex-shrink: 0;
-  align-self: stretch; object-fit: cover;
-  margin-top: 30px; /* 上の「たたむ」トグルと重ならないよう空ける */
+  width: min(320px, 38%); height: auto; flex-shrink: 0;
   border-radius: 14px; border: 1px solid var(--color-border);
   box-shadow: 0 6px 18px rgba(28, 28, 46, 0.08);
 }
 @media (max-width: 620px) { .ph-visual { display: none; } }
 .page-header-wrap {
-  padding: 14px 0 12px;
+  padding: 0 0 12px; /* 上はトグル行が確保するので詰める */
 }
 .page-header-en {
   font-family: 'Syne', sans-serif;
@@ -314,8 +315,11 @@ body {
   padding: 10px 14px;
 }
 
-/* ── フッター上の浮世絵ヒーローズ全員集合バナー ── */
+/* ── フッター上の浮世絵ヒーローズ全員集合バナー（紙面と同じ幅に揃える） ── */
 .footer-heroes {
+  width: 100%;
+  max-width: var(--app-paper-width);
+  margin: 0 auto;
   background: #000;
   overflow: hidden;
   display: flex;
@@ -372,3 +376,28 @@ body {
   transition: color .15s;
 }
 .sfa-right a:hover { color: #fff; }
+
+/* ── 上に戻るボタン（本体 common.css の .scroll-top-float と同一） ── */
+.scroll-top-float {
+  position: fixed;
+  bottom: 28px;
+  right: 24px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #2C2C2A;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 18px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s, background .15s;
+  z-index: 200;
+}
+.scroll-top-float.visible { opacity: 1; pointer-events: auto; }
+.scroll-top-float:hover { background: #444; }

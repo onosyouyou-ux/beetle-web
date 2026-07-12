@@ -43,23 +43,29 @@ export function PageHero({ counter }: { counter: CounterData | null }) {
 
   return (
     <div className="page-header">
-      <button type="button" className="ph-toggle" onClick={toggle} aria-expanded={!collapsed}>
-        {collapsed ? '▼ ひらく' : '▲ たたむ'}
-      </button>
-
       {collapsed ? (
         <div className="ph-collapsed">
           <span className="page-header-en" style={{ marginBottom: 0 }}>BUG DETECTOR</span>
           <span className="ph-collapsed-title">これってバグなの？</span>
+          <button type="button" className="ph-toggle" onClick={toggle} aria-expanded={false}>
+            ▼ ひらく
+          </button>
         </div>
       ) : (
+        <>
+        {/* たたむトグルは独立した1列（タイトル群はその下） */}
+        <div className="ph-toggle-row">
+          <button type="button" className="ph-toggle" onClick={toggle} aria-expanded={true}>
+            ▲ たたむ
+          </button>
+        </div>
         <div className="page-header-wrap ph-with-visual">
           <div className="ph-main">
             <div className="page-header-en">BUG DETECTOR</div>
             <div className="page-header-inner">
               <div className="page-header-title">これってバグなの？</div>
               <p className="page-header-desc">
-                画像を貼るだけでAIがバグか否かを判定。<br />バグなら起票内容を自動生成します。<br />タイトル・再現手順・期待値まで全部出てきます。
+                画像を貼るだけでAIがバグか否かを判定。<br />バグなら起票内容を自動生成します。<br />タイトル・再現手順・期待値まで全部出てきます。<br />登録不要・インストール不要、月1万回まで無料です。
               </p>
               {/* 使用回数は無料枠の8割（8,000回）を超えたら表示（残量アラートとして） */}
               {counter && counter.used >= counter.limit * 0.8 && (
@@ -80,6 +86,7 @@ export function PageHero({ counter }: { counter: CounterData | null }) {
           {/* LPメインビジュアル */}
           <img className="ph-visual" src="/hero-lp.jpg" alt="" aria-hidden="true" width="1600" height="900" />
         </div>
+        </>
       )}
     </div>
   );

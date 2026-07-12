@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import AppHeader, { PageHero } from '@/components/AppHeader';
+import ScrollTopButton from '@/components/ScrollTopButton';
 import UploadZone from '@/components/UploadZone';
 import ScanButton from '@/components/ScanButton';
 import ScanningArea from '@/components/ScanningArea';
@@ -247,6 +248,7 @@ export default function HomePage() {
           <span>© 2026 BEETLE Co., LLC</span>
         </div>
       </footer>
+      <ScrollTopButton />
     </main>
   );
 }
