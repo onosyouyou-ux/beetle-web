@@ -197,50 +197,86 @@ body {
   margin-bottom: 6px;
 }
 
-/* ── How to use ── */
-.how-to {
-  margin-top: 20px;
-  padding: 16px 18px;
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-}
-.how-to-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: .07em;
-  margin-bottom: 10px;
-}
-.how-to-steps {
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
-}
-.how-to-step {
-  flex: 1;
-  display: flex;
-  gap: 6px;
-  align-items: flex-start;
-}
-.how-to-num {
-  font-size: 11px;
-  font-weight: 700;
+/* ── ランディング準拠の「使い方」「FAQ」セクション ── */
+.app-section { margin-top: 44px; }
+.app-eyebrow {
+  display: inline-block;
+  margin-bottom: 8px;
   color: var(--color-accent);
-  flex-shrink: 0;
-  line-height: 1.6;
-}
-.how-to-text {
+  font-weight: 800;
   font-size: 12px;
+  letter-spacing: .12em;
+}
+.app-h2 {
+  font-family: 'M PLUS 1p', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+.app-lead {
   color: var(--color-text-secondary);
-  line-height: 1.6;
+  font-size: 13px;
+  line-height: 1.7;
 }
-.how-to-arrow {
+.app-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+.app-step-card, .app-faq-card {
+  padding: 18px;
+  background: rgba(255, 255, 255, .6);
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(28, 28, 46, .05);
+}
+.app-step-card h3, .app-faq-card h3 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+.app-step-card p, .app-faq-card p {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  line-height: 1.7;
+  margin-top: 8px;
+}
+.app-step-no {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--color-text-primary);
+  color: #fff;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+.app-flow-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+.app-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .7);
+  border: 1px solid var(--color-border);
+  font-weight: 700;
+  color: var(--color-text-primary);
   font-size: 12px;
-  color: var(--color-border);
-  flex-shrink: 0;
-  padding-top: 3px;
+}
+.app-faq-grid { display: grid; gap: 12px; margin-top: 16px; }
+@media (max-width: 640px) {
+  .app-steps { grid-template-columns: 1fr; }
 }
 
 /* ── Content footer (Anthropic notice) ── */

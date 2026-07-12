@@ -148,25 +148,60 @@ export default function HomePage() {
         </p>
 
         {!verdict && !scanning && (
-          <div className="how-to">
-            <div className="how-to-label">使い方</div>
-            <div className="how-to-steps">
-              <div className="how-to-step">
-                <span className="how-to-num">①</span>
-                <span className="how-to-text">気になる画面のスクショを貼る</span>
+          <>
+            <section className="app-section">
+              <span className="app-eyebrow">使い方</span>
+              <h2 className="app-h2">3ステップで完了。</h2>
+              <p className="app-lead">調査の入口として気軽に回せるように、流れはシンプルです。初見でも迷わず使えます。</p>
+              <div className="app-steps">
+                <article className="app-step-card">
+                  <div className="app-step-no">1</div>
+                  <h3>スクショを貼る</h3>
+                  <p>気になる画面のスクリーンショットをドラッグ＆ドロップ、またはクリックして選択します。</p>
+                </article>
+                <article className="app-step-card">
+                  <div className="app-step-no">2</div>
+                  <h3>バグスキャン実行</h3>
+                  <p>ボタンを押すだけで、AIが内容を解析し、判断の材料を整理します。</p>
+                </article>
+                <article className="app-step-card">
+                  <div className="app-step-no">3</div>
+                  <h3>起票内容をコピー</h3>
+                  <p>生成された内容を、そのままチケットに貼り付けて次のやりとりへ進めます。</p>
+                </article>
               </div>
-              <span className="how-to-arrow">→</span>
-              <div className="how-to-step">
-                <span className="how-to-num">②</span>
-                <span className="how-to-text">バグスキャンを実行する</span>
+              <div className="app-flow-badges">
+                <span className="app-chip">🆓 月1万回まで無料</span>
+                <span className="app-chip">📱 スマホ対応</span>
+                <span className="app-chip">🔒 登録不要</span>
+                <span className="app-chip">🌐 ブラウザで動く</span>
+                <span className="app-chip">⚡ インストール不要</span>
               </div>
-              <span className="how-to-arrow">→</span>
-              <div className="how-to-step">
-                <span className="how-to-num">③</span>
-                <span className="how-to-text">判定結果と起票内容をコピー</span>
+            </section>
+
+            <section className="app-section">
+              <span className="app-eyebrow">FAQ</span>
+              <h2 className="app-h2">よくある質問</h2>
+              <div className="app-faq-grid">
+                <article className="app-faq-card">
+                  <h3>Q. 本当に画像を貼るだけですか？</h3>
+                  <p>A. はい。スクリーンショットを貼り、必要であれば補足メモを加えるだけで使えます。ログイン・インストールは不要です。</p>
+                </article>
+                <article className="app-faq-card">
+                  <h3>Q. 判定結果は絶対ですか？</h3>
+                  <p>A. AIの判定は判断の補助です。最終判断は、仕様や実際の文脈にあわせて確認してください。</p>
+                </article>
+                <article className="app-faq-card">
+                  <h3>Q. どんな内容が出力されますか？</h3>
+                  <p>A. バグか否かの整理に加えて、タイトル・再現手順・期待値・実際の結果・環境など、起票の下書きになる情報を出力します。</p>
+                </article>
+                <article className="app-faq-card">
+                  <h3>Q. 無料で使えますか？</h3>
+                  <p>A. 月1万回まで無料で使えます。会員登録は不要で、ブラウザを開けばすぐに試せます。</p>
+                </article>
               </div>
-            </div>
-          </div>
+            </section>
+          </>
         )}
 
         <ScanningArea phase={scanPhase} />
