@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import AppHeader from '@/components/AppHeader';
+import AppHeader, { PageHero } from '@/components/AppHeader';
 import UploadZone from '@/components/UploadZone';
 import ScanButton from '@/components/ScanButton';
 import ScanningArea from '@/components/ScanningArea';
@@ -116,10 +116,12 @@ export default function HomePage() {
   const releaseDate = process.env.NEXT_PUBLIC_RELEASE_DATE ?? '2026-06-01';
 
   return (
-    <main className="min-h-screen flex flex-col" style={{ background: 'var(--color-bg-primary)' }}>
-      <AppHeader counter={counter} />
-      <div className="mx-auto px-5" style={{ maxWidth: '600px', paddingTop: '24px', paddingBottom: '64px' }}>
-        <div className="w-full max-w-[560px] mx-auto">
+    <main className="min-h-screen flex flex-col">
+      <AppHeader />
+      <div className="app-paper flex-1">
+      <PageHero counter={counter} />
+      <div className="mx-auto px-5" style={{ maxWidth: '780px', paddingTop: '24px', paddingBottom: '64px' }}>
+        <div className="w-full max-w-[720px] mx-auto">
 
         {limitExceeded && <LimitBanner />}
 
@@ -188,6 +190,7 @@ export default function HomePage() {
           </p>
         </div>
         </div>
+      </div>
       </div>
 
       <footer className="site-footer-app">

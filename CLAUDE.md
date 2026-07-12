@@ -141,6 +141,16 @@ Tool系フッターに必須の要素：
 - プライバシーポリシーリンク → `https://www.beetle-web.jp/privacy`
 - © 表記
 
+### アプリ紙面の固定レイアウト（2026-07-12決定）
+
+Vercelアプリは「**紙面固定＋余白は背景**」で作る。レイアウトを画面幅で伸縮させない。
+
+- **紙面**: `.app-paper`（`max-width: var(--app-paper-width)` = **1180px**・背景 `var(--color-bg-primary)`・`box-shadow: 0 0 32px rgba(28,28,46,.16)`）を中央寄せ。全幅の白ナビ（`.site-nav`）と全幅のダークフッター（`.site-footer-app`）の間に挟む
+- **背景**: body に青海波タイル `/images/bg-seigaiha.png`（ベース `#EAE4D5`・線 `#D9D1BE`、`background-size: 160px 40px`）。タイル原本は bug-checker の `public/images/` にあり、PowerShell System.Drawing で生成した（他アプリへはコピーで流用）
+- **レスポンシブの考え方**: 紙面より広い画面では**余白（背景）だけが伸びる**。紙面幅を下回ったら、そこで初めてコンテンツ側の既存レスポンシブ（1カラム化など）で調整する（余白ファースト）
+- 紙面内のコンテンツ幅はツールごとに決めてよい（bug-checker は 720px、gakkyu-tsushin は 1180px 2カラム）
+- **進捗**: bug-checker 適用済み。gakkyu-tsushin・rubi-shokunin は今後反映
+
 ### ヘッダー・フッターの固定ルール（2026-07決定）
 
 - **アプリLPのヘッダー**：共通パーシャル（`<div id="site-header">`＋`common.css` のライトナビ）で固定。LP独自ヘッダーは作らない

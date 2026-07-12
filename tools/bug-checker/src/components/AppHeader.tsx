@@ -5,7 +5,8 @@ interface CounterData {
   limit: number;
 }
 
-export default function AppHeader({ counter }: { counter: CounterData | null }) {
+/** 全幅の共通ライトナビ（紙面の外） */
+export default function AppHeader() {
   return (
     <header>
       <nav className="site-nav">
@@ -20,10 +21,16 @@ export default function AppHeader({ counter }: { counter: CounterData | null }) 
           </div>
         </div>
       </nav>
+    </header>
+  );
+}
 
-      <div className="page-header">
-        <div className="page-header-wrap ph-with-visual">
-          <div className="ph-main">
+/** ページヘッダー（紙面の中） */
+export function PageHero({ counter }: { counter: CounterData | null }) {
+  return (
+    <div className="page-header">
+      <div className="page-header-wrap ph-with-visual">
+        <div className="ph-main">
           <div className="page-header-en">BUG DETECTOR</div>
           <div className="page-header-inner">
             <div className="page-header-title">これってバグなの？</div>
@@ -45,11 +52,10 @@ export default function AppHeader({ counter }: { counter: CounterData | null }) 
               </div>
             )}
           </div>
-          </div>
-          {/* LPメインビジュアル */}
-          <img className="ph-visual" src="/hero-lp.jpg" alt="" aria-hidden="true" width="1600" height="900" />
         </div>
+        {/* LPメインビジュアル */}
+        <img className="ph-visual" src="/hero-lp.jpg" alt="" aria-hidden="true" width="1600" height="900" />
       </div>
-    </header>
+    </div>
   );
 }
