@@ -169,7 +169,7 @@ Vercelアプリは「**紙面固定＋余白は背景**」で作る。レイア�
   - キャラ指定: `meganeqa woman with round glasses and black hair bun in blue floral kimono`（メガネQAさん）／ `kabukiengineer man with dramatic kabuki kumadori makeup`（隈取エンジニア）。2人なら `two characters`、1人なら `solo`
   - ネガティブ: `photo, photorealistic, 3d render, blurry, lowres, watermark, text, letters, three people, crowd, deformed hands`
   - 推奨設定: steps 28 / cfg 7.0 / dpmpp_2m karras / LoRA強度 0.9
-- **文字は生成させない**（SDXLはニセ文字になる）。タイトル文字は HG行書体で後入れ（PowerShell System.Drawing、クリーム `#f7f0dd` 文字＋濃紺 `#1c1c2e` 縁取り、またはニセ文字を背景色で塗り消して差し替え）。文字スペースが欲しいときはプロンプトに `blank wooden sign board` や `spacious empty sky at the top of the image` を入れる
+- **ヒーロー画像に文字は入れない（2026-07-12決定）**。SDXLの生成文字はニセ文字になり、後入れ文字も貼った感が出て浮くため、画像は絵だけで完結させる（タイトルは記事HTML側が担う）。ネガティブの `text, letters` でニセ文字を抑制する。どうしても文字が要る場合のみ `beetle-image.ps1 -Text "..."` で後入れできる
 - **仕上げ**: 1200×800 にリサイズ・クロップ → `assets/images/blog/{記事スラッグ}.jpg`（JPG・200KB目安）に保存 → 記事の `og:image`（width/height も）と `<img class="post-eyecatch" width="1200" height="800" alt="...">` を設定 → **画像を作ったらすぐコミット**
 - **注意**: LoRA学習（`D:\sd-scripts`）がGPU使用中は生成しない（VRAM競合で両方落ちる）。生成物は必ず目視検品（指の崩れ・意図しない3人目・目立つニセ文字）。ダメならシード変えて再生成
 
