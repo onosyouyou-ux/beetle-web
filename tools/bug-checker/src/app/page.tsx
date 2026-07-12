@@ -114,7 +114,7 @@ export default function HomePage() {
     setScanning(false);
   }
 
-  const releaseDate = process.env.NEXT_PUBLIC_RELEASE_DATE ?? '2026-06-01';
+  const updatedDate = process.env.NEXT_PUBLIC_UPDATED_DATE ?? '2026-07-13';
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -225,7 +225,7 @@ export default function HomePage() {
         </div>
         </div>
       </div>
-      <p className="paper-release">リリース日：{releaseDate}</p>
+      <p className="paper-release">更新日：{updatedDate}</p>
       </div>
 
       <div className="footer-heroes">
