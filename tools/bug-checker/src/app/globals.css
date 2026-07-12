@@ -123,10 +123,12 @@ body {
   font-size: 15px;
   color: var(--color-text-primary);
 }
-.ph-with-visual { display: flex; align-items: center; gap: 20px; }
+.ph-with-visual { display: flex; align-items: stretch; gap: 20px; }
 .ph-main { flex: 1; min-width: 0; }
 .ph-visual {
-  width: min(400px, 44%); height: auto; flex-shrink: 0;
+  width: min(420px, 46%); flex-shrink: 0;
+  align-self: stretch; object-fit: cover;
+  margin-top: 30px; /* 上の「たたむ」トグルと重ならないよう空ける */
   border-radius: 14px; border: 1px solid var(--color-border);
   box-shadow: 0 6px 18px rgba(28, 28, 46, 0.08);
 }
@@ -149,7 +151,7 @@ body {
 }
 .page-header-title {
   font-family: 'M PLUS 1p', sans-serif;
-  font-size: 26px;
+  font-size: 32px;
   font-weight: 800;
   color: var(--color-text-primary);
   line-height: 1.1;
@@ -157,9 +159,9 @@ body {
   margin-bottom: 6px;
 }
 .page-header-desc {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--color-text-secondary);
-  line-height: 1.6;
+  line-height: 1.8;
   max-width: 560px;
 }
 .page-header-metrics {
@@ -190,9 +192,9 @@ body {
 
 /* ── Field label ── */
 .field-label {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
-  color: var(--color-text-muted);
+  color: var(--color-text-primary);
   letter-spacing: .05em;
   margin-bottom: 6px;
 }

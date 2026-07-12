@@ -139,13 +139,10 @@ export default function HomePage() {
             onChange={e => setNote(e.target.value)}
             disabled={scanning}
             placeholder="操作していた内容・エラーの状況・気になったことなど（任意）"
-            className="w-full border border-[#c8c7c0] rounded-xl px-4 py-2.5 text-[13px] text-ink bg-[#fafaf8] resize-none h-[60px] outline-none focus:border-[#888780] transition-colors placeholder:text-[#b4b2a9] disabled:opacity-50"
+            className="w-full border border-[#a8a79f] rounded-xl px-4 py-2.5 text-[14px] text-ink bg-white resize-none h-[68px] outline-none focus:border-[#555] transition-colors placeholder:text-[#999] disabled:opacity-50"
           />
         </div>
         <ScanButton disabled={!imagePreview || scanning || !!verdict} onClick={handleScan} />
-        <p className="text-[11px] text-[#b4b2a9] text-center mt-2">
-          ※ AIの判定は参考情報です。誤りが含まれる場合があります。
-        </p>
 
         {!verdict && !scanning && (
           <>
@@ -210,6 +207,7 @@ export default function HomePage() {
 
         <div className="content-footer">
           <p className="content-footer-notice">
+            ※ AIの判定は参考情報です。誤りが含まれる場合があります。<br />
             アップロードされた画像はAI判定のためAnthropicのAPIに送信されます。<br />
             モデルの学習には利用されません。当サイトにデータベースはなく、画像を保存・収集することもありません。
           </p>
