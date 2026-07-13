@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import AppHeader from '@/components/AppHeader';
 import AppFooter from '@/components/AppFooter';
+import ScrollTopButton from '@/components/ScrollTopButton';
 import PreviewControls from '@/components/PreviewControls';
 import NewspaperPreview from '@/components/NewspaperPreview';
 import ArticleBox, { type ArticleItem } from '@/components/ArticleBox';
@@ -45,6 +46,20 @@ export default function Home() {
 
   const eventsRef = useRef<HTMLTextAreaElement>(null);
   const paperRef = useRef<HTMLDivElement>(null);
+
+  // ヒーローのたたみ機能（bug-checker と同型。状態は localStorage に保存）
+  const [heroCollapsed, setHeroCollapsed] = useState(false);
+  useEffect(() => {
+    try { if (localStorage.getItem('gt_hero_collapsed') === '1') setHeroCollapsed(true); } catch {}
+  }, []);
+  function toggleHero() {
+    setHeroCollapsed((c) => {
+      try { localStorage.setItem('gt_hero_collapsed', c ? '0' : '1'); } catch {}
+      return !c;
+    });
+  }
+
+  const updatedDate = process.env.NEXT_PUBLIC_UPDATED_DATE ?? '2026-07-13';
 
   const hasDirtyContent = useMemo(
     () => articles.some((a) => a.text.trim() || a.heading.trim()) ||
@@ -315,38 +330,57 @@ export default function Home() {
   }
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <AppHeader />
+      <div className="app-paper flex-1 flex flex-col">
 
-      {/* ── ヒーロー ── */}
+      {/* ── ヒーロー（たためる） ── */}
       <section className="hero-band">
-        <div className="hero-inner">
-          <div className="hero-copy">
-            <div className="page-header-en">NEWSLETTER MAKER</div>
-            <h1 className="hero-title">学級通信メーカー</h1>
-            <p className="hero-desc">
-              今月の出来事をメモするだけ。AIが見出しと文章を整えて、学級通信の紙面に流し込みます。<br />
-              写真なしでもイラスト付きで作れるので、子どもの顔出しが気になるクラスだよりにも。
-            </p>
+        {heroCollapsed ? (
+          <div className="ph-collapsed">
+            <span className="page-header-en" style={{ marginBottom: 0 }}>NEWSLETTER MAKER</span>
+            <span className="ph-collapsed-title">学級通信メーカー</span>
+            <button type="button" className="ph-toggle" onClick={toggleHero} aria-expanded={false}>
+              ▼ ひらく
+            </button>
           </div>
-          {/* 静的プレビュー画像＋装飾 */}
-          <div className="hero-visual" aria-hidden="true">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/hero-preview.jpg" alt="" className="hero-img" />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icons/04_notepaper_clip.png" alt="" className="deco deco-clip" />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icons/05_leaf_sprig.png" alt="" className="deco deco-leaf" />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icons/06_music_note.png" alt="" className="deco deco-note" />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icons/07_flower.png" alt="" className="deco deco-flower" />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icons/08_green_pencil.png" alt="" className="deco deco-pencil" />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icons/09_smile_sticky.png" alt="" className="deco deco-sticky" />
+        ) : (
+          <>
+          {/* たたむトグルは独立した1列（タイトル群はその下） */}
+          <div className="ph-toggle-row">
+            <button type="button" className="ph-toggle" onClick={toggleHero} aria-expanded={true}>
+              ▲ たたむ
+            </button>
           </div>
-        </div>
+          <div className="hero-inner">
+            <div className="hero-copy">
+              <div className="page-header-en">NEWSLETTER MAKER</div>
+              <h1 className="hero-title">学級通信メーカー</h1>
+              <p className="hero-desc">
+                今月の出来事をメモするだけ。AIが見出しと文章を整えて、学級通信の紙面に流し込みます。<br />
+                写真なしでもイラスト付きで作れるので、子どもの顔出しが気になるクラスだよりにも。
+              </p>
+            </div>
+            {/* 静的プレビュー画像＋装飾 */}
+            <div className="hero-visual" aria-hidden="true">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/hero-preview.jpg" alt="" className="hero-img" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icons/04_notepaper_clip.png" alt="" className="deco deco-clip" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icons/05_leaf_sprig.png" alt="" className="deco deco-leaf" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icons/06_music_note.png" alt="" className="deco deco-note" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icons/07_flower.png" alt="" className="deco deco-flower" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icons/08_green_pencil.png" alt="" className="deco deco-pencil" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icons/09_smile_sticky.png" alt="" className="deco deco-sticky" />
+            </div>
+          </div>
+          </>
+        )}
       </section>
 
       <main className="max-w-[1180px] mx-auto px-4 sm:px-6 py-6 pb-16">
@@ -540,9 +574,67 @@ export default function Home() {
             </div>
           </section>
         </div>
+
+        {/* ── ランディング準拠の使い方3ステップ ── */}
+        <section className="app-section">
+          <span className="app-eyebrow">使い方</span>
+          <h2 className="app-h2">使い方は3ステップ</h2>
+          <p className="app-lead">箇条書きのメモから学級通信ができます。初めてでも迷わず作れます。</p>
+          <div className="app-steps">
+            <article className="app-step-card">
+              <div className="app-step-no">1</div>
+              <h3>今月の出来事をメモする</h3>
+              <p>箇条書きでOK。思いついたことを書き出します。</p>
+            </article>
+            <article className="app-step-card">
+              <div className="app-step-no">2</div>
+              <h3>AIで見出しと文章を整える</h3>
+              <p>AIが見出しを考え、読みやすい文章にまとめます。</p>
+            </article>
+            <article className="app-step-card">
+              <div className="app-step-no">3</div>
+              <h3>PDFで保存して印刷する</h3>
+              <p>A4の紙面をPDFで保存して、そのまま印刷できます。</p>
+            </article>
+          </div>
+          <div className="app-flow-badges">
+            <span className="app-chip">🆓 登録不要・無料</span>
+            <span className="app-chip">🖼 写真なしでもOK</span>
+            <span className="app-chip">📄 PDFで印刷</span>
+            <span className="app-chip">🌐 ブラウザで動く</span>
+          </div>
+        </section>
+
+        {/* ── ランディング準拠のFAQ ── */}
+        <section className="app-section">
+          <span className="app-eyebrow">FAQ</span>
+          <h2 className="app-h2">よくある質問</h2>
+          <div className="app-faq-grid">
+            <article className="app-faq-card">
+              <h3>Q. 無料で使えますか？</h3>
+              <p>A. はい。登録不要・無料で使えます。ブラウザで開いて、そのまま学級通信を作成できます。</p>
+            </article>
+            <article className="app-faq-card">
+              <h3>Q. 写真を使わなくても作れますか？</h3>
+              <p>A. はい。写真を使わず、イラストを選んで学級通信を作れます。子どもの顔出しが気になる場合にも使いやすいです。</p>
+            </article>
+            <article className="app-faq-card">
+              <h3>Q. どんな内容を入力すればいいですか？</h3>
+              <p>A. 箇条書きのメモで大丈夫です。「運動会の練習をがんばった」「水筒を持ってきてください」のような短いメモから文章に整えられます。</p>
+            </article>
+            <article className="app-faq-card">
+              <h3>Q. 作った学級通信はそのまま配れますか？</h3>
+              <p>A. PDFで保存して印刷できます。学校ごとの表記ルールや連絡内容に誤りがないか、配布前にご確認ください。</p>
+            </article>
+          </div>
+        </section>
       </main>
 
+      <p className="paper-release">更新日：{updatedDate}</p>
+      </div>
+
       <AppFooter />
-    </>
+      <ScrollTopButton />
+    </div>
   );
 }
