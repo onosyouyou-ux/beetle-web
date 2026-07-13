@@ -42,7 +42,7 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 .tool-name{font-size:14px;font-weight:700;color:var(--tp-text)}
 .tool-desc{font-size:13px;color:var(--tp-text2);line-height:1.8;margin-bottom:14px;flex:1}
 /* カード末尾のリンク表示：色付きバッジをやめ、トップページ .tool-badge と同じあっさりしたテキストリンクに統一（2026-07-13決定） */
-.tool-tag{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--tp-orange);padding-left:10px;border-left:2px solid #1c1c2e;align-self:flex-start;background:none;border-radius:0}
+.tool-tag{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--tp-orange);align-self:flex-start;background:none;border-radius:0}
 .tool-tag.free,.tool-tag.try{background:none;color:var(--tp-orange)}
 
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
