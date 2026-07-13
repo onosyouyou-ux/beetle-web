@@ -26,6 +26,9 @@ a{text-decoration:none;}
 .nav-links a.nav-cta-lp:hover { background: #7a7a88; border-color: #7a7a88; color: #fff; }
 .nav-links a.nav-cta-edu { background: var(--color-accent); border-color: var(--color-accent); }
 .nav-links a.nav-cta-edu:hover { background: #a9543f; border-color: #a9543f; }
+/* 静的教育アプリのリファレンスボタン（オレンジ。common.jsが注入） */
+.nav-links a.nav-cta-ref { background: #ef8a3c; border-color: #ef8a3c; }
+.nav-links a.nav-cta-ref:hover { background: #e07428; border-color: #e07428; }
 
 /* 2段目：ページ内セクションリンク（common.js が注入。空なら出さない） */
 .nav-sections { display: flex; justify-content: center; gap: 24px; padding: 7px 16px 9px; border-top: 1px solid #ebebeb; flex-wrap: wrap; }

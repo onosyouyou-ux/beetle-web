@@ -35,15 +35,21 @@
 <!-- SEO評価はランディング(landing.html)に集約。このページは実アプリ本体 -->
 <link rel="canonical" href="https://www.beetle-web.jp/tools/eigo/landing.html">
 <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="/css/eigo-app.css?v=3">
+<link rel="stylesheet" href="/css/eigo-app.css?v=4">
 </head>
 <body>
 <div id="site-header"></div>
-<div id="app"></div>
+
+<!-- 紙面（1180px固定）。余白はモザイクタイルの背景 -->
+<div class="app-paper">
+  <div id="app"></div>
+  <p class="paper-release">更新日：2026-07-13</p>
+</div>
 <script src="/js/eigo-app.js"></script>
 
+<!-- その他ツール用フッター：テキストロゴ版（ロゴ＋ナビ／プライバシー・会社名の2段中央揃え） -->
 <footer class="site-footer-app">
-  <div class="sfa-left">
+  <div class="sfa-row">
     <a href="/" class="sfa-logo">BEET<span>LE</span></a>
     <nav class="sfa-nav">
       <a href="/">ホーム</a>
@@ -52,7 +58,7 @@
       <a href="/#contact">お問い合わせ</a>
     </nav>
   </div>
-  <div class="sfa-right">
+  <div class="sfa-copy">
     <a href="/privacy">プライバシーポリシー</a>
     <span>© 2026 BEETLE Co., LLC</span>
   </div>

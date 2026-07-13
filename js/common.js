@@ -9,11 +9,30 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPartial('site-header', '/partials/header.html').then(() => {
     const path = location.pathname;
 
-    // 事業メインページでは自分自身へのボタンを出さない（LPページボタンは常設）
+    // 事業メインページでは自分自身へのボタンを出さない（トップボタンは常設）
     const ctaQa = document.querySelector('.nav-cta-qa');
     const ctaEdu = document.querySelector('.nav-cta-edu');
     if (path === '/test-tools.html' && ctaQa) ctaQa.style.display = 'none';
     else if (path === '/edu-tools.html' && ctaEdu) ctaEdu.style.display = 'none';
+
+    // 本体配信の静的アプリはVercelアプリと同じ構成にする：
+    // 教育系＝トップ＋教育支援＋リファレンス（オレンジ→ランディング）。QA支援ボタンは出さない
+    const staticApps = {
+      '/tools/eigo/': { ref: '/tools/eigo/landing.html', type: 'edu' },
+      '/tools/eigo/index.html': { ref: '/tools/eigo/landing.html', type: 'edu' },
+    };
+    const appConf = staticApps[path];
+    if (appConf) {
+      if (appConf.type === 'edu' && ctaQa) ctaQa.style.display = 'none';
+      const links = document.querySelector('.nav-links');
+      if (links) {
+        const ref = document.createElement('a');
+        ref.href = appConf.ref;
+        ref.className = 'nav-cta nav-cta-ref';
+        ref.textContent = 'リファレンス';
+        links.appendChild(ref);
+      }
+    }
 
     // 2段目：ページ内セクションリンク（定義があるページだけ表示）
     const sectionLinks = {
