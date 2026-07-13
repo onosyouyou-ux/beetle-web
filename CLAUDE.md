@@ -147,10 +147,12 @@ Vercelアプリは「**紙面固定＋余白は背景**」で作る。レイア�
 
 **紙面と背景**
 - **紙面**: `.app-paper`（`max-width: var(--app-paper-width)` = **1180px**・背景 `var(--color-bg-primary)`・`box-shadow: 0 0 32px rgba(28,28,46,.16)`）を中央寄せ。全幅の白ナビ（`.site-nav`）と全幅のダークフッター（`.site-footer-app`）の間に挟む
-- **背景**: body に青海波タイル `/images/bg-seigaiha.png`（ベース `#EAE4D5`・線 `#D9D1BE`、`background-size: 160px 40px`）。タイル原本は bug-checker の `public/images/` にあり、PowerShell System.Drawing で生成した（他アプリへはコピーで流用）
+- **背景**: body のタイル背景はツールの系統で作り分ける（どちらも PowerShell System.Drawing で生成。2026-07-13決定）
+  - **テスト検証用ツール**: 青海波 `/images/bg-seigaiha.png`（ベース `#EAE4D5`・線 `#D9D1BE`、`background-size: 160px 40px`）。原本は bug-checker の `public/images/`
+  - **学校・子ども向けツール**: モザイクタイル `/images/bg-mosaic.png`（ベース `#ece1cb`・温かいベージュ＋パステルアクセント2割、`background-size: 160px 160px`）。原本は gakkyu-tsushin の `public/images/`（rubi-shokunin へコピー済み）
 - **レスポンシブの考え方**: 紙面より広い画面では**余白（背景）だけが伸びる**。紙面幅を下回ったら、そこで初めてコンテンツ側の既存レスポンシブ（1カラム化など）で調整する（余白ファースト）
-- 紙面内のコンテンツ幅はツールごとに決めてよい（bug-checker は 720px、gakkyu-tsushin は 1180px 2カラム）
-- 全員集合バナー（`.footer-heroes`）も紙面幅 1180px に揃える
+- 紙面内のコンテンツ幅はツールごとに決めてよい（bug-checker は 720px、gakkyu-tsushin は 1180px 2カラム、rubi-shokunin は 620px）
+- 全員集合バナー（`.footer-heroes`。テスト検証用ツールのみ）も紙面幅 1180px に揃える
 
 **紙面内の必須要素**
 - **ページヘッダー**: page-header ＋**たたみ機能**（たたむトグルは独立行、タイトル群はその下＝ヒーロー画像と重ねない）。初期表示がノートPC1画面に収まるよう余白を圧縮する
@@ -161,14 +163,16 @@ Vercelアプリは「**紙面固定＋余白は背景**」で作る。レイア�
 **実装の注意**
 - stickyナビを高さゼロの `<header>` で包まない（スクロール→リサイズ→上に戻るとヘッダーが消えるバグの原因になった。2026-07-12修正済み）
 
-**進捗**: bug-checker 適用済み（基準アプリ）。gakkyu-tsushin・rubi-shokunin は今後反映
+**進捗**: bug-checker（基準アプリ）・gakkyu-tsushin・rubi-shokunin の全アプリ適用済み（2026-07-13横展開完了）
 
 ### ヘッダー・フッターの固定ルール（2026-07決定）
 
 - **アプリLPのヘッダー**：共通パーシャル（`<div id="site-header">`＋`common.css` のライトナビ）で固定。LP独自ヘッダーは作らない
-- **テスト検証用ツールのフッター**（これってバグなの？・テストコンテンツ作成ツール・正規表現テスター）：共通パーシャル（`<div id="site-footer">`＝浮世絵ヒーローズ画像＋ダークバー）で固定
+- **フッターは2系統に統一（2026-07-13決定。PC・スマホ同一レイアウト、全て中央揃え）**。バナー版とテキストロゴ版は**排他**（両方は出さない）：
+  - **バナー版**（テスト検証用ツール＋本体共通パーシャル `#site-footer`）：浮世絵ヒーローズバナー → ナビリンク → プライバシーポリシー・会社名 の2段。バナーにBEETLEロゴが焼き込み済みのため**テキストロゴは出さない**
+  - **テキストロゴ版**（その他ツール＝学校・子ども向けアプリ。gakkyu-tsushin・rubi-shokunin）：1段目「BEETLEテキストロゴ＋ナビリンク」・2段目「プライバシーポリシー・会社名」。バナーなし。クラスは `.site-footer-app` ＞ `.sfa-row`（ロゴ＋ナビ）＋ `.sfa-copy`
 - **その他ツール（子ども・家庭向け）LPのフッター**（えいごよんで！など）：トップページと同じ2段フッター（BEETLEロゴバー `.footer-skyline-bar`＋リンクバー `.footer-link-bar`）。ロゴ部分は詰めた高さ（`.footer-skyline-inner` padding `16px 20px 12px`）で固定
-- **スマホ共通フッター（2026-07-10決定）**：全ページ「浮世絵バナー縮小（全幅フィット）→ ナビリンク → プライバシーポリシー・©」の順で全て中央揃え（BEETLEテキストロゴ行はバナーに焼き込み済みのためSPでは非表示）。2段フッターLPはSP時のみ `.footer-heroes-sp` でバナー表示（トップLPは出さない）。共通ヘッダーのSPナビリンクも中央揃え（ハンバーガー化はしない）
+- 共通ヘッダーのSPナビリンクも中央揃え（ハンバーガー化はしない）
 - **アプリのヘッダー統一（2026-07-10決定）**：Vercelアプリ（bug-checker・gakkyu-tsushin・rubi-shokunin）のヘッダーは本体ライトナビと同型の `.site-nav`。「リファレンス」ピルボタン（旧称「使い方」、2026-07-12改称）は**ナビの一番右**（お問い合わせの右）に置き、各ランディングへ誘導。**ランディングがないツールはボタンを置かない**（本体配信の静的ツールは共通パーシャル `#site-header` をそのまま使う。例：テストコンテンツ作成ツール）
 - **ツールのビジュアルトーン（2026-07-10決定）**：テスト検証用ツールは**歌舞伎絵（浮世絵）風**、その他ツール（子ども・家庭向け）は**温かい雰囲気**で作り分ける
 
@@ -283,6 +287,6 @@ FAQ をページに追加・変更したときは **JSON-LD の FAQPage も同�
 ### 各ツールの状況
 
 - **bug-checker**: この型（静的ランディング `tools/bug-checker/landing.html` ＋アプリ vercel.app）で運用中。紙面ルールの基準アプリ。
-- **gakkyu-tsushin**: `tools/gakkyu-tsushin/index.html` がランディング（canonical: `/tools/gakkyu-tsushin/`）。アプリは vercel.app。`landing.html` は不要なため削除済み。紙面ルール未反映。
-- **rubi-shokunin**: `tools/rubi-shokunin/index.html` がランディング（canonical: `/tools/rubi-shokunin/`）。アプリは vercel.app。紙面ルール未反映。
+- **gakkyu-tsushin**: `tools/gakkyu-tsushin/index.html` がランディング（canonical: `/tools/gakkyu-tsushin/`）。アプリは vercel.app。`landing.html` は不要なため削除済み。紙面ルール適用済み（2026-07-13）。
+- **rubi-shokunin**: `tools/rubi-shokunin/index.html` がランディング（canonical: `/tools/rubi-shokunin/`）。アプリは vercel.app。紙面ルール適用済み（2026-07-13）。
 - **えいごよんで（eigo）**: 静的ツール（AIなし）。`tools/eigo/landing.html` がランディング、`index.html` がアプリ本体。どちらも本体ドメイン配信。
