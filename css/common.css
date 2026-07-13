@@ -18,11 +18,11 @@ a{text-decoration:none;}
 .nav-links { display: flex; gap: 12px 22px; align-items: center; flex-wrap: wrap; }
 .nav-links a { font-size: 13px; color: #666; text-decoration: none; white-space: nowrap; transition: color .15s; }
 .nav-links a:hover { color: var(--color-accent); }
-/* 事業入口の角ボタン（アウトライン型・radius 2px。QA支援＝アクセント色、教育・こども＝温かいオレンジ） */
-.nav-links a.nav-cta { color: var(--color-accent); border: 1px solid var(--color-accent); border-radius: 2px; background: transparent; font-weight: 700; font-size: 12px; padding: 5px 12px; transition: background .15s, color .15s; }
-.nav-links a.nav-cta:hover { background: var(--color-accent); color: #fff; }
-.nav-links a.nav-cta-edu { color: #ef8a3c; border-color: #ef8a3c; }
-.nav-links a.nav-cta-edu:hover { background: #ef8a3c; color: #fff; }
+/* 事業入口の角ボタン（アウトライン型・radius 2px。QA支援＝黒、教育＝BEETLE赤） */
+.nav-links a.nav-cta { color: #1c1c2e; border: 1px solid #1c1c2e; border-radius: 2px; background: transparent; font-weight: 700; font-size: 12px; padding: 5px 12px; transition: background .15s, color .15s; }
+.nav-links a.nav-cta:hover { background: #1c1c2e; color: #fff; }
+.nav-links a.nav-cta-edu { color: var(--color-accent); border-color: var(--color-accent); }
+.nav-links a.nav-cta-edu:hover { background: var(--color-accent); color: #fff; }
 
 @media (max-width: 480px) {
   .nav-inner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 10px 16px; }
