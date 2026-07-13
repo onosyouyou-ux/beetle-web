@@ -60,6 +60,25 @@ a{text-decoration:none;}
 @media (max-width: 600px) {
   .footer-copy { font-size: 11px; }
 }
+/* お問い合わせCTA（トップLPと同型。2026-07-13共通化） */
+.cta-section { background: var(--color-accent) url("/assets/images/contact-bg.jpg") left center / cover no-repeat; aspect-ratio: 1564 / 372; display: flex; align-items: center; justify-content: center; padding: clamp(40px, 4vw, 64px) 40px; text-align: center; margin-top: 40px; }
+.cta-inner { max-width: 700px; }
+.cta-eyebrow { font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(28,28,46,0.75); margin-bottom: 20px; }
+.cta-title { font-size: clamp(1.5rem, 2.8vw, 2.1rem); font-weight: 700; color: #1c1c2e; line-height: 1.5; margin-bottom: 18px; }
+.cta-body { font-size: 0.9rem; font-weight: 500; color: rgba(28,28,46,0.9); line-height: 1.9; margin-bottom: 28px; }
+.cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.btn-cta-main { background: #fdf6ec; color: var(--color-accent); font-weight: 700; font-size: 0.95rem; padding: 12px 32px; border-radius: 4px; border: none; cursor: pointer; transition: transform .15s; display: inline-block; }
+.btn-cta-main:hover { transform: translateY(-2px); }
+.btn-cta-sub { background: rgba(253,246,236,0.15); color: #fdf6ec; font-weight: 700; font-size: 0.85rem; padding: 12px 26px; border-radius: 4px; border: 2px solid rgba(253,246,236,0.7); transition: border-color .2s; display: inline-block; }
+.btn-cta-sub:hover { border-color: #fff; }
+@media (max-width: 600px) {
+  .cta-section { padding: 48px 20px 56px; background-image: none; aspect-ratio: auto; }
+  .cta-eyebrow { color: rgba(255,255,255,0.75); }
+  .cta-title { color: #fff; }
+  .cta-body { color: rgba(255,255,255,0.92); }
+  .cta-btns .btn-cta-main, .cta-btns .btn-cta-sub { flex: 1; white-space: nowrap; padding: 14px 10px; font-size: 0.85rem; }
+}
+
 /* LP型2段フッター（トップと同じ。サービスページ等、会社系ページで使用。2026-07-13共通化） */
 .footer-lp { background: #0a0a0f; margin-top: auto; }
 .footer-skyline-bar { background: #0a0a0f; }
