@@ -106,6 +106,7 @@ beetle-web/
 ### SEOチェックリスト（新規ページ必須）
 
 - `sitemap.xml` に URL を追加（`lastmod` は作成日）。過去にサービスページ4枚が未登録のまま放置された失敗あり
+- **既存ページの内容を更新したときも該当 `lastmod` を更新する**。放置されがちなので、気づいたら `git log -1 --format=%cs -- <ファイル>` と突き合わせて棚卸しする（2026-07-13 全URL棚卸し済み）
 - `canonical`・`meta description`・OGP・JSON-LD を入れる
 - `<img>` には `width`/`height` を付ける。ファーストビュー外の画像は `loading="lazy"` も付ける
 

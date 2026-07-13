@@ -3,19 +3,19 @@
 
   <url>
     <loc>https://www.beetle-web.jp/</loc>
-    <lastmod>2026-06-19</lastmod>
+    <lastmod>2026-07-10</lastmod>
     <priority>1.0</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/about.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/test-tools.html</loc>
-    <lastmod>2026-06-19</lastmod>
+    <lastmod>2026-07-10</lastmod>
     <priority>0.7</priority>
   </url>
 
@@ -28,68 +28,68 @@
   <!-- サービス -->
   <url>
     <loc>https://www.beetle-web.jp/service-degre-check.html</loc>
-    <lastmod>2026-06-29</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/service-test-design.html</loc>
-    <lastmod>2026-06-29</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/service-monthly-qa.html</loc>
-    <lastmod>2026-06-29</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/service-release-qa-spot.html</loc>
-    <lastmod>2026-06-29</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.9</priority>
   </url>
 
   <!-- ツール -->
   <url>
     <loc>https://www.beetle-web.jp/tools/test-patterns/</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/tools/test-patterns/about/</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/tools/ui-parts/</loc>
-    <lastmod>2026-05-31</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/tools/test-techniques/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/tools/glossary/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/tools/release-checklist/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/tools/http-status/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.8</priority>
   </url>
 
@@ -107,50 +107,50 @@
 
   <url>
     <loc>https://www.beetle-web.jp/tools/eigo/landing.html</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-10</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/tools/test-content/</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-10</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/tools/gakkyu-tsushin/</loc>
-    <lastmod>2026-06-23</lastmod>
+    <lastmod>2026-07-10</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/tools/rubi-shokunin/</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-07-10</lastmod>
     <priority>0.8</priority>
   </url>
 
   <!-- コラム -->
   <url>
     <loc>https://www.beetle-web.jp/blog/</loc>
-    <lastmod>2026-06-26</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/startup-qa.html</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.6</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/ai-instruction.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.6</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/claude-abc.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.6</priority>
   </url>
 
@@ -162,19 +162,19 @@
 
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/bug-or-not.html</loc>
-    <lastmod>2026-06-11</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.6</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/catch-ball.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.6</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/sarukani.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.6</priority>
   </url>
 
@@ -186,43 +186,43 @@
 
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/spec-or-bug.html</loc>
-    <lastmod>2026-06-11</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.6</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/repro-steps.html</loc>
-    <lastmod>2026-06-13</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.6</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/ai-marunage.html</loc>
-    <lastmod>2026-06-13</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.6</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/friday-deploy.html</loc>
-    <lastmod>2026-06-14</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.6</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/verify-engineer.html</loc>
-    <lastmod>2026-06-16</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.6</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/ai-test-items.html</loc>
-    <lastmod>2026-06-26</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.6</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/claude-proj.html</loc>
-    <lastmod>2026-06-27</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.6</priority>
   </url>
 
@@ -234,13 +234,13 @@
 
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/like-updated-at.html</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <priority>0.6</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/csv-leading-zero.html</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <priority>0.6</priority>
   </url>
 
