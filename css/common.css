@@ -43,9 +43,9 @@ a{text-decoration:none;}
   .nav-sections a { font-size: 12px; }
 }
 
-/* Footer（2026-07-13統一）：浮世絵バナー（ロゴ焼き込み済み）→ナビリンク→プライバシー・会社名。
-   バナーがロゴを兼ねるためBEETLEテキストロゴは出さない。PC・スマホとも中央揃え */
-.site-footer { background: #1a1a1a; padding: 1.25rem 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; text-align: center; }
+/* Footer（2026-07-13統一）：浮世絵バナー（ロゴ焼き込み済み）→ナビリンク＋プライバシー・会社名を1行中央揃え。
+   バナーがロゴを兼ねるためBEETLEテキストロゴは出さない。狭い画面では自然に折り返す */
+.site-footer { background: #1a1a1a; padding: 1.1rem 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.6rem 2rem; flex-wrap: wrap; text-align: center; }
 .footer-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .footer-brand span { font-size: 14px; font-weight: bold; color: #fff; white-space: nowrap; }
 .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; letter-spacing: 0.08em; color: #fff; gap: 0; }
