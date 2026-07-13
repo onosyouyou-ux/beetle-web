@@ -138,11 +138,14 @@ a{text-decoration:none;}
 .footer-heroes { background: #000; overflow: hidden; display: flex; justify-content: center; box-shadow: 0 -10px 24px rgba(28,28,46,0.25); }
 .footer-heroes img { display: block; width: 100%; height: auto; }
 
-/* スマホ専用：2段フッター（LP）の上に置くキャラバナー */
+/* スマホ専用：2段フッター（LP型）の上に置くキャラバナー。
+   SPはお問い合わせCTAが背景画像なしのため、代わりに全員集合バナーを表示。
+   バナーにBEETLEロゴが焼き込み済みなので、スカイラインのロゴバーはSPでは重複につき非表示（2026-07-13統一） */
 .footer-heroes-sp { display: none; }
 @media (max-width: 768px) {
   .footer-heroes-sp { display: block; background: #000; overflow: hidden; }
   .footer-heroes-sp img { display: block; width: 100%; height: auto; }
+  .footer-lp .footer-skyline-bar { display: none; }
 }
 
 /* ─── クリック可能カードの丸アイコンキャラ（LPと共通の演出、44px） ─── */

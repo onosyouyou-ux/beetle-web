@@ -389,6 +389,14 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ─── BACK TO TOP ─── */
+/* スマホ専用：フッター上の全員集合バナー（CTAが背景画像なしのため代わりに表示。ロゴバーはSPでは重複につき非表示） */
+.footer-heroes-sp { display: none; }
+@media (max-width: 768px) {
+  .footer-heroes-sp { display: block; background: #000; overflow: hidden; }
+  .footer-heroes-sp img { display: block; width: 100%; height: auto; }
+  .footer .footer-skyline-bar { display: none; }
+}
+
 .back-to-top { position: fixed; bottom: 32px; right: 32px; z-index: 99; width: 44px; height: 44px; background: var(--navy); color: var(--white); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(28,28,46,0.24); opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s; }
 .back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
 .back-to-top:hover { background: var(--color-accent); }
