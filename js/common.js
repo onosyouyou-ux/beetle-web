@@ -9,18 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPartial('site-header', '/partials/header.html').then(() => {
     const path = location.pathname;
 
-    // 事業メインページでは自分自身へのボタンを「LPページ」（トップへ）に差し替える
-    const ctaQa = document.querySelector('.nav-cta:not(.nav-cta-edu)');
+    // 事業メインページでは自分自身へのボタンを出さない（LPページボタンは常設）
+    const ctaQa = document.querySelector('.nav-cta-qa');
     const ctaEdu = document.querySelector('.nav-cta-edu');
-    if (ctaQa && ctaEdu) {
-      if (path === '/test-tools.html') {
-        ctaQa.textContent = 'LPページ';
-        ctaQa.href = '/';
-      } else if (path === '/edu-tools.html') {
-        ctaEdu.textContent = 'LPページ';
-        ctaEdu.href = '/';
-      }
-    }
+    if (path === '/test-tools.html' && ctaQa) ctaQa.style.display = 'none';
+    else if (path === '/edu-tools.html' && ctaEdu) ctaEdu.style.display = 'none';
 
     // 2段目：ページ内セクションリンク（定義があるページだけ表示）
     const sectionLinks = {

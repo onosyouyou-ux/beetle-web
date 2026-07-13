@@ -268,7 +268,7 @@ FAQ をページに追加・変更したときは **JSON-LD の FAQPage も同�
 QA事業と教育事業の二本立てに合わせ、入口を分ける：
 
 - 共通ヘッダー（`partials/header.html`）は**2段構成**（2026-07-13決定）：1段目「ロゴ＋QA支援・教育支援ボタン」（ホーム・ツール・コラム・お問い合わせのテキストリンクは廃止）、2段目「ページ内セクションリンク」（`.nav-sections`。common.js がページごとに注入、定義がないページは非表示）
-- 入口ボタンの色：**QA支援**（黒 `#1c1c2e`）→ `/test-tools.html`、**教育支援**（BEETLE赤 `--color-accent`、`.nav-cta-edu`）→ `/edu-tools.html`
+- 入口ボタンは左から **LPページ**（グレー `#7a7a88`、`.nav-cta-lp`）→ `/`、**QA支援**（黒 `#1c1c2e`、`.nav-cta-qa`）→ `/test-tools.html`、**教育支援**（BEETLE赤 `--color-accent`、`.nav-cta-edu`）→ `/edu-tools.html`。事業メインページでは自分自身のボタンを非表示（common.js）
 - 両メインページの末尾はトップLPと同型の**お問い合わせCTA**（`#contact`、メール＋Googleフォーム）。旧 `.to-service` の相互リンク行は廃止
 - のぞき丸アイコンの**「クリック」ラベルは全ページ廃止**（`.service-peek-label` display:none。SPは丸アイコンごと非表示）
 - トップLP（`index.html`）のヘッダーは2段構成（2026-07-13決定）：1段目「ロゴ＋QA支援・教育支援ボタン（色は同上）」、2段目「サービス・事例・流れ・なぜ今・スタイル・ツール・代表」中央揃え（SPは横スクロール）。相談するCTA・ハンバーガーは廃止

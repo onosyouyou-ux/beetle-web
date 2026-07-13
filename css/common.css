@@ -18,9 +18,11 @@ a{text-decoration:none;}
 .nav-links { display: flex; gap: 12px 22px; align-items: center; flex-wrap: wrap; }
 .nav-links a { font-size: 13px; color: #666; text-decoration: none; white-space: nowrap; transition: color .15s; }
 .nav-links a:hover { color: var(--color-accent); }
-/* 事業入口の角ボタン（塗り＋白文字・radius 2px。QA支援＝黒、教育＝BEETLE赤） */
+/* 事業入口の角ボタン（塗り＋白文字・radius 2px。LPページ＝グレー、QA支援＝黒、教育＝BEETLE赤） */
 .nav-links a.nav-cta { color: #fff; background: #1c1c2e; border: 1px solid #1c1c2e; border-radius: 2px; font-weight: 700; font-size: 12px; padding: 5px 12px; transition: background .15s; }
 .nav-links a.nav-cta:hover { background: #3a3a52; border-color: #3a3a52; color: #fff; }
+.nav-links a.nav-cta-lp { background: #7a7a88; border-color: #7a7a88; }
+.nav-links a.nav-cta-lp:hover { background: #63636e; border-color: #63636e; }
 .nav-links a.nav-cta-edu { background: var(--color-accent); border-color: var(--color-accent); }
 .nav-links a.nav-cta-edu:hover { background: #a9543f; border-color: #a9543f; }
 
