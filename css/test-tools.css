@@ -98,9 +98,9 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 .list-btn{display:inline-flex;align-items:center;justify-content:center;background:var(--tp-orange);color:#fff;border-radius:2px;font-size:13px;font-weight:700;padding:10px 28px;transition:background .2s}
 .list-btn:hover{background:#a9543f;color:#fff}
 
-/* ─── QA支援メインビジュアル（浮世絵QAキャラ。ヒーロー右端） ─── */
-.bh-visual { height: 160px; width: auto; border-radius: 2px; border: 1px solid rgba(255,255,255,0.25); margin-left: auto; display: block; flex-shrink: 0; }
-@media (max-width: 600px) { .bh-visual { display: none; } }
+/* ─── QA支援メインビジュアル（浮世絵バナー全幅。h1は画像に焼き込み済みのためsr-onlyで保持） ─── */
+.qa-hero img { display: block; width: 100%; height: auto; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 /* ─── LPと同じフッター ─── */
 .footer-lp { background: #0a0a0f; }
