@@ -6,7 +6,20 @@ async function loadPartial(id, url) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  loadPartial('site-header', '/partials/header.html');
+  loadPartial('site-header', '/partials/header.html').then(() => {
+    // 事業メインページでは自分自身へのボタンを「LPページ」（トップへ）に差し替える
+    const ctaQa = document.querySelector('.nav-cta:not(.nav-cta-edu)');
+    const ctaEdu = document.querySelector('.nav-cta-edu');
+    if (!ctaQa || !ctaEdu) return;
+    const path = location.pathname;
+    if (path === '/test-tools.html') {
+      ctaQa.textContent = 'LPページ';
+      ctaQa.href = '/';
+    } else if (path === '/edu-tools.html') {
+      ctaEdu.textContent = 'LPページ';
+      ctaEdu.href = '/';
+    }
+  });
   loadPartial('site-footer', '/partials/footer.html').then(() => {
     const btn = document.getElementById('scrollTopBtn');
     if (!btn) return;

@@ -38,7 +38,7 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 .tool-card{position:relative;background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px;display:flex;flex-direction:column;color:inherit;text-decoration:none;transition:all .15s}
 .tool-card:hover{border-color:var(--tp-orange-bd);box-shadow:0 2px 12px rgba(192,99,76,.08);transform:translateY(-2px)}
 .tool-card-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-right:46px}
-.tool-icon{width:38px;height:38px;border-radius:10px;background:var(--tp-cream2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--tp-text2)}
+.tool-icon{width:38px;height:38px;border-radius:10px;background:var(--tp-cream2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--tp-orange)}
 .tool-name{font-size:14px;font-weight:700;color:var(--tp-text)}
 .tool-desc{font-size:13px;color:var(--tp-text2);line-height:1.8;margin-bottom:14px;flex:1}
 /* カード末尾のリンク表示：色付きバッジをやめ、トップページ .tool-badge と同じあっさりしたテキストリンクに統一（2026-07-13決定） */
@@ -48,7 +48,7 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
 .card{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px}
 .card-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.card-icon{width:38px;height:38px;border-radius:10px;background:var(--tp-cream2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--tp-text2)}
+.card-icon{width:38px;height:38px;border-radius:10px;background:var(--tp-cream2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--tp-orange)}
 .card h3{font-size:14px;font-weight:700;color:var(--tp-text)}
 .card p{font-size:13px;color:var(--tp-text2);line-height:1.8}
 
@@ -69,6 +69,15 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
   .tools-grid{grid-template-columns:1fr}
   .cards{grid-template-columns:1fr}
 }
+
+/* 一覧ボタン（LPの .more-btn と同型。QAページは黒） */
+.list-btn-row{margin-top:28px;display:flex;justify-content:center}
+.list-btn{display:inline-flex;align-items:center;justify-content:center;background:#1c1c2e;color:#fff;border-radius:2px;font-size:13px;font-weight:700;padding:10px 28px;transition:background .2s}
+.list-btn:hover{background:#3a3a52;color:#fff}
+
+/* ─── QA支援メインビジュアル（浮世絵QAキャラ。ヒーロー右端） ─── */
+.bh-visual { height: 160px; width: auto; border-radius: 2px; border: 1px solid rgba(255,255,255,0.25); margin-left: auto; display: block; flex-shrink: 0; }
+@media (max-width: 600px) { .bh-visual { display: none; } }
 
 /* ─── LPと同じフッター ─── */
 .footer-lp { background: #0a0a0f; }
