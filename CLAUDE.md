@@ -124,11 +124,11 @@ beetle-web/
 | フォント | Syne（英字見出し）＋ M PLUS 1p（日本語タイトル） |
 | CSS管理 | `/css/xxxx.css` に外出し、インライン禁止 |
 
-**Tool系** — bug-checker・えいごよんで など「操作して使う」インタラクティブページ（Next.js）
+**Tool系** — bug-checker・えいごよんで など「操作して使う」インタラクティブページ（VercelアプリはNext.js、静的ツールは素のHTML）
 
 | 要素 | 内容 |
 |---|---|
-| ヘッダー | 本体と同じライトナビ（`.site-nav`）：BEETLEテキストロゴ＋ホーム・ツール・コラム・**リファレンス（アクセント色ピル→ランディングへ。旧称「使い方」、2026-07-12改称）**・お問い合わせ。旧ダークバー`.bc-nav`は廃止（2026-07-10統一） |
+| ヘッダー | 本体と同じライトナビ（`.site-nav`）。リファレンスピルの置き方は「ヘッダー・フッターの固定ルール > アプリのヘッダー統一」参照 |
 | フッター | ダークバー（`.site-footer-app`）、BEETLEロゴ＋ナビ＋プライバシーポリシー＋© |
 | ページヘッダー | BEETLEデザインシステムの `page-header` コンポーネント（共通） |
 | 背景 | `var(--color-bg-primary)` = `#f7f5f0` |
@@ -141,15 +141,27 @@ Tool系フッターに必須の要素：
 - プライバシーポリシーリンク → `https://www.beetle-web.jp/privacy`
 - © 表記
 
-### アプリ紙面の固定レイアウト（2026-07-12決定）
+### Vercelアプリの紙面ルール（bug-checkerで確立した標準。2026-07-12〜13決定）
 
-Vercelアプリは「**紙面固定＋余白は背景**」で作る。レイアウトを画面幅で伸縮させない。
+Vercelアプリは「**紙面固定＋余白は背景**」で作る。レイアウトを画面幅で伸縮させない。新アプリも既存アプリの改修もこの型に揃える。迷ったら bug-checker の実装が正。
 
+**紙面と背景**
 - **紙面**: `.app-paper`（`max-width: var(--app-paper-width)` = **1180px**・背景 `var(--color-bg-primary)`・`box-shadow: 0 0 32px rgba(28,28,46,.16)`）を中央寄せ。全幅の白ナビ（`.site-nav`）と全幅のダークフッター（`.site-footer-app`）の間に挟む
 - **背景**: body に青海波タイル `/images/bg-seigaiha.png`（ベース `#EAE4D5`・線 `#D9D1BE`、`background-size: 160px 40px`）。タイル原本は bug-checker の `public/images/` にあり、PowerShell System.Drawing で生成した（他アプリへはコピーで流用）
 - **レスポンシブの考え方**: 紙面より広い画面では**余白（背景）だけが伸びる**。紙面幅を下回ったら、そこで初めてコンテンツ側の既存レスポンシブ（1カラム化など）で調整する（余白ファースト）
 - 紙面内のコンテンツ幅はツールごとに決めてよい（bug-checker は 720px、gakkyu-tsushin は 1180px 2カラム）
-- **進捗**: bug-checker 適用済み。gakkyu-tsushin・rubi-shokunin は今後反映
+- 全員集合バナー（`.footer-heroes`）も紙面幅 1180px に揃える
+
+**紙面内の必須要素**
+- **ページヘッダー**: page-header ＋**たたみ機能**（たたむトグルは独立行、タイトル群はその下＝ヒーロー画像と重ねない）。初期表示がノートPC1画面に収まるよう余白を圧縮する
+- **使い方3ステップ＋FAQ**: ランディングと同内容をアプリ画面下部にも表示する。ランディング側を変えたらアプリ側も同時に更新（JSON-LD FAQPage も）
+- **更新日表記**: 紙面下部に「更新日：YYYY-MM-DD」。日付は `next.config.mjs` の `env.NEXT_PUBLIC_UPDATED_DATE = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' })` でビルド日を自動焼き込み（手動更新しない。デプロイすれば勝手に変わる）
+- **上に戻るフロートボタン**: 本体 `common.css` と同スタイル（bug-checker の `ScrollTopButton.tsx` を流用）
+
+**実装の注意**
+- stickyナビを高さゼロの `<header>` で包まない（スクロール→リサイズ→上に戻るとヘッダーが消えるバグの原因になった。2026-07-12修正済み）
+
+**進捗**: bug-checker 適用済み（基準アプリ）。gakkyu-tsushin・rubi-shokunin は今後反映
 
 ### ヘッダー・フッターの固定ルール（2026-07決定）
 
@@ -270,5 +282,7 @@ FAQ をページに追加・変更したときは **JSON-LD の FAQPage も同�
 
 ### 各ツールの状況
 
-- **bug-checker**: この型（静的ランディング `tools/bug-checker/landing.html` ＋アプリ vercel.app）で運用中。
-- **gakkyu-tsushin**: `tools/gakkyu-tsushin/index.html` がランディングページ（canonical: `/tools/gakkyu-tsushin/`）。アプリは vercel.app。`landing.html` は不要なため削除済み。
+- **bug-checker**: この型（静的ランディング `tools/bug-checker/landing.html` ＋アプリ vercel.app）で運用中。紙面ルールの基準アプリ。
+- **gakkyu-tsushin**: `tools/gakkyu-tsushin/index.html` がランディング（canonical: `/tools/gakkyu-tsushin/`）。アプリは vercel.app。`landing.html` は不要なため削除済み。紙面ルール未反映。
+- **rubi-shokunin**: `tools/rubi-shokunin/index.html` がランディング（canonical: `/tools/rubi-shokunin/`）。アプリは vercel.app。紙面ルール未反映。
+- **えいごよんで（eigo）**: 静的ツール（AIなし）。`tools/eigo/landing.html` がランディング、`index.html` がアプリ本体。どちらも本体ドメイン配信。
