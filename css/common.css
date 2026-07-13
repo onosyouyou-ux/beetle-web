@@ -15,9 +15,14 @@ a{text-decoration:none;}
 .logo a { display: flex; align-items: center; }
 .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; letter-spacing: 0.08em; color: #1c1c2e; text-decoration: none; }
 .nav-logo span { color: var(--color-accent); }
-.nav-links { display: flex; gap: 22px; }
+.nav-links { display: flex; gap: 22px; align-items: center; }
 .nav-links a { font-size: 13px; color: #666; text-decoration: none; white-space: nowrap; transition: color .15s; }
 .nav-links a:hover { color: var(--color-accent); }
+/* 事業入口のアクセント色ピル（QA支援＝アクセント色、教育・こども＝温かいオレンジ。アプリの .site-nav-howto と同型） */
+.nav-links a.nav-cta { background: var(--color-accent); color: #fff; font-weight: 700; font-size: 12px; padding: 6px 14px; border-radius: 999px; transition: background .15s; }
+.nav-links a.nav-cta:hover { background: #a9543f; color: #fff; }
+.nav-links a.nav-cta-edu { background: #ef8a3c; }
+.nav-links a.nav-cta-edu:hover { background: #e07428; color: #fff; }
 
 @media (max-width: 480px) {
   .nav-inner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 10px 16px; }

@@ -1,0 +1,21 @@
+/* 教育・こども向けツール集ページ（edu-tools.html）
+   test-tools.css を土台に、アクセントを温かいオレンジへ差し替える（教育トーン） */
+:root {
+  --tp-orange: #ef8a3c;
+  --tp-orange-bg: #fef3e8;
+  --tp-orange-bd: #f2b083;
+}
+
+/* ブランドヒーローのアクセントも温かい色に */
+.brand-hero::before {
+  background: radial-gradient(ellipse at 14% 50%, rgba(239, 138, 60, 0.22) 0%, transparent 55%);
+}
+.brand-hero::after {
+  background: linear-gradient(90deg, #ef8a3c 0%, #f5c08a 50%, transparent 100%);
+}
+.brand-hero-text .bh-eyebrow { color: #ef8a3c; }
+
+.tool-card:hover {
+  border-color: var(--tp-orange-bd);
+  box-shadow: 0 2px 12px rgba(239, 138, 60, 0.12);
+}

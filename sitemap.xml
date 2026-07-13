@@ -15,7 +15,13 @@
 
   <url>
     <loc>https://www.beetle-web.jp/test-tools.html</loc>
-    <lastmod>2026-07-10</lastmod>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/edu-tools.html</loc>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.7</priority>
   </url>
 
