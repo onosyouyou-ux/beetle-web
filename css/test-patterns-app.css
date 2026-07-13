@@ -76,3 +76,6 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
   .sw{padding:20px 16px}
   .bc,.cat-bar{padding-left:16px;padding-right:16px}
 }
+
+/* スマホではパンくずバー非表示（2026-07-13決定：ヘッダー2段化で混雑するため） */
+@media(max-width:600px){.bc{display:none}}

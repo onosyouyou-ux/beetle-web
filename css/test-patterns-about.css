@@ -84,3 +84,6 @@ details.faq-item[open] .faq-icon{transform:rotate(45deg)}
   .cta-section{padding:40px 20px;border-radius:12px}
   .cta-btn-main,.cta-btn-sub{width:100%;text-align:center}
 }
+
+/* スマホではパンくずバー非表示（2026-07-13決定：ヘッダー2段化で混雑するため） */
+@media(max-width:600px){.bc{display:none}}
