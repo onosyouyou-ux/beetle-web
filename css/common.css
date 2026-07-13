@@ -25,30 +25,22 @@ a{text-decoration:none;}
   .nav-links a { font-size: 12px; }
 }
 
-/* Footer */
-.site-footer { background: #1a1a1a; padding: 1.25rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem 1.5rem; }
-.footer-left { display: flex; align-items: center; gap: 2rem; }
+/* Footer（2026-07-13統一）：浮世絵バナー（ロゴ焼き込み済み）→ナビリンク→プライバシー・会社名。
+   バナーがロゴを兼ねるためBEETLEテキストロゴは出さない。PC・スマホとも中央揃え */
+.site-footer { background: #1a1a1a; padding: 1.25rem 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; text-align: center; }
 .footer-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .footer-brand span { font-size: 14px; font-weight: bold; color: #fff; white-space: nowrap; }
 .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; letter-spacing: 0.08em; color: #fff; gap: 0; }
 .footer-logo span { color: var(--color-accent); font-size: inherit; }
-.footer-nav { display: flex; gap: 1.5rem; }
+.footer-nav { display: flex; gap: 1rem 1.5rem; flex-wrap: wrap; justify-content: center; }
 .footer-nav a { font-size: 13px; color: #888; text-decoration: none; transition: color .15s; }
 .footer-nav a:hover { color: #fff; }
-.footer-copy { font-size: 12px; color: #888; white-space: nowrap; display: flex; align-items: center; gap: 1rem; }
+.footer-copy { font-size: 12px; color: #888; white-space: normal; display: flex; align-items: center; justify-content: center; gap: 0.4rem 1rem; flex-wrap: wrap; }
 .footer-copy a { color: #888; text-decoration: none; transition: color .15s; }
 .footer-copy a:hover { color: #fff; }
 .footer-version { font-size: 10px; color: #555; opacity: 0.6; letter-spacing: .04em; }
-.footer-sitemap-mobile { display: none; }
-.footer-logo-sp { display: none; }
 @media (max-width: 600px) {
-  .footer-sitemap-mobile { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem 1.25rem; }
-  .footer-sitemap-mobile a { font-size: 13px; color: #888; text-decoration: none; }
-  .footer-sitemap-mobile a:hover { color: #fff; }
-  .site-footer { flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; padding: 1.25rem 1.5rem; text-align: center; }
-  .footer-left { display: none; }
-  .footer-nav { display: none; }
-  .footer-copy { font-size: 11px; justify-content: center; flex-wrap: wrap; gap: 0.4rem 1rem; white-space: normal; }
+  .footer-copy { font-size: 11px; }
 }
 .scroll-top-float { position: fixed; bottom: 28px; right: 24px; width: 40px; height: 40px; border-radius: 50%; background: #2C2C2A; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.18); opacity: 0; pointer-events: none; transition: opacity .25s, background .15s; z-index: 200; }
 .scroll-top-float.visible { opacity: 1; pointer-events: auto; }
