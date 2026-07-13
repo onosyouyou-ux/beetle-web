@@ -16,11 +16,12 @@
 /* ホバーでカブトムシが降りてくる（LPの card-mascot と同じ演出） */
 .post-meta{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
 .post-date{font-size:11px;color:#aaa;font-family:monospace;}
-.post-tag{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600;}
-.post-tag.qa{background:#e8f0fe;color:#1a56db;}
-.post-tag.ai{background:#fce8ff;color:#7c3aed;}
-.post-tag.tips{background:#e8f5e9;color:#2e7d32;}
-.post-tag.essay{background:#fdf0e8;color:var(--color-accent);}
+/* カテゴリバッジ（トップの .column-tag／ツールの .tool-ribbon と同型・同配色） */
+.post-tag{font-family:'Syne',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:2px;font-weight:700;color:#fff;}
+.post-tag.qa{background:var(--color-accent);}
+.post-tag.ai{background:#1c1c2e;}
+.post-tag.tips{background:#7a7a88;}
+.post-tag.essay{background:#ef8a3c;}
 .post-title{font-size:15px;font-weight:700;color:#111;line-height:1.5;margin-bottom:10px;letter-spacing:-0.01em;}
 .post-excerpt{font-size:13px;color:#666;line-height:1.8;}
 .post-card:hover .post-title{color:var(--color-accent);}
