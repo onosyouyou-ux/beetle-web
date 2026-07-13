@@ -99,18 +99,18 @@ body {
   transition: color .15s;
 }
 .site-nav-links a:hover { color: var(--color-accent); }
-/* リファレンスの角ボタン（アウトライン型・radius 2px。本体 .nav-cta と同型） */
+/* リファレンスの角ボタン（塗り＋白文字・radius 2px。本体 .nav-cta と同型） */
 .site-nav-links a.site-nav-howto {
-  color: var(--color-accent);
+  color: #fff;
+  background: var(--color-accent);
   border: 1px solid var(--color-accent);
   border-radius: 2px;
-  background: transparent;
   font-weight: 700;
   font-size: 12px;
   padding: 5px 12px;
-  transition: background .15s, color .15s;
+  transition: background .15s;
 }
-.site-nav-links a.site-nav-howto:hover { background: var(--color-accent); color: #fff; }
+.site-nav-links a.site-nav-howto:hover { background: #a9543f; border-color: #a9543f; color: #fff; }
 @media (max-width: 480px) {
   .site-nav-inner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 10px 16px; }
   .site-nav-links { gap: 8px 14px; align-self: center; justify-content: center; max-width: 100%; }

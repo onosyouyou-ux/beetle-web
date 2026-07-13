@@ -22,10 +22,10 @@ a { color: inherit; text-decoration: none; }
 .header-logo { font-family: var(--font-en); font-weight: 800; font-size: 1.25rem; letter-spacing: 0.08em; color: var(--navy); }
 .header-logo span { color: var(--color-accent); }
 .header-entries { display: flex; gap: 10px; }
-.header-entry { color: var(--navy); border: 1px solid var(--navy); border-radius: 2px; background: transparent; font-family: var(--font-ja); font-size: 0.82rem; font-weight: 700; padding: 6px 18px; white-space: nowrap; transition: background .2s, color .2s; }
-.header-entry:hover { background: var(--navy); color: #fff; }
-.header-entry.edu { color: var(--color-accent); border-color: var(--color-accent); }
-.header-entry.edu:hover { background: var(--color-accent); color: #fff; }
+.header-entry { color: #fff; background: var(--navy); border: 1px solid var(--navy); border-radius: 2px; font-family: var(--font-ja); font-size: 0.82rem; font-weight: 700; padding: 6px 18px; white-space: nowrap; transition: background .2s; }
+.header-entry:hover { background: #3a3a52; border-color: #3a3a52; }
+.header-entry.edu { background: var(--color-accent); border-color: var(--color-accent); }
+.header-entry.edu:hover { background: #a9543f; border-color: #a9543f; }
 .header-nav { display: flex; gap: 28px; justify-content: center; font-family: var(--font-en); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; padding: 7px 40px 9px; border-top: 1px solid var(--gray-lt); }
 .header-nav a { opacity: 0.6; white-space: nowrap; transition: opacity .2s, color .2s; }
 .header-nav a:hover { opacity: 1; color: var(--color-accent); }
