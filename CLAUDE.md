@@ -33,10 +33,11 @@ git branch -D fix/やること名
 
 ### デプロイ
 
-**beetle-web 本体（GitHub Pages）**
-`git push origin main` で自動デプロイが走る。反映まで通常 1〜2 分。
-デプロイ状況は GitHub リポジトリの **Actions** タブで確認できる。
-プッシュ前に `version.json`（フッターのバージョン表示。`js/common.js` が読む）の日付を更新する。
+**beetle-web 本体（実態はVercel配信。2026-07-13判明）**
+`www.beetle-web.jp` のレスポンスヘッダーは `Server: Vercel`。**pushごとにVercelの自動デプロイが走る**（GitHub Actionsの "pages build and deployment" も成功するが、ドメインが向いているのはVercel側）。反映まで通常1〜2分。
+プッシュ前に `version.json`（フッターのバージョン表示。`js/common.js` が読む）の日付を更新する。本番反映の確認は `curl -s https://www.beetle-web.jp/version.json` とローカルの比較が確実。
+
+⚠️ **無料枠は1日100デプロイまで**（2026-07-13に実際に到達）。pushごとに自動デプロイが走るため、細かいpushを重ねる日は上限を食い切る。**上限到達後のpushは本番に反映されない**うえ、リセット後も自動では追いつかない（新しいpushか手動デプロイが必要）。対策：作業日はコミットをまとめてpushする、または上限到達に気づいたら翌日に空コミットpushで反映させる。
 
 **Vercelアプリ3つ（2026-07-10 実デプロイで確認済み）**
 3プロジェクトで Vercel の Root Directory 設定がばらばらなため、**実行場所を間違えるとエラーになる**。
