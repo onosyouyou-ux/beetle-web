@@ -276,6 +276,11 @@ a { color: inherit; text-decoration: none; }
 .column-card-body { font-size: 0.8rem; color: var(--gray); line-height: 1.8; flex: 1; }
 .column-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 700; color: var(--color-accent); align-self: flex-start; }
 .more-link-row { margin-top: 40px; display: flex; gap: 16px 28px; flex-wrap: wrap; justify-content: center; }
+/* ツール一覧へのボタン（ヘッダー入口ボタンと同配色：QA=黒、教育=BEETLE赤） */
+.more-btn { display: inline-flex; align-items: center; justify-content: center; background: var(--navy); color: #fff; border-radius: 2px; font-size: 0.88rem; font-weight: 700; padding: 10px 28px; transition: background .2s; }
+.more-btn:hover { background: #3a3a52; }
+.more-btn.edu { background: var(--color-accent); }
+.more-btn.edu:hover { background: #a9543f; }
 .more-link { display: inline-flex; align-items: center; gap: 8px; padding-left: 10px; border-left: 2px solid var(--color-accent); font-size: 0.88rem; font-weight: 700; color: var(--navy); transition: color .15s; }
 .more-link:hover { color: var(--color-accent); }
 
