@@ -43,11 +43,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <nav className="site-nav">
           <div className="site-nav-inner">
             <a className="site-nav-logo" href="https://www.beetle-web.jp" target="_blank" rel="noopener">BEET<span>LE</span></a>
+            {/* 本体ヘッダーと同型のボタンのみ（テキストリンクは2026-07-13廃止） */}
             <div className="site-nav-links">
-              <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">ホーム</a>
-              <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール</a>
-              <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
-              <a href="https://www.beetle-web.jp/#contact" target="_blank" rel="noopener">お問い合わせ</a>
+              <a className="site-nav-btn site-nav-top" href="https://www.beetle-web.jp/" target="_blank" rel="noopener">トップ</a>
+              <a className="site-nav-btn site-nav-edu" href="https://www.beetle-web.jp/edu-tools.html" target="_blank" rel="noopener">教育支援</a>
               <a className="site-nav-howto" href={LANDING_URL} target="_blank" rel="noopener">リファレンス</a>
             </div>
           </div>

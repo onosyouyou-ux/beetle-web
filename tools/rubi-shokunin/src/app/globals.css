@@ -99,18 +99,34 @@ body {
   transition: color .15s;
 }
 .site-nav-links a:hover { color: var(--color-accent); }
-/* リファレンスの角ボタン（塗り＋白文字・radius 2px。本体 .nav-cta と同型） */
+/* ナビの角ボタン群（本体ヘッダーと同型。トップ＝アウトライングレー、教育支援＝BEETLE赤） */
+.site-nav-links a.site-nav-btn {
+  color: #fff;
+  background: #1c1c2e;
+  border: 1px solid #1c1c2e;
+  border-radius: 2px;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 5px 12px;
+  transition: background .15s, color .15s;
+}
+.site-nav-links a.site-nav-btn:hover { background: #3a3a52; border-color: #3a3a52; color: #fff; }
+.site-nav-links a.site-nav-top { background: transparent; border-color: #7a7a88; color: #7a7a88; }
+.site-nav-links a.site-nav-top:hover { background: #7a7a88; border-color: #7a7a88; color: #fff; }
+.site-nav-links a.site-nav-edu { background: var(--color-accent); border-color: var(--color-accent); }
+.site-nav-links a.site-nav-edu:hover { background: #a9543f; border-color: #a9543f; }
+/* リファレンス（教育系アプリは温かいオレンジ。赤の教育支援ボタンとの色被り回避） */
 .site-nav-links a.site-nav-howto {
   color: #fff;
-  background: var(--color-accent);
-  border: 1px solid var(--color-accent);
+  background: #ef8a3c;
+  border: 1px solid #ef8a3c;
   border-radius: 2px;
   font-weight: 700;
   font-size: 12px;
   padding: 5px 12px;
   transition: background .15s;
 }
-.site-nav-links a.site-nav-howto:hover { background: #a9543f; border-color: #a9543f; color: #fff; }
+.site-nav-links a.site-nav-howto:hover { background: #e07428; border-color: #e07428; color: #fff; }
 @media (max-width: 480px) {
   .site-nav-inner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 10px 16px; }
   .site-nav-links { gap: 8px 14px; align-self: center; justify-content: center; max-width: 100%; }
