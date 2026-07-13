@@ -94,4 +94,5 @@
 .post-related-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;}
 .post-related-list a{font-size:14px;color:#333;text-decoration:none;line-height:1.6;}
 .post-related-list a:hover{color:var(--color-accent);}
-.post-card .service-peek-label{display:none;}
+/* コラムカードは顔アイコンなし（2026-07-13決定） */
+.post-card .service-peek{display:none;}

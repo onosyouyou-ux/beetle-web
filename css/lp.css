@@ -422,9 +422,10 @@ a { color: inherit; text-decoration: none; }
 /* セクション別の黒丸サイズ（サービス=大きめ、ツール=小さめ、コラム=標準56px） */
 .service-card .service-peek { width: 64px; }
 .service-card .service-peek-circle { width: 64px; height: 64px; }
-.tool-card .service-peek, .column-card .service-peek { width: 44px; }
-.tool-card .service-peek-circle, .column-card .service-peek-circle { width: 44px; height: 44px; }
-.column-card .service-peek-label { display: none; }
+.tool-card .service-peek { width: 44px; }
+.tool-card .service-peek-circle { width: 44px; height: 44px; }
+/* コラムカードは顔アイコンなし（2026-07-13決定） */
+.column-card .service-peek { display: none; }
 
 /* スマホ：ホバー演出が意味を持たないため丸アイコンごと非表示（2026-07-13決定） */
 @media (max-width: 768px) {
