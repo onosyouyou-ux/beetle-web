@@ -87,6 +87,12 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 /* 検証コラムのカードは顔アイコンなし（2026-07-13決定） */
 #column .service-peek{display:none}
 
+/* QA支援サービスは4商品なので2×2 */
+#services .tools-grid{grid-template-columns:repeat(2,1fr)}
+@media(max-width:600px){
+  #services .tools-grid{grid-template-columns:1fr}
+}
+
 /* 一覧ボタン（LPの .more-btn と同型。オレンジ系＝アクセント） */
 .list-btn-row{margin-top:28px;display:flex;justify-content:center}
 .list-btn{display:inline-flex;align-items:center;justify-content:center;background:var(--tp-orange);color:#fff;border-radius:2px;font-size:13px;font-weight:700;padding:10px 28px;transition:background .2s}
