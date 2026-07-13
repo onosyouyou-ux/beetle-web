@@ -231,19 +231,16 @@ export default function HomePage() {
       <div className="footer-heroes">
         <img src="/images/footer-heroes.jpg" alt="" aria-hidden="true" width="2172" height="264" loading="lazy" />
       </div>
+      {/* テスト検証用ツールのフッター：浮世絵バナー（ロゴ焼き込み済み）→ナビリンク→プライバシー・会社名。
+          バナーがロゴを兼ねるためBEETLEテキストロゴは出さない。PC・スマホとも中央揃え */}
       <footer className="site-footer-app">
-        <div className="sfa-left">
-          <a href="https://www.beetle-web.jp" target="_blank" rel="noopener" className="sfa-logo">
-            BEET<span>LE</span>
-          </a>
-          <nav className="sfa-nav">
-            <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">ホーム</a>
-            <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール</a>
-            <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
-            <a href="mailto:info@beetle-web.jp">お問い合わせ</a>
-          </nav>
-        </div>
-        <div className="sfa-right">
+        <nav className="sfa-nav">
+          <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">ホーム</a>
+          <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール</a>
+          <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
+          <a href="mailto:info@beetle-web.jp">お問い合わせ</a>
+        </nav>
+        <div className="sfa-copy">
           <a href="https://www.beetle-web.jp/privacy" target="_blank" rel="noopener">プライバシーポリシー</a>
           <span>© 2026 BEETLE Co., LLC</span>
         </div>
