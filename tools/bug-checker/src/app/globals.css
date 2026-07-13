@@ -331,16 +331,16 @@ body {
 .footer-heroes img { display: block; width: 100%; height: auto; }
 
 /* ── Site footer（テスト検証用ツール：バナー版。2026-07-13統一）
-   浮世絵バナー（ロゴ焼き込み済み）→ナビリンク→プライバシー・会社名。
-   バナーがロゴを兼ねるためBEETLEテキストロゴは出さない。PC・スマホとも中央揃え ── */
+   浮世絵バナー（ロゴ焼き込み済み）→ナビリンク＋プライバシー・会社名を1行中央揃え（狭い画面では折り返し）。
+   バナーがロゴを兼ねるためBEETLEテキストロゴは出さない ── */
 .site-footer-app {
   background: #1a1a1a;
-  padding: 1.25rem 1.5rem;
+  padding: 1.1rem 1.5rem;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.6rem 2rem;
+  flex-wrap: wrap;
   text-align: center;
 }
 .sfa-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
