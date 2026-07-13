@@ -10,6 +10,7 @@
 
 .article-body{font-size:15px;line-height:2;color:#333;}
 .article-body p{margin-bottom:1.6em;}
+.article-body h2{font-size:18px;font-weight:700;color:#1a1a1a;margin:44px 0 18px;padding-left:12px;border-left:3px solid var(--color-accent);line-height:1.6;}
 .article-body .section-break{border:none;border-top:1px solid #e5e5e5;margin:32px 0;}
 .article-body .highlight{color:var(--color-accent);font-weight:500;}
 .article-body .closing{font-size:15px;font-weight:500;color:#1a1a1a;padding:20px;background:#fafafa;border-left:3px solid var(--color-accent);border-radius:0 8px 8px 0;line-height:1.9;}
