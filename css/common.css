@@ -15,18 +15,18 @@ a{text-decoration:none;}
 .logo a { display: flex; align-items: center; }
 .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; letter-spacing: 0.08em; color: #1c1c2e; text-decoration: none; }
 .nav-logo span { color: var(--color-accent); }
-.nav-links { display: flex; gap: 22px; align-items: center; }
+.nav-links { display: flex; gap: 12px 22px; align-items: center; flex-wrap: wrap; }
 .nav-links a { font-size: 13px; color: #666; text-decoration: none; white-space: nowrap; transition: color .15s; }
 .nav-links a:hover { color: var(--color-accent); }
-/* 事業入口のアクセント色ピル（QA支援＝アクセント色、教育・こども＝温かいオレンジ。アプリの .site-nav-howto と同型） */
-.nav-links a.nav-cta { background: var(--color-accent); color: #fff; font-weight: 700; font-size: 12px; padding: 6px 14px; border-radius: 999px; transition: background .15s; }
-.nav-links a.nav-cta:hover { background: #a9543f; color: #fff; }
-.nav-links a.nav-cta-edu { background: #ef8a3c; }
-.nav-links a.nav-cta-edu:hover { background: #e07428; color: #fff; }
+/* 事業入口の角ボタン（アウトライン型・radius 2px。QA支援＝アクセント色、教育・こども＝温かいオレンジ） */
+.nav-links a.nav-cta { color: var(--color-accent); border: 1px solid var(--color-accent); border-radius: 2px; background: transparent; font-weight: 700; font-size: 12px; padding: 5px 12px; transition: background .15s, color .15s; }
+.nav-links a.nav-cta:hover { background: var(--color-accent); color: #fff; }
+.nav-links a.nav-cta-edu { color: #ef8a3c; border-color: #ef8a3c; }
+.nav-links a.nav-cta-edu:hover { background: #ef8a3c; color: #fff; }
 
 @media (max-width: 480px) {
   .nav-inner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 10px 16px; }
-  .nav-links { gap: 16px; align-self: center; }
+  .nav-links { gap: 8px 16px; align-self: center; justify-content: center; max-width: 100%; }
   .nav-links a { font-size: 12px; }
 }
 
@@ -96,3 +96,7 @@ a{text-decoration:none;}
 .service-peek-label { display: block; margin-top: 5px; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; color: var(--color-accent); white-space: nowrap; opacity: 0; transform: translateY(-3px); transition: opacity .3s ease .3s, transform .3s ease .3s; }
 .peek-on .service-peek-label { opacity: 1; transform: translateY(0); }
 .peek-static .service-peek-label { opacity: 1; transform: none; }
+/* スマホではホバー演出が意味を持たないため丸アイコンごと非表示（2026-07-13決定） */
+@media (max-width: 600px) {
+  .service-peek { display: none; }
+}

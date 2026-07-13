@@ -441,11 +441,7 @@ a { color: inherit; text-decoration: none; }
 .tool-card .service-peek-circle, .column-card .service-peek-circle { width: 44px; height: 44px; }
 .column-card .service-peek-label { display: none; }
 
-/* スマホ：丸アイコンを小さめに・「クリック」ラベルは出さない */
+/* スマホ：ホバー演出が意味を持たないため丸アイコンごと非表示（2026-07-13決定） */
 @media (max-width: 768px) {
-  .service-card .service-peek { width: 48px; }
-  .service-card .service-peek-circle { width: 48px; height: 48px; }
-  .tool-card .service-peek, .column-card .service-peek { width: 36px; }
-  .tool-card .service-peek-circle, .column-card .service-peek-circle { width: 36px; height: 36px; }
-  .service-peek-label { display: none; }
+  .service-peek { display: none; }
 }

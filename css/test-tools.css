@@ -41,9 +41,9 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 .tool-icon{width:38px;height:38px;border-radius:10px;background:var(--tp-cream2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--tp-text2)}
 .tool-name{font-size:14px;font-weight:700;color:var(--tp-text)}
 .tool-desc{font-size:13px;color:var(--tp-text2);line-height:1.8;margin-bottom:14px;flex:1}
-.tool-tag{font-size:11px;padding:5px 14px;border-radius:99px;display:inline-block;font-weight:700;align-self:flex-start}
-.tool-tag.free{background:var(--tp-green-bg);color:var(--tp-green)}
-.tool-tag.try{background:var(--tp-orange);color:#fff}
+/* カード末尾のリンク表示：色付きバッジをやめ、トップページ .tool-badge と同じあっさりしたテキストリンクに統一（2026-07-13決定） */
+.tool-tag{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--tp-text);padding-left:10px;border-left:2px solid var(--tp-orange);align-self:flex-start;background:none;border-radius:0}
+.tool-tag.free,.tool-tag.try{background:none;color:var(--tp-text)}
 
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
 .card{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px}

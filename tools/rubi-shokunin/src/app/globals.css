@@ -90,7 +90,7 @@ body {
   text-decoration: none;
 }
 .site-nav-logo span { color: var(--color-accent); }
-.site-nav-links { display: flex; gap: 22px; align-items: center; }
+.site-nav-links { display: flex; gap: 12px 22px; align-items: center; flex-wrap: wrap; }
 .site-nav-links a {
   font-size: 13px;
   color: #666;
@@ -99,19 +99,21 @@ body {
   transition: color .15s;
 }
 .site-nav-links a:hover { color: var(--color-accent); }
+/* リファレンスの角ボタン（アウトライン型・radius 2px。本体 .nav-cta と同型） */
 .site-nav-links a.site-nav-howto {
-  background: var(--color-accent);
-  color: #fff;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  border-radius: 2px;
+  background: transparent;
   font-weight: 700;
   font-size: 12px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  transition: background .15s;
+  padding: 5px 12px;
+  transition: background .15s, color .15s;
 }
-.site-nav-links a.site-nav-howto:hover { background: #a9543f; color: #fff; }
+.site-nav-links a.site-nav-howto:hover { background: var(--color-accent); color: #fff; }
 @media (max-width: 480px) {
   .site-nav-inner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 10px 16px; }
-  .site-nav-links { gap: 14px; align-self: center; }
+  .site-nav-links { gap: 8px 14px; align-self: center; justify-content: center; max-width: 100%; }
   .site-nav-links a { font-size: 12px; }
 }
 
