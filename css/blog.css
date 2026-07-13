@@ -15,6 +15,8 @@
 .post-card:hover{box-shadow:0 4px 24px rgba(0,0,0,0.1);transform:translateY(-2px);}
 /* ホバーでカブトムシが降りてくる（LPの card-mascot と同じ演出） */
 .post-meta{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+/* カード内は「ラベル → 日付」の順（2026-07-13決定） */
+.post-meta .post-date{order:2;}
 .post-date{font-size:11px;color:#aaa;font-family:monospace;}
 /* カテゴリバッジ（トップの .column-tag／ツールの .tool-ribbon と同型・同配色） */
 .post-tag{font-family:'Syne',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:2px;font-weight:700;color:#fff;}
