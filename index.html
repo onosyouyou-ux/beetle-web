@@ -57,7 +57,7 @@
 {"@context":"https://schema.org","@type":"WebSite","name":"BEETLE合同会社","alternateName":"BEETLE","url":"https://www.beetle-web.jp/","publisher":{"@type":"Organization","name":"BEETLE合同会社"}}
 </script>
 <link rel="icon" href="./assets/icons/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/css/lp.css?v=31">
+<link rel="stylesheet" href="/css/lp.css?v=32">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Dela+Gothic+One&display=swap" rel="stylesheet">
@@ -72,61 +72,24 @@
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- HEADER（2026-07-13改修：相談する・ハンバーガー廃止。事業入口2ボタン＋セクションリンク行の2段） -->
 <header class="header">
-  <div class="header-logo">BEET<span>LE</span></div>
+  <div class="header-top">
+    <div class="header-logo">BEET<span>LE</span></div>
+    <div class="header-entries">
+      <a href="/test-tools.html" class="header-entry">QA支援</a>
+      <a href="/edu-tools.html" class="header-entry edu">教育支援</a>
+    </div>
+  </div>
   <nav class="header-nav">
     <a href="#services">サービス</a>
     <a href="#case">事例</a>
     <a href="#flow">流れ</a>
-    <a href="#why" class="nav-sp-hidden">なぜ今</a>
-    <a href="#style" class="nav-sp-hidden">スタイル</a>
+    <a href="#why">なぜ今</a>
+    <a href="#style">スタイル</a>
     <a href="#tools">ツール</a>
     <a href="#about">代表</a>
-    <a href="/edu-tools.html">教育・こども</a>
   </nav>
-  <a href="mailto:info@beetle-web.jp" class="header-cta">相談する</a>
-  <div class="header-menu">
-    <button class="header-menu-btn" aria-label="メニュー" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="header-menu-dropdown">
-      <div class="header-menu-parent">
-        <a href="/test-tools.html" class="header-menu-parent-btn">ツール一覧</a>
-        <div class="header-menu-children">
-          <div class="hm-group">
-            <div class="hm-cat">テスト検証</div>
-            <div class="hm-links">
-              <a href="./tools/bug-checker/landing.html"><svg width="15" height="15" viewBox="0 0 24 24"><use href="/assets/icons/sprites.svg#icon-bug"></use></svg>これってバグなの？</a>
-              <a href="./tools/test-content/"><svg width="15" height="15" viewBox="0 0 24 24"><use href="/assets/icons/sprites.svg#icon-file-text"></use></svg>テストコンテンツ作成ツール</a>
-              <a href="./tools/regex-tester/index.html"><svg width="15" height="15" viewBox="0 0 24 24"><use href="/assets/icons/sprites.svg#icon-code"></use></svg>正規表現テスター</a>
-            </div>
-          </div>
-          <div class="hm-group">
-            <div class="hm-cat">リファレンス</div>
-            <div class="hm-links">
-              <a href="./tools/test-patterns/index.html"><svg width="15" height="15" viewBox="0 0 24 24"><use href="/assets/icons/sprites.svg#icon-check-square"></use></svg>TESTパターン集</a>
-              <a href="./tools/ui-parts/index.html"><svg width="15" height="15" viewBox="0 0 24 24"><use href="/assets/icons/sprites.svg#icon-layout"></use></svg>UI部品名鑑</a>
-              <a href="./tools/test-techniques/index.html"><svg width="15" height="15" viewBox="0 0 24 24"><use href="/assets/icons/sprites.svg#icon-search-plus"></use></svg>テスト技法カタログ</a>
-              <a href="./tools/glossary/index.html"><svg width="15" height="15" viewBox="0 0 24 24"><use href="/assets/icons/sprites.svg#icon-book"></use></svg>QA・バグ用語辞典</a>
-              <a href="./tools/release-checklist/index.html"><svg width="15" height="15" viewBox="0 0 24 24"><use href="/assets/icons/sprites.svg#icon-shield-check"></use></svg>リリース前チェックリスト集</a>
-              <a href="./tools/http-status/index.html"><svg width="15" height="15" viewBox="0 0 24 24"><use href="/assets/icons/sprites.svg#icon-globe"></use></svg>HTTPステータスコード一覧</a>
-            </div>
-          </div>
-          <div class="hm-group">
-            <div class="hm-cat">教育・こども</div>
-            <div class="hm-links">
-              <a href="./tools/eigo/landing.html"><svg width="15" height="15" viewBox="0 0 24 24"><use href="/assets/icons/sprites.svg#icon-volume"></use></svg>えいごよんで！</a>
-              <a href="./tools/gakkyu-tsushin/"><svg width="15" height="15" viewBox="0 0 24 24"><use href="/assets/icons/sprites.svg#icon-newspaper"></use></svg>学級通信メーカー</a>
-              <a href="./tools/rubi-shokunin/"><svg width="15" height="15" viewBox="0 0 24 24"><use href="/assets/icons/sprites.svg#icon-type"></use></svg>ルビメーカー</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <a href="/edu-tools.html" class="header-menu-item">教育・こどもツール一覧</a>
-      <a href="/blog/" class="header-menu-item">コラム</a>
-    </div>
-  </div>
 </header>
 
 <!-- HERO -->
@@ -865,6 +828,6 @@
   </div>
 </footer>
 
-<script src="/js/index.js?v=11"></script>
+<script src="/js/index.js?v=12"></script>
 </body>
 </html>

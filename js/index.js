@@ -1,18 +1,4 @@
-  // header menu
-  const headerMenuBtn = document.querySelector('.header-menu-btn');
-  const headerMenuDropdown = document.querySelector('.header-menu-dropdown');
-  const headerMenu = document.querySelector('.header-menu');
-  headerMenuBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isOpen = headerMenuDropdown.classList.toggle('open');
-    headerMenu.classList.toggle('open', isOpen);
-    headerMenuBtn.setAttribute('aria-expanded', isOpen);
-  });
-  document.addEventListener('click', () => {
-    headerMenuDropdown.classList.remove('open');
-    headerMenu.classList.remove('open');
-    headerMenuBtn.setAttribute('aria-expanded', 'false');
-  });
+  // header menu（2026-07-13廃止。ヘッダーは2段構成＝ロゴ＋事業入口ボタン／セクションリンク行）
 
   // back to top（フッターにかぶらないよう、フッター上端で止める）
   const backToTop = document.querySelector('.back-to-top');
