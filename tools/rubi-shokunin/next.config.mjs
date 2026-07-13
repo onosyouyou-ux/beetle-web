@@ -4,6 +4,8 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? 'dev',
     NEXT_PUBLIC_BUILD_DATE: new Date().toISOString().slice(0, 10),
+    // ビルド（デプロイ）した日付を「更新日」として焼き込む
+    NEXT_PUBLIC_UPDATED_DATE: new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' }),
   },
 };
 

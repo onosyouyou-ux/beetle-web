@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import ScrollTopButton from '../components/ScrollTopButton';
 import './globals.css';
 
 const GA_ID = 'G-N6JXJGQ1Q6';
@@ -52,10 +53,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </nav>
 
-        <main className="app-main">{children}</main>
+        {/* 紙面（1180px固定）。余白はモザイクタイルの背景 */}
+        <div className="app-paper">
+          <main className="app-main">{children}</main>
+          <p className="paper-release">更新日：{process.env.NEXT_PUBLIC_UPDATED_DATE}</p>
+        </div>
 
+        {/* その他ツール用フッター：バナーなしのテキストロゴ版。
+            1段目「BEETLEロゴ＋ナビリンク」、2段目「プライバシーポリシー・会社名」。PC・スマホとも中央揃え */}
         <footer className="site-footer-app">
-          <div className="sfa-left">
+          <div className="sfa-row">
             <a href="https://www.beetle-web.jp" target="_blank" rel="noopener" className="sfa-logo">
               BEET<span>LE</span>
             </a>
@@ -66,11 +73,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href="mailto:info@beetle-web.jp">お問い合わせ</a>
             </nav>
           </div>
-          <div className="sfa-right">
+          <div className="sfa-copy">
             <a href="https://www.beetle-web.jp/privacy" target="_blank" rel="noopener">プライバシーポリシー</a>
             <span>© 2026 BEETLE Co., LLC</span>
           </div>
         </footer>
+        <ScrollTopButton />
 
         {/* Google Analytics (gtag はインライン必須の例外) */}
         <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />

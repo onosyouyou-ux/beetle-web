@@ -240,6 +240,49 @@ export default function Home() {
         {error && <div className="error">{error}</div>}
       </div>
 
+      {/* ── ランディング準拠の使い方3ステップ ── */}
+      <section className="app-section">
+        <p className="app-eyebrow">使い方</p>
+        <h2 className="app-h2">3ステップですぐ完成。</h2>
+        <div className="app-steps">
+          <article className="app-step-card">
+            <div className="app-step-no">1</div>
+            <h3>文章を入力</h3>
+            <p>ルビを入れたい文章を貼りつけるか、画像から読み込みます。</p>
+          </article>
+          <article className="app-step-card">
+            <div className="app-step-no">2</div>
+            <h3>範囲を選ぶ</h3>
+            <p>すべての漢字、またはむずかしい漢字だけを選びます。</p>
+          </article>
+          <article className="app-step-card">
+            <div className="app-step-no">3</div>
+            <h3>コピーして使う</h3>
+            <p>教材、プリント、Webページなどに貼りつけます。</p>
+          </article>
+        </div>
+      </section>
+
+      {/* ── ランディング準拠のFAQ ── */}
+      <section className="app-section">
+        <p className="app-eyebrow">FAQ</p>
+        <h2 className="app-h2">よくある質問</h2>
+        <div className="app-faq-grid">
+          <article className="app-faq-card">
+            <h3>Q. 無料で使えますか？</h3>
+            <p>A. はい、登録不要・無料でお使いいただけます。</p>
+          </article>
+          <article className="app-faq-card">
+            <h3>Q. 一度にどのくらいの文章を処理できますか？</h3>
+            <p>A. 一度に400〜500字程度が目安です。長い文章は分けて貼りつけてください。</p>
+          </article>
+          <article className="app-faq-card">
+            <h3>Q. 入力した文章は保存されますか？</h3>
+            <p>A. 入力した文章はふりがなの生成にのみ使用し、サーバーに保存しません。</p>
+          </article>
+        </div>
+      </section>
+
       <div className={`toast${toast ? ' show' : ''}`}>{toast}</div>
     </div>
   );
