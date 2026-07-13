@@ -15,7 +15,7 @@ a{text-decoration:none;}
 .logo a { display: flex; align-items: center; }
 .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; letter-spacing: 0.08em; color: #1c1c2e; text-decoration: none; }
 .nav-logo span { color: var(--color-accent); }
-.nav-links { display: flex; gap: 12px 22px; align-items: center; flex-wrap: wrap; }
+.nav-links { display: flex; gap: 6px 11px; align-items: center; flex-wrap: wrap; }
 .nav-links a { font-size: 13px; color: #666; text-decoration: none; white-space: nowrap; transition: color .15s; }
 .nav-links a:hover { color: var(--color-accent); }
 /* 事業入口の角ボタン（塗り＋白文字・radius 2px。LPページ＝グレー、QA支援＝黒、教育＝BEETLE赤） */
@@ -37,7 +37,7 @@ a{text-decoration:none;}
 
 @media (max-width: 480px) {
   .nav-inner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 10px 16px; }
-  .nav-links { gap: 8px 16px; align-self: center; justify-content: center; max-width: 100%; }
+  .nav-links { gap: 4px 8px; align-self: center; justify-content: center; max-width: 100%; }
   .nav-links a { font-size: 12px; }
   .nav-sections { gap: 8px 16px; }
   .nav-sections a { font-size: 12px; }
