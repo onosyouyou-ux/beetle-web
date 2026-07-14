@@ -24,6 +24,9 @@ a{text-decoration:none;}
 /* LPページだけ塗りなしのアウトライン型（グレー枠＋グレー文字） */
 .nav-links a.nav-cta-lp { background: transparent; border-color: #7a7a88; color: #7a7a88; }
 .nav-links a.nav-cta-lp:hover { background: #7a7a88; border-color: #7a7a88; color: #fff; }
+/* コラム（アウトライン。PCのみ表示＝SPは480px以下で非表示。2026-07-14追加） */
+.nav-links a.nav-cta-blog { background: transparent; border-color: #7a7a88; color: #7a7a88; }
+.nav-links a.nav-cta-blog:hover { background: #7a7a88; border-color: #7a7a88; color: #fff; }
 .nav-links a.nav-cta-edu { background: var(--color-accent); border-color: var(--color-accent); }
 .nav-links a.nav-cta-edu:hover { background: #a9543f; border-color: #a9543f; }
 /* 静的教育アプリのリファレンスボタン（オレンジ。common.jsが注入） */
@@ -44,8 +47,9 @@ a{text-decoration:none;}
   .nav-links { gap: 4px 6px; justify-content: flex-end; }
   .nav-links a { font-size: 12px; }
   .nav-links a.nav-cta { padding: 4px 9px; }
-  /* SPはボタンラベルを短縮（トップ・QA・教育） */
+  /* SPはボタンラベルを短縮（トップ・QA・教育）、コラムボタンはPCのみ */
   .nav-cta-full { display: none; }
+  .nav-links a.nav-cta-blog { display: none; }
   .nav-sections { gap: 8px 16px; }
   .nav-sections a { font-size: 12px; }
 }
@@ -85,10 +89,10 @@ a{text-decoration:none;}
 .btn-cta-sub { background: rgba(253,246,236,0.15); color: #fdf6ec; font-weight: 700; font-size: 0.85rem; padding: 12px 26px; border-radius: 4px; border: 2px solid rgba(253,246,236,0.7); transition: border-color .2s; display: inline-block; }
 .btn-cta-sub:hover { border-color: #fff; }
 @media (max-width: 600px) {
-  .cta-section { padding: 48px 20px 56px; background-image: none; aspect-ratio: auto; }
-  .cta-eyebrow { color: rgba(255,255,255,0.75); }
-  .cta-title { color: #fff; }
-  .cta-body { color: rgba(255,255,255,0.92); }
+  .cta-section { padding: 36px 20px 40px; background-image: none; aspect-ratio: auto; }
+  .cta-eyebrow { color: rgba(255,255,255,0.75); margin-bottom: 12px; }
+  .cta-title { color: #fff; margin-bottom: 12px; }
+  .cta-body { color: rgba(255,255,255,0.92); line-height: 1.75; margin-bottom: 20px; }
   .cta-btns .btn-cta-main, .cta-btns .btn-cta-sub { flex: 1; white-space: nowrap; padding: 14px 10px; font-size: 0.85rem; }
 }
 

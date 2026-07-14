@@ -9,6 +9,7 @@ export default function AppHeader() {
           <a className="site-nav-btn site-nav-top" href="https://www.beetle-web.jp/" target="_blank" rel="noopener">トップ</a>
           <a className="site-nav-btn" href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">QA<span className="nav-cta-full">支援</span></a>
           <a className="site-nav-btn site-nav-edu" href="https://www.beetle-web.jp/edu-tools.html" target="_blank" rel="noopener">教育<span className="nav-cta-full">支援</span></a>
+          <a className="site-nav-btn site-nav-blog" href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
           <a className="site-nav-howto" href="https://www.beetle-web.jp/tools/gakkyu-tsushin/" target="_blank" rel="noopener">リファレンス</a>
         </div>
       </div>

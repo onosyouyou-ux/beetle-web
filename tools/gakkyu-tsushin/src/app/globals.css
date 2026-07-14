@@ -178,6 +178,9 @@ select:focus {
 .site-nav-links a.site-nav-top:hover { background: #7a7a88; border-color: #7a7a88; color: #fff; }
 .site-nav-links a.site-nav-edu { background: var(--color-accent); border-color: var(--color-accent); }
 .site-nav-links a.site-nav-edu:hover { background: #a9543f; border-color: #a9543f; }
+/* コラム（アウトライン。PCのみ表示。2026-07-14追加） */
+.site-nav-links a.site-nav-blog { background: transparent; border-color: #7a7a88; color: #7a7a88; }
+.site-nav-links a.site-nav-blog:hover { background: #7a7a88; border-color: #7a7a88; color: #fff; }
 /* リファレンス（教育系アプリは温かいオレンジ。赤の教育支援ボタンとの色被り回避） */
 .site-nav-links a.site-nav-howto {
   color: #fff;
@@ -196,8 +199,9 @@ select:focus {
   .site-nav-links { gap: 4px 6px; justify-content: flex-end; }
   .site-nav-links a { font-size: 12px; }
   .site-nav-links a.site-nav-btn, .site-nav-links a.site-nav-howto { padding: 4px 9px; }
-  /* SPはボタンラベルを短縮（トップ・QA・教育） */
+  /* SPはボタンラベルを短縮（トップ・QA・教育）、コラムボタンはPCのみ */
   .nav-cta-full { display: none; }
+  .site-nav-links a.site-nav-blog { display: none; }
 }
 @media (max-width: 360px) {
   .site-nav-logo { font-size: 1.05rem; }

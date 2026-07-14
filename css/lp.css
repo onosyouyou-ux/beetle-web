@@ -29,6 +29,9 @@ a { color: inherit; text-decoration: none; }
 /* トップ（アウトライングレー。全画面ボタン統一のため自ページでも表示。2026-07-14） */
 .header-entry.top { background: transparent; border-color: #7a7a88; color: #7a7a88; }
 .header-entry.top:hover { background: #7a7a88; border-color: #7a7a88; color: #fff; }
+/* コラム（アウトライン。PCのみ表示。2026-07-14追加） */
+.header-entry.blog { background: transparent; border-color: #7a7a88; color: #7a7a88; }
+.header-entry.blog:hover { background: #7a7a88; border-color: #7a7a88; color: #fff; }
 .header-nav { display: flex; gap: 28px; justify-content: center; font-family: var(--font-en); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; padding: 7px 40px 9px; border-top: 1px solid var(--gray-lt); }
 .header-nav a { opacity: 0.6; white-space: nowrap; transition: opacity .2s, color .2s; }
 .header-nav a:hover { opacity: 1; color: var(--color-accent); }
@@ -340,8 +343,9 @@ a { color: inherit; text-decoration: none; }
   .header-logo { font-size: 1.1rem; }
   .header-entries { gap: 8px; }
   .header-entry { font-size: 0.78rem; padding: 5px 12px; }
-  /* SPはボタンラベルを短縮（QA・教育） */
+  /* SPはボタンラベルを短縮（QA・教育）、コラムボタンはPCのみ */
   .nav-cta-full { display: none; }
+  .header-entry.blog { display: none; }
   .header-nav { overflow-x: auto; scrollbar-width: none; gap: 0; padding: 6px 8px 8px; }
   .header-nav::-webkit-scrollbar { display: none; }
   .header-nav a { white-space: nowrap; font-size: 0.8rem; padding: 2px 7px; }
