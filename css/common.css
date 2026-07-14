@@ -39,13 +39,21 @@ a{text-decoration:none;}
 [id] { scroll-margin-top: 100px; }
 
 @media (max-width: 480px) {
-  .nav-inner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 10px 16px; }
-  .nav-links { gap: 4px 8px; align-self: center; justify-content: center; max-width: 100%; }
+  /* ロゴ＋ボタンは1行のまま（縦積みにするとロゴ左・ボタン中央でくずれて見える） */
+  .nav-inner { gap: 8px; padding: 10px 14px; }
+  .nav-links { gap: 4px 6px; justify-content: flex-end; }
   .nav-links a { font-size: 12px; }
+  .nav-links a.nav-cta { padding: 4px 9px; }
   /* SPはボタンラベルを短縮（トップ・QA・教育） */
   .nav-cta-full { display: none; }
   .nav-sections { gap: 8px 16px; }
   .nav-sections a { font-size: 12px; }
+}
+
+/* 極小画面（〜360px）でもロゴ＋ボタン3つが1行に収まるよう追加圧縮 */
+@media (max-width: 360px) {
+  .nav-logo { font-size: 1.05rem; }
+  .nav-links a.nav-cta { font-size: 11px; padding: 4px 7px; }
 }
 
 /* Footer（2026-07-13統一）：浮世絵バナー（ロゴ焼き込み済み）→ナビリンク＋プライバシー・会社名を1行中央揃え。
