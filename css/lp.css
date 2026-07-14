@@ -182,9 +182,10 @@ a { color: inherit; text-decoration: none; }
 .service-icon { margin-bottom: 20px; display: block; color: var(--color-accent); }
 .service-title { font-family: var(--font-ja); font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 12px; line-height: 1.5; }
 .service-body { font-size: 0.85rem; color: var(--gray); line-height: 1.9; }
-.service-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 20px; }
+/* タグ行の右端に「詳しく見る」を同居させ、行ごとカード下部に固定（リンクだけの行を作らない。2026-07-14） */
+.service-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: auto; padding-top: 20px; }
 .service-tag { font-size: 0.72rem; font-weight: 700; padding: 3px 10px; background: var(--white); border: 1px solid var(--gray-lt); border-radius: 2px; color: var(--gray); }
-.service-card-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; font-size: 0.88rem; font-weight: 700; color: var(--color-accent); }
+.service-card-link { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; font-size: 0.88rem; font-weight: 700; color: var(--color-accent); }
 .service-card-link span { display: inline-block; transition: transform .2s ease; }
 .service-card:hover .service-card-link span { transform: translateX(4px); }
 .coverage-block { margin-top: 48px; padding-top: 36px; border-top: 1px solid var(--gray-lt); text-align: center; }
