@@ -26,6 +26,9 @@ a { color: inherit; text-decoration: none; }
 .header-entry:hover { background: #3a3a52; border-color: #3a3a52; }
 .header-entry.edu { background: var(--color-accent); border-color: var(--color-accent); }
 .header-entry.edu:hover { background: #a9543f; border-color: #a9543f; }
+/* トップ（アウトライングレー。全画面ボタン統一のため自ページでも表示。2026-07-14） */
+.header-entry.top { background: transparent; border-color: #7a7a88; color: #7a7a88; }
+.header-entry.top:hover { background: #7a7a88; border-color: #7a7a88; color: #fff; }
 .header-nav { display: flex; gap: 28px; justify-content: center; font-family: var(--font-en); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; padding: 7px 40px 9px; border-top: 1px solid var(--gray-lt); }
 .header-nav a { opacity: 0.6; white-space: nowrap; transition: opacity .2s, color .2s; }
 .header-nav a:hover { opacity: 1; color: var(--color-accent); }

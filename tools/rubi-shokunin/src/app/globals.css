@@ -128,9 +128,17 @@ body {
 }
 .site-nav-links a.site-nav-howto:hover { background: #e07428; border-color: #e07428; color: #fff; }
 @media (max-width: 480px) {
-  .site-nav-inner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 10px 16px; }
-  .site-nav-links { gap: 8px 14px; align-self: center; justify-content: center; max-width: 100%; }
+  /* ロゴ＋ボタンは1行のまま（本体ヘッダーと同じ。縦積みはくずれて見える） */
+  .site-nav-inner { gap: 8px; padding: 10px 14px; }
+  .site-nav-links { gap: 4px 6px; justify-content: flex-end; }
   .site-nav-links a { font-size: 12px; }
+  .site-nav-links a.site-nav-btn, .site-nav-links a.site-nav-howto { padding: 4px 9px; }
+  /* SPはボタンラベルを短縮（トップ・QA・教育） */
+  .nav-cta-full { display: none; }
+}
+@media (max-width: 360px) {
+  .site-nav-logo { font-size: 1.05rem; }
+  .site-nav-links a.site-nav-btn, .site-nav-links a.site-nav-howto { font-size: 11px; padding: 4px 7px; }
 }
 
 /* ── フッター（その他ツール用：テキストロゴ版。2026-07-13統一）

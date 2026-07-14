@@ -9,21 +9,16 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPartial('site-header', '/partials/header.html').then(() => {
     const path = location.pathname;
 
-    // 事業メインページでは自分自身へのボタンを出さない（トップボタンは常設）
-    const ctaQa = document.querySelector('.nav-cta-qa');
-    const ctaEdu = document.querySelector('.nav-cta-edu');
-    if (path === '/test-tools.html' && ctaQa) ctaQa.style.display = 'none';
-    else if (path === '/edu-tools.html' && ctaEdu) ctaEdu.style.display = 'none';
+    // ボタンは全画面「トップ・QA支援・教育支援」で固定（2026-07-14決定。
+    // 以前の「自ページのボタンを隠す」出し分けは画面ごとの違和感のもとなので廃止）
 
-    // 本体配信の静的アプリはVercelアプリと同じ構成にする：
-    // 教育系＝トップ＋教育支援＋リファレンス（オレンジ→ランディング）。QA支援ボタンは出さない
+    // 本体配信の静的アプリ（えいごよんで等）はリファレンスボタン（オレンジ→ランディング）を追加注入
     const staticApps = {
-      '/tools/eigo/': { ref: '/tools/eigo/landing.html', type: 'edu' },
-      '/tools/eigo/index.html': { ref: '/tools/eigo/landing.html', type: 'edu' },
+      '/tools/eigo/': { ref: '/tools/eigo/landing.html' },
+      '/tools/eigo/index.html': { ref: '/tools/eigo/landing.html' },
     };
     const appConf = staticApps[path];
     if (appConf) {
-      if (appConf.type === 'edu' && ctaQa) ctaQa.style.display = 'none';
       const links = document.querySelector('.nav-links');
       if (links) {
         const ref = document.createElement('a');
