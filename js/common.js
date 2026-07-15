@@ -9,8 +9,18 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPartial('site-header', '/partials/header.html').then(() => {
     const path = location.pathname;
 
-    // ボタンは全画面「トップ・QA支援・教育支援」で固定（2026-07-14決定。
-    // 以前の「自ページのボタンを隠す」出し分けは画面ごとの違和感のもとなので廃止）
+    // グローバルメニュー（トップ・QA支援・教育支援・コラム）は全画面共通のテキストリンク
+    // （2026-07-15にボタン→テキスト化）。現在ページのリンクに aria-current を付与して色替え
+    const currentHref =
+      path === '/' || path === '/index.html' ? '/'
+      : path.startsWith('/blog/') ? '/blog/'
+      : path === '/test-tools.html' ? '/test-tools.html'
+      : path === '/edu-tools.html' ? '/edu-tools.html'
+      : null;
+    if (currentHref) {
+      const link = document.querySelector(`.nav-links a[href="${currentHref}"]`);
+      if (link) link.setAttribute('aria-current', 'page');
+    }
 
     // 本体配信の静的アプリ（えいごよんで等）はリファレンスボタン（オレンジ→ランディング）を追加注入
     const staticApps = {

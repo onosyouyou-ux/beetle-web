@@ -16,23 +16,17 @@ section[id], div[id] { scroll-margin-top: 105px; }
 body { background: var(--bg); color: var(--navy); font-family: var(--font-ja); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
 a { color: inherit; text-decoration: none; }
 
-/* ─── HEADER（2段：ロゴ＋事業入口2ボタン／セクションリンク行。2026-07-13改修） ─── */
-.header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; flex-direction: column; background: rgba(247,245,240,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--gray-lt); }
+/* ─── HEADER（2段：ロゴ＋グローバルメニュー／セクションリンク行。2026-07-15にボタン→テキストリンク化・白背景化） ─── */
+.header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; flex-direction: column; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid #ebebeb; }
 .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 40px 10px; }
 .header-logo { font-family: var(--font-en); font-weight: 800; font-size: 1.25rem; letter-spacing: 0.08em; color: var(--navy); }
 .header-logo span { color: var(--color-accent); }
-.header-entries { display: flex; gap: 10px; }
-.header-entry { color: #fff; background: var(--navy); border: 1px solid var(--navy); border-radius: 2px; font-family: var(--font-ja); font-size: 0.82rem; font-weight: 700; padding: 6px 18px; white-space: nowrap; transition: background .2s; }
-.header-entry:hover { background: #3a3a52; border-color: #3a3a52; }
-.header-entry.edu { background: var(--color-accent); border-color: var(--color-accent); }
-.header-entry.edu:hover { background: #a9543f; border-color: #a9543f; }
-/* トップ（アウトライングレー。全画面ボタン統一のため自ページでも表示。2026-07-14） */
-.header-entry.top { background: transparent; border-color: #7a7a88; color: #7a7a88; }
-.header-entry.top:hover { background: #7a7a88; border-color: #7a7a88; color: #fff; }
-/* コラム（アウトライン。PCのみ表示。2026-07-14追加） */
-.header-entry.blog { background: transparent; border-color: #7a7a88; color: #7a7a88; }
-.header-entry.blog:hover { background: #7a7a88; border-color: #7a7a88; color: #fff; }
-.header-nav { display: flex; gap: 28px; justify-content: center; font-family: var(--font-en); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; padding: 7px 40px 9px; border-top: 1px solid var(--gray-lt); }
+.header-entries { display: flex; gap: 24px; align-items: center; }
+.header-entry { color: #55555f; font-family: var(--font-ja); font-size: 0.85rem; font-weight: 700; white-space: nowrap; transition: color .2s; }
+.header-entry:hover { color: var(--color-accent); }
+/* 現在ページ（トップLPは自分自身＝トップにHTMLで直接付与） */
+.header-entry[aria-current="page"] { color: var(--color-accent); }
+.header-nav { display: flex; gap: 28px; justify-content: center; font-family: var(--font-en); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; padding: 7px 40px 9px; border-top: 1px solid #ebebeb; }
 .header-nav a { opacity: 0.6; white-space: nowrap; transition: opacity .2s, color .2s; }
 .header-nav a:hover { opacity: 1; color: var(--color-accent); }
 
@@ -341,11 +335,8 @@ a { color: inherit; text-decoration: none; }
   section[id], div[id] { scroll-margin-top: 100px; }
   .header-top { padding: 10px 16px 8px; }
   .header-logo { font-size: 1.1rem; }
-  .header-entries { gap: 8px; }
-  .header-entry { font-size: 0.78rem; padding: 5px 12px; }
-  /* SPはボタンラベルを短縮（QA・教育）、コラムボタンはPCのみ */
-  .nav-cta-full { display: none; }
-  .header-entry.blog { display: none; }
+  .header-entries { gap: 14px; }
+  .header-entry { font-size: 0.8rem; }
   .header-nav { overflow-x: auto; scrollbar-width: none; gap: 0; padding: 6px 8px 8px; }
   .header-nav::-webkit-scrollbar { display: none; }
   .header-nav a { white-space: nowrap; font-size: 0.8rem; padding: 2px 7px; }
