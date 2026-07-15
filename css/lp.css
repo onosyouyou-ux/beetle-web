@@ -22,10 +22,10 @@ a { color: inherit; text-decoration: none; }
 .header-logo { font-family: var(--font-en); font-weight: 800; font-size: 1.25rem; letter-spacing: 0.08em; color: var(--navy); }
 .header-logo span { color: var(--color-accent); }
 .header-entries { display: flex; gap: 24px; align-items: center; }
-.header-entry { color: #55555f; font-family: var(--font-ja); font-size: 0.85rem; font-weight: 700; white-space: nowrap; transition: color .2s; }
-.header-entry:hover { color: var(--color-accent); }
-/* 現在ページ（トップLPは自分自身＝トップにHTMLで直接付与） */
-.header-entry[aria-current="page"] { color: var(--color-accent); }
+.header-entry { color: #55555f; font-family: var(--font-ja); font-size: 0.85rem; font-weight: 700; white-space: nowrap; text-underline-offset: 6px; text-decoration-thickness: 2px; transition: color .2s; }
+.header-entry:hover { color: var(--color-accent); text-decoration: underline; }
+/* 現在ページ（トップLPは自分自身＝トップにHTMLで直接付与）：アクセント色＋下線 */
+.header-entry[aria-current="page"] { color: var(--color-accent); text-decoration: underline; }
 .header-nav { display: flex; gap: 28px; justify-content: center; font-family: var(--font-en); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; padding: 7px 40px 9px; border-top: 1px solid #ebebeb; }
 .header-nav a { opacity: 0.6; white-space: nowrap; transition: opacity .2s, color .2s; }
 .header-nav a:hover { opacity: 1; color: var(--color-accent); }

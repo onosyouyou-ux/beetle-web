@@ -17,10 +17,11 @@ a{text-decoration:none;}
 .nav-logo span { color: var(--color-accent); }
 .nav-links { display: flex; gap: 6px 22px; align-items: center; flex-wrap: wrap; }
 /* グローバルメニュー（テキストリンク。2026-07-15にボタン→テキスト化。SPでもコラム含め全リンク表示・ラベル短縮なし） */
-.nav-links a { font-size: 13.5px; font-weight: 700; color: #55555f; text-decoration: none; white-space: nowrap; transition: color .15s; }
-.nav-links a:hover { color: var(--color-accent); }
-/* 現在ページ（common.js が aria-current="page" を付与） */
-.nav-links a[aria-current="page"] { color: var(--color-accent); }
+.nav-links a { font-size: 13.5px; font-weight: 700; color: #55555f; text-decoration: none; text-underline-offset: 6px; text-decoration-thickness: 2px; white-space: nowrap; transition: color .15s; }
+.nav-links a:hover { color: var(--color-accent); text-decoration: underline; }
+/* 現在ページ（common.js が aria-current="page" を付与）：アクセント色＋下線 */
+.nav-links a[aria-current="page"] { color: var(--color-accent); text-decoration: underline; }
+.nav-links a.nav-cta-ref:hover { text-decoration: none; }
 /* 静的教育アプリのリファレンスボタン（オレンジ塗り角ボタン。common.jsが注入） */
 .nav-links a.nav-cta-ref { color: #fff; background: #ef8a3c; border: 1px solid #ef8a3c; border-radius: 2px; font-weight: 700; font-size: 12px; padding: 5px 12px; transition: background .15s; }
 .nav-links a.nav-cta-ref:hover { background: #e07428; border-color: #e07428; color: #fff; }
