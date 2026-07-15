@@ -14,13 +14,13 @@ export default function AppHeader() {
     <nav className="site-nav">
       <div className="site-nav-inner">
         <a className="site-nav-logo" href="https://www.beetle-web.jp" target="_blank" rel="noopener">BEET<span>LE</span></a>
-        {/* ボタンは全画面「トップ・QA支援・教育支援」で統一（2026-07-14決定）＋リファレンス */}
+        {/* グローバルメニュー（本体LPと同型のテキストリンク。2026-07-15にボタン→テキスト化。
+            リファレンスはヘッダーから外し、page-header内のタイトル・注釈の下に移設） */}
         <div className="site-nav-links">
-          <a className="site-nav-btn site-nav-top" href="https://www.beetle-web.jp/" target="_blank" rel="noopener">トップ</a>
-          <a className="site-nav-btn" href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">QA<span className="nav-cta-full">支援</span></a>
-          <a className="site-nav-btn site-nav-edu" href="https://www.beetle-web.jp/edu-tools.html" target="_blank" rel="noopener">教育<span className="nav-cta-full">支援</span></a>
-          <a className="site-nav-btn site-nav-blog" href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
-          <a className="site-nav-howto" href="https://www.beetle-web.jp/tools/bug-checker/landing.html" target="_blank" rel="noopener">リファレンス</a>
+          <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">トップ</a>
+          <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">QA支援</a>
+          <a href="https://www.beetle-web.jp/edu-tools.html" target="_blank" rel="noopener">教育支援</a>
+          <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
         </div>
       </div>
     </nav>
@@ -68,6 +68,8 @@ export function PageHero({ counter }: { counter: CounterData | null }) {
               <p className="page-header-desc">
                 画像を貼るだけでAIがバグか否かを判定。<br />バグなら起票内容を自動生成します。<br />タイトル・再現手順・期待値まで全部出てきます。<br />登録不要・インストール不要、月1万回まで無料です。
               </p>
+              {/* リファレンス（ランディングへ）。ヘッダーから移設（2026-07-15） */}
+              <a className="ph-ref" href="https://www.beetle-web.jp/tools/bug-checker/landing.html" target="_blank" rel="noopener">リファレンス</a>
               {/* 使用回数は無料枠の8割（8,000回）を超えたら表示（残量アラートとして） */}
               {counter && counter.used >= counter.limit * 0.8 && (
                 <div className="mt-2 inline-flex flex-col gap-0.5 bg-white border border-[#e8e4de] rounded-lg px-3 py-1.5" style={{ borderWidth: '0.5px' }}>

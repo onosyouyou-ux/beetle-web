@@ -146,6 +146,8 @@ export default function Home() {
       <p className="lead">
         ぶんしょうを はりつけると、かんじに ふりがなが つくよ。がぞうから ぶんしょうを よみこむこともできるよ。
       </p>
+      {/* リファレンス（ランディングへ）。ヘッダーから移設（2026-07-15） */}
+      <a className="ph-ref" href="https://www.beetle-web.jp/tools/rubi-shokunin/" target="_blank" rel="noopener">リファレンス</a>
 
       {/* LPメインビジュアル */}
       {/* eslint-disable-next-line @next/next/no-img-element */}

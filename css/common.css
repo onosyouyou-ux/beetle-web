@@ -21,10 +21,6 @@ a{text-decoration:none;}
 .nav-links a:hover { color: var(--color-accent); text-decoration: underline; }
 /* 現在ページ（common.js が aria-current="page" を付与）：アクセント色＋下線 */
 .nav-links a[aria-current="page"] { color: var(--color-accent); text-decoration: underline; }
-.nav-links a.nav-cta-ref:hover { text-decoration: none; }
-/* 静的教育アプリのリファレンスボタン（オレンジ塗り角ボタン。common.jsが注入） */
-.nav-links a.nav-cta-ref { color: #fff; background: #ef8a3c; border: 1px solid #ef8a3c; border-radius: 2px; font-weight: 700; font-size: 12px; padding: 5px 12px; transition: background .15s; }
-.nav-links a.nav-cta-ref:hover { background: #e07428; border-color: #e07428; color: #fff; }
 
 /* 2段目：ページ内セクションリンク（common.js が注入。空なら出さない） */
 .nav-sections { display: flex; justify-content: center; gap: 24px; padding: 7px 16px 9px; border-top: 1px solid #ebebeb; flex-wrap: wrap; }
@@ -39,7 +35,6 @@ a{text-decoration:none;}
   .nav-inner { gap: 8px; padding: 10px 14px; }
   .nav-links { gap: 4px 13px; justify-content: flex-end; }
   .nav-links a { font-size: 12.5px; }
-  .nav-links a.nav-cta-ref { padding: 4px 9px; font-size: 11.5px; }
   .nav-sections { gap: 8px 16px; }
   .nav-sections a { font-size: 12px; }
 }
@@ -49,7 +44,6 @@ a{text-decoration:none;}
   .nav-logo { font-size: 1.05rem; }
   .nav-links { gap: 4px 9px; }
   .nav-links a { font-size: 11.5px; }
-  .nav-links a.nav-cta-ref { font-size: 11px; padding: 4px 7px; }
 }
 
 /* Footer（2026-07-13統一）：浮世絵バナー（ロゴ焼き込み済み）→ナビリンク＋プライバシー・会社名を1行中央揃え。

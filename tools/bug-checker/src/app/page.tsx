@@ -231,15 +231,20 @@ export default function HomePage() {
       <div className="footer-heroes">
         <img src="/images/footer-heroes.jpg" alt="" aria-hidden="true" width="2172" height="264" loading="lazy" />
       </div>
-      {/* テスト検証用ツールのフッター：浮世絵バナー（ロゴ焼き込み済み）→ナビリンク→プライバシー・会社名。
-          バナーがロゴを兼ねるためBEETLEテキストロゴは出さない。PC・スマホとも中央揃え */}
+      {/* 全アプリ共通のテキストロゴ版フッター（2026-07-15統一。テスト検証用ツールは上に浮世絵バナー） */}
       <footer className="site-footer-app">
-        <nav className="sfa-nav">
-          <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">ホーム</a>
-          <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール</a>
-          <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
-          <a href="mailto:info@beetle-web.jp">お問い合わせ</a>
-        </nav>
+        <div className="sfa-row">
+          <a href="https://www.beetle-web.jp" target="_blank" rel="noopener" className="sfa-logo">
+            BEET<span>LE</span>
+          </a>
+          <nav className="sfa-nav">
+            <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">トップ</a>
+            <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">QA支援</a>
+            <a href="https://www.beetle-web.jp/edu-tools.html" target="_blank" rel="noopener">教育支援</a>
+            <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
+            <a href="https://www.beetle-web.jp/#contact" target="_blank" rel="noopener">お問い合わせ</a>
+          </nav>
+        </div>
         <div className="sfa-copy">
           <a href="https://www.beetle-web.jp/privacy" target="_blank" rel="noopener">プライバシーポリシー</a>
           <span>© 2026 BEETLE Co., LLC</span>

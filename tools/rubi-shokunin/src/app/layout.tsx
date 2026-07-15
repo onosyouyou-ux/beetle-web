@@ -43,13 +43,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <nav className="site-nav">
           <div className="site-nav-inner">
             <a className="site-nav-logo" href="https://www.beetle-web.jp" target="_blank" rel="noopener">BEET<span>LE</span></a>
-            {/* ボタンは全画面「トップ・QA支援・教育支援」で統一（2026-07-14決定）＋リファレンス */}
+            {/* グローバルメニュー（本体LPと同型のテキストリンク。2026-07-15にボタン→テキスト化。
+                リファレンスはヘッダーから外し、タイトル・注釈の下に移設） */}
             <div className="site-nav-links">
-              <a className="site-nav-btn site-nav-top" href="https://www.beetle-web.jp/" target="_blank" rel="noopener">トップ</a>
-              <a className="site-nav-btn" href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">QA<span className="nav-cta-full">支援</span></a>
-              <a className="site-nav-btn site-nav-edu" href="https://www.beetle-web.jp/edu-tools.html" target="_blank" rel="noopener">教育<span className="nav-cta-full">支援</span></a>
-              <a className="site-nav-btn site-nav-blog" href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
-              <a className="site-nav-howto" href={LANDING_URL} target="_blank" rel="noopener">リファレンス</a>
+              <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">トップ</a>
+              <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">QA支援</a>
+              <a href="https://www.beetle-web.jp/edu-tools.html" target="_blank" rel="noopener">教育支援</a>
+              <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
             </div>
           </div>
         </nav>
@@ -60,7 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <p className="paper-release">更新日：{process.env.NEXT_PUBLIC_UPDATED_DATE}</p>
         </div>
 
-        {/* その他ツール用フッター：バナーなしのテキストロゴ版。
+        {/* 全アプリ共通のテキストロゴ版フッター（2026-07-15統一）。
             1段目「BEETLEロゴ＋ナビリンク」、2段目「プライバシーポリシー・会社名」。PC・スマホとも中央揃え */}
         <footer className="site-footer-app">
           <div className="sfa-row">
@@ -68,10 +68,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               BEET<span>LE</span>
             </a>
             <nav className="sfa-nav">
-              <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">ホーム</a>
-              <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">ツール</a>
+              <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">トップ</a>
+              <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">QA支援</a>
+              <a href="https://www.beetle-web.jp/edu-tools.html" target="_blank" rel="noopener">教育支援</a>
               <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
-              <a href="mailto:info@beetle-web.jp">お問い合わせ</a>
+              <a href="https://www.beetle-web.jp/#contact" target="_blank" rel="noopener">お問い合わせ</a>
             </nav>
           </div>
           <div className="sfa-copy">

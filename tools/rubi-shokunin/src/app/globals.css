@@ -90,65 +90,51 @@ body {
   text-decoration: none;
 }
 .site-nav-logo span { color: var(--color-accent); }
-.site-nav-links { display: flex; gap: 12px 22px; align-items: center; flex-wrap: wrap; }
+.site-nav-links { display: flex; gap: 6px 22px; align-items: center; flex-wrap: wrap; }
+/* グローバルメニュー（本体LPと同型のテキストリンク。2026-07-15にボタン→テキスト化） */
 .site-nav-links a {
-  font-size: 13px;
-  color: #666;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #55555f;
   text-decoration: none;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 2px;
   white-space: nowrap;
   transition: color .15s;
 }
-.site-nav-links a:hover { color: var(--color-accent); }
-/* ナビの角ボタン群（本体ヘッダーと同型。トップ＝アウトライングレー、教育支援＝BEETLE赤） */
-.site-nav-links a.site-nav-btn {
-  color: #fff;
-  background: #1c1c2e;
-  border: 1px solid #1c1c2e;
-  border-radius: 2px;
-  font-weight: 700;
-  font-size: 12px;
-  padding: 5px 12px;
-  transition: background .15s, color .15s;
-}
-.site-nav-links a.site-nav-btn:hover { background: #3a3a52; border-color: #3a3a52; color: #fff; }
-.site-nav-links a.site-nav-top { background: transparent; border-color: #7a7a88; color: #7a7a88; }
-.site-nav-links a.site-nav-top:hover { background: #7a7a88; border-color: #7a7a88; color: #fff; }
-.site-nav-links a.site-nav-edu { background: var(--color-accent); border-color: var(--color-accent); }
-.site-nav-links a.site-nav-edu:hover { background: #a9543f; border-color: #a9543f; }
-/* コラム（アウトライン。PCのみ表示。2026-07-14追加） */
-.site-nav-links a.site-nav-blog { background: transparent; border-color: #7a7a88; color: #7a7a88; }
-.site-nav-links a.site-nav-blog:hover { background: #7a7a88; border-color: #7a7a88; color: #fff; }
-/* リファレンス（教育系アプリは温かいオレンジ。赤の教育支援ボタンとの色被り回避） */
-.site-nav-links a.site-nav-howto {
+.site-nav-links a:hover { color: var(--color-accent); text-decoration: underline; }
+/* リファレンスボタン（タイトル・注釈の下。2026-07-15にヘッダーから移設） */
+.ph-ref {
+  display: inline-block;
+  margin-top: 4px;
   color: #fff;
   background: #ef8a3c;
   border: 1px solid #ef8a3c;
   border-radius: 2px;
   font-weight: 700;
-  font-size: 12px;
-  padding: 5px 12px;
+  font-size: 12.5px;
+  padding: 6px 18px;
+  text-decoration: none;
   transition: background .15s;
 }
-.site-nav-links a.site-nav-howto:hover { background: #e07428; border-color: #e07428; color: #fff; }
+.ph-ref:hover { background: #e07428; border-color: #e07428; color: #fff; }
 @media (max-width: 480px) {
-  /* ロゴ＋ボタンは1行のまま（本体ヘッダーと同じ。縦積みはくずれて見える） */
+  /* ロゴ＋リンクは1行のまま（本体ヘッダーと同じ。縦積みはくずれて見える） */
   .site-nav-inner { gap: 8px; padding: 10px 14px; }
-  .site-nav-links { gap: 4px 6px; justify-content: flex-end; }
-  .site-nav-links a { font-size: 12px; }
-  .site-nav-links a.site-nav-btn, .site-nav-links a.site-nav-howto { padding: 4px 9px; }
-  /* SPはボタンラベルを短縮（トップ・QA・教育）、コラムボタンはPCのみ */
-  .nav-cta-full { display: none; }
-  .site-nav-links a.site-nav-blog { display: none; }
+  .site-nav-links { gap: 4px 13px; justify-content: flex-end; }
+  .site-nav-links a { font-size: 12.5px; }
 }
 @media (max-width: 360px) {
   .site-nav-logo { font-size: 1.05rem; }
-  .site-nav-links a.site-nav-btn, .site-nav-links a.site-nav-howto { font-size: 11px; padding: 4px 7px; }
+  .site-nav-links { gap: 4px 9px; }
+  .site-nav-links a { font-size: 11.5px; }
 }
 
 /* ── フッター（その他ツール用：テキストロゴ版。2026-07-13統一）
    1段目「BEETLEロゴ＋ナビリンク」、2段目「プライバシーポリシー・会社名」。PC・スマホとも中央揃え ── */
+/* 全アプリ共通のテキストロゴ版フッター（2026-07-15統一。bg #1a1a1a・リンク #888 に揃えた） */
 .site-footer-app {
-  background: #1c1c2e;
+  background: #1a1a1a;
   padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
@@ -168,10 +154,10 @@ body {
 }
 .sfa-logo span { color: var(--color-accent); }
 .sfa-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
-.sfa-nav a { font-size: 13px; color: #9a97ab; text-decoration: none; transition: color .15s; }
+.sfa-nav a { font-size: 13px; color: #888; text-decoration: none; transition: color .15s; }
 .sfa-nav a:hover { color: #fff; }
-.sfa-copy { display: flex; align-items: center; justify-content: center; gap: 1rem; font-size: 12px; color: #9a97ab; flex-wrap: wrap; white-space: normal; }
-.sfa-copy a { color: #9a97ab; text-decoration: none; transition: color .15s; }
+.sfa-copy { display: flex; align-items: center; justify-content: center; gap: 1rem; font-size: 12px; color: #888; flex-wrap: wrap; white-space: normal; }
+.sfa-copy a { color: #888; text-decoration: none; transition: color .15s; }
 .sfa-copy a:hover { color: #fff; }
 
 .header-row { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; }

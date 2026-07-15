@@ -22,22 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (link) link.setAttribute('aria-current', 'page');
     }
 
-    // 本体配信の静的アプリ（えいごよんで等）はリファレンスボタン（オレンジ→ランディング）を追加注入
-    const staticApps = {
-      '/tools/eigo/': { ref: '/tools/eigo/landing.html' },
-      '/tools/eigo/index.html': { ref: '/tools/eigo/landing.html' },
-    };
-    const appConf = staticApps[path];
-    if (appConf) {
-      const links = document.querySelector('.nav-links');
-      if (links) {
-        const ref = document.createElement('a');
-        ref.href = appConf.ref;
-        ref.className = 'nav-cta nav-cta-ref';
-        ref.textContent = 'リファレンス';
-        links.appendChild(ref);
-      }
-    }
+    // リファレンスボタンのヘッダー注入は廃止（2026-07-15。各アプリのタイトル・注釈の下に移設）
 
     // 2段目：ページ内セクションリンク（定義があるページだけ表示）
     const sectionLinks = {

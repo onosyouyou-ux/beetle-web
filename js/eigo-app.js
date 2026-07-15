@@ -596,6 +596,10 @@ function renderApp(){
   titleDiv.appendChild(mkTxt("div","font-size:"+(T?52:38)+"px;","🔤"));
   titleDiv.appendChild(mkTxt("h1","color:#fff;font-size:"+(T?32:22)+"px;font-weight:900;margin:4px 0;text-shadow:0 4px 14px rgba(0,0,0,0.3);","えいご よんで！"));
   titleDiv.appendChild(mkTxt("p","color:rgba(255,255,255,0.85);font-size:"+(T?15:12)+"px;","たんごやえいぶんをいれて、まとめてよんでもらおう！"));
+  // リファレンス（ランディングへ）。ヘッダーの注入ボタンから移設（2026-07-15）
+  var refA=mkTxt("a","display:inline-block;margin-top:"+(T?12:8)+"px;color:#fff;background:#ef8a3c;border-radius:2px;font-weight:700;font-size:"+(T?13:12)+"px;padding:6px 18px;text-decoration:none;","リファレンス");
+  refA.href="/tools/eigo/landing.html";
+  titleDiv.appendChild(refA);
   app.appendChild(titleDiv);
 
   // ---- タブ ----

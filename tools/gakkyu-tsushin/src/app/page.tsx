@@ -360,6 +360,8 @@ export default function Home() {
                 今月の出来事をメモするだけ。AIが見出しと文章を整えて、学級通信の紙面に流し込みます。<br />
                 写真なしでもイラスト付きで作れるので、子どもの顔出しが気になるクラスだよりにも。
               </p>
+              {/* リファレンス（ランディングへ）。ヘッダーから移設（2026-07-15） */}
+              <a className="ph-ref" href="https://www.beetle-web.jp/tools/gakkyu-tsushin/" target="_blank" rel="noopener">リファレンス</a>
             </div>
             {/* 静的プレビュー画像＋装飾 */}
             <div className="hero-visual" aria-hidden="true">
