@@ -1,0 +1,40 @@
+name: site-tests
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 21 * * 0'  # 毎週月曜 6:00 JST
+  workflow_dispatch:
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Vercel デプロイ完了を待つ（push時のみ）
+        if: github.event_name == 'push'
+        run: sleep 120
+      - name: 仕様書ベースの静的チェック
+        run: node tests/run-static.mjs
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: static-checks
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: 依存インストール
+        working-directory: tests
+        run: npm ci
+      - name: Playwright ブラウザ
+        working-directory: tests
+        run: npx playwright install --with-deps chromium
+      - name: E2E テスト
+        working-directory: tests
+        run: npx playwright test

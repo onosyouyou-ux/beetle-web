@@ -6,20 +6,21 @@ const GA_ID = 'G-N6JXJGQ1Q6';
 const SITE_URL = 'https://bug-checker.vercel.app';
 const TITLE = 'これってバグなの？';
 const DESC = '画像を貼るだけで判定 → バグなら起票内容を自動生成';
-const OG_IMAGE = 'https://www.beetle-web.jp/assets/images/OG.png';
+const LANDING_URL = 'https://www.beetle-web.jp/tools/bug-checker/landing.html';
+const OG_IMAGE = 'https://www.beetle-web.jp/assets/images/og-bug-checker.png';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESC,
   icons: { icon: '/favicon.svg' },
-  alternates: { canonical: '/' },
+  alternates: { canonical: LANDING_URL },
   openGraph: {
     type: 'website',
     siteName: 'BEETLE合同会社',
     title: `${TITLE} | BEETLE`,
     description: DESC,
-    url: '/',
+    url: LANDING_URL,
     locale: 'ja_JP',
     images: [{ url: OG_IMAGE, width: 1200, height: 630 }],
   },

@@ -1,0 +1,12 @@
+{
+  "name": "beetle-web-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "static": "node run-static.mjs",
+    "e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1"
+  }
+}
