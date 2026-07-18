@@ -9,7 +9,7 @@ const APP_URL = 'https://gakkyu-tsushin.vercel.app';
 const LANDING_URL = 'https://www.beetle-web.jp/tools/gakkyu-tsushin/';
 const TITLE = '学級通信メーカー';
 const DESC = '記事の素材を入力するだけ。AIが学級通信に整えます。写真ではなくイラストで、子どもの顔出しの心配なし。';
-const OG_IMAGE = 'https://www.beetle-web.jp/assets/images/OG.png';
+const OG_IMAGE = 'https://www.beetle-web.jp/assets/images/og-gakkyu-tsushin.jpg';
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
