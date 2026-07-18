@@ -11,7 +11,7 @@ const APP_URL = 'https://rubi-shokunin.vercel.app';
 const LANDING_URL = 'https://www.beetle-web.jp/tools/rubi-shokunin/';
 const TITLE = 'ルビメーカー';
 const DESC = 'ぶんしょうを はりつけるだけで、かんじに ふりがなが つくよ。がぞうからの よみこみにも たいおう。';
-const OG_IMAGE = 'https://www.beetle-web.jp/assets/images/OG.jpg';
+const OG_IMAGE = 'https://www.beetle-web.jp/assets/images/og-rubi-shokunin.jpg';
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: DESC,
     url: LANDING_URL,
     locale: 'ja_JP',
-    images: [{ url: OG_IMAGE, width: 1200, height: 800 }],
+    images: [{ url: OG_IMAGE, width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
