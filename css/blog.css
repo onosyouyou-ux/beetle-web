@@ -61,6 +61,10 @@
 .post-body ul li{margin-bottom:0.5em;}
 .post-body a{color:var(--color-accent);text-decoration:underline;text-underline-offset:3px;}
 .post-rule{border:none;border-top:1px solid #ebebeb;margin:2em 0;}
+/* 引用ブロック（AI反省文の全文掲載など） */
+.post-body blockquote{margin:0 0 1.8em;padding:20px 24px;background:#fafafa;border-left:3px solid var(--color-accent);border-radius:0 8px 8px 0;}
+.post-body blockquote p{margin-bottom:1em;font-size:0.95em;}
+.post-body blockquote p:last-child{margin-bottom:0;}
 .post-body .lead{font-size:15px;color:#111;font-weight:700;padding-bottom:24px;border-bottom:1px solid #ebebeb;}
 .post-cta{margin-top:48px;padding:28px 24px;background:#fafafa;border:1px solid #ebebeb;border-radius:16px;text-align:center;}
 .post-cta p{font-size:14px;color:#666;margin-bottom:16px;line-height:1.8;}

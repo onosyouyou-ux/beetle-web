@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漢字が読めないと、歌えない。ふりがなを自動でふる無料ツール「ルビメーカー」を作った | BEETLE</title>
+<meta name="description" content="子どもの「この漢字、なんてよむの？」から生まれた無料ツール「ルビメーカー」。文章を貼り付けるだけでAIが漢字にふりがな（ルビ）をふる。作った理由と使い方、正直な弱点まで。">
+<link rel="canonical" href="https://www.beetle-web.jp/blog/posts/rubi-maker.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="漢字が読めないと、歌えない。ふりがなを自動でふる無料ツール「ルビメーカー」を作った | BEETLE">
+<meta property="og:description" content="文章を貼り付けるだけで、AIが漢字にふりがなをふる無料ツールを作りました。きっかけは、子どもの「この漢字、なんてよむの？」でした。">
+<meta property="og:url" content="https://www.beetle-web.jp/blog/posts/rubi-maker.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="漢字が読めないと、歌えない。ふりがなを自動でふる無料ツール「ルビメーカー」を作った | BEETLE合同会社">
+<meta name="twitter:description" content="文章を貼り付けるだけで、AIが漢字にふりがなをふる無料ツールを作りました。きっかけは、子どもの「この漢字、なんてよむの？」でした。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"漢字が読めないと、歌えない。ふりがなを自動でふる無料ツール「ルビメーカー」を作った","datePublished":"2026-07-18","dateModified":"2026-07-18","description":"文章を貼り付けるだけで、AIが漢字にふりがな（ルビ）をふる無料ツール「ルビメーカー」を作った理由と使い方。","image":"https://www.beetle-web.jp/assets/images/OG.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/rubi-maker.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"漢字が読めないと、歌えない。ふりがなを自動でふる無料ツール「ルビメーカー」を作った","item":"https://www.beetle-web.jp/blog/posts/rubi-maker.html"}]}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-07-18</span>
+        <span class="post-tag tips">Tips</span>
+      </div>
+      <h1 class="post-h1">漢字が読めないと、歌えない。ふりがなを自動でふる無料ツール「ルビメーカー」を作った</h1>
+    </div>
+
+    <div class="post-body">
+
+      <p class="lead">文章を貼り付けるだけで、漢字にふりがな（ルビ）を自動でふる無料ツールを作りました。きっかけは、子どもの一言です。</p>
+
+      <p>子どもが、好きな曲の歌詞を見ながら歌おうとして、途中で止まりました。</p>
+
+      <p>「この漢字、なんてよむの？」</p>
+
+      <p>言われてみれば、そうなんですよね。大人は歌詞を当たり前に読んでいるけれど、子どもにとって歌詞カードは漢字だらけです。読めない漢字が1つあるだけで、歌はそこで止まる。歌いたい気持ちはあるのに、漢字が先に立ちはだかる。</p>
+
+      <h2>印刷して、手でルビをふっていた</h2>
+
+      <p>最初は、歌詞を印刷して、読めなさそうな漢字の上に手でふりがなを書いていました。1曲ぶんやると、けっこうな量になります。どの漢字が読めて、どの漢字が読めないか。考えながら書くので、思ったより時間もかかる。</p>
+
+      <p>そして何より、「すぐやってあげられない」のがつらかった。子どもが「これ歌いたい」と持ってきた瞬間が、一番熱があるときです。「あとでね」と言って翌日に渡しても、もう別の曲に興味が移っていたりする。この時間差が、地味にこたえました。</p>
+
+      <h2>貼り付けるだけで、AIがふりがなを自動でふるようにした</h2>
+
+      <p>この内職をなくしたくて、ツールを作りました。名前は<a href="/tools/rubi-shokunin/">「ルビメーカー」</a>。文章を貼り付けるだけで、AIが漢字にふりがな（ルビ）を自動でふります。</p>
+
+      <p>作るときに決めていたのは、親を経由しなくても使えることでした。私がルビをふってあげる仕組みのままだと、結局「あとでね」が発生します。そうではなくて、子どもが読みたくなったその瞬間に、自分で貼って、自分でふりがなをつけられる。ツールの目的は代筆ではなく、この時間差をなくすことでした。</p>
+
+      <p>ちなみにこのツール自体も、コードが書けない私がAIと対話しながら作ったものです。手でルビをふっていた父親が、AIと組んでルビふりを自動化する。少し前なら考えられなかった流れだと思います。</p>
+
+      <h2>使い方は、貼って、選んで、コピーするだけ</h2>
+
+      <p>使い方は3ステップです。ふりがなをつけたい文章を貼り付けて、範囲を選んで、コピーする。これだけです。</p>
+
+      <p>範囲は「すべての漢字」と「むずかしい漢字だけ」から選べます。低学年ならすべての漢字に、高学年ならむずかしい漢字だけに。ふりがなが多すぎると、かえって読みにくくなるんですよね。コピーはHTMLのルビタグ形式と「漢字（かんじ）」形式の2つから選べるので、Webページにも紙のプリントにも貼り付けられます。</p>
+
+      <p>歌詞カードや本など、手元に紙しかないときは、写真を撮って画像から読み込めます。登録は不要で、無料です。</p>
+
+      <h2>正直に言うと、完璧ではありません</h2>
+
+      <p>QAが本業なので、自分の作ったツールほど疑って見てしまいます。正直に言うと、AIのふりがなは完璧ではありません。漢字の読みは文脈で変わるので、たまに違う読みをふることがあります。子どもが使うものだからこそ、最初のうちは大人がさっと目を通してもらえると安心です。</p>
+
+      <p>それと、これは作ってから気付いたことですが、印刷してあげても、まったく見ないこともあります。あんなに歌いたがっていたのに、渡したころには興味が別のところに移っている。でも、そのとき子どもはアプリのほうを触っていました。読まれなかったプリントは無駄だったけれど、「読みたくなったら自分でやれる道具がある」ことは無駄にならない。そう思うことにしています。</p>
+
+      <h2>自分のことを自分でできるのは、いいものだ</h2>
+
+      <p>作ってみて一番の発見は、ツールの性能ではなく、子どもの表情でした。やってもらうより、自分でやれるほうが、うれしそうなんです。考えてみれば大人も同じで、人に頼んで待つより、自分の手でその場で片付くほうが気持ちいい。</p>
+
+      <p>おうちに「この漢字、なんてよむの？」と聞いてくる人がいたら、歌詞でもプリントでも、一度貼ってみてください。ルビをふる内職から、引退できます。</p>
+
+    </div>
+
+    <div class="post-cta">
+      <p>登録不要・無料。文章を貼り付けるだけで、ふりがなをふれます。</p>
+      <a class="post-cta-btn" href="/tools/rubi-shokunin/">ルビメーカーを使ってみる</a>
+    </div>
+
+    <div class="post-related">
+      <p class="post-related-title">関連記事</p>
+      <ul class="post-related-list">
+        <li><a href="/blog/posts/gakkyu-tsushin.html">学級通信は「あとは文章にするだけ」が一番重い。メモからAIで自動作成する無料ツールを作った</a></li>
+        <li><a href="/blog/posts/bug-or-not.html">「これ、バグですか？」って聞くの、しんどくないですか。</a></li>
+        <li><a href="/blog/posts/ai-marunage.html">AIをうまく使う方法は、丸投げだった。</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>

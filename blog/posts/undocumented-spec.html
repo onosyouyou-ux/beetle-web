@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>バグだと思ったら仕様だった。でもその仕様は、どこにも書かれていなかった話 | BEETLE</title>
+<meta name="description" content="見積は四捨五入、請求は切り捨て。「それ、仕様です」の根拠を聞いたら「当時の議事録にあるはず」。バグか仕様かの判定が、ドキュメントではなく人の記憶で行われている現場の話。">
+<link rel="canonical" href="https://www.beetle-web.jp/blog/posts/undocumented-spec.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="バグだと思ったら仕様だった。でもその仕様は、どこにも書かれていなかった話 | BEETLE">
+<meta property="og:description" content="「それ、仕様です」の根拠を聞いたら「当時の議事録にあるはず」。バグか仕様かの判定が、人の記憶で行われている現場の話。">
+<meta property="og:url" content="https://www.beetle-web.jp/blog/posts/undocumented-spec.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="バグだと思ったら仕様だった。でもその仕様は、どこにも書かれていなかった話 | BEETLE合同会社">
+<meta name="twitter:description" content="「それ、仕様です」の根拠を聞いたら「当時の議事録にあるはず」。バグか仕様かの判定が、人の記憶で行われている現場の話。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"バグだと思ったら仕様だった。でもその仕様は、どこにも書かれていなかった話","datePublished":"2026-07-18","dateModified":"2026-07-18","description":"「それ、仕様です」の根拠を聞いたら「当時の議事録にあるはず」。バグか仕様かの判定が、人の記憶で行われている現場の話。","image":"https://www.beetle-web.jp/assets/images/OG.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/undocumented-spec.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"バグだと思ったら仕様だった。でもその仕様は、どこにも書かれていなかった話","item":"https://www.beetle-web.jp/blog/posts/undocumented-spec.html"}]}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-07-18</span>
+        <span class="post-tag qa">QA</span>
+      </div>
+      <h1 class="post-h1">バグだと思ったら仕様だった。でもその仕様は、どこにも書かれていなかった話</h1>
+    </div>
+
+    <div class="post-body">
+
+      <p class="lead">見積画面では3,981円。請求画面では3,980円。同じ明細なのに、合計が1円だけずれていた。</p>
+
+      <p>消費税の端数処理が画面によって違う。これはバグだと思った。再現手順を整えて、キャプチャを撮って、起票した。我ながらきれいなバグ票だった。翌日、開発リーダーから返ってきたのは一言だった。</p>
+
+      <p>「それ、仕様です」</p>
+
+      <p>QAをやっていると、この返事に何度も出会う。バグだと思って起票したものが、仕様だと言われる。あの瞬間の、恥ずかしさと納得のいかなさが混ざった気持ちは、何年やっても慣れない。</p>
+
+      <h2>見積は四捨五入、請求は切り捨てだった</h2>
+
+      <p>調べてもらうと、見積画面は消費税を四捨五入、請求画面は切り捨てで計算していた。だから端数の出る明細では、必ず1円ずれる。理由も聞けば筋が通っていた。数年前、経理部の要望で請求側だけ切り捨てに変えた経緯があるという。</p>
+
+      <p>じゃあ仕様書のどこに書いてあるんですか、と聞いた。返ってきた答えが忘れられない。</p>
+
+      <p>「たしか、当時の定例の議事録に書いてあったはず」</p>
+
+      <p>仕様書には「消費税を加算する」としか書かれていなかった。端数処理の方式は、どこにもない。つまり私が読める範囲のドキュメントを正とするなら、四捨五入も切り捨ても、どちらも「仕様通り」になってしまう。</p>
+
+      <h2>「仕様です」の根拠を、誰も見せられなかった</h2>
+
+      <p>バグ票はクローズされた。ステータスは「仕様」。でも、もやもやが残った。仕様だと言うなら、その仕様はどこにあるのか。</p>
+
+      <p>開発リーダーの記憶。経理部との口約束。数年前の議事録。それらはすべて「実装がこうなっている理由」ではあるけれど、「次にこの画面を触る人が読める仕様」ではない。現に私はバグ票を1枚無駄にしたし、来年入ってくる新人も、たぶん同じ起票をする。</p>
+
+      <p>このとき気付いたのは、この現場ではバグか仕様かの判定が、ドキュメントではなく人の記憶で行われている、ということだった。答えられる人が異動したら、この仕様は誰にも証明できなくなる。</p>
+
+      <h2>「仕様だから直さない」と「仕様が書かれていない」は別の問題</h2>
+
+      <p>それ以来、「仕様です」と返ってきたときの動き方を変えた。事象のバグ票はクローズしていい。そのかわり、必ず根拠を聞く。「どのドキュメントを見れば分かりますか」と。</p>
+
+      <p>出てくればそれでいい。私の確認不足だ。出てこなければ、それは実装のバグではなく、ドキュメントのバグだと考えることにしている。だから「仕様書に端数処理の記載がない」という改善起票に切り替える。事象は仕様でも、書かれていないことは直せる。</p>
+
+      <p>AIにテストケースを作らせる時代になって、この区別は前より重要になったと感じる。AIは渡された仕様書を正として動くから、書かれていない口伝の仕様は、AIにとって存在しないのと同じだ。人間なら「あの人に聞けば分かる」で回っていたものが、AIを挟んだ瞬間、ぜんぶ「仕様通り」の顔をして通過してしまう。</p>
+
+      <h2>バグ票が「仕様です」で終わった数だけ、書かれていない仕様がある</h2>
+
+      <p>バグだと思ったら仕様だった、という経験は、QAなら誰でも持っていると思う。私は長いこと、あれを恥ずかしい失敗として数えていた。でも今は、ドキュメントと実装の間にある穴を1つ見つけた瞬間だった、と数え直している。</p>
+
+      <p>あなたの現場で最近「仕様です」でクローズされたバグ票、その仕様の出どころは、どこに書いてあっただろうか。</p>
+
+    </div>
+
+    <div class="post-cta">
+      <p>バグか仕様か迷った画面は、スクショを貼るとAIが三択で判定します。人に聞く前の一次確認に。</p>
+      <a class="post-cta-btn" href="/tools/bug-checker/landing.html">「これってバグなの？」を使ってみる</a>
+    </div>
+
+    <div class="post-related">
+      <p class="post-related-title">関連記事</p>
+      <ul class="post-related-list">
+        <li><a href="/blog/posts/spec-or-bug.html">「仕様です」の一言で、片づけないために</a></li>
+        <li><a href="/blog/posts/bug-or-not.html">「これ、バグですか？」って聞くの、しんどくないですか。</a></li>
+        <li><a href="/blog/posts/ai-test-items.html">生成AIで作ったテスト項目書は、なぜ現場を止めるのか</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>

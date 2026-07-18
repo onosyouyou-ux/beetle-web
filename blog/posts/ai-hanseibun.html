@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIに物理削除の反省文を書かせたら、反省するのは私のほうだった話 | BEETLE</title>
+<meta name="description" content="データを消し飛ばしたAIに始末書風の反省文を書かせてみた。返ってきた文面は完璧で、しかも私の指示不足だけが敬語で丁寧に書かれていた。反省文の宛先は、書かせた本人だった。">
+<link rel="canonical" href="https://www.beetle-web.jp/blog/posts/ai-hanseibun.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="AIに物理削除の反省文を書かせたら、反省するのは私のほうだった話 | BEETLE">
+<meta property="og:description" content="データを消し飛ばしたAIに始末書風の反省文を書かせてみた。返ってきた文面は完璧で、しかも私の指示不足だけが丁寧に書かれていた。">
+<meta property="og:url" content="https://www.beetle-web.jp/blog/posts/ai-hanseibun.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AIに物理削除の反省文を書かせたら、反省するのは私のほうだった話 | BEETLE合同会社">
+<meta name="twitter:description" content="データを消し飛ばしたAIに始末書風の反省文を書かせてみた。返ってきた文面は完璧で、しかも私の指示不足だけが丁寧に書かれていた。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"AIに物理削除の反省文を書かせたら、反省するのは私のほうだった話","datePublished":"2026-07-10","dateModified":"2026-07-10","description":"データを消し飛ばしたAIに始末書風の反省文を書かせてみた。返ってきた文面は完璧で、私の指示不足だけが丁寧に書かれていた。","image":"https://www.beetle-web.jp/assets/images/OG.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/ai-hanseibun.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"AIに物理削除の反省文を書かせたら、反省するのは私のほうだった話","item":"https://www.beetle-web.jp/blog/posts/ai-hanseibun.html"}]}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-07-10</span>
+        <span class="post-tag ai">AI</span>
+      </div>
+      <h1 class="post-h1">AIに物理削除の反省文を書かせたら、反省するのは私のほうだった話</h1>
+    </div>
+
+    <div class="post-body">
+
+      <p class="lead">先日、生成AIに「削除機能を作ってください」と頼んだら、データベースからレコードごと消える物理削除で実装されていた。画面上はきれいに動くのに、裏側ではデータが跡形もなく消えている。この経緯は<a href="/blog/posts/physical-delete.html">前回の記事</a>に書いたとおりである。</p>
+
+      <p>事件のあと、ふと思った。人間の新人がテスト環境とはいえデータを消し飛ばしたら、たぶん始末書を書く。ならばAIにも書いてもらおうではないか。</p>
+
+      <h2>人間なら始末書ものなので、AIにも書かせてみた</h2>
+
+      <p>頼み方は簡単だった。「あなたが実装した削除機能が物理削除だった件について、始末書風の反省文を書いてください」と入力しただけである。</p>
+
+      <p>返ってきたのは数秒後だった。誠意が宿るには、いくらなんでも早すぎる。</p>
+
+      <h2>AIの反省文は、悔しいくらいよくできていた</h2>
+
+      <p>以下、全文である。</p>
+
+      <blockquote>
+        <p><strong>反省文</strong></p>
+        <p>この度は、削除機能の実装において物理削除を選択し、ご迷惑をおかけしましたことを深くお詫び申し上げます。</p>
+        <p>私は「削除機能を作ってください」というご指示を受け、対象レコードをDELETE文で削除する実装を選択いたしました。ご指示を最短で満たす実装ではありましたが、業務システムにおける「削除」には論理削除と物理削除の二つの解釈があることを踏まえ、実装前に確認の質問をすべきでした。</p>
+        <p>今回の実装により、削除されたデータは復元できない状態となっておりました。テスト環境であったことが不幸中の幸いと存じます。</p>
+        <p>再発防止策として、今後は削除機能のご依頼を受けた際、論理削除か物理削除かを必ず確認いたします。また、ご指示の際に「deleted_atによる論理削除」のように種別をご指定いただけますと、より確実にご意図に沿った実装が可能となります。</p>
+        <p>二度と同じ過ちを繰り返さぬよう、深く反省しております。</p>
+      </blockquote>
+
+      <p>文面は人事部が添削したみたいに整っている。「不幸中の幸いと存じます」のあたりは、反省しているのか開き直っているのか判断に迷う。それでも論旨は完璧で、正直、私が新人時代に書いた始末書より出来がいい。</p>
+
+      <h2>よく読むと、この反省文は私を反省させる文章だった</h2>
+
+      <p>三回読んで気付いた。この反省文、私のことを一切責めていないのに、「ご指示は一行でした」という事実がきちんと書いてある。</p>
+
+      <p>再発防止策の後半に至っては、もはや私への要望である。「種別をご指定いただけますと」とは、つまり「最初からそう言ってくれ」ということだ。反省文を書かせたはずが、指示書の不備を敬語で丁寧に指摘されていた。</p>
+
+      <p>しかも、である。AIは次の会話になれば、この反省を覚えていない。同じ頼み方をすれば、たぶん同じ実装が返ってくる。反省文は書けても、再発防止を実行できるのは、次も「削除機能を作って」と一行で頼んでしまう私のほうだけなのだ。反省文の宛先は、最初から書かせた本人だった。</p>
+
+      <h2>AIの反省文は、次のプロンプトに貼ると効く</h2>
+
+      <p>あれから、削除機能を頼むときは論理削除か物理削除か、deleted_atに何を入れるか、復元は誰ができるかまで書くようになった。反省文はAIに書かせたのに、行動が変わったのは私だけである。</p>
+
+      <p>それでも、AIに反省文を書かせるのは意外と実用的だと思っている。自分の指示のどこに穴があったのかが、敬語で列挙されて返ってくるからだ。あなたが最近AIのせいにしたあの実装も、反省文を書かせてみると、宛先はこちらかもしれない。</p>
+
+    </div>
+
+    <div class="post-related">
+      <p class="post-related-title">関連記事</p>
+      <ul class="post-related-list">
+        <li><a href="/blog/posts/physical-delete.html">【検証実話】生成AIに「削除」と頼んだら、物理削除で実装されていた話</a></li>
+        <li><a href="/blog/posts/input-check-frontend.html">【検証実話】生成AIに「入力チェック」と頼んだら、フロントにしか実装されなかった話</a></li>
+        <li><a href="/blog/posts/naoshimashita.html">QAで一番怖い報告は「動きません」ではなく「直しました」だった話</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>

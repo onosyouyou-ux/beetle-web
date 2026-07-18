@@ -138,8 +138,38 @@
   <!-- コラム -->
   <url>
     <loc>https://www.beetle-web.jp/blog/</loc>
-    <lastmod>2026-07-13</lastmod>
+    <lastmod>2026-07-19</lastmod>
     <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/blog/posts/rubi-maker.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/blog/posts/gakkyu-tsushin.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/blog/posts/input-check-frontend.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/blog/posts/ai-hanseibun.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/blog/posts/undocumented-spec.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.6</priority>
   </url>
 
   <url>

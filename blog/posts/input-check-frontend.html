@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【検証実話】生成AIに「入力チェック」と頼んだら、フロントにしか実装されなかった話 | BEETLE</title>
+<meta name="description" content="画面のチェックは完璧なのに、APIを直接叩くと不正な値が素通しだった。生成AIは「入力チェック」を画面の仕事だと解釈した。フロントとサーバー、2枚で1セットの入力チェックの話。">
+<link rel="canonical" href="https://www.beetle-web.jp/blog/posts/input-check-frontend.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="【検証実話】生成AIに「入力チェック」と頼んだら、フロントにしか実装されなかった話 | BEETLE">
+<meta property="og:description" content="画面のチェックは完璧なのに、APIを直接叩くと不正な値が素通しだった。「入力チェックして」は、どこで守るかまで言わないと伝わらない。">
+<meta property="og:url" content="https://www.beetle-web.jp/blog/posts/input-check-frontend.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="【検証実話】生成AIに「入力チェック」と頼んだら、フロントにしか実装されなかった話 | BEETLE合同会社">
+<meta name="twitter:description" content="画面のチェックは完璧なのに、APIを直接叩くと不正な値が素通しだった。「入力チェックして」は、どこで守るかまで言わないと伝わらない。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"【検証実話】生成AIに「入力チェック」と頼んだら、フロントにしか実装されなかった話","datePublished":"2026-07-08","dateModified":"2026-07-08","description":"画面のチェックは完璧なのに、APIを直接叩くと不正な値が素通しだった。フロントとサーバー、2枚で1セットの入力チェックの話。","image":"https://www.beetle-web.jp/assets/images/OG.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/input-check-frontend.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"【検証実話】生成AIに「入力チェック」と頼んだら、フロントにしか実装されなかった話","item":"https://www.beetle-web.jp/blog/posts/input-check-frontend.html"}]}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-07-08</span>
+        <span class="post-tag ai">AI</span>
+      </div>
+      <h1 class="post-h1">【検証実話】生成AIに「入力チェック」と頼んだら、フロントにしか実装されなかった話</h1>
+    </div>
+
+    <div class="post-body">
+
+      <p class="lead">生成AIが作った画面を検証していると、「表側は完璧なのに」と感じる瞬間がある。</p>
+
+      <p>今回の事例は、顧客登録フォームだった。氏名、メールアドレス、電話番号、住所。どのシステムにもある、ごく普通の登録画面である。生成AIに「入力チェックをつけてください」と頼んで実装されたものだ。</p>
+
+      <p>画面のチェックは、正直よくできていた。必須項目を空にすれば赤字が出る。メールの形式が崩れていれば、その場で教えてくれる。電話番号にひらがなを入れれば弾かれる。エラーメッセージの文言まで丁寧で、「問題なさそうだな」と思った。</p>
+
+      <p>でも、少しだけ気になって、開発者ツールのNetworkタブを開いた。フォームが送信しているAPIに、画面を通さず直接リクエストを送ってみたのだ。氏名は空、メールアドレスは「あああ」、電話番号はひらがな。</p>
+
+      <p>「あれ？」</p>
+
+      <p>201が返ってきた。登録成功である。データベースを見ると、名前のないお客様が、メールアドレス「あああ」で登録されていた。画面からは絶対に作れないはずのデータが、裏口からは素通しだった。</p>
+
+      <h2>画面のチェックが完璧でも、APIは何も守っていないことがある</h2>
+
+      <p>フロント側の入力チェックは、ブラウザの中のJavaScriptで動いている。つまり、画面を経由しない相手には一切働かない。</p>
+
+      <p>APIを直接叩かれる。開発者ツールでリクエストを書き換えられる。別システムからデータ連携される。スマホアプリが後から追加される。経路はいくらでもあって、そのどれもが入力チェックの外側を通る。</p>
+
+      <p>フロントのチェックは、正しく入力してくれる人への「案内」でしかない。データを守る「防御」は、サーバー側にしか置けない。この2つは似ているようで、役割がまったく違う。</p>
+
+      <h2>AIは「入力チェック」を、画面の仕事だと解釈した</h2>
+
+      <p>なぜこうなったのか。指示が「入力チェックをつけてください」だけだったからだ。</p>
+
+      <p>フロントにチェックを実装すれば、この指示は満たされる。画面で試せば完璧に動いて見える。デモも通る。AIは間違えたわけではなく、一番素直な解釈を選んだだけだった。</p>
+
+      <p>以前書いた、<a href="/blog/posts/physical-delete.html">「削除」と頼んだら物理削除で実装されていた話</a>と、まったく同じ構造である。「削除」という言葉に物理か論理かの区別があるように、「入力チェック」という言葉にも、フロントかサーバーかどちらもか、という区別がある。言葉を雑に渡すと、AIは雑に受け取ったなりに、きれいなものを作ってしまう。</p>
+
+      <h2>画面から試すだけでは、この穴は一生見つからない</h2>
+
+      <p>怖いのはここだ。テストケースが「画面から不正な値を入力するとエラーになること」だけなら、この実装は全項目合格する。</p>
+
+      <p>必須チェック、合格。形式チェック、合格。桁数チェック、合格。試験成績書はきれいに埋まって、リリース判定も通る。それでもAPIはノーガードのままだ。</p>
+
+      <p>私が気付けたのは、守りが1枚に見えたとき、その1枚がどこにあるかを確認する癖があったからだと思う。フロントのチェックとサーバーのチェックは、2枚で1セット。画面で弾かれたときこそ、「では画面を通らなかったら？」と裏に回る。QAの仕事は、正面玄関の確認だけではない。</p>
+
+      <h2>「入力チェックして」は、どこで守るかまで言わないと伝わらない</h2>
+
+      <p>それ以来、AIに入力チェックを頼むときは、ここまで書くようにしている。</p>
+
+      <p>「入力チェックはフロントとAPIの両方に実装してください」<br>
+      「APIは不正な値を400エラーで返してください」<br>
+      「フロントのチェックは利用者への案内、サーバー側のチェックを最終防衛にしてください」</p>
+
+      <p>ここまで書いて、ようやく両側にチェックが入る。逆に言えば、この一言を足すだけで防げた穴だった。AIが悪いのではなく、「入力チェック」という言葉に込めていたつもりの意味を、こちらが言葉にしていなかったのだと思う。</p>
+
+      <h2>まとめ</h2>
+
+      <p>画面がきれいに弾いてくれるほど、裏側は確認されなくなる。完璧なフォームは、完璧な守りに見えてしまうからだ。</p>
+
+      <p>あなたのシステムのフォームの裏側で、APIは誰が守っているだろうか。</p>
+
+    </div>
+
+    <div class="post-related">
+      <p class="post-related-title">関連記事</p>
+      <ul class="post-related-list">
+        <li><a href="/blog/posts/physical-delete.html">【検証実話】生成AIに「削除」と頼んだら、物理削除で実装されていた話</a></li>
+        <li><a href="/blog/posts/ai-hanseibun.html">AIに物理削除の反省文を書かせたら、反省するのは私のほうだった話</a></li>
+        <li><a href="/blog/posts/like-updated-at.html">【検証実話】生成AIで実装したら「いいね！」で更新日時まで変わった話</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学級通信は「あとは文章にするだけ」が一番重い。メモからAIで自動作成する無料ツールを作った | BEETLE</title>
+<meta name="description" content="書きたいことはあるのに、文章にする時間がない。箇条書きのメモからAIが見出しと文章を整え、A4のPDFで印刷できる無料ツール「学級通信メーカー」を作った理由と使い方。園だより・クラスだよりにも。">
+<link rel="canonical" href="https://www.beetle-web.jp/blog/posts/gakkyu-tsushin.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="学級通信は「あとは文章にするだけ」が一番重い。メモからAIで自動作成する無料ツールを作った | BEETLE">
+<meta property="og:description" content="箇条書きのメモからAIが見出しと文章を整え、A4のPDFで印刷できる無料ツール「学級通信メーカー」。作った理由と使い方。">
+<meta property="og:url" content="https://www.beetle-web.jp/blog/posts/gakkyu-tsushin.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="学級通信は「あとは文章にするだけ」が一番重い。メモからAIで自動作成する無料ツールを作った | BEETLE合同会社">
+<meta name="twitter:description" content="箇条書きのメモからAIが見出しと文章を整え、A4のPDFで印刷できる無料ツール「学級通信メーカー」。作った理由と使い方。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"学級通信は「あとは文章にするだけ」が一番重い。メモからAIで自動作成する無料ツールを作った","datePublished":"2026-07-18","dateModified":"2026-07-18","description":"箇条書きのメモからAIが見出しと文章を整え、A4のPDFで印刷できる無料ツール「学級通信メーカー」を作った理由と使い方。","image":"https://www.beetle-web.jp/assets/images/OG.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/gakkyu-tsushin.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"学級通信は「あとは文章にするだけ」が一番重い。メモからAIで自動作成する無料ツールを作った","item":"https://www.beetle-web.jp/blog/posts/gakkyu-tsushin.html"}]}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-07-18</span>
+        <span class="post-tag tips">Tips</span>
+      </div>
+      <h1 class="post-h1">学級通信は「あとは文章にするだけ」が一番重い。メモからAIで自動作成する無料ツールを作った</h1>
+    </div>
+
+    <div class="post-body">
+
+      <p class="lead">子どもが毎月持ち帰ってくる学級通信を、わりと楽しみに読んでいます。運動会の練習で誰が転んだとか、教室にカマキリが来たとか、親が知らない昼間の子どもの様子は、あそこにしか載っていません。</p>
+
+      <p>ある日の個人面談で、先生がぽろっと言いました。</p>
+
+      <p>「書きたいことはたくさんあるんです。ただ、文章にする時間がなくて」</p>
+
+      <p>聞けば、学級通信は授業の合間には書けないので、放課後や家で書くことが多いそうです。伝えたい出来事はメモに溜まっているのに、それを「配れる文章」に整える時間が取れない。だから発行が遅れたり、書きたかったことを削ったりする。</p>
+
+      <h2>試験報告書で、この重さには覚えがあった</h2>
+
+      <p>その話、他人事に聞こえませんでした。私はQAエンジニアで、テストが終わったあとに試験報告書を書きます。テスト自体は終わっている。結果のメモも手元にある。それでも「報告書として読める文章に整える」段階で、平気で何時間も消えていきます。</p>
+
+      <p>やることは終わっているのに、やったことを文章にする作業が残っている。この「あとは書くだけ」が、実はいちばん重い。たぶんどの仕事にもある構図で、先生の学級通信は、その最たるものだと思いました。</p>
+
+      <p>そして、このメモを文章に整える仕事は、いま生成AIがいちばん得意なところです。だったら、そこだけAIに渡せる道具があればいい。そう思って作りました。</p>
+
+      <h2>メモを貼るだけで、AIが学級通信の見出しと文章を自動で作る</h2>
+
+      <p>名前は<a href="/tools/gakkyu-tsushin/">「学級通信メーカー」</a>です。使い方は3ステップ。今月の出来事を箇条書きでメモする。AIが見出しと文章に整える。PDFで保存して印刷する。これだけです。</p>
+
+      <p>テンプレート集を探してきて文面をゼロから組み立てるより、自分のメモから作るほうが早いし、その先生のクラスの話になります。書くのは箇条書きで十分です。文章にする部分だけを、AIが引き受けます。</p>
+
+      <h2>無料・登録不要で、A4のPDFにしてそのまま印刷できる</h2>
+
+      <p>紙面はA4で、校名・学年組・月号が入ります。行事のお知らせや持ち物連絡の枠もあり、写真がなくても使えるようにイラストも選べます。登録不要、インストール不要、無料で、ブラウザだけで動くので、職員室のPCでも家のPCでも開けます。小学校の学級通信のほか、幼稚園・保育園の園だよりやクラスだよりにも使えます。</p>
+
+      <p>ちなみにこのツールも、コードが書けない私がAIと対話しながら作ったものです。</p>
+
+      <h2>AIで作った学級通信は、配る前に先生の言葉に戻してほしい</h2>
+
+      <p>正直に言うと、AIが整えた文章は、そのままだと少し行儀がよすぎることがあります。先生が書く「らしさ」、あの子の名前の呼び方や、クラスだけで通じる言い回しまでは、AIは書けません。なので、出てきた文章はたたき台にして、最後は先生の言葉に直してもらうのがいい使い方だと思います。</p>
+
+      <p>もう1つ、子どもの情報を扱う紙面なので、必要以上の個人情報は入れない使い方をおすすめします。配布前の確認は、必ず先生自身の目でお願いします。QAの仕事をしていて思うのは、自動化がうまくいくのは「最後に人が確認する前提」を崩さないときだ、ということです。このツールもその作りにしてあります。</p>
+
+      <h2>減らしたいのは書く時間であって、先生の言葉ではない</h2>
+
+      <p>学級通信が減ったらさびしいのは、たぶん親のほうです。あの紙には、成績表には載らない子どもの姿が載っています。だから先生には、書くのをやめてほしくない。やめないために、書く時間のほうを軽くしたい。そういうツールです。</p>
+
+      <p>身近に、学級通信や園だよりを家で書いている先生がいたら、このページを教えてあげてください。メモだけ持って帰って、文章化は置いてくる。そんな働き方に少しでも近づいたら、作った甲斐があります。</p>
+
+    </div>
+
+    <div class="post-cta">
+      <p>登録不要・無料。メモを貼れば、見出しと文章が整ったA4のPDFになります。</p>
+      <a class="post-cta-btn" href="/tools/gakkyu-tsushin/">学級通信メーカーを使ってみる</a>
+    </div>
+
+    <div class="post-related">
+      <p class="post-related-title">関連記事</p>
+      <ul class="post-related-list">
+        <li><a href="/blog/posts/rubi-maker.html">漢字が読めないと、歌えない。ふりがなを自動でふる無料ツール「ルビメーカー」を作った</a></li>
+        <li><a href="/blog/posts/bug-or-not.html">「これ、バグですか？」って聞くの、しんどくないですか。</a></li>
+        <li><a href="/blog/posts/ai-marunage.html">AIをうまく使う方法は、丸投げだった。</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>
