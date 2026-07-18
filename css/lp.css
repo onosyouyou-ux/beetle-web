@@ -336,7 +336,9 @@ a { color: inherit; text-decoration: none; }
   .header-top { padding: 10px 16px 8px; }
   .header-logo { font-size: 1.1rem; }
   .header-entries { gap: 14px; }
-  .header-entry { font-size: 0.8rem; }
+  .header-entry { font-size: 0.85rem; }
+  /* SPはQA・教育に短縮表示（2026-07-19決定。common.cssの.nav-trimと同じ扱い） */
+  .header-entry .nav-trim { display: none; }
   .header-nav { overflow-x: auto; scrollbar-width: none; gap: 0; padding: 6px 8px 8px; }
   .header-nav::-webkit-scrollbar { display: none; }
   .header-nav a { white-space: nowrap; font-size: 0.8rem; padding: 2px 7px; }

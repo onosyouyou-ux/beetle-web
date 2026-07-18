@@ -45,6 +45,16 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 .tool-tag{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--tp-orange);align-self:flex-start;background:none;border-radius:0}
 .tool-tag.free,.tool-tag.try{background:none;color:var(--tp-orange)}
 
+/* スマホ用：ツールカードの説明文アコーディオン。▼はjs/tool-card-accordion.jsが注入する（カード全体が<a>のため、▼側でナビゲーションを止める。2026-07-15） */
+.tool-desc-toggle{display:none}
+@media (max-width:600px){
+  .tool-desc-toggle{display:flex;align-items:center;justify-content:center;width:30px;height:30px;margin-left:auto;flex-shrink:0;border-radius:50%;background:var(--tp-cream2);color:var(--tp-orange);cursor:pointer}
+  .tool-desc-toggle::before{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .2s}
+  .tool-card.is-open .tool-desc-toggle::before{transform:translateY(2px) rotate(225deg)}
+  .tool-card .tool-desc{max-height:0;overflow:hidden;margin-bottom:0;transition:max-height .25s ease,margin-bottom .25s ease}
+  .tool-card.is-open .tool-desc{max-height:260px;margin-bottom:14px}
+}
+
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
 .card{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px}
 .card-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
@@ -67,10 +77,10 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 .btn-cta-sub { background: rgba(253,246,236,0.15); color: #fdf6ec; font-weight: 700; font-size: 0.85rem; padding: 12px 26px; border-radius: 4px; border: 2px solid rgba(253,246,236,0.7); transition: border-color .2s; display: inline-block; }
 .btn-cta-sub:hover { border-color: #fff; }
 @media (max-width: 600px) {
-  .cta-section { padding: 48px 20px 56px; background-image: none; aspect-ratio: auto; }
-  .cta-eyebrow { color: rgba(255,255,255,0.75); }
-  .cta-title { color: #fff; }
-  .cta-body { color: rgba(255,255,255,0.92); }
+  .cta-section { padding: 36px 20px 40px; background-image: none; aspect-ratio: auto; }
+  .cta-eyebrow { color: rgba(255,255,255,0.75); margin-bottom: 12px; }
+  .cta-title { color: #fff; margin-bottom: 12px; }
+  .cta-body { color: rgba(255,255,255,0.92); line-height: 1.75; margin-bottom: 20px; }
   .cta-btns .btn-cta-main, .cta-btns .btn-cta-sub { flex: 1; white-space: nowrap; padding: 14px 10px; font-size: 0.85rem; }
 }
 
