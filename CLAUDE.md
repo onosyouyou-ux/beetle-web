@@ -104,6 +104,16 @@ beetle-web/
 
 ナビ・フッターを変更したいときは `partials/header.html` か `partials/footer.html` だけ編集すればOK。各ページは触らなくていい。
 
+### 仕様書と自動テスト（2026-07-19新設・新規ページ必須）
+
+全画面の仕様書が `specs/` にあり、**frontmatter が自動テストの期待値**（書式は `specs/README.md`）。
+`node tests/run-static.mjs` が本番URLに対しメタ・OGP・必須要素・sitemap整合を検証し、
+GitHub Actions（`site-tests.yml`）が push 時＋週次で静的チェックと Playwright E2E（`tests/e2e/`）を回す。
+
+- **新規ページを作ったら `specs/` に仕様書も追加**（ブログ記事は `specs/blog-posts.md` の urls に追記）
+- 仕様を変えたら仕様書の frontmatter を直す（テストコード側に期待値を書かない）
+- push 前のローカル確認は `node tests/run-static.mjs`（依存ゼロ・数十秒）
+
 ### SEOチェックリスト（新規ページ必須）
 
 - `sitemap.xml` に URL を追加（`lastmod` は作成日）。過去にサービスページ4枚が未登録のまま放置された失敗あり
