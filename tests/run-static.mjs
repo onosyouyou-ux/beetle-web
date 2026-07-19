@@ -74,7 +74,8 @@ const failures = [];
 let checks = 0;
 const fail = (spec, url, msg) => failures.push(`[${spec}] ${url}\n    ${msg}`);
 
-const specFiles = (await readdir(SPECS_DIR)).filter((f) => f.endsWith('.md') && f !== 'README.md' && (!only || f.includes(only)));
+// `_` 始まり（_common.md 等の共通ドキュメント）と README.md は画面仕様ではないのでスキップ
+const specFiles = (await readdir(SPECS_DIR)).filter((f) => f.endsWith('.md') && f !== 'README.md' && !f.startsWith('_') && (!only || f.includes(only)));
 
 // sitemap を先に読む
 const sitemapRes = await fetchPage(`${MAIN_BASE}/sitemap.xml`);

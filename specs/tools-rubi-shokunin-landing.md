@@ -11,5 +11,5 @@ required_selectors: ["#site-header", ".footer-skyline-bar", ".footer-link-bar"]
 # ルビメーカーランディング（`tools/rubi-shokunin/index.html`）
 
 - **目的**: SEO集客面。AIアプリ本体（https://rubi-shokunin.vercel.app）への入口
-- **レイアウト型**: Tool系ランディング（教育系・温かいトーン）
+- **レイアウト型**: Tool系ランディング（[_common.md](_common.md)「Tool系ランディング」参照。教育系・温かいトーン）
 - **手動確認観点**: 画像読み込み対応等の機能訴求がアプリ現行と一致しているか

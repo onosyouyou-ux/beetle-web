@@ -11,5 +11,5 @@ required_selectors: ["#site-header", "#site-footer"]
 # UI部品名鑑（`tools/ui-parts/`）
 
 - **目的**: UI部品の名前とよくあるバグのリファレンス。バグ報告の語彙合わせに使う
-- **レイアウト型**: Reference系
+- **レイアウト型**: Reference系（[_common.md](_common.md) 参照）
 - **手動確認観点**: 部品ごとの「よくあるバグ」が古くなっていないか

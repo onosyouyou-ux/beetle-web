@@ -47,8 +47,22 @@ frontmatter の下に、画面の目的・構成・自動化できない確認�
 - **主な構成**: セクションの並び
 - **手動確認観点**: 自動テストでは拾えない見た目・文言・導線のチェックリスト
 
+## 共通仕様（`_common.md`）
+
+ヘッダー・フッター・レイアウト型・カードルール・SEO共通ルールなど**画面をまたぐ共通パーツは `_common.md` に一元化**してある。
+
+- 各画面の仕様書には共通部分を書かず、`[_common.md](_common.md) 参照` と書く
+- 共通部分を変えるときは `_common.md` を直す（参照元すべてに効く）
+- `_` 始まりのファイルは run-static.mjs が検証対象外としてスキップする（frontmatter 不要）
+
+## 検証対象外のページ
+
+- `logo-preview.html`・`tools/mock.html` — 開発用プレビュー。sitemap 未登録・仕様書なしで良い
+- `google0e723b144d7e79b2.html` — Google Search Console の所有権確認ファイル
+- `partials/*.html` — ページではなく共通部品（仕様は `_common.md` に記載）
+
 ## 新しい画面を作ったら
 
-1. この形式で `specs/<画面名>.md` を追加
+1. この形式で `specs/<画面名>.md` を追加（共通部分は書かず `_common.md` を参照）
 2. `node tests/run-static.mjs` をローカル実行して green を確認
 3. ページ本体と同じコミットに含める

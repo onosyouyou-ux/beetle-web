@@ -11,5 +11,5 @@ required_selectors: ["#site-header", ".footer-skyline-bar", ".footer-link-bar"]
 # サービス：月額QA伴走プラン（`service-monthly-qa.html`）
 
 - **目的**: QA支援4商品のひとつ（月額150,000円〜）。継続伴走型の商品ページ
-- **レイアウト型**: 共通ヘッダー＋LP型2段フッター
+- **レイアウト型**: LP型（[_common.md](_common.md)「LP型」参照）
 - **手動確認観点**: 月額・稼働量・解約条件の記載が現行と一致しているか

@@ -112,6 +112,7 @@ GitHub Actions（`site-tests.yml`）が push 時＋週次で静的チェック�
 
 - **新規ページを作ったら `specs/` に仕様書も追加**（ブログ記事は `specs/blog-posts.md` の urls に追記）
 - 仕様を変えたら仕様書の frontmatter を直す（テストコード側に期待値を書かない）
+- **画面をまたぐ共通パーツ（ヘッダー・フッター・レイアウト型・カードルール・SEO共通）は `specs/_common.md` に一元化**（2026-07-19新設）。各画面の仕様書には共通部分を書かず `_common.md` 参照と書く。`_` 始まりのファイルはテスト対象外
 - push 前のローカル確認は `node tests/run-static.mjs`（依存ゼロ・数十秒）
 
 ### SEOチェックリスト（新規ページ必須）
