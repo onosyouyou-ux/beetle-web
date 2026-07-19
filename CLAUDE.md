@@ -110,7 +110,7 @@ beetle-web/
 `node tests/run-static.mjs` が本番URLに対しメタ・OGP・必須要素・sitemap整合を検証し、
 GitHub Actions（`site-tests.yml`）が push 時＋週次で静的チェックと Playwright E2E（`tests/e2e/`）を回す。
 
-- **新規ページを作ったら `specs/` に仕様書も追加**（ブログ記事は `specs/blog-posts.md` の urls に追記）
+- **新規ページを作ったら `specs/` に仕様書も追加**（ブログ記事は不要：sitemap.xml に登録すれば `specs/blog-posts.md` の `urls_from_sitemap` が自動で検証対象に含める。2026-07-19変更）
 - 仕様を変えたら仕様書の frontmatter を直す（テストコード側に期待値を書かない）
 - **画面をまたぐ共通パーツ（ヘッダー・フッター・レイアウト型・カードルール・SEO共通）は `specs/_common.md` に一元化**（2026-07-19新設）。各画面の仕様書には共通部分を書かず `_common.md` 参照と書く。`_` 始まりのファイルはテスト対象外
 - push 前のローカル確認は `node tests/run-static.mjs`（依存ゼロ・数十秒）

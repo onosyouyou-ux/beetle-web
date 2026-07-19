@@ -87,7 +87,12 @@ if (sitemapRes.status !== 200 || sitemapUrls.length === 0) {
 for (const file of specFiles) {
   const md = await readFile(join(SPECS_DIR, file), 'utf8');
   const fm = parseFrontmatter(md);
-  if (!fm || !fm.urls) { failures.push(`[${file}] frontmatter が読めない`); continue; }
+  if (!fm || (!fm.urls && !fm.urls_from_sitemap)) { failures.push(`[${file}] frontmatter が読めない`); continue; }
+  // urls_from_sitemap: sitemap から該当プレフィックスのURLを自動展開（記事追加ごとの urls 追記を不要にする）
+  if (fm.urls_from_sitemap) {
+    fm.urls = sitemapUrls.filter((u) => u.startsWith(MAIN_BASE + fm.urls_from_sitemap)).map((u) => u.slice(MAIN_BASE.length));
+    if (fm.urls.length === 0) { failures.push(`[${file}] sitemap に ${fm.urls_from_sitemap} 配下のURLが1件もない`); continue; }
+  }
   const base = fm.base ?? MAIN_BASE;
 
   for (const path of fm.urls) {

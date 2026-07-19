@@ -15,6 +15,7 @@
 page: トップLP                     # 画面名（表示用）
 base: https://www.beetle-web.jp    # 省略時は本体ドメイン
 urls: ["/"]                        # 検証対象パス（複数可。共通仕様を全URLに適用）
+urls_from_sitemap: "/blog/posts/"  # urls の代わりに、sitemap の該当プレフィックス配下を自動展開（記事型ページ用。追記漏れが起きない）
 canonical: self                    # self=自分自身 / "none" / 明示URL
 sitemap: true                      # 本体 sitemap.xml に載っているべきか
 title_contains: "BEETLE合同会社"    # <title> に含まれるべき文字列
