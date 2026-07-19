@@ -5,7 +5,7 @@ canonical: self
 sitemap: true
 title_contains: "正規表現テスター"
 og_image: "/assets/images/OG.jpg"
-required_selectors: ["#site-header", "#site-footer", "#rt-pattern", "#rt-string", "#rt-output"]
+required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#rt-pattern", "#rt-string", "#rt-output"]
 e2e: true
 ---
 

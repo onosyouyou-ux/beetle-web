@@ -5,7 +5,7 @@ canonical: self
 sitemap: true
 title_contains: "ダミーファイル"
 og_image: "/assets/images/OG.jpg"
-required_selectors: ["#site-header", "#site-footer"]
+required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes"]
 ---
 
 # ダミーファイル生成ツール（`tools/test-content/`）

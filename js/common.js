@@ -52,8 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('scrollTopBtn');
     if (!btn) return;
     window.addEventListener('scroll', () => {
-      // バナー画像を含むフッター全体（#site-footer）の上で止める
-      const footer = document.getElementById('site-footer');
+      // バナー画像を含むフッター全体の上で止める（パーシャル型は #site-footer、
+      // アプリ統一フッター型はヒーローズバナー or .site-footer-app が基準）
+      const footer = document.getElementById('site-footer')
+        || document.querySelector('.footer-heroes')
+        || document.querySelector('footer.site-footer-app');
       if (!footer) return;
       const footerTop = footer.getBoundingClientRect().top;
       if (window.scrollY > 200) {
