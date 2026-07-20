@@ -17,12 +17,13 @@
     return arr;
   }
 
-  // ---- むずかしさ（こたえの大きさで決める。学年は持たない）----
+  // ---- むずかしさ（数の大きさで決める。学年は持たない）----
+  // note はモードによって意味が変わるので、選択中のモードに合わせて出し分ける
   const DIFFS = [
-    { id: 'vs', name: 'ちょうかんたん', note: 'こたえが 5まで', max: 5 },
-    { id: 's', name: 'かんたん', note: 'こたえが 10まで', max: 10 },
-    { id: 'm', name: 'ふつう', note: 'こたえが 20まで', max: 20 },
-    { id: 'l', name: 'ちょうなんもん', note: 'こたえが 100まで', max: 100 }
+    { id: 'vs', name: 'ちょうかんたん', max: 5 },
+    { id: 's', name: 'かんたん', max: 10 },
+    { id: 'm', name: 'ふつう', max: 20 },
+    { id: 'l', name: 'ちょうなんもん', max: 100 }
   ];
 
   const PLAYSTYLES = [
@@ -31,7 +32,8 @@
   ];
 
   // ---- けいさんの しゅるい ----
-  // 出題UIはモードごとに差し替えられるようにしておく（さくらんぼ算は4択にならないため）
+  // 出題は make() が「答え・選択肢・見た目」まで返す。
+  // さくらんぼ算のように4択の作り方が違うモードを足せるようにしてある。
   function makeAdd(diff) {
     let a, b;
     if (diff.max <= 20) {
@@ -41,13 +43,65 @@
       a = randInt(10, 89);
       b = randInt(1, diff.max - a);
     }
-    return { a: a, b: b, answer: a + b, text: a + ' + ' + b };
+    const answer = a + b;
+    return {
+      layout: 'plain',
+      prompt: 'こたえは どれ?',
+      text: a + ' + ' + b,
+      answer: answer,
+      options: buildOptions(answer, 0, diff.max)
+    };
+  }
+
+  function makeSub(diff) {
+    // 引かれる数を難易度の上限に合わせる（こたえは自動的に上限以下になる）
+    const a = diff.max <= 20 ? randInt(2, diff.max) : randInt(11, diff.max);
+    const b = randInt(1, a - 1);   // こたえが0にならないようにする
+    const answer = a - b;
+    return {
+      layout: 'plain',
+      prompt: 'こたえは どれ?',
+      text: a + ' − ' + b,
+      answer: answer,
+      options: buildOptions(answer, 0, diff.max)
+    };
+  }
+
+  // さくらんぼ算：うしろの数を「キリのいい数をつくる分」と「あまり」に分ける
+  function makeCherry(diff) {
+    let a;
+    if (diff.max >= 100) {
+      do { a = randInt(11, 89); } while (a % 10 < 2);   // 1の位が0・1だと分けられない
+    } else if (diff.max >= 20) {
+      a = randInt(2, 9);
+    } else if (diff.max >= 10) {
+      a = randInt(6, 9);
+    } else {
+      a = randInt(8, 9);
+    }
+    const target = (Math.floor(a / 10) + 1) * 10;   // つくりたいキリのいい数
+    const need = target - a;                        // 左のさくらんぼ（これを答えさせる）
+    const b = randInt(need + 1, 9);                 // くり上がるように need より大きくする
+    return {
+      layout: 'cherry',
+      prompt: target + ' を つくるには?',
+      text: a + ' + ' + b,
+      a: a, b: b, target: target, rest: b - need, total: a + b,
+      answer: need,
+      options: buildOptions(need, 1, 9)
+    };
   }
 
   const MODES = [
-    { id: 'tashizan', name: 'たしざん', emoji: '➕', ready: true, ui: 'choice', make: makeAdd },
-    { id: 'hikizan', name: 'ひきざん', emoji: '➖', ready: false },
-    { id: 'sakuranbo', name: 'さくらんぼざん', emoji: '🍒', ready: false }
+    { id: 'tashizan', name: 'たしざん', emoji: '➕', ready: true, make: makeAdd,
+      diffNote: (d) => 'こたえが ' + d.max + 'まで' },
+    { id: 'hikizan', name: 'ひきざん', emoji: '➖', ready: true, make: makeSub,
+      diffNote: (d) => d.max + 'までの かずから' },
+    // さくらんぼ算は「10のかたまり」を作る技法なので、前の数の大きさで難しさが決まる
+    { id: 'sakuranbo', name: 'さくらんぼざん', emoji: '🍒', ready: true, make: makeCherry,
+      diffNote: (d) => (d.max >= 100 ? '2けたから くり上がり'
+        : d.max >= 20 ? '1けたどうし'
+          : d.max >= 10 ? '6〜9に たす' : '8・9に たす') }
   ];
 
   // ---- せいせきの保存 ----
@@ -125,23 +179,24 @@
   const pick = (arr) => arr[randInt(0, arr.length - 1)];
 
   // ---- 選択肢（ありがちな間違いから作る）----
-  function buildOptions(correct, max) {
-    const limit = Math.max(max, correct);
+  function buildOptions(correct, min, max) {
+    const lo = min;
+    const hi = Math.max(max, correct);
     const near = [correct + 1, correct - 1, correct + 2, correct - 2];
     // 繰り上がり・十の位のミスは大きい数のときだけ混ぜる
-    const carry = max >= 20 ? [correct - 10, correct + 10] : [];
+    const carry = hi >= 20 ? [correct - 10, correct + 10] : [];
     const pool = shuffle(near.concat(carry))
-      .filter((v) => v >= 0 && v <= limit && v !== correct);
+      .filter((v) => v >= lo && v <= hi && v !== correct);
 
     const opts = new Set([correct]);
     pool.forEach((v) => { if (opts.size < 4) opts.add(v); });
     let guard = 0;
-    while (opts.size < 4 && guard++ < 200) {
-      const v = randInt(Math.max(0, correct - 5), Math.min(limit, correct + 5));
+    while (opts.size < 4 && guard++ < 300) {
+      const v = randInt(Math.max(lo, correct - 5), Math.min(hi, correct + 5));
       if (v !== correct) opts.add(v);
     }
-    let filler = 1;
-    while (opts.size < 4) opts.add(correct + filler++);
+    // それでも足りなければ範囲内を順に埋める（選択肢が4つ未満にならないようにする）
+    for (let v = lo; v <= hi && opts.size < 4; v++) opts.add(v);
     return shuffle(Array.from(opts));
   }
 
@@ -175,9 +230,10 @@
       disabled: !m.ready
     })));
 
+    const chosenMode = findMode(selection.modeId);
     app.appendChild(group('むずかしさ', DIFFS, 'diffId', (d) => ({
       label: d.name,
-      note: d.note
+      note: chosenMode.diffNote(d)
     })));
 
     app.appendChild(group('あそびかた', PLAYSTYLES, 'styleId', (s) => ({
@@ -269,19 +325,21 @@
     app.appendChild(progressBar());
 
     const card = el('div', 'sa-card');
-    card.appendChild(el('p', 'sa-question-text', 'こたえは どれ?'));
+    card.appendChild(el('p', 'sa-question-text', s.current.prompt));
 
     const problem = el('div', 'sa-problem');
     problem.appendChild(el('span', null, s.current.text));
     problem.appendChild(el('span', 'sa-op', '='));
-    problem.appendChild(el('span', 'sa-qmark', '?'));
+    problem.appendChild(el('span', 'sa-qmark', s.current.layout === 'cherry' ? String(s.current.total) : '?'));
     card.appendChild(problem);
+
+    if (s.current.layout === 'cherry') card.appendChild(cherryDiagram(s.current));
 
     const options = el('div', 'sa-options');
     const feedback = el('div', 'sa-feedback');
     feedback.innerHTML = '&nbsp;';
 
-    buildOptions(s.current.answer, s.diff.max).forEach((val) => {
+    s.current.options.forEach((val) => {
       const btn = el('button', 'sa-opt', String(val));
       btn.type = 'button';
       btn.addEventListener('click', () => answer(val, btn, options, feedback));
@@ -290,6 +348,20 @@
     card.appendChild(options);
     card.appendChild(feedback);
     app.appendChild(card);
+  }
+
+  // うしろの数を2つに分ける「さくらんぼ」の図
+  function cherryDiagram(q) {
+    const wrap = el('div', 'sa-cherry');
+    wrap.appendChild(el('div', 'sa-cherry-top', String(q.b)));
+    wrap.appendChild(el('div', 'sa-cherry-stem'));
+    const pair = el('div', 'sa-cherry-pair');
+    pair.appendChild(el('span', 'sa-cherry-ball is-target', '?'));
+    pair.appendChild(el('span', 'sa-cherry-ball', '?'));
+    wrap.appendChild(pair);
+    wrap.appendChild(el('p', 'sa-cherry-hint',
+      q.a + ' と あわせて ' + q.target + ' に するには?'));
+    return wrap;
   }
 
   function progressBar() {
@@ -341,7 +413,10 @@
       btn.classList.add('is-correct');
       s.correct += 1;
       playCorrect();
-      feedback.textContent = pick(PRAISE_OK);
+      // さくらんぼ算は「分けたあと」の流れまで見せるのが学びどころ
+      feedback.textContent = q.layout === 'cherry'
+        ? q.a + ' + ' + q.answer + ' = ' + q.target + '、' + q.target + ' + ' + q.rest + ' = ' + q.total + '!'
+        : pick(PRAISE_OK);
       feedback.classList.add('is-ok');
     } else {
       btn.classList.add('is-wrong');
@@ -349,7 +424,9 @@
         if (Number(b.textContent) === q.answer) b.classList.add('is-correct');
       });
       playWrong();
-      feedback.textContent = pick(PRAISE_NG) + ' こたえは ' + q.answer;
+      feedback.textContent = q.layout === 'cherry'
+        ? q.b + ' は ' + q.answer + ' と ' + q.rest + ' に わけるよ'
+        : pick(PRAISE_NG) + ' こたえは ' + q.answer;
       feedback.classList.add('is-ng');
     }
 

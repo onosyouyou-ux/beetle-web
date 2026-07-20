@@ -263,6 +263,75 @@ body {
   font-size: 38px;
 }
 
+/* ── さくらんぼ算：うしろの数を2つに分ける図 ── */
+.sa-cherry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: -6px 0 18px;
+}
+.sa-cherry-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #ff6b4a;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+}
+.sa-cherry-stem {
+  width: 2px;
+  height: 14px;
+  background: #c9c4e6;
+}
+.sa-cherry-pair {
+  position: relative;
+  display: flex;
+  gap: 48px;
+  padding-top: 16px;
+}
+/* 2つのさくらんぼへ枝分かれする線 */
+.sa-cherry-pair::before,
+.sa-cherry-pair::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 44px;
+  height: 2px;
+  background: #c9c4e6;
+  transform-origin: left center;
+}
+.sa-cherry-pair::before { transform: rotate(150deg); }
+.sa-cherry-pair::after { transform: rotate(30deg); }
+.sa-cherry-ball {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #f0eefc;
+  color: #8b7ef0;
+  font-size: 22px;
+  font-weight: 800;
+}
+.sa-cherry-ball.is-target {
+  background: #fff4d6;
+  color: #e08a1e;
+  box-shadow: 0 0 0 3px #ffd93d;
+}
+.sa-cherry-hint {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 800;
+  color: #5a6079;
+}
+
 /* ── こたえのボタン ── */
 .sa-options {
   display: grid;
