@@ -1,8 +1,6 @@
 /* ── さんすうアプリ（宇宙探検テーマ）
-   アプリ共通レイアウト（紙面固定＋余白は背景）に従う。
-   紙面の中だけ宇宙テーマ、紙面外の余白は星空タイル ── */
-
-.sa-app *, .sa-app *::before, .sa-app *::after { box-sizing: border-box; }
+   レイアウトは縦1カラム固定（2026-07-20決定）。
+   コンテンツ列は640pxで固定し、その外側は背景で世界観を出す ── */
 
 body {
   margin: 0;
@@ -43,7 +41,7 @@ body {
     radial-gradient(circle at 55% 6%,  rgba(255,255,255,.4) 0 1.5px, transparent 1.5px);
 }
 
-/* ── アプリ内の共通枠（コンテンツは 640px） ── */
+/* ── 縦1カラムのコンテンツ列 ── */
 .sa-app {
   position: relative;
   z-index: 1;
@@ -53,6 +51,7 @@ body {
   padding: 22px 16px 30px;
   color: #fff;
 }
+.sa-app *, .sa-app *::before, .sa-app *::after { box-sizing: border-box; }
 
 .sa-title {
   display: flex;
@@ -62,89 +61,89 @@ body {
   margin: 0 0 6px;
   font-size: 24px;
   font-weight: 800;
-  color: #fff;
 }
 .sa-lead {
-  margin: 0 0 20px;
+  margin: 0 0 18px;
   text-align: center;
   font-size: 13px;
   font-weight: 700;
   color: rgba(255, 255, 255, .75);
 }
 
-/* ── 画面ヘッダー（もどる＋見出し） ── */
-.sa-screen-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-  min-height: 34px;
-}
-.sa-back {
-  flex: none;
-  padding: 7px 13px;
-  border-radius: 100px;
-  background: rgba(255, 255, 255, .14);
-  border: 1px solid rgba(255, 255, 255, .25);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  text-decoration: none;
-}
-.sa-back:hover { background: rgba(255, 255, 255, .24); }
-.sa-screen-title {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 800;
-  color: #fff;
-}
-
-/* ── ハブ ── */
+/* ── メニュー ── */
 .sa-total {
-  margin: 0 0 16px;
+  margin: 0 0 18px;
   text-align: center;
   font-size: 13px;
   font-weight: 700;
   color: rgba(255, 255, 255, .8);
 }
-.sa-total strong { font-size: 20px; color: var(--sa-yellow, #ffd93d); }
+.sa-total strong { font-size: 20px; color: #ffd93d; }
 
-.sa-mode-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+.sa-group { margin-bottom: 18px; }
+.sa-group-title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, .7);
 }
-.sa-mode-card {
+.sa-choices {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.sa-choice {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 20px 8px 16px;
-  border-radius: 20px;
+  gap: 2px;
+  padding: 13px 8px;
+  border: 2px solid transparent;
+  border-radius: 16px;
   background: #fff;
-  box-shadow: 0 6px 0 rgba(18, 24, 43, .35);
-  text-decoration: none;
   color: #1e2a47;
-  transition: transform .15s;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(18, 24, 43, .35);
+  transition: transform .12s, border-color .15s;
 }
-.sa-mode-card:hover { transform: translateY(-3px); }
-.sa-mode-card:active { transform: translateY(2px); box-shadow: 0 3px 0 rgba(18, 24, 43, .35); }
-.sa-mode-card.is-soon {
-  background: rgba(255, 255, 255, .12);
-  color: rgba(255, 255, 255, .55);
+.sa-choice:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(18, 24, 43, .35); }
+.sa-choice.is-on {
+  border-color: #ffd93d;
+  background: linear-gradient(160deg, #efecff, #fff);
+}
+.sa-choice.is-on .sa-choice-label::after { content: ' ✓'; color: #6c5ce7; }
+.sa-choice.is-disabled {
+  background: rgba(255, 255, 255, .1);
+  color: rgba(255, 255, 255, .5);
   box-shadow: none;
   border: 1px dashed rgba(255, 255, 255, .3);
+  cursor: default;
 }
-.sa-mode-card.is-soon:hover { transform: none; }
-.sa-mode-emoji { font-size: 32px; line-height: 1.1; }
-.sa-mode-card.is-soon .sa-mode-emoji { filter: grayscale(1); opacity: .6; }
-.sa-mode-name { font-size: 15px; font-weight: 800; }
-.sa-mode-note { font-size: 11px; font-weight: 700; color: #6c5ce7; }
-.sa-mode-card.is-soon .sa-mode-note { color: rgba(255, 255, 255, .5); }
+.sa-choice-label { font-size: 15px; font-weight: 800; }
+.sa-choice-note { font-size: 11px; font-weight: 700; color: #7a7f95; }
+.sa-choice.is-disabled .sa-choice-note { color: rgba(255, 255, 255, .45); }
+
+.sa-start {
+  display: block;
+  width: 100%;
+  margin-top: 22px;
+  padding: 18px 0;
+  border: none;
+  border-radius: 18px;
+  background: linear-gradient(90deg, #ff6b4a, #ffd93d);
+  color: #1e2a47;
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 0 rgba(18, 24, 43, .4);
+}
+.sa-start:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba(18, 24, 43, .4); }
 
 .sa-reset {
   display: block;
-  margin: 26px auto 0;
+  margin: 24px auto 0;
   padding: 8px 16px;
   border-radius: 100px;
   background: none;
@@ -157,33 +156,33 @@ body {
 }
 .sa-reset:hover { background: rgba(255, 255, 255, .12); }
 
-/* ── レベルえらび ── */
-.sa-level-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-.sa-level-card {
+/* ── プレイ画面のヘッダー（もどる＋選択中モード）── */
+.sa-play-head {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 3px;
-  padding: 18px 10px 14px;
-  border-radius: 20px;
-  background: #fff;
-  box-shadow: 0 6px 0 rgba(18, 24, 43, .35);
-  text-decoration: none;
-  color: #1e2a47;
-  transition: transform .15s;
+  gap: 10px;
+  margin-bottom: 14px;
 }
-.sa-level-card:hover { transform: translateY(-3px); }
-.sa-level-card:active { transform: translateY(2px); box-shadow: 0 3px 0 rgba(18, 24, 43, .35); }
-.sa-level-emoji { font-size: 28px; line-height: 1.1; }
-.sa-level-name { font-size: 16px; font-weight: 800; }
-.sa-level-note { font-size: 11px; font-weight: 700; color: #7a7f95; }
-.sa-level-stars { margin-top: 4px; font-size: 13px; letter-spacing: 2px; }
+.sa-back {
+  flex: none;
+  padding: 7px 13px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, .14);
+  border: 1px solid rgba(255, 255, 255, .25);
+  color: #fff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.sa-back:hover { background: rgba(255, 255, 255, .24); }
+.sa-play-mode {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, .8);
+}
 
-/* ── ロケットの進み ── */
+/* ── 進捗バー ── */
 .sa-track-card {
   padding: 14px 16px 18px;
   margin-bottom: 16px;
@@ -229,75 +228,40 @@ body {
 
 /* ── もんだいカード ── */
 .sa-card {
-  padding: 26px 20px 22px;
+  padding: 22px 20px;
   border-radius: 24px;
   background: #fff;
   color: #1e2a47;
   box-shadow: 0 10px 30px rgba(18, 24, 43, .3);
 }
+.sa-question-text {
+  margin: 0 0 10px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 800;
+  color: #7a7f95;
+}
 .sa-problem {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  font-size: 52px;
+  gap: 12px;
+  margin-bottom: 20px;
+  font-size: 46px;
   font-weight: 800;
-  color: #1e2a47;
 }
 .sa-op { color: #8b7ef0; }
 .sa-qmark {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 70px;
-  height: 70px;
+  width: 66px;
+  height: 66px;
   border-radius: 18px;
   background: #f0eefc;
   color: #6c5ce7;
-  font-size: 40px;
+  font-size: 38px;
 }
-
-.sa-viz-toggle {
-  display: block;
-  margin: 8px auto 12px;
-  background: none;
-  border: none;
-  color: #6c5ce7;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
-}
-.sa-viz {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  max-height: 0;
-  margin: 0;
-  overflow: hidden;
-  transition: max-height .35s ease, margin .35s ease;
-}
-.sa-viz.is-open { max-height: 160px; margin: 0 0 16px; }
-.sa-dots {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  max-width: 150px;
-}
-.sa-dot {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #6c5ce7;
-  box-shadow: 0 2px 0 rgba(0, 0, 0, .1);
-}
-.sa-dots-b .sa-dot { background: #ff6b4a; }
-.sa-viz-op { font-size: 24px; font-weight: 800; color: #b9b4e8; }
 
 /* ── こたえのボタン ── */
 .sa-options {
@@ -339,7 +303,7 @@ body {
 .sa-result-score { margin: 8px 0 0; font-size: 18px; font-weight: 700; }
 .sa-result-score strong { font-size: 30px; color: #6c5ce7; }
 .sa-result-stars { margin: 6px 0 10px; font-size: 30px; letter-spacing: 5px; }
-.sa-result-msg { margin: 0 0 20px; font-size: 14px; font-weight: 700; color: #5a6079; }
+.sa-result-msg { margin: 10px 0 20px; font-size: 14px; font-weight: 700; color: #5a6079; }
 
 .sa-actions {
   display: flex;
@@ -356,7 +320,6 @@ body {
   font-family: inherit;
   font-size: 14px;
   font-weight: 800;
-  text-decoration: none;
   cursor: pointer;
 }
 .sa-btn:hover { background: #e3dffa; }
@@ -374,14 +337,14 @@ body {
   color: rgba(255, 255, 255, .55);
 }
 
-/* ── 紙面幅を下回ったら中身を詰める ── */
+/* ── 狭い画面：順番は変えずに詰めるだけ ── */
 @media (max-width: 480px) {
   .sa-app { padding: 18px 12px 24px; }
   .sa-title { font-size: 20px; }
-  .sa-mode-grid { gap: 9px; }
-  .sa-mode-emoji { font-size: 27px; }
-  .sa-mode-name { font-size: 13px; }
-  .sa-problem { font-size: 40px; gap: 8px; }
-  .sa-qmark { width: 56px; height: 56px; font-size: 30px; }
-  .sa-opt { font-size: 22px; padding: 14px 0; }
+  .sa-choices { gap: 8px; }
+  .sa-choice-label { font-size: 13px; }
+  .sa-problem { font-size: 36px; gap: 8px; }
+  .sa-qmark { width: 54px; height: 54px; font-size: 30px; }
+  .sa-opt { font-size: 24px; padding: 15px 0; }
+  .sa-start { font-size: 19px; padding: 16px 0; }
 }
