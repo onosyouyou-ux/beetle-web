@@ -163,3 +163,25 @@ a{text-decoration:none;}
 @media (max-width: 600px) {
   .service-peek { display: none; }
 }
+
+/* ── アプリ共通フッター（全アプリ統一。2026-07-15）──
+   bug-checker・gakkyu-tsushin・rubi-shokunin・えいごよんで・テストコンテンツ・
+   正規表現テスター・さんすうアプリ が共有する。
+   2026-07-21 に eigo-app.css からここへ移動（1アプリのCSSに置いていたため、
+   それを読まない regex-tester / test-content / sansu-app で無スタイルになっていた） */
+.site-footer-app {
+  background: #1a1a1a;
+  padding: 1.25rem 1.5rem;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem;
+  text-align: center;
+  position: relative; z-index: 1;
+}
+.sfa-row { display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+.sfa-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.15rem; letter-spacing: .08em; color: #fff; text-decoration: none; }
+.sfa-logo span { color: var(--color-accent); }
+.sfa-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+.sfa-nav a { font-size: 13px; color: #888; text-decoration: none; transition: color .15s; }
+.sfa-nav a:hover { color: #fff; }
+.sfa-copy { display: flex; align-items: center; justify-content: center; gap: 1rem; font-size: 12px; color: #888; flex-wrap: wrap; white-space: normal; }
+.sfa-copy a { color: #888; text-decoration: none; transition: color .15s; }
+.sfa-copy a:hover { color: #fff; }

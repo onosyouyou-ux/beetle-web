@@ -20,15 +20,15 @@
   // ---- むずかしさ（数の大きさで決める。学年は持たない）----
   // note はモードによって意味が変わるので、選択中のモードに合わせて出し分ける
   const DIFFS = [
-    { id: 'vs', name: 'ちょうかんたん', max: 5 },
-    { id: 's', name: 'かんたん', max: 10 },
-    { id: 'm', name: 'ふつう', max: 20 },
-    { id: 'l', name: 'ちょうなんもん', max: 100 }
+    { id: 'vs', name: 'ちょうかんたん', max: 5, icon: 'moon' },
+    { id: 's', name: 'かんたん', max: 10, icon: 'ringed-planet' },
+    { id: 'm', name: 'ふつう', max: 20, icon: 'meteor' },
+    { id: 'l', name: 'ちょうなんもん', max: 100, icon: 'black-hole' }
   ];
 
   const PLAYSTYLES = [
-    { id: 'challenge', name: '10もん チャレンジ', note: 'といて けっかを みる' },
-    { id: 'endless', name: 'とことん', note: '100もんずつ すすむ' }
+    { id: 'challenge', name: '10もん チャレンジ', note: 'といて けっかを みる', icon: 'stopwatch' },
+    { id: 'endless', name: 'とことん', note: '100もんずつ すすむ', icon: 'orbit-loop' }
   ];
 
   // ---- けいさんの しゅるい ----
@@ -67,26 +67,29 @@
     };
   }
 
-  // さくらんぼ算：うしろの数を「キリのいい数をつくる分」と「あまり」に分ける
+  // さくらんぼ算：うしろの数を「キリのいい数をつくる分」と「あまり」に分ける。
+  // 教科書どおり「大きいほうを10にする」ため、前の数 a は必ず b 以上にする
+  // （6+8 で 8 を崩すのは不自然。8+6 で 6 を 2 と 4 に分けるのが本来の形）
   function makeCherry(diff) {
     let a;
     if (diff.max >= 100) {
       do { a = randInt(11, 89); } while (a % 10 < 2);   // 1の位が0・1だと分けられない
     } else if (diff.max >= 20) {
-      a = randInt(2, 9);
-    } else if (diff.max >= 10) {
       a = randInt(6, 9);
+    } else if (diff.max >= 10) {
+      a = randInt(7, 9);
     } else {
       a = randInt(8, 9);
     }
     const target = (Math.floor(a / 10) + 1) * 10;   // つくりたいキリのいい数
     const need = target - a;                        // 左のさくらんぼ（これを答えさせる）
-    const b = randInt(need + 1, 9);                 // くり上がるように need より大きくする
+    // くり上がるように need より大きく、かつ a を超えない（分けるのは小さいほう）
+    const b = randInt(need + 1, Math.min(9, a));
     return {
       layout: 'cherry',
-      prompt: target + ' を つくるには?',
+      prompt: b + ' を わけて ' + target + ' を つくろう!',
       text: a + ' + ' + b,
-      a: a, b: b, target: target, rest: b - need, total: a + b,
+      a: a, b: b, target: target, need: need, rest: b - need, total: a + b,
       answer: need,
       options: buildOptions(need, 1, 9)
     };
@@ -94,14 +97,15 @@
 
   const MODES = [
     { id: 'tashizan', name: 'たしざん', emoji: '➕', ready: true, make: makeAdd,
-      diffNote: (d) => 'こたえが ' + d.max + 'まで' },
+      icon: 'addition', diffNote: (d) => d.max + 'までの たしざん' },
     { id: 'hikizan', name: 'ひきざん', emoji: '➖', ready: true, make: makeSub,
-      diffNote: (d) => d.max + 'までの かずから' },
+      icon: 'subtraction', diffNote: (d) => d.max + 'までの ひきざん' },
     // さくらんぼ算は「10のかたまり」を作る技法なので、前の数の大きさで難しさが決まる
     { id: 'sakuranbo', name: 'さくらんぼざん', emoji: '🍒', ready: true, make: makeCherry,
-      diffNote: (d) => (d.max >= 100 ? '2けたから くり上がり'
+      icon: 'multiplication',
+      diffNote: (d) => (d.max >= 100 ? '2けたの くり上がり'
         : d.max >= 20 ? '1けたどうし'
-          : d.max >= 10 ? '6〜9に たす' : '8・9に たす') }
+          : d.max >= 10 ? '7〜9に たす' : '8・9に たす') }
   ];
 
   // ---- せいせきの保存 ----
@@ -225,7 +229,7 @@
     app.appendChild(total);
 
     app.appendChild(group('けいさんの しゅるい', MODES, 'modeId', (m) => ({
-      label: m.emoji + ' ' + m.name,
+      label: m.name,
       note: m.ready ? null : 'じゅんびちゅう',
       disabled: !m.ready
     })));
@@ -241,13 +245,17 @@
       note: s.note
     })));
 
-    const start = el('button', 'sa-start', '▶ スタート');
+    const start = el('button', 'sa-start');
     start.type = 'button';
+    start.appendChild(icon('rocket-badge', 'sa-start-icon'));
+    start.appendChild(el('span', null, 'スタート'));
     start.addEventListener('click', startSession);
     app.appendChild(start);
 
-    const reset = el('button', 'sa-reset', 'せいせきを リセットする');
+    const reset = el('button', 'sa-reset');
     reset.type = 'button';
+    reset.appendChild(icon('reset-arrow', 'sa-reset-icon'));
+    reset.appendChild(el('span', null, 'せいせきを リセットする'));
     reset.addEventListener('click', () => {
       if (!window.confirm('いままでの せいせきを ぜんぶ けしますか?')) return;
       progress = emptyProgress();
@@ -255,6 +263,14 @@
       renderMenu();
     });
     app.appendChild(reset);
+  }
+
+  function icon(name, cls) {
+    const img = el('img', cls || 'sa-choice-icon');
+    img.src = '/assets/images/sansu/icons/' + name + '.png';
+    img.alt = '';
+    img.loading = 'lazy';
+    return img;
   }
 
   function group(title, items, key, describe) {
@@ -265,13 +281,19 @@
       const info = describe(item);
       const btn = el('button', 'sa-choice');
       btn.type = 'button';
-      btn.appendChild(el('span', 'sa-choice-label', info.label));
-      if (info.note) btn.appendChild(el('span', 'sa-choice-note', info.note));
+      if (item.icon) btn.appendChild(icon(item.icon));
+      const body = el('span', 'sa-choice-body');
+      body.appendChild(el('span', 'sa-choice-label', info.label));
+      if (info.note) body.appendChild(el('span', 'sa-choice-note', info.note));
+      btn.appendChild(body);
       if (info.disabled) {
         btn.classList.add('is-disabled');
         btn.disabled = true;
       } else {
-        if (selection[key] === item.id) btn.classList.add('is-on');
+        if (selection[key] === item.id) {
+          btn.classList.add('is-on');
+          btn.appendChild(icon('check-badge', 'sa-choice-check'));
+        }
         btn.addEventListener('click', () => {
           selection[key] = item.id;
           renderMenu();
@@ -327,13 +349,8 @@
     const card = el('div', 'sa-card');
     card.appendChild(el('p', 'sa-question-text', s.current.prompt));
 
-    const problem = el('div', 'sa-problem');
-    problem.appendChild(el('span', null, s.current.text));
-    problem.appendChild(el('span', 'sa-op', '='));
-    problem.appendChild(el('span', 'sa-qmark', s.current.layout === 'cherry' ? String(s.current.total) : '?'));
-    card.appendChild(problem);
-
-    if (s.current.layout === 'cherry') card.appendChild(cherryDiagram(s.current));
+    const built = s.current.layout === 'cherry' ? cherryProblem(s.current) : plainProblem(s.current);
+    card.appendChild(built.node);
 
     const options = el('div', 'sa-options');
     const feedback = el('div', 'sa-feedback');
@@ -342,7 +359,7 @@
     s.current.options.forEach((val) => {
       const btn = el('button', 'sa-opt', String(val));
       btn.type = 'button';
-      btn.addEventListener('click', () => answer(val, btn, options, feedback));
+      btn.addEventListener('click', () => answer(val, btn, options, feedback, built.reveal));
       options.appendChild(btn);
     });
     card.appendChild(options);
@@ -350,18 +367,56 @@
     app.appendChild(card);
   }
 
-  // うしろの数を2つに分ける「さくらんぼ」の図
-  function cherryDiagram(q) {
-    const wrap = el('div', 'sa-cherry');
-    wrap.appendChild(el('div', 'sa-cherry-top', String(q.b)));
-    wrap.appendChild(el('div', 'sa-cherry-stem'));
+  // ふつうの式（こたえは伏せる）
+  function plainProblem(q) {
+    const node = el('div', 'sa-problem');
+    node.appendChild(el('span', null, q.text));
+    node.appendChild(el('span', 'sa-op', '='));
+    const total = el('span', 'sa-qmark', '?');
+    node.appendChild(total);
+    return {
+      node: node,
+      reveal: () => { total.textContent = String(q.answer); }
+    };
+  }
+
+  // さくらんぼ算：分ける数の真下にさくらんぼをぶら下げる（こたえは答えるまで伏せる）
+  function cherryProblem(q) {
+    const node = el('div', 'sa-problem sa-problem-cherry');
+    node.appendChild(el('span', 'sa-term', String(q.a)));
+    node.appendChild(el('span', 'sa-op', '+'));
+
+    const col = el('div', 'sa-cherry-col');
+    col.appendChild(el('span', 'sa-term sa-cherry-top', String(q.b)));
+    col.appendChild(el('div', 'sa-cherry-stem'));
+
     const pair = el('div', 'sa-cherry-pair');
-    pair.appendChild(el('span', 'sa-cherry-ball is-target', '?'));
-    pair.appendChild(el('span', 'sa-cherry-ball', '?'));
-    wrap.appendChild(pair);
-    wrap.appendChild(el('p', 'sa-cherry-hint',
-      q.a + ' と あわせて ' + q.target + ' に するには?'));
-    return wrap;
+    const leftSlot = el('div', 'sa-cherry-slot');
+    const left = el('span', 'sa-cherry-ball is-target', '?');
+    leftSlot.appendChild(left);
+    leftSlot.appendChild(el('span', 'sa-cherry-cap', q.a + ' と あわせて ' + q.target));
+    const rightSlot = el('div', 'sa-cherry-slot');
+    const right = el('span', 'sa-cherry-ball', '?');
+    rightSlot.appendChild(right);
+    pair.appendChild(leftSlot);
+    pair.appendChild(rightSlot);
+    col.appendChild(pair);
+    node.appendChild(col);
+
+    node.appendChild(el('span', 'sa-op', '='));
+    const total = el('span', 'sa-qmark', '?');
+    node.appendChild(total);
+
+    return {
+      node: node,
+      reveal: () => {
+        left.textContent = String(q.need);
+        right.textContent = String(q.rest);
+        left.classList.add('is-filled');
+        right.classList.add('is-filled');
+        total.textContent = String(q.total);
+      }
+    };
   }
 
   function progressBar() {
@@ -399,10 +454,11 @@
     return wrap;
   }
 
-  function answer(val, btn, options, feedback) {
+  function answer(val, btn, options, feedback, reveal) {
     const s = session;
     if (s.locked) return;
     s.locked = true;
+    if (reveal) reveal();   // 式のこたえ・さくらんぼの中身を埋める
 
     const q = s.current;
     const buttons = options.querySelectorAll('.sa-opt');
