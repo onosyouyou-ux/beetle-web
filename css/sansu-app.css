@@ -310,6 +310,8 @@ body {
 
 /* ── さくらんぼ算：分ける数の真下にぶら下げる ── */
 .sa-problem-cherry { align-items: flex-start; }
+/* こたえるまで「= ?」を伏せる（場所は確保して跳ねさせない） */
+.sa-eq-late { visibility: hidden; }
 .sa-cherry-col {
   display: flex;
   flex-direction: column;

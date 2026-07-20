@@ -87,7 +87,9 @@
     const b = randInt(need + 1, Math.min(9, a));
     return {
       layout: 'cherry',
-      prompt: b + ' を わけて ' + target + ' を つくろう!',
+      // 「9 を わけて 90 を つくろう」は 9 から 90 を作ると読めて意味が通らないため、
+      // 動作（分ける）だけを書き、何のために分けるかは さくらんぼの下の説明に任せる
+      prompt: b + ' を 2つに わけよう',
       text: a + ' + ' + b,
       a: a, b: b, target: target, need: need, rest: b - need, total: a + b,
       answer: need,
@@ -403,8 +405,12 @@
     col.appendChild(pair);
     node.appendChild(col);
 
-    node.appendChild(el('span', 'sa-op', '='));
-    const total = el('span', 'sa-qmark', '?');
+    // 「= ?」を先に出すと式の答え（16は?）を聞いているように見え、
+    // 選択肢（分ける数）と噛み合わないため、答えるまで隠しておく。
+    // visibility なら場所は確保されるのでレイアウトが跳ねない
+    const eq = el('span', 'sa-op sa-eq-late', '=');
+    const total = el('span', 'sa-qmark sa-eq-late', '?');
+    node.appendChild(eq);
     node.appendChild(total);
 
     return {
@@ -415,6 +421,8 @@
         left.classList.add('is-filled');
         right.classList.add('is-filled');
         total.textContent = String(q.total);
+        eq.classList.remove('sa-eq-late');
+        total.classList.remove('sa-eq-late');
       }
     };
   }
