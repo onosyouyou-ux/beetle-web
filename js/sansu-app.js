@@ -230,11 +230,21 @@
     total.innerHTML = 'いままで <strong>' + progress.totals.correct + '</strong> もん せいかい!';
     app.appendChild(total);
 
+    // さくらんぼざんの となりに、やりかた解説へのリファレンスボタンを置く
+    const refBtn = el('button', 'sa-ref');
+    refBtn.type = 'button';
+    refBtn.appendChild(icon('multiplication', 'sa-ref-icon'));
+    const refBody = el('span', 'sa-choice-body');
+    refBody.appendChild(el('span', 'sa-choice-label', 'やりかた'));
+    refBody.appendChild(el('span', 'sa-choice-note', 'さくらんぼざん って?'));
+    refBtn.appendChild(refBody);
+    refBtn.addEventListener('click', renderReference);
+
     app.appendChild(group('けいさんの しゅるい', MODES, 'modeId', (m) => ({
       label: m.name,
       note: m.ready ? null : 'じゅんびちゅう',
       disabled: !m.ready
-    })));
+    }), refBtn));
 
     const chosenMode = findMode(selection.modeId);
     app.appendChild(group('むずかしさ', DIFFS, 'diffId', (d) => ({
@@ -275,7 +285,7 @@
     return img;
   }
 
-  function group(title, items, key, describe) {
+  function group(title, items, key, describe, extra) {
     const wrap = el('section', 'sa-group');
     wrap.appendChild(el('h3', 'sa-group-title', title));
     const grid = el('div', 'sa-choices');
@@ -303,8 +313,100 @@
       }
       grid.appendChild(btn);
     });
+    if (extra) grid.appendChild(extra);
     wrap.appendChild(grid);
     return wrap;
+  }
+
+  // ---- さくらんぼざんの やりかた（リファレンス）----
+  function renderReference() {
+    session = null;
+    app.innerHTML = '';
+
+    const head = el('div', 'sa-play-head');
+    const back = el('button', 'sa-back', '← もどる');
+    back.type = 'button';
+    back.addEventListener('click', renderMenu);
+    head.appendChild(back);
+    head.appendChild(el('span', 'sa-play-mode', '🍒 さくらんぼざん の やりかた'));
+    app.appendChild(head);
+
+    const card = el('div', 'sa-card sa-ref-card');
+    card.appendChild(el('p', 'sa-ref-lead',
+      '10より 大きく なる たしざんを、「10の かたまり」を つくって とく やりかただよ。'));
+
+    card.appendChild(el('p', 'sa-ref-example-title', 'れい：8 + 5'));
+
+    // ステップ1：うしろの数を分ける（さくらんぼの図・こたえ入り）
+    const step1 = el('div', 'sa-ref-step');
+    step1.appendChild(el('span', 'sa-ref-step-no', '1'));
+    const s1body = el('div', 'sa-ref-step-body');
+    s1body.appendChild(el('p', 'sa-ref-step-text', 'うしろの 5 を、10を つくる ぶんと のこりに わける'));
+    s1body.appendChild(refCherry(8, 5, 2, 3, 10));
+    step1.appendChild(s1body);
+    card.appendChild(step1);
+
+    // ステップ2：10をつくる
+    const step2 = el('div', 'sa-ref-step');
+    step2.appendChild(el('span', 'sa-ref-step-no', '2'));
+    const s2body = el('div', 'sa-ref-step-body');
+    s2body.appendChild(el('p', 'sa-ref-step-text', '8 と 2 で 10の かたまりを つくる'));
+    s2body.appendChild(refFormula('8 + 2 = 10'));
+    step2.appendChild(s2body);
+    card.appendChild(step2);
+
+    // ステップ3：のこりをたす
+    const step3 = el('div', 'sa-ref-step');
+    step3.appendChild(el('span', 'sa-ref-step-no', '3'));
+    const s3body = el('div', 'sa-ref-step-body');
+    s3body.appendChild(el('p', 'sa-ref-step-text', '10 に のこりの 3 を たす'));
+    s3body.appendChild(refFormula('10 + 3 = 13'));
+    step3.appendChild(s3body);
+    card.appendChild(step3);
+
+    card.appendChild(el('p', 'sa-ref-answer', 'だから 8 + 5 = 13!'));
+    card.appendChild(el('p', 'sa-ref-tip', 'このゲームでは ①の「わける かず」を えらぶよ。'));
+
+    const actions = el('div', 'sa-actions');
+    const tryBtn = el('button', 'sa-btn sa-btn-primary', '🍒 やってみる');
+    tryBtn.type = 'button';
+    tryBtn.addEventListener('click', () => {
+      selection.modeId = 'sakuranbo';
+      startSession();
+    });
+    actions.appendChild(tryBtn);
+    const backBtn = el('a', 'sa-btn', 'メニューに もどる');
+    backBtn.href = 'javascript:void(0)';
+    backBtn.addEventListener('click', renderMenu);
+    actions.appendChild(backBtn);
+    card.appendChild(actions);
+
+    app.appendChild(card);
+  }
+
+  // リファレンス用：中身の入ったさくらんぼの図
+  function refCherry(a, b, need, rest, target) {
+    const node = el('div', 'sa-problem sa-problem-cherry sa-ref-cherry');
+    node.appendChild(el('span', 'sa-term', String(a)));
+    node.appendChild(el('span', 'sa-op', '+'));
+    const col = el('div', 'sa-cherry-col');
+    col.appendChild(el('span', 'sa-term sa-cherry-top', String(b)));
+    col.appendChild(el('div', 'sa-cherry-stem'));
+    const pair = el('div', 'sa-cherry-pair');
+    const leftSlot = el('div', 'sa-cherry-slot');
+    leftSlot.appendChild(el('span', 'sa-cherry-ball is-target is-filled', String(need)));
+    leftSlot.appendChild(el('span', 'sa-cherry-cap', a + ' と あわせて ' + target));
+    const rightSlot = el('div', 'sa-cherry-slot');
+    rightSlot.appendChild(el('span', 'sa-cherry-ball is-filled', String(rest)));
+    pair.appendChild(leftSlot);
+    pair.appendChild(rightSlot);
+    col.appendChild(pair);
+    node.appendChild(col);
+    return node;
+  }
+
+  function refFormula(text) {
+    return el('p', 'sa-ref-formula', text);
   }
 
   // ---- プレイ ----
