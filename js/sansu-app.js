@@ -434,7 +434,8 @@
     session = {
       mode: mode, diff: diff, style: style,
       index: 0, correct: 0, locked: false, current: null,
-      recent: []   // 直近の問題文。連続で同じ問題を出さないため
+      recent: [],   // 直近の問題文。連続で同じ問題を出さないため
+      combo: 0, bestCombo: 0   // 連続正解（COMBO）
     };
     nextQuestion();
   }
@@ -465,10 +466,16 @@
     const s = session;
     app.innerHTML = '';
 
-    // 選択中のモード表示（もどるは一番下に配置）
+    // 選択中のモード表示（もどるは一番下に配置）＋COMBOバッジ
     const head = el('div', 'sa-play-head');
     head.appendChild(el('span', 'sa-play-mode',
       s.mode.name + '・' + s.diff.name + '・' + s.style.name));
+    const combo = el('span', 'sa-combo');
+    if (s.combo >= 2) {
+      combo.classList.add('is-show');
+      combo.textContent = '🔥 COMBO ×' + s.combo;
+    }
+    head.appendChild(combo);
     app.appendChild(head);
 
     app.appendChild(progressBar());
@@ -670,6 +677,27 @@
       feedback.classList.add('is-ng');
     }
 
+    // COMBO（連続正解）
+    if (ok) {
+      s.combo += 1;
+      if (s.combo > s.bestCombo) s.bestCombo = s.combo;
+      if (s.combo % 5 === 0) playFanfare();   // 5連ごとにファンファーレ
+    } else {
+      s.combo = 0;
+    }
+    const comboEl = app.querySelector('.sa-combo');
+    if (comboEl) {
+      if (s.combo >= 2) {
+        comboEl.textContent = '🔥 COMBO ×' + s.combo;
+        comboEl.classList.add('is-show');
+        comboEl.classList.remove('is-pop');
+        void comboEl.offsetWidth;   // アニメを再発火させる
+        comboEl.classList.add('is-pop');
+      } else {
+        comboEl.classList.remove('is-show', 'is-pop');
+      }
+    }
+
     s.index += 1;
     progress.totals.answered += 1;
     if (ok) progress.totals.correct += 1;
@@ -725,6 +753,10 @@
           : stars === 2 ? 'すごい! もうすこしで ぜんもん せいかい!'
             : stars === 1 ? 'いいちょうし! もういっかい やってみよう!'
               : 'あきらめないで! れんしゅうすれば できるよ!'));
+    }
+
+    if (s.bestCombo >= 2) {
+      card.appendChild(el('p', 'sa-result-combo', '🔥 さいだい COMBO ×' + s.bestCombo));
     }
 
     const actions = el('div', 'sa-actions');

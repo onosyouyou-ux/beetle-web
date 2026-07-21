@@ -324,6 +324,39 @@ body {
 .sa-back:hover { background: rgba(139, 92, 246, .25); }
 .sa-play-mode { font-size: 13px; font-weight: 700; color: rgba(255, 255, 255, .85); }
 
+/* COMBO バッジ（連続正解。2連から表示）*/
+.sa-combo {
+  margin-left: auto;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff6b4a, #ffb03c);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  white-space: nowrap;
+  box-shadow: 0 0 14px rgba(255, 138, 46, .6);
+  opacity: 0;
+  transform: scale(.6);
+  pointer-events: none;
+  transition: opacity .2s, transform .2s;
+}
+.sa-combo.is-show { opacity: 1; transform: scale(1); }
+.sa-combo.is-pop { animation: sa-combo-pop .4s cubic-bezier(.34, 1.56, .64, 1); }
+@keyframes sa-combo-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.35) rotate(-3deg); }
+  100% { transform: scale(1); }
+}
+
+.sa-result-combo {
+  margin: -4px 0 16px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 800;
+  color: #ef7f2e;
+}
+
 /* もどるボタン（プレイ画面の一番下・中央）*/
 .sa-play-foot { display: flex; justify-content: center; margin-top: 18px; }
 
