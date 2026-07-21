@@ -115,30 +115,30 @@ body {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 12px 46px 12px 16px;
-  min-height: 74px;
-  border: 2px solid var(--sa-plate-line);
-  border-radius: 16px;
-  background: var(--sa-plate);
+  padding: 14px 48px 16px 20px;
+  min-height: 78px;
+  border: 0;
+  background: transparent;
   color: var(--sa-ink);
   font-family: inherit;
   text-align: left;
   cursor: pointer;
-  box-shadow: 0 4px 0 rgba(10, 15, 34, .45);
-  transition: transform .12s, box-shadow .12s;
+  /* 支給素材の板を9スライスで敷く（中央だけ伸縮・角は固定）*/
+  border-image: url('/assets/images/sansu/buttons/choice-default.png') 40 44 50 44 fill / 20px 22px 25px 22px / 0 stretch;
+  transition: transform .12s;
 }
 .sa-choice:hover { transform: translateY(-2px); }
-.sa-choice:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(10, 15, 34, .45); }
+.sa-choice:active { transform: translateY(2px); }
 .sa-choice.is-on {
-  border-color: var(--sa-gold);
-  background: var(--sa-plate-on);
-  box-shadow: 0 4px 0 rgba(10, 15, 34, .45), 0 0 18px rgba(242, 194, 48, .5);
+  color: #4a3d1a;
+  border-image: url('/assets/images/sansu/buttons/choice-selected.png') 40 44 54 44 fill / 20px 22px 27px 22px / 0 stretch;
 }
 .sa-choice.is-disabled {
-  background: rgba(255, 255, 255, .1);
+  border-image: none;
   border: 2px dashed rgba(255, 255, 255, .3);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .1);
   color: rgba(255, 255, 255, .55);
-  box-shadow: none;
   cursor: default;
 }
 .sa-choice.is-disabled:hover { transform: none; }
@@ -153,6 +153,7 @@ body {
 .sa-choice-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .sa-choice-label { font-size: 18px; font-weight: 800; }
 .sa-choice-note { font-size: 13px; font-weight: 700; color: #6f6a90; }
+.sa-choice.is-on .sa-choice-note { color: #9a7d33; }
 .sa-choice.is-disabled .sa-choice-note { color: rgba(255, 255, 255, .5); }
 .sa-choice-check {
   position: absolute;
@@ -163,27 +164,27 @@ body {
   transform: translateY(-50%);
 }
 
-/* ── スタート ── */
+/* ── スタート（金具付きの支給ボタン。端の金具は固定・中央のみ伸縮）── */
 .sa-start {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 16px;
   width: 100%;
   margin-top: 24px;
-  padding: 18px 0;
-  border: 3px solid #2b3566;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #f4553f 0%, #f98a2e 55%, #ffc93c 100%);
-  color: #2a2350;
+  padding: 20px 70px 24px;
+  border: 0;
+  background: transparent;
+  color: #3a2c10;
   font-family: inherit;
   font-size: 30px;
   font-weight: 800;
   letter-spacing: .06em;
   cursor: pointer;
-  box-shadow: 0 6px 0 rgba(10, 15, 34, .5), 0 0 24px rgba(249, 138, 46, .45);
+  border-image: url('/assets/images/sansu/buttons/start-button.png') 46 70 54 70 fill / 34px 52px 40px 52px / 0 stretch;
+  transition: transform .12s;
 }
-.sa-start:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba(10, 15, 34, .5); }
+.sa-start:active { transform: translateY(3px); }
 .sa-start-icon { width: 46px; height: 46px; }
 
 .sa-reset {
@@ -192,17 +193,18 @@ body {
   justify-content: center;
   gap: 10px;
   margin: 18px auto 6px;
-  padding: 10px 22px;
-  border: 2px solid #6f5fc4;
-  border-radius: 999px;
-  background: rgba(16, 26, 63, .7);
+  padding: 12px 28px 14px;
+  border: 0;
+  background: transparent;
   color: #fff;
   font-family: inherit;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
+  border-image: url('/assets/images/sansu/buttons/reset-button.png') 34 40 38 40 fill / 16px 20px 18px 20px / 0 stretch;
+  transition: transform .12s;
 }
-.sa-reset:hover { background: rgba(139, 92, 246, .25); }
+.sa-reset:active { transform: translateY(2px); }
 .sa-reset-icon { width: 22px; height: 22px; }
 
 /* ── プレイ画面 ── */
@@ -373,22 +375,22 @@ body {
   gap: 14px;
 }
 .sa-opt {
-  padding: 20px 0;
-  border: 2px solid var(--sa-plate-line);
-  border-radius: 16px;
-  background: var(--sa-plate);
+  padding: 22px 0 26px;
+  border: 0;
+  background: transparent;
   color: var(--sa-ink);
   font-family: inherit;
   font-size: 30px;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 4px 0 rgba(10, 15, 34, .2);
-  transition: transform .12s, background .2s, color .2s;
+  border-image: url('/assets/images/sansu/buttons/choice-default.png') 40 44 50 44 fill / 20px 22px 25px 22px / 0 stretch;
+  transition: transform .12s;
 }
-.sa-opt:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(10, 15, 34, .2); }
+.sa-opt:active { transform: translateY(2px); }
 .sa-opt:disabled { cursor: default; }
-.sa-opt.is-correct { background: #3fb380; border-color: #2f9469; color: #fff; }
-.sa-opt.is-wrong { background: #ff5c6c; border-color: #e04555; color: #fff; }
+/* 正解・不正解は素材を外してベタ塗りで色替え */
+.sa-opt.is-correct { border-image: none; border-radius: 16px; background: #3fb380; color: #fff; }
+.sa-opt.is-wrong { border-image: none; border-radius: 16px; background: #ff5c6c; color: #fff; }
 
 .sa-feedback {
   margin-top: 16px;
