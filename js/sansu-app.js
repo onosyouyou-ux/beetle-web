@@ -646,7 +646,8 @@
     const fill = el('div', 'sa-track-fill');
     const pct = (done / goal) * 100;
     fill.style.width = pct + '%';
-    bar.appendChild(bodyMarker(JOURNEY[stage], 'sa-track-start'));
+    // 出発点はいつも地球★（ステージが進んでも左端は地球のまま）
+    bar.appendChild(bodyMarker(JOURNEY[0], 'sa-track-start'));
     const rocket = el('div', 'sa-rocket', '🚀');
     rocket.style.left = pct + '%';
     bar.appendChild(fill);
