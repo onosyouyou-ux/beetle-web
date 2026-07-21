@@ -249,7 +249,7 @@
 
     const start = el('button', 'sa-start');
     start.type = 'button';
-    start.appendChild(icon('rocket-badge', 'sa-start-icon'));
+    start.appendChild(icon('rocket-simple', 'sa-start-icon'));
     start.appendChild(el('span', null, 'スタート'));
     start.addEventListener('click', startSession);
     app.appendChild(start);

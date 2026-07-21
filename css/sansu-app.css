@@ -144,9 +144,9 @@ body {
 .sa-choice.is-disabled:hover { transform: none; }
 
 .sa-choice-icon {
-  width: 52px;
-  height: 44px;
-  flex: none;
+  height: 46px;
+  width: auto;
+  flex-shrink: 0;
   object-fit: contain;
 }
 .sa-choice.is-disabled .sa-choice-icon { filter: grayscale(1); opacity: .5; }
