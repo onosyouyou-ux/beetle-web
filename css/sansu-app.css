@@ -415,6 +415,16 @@ body {
   opacity: .9;
   z-index: 1;
 }
+/* スタート地点（地球）は大きな★ */
+.sa-track-start.is-star {
+  left: 2px;
+  width: auto; height: auto;
+  font-size: 30px;
+  line-height: 1;
+  color: var(--sa-gold);
+  opacity: 1;
+  text-shadow: 0 0 8px rgba(255, 217, 61, .8);
+}
 
 /* とことんの太陽系航路（星＝到達地点。バーの上に配置）*/
 .sa-route {
@@ -427,10 +437,44 @@ body {
   min-height: 34px;
 }
 .sa-route-stop {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform .3s;
+}
+/* 到着アナウンス（惑星アイコンの上にポップ）*/
+.sa-route-bubble {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-bottom: 6px;
+  padding: 4px 9px;
+  border-radius: 10px;
+  background: var(--sa-gold);
+  color: #3a2c10;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .35);
+  transform: translateX(-50%);
+  z-index: 3;
+  animation: sa-bubble-pop 1.6s ease-out forwards;
+}
+.sa-route-bubble::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 50%;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-top-color: var(--sa-gold);
+}
+@keyframes sa-bubble-pop {
+  0% { opacity: 0; transform: translateX(-50%) translateY(6px) scale(.7); }
+  18% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.1); }
+  30% { transform: translateX(-50%) translateY(0) scale(1); }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-4px) scale(1); }
 }
 .sa-route-img {
   width: 26px;

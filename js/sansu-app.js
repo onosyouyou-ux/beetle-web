@@ -3,15 +3,15 @@
 
   const STORAGE_KEY = 'sansuProgress';
   const CHALLENGE_LENGTH = 10;
-  const ENDLESS_STAGE = 100;   // とことんモードの進捗バー1本ぶん
-  const ENDLESS_MAX = 1000;    // とことんモードのコンプリート
+  const ENDLESS_STAGE = 10;    // 次の星に到着するのに必要な「正解」数
+  const ENDLESS_MAX = 100;     // 全10星ぶんの正解数（コンプリート）
   const app = document.getElementById('app');
 
   // とことんモードの旅路：スタート=地球。100問ごとに次の天体へ到着していく（全10ステージ）
   // icon があれば /assets/images/sansu/route/ の画像、無ければ emoji で表示
   // 地球から近い順に並べる
   const JOURNEY = [
-    { name: 'ちきゅう', emoji: '🌏' },                          // スタート地点
+    { name: 'ちきゅう', emoji: '⭐', star: true },              // スタート地点（大きな★）
     { name: 'つき', emoji: '🌙', icon: 'moon' },               // 1 月
     { name: 'きんせい', emoji: '🟡', icon: 'venus' },          // 2 金星
     { name: 'かせい', emoji: '🔴', icon: 'mars' },             // 3 火星
@@ -435,15 +435,16 @@
       mode: mode, diff: diff, style: style,
       index: 0, correct: 0, locked: false, current: null,
       recent: [],   // 直近の問題文。連続で同じ問題を出さないため
-      combo: 0, bestCombo: 0   // 連続正解（COMBO）
+      combo: 0, bestCombo: 0,   // 連続正解（COMBO）
+      arrivedStage: null   // 直前に到着した天体のステージ番号（アイコン上に「到着!」を出す）
     };
     nextQuestion();
   }
 
   function nextQuestion() {
     if (session.style.id === 'challenge' && session.index >= CHALLENGE_LENGTH) return renderResult(false);
-    // とことんは毎回0からスタート（地球→…→ほし の1回の旅）
-    if (session.style.id === 'endless' && session.index >= ENDLESS_MAX) return renderResult(true);
+    // とことんは「正解数」で進む（毎回0スタート・地球→…→ほし の1回の旅）
+    if (session.style.id === 'endless' && session.correct >= ENDLESS_MAX) return renderResult(true);
     session.current = makeUniqueQuestion();
     session.locked = false;
     renderPlay();
@@ -570,8 +571,13 @@
     };
   }
 
-  // 天体マーカー（icon があれば画像、無ければ絵文字）
+  // 天体マーカー（★スタート／icon画像／絵文字）
   function bodyMarker(body, cls) {
+    if (body.star) {
+      const span = el('span', cls + ' is-star', '★');
+      span.title = body.name;
+      return span;
+    }
     if (body.icon) {
       const img = el('img', cls);
       img.src = '/assets/images/sansu/route/' + body.icon + '.png';
@@ -607,16 +613,16 @@
       return wrap;
     }
 
-    // ── とことん：session.index を使うので必ず0からスタート ──
-    const stage = Math.floor(s.index / ENDLESS_STAGE);   // 0..9
-    const done = s.index - stage * ENDLESS_STAGE;
+    // ── とことん：正解数で進む（必ず0からスタート）──
+    const stage = Math.floor(s.correct / ENDLESS_STAGE);   // 0..9
+    const done = s.correct - stage * ENDLESS_STAGE;
     const goal = ENDLESS_STAGE;
     const next = JOURNEY[stage + 1] || JOURNEY[JOURNEY.length - 1];
 
     const head = el('span', null);
     head.textContent = 'ステージ ' + (stage + 1) + ' / 10 ・ ' + next.name + ' へ';
     label.appendChild(head);
-    label.appendChild(el('span', null, done + ' / ' + goal + ' もん'));
+    label.appendChild(el('span', null, done + ' / ' + goal + ' せいかい'));
     wrap.appendChild(label);
 
     // 星（到達地点）はバーの上に配置
@@ -624,12 +630,17 @@
     JOURNEY.slice(1).forEach((body, i) => {
       const no = i + 1;   // ステージ番号 1..10
       const stop = el('span', 'sa-route-stop');
+      // 直前に到着した天体は、アイコンの上に「〇〇に とうちゃく!」を出す
+      if (no === s.arrivedStage) {
+        stop.appendChild(el('span', 'sa-route-bubble', body.name + ' に とうちゃく!'));
+      }
       stop.appendChild(bodyMarker(body, 'sa-route-img'));
       if (no <= stage) stop.classList.add('is-done');
       else if (no === stage + 1) stop.classList.add('is-now');
       route.appendChild(stop);
     });
     wrap.appendChild(route);
+    s.arrivedStage = null;   // 一度出したら消す
 
     const bar = el('div', 'sa-track');
     const fill = el('div', 'sa-track-fill');
@@ -706,16 +717,10 @@
       const rec = endlessRecord(s.mode.id, s.diff.id);   // 通算成績（記録用）
       rec.answered += 1;
       if (ok) rec.correct += 1;
-      // 100問ごとに次の天体へ到着（バーは session.index 基準＝毎回0スタート）
-      if (s.index % ENDLESS_STAGE === 0 && s.index < ENDLESS_MAX) {
-        const reached = JOURNEY[s.index / ENDLESS_STAGE];
-        const next = JOURNEY[s.index / ENDLESS_STAGE + 1];
-        setTimeout(() => {
-          playFanfare();
-          feedback.textContent = reached.emoji + ' ' + reached.name + ' に とうちゃく!'
-            + (next ? ' つぎは ' + next.name : '');
-          feedback.className = 'sa-feedback is-ok';
-        }, 400);
+      // 10問正解ごとに次の天体へ到着（次の画面で、その天体アイコンの上に「到着!」を出す）
+      if (ok && s.correct % ENDLESS_STAGE === 0 && s.correct < ENDLESS_MAX) {
+        s.arrivedStage = s.correct / ENDLESS_STAGE;
+        setTimeout(playFanfare, 400);
       }
     }
     saveProgress();
@@ -735,7 +740,7 @@
       const goal = JOURNEY[JOURNEY.length - 1];
       card.appendChild(el('div', 'sa-result-emoji', goal.emoji));
       card.appendChild(el('p', 'sa-result-msg',
-        ENDLESS_MAX + 'もん たっせい! ' + goal.name + ' に とうちゃく! うちゅうの おうさまだ!'));
+        ENDLESS_MAX + 'もん せいかい! ' + goal.name + ' に とうちゃく! うちゅうの おうさまだ!'));
     } else {
       const rec = challengeRecord(s.mode.id, s.diff.id);
       rec.plays += 1;
