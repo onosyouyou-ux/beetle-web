@@ -7,6 +7,21 @@
   const ENDLESS_MAX = 1000;    // とことんモードのコンプリート
   const app = document.getElementById('app');
 
+  // とことんモードの旅路：スタート=地球。100問ごとに次の天体へ到着していく（全10ステージ）
+  const JOURNEY = [
+    { name: 'ちきゅう', emoji: '🌏' },        // スタート地点
+    { name: 'つき', emoji: '🌙' },            // ステージ1
+    { name: 'かせい', emoji: '🔴' },          // 2 火星
+    { name: 'もくせい', emoji: '🟠' },        // 3 木星
+    { name: 'どせい', emoji: '🪐' },          // 4 土星
+    { name: 'てんのうせい', emoji: '🔵' },    // 5 天王星
+    { name: 'かいおうせい', emoji: '🟣' },    // 6 海王星
+    { name: 'めいおうせい', emoji: '⚪' },    // 7 冥王星
+    { name: 'たいようけいの はて', emoji: '🌌' }, // 8
+    { name: 'ながれぼし', emoji: '☄️' },      // 9
+    { name: 'かがやく ほし', emoji: '🌟' }    // 10 ゴール（1000問）
+  ];
+
   const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
   function shuffle(arr) {
@@ -435,15 +450,8 @@
     const s = session;
     app.innerHTML = '';
 
-    // 選択中のモード表示＋もどる
+    // 選択中のモード表示（もどるは一番下に配置）
     const head = el('div', 'sa-play-head');
-    const back = el('button', 'sa-back', '← もどる');
-    back.type = 'button';
-    back.addEventListener('click', () => {
-      session = null;
-      renderMenu();
-    });
-    head.appendChild(back);
     head.appendChild(el('span', 'sa-play-mode',
       s.mode.name + '・' + s.diff.name + '・' + s.style.name));
     app.appendChild(head);
@@ -469,6 +477,17 @@
     card.appendChild(options);
     card.appendChild(feedback);
     app.appendChild(card);
+
+    // もどるボタンは一番下
+    const backWrap = el('div', 'sa-play-foot');
+    const back = el('button', 'sa-back', '← メニューに もどる');
+    back.type = 'button';
+    back.addEventListener('click', () => {
+      session = null;
+      renderMenu();
+    });
+    backWrap.appendChild(back);
+    app.appendChild(backWrap);
   }
 
   // ふつうの式（こたえは伏せる）
@@ -533,21 +552,25 @@
     const s = session;
     const wrap = el('div', 'sa-track-card');
     const label = el('div', 'sa-track-label');
-    let done, goal, left;
+    let done, goal, goalEmoji, stage = 0;
 
     if (s.style.id === 'challenge') {
       done = s.index;
       goal = CHALLENGE_LENGTH;
-      left = 'うちゅうへ すすもう';
+      goalEmoji = '🪐';
+      label.appendChild(el('span', null, 'うちゅうへ すすもう'));
     } else {
       const rec = endlessRecord(s.mode.id, s.diff.id);
-      const stage = Math.floor(rec.answered / ENDLESS_STAGE);
+      stage = Math.floor(rec.answered / ENDLESS_STAGE);   // 0..9
       done = rec.answered - stage * ENDLESS_STAGE;
       goal = ENDLESS_STAGE;
-      left = 'ステージ ' + (stage + 1) + ' / ' + (ENDLESS_MAX / ENDLESS_STAGE);
+      const next = JOURNEY[stage + 1] || JOURNEY[JOURNEY.length - 1];
+      goalEmoji = next.emoji;
+      const head = el('span', null);
+      head.textContent = 'ステージ ' + (stage + 1) + ' / 10 ・ ' + next.emoji + ' ' + next.name + ' へ';
+      label.appendChild(head);
     }
 
-    label.appendChild(el('span', null, left));
     label.appendChild(el('span', null, done + ' / ' + goal + ' もん'));
     wrap.appendChild(label);
 
@@ -555,12 +578,30 @@
     const fill = el('div', 'sa-track-fill');
     const pct = (done / goal) * 100;
     fill.style.width = pct + '%';
+    // スタート側の天体（とことんのみ）
+    if (s.style.id === 'endless') {
+      bar.appendChild(el('div', 'sa-track-start', JOURNEY[stage].emoji));
+    }
     const rocket = el('div', 'sa-rocket', '🚀');
     rocket.style.left = pct + '%';
     bar.appendChild(fill);
     bar.appendChild(rocket);
-    bar.appendChild(el('div', 'sa-track-goal', '🪐'));
+    bar.appendChild(el('div', 'sa-track-goal', goalEmoji));
     wrap.appendChild(bar);
+
+    // とことんは太陽系の航路（10個の到達地点）を表示
+    if (s.style.id === 'endless') {
+      const route = el('div', 'sa-route');
+      JOURNEY.slice(1).forEach((body, i) => {
+        const no = i + 1;   // ステージ番号 1..10
+        const stop = el('span', 'sa-route-stop', body.emoji);
+        if (no <= stage) stop.classList.add('is-done');
+        else if (no === stage + 1) stop.classList.add('is-now');
+        stop.title = body.name;
+        route.appendChild(stop);
+      });
+      wrap.appendChild(route);
+    }
     return wrap;
   }
 
@@ -604,11 +645,14 @@
       const rec = endlessRecord(s.mode.id, s.diff.id);
       rec.answered += 1;
       if (ok) rec.correct += 1;
-      // 100問ごとにステージクリア
+      // 100問ごとに次の天体へ到着
       if (rec.answered % ENDLESS_STAGE === 0 && rec.answered < ENDLESS_MAX) {
+        const reached = JOURNEY[rec.answered / ENDLESS_STAGE];
+        const next = JOURNEY[rec.answered / ENDLESS_STAGE + 1];
         setTimeout(() => {
           playFanfare();
-          feedback.textContent = '🎉 ステージ ' + (rec.answered / ENDLESS_STAGE) + ' クリア!';
+          feedback.textContent = reached.emoji + ' ' + reached.name + ' に とうちゃく!'
+            + (next ? ' つぎは ' + next.name : '');
           feedback.className = 'sa-feedback is-ok';
         }, 400);
       }
@@ -627,8 +671,10 @@
     const card = el('div', 'sa-card sa-result');
 
     if (complete) {
-      card.appendChild(el('div', 'sa-result-emoji', '👑'));
-      card.appendChild(el('p', 'sa-result-msg', ENDLESS_MAX + 'もん たっせい! うちゅうの おうさまだ!'));
+      const goal = JOURNEY[JOURNEY.length - 1];
+      card.appendChild(el('div', 'sa-result-emoji', goal.emoji));
+      card.appendChild(el('p', 'sa-result-msg',
+        ENDLESS_MAX + 'もん たっせい! ' + goal.name + ' に とうちゃく! うちゅうの おうさまだ!'));
     } else {
       const rec = challengeRecord(s.mode.id, s.diff.id);
       rec.plays += 1;
