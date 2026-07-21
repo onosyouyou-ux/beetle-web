@@ -431,7 +431,8 @@
     const style = findStyle(selection.styleId);
     session = {
       mode: mode, diff: diff, style: style,
-      index: 0, correct: 0, locked: false, current: null
+      index: 0, correct: 0, locked: false, current: null,
+      recent: []   // 直近の問題文。連続で同じ問題を出さないため
     };
     nextQuestion();
   }
@@ -441,9 +442,22 @@
     if (session.style.id === 'endless' && endlessRecord(session.mode.id, session.diff.id).answered >= ENDLESS_MAX) {
       return renderResult(true);
     }
-    session.current = session.mode.make(session.diff);
+    session.current = makeUniqueQuestion();
     session.locked = false;
     renderPlay();
+  }
+
+  // 直近3問と同じ問題を避けて出題する（プールが小さい難易度でも止まらないよう試行回数に上限）
+  function makeUniqueQuestion() {
+    const s = session;
+    let q, tries = 0;
+    do {
+      q = s.mode.make(s.diff);
+      tries++;
+    } while (s.recent.indexOf(q.text) !== -1 && tries < 25);
+    s.recent.push(q.text);
+    if (s.recent.length > 3) s.recent.shift();
+    return q;
   }
 
   function renderPlay() {
