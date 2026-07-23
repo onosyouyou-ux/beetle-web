@@ -5,7 +5,7 @@
    アイコンは支給素材のPNG、板（パネル・ボタン）は伸縮に耐えるようCSSで描く ── */
 
 :root {
-  --sa-panel-w: 1100px;
+  --sa-panel-w: 770px;
   --sa-ink: #241f4d;
   --sa-purple: #8b5cf6;
   --sa-purple-soft: #b6a8f5;
@@ -653,10 +653,26 @@ body {
 .sa-btn-primary { background: var(--sa-purple); border-color: #6f5fc4; color: #fff; }
 .sa-btn-primary:hover { background: #a08ef0; }
 
+/* 紙面下部：しょうかいページ（LP）への導線 */
+.paper-about {
+  margin: auto 0 0;
+  padding: 10px 22px 0;
+  text-align: center;
+}
+.paper-about a {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sa-purple-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(182, 168, 245, .6);
+  padding-bottom: 2px;
+}
+.paper-about a:hover { color: #fff; border-bottom-color: #fff; }
+
 /* 紙面の一番下に置く更新日 */
 .paper-release {
-  margin: auto 0 0;
-  padding: 8px 22px 4px;
+  margin: 6px 0 0;
+  padding: 4px 22px 4px;
   text-align: right;
   font-size: 11px;
   color: rgba(255, 255, 255, .5);

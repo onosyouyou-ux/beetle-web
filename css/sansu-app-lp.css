@@ -1,0 +1,282 @@
+/* ── さんすう うちゅうたんけん ランディング（Tool系・子ども向け）
+   アプリ本体（sansu-app.css）と同じ宇宙×パープルのトーン。
+   ページ地はクリーム、ヒーローだけ宇宙のダーク。カードは白＋やわらかい影 ── */
+
+:root {
+  --sl-ink: #241f4d;
+  --sl-purple: #7c5cf0;
+  --sl-purple-d: #6a49dd;
+  --sl-purple-soft: #b6a8f5;
+  --sl-gold: #f2c230;
+  --sl-cream: #faf8f3;
+  --sl-line: #ece7f7;
+}
+
+body {
+  margin: 0;
+  background: var(--sl-cream);
+  color: var(--sl-ink);
+  font-family: 'M PLUS Rounded 1c', 'Hiragino Maru Gothic ProN', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+.slp-wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+img { max-width: 100%; height: auto; }
+
+/* ── ボタン ── */
+.slp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 30px;
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform .12s, box-shadow .12s, background .12s;
+}
+.slp-btn-primary {
+  background: linear-gradient(160deg, #8b6cf6, #6a49dd);
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(106, 73, 221, .4);
+}
+.slp-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(106, 73, 221, .5); }
+.slp-btn-ghost {
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, .5);
+}
+.slp-btn-ghost:hover { border-color: #fff; background: rgba(255, 255, 255, .2); }
+
+/* ── ヒーロー（宇宙のダーク）── */
+.slp-hero {
+  position: relative;
+  padding: 64px 0 76px;
+  background:
+    linear-gradient(180deg, rgba(10, 15, 34, .72), rgba(12, 19, 50, .92)),
+    #0a0f22 url('/assets/images/sansu/bg-space.jpg') center / cover no-repeat;
+  color: #fff;
+  overflow: hidden;
+}
+.slp-hero-grid {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: 44px;
+  align-items: center;
+}
+.slp-badge {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: rgba(242, 194, 48, .16);
+  border: 1px solid rgba(242, 194, 48, .5);
+  color: var(--sl-gold);
+  font-size: 13px;
+  font-weight: 800;
+}
+.slp-hero h1 {
+  margin: 0 0 18px;
+  font-size: clamp(30px, 4.4vw, 46px);
+  font-weight: 800;
+  line-height: 1.28;
+  letter-spacing: .01em;
+}
+.slp-hero h1 .accent { color: #ffd75e; }
+.slp-hero-copy {
+  margin: 0 0 28px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, .86);
+}
+.slp-cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+.slp-hero-note {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, .82);
+}
+.slp-hero-note span { display: inline-flex; align-items: center; gap: 6px; }
+.slp-hero-note i { color: var(--sl-gold); font-style: normal; }
+
+.slp-hero-visual { position: relative; }
+.slp-hero-img {
+  width: 100%;
+  border-radius: 22px;
+  border: 3px solid var(--sl-purple);
+  box-shadow: 0 0 26px rgba(139, 92, 246, .45), 0 20px 50px rgba(0, 0, 0, .5);
+}
+.slp-float {
+  position: absolute;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--sl-ink);
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .3);
+}
+.slp-float.one { top: -14px; left: -14px; }
+.slp-float.two { bottom: -14px; right: -10px; color: var(--sl-purple-d); }
+
+/* ── セクション共通 ── */
+.slp-section { padding: 68px 0; }
+.slp-section.tint { background: #f2eefb; }
+.slp-head { text-align: center; max-width: 640px; margin: 0 auto 40px; }
+.slp-eyebrow {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  color: var(--sl-purple);
+}
+.slp-head h2 { margin: 0 0 14px; font-size: clamp(23px, 3.2vw, 31px); font-weight: 800; line-height: 1.4; }
+.slp-head p { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.9; color: #5c5678; }
+
+/* ── モード3カード ── */
+.slp-modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.slp-mode {
+  padding: 28px 24px 26px;
+  background: #fff;
+  border: 1px solid var(--sl-line);
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 26px rgba(36, 31, 77, .06);
+}
+.slp-mode-ic {
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 14px;
+  object-fit: contain;
+}
+.slp-mode h3 { margin: 0 0 8px; font-size: 19px; font-weight: 800; color: var(--sl-purple-d); }
+.slp-mode p { margin: 0; font-size: 14px; font-weight: 500; line-height: 1.8; color: #5c5678; }
+
+/* ── あそびかた（画像＋テキストの交互）── */
+.slp-play {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.slp-play + .slp-play { margin-top: 56px; }
+.slp-play.rev .slp-play-text { order: 2; }
+.slp-play-img {
+  border-radius: 18px;
+  border: 1px solid var(--sl-line);
+  box-shadow: 0 16px 38px rgba(36, 31, 77, .14);
+}
+.slp-tag {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(124, 92, 240, .12);
+  color: var(--sl-purple-d);
+  font-size: 12px;
+  font-weight: 800;
+}
+.slp-play-text h3 { margin: 0 0 12px; font-size: 23px; font-weight: 800; line-height: 1.45; }
+.slp-play-text p { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.95; color: #5c5678; }
+
+/* ── さくらんぼ算ハイライト ── */
+.slp-cherry {
+  display: grid;
+  grid-template-columns: .95fr 1.05fr;
+  gap: 40px;
+  align-items: center;
+  padding: 40px;
+  background: #fff;
+  border: 1px solid var(--sl-line);
+  border-radius: 24px;
+  box-shadow: 0 16px 40px rgba(36, 31, 77, .1);
+}
+.slp-cherry img { border-radius: 16px; }
+.slp-cherry h3 { margin: 0 0 12px; font-size: 23px; font-weight: 800; }
+.slp-cherry p { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.95; color: #5c5678; }
+
+/* ── 使い方3ステップ ── */
+.slp-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.slp-step {
+  position: relative;
+  padding: 30px 24px 26px;
+  background: #fff;
+  border: 1px solid var(--sl-line);
+  border-radius: 20px;
+  box-shadow: 0 10px 26px rgba(36, 31, 77, .06);
+}
+.slp-step-no {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  background: linear-gradient(160deg, #8b6cf6, #6a49dd);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+}
+.slp-step h3 { margin: 0 0 8px; font-size: 17px; font-weight: 800; }
+.slp-step p { margin: 0; font-size: 14px; font-weight: 500; line-height: 1.85; color: #5c5678; }
+
+/* ── FAQ ── */
+.slp-faq { max-width: 760px; margin: 0 auto; }
+.slp-faq details {
+  margin-bottom: 12px;
+  background: #fff;
+  border: 1px solid var(--sl-line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.slp-faq summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+.slp-faq summary::-webkit-details-marker { display: none; }
+.slp-faq summary::after { content: '＋'; color: var(--sl-purple); font-weight: 800; }
+.slp-faq details[open] summary::after { content: '−'; }
+.slp-faq .slp-faq-a { padding: 0 22px 20px; font-size: 14px; font-weight: 500; line-height: 1.9; color: #5c5678; }
+
+/* ── 最後のCTA ── */
+.slp-final {
+  padding: 72px 0;
+  text-align: center;
+  background:
+    linear-gradient(180deg, rgba(10, 15, 34, .78), rgba(12, 19, 50, .94)),
+    #0a0f22 url('/assets/images/sansu/bg-space.jpg') center / cover no-repeat;
+  color: #fff;
+}
+.slp-final h2 { margin: 0 0 16px; font-size: clamp(24px, 3.4vw, 32px); font-weight: 800; line-height: 1.5; }
+.slp-final p { margin: 0 0 30px; font-size: 15px; font-weight: 500; line-height: 1.9; color: rgba(255, 255, 255, .86); }
+
+/* ── レスポンシブ ── */
+@media (max-width: 860px) {
+  .slp-hero-grid { grid-template-columns: 1fr; gap: 32px; }
+  .slp-hero-visual { max-width: 420px; margin: 0 auto; }
+  .slp-modes { grid-template-columns: 1fr; }
+  .slp-steps { grid-template-columns: 1fr; }
+  .slp-play { grid-template-columns: 1fr; gap: 20px; }
+  .slp-play.rev .slp-play-text { order: 0; }
+  .slp-play-img { max-width: 460px; }
+  .slp-cherry { grid-template-columns: 1fr; padding: 28px; }
+}
+@media (max-width: 560px) {
+  .slp-hero { padding: 44px 0 54px; }
+  .slp-section { padding: 52px 0; }
+  .slp-cta-row .slp-btn { flex: 1; justify-content: center; }
+}
