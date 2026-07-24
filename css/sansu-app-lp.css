@@ -107,9 +107,8 @@ img { max-width: 100%; height: auto; }
 .slp-hero-visual { position: relative; }
 .slp-hero-img {
   width: 100%;
-  border-radius: 22px;
-  border: 3px solid var(--sl-purple);
-  box-shadow: 0 0 26px rgba(139, 92, 246, .45), 0 20px 50px rgba(0, 0, 0, .5);
+  border-radius: 18px;
+  box-shadow: 0 0 30px rgba(139, 92, 246, .35), 0 20px 50px rgba(0, 0, 0, .5);
 }
 .slp-float {
   position: absolute;
@@ -139,51 +138,32 @@ img { max-width: 100%; height: auto; }
 .slp-head h2 { margin: 0 0 14px; font-size: clamp(23px, 3.2vw, 31px); font-weight: 800; line-height: 1.4; }
 .slp-head p { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.9; color: #5c5678; }
 
-/* ── モード3カード ── */
+/* ── モード3カード（イラスト・クリックでアプリへ）── */
 .slp-modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.slp-mode {
-  padding: 28px 24px 26px;
-  background: #fff;
-  border: 1px solid var(--sl-line);
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0 10px 26px rgba(36, 31, 77, .06);
-}
-.slp-mode-ic {
-  width: 68px;
-  height: 68px;
-  margin: 0 auto 14px;
-  object-fit: contain;
-}
-.slp-mode h3 { margin: 0 0 8px; font-size: 19px; font-weight: 800; color: var(--sl-purple-d); }
-.slp-mode p { margin: 0; font-size: 14px; font-weight: 500; line-height: 1.8; color: #5c5678; }
-
-/* ── あそびかた（画像＋テキストの交互）── */
-.slp-play {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  align-items: center;
-}
-.slp-play + .slp-play { margin-top: 56px; }
-.slp-play.rev .slp-play-text { order: 2; }
-.slp-play-img {
+.slp-mode-card {
+  display: block;
   border-radius: 18px;
-  border: 1px solid var(--sl-line);
-  box-shadow: 0 16px 38px rgba(36, 31, 77, .14);
+  overflow: hidden;
+  box-shadow: 0 10px 26px rgba(36, 31, 77, .12);
+  transition: transform .14s, box-shadow .14s;
 }
-.slp-tag {
-  display: inline-block;
-  margin-bottom: 12px;
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: rgba(124, 92, 240, .12);
-  color: var(--sl-purple-d);
-  font-size: 12px;
-  font-weight: 800;
+.slp-mode-card:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(36, 31, 77, .22); }
+.slp-mode-card img { display: block; width: 100%; }
+
+/* ── あそびかた（イラストパネル・クリックでアプリへ）── */
+.slp-plays { display: flex; flex-direction: column; align-items: center; gap: 26px; }
+.slp-play-panel {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 14px 34px rgba(36, 31, 77, .16);
+  transition: transform .14s, box-shadow .14s;
 }
-.slp-play-text h3 { margin: 0 0 12px; font-size: 23px; font-weight: 800; line-height: 1.45; }
-.slp-play-text p { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.95; color: #5c5678; }
+.slp-play-panel.wide { max-width: 640px; }
+.slp-play-panel:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(36, 31, 77, .26); }
+.slp-play-panel img { display: block; width: 100%; }
 
 /* ── さくらんぼ算ハイライト ── */
 .slp-cherry {
@@ -270,9 +250,6 @@ img { max-width: 100%; height: auto; }
   .slp-hero-visual { max-width: 420px; margin: 0 auto; }
   .slp-modes { grid-template-columns: 1fr; }
   .slp-steps { grid-template-columns: 1fr; }
-  .slp-play { grid-template-columns: 1fr; gap: 20px; }
-  .slp-play.rev .slp-play-text { order: 0; }
-  .slp-play-img { max-width: 460px; }
   .slp-cherry { grid-template-columns: 1fr; padding: 28px; }
 }
 @media (max-width: 560px) {
