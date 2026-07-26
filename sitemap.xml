@@ -144,8 +144,14 @@
   <!-- コラム -->
   <url>
     <loc>https://www.beetle-web.jp/blog/</loc>
-    <lastmod>2026-07-19</lastmod>
+    <lastmod>2026-07-26</lastmod>
     <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/blog/posts/sakuranbo-zan.html</loc>
+    <lastmod>2026-07-26</lastmod>
+    <priority>0.6</priority>
   </url>
 
   <url>
