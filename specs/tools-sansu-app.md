@@ -1,7 +1,7 @@
 ---
 page: さんすう うちゅうたんけん（アプリ本体・開発中）
 urls: ["/tools/sansu-app/"]
-canonical: self
+canonical: https://www.beetle-web.jp/tools/sansu-app/landing.html
 sitemap: false
 title_contains: "さんすう"
 og_image: "none"
@@ -12,8 +12,8 @@ e2e: false
 # さんすう うちゅうたんけん（`tools/sansu-app/index.html`）
 
 - **目的**: 小学生・幼児向けの計算ドリル（サーバー不要の静的ツール）。宇宙探検の世界観で計算を練習する
-- **公開状態**: **開発中の未公開ページ**。サイト内リンクなし・`sitemap.xml` 未登録・`noindex, nofollow`。
-  公開時は noindex を外し、`landing.html` を作って canonical をそちらへ向け、sitemap に登録する
+- **公開状態**: **公開済み**（2026-07-24）。`edu-tools.html`「おうちで使えるツール」からランディング経由でリンク。
+  アプリ本体は `noindex` を持たず、canonical / og:url は `landing.html` を指す（評価はランディングに集約）。sitemap には `landing.html` を登録（アプリ本体は未登録）
 - **レイアウト**: 縦1カラム固定（2026-07-20決定）。**紙面（`.app-paper`）は PC 1100px / スマホ 560px**、その中のコンテンツ列は約940px。
   紙面の外側は宇宙の背景画像 `bg-space.jpg`（cover）。紙面枠・ボタン・板は支給素材を `border-image`（9スライス）で敷き、
   アイコンは PNG（`object-fit:contain`）を重ねる。文字はHTMLで重ねる（素材に焼き込まない＝ラベルを動的に変えられる）
