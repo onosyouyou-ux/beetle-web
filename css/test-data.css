@@ -1,0 +1,89 @@
+/* ============================================================
+   test-data.css — 意地悪テストデータ生成器 固有スタイル
+   共通変数は /style/common.css の --tp-* を流用
+   ============================================================ */
+
+/* ====== グループ見出し ====== */
+.td-group{font-size:14px;font-weight:800;color:var(--tp-text2);margin:8px 0 12px;padding-left:10px;border-left:3px solid var(--tp-orange)}
+.td-group:not(:first-of-type){margin-top:28px}
+
+/* ====== 意地悪データカード ====== */
+.td-grid{grid-template-columns:repeat(3,1fr)}
+.td-card{display:flex;flex-direction:column;gap:9px}
+.td-name{font-size:14px;font-weight:800}
+.td-sample{font-family:'SFMono-Regular','Consolas',monospace;font-size:12px;background:var(--tp-cream);border-radius:6px;padding:9px 10px;word-break:break-all;color:var(--tp-text);line-height:1.7}
+.td-note{font-size:12px;line-height:1.8;color:var(--tp-text2);flex:1}
+.td-note strong{color:var(--tp-text)}
+.td-copy{align-self:flex-start;font-size:12px;font-weight:700;color:#fff;background:var(--tp-orange);border:none;border-radius:2px;padding:6px 14px;cursor:pointer;transition:background .12s}
+.td-copy:hover{background:#c94a12}
+.td-copy.is-done{background:var(--tp-green)}
+
+/* ====== 操作パネル ====== */
+.td-panel{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px 22px}
+.td-form-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:12px}
+.td-form-row label{font-size:12px;font-weight:700;color:var(--tp-text2)}
+.td-form-row input[type=number],.td-form-row select{border:1px solid var(--tp-border2);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;color:var(--tp-text);background:#fff}
+.td-form-row input[type=number]{width:110px}
+.td-check{display:flex;align-items:center;gap:6px;cursor:pointer}
+.td-btn{background:var(--tp-dark);color:#fff;border:none;border-radius:2px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.td-btn:hover{background:var(--tp-dark2)}
+.td-btn-ghost{background:none;border:1px solid var(--tp-border2);border-radius:2px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--tp-text2);cursor:pointer;font-family:inherit}
+.td-btn-ghost:hover{border-color:var(--tp-orange);color:var(--tp-orange)}
+
+/* ====== 境界値クイックボタン ====== */
+.td-quick{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px}
+.td-quick-label{font-size:12px;color:var(--tp-text3);margin-right:2px}
+.td-chip{font-size:12px;font-family:'SFMono-Regular','Consolas',monospace;padding:4px 12px;border-radius:99px;border:1px solid var(--tp-border2);background:#fff;color:var(--tp-text2);cursor:pointer}
+.td-chip:hover{background:var(--tp-orange);color:#fff;border-color:var(--tp-orange)}
+
+/* ====== 出力エリア ====== */
+.td-out{width:100%;border:1px solid var(--tp-border2);border-radius:8px;padding:11px 12px;font-family:'SFMono-Regular','Consolas',monospace;font-size:12px;line-height:1.7;resize:vertical;box-sizing:border-box;background:var(--tp-cream);color:var(--tp-text);white-space:pre}
+.td-out-edit{background:#fff;white-space:pre-wrap}
+.td-out-foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px}
+.td-info{font-size:12px;color:var(--tp-text3);flex:1;min-width:180px}
+.td-copy-inline{align-self:auto}
+.td-caution{font-size:11px;color:var(--tp-text3);line-height:1.7;margin-top:12px;padding-top:10px;border-top:1px dashed var(--tp-border)}
+
+/* ====== ダミーデータのプレビュー表 ====== */
+.td-table-wrap{overflow-x:auto;margin-bottom:12px}
+.td-table{border-collapse:collapse;font-size:11px;width:100%;min-width:760px}
+.td-table:empty{display:none}
+.td-table th,.td-table td{border:1px solid var(--tp-border);padding:5px 8px;text-align:left;white-space:nowrap}
+.td-table th{background:var(--tp-cream2);font-weight:700;color:var(--tp-text2)}
+.td-table tr:nth-child(even) td{background:var(--tp-cream)}
+
+/* ====== カウンターの数値パネル ====== */
+.td-stats{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:14px 0}
+.td-stat{background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:8px;padding:12px 10px;text-align:center}
+.td-stat-v{display:block;font-size:22px;font-weight:900;color:var(--tp-text);font-family:'Syne','M PLUS 1p',sans-serif;line-height:1.2}
+.td-stat-l{display:block;font-size:11px;color:var(--tp-text2);margin-top:4px;line-height:1.4}
+.td-stat-l small{display:block;font-size:10px;color:var(--tp-text3)}
+.td-stat.is-warn{border-color:var(--tp-orange-bd);background:var(--tp-orange-bg)}
+.td-stat.is-warn .td-stat-v{color:var(--tp-orange)}
+
+/* ====== 検出フラグ ====== */
+.td-flags-hd{font-size:12px;font-weight:700;color:var(--tp-text2);margin-bottom:8px}
+.td-flags{display:flex;flex-wrap:wrap;gap:8px;min-height:28px}
+.td-flag{font-size:12px;line-height:1.6;padding:6px 12px;border-radius:6px;background:var(--tp-amber-bg);color:var(--tp-amber);border:1px solid rgba(179,92,0,.2);font-weight:700}
+.td-flag.is-danger{background:var(--tp-red-bg);color:var(--tp-red);border-color:rgba(192,57,43,.2)}
+.td-flag span{font-weight:400;color:var(--tp-text2)}
+.td-flag-none{font-size:12px;color:var(--tp-text3)}
+
+/* ====== FAQ（details/summaryベース。regex-tester.css と同スタイル） ====== */
+.faq-item{border-bottom:1px solid var(--tp-border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 2px;cursor:pointer;font-weight:700;font-size:14px;color:var(--tp-text);list-style:none}
+.faq-q::-webkit-details-marker{display:none}
+.faq-icon{color:var(--tp-orange);font-weight:700}
+details[open] .faq-icon{transform:rotate(45deg)}
+.faq-a{padding:0 2px 14px;font-size:13px;line-height:1.8;color:var(--tp-text2)}
+
+@media(max-width:900px){
+  .td-grid{grid-template-columns:repeat(2,1fr)}
+  .td-stats{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:600px){
+  .td-grid{grid-template-columns:1fr}
+  .td-stats{grid-template-columns:repeat(2,1fr)}
+  .td-panel{padding:16px}
+  .td-form-row input[type=number],.td-form-row select{flex:1;min-width:0}
+}

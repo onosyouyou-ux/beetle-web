@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>意地悪テストデータ生成器｜機種依存文字・絵文字・サロゲートペアをワンクリックコピー【無料】｜BEETLE</title>
+<meta name="description" content="機種依存文字・絵文字・サロゲートペア・半角カナ・ゼロ幅スペースなど、入力欄を壊しにいく「意地悪データ」をワンクリックでコピー。日本向けダミーデータ生成（CSV/JSON）と文字数・バイト数（UTF-8/Shift_JIS換算）カウンターつき。完全無料・登録不要・ブラウザ内で完結。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="意地悪テストデータ生成器（日本語対応） | BEETLE">
+<meta property="og:description" content="機種依存文字・絵文字・サロゲートペア・ゼロ幅スペースなどの意地悪データをワンクリックコピー。日本向けダミーデータ生成と文字数・バイト数カウンターつき。完全無料。">
+<meta property="og:url" content="https://www.beetle-web.jp/tools/test-data/">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="意地悪テストデータ生成器（日本語対応） | BEETLE">
+<meta name="twitter:description" content="機種依存文字・絵文字・サロゲートペア・ゼロ幅スペースなどの意地悪データをワンクリックコピー。完全無料。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<link rel="canonical" href="https://www.beetle-web.jp/tools/test-data/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "意地悪テストデータ生成器",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "url": "https://www.beetle-web.jp/tools/test-data/",
+  "description": "機種依存文字・絵文字・サロゲートペア・半角カナ・ゼロ幅スペースなど、入力欄の検証で使う意地悪データをワンクリックでコピーできるツール。日本向けダミーデータ生成と文字数・バイト数カウンターつき。"
+}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"ツール一覧","item":"https://www.beetle-web.jp/test-tools.html"},{"@type":"ListItem","position":3,"name":"意地悪テストデータ生成器","item":"https://www.beetle-web.jp/tools/test-data/"}]}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "入力したデータはサーバーに送られますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "送られません。生成もカウントもすべてブラウザ内（あなたの端末上）で処理していて、サーバーには一切送信していません。社外に出せないデータを貼り付けても大丈夫です。" }
+    },
+    {
+      "@type": "Question",
+      "name": "生成されるダミーの氏名・住所・電話番号は実在しますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "実在しません。よくある姓名・都道府県名を組み合わせて機械的に作っているだけで、番地や電話番号の下4桁は乱数です。ただし偶然一致する可能性はゼロではないため、実在の個人・法人として扱わないでください。" }
+    },
+    {
+      "@type": "Question",
+      "name": "Shift_JISのバイト数はなぜ「換算（目安）」なのですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "ブラウザはShift_JISへの変換機能を持っていないため、CP932の一般的な文字幅ルール（ASCII・半角カナは1バイト、日本語の常用文字は2バイト、サロゲートペアは変換不可）から計算した推定値です。DBの桁数設計を最終判断するときは実際の環境で確認してください。" }
+    },
+    {
+      "@type": "Question",
+      "name": "どの意地悪データから試せばいいですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "まず「サロゲートペア（𠮷・𩸽）」と「絵文字」を入力欄に入れてみてください。MySQLのutf8（3バイト）やShift_JIS系のDBだと保存時にエラーになったり、以降の文字が消えたりします。次に「ゼロ幅スペース」と「前後の空白」で、トリム処理と重複チェックの穴を確認するのが定番です。" }
+    }
+  ]
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/style/common.css">
+<link rel="stylesheet" href="/css/reference.css">
+<link rel="stylesheet" href="/css/test-data.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" style="height:28px;vertical-align:middle;border-radius:6px;"></a>
+  <span>›</span>
+  <a href="/test-tools.html">ツール一覧</a>
+  <span>›</span>
+  <span style="color:#ddd;font-size:13px;">意地悪テストデータ生成器</span>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">TOOL</div>
+  <h1>意地悪<em>テストデータ</em></h1>
+  <p>機種依存文字、絵文字、サロゲートペア、ゼロ幅スペース。<br>入力欄を壊しにいくデータを、ワンクリックでコピー。</p>
+</div>
+
+<div class="ref-nav">
+  <a href="#catalog">意地悪データ集</a>
+  <a href="#length">長さ・境界値</a>
+  <a href="#dummy">ダミーデータ生成</a>
+  <a href="#counter">文字数・バイト数</a>
+  <a href="#faq">よくある質問</a>
+</div>
+
+<p class="ref-lead">「氏名欄に𠮷野さんを入れたら保存できなかった」「コピペした住所にゼロ幅スペースが混ざっていて重複チェックをすり抜けた」——入力欄まわりの事故は、たいてい<strong>ちゃんとしたデータでテストしていた</strong>から起きます。ここのデータをコピーして、あなたの入力欄に順番に流し込んでみてください。すべてブラウザ内で処理していて、貼り付けたデータがどこかに送られることはありません。</p>
+
+<div class="sw">
+
+  <section id="catalog" class="ref-section">
+    <div class="ref-sec-hd"><h2>意地悪データ集</h2><span class="d">クリックでコピー → 入力欄に貼るだけ</span></div>
+
+    <h3 class="td-group">文字種・エンコード</h3>
+    <div class="ref-grid td-grid">
+
+      <div class="ref-card td-card">
+        <div class="td-name">全角英数字</div>
+        <code class="td-sample">ＡＢＣ１２３ａｂｃ＠</code>
+        <p class="td-note">半角に正規化されるか。ID・メール・電話番号欄で「登録はできたのにログインできない」の定番。</p>
+        <button type="button" class="td-copy" data-v="ＡＢＣ１２３ａｂｃ＠">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">半角カナ</div>
+        <code class="td-sample">ﾊﾝｶｸｶﾅﾃｽﾄ ｶﾞｷﾞｸﾞ ｡｢｣､･ｰ</code>
+        <p class="td-note">全角変換されるか、濁点が1文字扱いか。帳票・CSV・SMS連携で化けやすい。</p>
+        <button type="button" class="td-copy" data-v="ﾊﾝｶｸｶﾅﾃｽﾄ ｶﾞｷﾞｸﾞ ｡｢｣､･ｰ">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">機種依存文字（丸数字・単位）</div>
+        <code class="td-sample">①②③Ⅰ Ⅱ Ⅲ ㈱㈲℡㍿№㎡</code>
+        <p class="td-note">DB保存・PDF出力・メール送信で「?」や空白に化けないか。CP932にはあってもUTF-8変換で崩れる経路がある。</p>
+        <button type="button" class="td-copy" data-v="①②③Ⅰ Ⅱ Ⅲ ㈱㈲℡㍿№㎡">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">サロゲートペア（4バイト文字）</div>
+        <code class="td-sample">𠮷野 𩸽 𡈽 𣘺</code>
+        <p class="td-note"><strong>最優先で試す1件。</strong>MySQLのutf8（3バイト）カラムだと保存エラー、または以降の文字が丸ごと消える。文字数カウントも言語によってズレる。</p>
+        <button type="button" class="td-copy" data-v="𠮷野 𩸽 𡈽 𣘺">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">絵文字（ZWJ・国旗つき）</div>
+        <code class="td-sample">🐛🎌🇯🇵👨‍👩‍👧‍👦👍🏽</code>
+        <p class="td-note">1文字に見えて中身は複数コードポイント。家族絵文字や肌色つきは、文字数制限・途中切り詰めで壊れて豆腐になる。</p>
+        <button type="button" class="td-copy" data-v="🐛🎌🇯🇵👨‍👩‍👧‍👦👍🏽">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">異体字・環境依存の漢字</div>
+        <code class="td-sample">髙橋 﨑 濵 邊 德</code>
+        <p class="td-note">いわゆる「はしごだか」「たつさき」。名前欄では実在するので必ず通す。検索でヒットするかも要確認。</p>
+        <button type="button" class="td-copy" data-v="髙橋 﨑 濵 邊 德">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">結合文字（見た目は同じ）</div>
+        <code class="td-sample">が（か + U+3099）</code>
+        <p class="td-note">通常の「が」と<strong>見た目が同じで別の文字列</strong>。重複チェック・検索・ソートをすり抜ける。macOSのファイル名から流れ込みがち。</p>
+        <button type="button" class="td-copy" data-esc="がいがい">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">ゼロ幅スペース・不可視文字</div>
+        <code class="td-sample">あ[U+200B]い[U+FEFF]う[U+00AD]え</code>
+        <p class="td-note">目に見えないのに文字数を食う。trimで消えず、コピペ経由で混入して「同じに見えるのに一致しない」を起こす。</p>
+        <button type="button" class="td-copy" data-esc="あ​い﻿う­え⁠お">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">双方向制御文字（RTL）</div>
+        <code class="td-sample">test[U+202E]gnp.exe</code>
+        <p class="td-note">表示順が反転する制御文字。ファイル名やユーザー名の表示偽装、画面レイアウト崩れの確認用。</p>
+        <button type="button" class="td-copy" data-esc="test‮gnp.exe">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">制御文字・タブ・改行</div>
+        <code class="td-sample">1行目[TAB]値↵2行目</code>
+        <p class="td-note">1行入力欄に改行が入るとどうなるか。ログ出力・CSV・検索インデックスで崩れる。</p>
+        <button type="button" class="td-copy" data-esc="1行目\tテスト\n2行目">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">前後の空白（半角・全角）</div>
+        <code class="td-sample">␣␣ 値 ␣␣（全角スペース混在）</code>
+        <p class="td-note">trimしているか、全角スペースまで落としているか。ログインIDの末尾スペースは古典的な不具合。</p>
+        <button type="button" class="td-copy" data-esc="  　値　  ">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">NULLに見える文字列</div>
+        <code class="td-sample">null / undefined / NaN / None / -</code>
+        <p class="td-note">文字列の "null" を入れたときに型判定が壊れないか。CSV取り込みで空欄と同一視されないか。</p>
+        <button type="button" class="td-copy" data-esc="null\nundefined\nNaN\nNone\n-\n\\N">コピー</button>
+      </div>
+
+    </div>
+
+    <h3 class="td-group">数値・記号</h3>
+    <div class="ref-grid td-grid">
+
+      <div class="ref-card td-card">
+        <div class="td-name">全角数字・記号まじりの数値</div>
+        <code class="td-sample">１２３４ ¥1,000 １，０００</code>
+        <p class="td-note">金額欄・数量欄で全角やカンマを受けたときの挙動。弾くのか、正規化して通すのか仕様を確認する。</p>
+        <button type="button" class="td-copy" data-v="１２３４ ¥1,000 １，０００">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">紛らわしいハイフン6種</div>
+        <code class="td-sample">- ‐ ‑ – — ー −</code>
+        <p class="td-note">電話番号・郵便番号でユーザーが打ちがちな別文字。全部が半角ハイフンに正規化されるか。</p>
+        <button type="button" class="td-copy" data-v="03-1234-5678 03‐1234‑5678 03–1234—5678 03ー1234−5678">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">数値の境界・丸め</div>
+        <code class="td-sample">0 / -0 / 007 / 0.1 / 1e10 / 9007199254740993</code>
+        <p class="td-note">先頭ゼロが消えないか、指数表記を受けるか、桁の大きい数がJSの浮動小数で丸められないか。</p>
+        <button type="button" class="td-copy" data-esc="0\n-0\n007\n0.1\n1e10\n-1\n9007199254740993\n99999999999999999999">コピー</button>
+      </div>
+
+    </div>
+
+    <h3 class="td-group">エスケープ漏れ・取り込み事故</h3>
+    <div class="ref-grid td-grid">
+
+      <div class="ref-card td-card">
+        <div class="td-name">HTML特殊文字</div>
+        <code class="td-sample">&lt;b&gt;太字&lt;/b&gt; &amp; " ' &lt;/textarea&gt;</code>
+        <p class="td-note">画面に貼ったときに<strong>タグとして解釈されないか</strong>（＝エスケープ漏れ）。確認画面・メール本文・PDFまで追いかける。</p>
+        <button type="button" class="td-copy" data-v="<b>太字</b> &amp; &quot; ' </textarea>">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">SQLのLIKEワイルドカード</div>
+        <code class="td-sample">100% _test_ a\b</code>
+        <p class="td-note">検索欄に % や _ を入れると全件ヒットしないか。エスケープ処理の抜けを見つける定番。</p>
+        <button type="button" class="td-copy" data-v="100% _test_ a\b">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">CSV事故セット</div>
+        <code class="td-sample">a,b / "引用符" / 改行入りセル / 0123</code>
+        <p class="td-note">CSVエクスポート → Excelで開く経路の崩れ確認。先頭ゼロの消滅、セル内改行、区切りズレをまとめて再現。</p>
+        <button type="button" class="td-copy" data-esc="a,b,c\n&quot;引用符&quot;つき\n改行入り\nセル\n0123\n2026/1/2\n1-2\n">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">Excel数式インジェクション</div>
+        <code class="td-sample">=1+1 +81 -1 @SUM(A1)</code>
+        <p class="td-note">= や + で始まる値がCSV経由でExcelの数式として実行されないか。電話番号「+81…」で自然に発生する。</p>
+        <button type="button" class="td-copy" data-esc="=1+1\n+81901234567\n-1234\n@SUM(A1)">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">危険なファイル名</div>
+        <code class="td-sample">CON.txt / ../etc / 末尾スペース.txt</code>
+        <p class="td-note">アップロード機能の確認用。Windows予約語、パス区切り、末尾のドット・スペース、長すぎる名前。</p>
+        <button type="button" class="td-copy" data-esc="CON.txt\nNUL\n../../test.txt\nファイル 名.txt\ntest.txt \ntest.\n𠮷野家.txt">コピー</button>
+      </div>
+
+      <div class="ref-card td-card">
+        <div class="td-name">テスト用クレジットカード番号</div>
+        <code class="td-sample">4111111111111111 ほか</code>
+        <p class="td-note">各ブランドが公開しているテスト番号（Luhnチェックが通る）。決済フォームの表示・分割・ブランド判定の確認に。実際の決済はできない。</p>
+        <button type="button" class="td-copy" data-esc="4111111111111111\n5555555555554444\n3530111333300000\n378282246310005\n3566002020360505">コピー</button>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="length" class="ref-section">
+    <div class="ref-sec-hd"><h2>長さ・境界値の文字列を作る</h2><span class="d">桁あふれ・切り詰めの確認用</span></div>
+    <div class="td-panel">
+      <div class="td-form-row">
+        <label for="td-len">文字数</label>
+        <input type="number" id="td-len" value="256" min="0" max="100000" step="1">
+        <label for="td-len-kind">文字種</label>
+        <select id="td-len-kind">
+          <option value="a">半角英字（a）</option>
+          <option value="an">半角英数ランダム</option>
+          <option value="ja">ひらがな（あ）</option>
+          <option value="kanji">漢字（漢）</option>
+          <option value="kana">半角カナ（ｱ）</option>
+          <option value="emoji">絵文字（🐛）</option>
+          <option value="mix">日本語＋英数まじり文</option>
+        </select>
+        <button type="button" class="td-btn" id="td-len-gen">生成</button>
+      </div>
+      <div class="td-quick">
+        <span class="td-quick-label">よく使う境界:</span>
+        <button type="button" class="td-chip" data-len="0">0</button>
+        <button type="button" class="td-chip" data-len="1">1</button>
+        <button type="button" class="td-chip" data-len="20">20</button>
+        <button type="button" class="td-chip" data-len="255">255</button>
+        <button type="button" class="td-chip" data-len="256">256</button>
+        <button type="button" class="td-chip" data-len="1000">1000</button>
+        <button type="button" class="td-chip" data-len="4000">4000</button>
+        <button type="button" class="td-chip" data-len="10000">10000</button>
+      </div>
+      <textarea id="td-len-out" class="td-out" rows="5" readonly placeholder="ここに生成した文字列が入ります"></textarea>
+      <div class="td-out-foot">
+        <span id="td-len-info" class="td-info">—</span>
+        <button type="button" class="td-copy td-copy-inline" data-target="td-len-out">コピー</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="dummy" class="ref-section">
+    <div class="ref-sec-hd"><h2>日本向けダミーデータ生成</h2><span class="d">氏名・住所・電話・メールをまとめて</span></div>
+    <div class="td-panel">
+      <div class="td-form-row">
+        <label for="td-rows">件数</label>
+        <select id="td-rows">
+          <option value="5">5件</option>
+          <option value="10" selected>10件</option>
+          <option value="30">30件</option>
+          <option value="100">100件</option>
+        </select>
+        <label for="td-format">形式</label>
+        <select id="td-format">
+          <option value="csv">CSV</option>
+          <option value="tsv">TSV（Excel貼り付け用）</option>
+          <option value="json">JSON</option>
+          <option value="md">Markdown表</option>
+        </select>
+        <label class="td-check"><input type="checkbox" id="td-naughty"> 意地悪データを1割まぜる</label>
+        <button type="button" class="td-btn" id="td-dummy-gen">生成</button>
+      </div>
+      <div class="td-table-wrap"><table class="td-table" id="td-dummy-table"><thead></thead><tbody></tbody></table></div>
+      <textarea id="td-dummy-out" class="td-out" rows="6" readonly placeholder="「生成」を押すとここにデータが入ります"></textarea>
+      <div class="td-out-foot">
+        <span id="td-dummy-info" class="td-info">氏名・かな・カナ・性別・生年月日・郵便番号・住所・電話・携帯・メール・会社名</span>
+        <button type="button" class="td-btn-ghost" id="td-dummy-dl">ダウンロード</button>
+        <button type="button" class="td-copy td-copy-inline" data-target="td-dummy-out">コピー</button>
+      </div>
+      <p class="td-caution">生成される氏名・住所・電話番号はすべて架空です（番地と番号の下4桁は乱数、メールは example.com）。実在の個人・法人として扱わないでください。</p>
+    </div>
+  </section>
+
+  <section id="counter" class="ref-section">
+    <div class="ref-sec-hd"><h2>文字数・バイト数カウンター</h2><span class="d">桁あふれと「危険な文字」を同時にチェック</span></div>
+    <div class="td-panel">
+      <textarea id="td-count-in" class="td-out td-out-edit" rows="4" placeholder="ここに文字列を貼り付け（送信されません）"></textarea>
+      <div class="td-stats" id="td-stats">
+        <div class="td-stat"><span class="td-stat-v" id="td-c-len">0</span><span class="td-stat-l">文字数<small>JSのlength</small></span></div>
+        <div class="td-stat"><span class="td-stat-v" id="td-c-cp">0</span><span class="td-stat-l">コードポイント数</span></div>
+        <div class="td-stat"><span class="td-stat-v" id="td-c-graph">0</span><span class="td-stat-l">見た目の文字数<small>書記素</small></span></div>
+        <div class="td-stat"><span class="td-stat-v" id="td-c-utf8">0</span><span class="td-stat-l">UTF-8バイト</span></div>
+        <div class="td-stat"><span class="td-stat-v" id="td-c-sjis">0</span><span class="td-stat-l">Shift_JISバイト<small>CP932換算・目安</small></span></div>
+        <div class="td-stat"><span class="td-stat-v" id="td-c-lines">0</span><span class="td-stat-l">行数</span></div>
+      </div>
+      <div class="td-flags-hd">この文字列に含まれる注意ポイント</div>
+      <div class="td-flags" id="td-flags"><span class="td-flag-none">文字列を入力すると、DBやCSVで事故りやすい要素を検出します。</span></div>
+    </div>
+  </section>
+
+  <section id="faq" class="ref-section">
+    <div class="ref-sec-hd"><h2>よくある質問</h2></div>
+    <details class="faq-item">
+      <summary class="faq-q"><span>入力したデータはサーバーに送られますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">送られません。生成もカウントもすべてブラウザ内（あなたの端末上）で処理していて、サーバーには一切送信していません。社外に出せないデータを貼り付けても大丈夫です。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>生成されるダミーの氏名・住所・電話番号は実在しますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">実在しません。よくある姓名・都道府県名を組み合わせて機械的に作っているだけで、番地や電話番号の下4桁は乱数です。ただし偶然一致する可能性はゼロではないため、実在の個人・法人として扱わないでください。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>Shift_JISのバイト数はなぜ「換算（目安）」なのですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">ブラウザはShift_JISへの変換機能を持っていないため、CP932の一般的な文字幅ルール（ASCII・半角カナは1バイト、日本語の常用文字は2バイト、サロゲートペアは変換不可）から計算した推定値です。DBの桁数設計を最終判断するときは実際の環境で確認してください。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>どの意地悪データから試せばいいですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">まず「サロゲートペア（𠮷・𩸽）」と「絵文字」を入力欄に入れてみてください。MySQLのutf8（3バイト）やShift_JIS系のDBだと保存時にエラーになったり、以降の文字が消えたりします。次に「ゼロ幅スペース」と「前後の空白」で、トリム処理と重複チェックの穴を確認するのが定番です。</div>
+    </details>
+  </section>
+
+</div>
+
+<div class="site-description">
+  <p>入力欄まわりの観点をもっと網羅したいときは <a href="/tools/test-patterns/">TESTパターン集</a>、バリデーションの正規表現は <a href="/tools/regex-tester/">正規表現テスター</a>、テスト用のファイルそのものが欲しいときは <a href="/tools/test-content/">テストコンテンツ作成ツール</a> をどうぞ。</p>
+</div>
+
+<!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一）。テスト検証用ツールなのでヒーローズバナー付き -->
+<div class="footer-heroes"><img src="/assets/images/footer-heroes.jpg" alt="" aria-hidden="true" width="2172" height="264" loading="lazy"></div>
+<footer class="site-footer-app">
+  <div class="sfa-row">
+    <a href="/" class="sfa-logo">BEET<span>LE</span></a>
+    <nav class="sfa-nav">
+      <a href="/">トップ</a>
+      <a href="/test-tools.html">QA支援</a>
+      <a href="/edu-tools.html">教育支援</a>
+      <a href="/blog/">コラム</a>
+      <a href="/#contact">お問い合わせ</a>
+    </nav>
+  </div>
+  <div class="sfa-copy">
+    <a href="/privacy">プライバシーポリシー</a>
+    <span>© 2026 BEETLE Co., LLC</span>
+  </div>
+</footer>
+<button class="scroll-top-float" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script src="/js/common.js"></script>
+<script src="/js/test-data.js"></script>
+</body>
+</html>
