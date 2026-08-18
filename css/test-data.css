@@ -30,6 +30,15 @@
 .td-btn-ghost{background:none;border:1px solid var(--tp-border2);border-radius:2px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--tp-text2);cursor:pointer;font-family:inherit}
 .td-btn-ghost:hover{border-color:var(--tp-orange);color:var(--tp-orange)}
 
+/* ====== 出力項目の選択 ====== */
+.td-fields-block{background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:8px;padding:12px 14px;margin-bottom:14px}
+.td-fields-hd{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:12px;font-weight:700;color:var(--tp-text2);margin-bottom:10px}
+.td-preset-row{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
+.td-preset{font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px;border:1px solid var(--tp-border2);background:#fff;color:var(--tp-text2);cursor:pointer;font-family:inherit}
+.td-preset:hover{background:var(--tp-orange);color:#fff;border-color:var(--tp-orange)}
+.td-fields{display:flex;flex-wrap:wrap;gap:6px 14px}
+.td-field{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--tp-text);cursor:pointer;white-space:nowrap}
+
 /* ====== 境界値クイックボタン ====== */
 .td-quick{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px}
 .td-quick-label{font-size:12px;color:var(--tp-text3);margin-right:2px}
@@ -46,7 +55,7 @@
 
 /* ====== ダミーデータのプレビュー表 ====== */
 .td-table-wrap{overflow-x:auto;margin-bottom:12px}
-.td-table{border-collapse:collapse;font-size:11px;width:100%;min-width:760px}
+.td-table{border-collapse:collapse;font-size:11px;width:max-content;min-width:100%}
 .td-table:empty{display:none}
 .td-table th,.td-table td{border:1px solid var(--tp-border);padding:5px 8px;text-align:left;white-space:nowrap}
 .td-table th{background:var(--tp-cream2);font-weight:700;color:var(--tp-text2)}

@@ -194,113 +194,219 @@
     ['渡邉', 'わたなべ', 'ワタナベ', 'watanabe']
   ];
 
-  var HEADERS = ['氏名', 'かな', 'カナ', '性別', '生年月日', '郵便番号', '住所', '電話番号', '携帯番号', 'メール', '会社名'];
+  var DEPT = ['営業部', '総務部', '経理部', '開発部', '品質保証部', 'カスタマーサポート部', '人事部'];
 
-  function makeRow(naughty) {
+  // 出力できる項目。並び順＝この配列の順。on:true が初期選択
+  var FIELDS = [
+    { key: 'id', label: '連番ID', on: false },
+    { key: 'name', label: '氏名', on: true },
+    { key: 'kana', label: 'かな', on: true },
+    { key: 'katakana', label: 'カナ', on: true },
+    { key: 'gender', label: '性別', on: true },
+    { key: 'birthday', label: '生年月日', on: true },
+    { key: 'age', label: '年齢', on: false },
+    { key: 'zip', label: '郵便番号', on: true },
+    { key: 'pref', label: '都道府県', on: false },
+    { key: 'city', label: '市区町村', on: false },
+    { key: 'street', label: '番地・建物', on: false },
+    { key: 'address', label: '住所（都道府県から）', on: true },
+    { key: 'tel', label: '電話番号', on: true },
+    { key: 'mobile', label: '携帯番号', on: true },
+    { key: 'email', label: 'メール', on: true },
+    { key: 'company', label: '会社名', on: true },
+    { key: 'department', label: '部署', on: false },
+    { key: 'created_at', label: '登録日時', on: false }
+  ];
+
+  var PRESETS = {
+    all: FIELDS.map(function (f) { return f.key; }),
+    basic: ['name', 'kana', 'email', 'tel'],
+    address: ['name', 'zip', 'pref', 'city', 'street', 'tel'],
+    account: ['id', 'name', 'katakana', 'email', 'created_at']
+  };
+
+  // 意地悪モードで足すノイズ。選ばれている列にだけ乗せる
+  var NOISE = {
+    name: function (v) { return v + ' '; },                       // 末尾スペース
+    kana: function (v) { return v.replace(/ /, '　'); },           // 全角スペース区切り
+    zip: function (v) { return v.replace(/[0-9]/g, function (d) { return String.fromCharCode(d.charCodeAt(0) + 0xFEE0); }); },
+    street: function (v) { return v + '　'; },
+    address: function (v) { return v + '　'; },
+    email: function (v) { return v.replace('@', '+test@'); },      // プラス付きアドレス
+    company: function (v) { return v + '🐛'; }
+  };
+
+  function toDate(y, m, d) { return y + '-' + pad(m, 2) + '-' + pad(d, 2); }
+
+  function ageOf(birthday) {
+    var b = birthday.split('-');
+    var now = new Date();
+    var a = now.getFullYear() - parseInt(b[0], 10);
+    var md = (now.getMonth() + 1) * 100 + now.getDate();
+    if (md < parseInt(b[1], 10) * 100 + parseInt(b[2], 10)) a -= 1;
+    return String(a);
+  }
+
+  function makeRecord(index, naughty) {
     var isM = Math.random() < 0.5;
     var sei = naughty ? pick(NAUGHTY_SEI) : pick(SEI);
     var mei = pick(isM ? MEI_M : MEI_F);
     var area = pick(AREA);
     var town = pick(TOWN);
-    var zip = area[2] + '-' + pad(rand(10000), 4);
-    var addr = area[0] + area[1] + town + (rand(9) + 1) + '丁目' + (rand(30) + 1) + '-' + (rand(20) + 1);
-    if (Math.random() < 0.4) addr += ' ' + pick(BLDG) + town + (rand(12) + 1) + pad(rand(15) + 1, 2) + '号室';
-    var year = 1955 + rand(55);
-    var month = rand(12) + 1;
-    var day = rand(28) + 1;
-    var mail = sei[3] + '.' + mei[3] + (rand(90) + 10) + '@example.com';
-    var corp = (Math.random() < 0.8 ? '株式会社' : '有限会社') + pick(CORP_W) + pick(CORP_S);
-    var row = [
-      sei[0] + ' ' + mei[0],
-      sei[1] + ' ' + mei[1],
-      sei[2] + ' ' + mei[2],
-      isM ? '男' : '女',
-      year + '-' + pad(month, 2) + '-' + pad(day, 2),
-      zip,
-      addr,
-      area[3] + '-' + pad(rand(10000), 4) + '-' + pad(rand(10000), 4),
-      pick(['090', '080', '070']) + '-' + pad(rand(10000), 4) + '-' + pad(rand(10000), 4),
-      mail,
-      corp
-    ];
-    if (naughty) {
-      // 末尾スペース・全角数字・絵文字など、現場で実際に混ざるノイズを足す
-      var noise = rand(4);
-      if (noise === 0) row[0] = row[0] + ' ';
-      else if (noise === 1) row[5] = row[5].replace(/[0-9]/g, function (d) { return String.fromCharCode(d.charCodeAt(0) + 0xFEE0); });
-      else if (noise === 2) row[10] = row[10] + '🐛';
-      else row[6] = row[6] + '　'; // 全角スペース
-    }
-    return row;
+    var street = town + (rand(9) + 1) + '丁目' + (rand(30) + 1) + '-' + (rand(20) + 1);
+    if (Math.random() < 0.4) street += ' ' + pick(BLDG) + town + (rand(12) + 1) + pad(rand(15) + 1, 2) + '号室';
+    var birthday = toDate(1955 + rand(55), rand(12) + 1, rand(28) + 1);
+    var created = toDate(new Date().getFullYear() - rand(3), rand(12) + 1, rand(28) + 1);
+    var rec = {
+      id: String(index + 1),
+      name: sei[0] + ' ' + mei[0],
+      kana: sei[1] + ' ' + mei[1],
+      katakana: sei[2] + ' ' + mei[2],
+      gender: isM ? '男' : '女',
+      birthday: birthday,
+      age: ageOf(birthday),
+      zip: area[2] + '-' + pad(rand(10000), 4),
+      pref: area[0],
+      city: area[1],
+      street: street,
+      address: area[0] + area[1] + street,
+      tel: area[3] + '-' + pad(rand(10000), 4) + '-' + pad(rand(10000), 4),
+      mobile: pick(['090', '080', '070']) + '-' + pad(rand(10000), 4) + '-' + pad(rand(10000), 4),
+      email: sei[3] + '.' + mei[3] + (rand(90) + 10) + '@example.com',
+      company: (Math.random() < 0.8 ? '株式会社' : '有限会社') + pick(CORP_W) + pick(CORP_S),
+      department: pick(DEPT),
+      created_at: created + ' ' + pad(rand(24), 2) + ':' + pad(rand(60), 2) + ':' + pad(rand(60), 2)
+    };
+    return rec;
   }
 
-  function toCSV(rows, sep) {
+  // 選ばれている列のうちノイズを持つものにだけ、1箇所だけ汚す
+  function addNoise(rec, cols) {
+    var targets = cols.filter(function (f) { return NOISE[f.key]; });
+    if (!targets.length) return;
+    var k = pick(targets).key;
+    rec[k] = NOISE[k](rec[k]);
+  }
+
+  function toCSV(records, cols, sep) {
     var esc = function (v) {
       return /["\n\r]|,|\t/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
     };
-    return [HEADERS.join(sep)].concat(rows.map(function (r) {
-      return r.map(esc).join(sep);
+    var head = cols.map(function (f) { return f.label; }).join(sep);
+    return [head].concat(records.map(function (r) {
+      return cols.map(function (f) { return esc(r[f.key]); }).join(sep);
     })).join('\r\n');
   }
 
-  function toJSON(rows) {
-    var keys = ['name', 'kana', 'katakana', 'gender', 'birthday', 'zip', 'address', 'tel', 'mobile', 'email', 'company'];
-    return JSON.stringify(rows.map(function (r) {
+  function toJSON(records, cols) {
+    return JSON.stringify(records.map(function (r) {
       var o = {};
-      keys.forEach(function (k, i) { o[k] = r[i]; });
+      cols.forEach(function (f) { o[f.key] = r[f.key]; });
       return o;
     }), null, 2);
   }
 
-  function toMarkdown(rows) {
+  function toMarkdown(records, cols) {
     var line = function (cells) { return '| ' + cells.join(' | ') + ' |'; };
-    return [line(HEADERS), line(HEADERS.map(function () { return '---'; }))]
-      .concat(rows.map(function (r) { return line(r); })).join('\n');
+    return [line(cols.map(function (f) { return f.label; })), line(cols.map(function () { return '---'; }))]
+      .concat(records.map(function (r) {
+        return line(cols.map(function (f) { return r[f.key]; }));
+      })).join('\n');
   }
 
   var dummyOut = document.getElementById('td-dummy-out');
   var dummyTable = document.getElementById('td-dummy-table');
   var dummyInfo = document.getElementById('td-dummy-info');
-  var lastRows = [];
+  var fieldsBox = document.getElementById('td-fields');
+  var lastRecords = [];
+
+  function selectedCols() {
+    return FIELDS.filter(function (f) {
+      var el = document.getElementById('td-f-' + f.key);
+      return el && el.checked;
+    });
+  }
+
+  function buildFieldCheckboxes() {
+    FIELDS.forEach(function (f) {
+      var label = document.createElement('label');
+      label.className = 'td-field';
+      var input = document.createElement('input');
+      input.type = 'checkbox';
+      input.id = 'td-f-' + f.key;
+      input.value = f.key;
+      input.checked = f.on;
+      input.addEventListener('change', renderDummy);
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(f.label));
+      fieldsBox.appendChild(label);
+    });
+  }
+
+  function applyPreset(name) {
+    var keys = PRESETS[name] || [];
+    FIELDS.forEach(function (f) {
+      var el = document.getElementById('td-f-' + f.key);
+      if (el) el.checked = keys.indexOf(f.key) !== -1;
+    });
+    renderDummy();
+  }
+
+  // 件数・意地悪の設定を変えたときだけ作り直す（列や形式の変更では同じデータを使い回す）
+  function generateDummy() {
+    var n = parseInt(document.getElementById('td-rows').value, 10);
+    var naughty = document.getElementById('td-naughty').checked;
+    var cols = selectedCols();
+    lastRecords = [];
+    for (var i = 0; i < n; i++) {
+      var dirty = naughty && Math.random() < 0.1;
+      var rec = makeRecord(i, dirty);
+      if (dirty) addNoise(rec, cols);
+      lastRecords.push(rec);
+    }
+    renderDummy();
+  }
 
   function renderDummy() {
-    var n = parseInt(document.getElementById('td-rows').value, 10);
     var format = document.getElementById('td-format').value;
-    var naughty = document.getElementById('td-naughty').checked;
-    lastRows = [];
-    for (var i = 0; i < n; i++) {
-      lastRows.push(makeRow(naughty && Math.random() < 0.1));
-    }
-    dummyOut.value = format === 'json' ? toJSON(lastRows)
-      : format === 'md' ? toMarkdown(lastRows)
-        : toCSV(lastRows, format === 'tsv' ? '\t' : ',');
-
-    // プレビュー表は先頭10件だけ
+    var cols = selectedCols();
     var thead = dummyTable.querySelector('thead');
     var tbody = dummyTable.querySelector('tbody');
     thead.innerHTML = '';
     tbody.innerHTML = '';
+
+    if (!cols.length) {
+      dummyOut.value = '';
+      dummyInfo.textContent = '項目を1つ以上選んでください';
+      return;
+    }
+
+    dummyOut.value = format === 'json' ? toJSON(lastRecords, cols)
+      : format === 'md' ? toMarkdown(lastRecords, cols)
+        : toCSV(lastRecords, cols, format === 'tsv' ? '\t' : ',');
+
+    // プレビュー表は先頭10件だけ
     var head = document.createElement('tr');
-    HEADERS.forEach(function (h) {
+    cols.forEach(function (f) {
       var th = document.createElement('th');
-      th.textContent = h;
+      th.textContent = f.label;
       head.appendChild(th);
     });
     thead.appendChild(head);
-    lastRows.slice(0, 10).forEach(function (r) {
+    lastRecords.slice(0, 10).forEach(function (r) {
       var tr = document.createElement('tr');
-      r.forEach(function (c) {
+      cols.forEach(function (f) {
         var td = document.createElement('td');
-        td.textContent = c;
+        td.textContent = r[f.key];
         tr.appendChild(td);
       });
       tbody.appendChild(tr);
     });
-    dummyInfo.textContent = n + '件を生成（表は先頭10件のみ表示）';
+    dummyInfo.textContent = lastRecords.length + '件 × ' + cols.length + '項目を生成（表は先頭10件のみ表示）';
   }
 
   function downloadDummy() {
-    if (!dummyOut.value) renderDummy();
+    if (!dummyOut.value) return;
     var format = document.getElementById('td-format').value;
     var ext = { csv: 'csv', tsv: 'tsv', json: 'json', md: 'md' }[format];
     var mime = format === 'json' ? 'application/json' : 'text/plain';
@@ -318,10 +424,17 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   }
 
-  if (dummyOut) {
-    document.getElementById('td-dummy-gen').addEventListener('click', renderDummy);
+  if (dummyOut && fieldsBox) {
+    buildFieldCheckboxes();
+    document.getElementById('td-dummy-gen').addEventListener('click', generateDummy);
     document.getElementById('td-dummy-dl').addEventListener('click', downloadDummy);
-    renderDummy();
+    document.getElementById('td-rows').addEventListener('change', generateDummy);
+    document.getElementById('td-naughty').addEventListener('change', generateDummy);
+    document.getElementById('td-format').addEventListener('change', renderDummy);
+    Array.prototype.forEach.call(document.querySelectorAll('.td-preset'), function (btn) {
+      btn.addEventListener('click', function () { applyPreset(btn.getAttribute('data-preset')); });
+    });
+    generateDummy();
   }
 
   /* ---------- 3. 文字数・バイト数カウンター ---------- */

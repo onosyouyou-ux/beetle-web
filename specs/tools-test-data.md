@@ -5,7 +5,7 @@ canonical: self
 sitemap: true
 title_contains: "意地悪テストデータ生成器"
 og_image: "/assets/images/OG.jpg"
-required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#catalog", "#td-len-out", "#td-dummy-out", "#td-count-in", "#td-flags"]
+required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#catalog", "#td-len-out", "#td-dummy-out", "#td-fields", "#td-count-in", "#td-flags"]
 e2e: true
 ---
 
@@ -14,11 +14,15 @@ e2e: true
 - **目的**: 入力欄の検証で使う「意地悪データ」（機種依存文字・絵文字・サロゲートペア・不可視文字など）をワンクリックでコピーできる静的ツール。日本向けダミーデータ生成と文字数・バイト数カウンターを同居させ、入力欄まわりの検証をこの1ページで完結させる
 - **レイアウト型**: Reference系（[_common.md](_common.md) 参照）＋インタラクティブ部
 - **構成**: `#catalog`（意地悪データ集：文字種・エンコード／数値・記号／エスケープ漏れの3グループ）→ `#length`（長さ・境界値の文字列生成）→ `#dummy`（日本向けダミーデータ生成）→ `#counter`（文字数・バイト数カウンター）→ `#faq`
-- **主要素**: `.td-copy`（コピーボタン。`data-v`＝そのままの文字列／`data-esc`＝`\n` `\t` `\uXXXX` を含む文字列／`data-target`＝出力欄のid）・`#td-len-out`・`#td-dummy-out`・`#td-dummy-table`・`#td-count-in`・`#td-stats`・`#td-flags`
+- **主要素**: `.td-copy`（コピーボタン。`data-v`＝そのままの文字列／`data-esc`＝`\n` `\t` `\uXXXX` を含む文字列／`data-target`＝出力欄のid）・`#td-len-out`・`#td-dummy-out`・`#td-dummy-table`・`#td-fields`（出力項目チェックボックス。JSが `FIELDS` から生成、idは `td-f-{key}`）・`.td-preset`（`data-preset`＝`all`/`basic`/`address`/`account`）・`#td-count-in`・`#td-stats`・`#td-flags`
+- **出力項目**: `js/test-data.js` の `FIELDS` が唯一の定義（順序・ラベル・初期ON）。id・氏名・かな・カナ・性別・生年月日・年齢・郵便番号・都道府県・市区町村・番地建物・住所・電話・携帯・メール・会社名・部署・登録日時の18項目。出力順は選択順ではなく `FIELDS` の並び順。CSV/TSV/Markdownの見出しは `label`、JSONのキーは `key`
 - **挙動（E2Eで検証）**:
   - カタログのコピーボタンを押すとラベルが「コピーしました」に変わる（クリップボード権限がない環境でも textarea フォールバックで動く）
   - 長さ生成で `256` を指定すると `#td-len-out` が256文字になり、`#td-len-info` にバイト数が出る
   - ダミーデータ生成で件数ぶんの行が `#td-dummy-out` に入り、表は先頭10件のみ表示
+  - 出力項目のチェックを変えると見出し・表の列・出力形式が即座に追従し、`#td-dummy-info` が「N件 × M項目」になる。**列や形式の変更ではデータを作り直さない**（同じ人物のまま列だけ変わる）／件数・意地悪チェックの変更では作り直す
+  - 項目を全部外すと `#td-dummy-out` が空になり `#td-dummy-info` が「項目を1つ以上選んでください」になる（ダウンロードも何も起きない）
+  - 意地悪モードのノイズ（末尾スペース・全角数字・全角スペース・絵文字・プラス付きアドレス）は**選ばれている列にだけ**乗る
   - `#td-count-in` に絵文字やサロゲートペアを入れると `#td-flags` に該当フラグが出る（Shift_JIS換算は「変換不可」表示になる）
 - **実装上の約束**: 不可視文字・制御文字の判定はソースに直接書かず `clsRe()` でコードポイントから組み立てる（ソースに生の制御文字が混ざると編集事故になるため）。生成・判定はすべてブラウザ内で完結し、サーバー送信は一切しない
 - **手動確認観点**:

@@ -12,11 +12,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>意地悪テストデータ生成器｜機種依存文字・絵文字・サロゲートペアをワンクリックコピー【無料】｜BEETLE</title>
-<meta name="description" content="機種依存文字・絵文字・サロゲートペア・半角カナ・ゼロ幅スペースなど、入力欄を壊しにいく「意地悪データ」をワンクリックでコピー。日本向けダミーデータ生成（CSV/JSON）と文字数・バイト数（UTF-8/Shift_JIS換算）カウンターつき。完全無料・登録不要・ブラウザ内で完結。">
+<meta name="description" content="機種依存文字・絵文字・サロゲートペア・半角カナ・ゼロ幅スペースなど、入力欄を壊しにいく「意地悪データ」をワンクリックでコピー。項目を選んで作れる日本向けダミーデータ生成（CSV/TSV/JSON/Markdown）と文字数・バイト数（UTF-8/Shift_JIS換算）カウンターつき。完全無料・登録不要・ブラウザ内で完結。">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="BEETLE合同会社">
 <meta property="og:title" content="意地悪テストデータ生成器（日本語対応） | BEETLE">
-<meta property="og:description" content="機種依存文字・絵文字・サロゲートペア・ゼロ幅スペースなどの意地悪データをワンクリックコピー。日本向けダミーデータ生成と文字数・バイト数カウンターつき。完全無料。">
+<meta property="og:description" content="機種依存文字・絵文字・サロゲートペア・ゼロ幅スペースなどの意地悪データをワンクリックコピー。項目を選べる日本向けダミーデータ生成と文字数・バイト数カウンターつき。完全無料。">
 <meta property="og:url" content="https://www.beetle-web.jp/tools/test-data/">
 <meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
 <meta property="og:image:width" content="1200">
@@ -35,7 +35,7 @@
   "operatingSystem": "Web",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
   "url": "https://www.beetle-web.jp/tools/test-data/",
-  "description": "機種依存文字・絵文字・サロゲートペア・半角カナ・ゼロ幅スペースなど、入力欄の検証で使う意地悪データをワンクリックでコピーできるツール。日本向けダミーデータ生成と文字数・バイト数カウンターつき。"
+  "description": "機種依存文字・絵文字・サロゲートペア・半角カナ・ゼロ幅スペースなど、入力欄の検証で使う意地悪データをワンクリックでコピーできるツール。項目を選べる日本向けダミーデータ生成と文字数・バイト数カウンターつき。"
 }
 </script>
 <script type="application/ld+json">
@@ -55,6 +55,11 @@
       "@type": "Question",
       "name": "生成されるダミーの氏名・住所・電話番号は実在しますか？",
       "acceptedAnswer": { "@type": "Answer", "text": "実在しません。よくある姓名・都道府県名を組み合わせて機械的に作っているだけで、番地や電話番号の下4桁は乱数です。ただし偶然一致する可能性はゼロではないため、実在の個人・法人として扱わないでください。" }
+    },
+    {
+      "@type": "Question",
+      "name": "出力する項目（カラム）は選べますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "選べます。「出力する項目」でチェックした列だけが、画面の並び順どおりにCSV・TSV・JSON・Markdown表へ出力されます。氏名や住所のほかに連番ID・年齢・都道府県・市区町村・番地・建物・部署・登録日時も用意しているので、テスト対象のフォームやテーブル定義に合わせて必要な列だけ作れます。よく使う組み合わせは「基本だけ」「住所まわり」「会員登録フォーム向け」のボタンでまとめて選べます。" }
     },
     {
       "@type": "Question",
@@ -309,7 +314,7 @@
   </section>
 
   <section id="dummy" class="ref-section">
-    <div class="ref-sec-hd"><h2>日本向けダミーデータ生成</h2><span class="d">氏名・住所・電話・メールをまとめて</span></div>
+    <div class="ref-sec-hd"><h2>日本向けダミーデータ生成</h2><span class="d">必要な項目だけ選んでCSV・JSONに</span></div>
     <div class="td-panel">
       <div class="td-form-row">
         <label for="td-rows">件数</label>
@@ -329,10 +334,22 @@
         <label class="td-check"><input type="checkbox" id="td-naughty"> 意地悪データを1割まぜる</label>
         <button type="button" class="td-btn" id="td-dummy-gen">生成</button>
       </div>
+      <div class="td-fields-block">
+        <div class="td-fields-hd">
+          <span>出力する項目</span>
+          <span class="td-preset-row">
+            <button type="button" class="td-preset" data-preset="all">全部</button>
+            <button type="button" class="td-preset" data-preset="basic">基本だけ</button>
+            <button type="button" class="td-preset" data-preset="address">住所まわり</button>
+            <button type="button" class="td-preset" data-preset="account">会員登録フォーム向け</button>
+          </span>
+        </div>
+        <div class="td-fields" id="td-fields"></div>
+      </div>
       <div class="td-table-wrap"><table class="td-table" id="td-dummy-table"><thead></thead><tbody></tbody></table></div>
       <textarea id="td-dummy-out" class="td-out" rows="6" readonly placeholder="「生成」を押すとここにデータが入ります"></textarea>
       <div class="td-out-foot">
-        <span id="td-dummy-info" class="td-info">氏名・かな・カナ・性別・生年月日・郵便番号・住所・電話・携帯・メール・会社名</span>
+        <span id="td-dummy-info" class="td-info">—</span>
         <button type="button" class="td-btn-ghost" id="td-dummy-dl">ダウンロード</button>
         <button type="button" class="td-copy td-copy-inline" data-target="td-dummy-out">コピー</button>
       </div>
@@ -366,6 +383,10 @@
     <details class="faq-item">
       <summary class="faq-q"><span>生成されるダミーの氏名・住所・電話番号は実在しますか？</span><span class="faq-icon">+</span></summary>
       <div class="faq-a">実在しません。よくある姓名・都道府県名を組み合わせて機械的に作っているだけで、番地や電話番号の下4桁は乱数です。ただし偶然一致する可能性はゼロではないため、実在の個人・法人として扱わないでください。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>出力する項目（カラム）は選べますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">選べます。「出力する項目」でチェックした列だけが、画面の並び順どおりにCSV・TSV・JSON・Markdown表へ出力されます。氏名や住所のほかに連番ID・年齢・都道府県・市区町村・番地・建物・部署・登録日時も用意しているので、テスト対象のフォームやテーブル定義に合わせて必要な列だけ作れます。よく使う組み合わせは「基本だけ」「住所まわり」「会員登録フォーム向け」のボタンでまとめて選べます。</div>
     </details>
     <details class="faq-item">
       <summary class="faq-q"><span>Shift_JISのバイト数はなぜ「換算（目安）」なのですか？</span><span class="faq-icon">+</span></summary>
