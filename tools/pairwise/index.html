@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ペアワイズ法テストケース生成ツール｜組み合わせテストを最小件数に【無料】｜BEETLE</title>
+<meta name="description" content="因子と水準を入れるだけで、ペアワイズ法（オールペア法）の組み合わせテストケースを自動生成。全網羅から何件に減るかを比較表示し、CSV・TSV・Markdown・JSONでコピーできます。禁則（あり得ない組み合わせ）の指定と3因子間網羅にも対応。完全無料・登録不要・ブラウザ内で完結。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="ペアワイズ法テストケース生成ツール | BEETLE">
+<meta property="og:description" content="因子と水準を入れるだけで組み合わせテストを最小件数に。全網羅との比較・禁則指定・CSV出力つき。完全無料。">
+<meta property="og:url" content="https://www.beetle-web.jp/tools/pairwise/">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ペアワイズ法テストケース生成ツール | BEETLE">
+<meta name="twitter:description" content="因子と水準を入れるだけで組み合わせテストを最小件数に。全網羅との比較・禁則指定・CSV出力つき。完全無料。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<link rel="canonical" href="https://www.beetle-web.jp/tools/pairwise/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "ペアワイズ法テストケース生成ツール",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "url": "https://www.beetle-web.jp/tools/pairwise/",
+  "description": "因子と水準からペアワイズ法（オールペア法）の組み合わせテストケースを生成するツール。全網羅件数との比較、禁則指定、3因子間網羅、CSV・TSV・Markdown・JSON出力に対応。"
+}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"ツール一覧","item":"https://www.beetle-web.jp/test-tools.html"},{"@type":"ListItem","position":3,"name":"ペアワイズ法テストケース生成ツール","item":"https://www.beetle-web.jp/tools/pairwise/"}]}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "ペアワイズ法でテストケースを作る手順",
+  "step": [
+    { "@type": "HowToStep", "name": "因子と水準を書く", "text": "「OS: Windows, Mac, iOS」のように、テストで変えたい項目（因子）と、その取りうる値（水準）を1行ずつ書きます。" },
+    { "@type": "HowToStep", "name": "あり得ない組み合わせを禁則に書く", "text": "「iOSではFirefoxを使わない」のような組み合わせがあれば、禁則欄に「OS=iOS, ブラウザ=Firefox」と書いて除外します。" },
+    { "@type": "HowToStep", "name": "生成してCSVで持ち出す", "text": "生成ボタンを押すと、すべての2因子の組み合わせを1回以上含む最小限の表ができます。CSVやMarkdownでコピーしてテストケース表に貼り付けてください。" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "入力した内容はサーバーに送られますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "送られません。組み合わせの計算はすべてブラウザ内（あなたの端末上）で処理していて、サーバーには一切送信していません。社外に出せない機能名や仕様を書いても大丈夫です。" }
+    },
+    {
+      "@type": "Question",
+      "name": "ペアワイズ法だとバグを見逃しませんか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "見逃す可能性はあります。ペアワイズ法が保証するのは「どの2つの因子の組み合わせも必ず1回は試す」ことまでで、3つ以上が同時に噛み合ったときだけ出るバグは対象外です。ただし現場の不具合の多くは1つまたは2つの条件で再現するため、費用対効果が高い削り方として使われています。重要な組み合わせは、生成結果に手で足してください。" }
+    },
+    {
+      "@type": "Question",
+      "name": "同じ条件でも生成結果の件数が変わることはありますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "変わりません。このツールは毎回同じ順序で組み合わせを選ぶため、同じ入力なら常に同じ表になります。テストケースをレビューに出したあとで再生成しても中身がずれない、という前提で使えます。" }
+    },
+    {
+      "@type": "Question",
+      "name": "禁則（あり得ない組み合わせ）はどう書きますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "1行に1ルールで「因子名=水準, 因子名=水準」と書きます。たとえば「OS=iOS, ブラウザ=Firefox」と書くと、その2つが同時に現れるテストケースは作られません。3つ以上並べれば「その3つが同時に揃う場合だけ禁止」という意味になります。" }
+    },
+    {
+      "@type": "Question",
+      "name": "3因子間網羅（3-wise）とは何ですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "どの3つの因子の組み合わせも必ず1回は試す、という強い網羅です。ペアワイズ（2因子間）より件数は増えますが、決済や権限まわりのように条件が三つ巴で絡む機能では有効です。件数がどれだけ増えるかはツール上で比較できます。" }
+    }
+  ]
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/style/common.css">
+<link rel="stylesheet" href="/css/reference.css">
+<link rel="stylesheet" href="/css/pairwise.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" style="height:28px;vertical-align:middle;border-radius:6px;"></a>
+  <span>›</span>
+  <a href="/test-tools.html">ツール一覧</a>
+  <span>›</span>
+  <span style="color:#ddd;font-size:13px;">ペアワイズ法テストケース生成</span>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">TOOL</div>
+  <h1>ペアワイズ<em>生成器</em></h1>
+  <p>OS × ブラウザ × 会員種別 × 決済手段。<br>掛け算で膨らんだ組み合わせを、最小限の表に畳む。</p>
+</div>
+
+<div class="ref-nav">
+  <a href="#tool">生成する</a>
+  <a href="#howto">使い方</a>
+  <a href="#about">ペアワイズとは</a>
+  <a href="#faq">よくある質問</a>
+</div>
+
+<p class="ref-lead">「OS4種 × ブラウザ3種 × 会員3種 × 決済3種」を全部試すと<strong>108件</strong>。現実には回しきれないので勘で間引いて、そこを漏らす——組み合わせテストの事故はここで起きます。ペアワイズ法は「<strong>どの2つの組み合わせも必ず1回は試す</strong>」という条件だけを守って件数を削る考え方です。因子と水準を書けば、その表をこの場で作ります。入力した内容はブラウザの外に出ません。</p>
+
+<div class="sw">
+
+  <section id="tool" class="ref-section">
+    <div class="ref-sec-hd"><h2>生成する</h2><span class="d">因子と水準を書いて「生成」を押すだけ</span></div>
+    <div class="pw-panel">
+
+      <div class="pw-io">
+        <div class="pw-io-col">
+          <div class="pw-lbl-row">
+            <label for="pw-factors">因子と水準</label>
+            <span class="pw-preset-row">
+              <button type="button" class="pw-preset" data-preset="web">Webサービス</button>
+              <button type="button" class="pw-preset" data-preset="form">申込フォーム</button>
+              <button type="button" class="pw-preset" data-preset="ec">EC決済</button>
+            </span>
+          </div>
+          <textarea id="pw-factors" class="pw-in" rows="7" spellcheck="false" placeholder="OS: Windows, Mac, iOS, Android"></textarea>
+          <p class="pw-hint">1行に1因子。<code>名前: 水準, 水準, 水準</code> の形式（全角の「：」「、」でも可）。<code>#</code> で始まる行はコメント。</p>
+        </div>
+        <div class="pw-io-col">
+          <div class="pw-lbl-row">
+            <label for="pw-forbid">禁則（任意）</label>
+            <span class="pw-lbl-note">あり得ない組み合わせを除く</span>
+          </div>
+          <textarea id="pw-forbid" class="pw-in" rows="7" spellcheck="false" placeholder="OS=iOS, ブラウザ=Firefox"></textarea>
+          <p class="pw-hint">1行に1ルール。<code>因子名=水準, 因子名=水準</code> と書くと、その組み合わせを含むケースを作りません。</p>
+        </div>
+      </div>
+
+      <div class="pw-form-row">
+        <label for="pw-strength">網羅の強さ</label>
+        <select id="pw-strength">
+          <option value="2" selected>2因子間（ペアワイズ）</option>
+          <option value="3">3因子間（3-wise）</option>
+        </select>
+        <label for="pw-format">出力形式</label>
+        <select id="pw-format">
+          <option value="csv">CSV</option>
+          <option value="tsv">TSV（Excel貼り付け用）</option>
+          <option value="md">Markdown表</option>
+          <option value="json">JSON</option>
+        </select>
+        <label class="pw-check"><input type="checkbox" id="pw-no" checked> 通し番号の列をつける</label>
+        <button type="button" class="pw-btn" id="pw-gen">生成</button>
+      </div>
+
+      <div class="pw-stats" id="pw-stats"></div>
+      <div class="pw-msg" id="pw-msg"></div>
+
+      <div class="pw-table-wrap"><table class="pw-table" id="pw-table"><thead></thead><tbody></tbody></table></div>
+      <textarea id="pw-out" class="pw-out" rows="6" readonly placeholder="「生成」を押すとここに結果が入ります"></textarea>
+      <div class="pw-out-foot">
+        <span id="pw-info" class="pw-info">—</span>
+        <button type="button" class="pw-btn-ghost" id="pw-dl">ダウンロード</button>
+        <button type="button" class="pw-copy" id="pw-copy">コピー</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="howto" class="ref-section">
+    <div class="ref-sec-hd"><h2>使い方</h2><span class="d">3ステップ</span></div>
+    <div class="pw-steps">
+      <div class="pw-step">
+        <div class="pw-step-n">1</div>
+        <h3>因子と水準を書く</h3>
+        <p>テストで変えたい項目が<strong>因子</strong>、その項目が取りうる値が<strong>水準</strong>です。「OS: Windows, Mac, iOS」のように1行ずつ書きます。まず上のプリセットを押して、形を見てから直すのが早いです。</p>
+      </div>
+      <div class="pw-step">
+        <div class="pw-step-n">2</div>
+        <h3>あり得ない組み合わせを除く</h3>
+        <p>「iOSにFirefoxは入れない」「無料会員は代引きを選べない」など、仕様上ありえない組み合わせは禁則に書きます。書いておかないと、テストできないケースが表に混ざります。</p>
+      </div>
+      <div class="pw-step">
+        <div class="pw-step-n">3</div>
+        <h3>生成してCSVで持ち出す</h3>
+        <p>生成すると、全網羅から何件に減ったかが出ます。表はそのままテストケース表に貼れるので、CSVかMarkdownでコピーしてください。<strong>この結果に、外せない重要ケースを手で足す</strong>のが実務での使い方です。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="ref-section">
+    <div class="ref-sec-hd"><h2>ペアワイズとは</h2><span class="d">なぜ2つの組み合わせだけで足りるのか</span></div>
+    <div class="pw-about">
+      <p>組み合わせテストの件数は、因子が増えるほど掛け算で膨らみます。4因子それぞれ3水準なら81件、5因子なら243件。全部やるのは早々に無理になります。</p>
+      <p>そこで「<strong>バグの多くは、1つの条件か、2つの条件の噛み合わせで再現する</strong>」という経験則を使います。3つ以上が同時に揃わないと出ないバグは、相対的に少ない。ならば「どの2因子の組み合わせも必ず1回は試す」という条件だけ守って、あとは自由に詰め込めばいい——これがペアワイズ法（オールペア法）です。</p>
+      <p>効果は件数に出ます。上のプリセット「Webサービス」（4×3×3×3＝108件）は、ペアワイズなら十数件まで落ちます。<strong>1割前後まで削っても、2因子の組み合わせは1つも漏れていない</strong>のがこの手法の勘所です。</p>
+      <p class="pw-caveat">ただし万能ではありません。ペアワイズが保証するのは2因子までなので、3つの条件が三つ巴で絡むバグは通り抜けます。決済・権限・在庫のように事故ったときの被害が大きいところは、3因子間網羅に切り替えるか、重要ケースを手で追加してください。技法そのものの解説は <a href="/tools/test-techniques/">テスト技法カタログ</a> にまとめています。</p>
+    </div>
+  </section>
+
+  <section id="faq" class="ref-section">
+    <div class="ref-sec-hd"><h2>よくある質問</h2></div>
+    <details class="faq-item">
+      <summary class="faq-q"><span>入力した内容はサーバーに送られますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">送られません。組み合わせの計算はすべてブラウザ内（あなたの端末上）で処理していて、サーバーには一切送信していません。社外に出せない機能名や仕様を書いても大丈夫です。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>ペアワイズ法だとバグを見逃しませんか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">見逃す可能性はあります。ペアワイズ法が保証するのは「どの2つの因子の組み合わせも必ず1回は試す」ことまでで、3つ以上が同時に噛み合ったときだけ出るバグは対象外です。ただし現場の不具合の多くは1つまたは2つの条件で再現するため、費用対効果が高い削り方として使われています。重要な組み合わせは、生成結果に手で足してください。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>同じ条件でも生成結果の件数が変わることはありますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">変わりません。このツールは毎回同じ順序で組み合わせを選ぶため、同じ入力なら常に同じ表になります。テストケースをレビューに出したあとで再生成しても中身がずれない、という前提で使えます。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>禁則（あり得ない組み合わせ）はどう書きますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">1行に1ルールで「因子名=水準, 因子名=水準」と書きます。たとえば「OS=iOS, ブラウザ=Firefox」と書くと、その2つが同時に現れるテストケースは作られません。3つ以上並べれば「その3つが同時に揃う場合だけ禁止」という意味になります。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>3因子間網羅（3-wise）とは何ですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">どの3つの因子の組み合わせも必ず1回は試す、という強い網羅です。ペアワイズ（2因子間）より件数は増えますが、決済や権限まわりのように条件が三つ巴で絡む機能では有効です。件数がどれだけ増えるかはツール上で比較できます。</div>
+    </details>
+  </section>
+
+</div>
+
+<div class="site-description">
+  <p>技法そのものの解説は <a href="/tools/test-techniques/">テスト技法カタログ</a>、観点の洗い出しは <a href="/tools/test-patterns/">TESTパターン集</a>、入力値そのものを作りたいときは <a href="/tools/test-data/">意地悪テストデータ生成器</a> をどうぞ。</p>
+</div>
+
+<!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一）。テスト検証用ツールなのでヒーローズバナー付き -->
+<div class="footer-heroes"><img src="/assets/images/footer-heroes.jpg" alt="" aria-hidden="true" width="2172" height="264" loading="lazy"></div>
+<footer class="site-footer-app">
+  <div class="sfa-row">
+    <a href="/" class="sfa-logo">BEET<span>LE</span></a>
+    <nav class="sfa-nav">
+      <a href="/">トップ</a>
+      <a href="/test-tools.html">QA支援</a>
+      <a href="/edu-tools.html">教育支援</a>
+      <a href="/blog/">コラム</a>
+      <a href="/#contact">お問い合わせ</a>
+    </nav>
+  </div>
+  <div class="sfa-copy">
+    <a href="/privacy">プライバシーポリシー</a>
+    <span>© 2026 BEETLE Co., LLC</span>
+  </div>
+</footer>
+<button class="scroll-top-float" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script src="/js/common.js"></script>
+<script src="/js/contact-track.js"></script>
+<script src="/js/pairwise.js"></script>
+</body>
+</html>

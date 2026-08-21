@@ -1,0 +1,103 @@
+/* ============================================================
+   pairwise.css — ペアワイズ法テストケース生成ツール 固有スタイル
+   共通変数は /style/common.css の --tp-* を流用
+   ============================================================ */
+
+/* ====== 操作パネル ====== */
+.pw-panel{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px 22px}
+
+.pw-io{display:grid;grid-template-columns:1.35fr 1fr;gap:18px;margin-bottom:14px}
+.pw-io-col{display:flex;flex-direction:column;min-width:0}
+.pw-lbl-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:7px}
+.pw-lbl-row label{font-size:12px;font-weight:700;color:var(--tp-text2)}
+.pw-lbl-note{font-size:11px;color:var(--tp-text3)}
+.pw-preset-row{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
+.pw-preset{font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px;border:1px solid var(--tp-border2);background:#fff;color:var(--tp-text2);cursor:pointer;font-family:inherit}
+.pw-preset:hover{background:var(--tp-orange);color:#fff;border-color:var(--tp-orange)}
+
+.pw-in{width:100%;border:1px solid var(--tp-border2);border-radius:8px;padding:11px 12px;font-family:'SFMono-Regular','Consolas',monospace;font-size:12px;line-height:1.8;resize:vertical;box-sizing:border-box;background:#fff;color:var(--tp-text)}
+.pw-in:focus{outline:none;border-color:var(--tp-orange)}
+.pw-hint{font-size:11px;color:var(--tp-text3);line-height:1.7;margin:6px 0 0}
+.pw-hint code{font-family:'SFMono-Regular','Consolas',monospace;background:var(--tp-cream2);border-radius:3px;padding:1px 5px;color:var(--tp-text2)}
+
+/* ====== 生成の条件 ====== */
+.pw-form-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding-top:14px;border-top:1px solid var(--tp-border)}
+.pw-form-row label{font-size:12px;font-weight:700;color:var(--tp-text2)}
+.pw-form-row select{border:1px solid var(--tp-border2);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;color:var(--tp-text);background:#fff}
+.pw-check{display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:400!important;color:var(--tp-text2);font-size:12px}
+.pw-btn{background:var(--tp-dark);color:#fff;border:none;border-radius:2px;padding:9px 24px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-left:auto}
+.pw-btn:hover{background:var(--tp-dark2)}
+.pw-btn-ghost{background:none;border:1px solid var(--tp-border2);border-radius:2px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--tp-text2);cursor:pointer;font-family:inherit}
+.pw-btn-ghost:hover{border-color:var(--tp-orange);color:var(--tp-orange)}
+.pw-copy{font-size:12px;font-weight:700;color:#fff;background:var(--tp-orange);border:none;border-radius:2px;padding:6px 16px;cursor:pointer;font-family:inherit;transition:background .12s}
+.pw-copy:hover{background:#c94a12}
+.pw-copy.is-done{background:var(--tp-green)}
+
+/* ====== 削減の数値パネル ====== */
+.pw-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0 0}
+.pw-stats:empty{display:none}
+.pw-stat{background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:8px;padding:12px 10px;text-align:center}
+.pw-stat-v{display:block;font-size:22px;font-weight:900;color:var(--tp-text);font-family:'Syne','M PLUS 1p',sans-serif;line-height:1.2}
+.pw-stat-l{display:block;font-size:11px;color:var(--tp-text2);margin-top:4px;line-height:1.4}
+.pw-stat-l small{display:block;font-size:10px;color:var(--tp-text3)}
+.pw-stat.is-hero{border-color:var(--tp-orange-bd);background:var(--tp-orange-bg)}
+.pw-stat.is-hero .pw-stat-v{color:var(--tp-orange)}
+.pw-stat.is-ok .pw-stat-v{color:var(--tp-green)}
+
+/* ====== メッセージ（エラー・注意） ====== */
+.pw-msg{margin:14px 0 0}
+.pw-msg:empty{display:none}
+.pw-note{font-size:12px;line-height:1.8;padding:10px 14px;border-radius:6px;background:var(--tp-amber-bg);color:var(--tp-amber);border:1px solid rgba(179,92,0,.2);font-weight:700}
+.pw-note.is-error{background:var(--tp-red-bg);color:var(--tp-red);border-color:rgba(192,57,43,.2)}
+.pw-note + .pw-note{margin-top:6px}
+.pw-note span{font-weight:400;color:var(--tp-text2);display:block;margin-top:3px}
+
+/* ====== 生成結果の表 ====== */
+.pw-table-wrap{overflow-x:auto;margin:16px 0 12px}
+.pw-table{border-collapse:collapse;font-size:11px;width:max-content;min-width:100%}
+.pw-table:empty{display:none}
+.pw-table th,.pw-table td{border:1px solid var(--tp-border);padding:5px 10px;text-align:left;white-space:nowrap}
+.pw-table th{background:var(--tp-cream2);font-weight:700;color:var(--tp-text2)}
+.pw-table tr:nth-child(even) td{background:var(--tp-cream)}
+.pw-table td.pw-no{color:var(--tp-text3);text-align:right;font-family:'SFMono-Regular','Consolas',monospace}
+
+/* ====== 出力エリア ====== */
+.pw-out{width:100%;border:1px solid var(--tp-border2);border-radius:8px;padding:11px 12px;font-family:'SFMono-Regular','Consolas',monospace;font-size:12px;line-height:1.7;resize:vertical;box-sizing:border-box;background:var(--tp-cream);color:var(--tp-text);white-space:pre}
+.pw-out-foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px}
+.pw-info{font-size:12px;color:var(--tp-text3);flex:1;min-width:180px}
+
+/* ====== 使い方3ステップ ====== */
+.pw-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.pw-step{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px 20px 22px}
+.pw-step-n{width:28px;height:28px;border-radius:50%;background:var(--tp-orange);color:#fff;font-family:'Syne','M PLUS 1p',sans-serif;font-weight:900;font-size:14px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.pw-step h3{font-size:14px;font-weight:800;color:var(--tp-text);margin:0 0 8px}
+.pw-step p{font-size:12px;line-height:1.9;color:var(--tp-text2);margin:0}
+.pw-step strong{color:var(--tp-text)}
+
+/* ====== 解説 ====== */
+.pw-about{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:22px 24px}
+.pw-about p{font-size:13px;line-height:2;color:var(--tp-text2);margin:0 0 14px}
+.pw-about p:last-child{margin-bottom:0}
+.pw-about strong{color:var(--tp-text)}
+.pw-about a{color:var(--tp-orange);font-weight:700}
+.pw-caveat{padding-top:14px;border-top:1px dashed var(--tp-border)}
+
+/* ====== FAQ（details/summaryベース。test-data.css と同スタイル） ====== */
+.faq-item{border-bottom:1px solid var(--tp-border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 2px;cursor:pointer;font-weight:700;font-size:14px;color:var(--tp-text);list-style:none}
+.faq-q::-webkit-details-marker{display:none}
+.faq-icon{color:var(--tp-orange);font-weight:700}
+details[open] .faq-icon{transform:rotate(45deg)}
+.faq-a{padding:0 2px 14px;font-size:13px;line-height:1.8;color:var(--tp-text2)}
+
+@media(max-width:900px){
+  .pw-io{grid-template-columns:1fr}
+  .pw-stats{grid-template-columns:repeat(2,1fr)}
+  .pw-steps{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .pw-panel{padding:16px}
+  .pw-about{padding:18px}
+  .pw-form-row select{flex:1;min-width:0}
+  .pw-btn{margin-left:0;width:100%}
+}
