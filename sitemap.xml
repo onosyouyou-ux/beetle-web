@@ -15,7 +15,7 @@
 
   <url>
     <loc>https://www.beetle-web.jp/test-tools.html</loc>
-    <lastmod>2026-07-13</lastmod>
+    <lastmod>2026-08-21</lastmod>
     <priority>0.7</priority>
   </url>
 
@@ -71,13 +71,13 @@
 
   <url>
     <loc>https://www.beetle-web.jp/tools/ui-parts/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-08-21</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://www.beetle-web.jp/tools/test-techniques/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-08-21</lastmod>
     <priority>0.8</priority>
   </url>
 
@@ -107,7 +107,31 @@
 
   <url>
     <loc>https://www.beetle-web.jp/tools/test-data/</loc>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-08-21</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/tools/pairwise/</loc>
+    <lastmod>2026-08-21</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/tools/test-dates/</loc>
+    <lastmod>2026-08-21</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/tools/mojibake/</loc>
+    <lastmod>2026-08-21</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/tools/contrast/</loc>
+    <lastmod>2026-08-21</lastmod>
     <priority>0.8</priority>
   </url>
 
