@@ -1,0 +1,140 @@
+/* ============================================================
+   tokei.css — とけいのれんしゅう（子ども向け・本体ドメイン配信の静的アプリ）
+   紙面固定（.app-paper 1180px）＋余白はモザイクタイル背景
+   ============================================================ */
+
+:root{
+  --tk-ink:#3a3630;
+  --tk-ink2:#7b756a;
+  --tk-ink3:#a9a296;
+  --tk-line:#e6dfd0;
+  --tk-line2:#d3c8b2;
+  --tk-cream:#fdf8ef;
+  --tk-cream2:#f5ecdb;
+  --tk-orange:#e8933f;
+  --tk-orange-dk:#cc7724;
+  --tk-blue:#2f5d8a;
+  --tk-red:#c0503b;
+  --tk-green:#2f7d55;
+  --tk-green-bg:#e9f5ee;
+  --tk-red-bg:#fbeeea;
+}
+
+body{
+  background-color:#ece1cb;
+  background-image:url('/assets/images/bg-mosaic.png');
+  background-size:160px 160px;
+  margin:0;
+  color:var(--tk-ink);
+}
+
+.app-paper{
+  width:100%;
+  max-width:1180px;   /* アプリ紙面の固定幅（全アプリ共通） */
+  margin:0 auto;
+  background:var(--tk-cream);
+  box-shadow:0 0 32px rgba(28,28,46,.16);
+  padding-bottom:36px;
+}
+
+/* ====== ヒーロー ====== */
+.tk-hero{
+  background:linear-gradient(135deg,#fdf1dd 0%,#f8e3c4 100%);
+  border-bottom:1px solid var(--tk-line);
+  padding:32px 40px 28px;
+  text-align:center;
+}
+.tk-eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--tk-orange);margin:0 0 8px}
+.tk-hero h1{font-size:32px;font-weight:900;margin:0 0 12px;letter-spacing:.06em}
+.tk-lead{font-size:14px;line-height:2;color:var(--tk-ink2);margin:0}
+
+/* ====== メニュー ====== */
+#tk-app{max-width:760px;margin:0 auto;padding:26px 20px 0}
+.tk-group{margin-bottom:22px}
+.tk-group-title{font-size:13px;font-weight:800;color:var(--tk-ink2);margin:0 0 10px;text-align:center;letter-spacing:.1em}
+.tk-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tk-choice{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  background:#fff;border:2px solid var(--tk-line2);border-radius:14px;
+  padding:14px 12px;cursor:pointer;font-family:inherit;color:var(--tk-ink);
+}
+.tk-choice:hover{border-color:var(--tk-orange)}
+.tk-choice.is-on{border-color:var(--tk-orange);background:#fff6e9;box-shadow:0 2px 0 var(--tk-orange-dk)}
+.tk-choice-label{font-size:16px;font-weight:800}
+.tk-choice-note{font-size:11px;color:var(--tk-ink3)}
+
+.tk-toggle{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:700;color:var(--tk-ink2);cursor:pointer;margin-bottom:14px}
+.tk-toggle input{width:18px;height:18px}
+.tk-preview{display:flex;justify-content:center;margin-bottom:20px}
+
+.tk-start{
+  display:block;width:100%;background:var(--tk-orange);color:#fff;border:none;border-radius:14px;
+  padding:16px;font-size:20px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:.1em;
+  box-shadow:0 3px 0 var(--tk-orange-dk);
+}
+.tk-start:hover{background:var(--tk-orange-dk);box-shadow:0 3px 0 #a85d1e}
+.tk-back{
+  display:block;margin:16px auto 0;background:none;border:none;font-size:13px;font-weight:700;
+  color:var(--tk-ink3);cursor:pointer;font-family:inherit;
+}
+.tk-back:hover{color:var(--tk-orange)}
+
+/* ====== 時計 ====== */
+.tk-clock .tk-num{font-size:19px;font-weight:800;fill:#4a4438;font-family:inherit}
+/* ぷんの数字は長針と同じ青にして「この数字は分」と結びつけて覚えられるようにする */
+.tk-clock .tk-num-min{font-size:12.5px;font-weight:800;fill:#4b7ba8;font-family:inherit}
+
+/* ====== プレイ ====== */
+.tk-play{text-align:center}
+.tk-play-head{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:800;color:var(--tk-ink2);margin-bottom:6px}
+.tk-bar{height:8px;background:var(--tk-cream2);border-radius:99px;overflow:hidden;margin-bottom:18px}
+.tk-bar-fill{height:100%;background:var(--tk-orange);border-radius:99px;transition:width .3s}
+.tk-ask{font-size:20px;font-weight:900;margin:0 0 14px;letter-spacing:.05em}
+.tk-stage{display:flex;justify-content:center;margin-bottom:18px}
+
+.tk-options{display:grid;gap:10px}
+.tk-options.is-text{grid-template-columns:repeat(2,1fr)}
+.tk-options.is-clock{grid-template-columns:repeat(4,1fr)}
+.tk-opt{
+  background:#fff;border:2px solid var(--tk-line2);border-radius:14px;padding:16px 10px;
+  font-size:20px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--tk-ink);
+}
+.tk-opt:hover:not(:disabled){border-color:var(--tk-orange)}
+.tk-opt-clock{padding:8px;display:flex;justify-content:center}
+.tk-opt:disabled{cursor:default;opacity:.75}
+.tk-opt.is-correct{border-color:var(--tk-green);background:var(--tk-green-bg);opacity:1}
+.tk-opt.is-wrong{border-color:var(--tk-red);background:var(--tk-red-bg);opacity:1}
+
+.tk-feedback{min-height:28px;margin-top:14px;font-size:15px;font-weight:800}
+.tk-feedback.is-ok{color:var(--tk-green)}
+.tk-feedback.is-ng{color:var(--tk-red)}
+
+/* ====== けっか ====== */
+.tk-result{text-align:center;padding:20px 0}
+.tk-result-stars{font-size:44px;letter-spacing:.1em;margin:0 0 10px;color:var(--tk-orange)}
+.tk-result-score{font-size:22px;font-weight:900;margin:0 0 8px}
+.tk-result-msg{font-size:14px;color:var(--tk-ink2);margin:0 0 22px}
+
+/* ====== おうちのかたへ ====== */
+.tk-doc{max-width:900px;margin:34px auto 0;padding:0 20px}
+.tk-doc h2{font-size:18px;font-weight:900;margin:28px 0 14px;padding-left:12px;border-left:4px solid var(--tk-orange)}
+.tk-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.tk-step{background:#fff;border:1px solid var(--tk-line);border-radius:12px;padding:18px 20px}
+.tk-step-n{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--tk-orange);color:#fff;font-size:13px;font-weight:900;margin-bottom:10px}
+.tk-step h3{font-size:14px;font-weight:800;margin:0 0 7px}
+.tk-step p{font-size:12.5px;line-height:1.9;color:var(--tk-ink2);margin:0}
+.tk-faq{border-bottom:1px solid var(--tk-line);background:#fff}
+.tk-faq summary{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;font-weight:800;font-size:14px;list-style:none}
+.tk-faq summary::-webkit-details-marker{display:none}
+.tk-faq summary span{color:var(--tk-orange)}
+.tk-faq[open] summary span{transform:rotate(45deg)}
+.tk-faq div{padding:0 16px 14px;font-size:13px;line-height:1.9;color:var(--tk-ink2)}
+.tk-more{font-size:13px;line-height:1.9;color:var(--tk-ink2);margin:24px 0 0;padding-top:16px;border-top:1px dashed var(--tk-line)}
+.tk-more a{color:var(--tk-orange);font-weight:700}
+
+@media(max-width:760px){
+  .tk-hero{padding:26px 20px 22px}
+  .tk-hero h1{font-size:26px}
+  .tk-options.is-clock{grid-template-columns:repeat(2,1fr)}
+  .tk-steps{grid-template-columns:1fr}
+}

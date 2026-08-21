@@ -3,7 +3,7 @@
 
   <url>
     <loc>https://www.beetle-web.jp/</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-08-21</lastmod>
     <priority>1.0</priority>
   </url>
 
@@ -27,7 +27,7 @@
 
   <url>
     <loc>https://www.beetle-web.jp/privacy/</loc>
-    <lastmod>2026-06-02</lastmod>
+    <lastmod>2026-08-21</lastmod>
     <priority>0.3</priority>
   </url>
 
@@ -167,6 +167,12 @@
 
   <url>
     <loc>https://www.beetle-web.jp/tools/sekigae/</loc>
+    <lastmod>2026-08-21</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.beetle-web.jp/tools/tokei/</loc>
     <lastmod>2026-08-21</lastmod>
     <priority>0.8</priority>
   </url>
