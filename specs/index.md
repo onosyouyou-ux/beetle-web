@@ -17,4 +17,5 @@ required_selectors: [".header-entry", ".hero", ".footer-skyline-bar", ".footer-l
   - ヘッダー背景は白（rgba(255,255,255,0.96)）。`aria-current` はHTML直書き
   - 自社ツールはQA系6カードのみ。教育カードは置かず一覧リンクで誘導
   - カードのリンク表示・ホバー演出は [_common.md](_common.md)「カード・リンク共通ルール」に従う
+  - Organization JSON-LD の `address` は**登記住所を市まで**（`streetAddress`・`postalCode` は入れない。2026-08-21変更。番地まで書くとGoogleが登記地点にピンを立てるため）。作業ラボは別途 `location`（Place）に建物名まで記載。表示側の表記ルールは [privacy.md](privacy.md) 参照
 - **手動確認観点**: ヒーロー画像（浮世絵QAキャラ）のSP非表示／サービスカードのhover演出がSPで非表示／CTAのメールとGoogleフォームが生きているか
