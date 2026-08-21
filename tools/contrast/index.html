@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>コントラスト比チェッカー｜WCAGのAA・AAA判定と通る色の提案【無料】｜BEETLE</title>
+<meta name="description" content="背景色と文字色を入れるだけで、WCAGのコントラスト比を計算してAA・AAAの合否を判定します。落ちたときは「最小限の変更で基準を通る色」を提案。P型・D型・T型の色覚シミュレーションでも見え方を確認できます。完全無料・登録不要・ブラウザ内で完結。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="コントラスト比チェッカー | BEETLE">
+<meta property="og:description" content="WCAGのコントラスト比を判定し、落ちたときは最小限の変更で通る色を提案。色覚シミュレーションつき。完全無料。">
+<meta property="og:url" content="https://www.beetle-web.jp/tools/contrast/">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="コントラスト比チェッカー | BEETLE">
+<meta name="twitter:description" content="WCAGのコントラスト比を判定し、落ちたときは最小限の変更で通る色を提案。色覚シミュレーションつき。完全無料。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<link rel="canonical" href="https://www.beetle-web.jp/tools/contrast/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "コントラスト比チェッカー",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "url": "https://www.beetle-web.jp/tools/contrast/",
+  "description": "背景色と文字色からWCAGのコントラスト比を計算してAA・AAAを判定し、基準を満たす色を提案するツール。色覚シミュレーション付き。"
+}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"ツール一覧","item":"https://www.beetle-web.jp/test-tools.html"},{"@type":"ListItem","position":3,"name":"コントラスト比チェッカー","item":"https://www.beetle-web.jp/tools/contrast/"}]}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "コントラスト比はいくつあればいいですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "WCAG 2.1のレベルAAでは、通常サイズの文字で4.5対1以上、大きい文字（18ポイント以上、または太字で14ポイント以上）で3対1以上が必要です。より厳しいレベルAAAでは、それぞれ7対1と4.5対1になります。ボタンの枠線やアイコンなど、文字ではないUI部品は3対1以上が求められます。" }
+    },
+    {
+      "@type": "Question",
+      "name": "「大きい文字」の基準はどこからですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "18ポイント（約24px）以上、または太字であれば14ポイント（約18.5px）以上が「大きい文字」として扱われます。日本語は同じサイズでも英字より複雑な字形のため、基準ぎりぎりの大きさなら通常サイズ側の基準で見ておくほうが安全です。" }
+    },
+    {
+      "@type": "Question",
+      "name": "薄いグレーの注釈文字はなぜ問題になるのですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "デザイン上の意図で情報の優先度を下げた結果、コントラスト比が3を切っていることが多いためです。健常な視力で明るい画面で見れば読めますが、屋外の日光下や、加齢で水晶体が黄変した目、安価な液晶では読めなくなります。読ませる必要がある文字なら4.5を確保してください。" }
+    },
+    {
+      "@type": "Question",
+      "name": "色覚シミュレーションはどこまで正確ですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "1型2色覚・2型2色覚・3型2色覚という「その錐体が働かない」場合の近似計算です。実際には程度に幅があり、多くの人は完全に見えないのではなく感度が低い状態です。目安として使い、これで区別がつかない配色は避ける、という使い方が向いています。" }
+    },
+    {
+      "@type": "Question",
+      "name": "入力した色はサーバーに送られますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "送られません。計算はすべてブラウザ内（あなたの端末上）で処理していて、サーバーには一切送信していません。" }
+    }
+  ]
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/style/common.css">
+<link rel="stylesheet" href="/css/reference.css">
+<link rel="stylesheet" href="/css/contrast.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" style="height:28px;vertical-align:middle;border-radius:6px;"></a>
+  <span>›</span>
+  <a href="/test-tools.html">ツール一覧</a>
+  <span>›</span>
+  <span style="color:#ddd;font-size:13px;">コントラスト比チェッカー</span>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">TOOL</div>
+  <h1>コントラスト<em>チェッカー</em></h1>
+  <p>その薄いグレーの注釈、屋外では読めていない。<br>数字で確かめて、通る色まで提案する。</p>
+</div>
+
+<div class="ref-nav">
+  <a href="#tool">調べる</a>
+  <a href="#cvd">色覚シミュレーション</a>
+  <a href="#about">基準の読み方</a>
+  <a href="#faq">よくある質問</a>
+</div>
+
+<p class="ref-lead">コントラスト不足は、レビューで指摘しづらいバグです。指摘する側も「なんとなく薄い」としか言えず、直す側も「デザインの意図です」と返せてしまう。<strong>数字にすれば話が終わります。</strong>WCAGは通常サイズの文字に4.5対1を求めていて、満たすか満たさないかのどちらかです。ここでは判定に加えて、落ちたときに<strong>元の色みを保ったまま基準を通る色</strong>を提案します。計算はすべてブラウザ内で行っています。</p>
+
+<div class="sw">
+
+  <section id="tool" class="ref-section">
+    <div class="ref-sec-hd"><h2>調べる</h2><span class="d">背景色と文字色を入れるだけ</span></div>
+    <div class="ct-panel">
+      <div class="ct-inputs">
+        <div class="ct-field">
+          <label for="ct-bg-hex">背景色</label>
+          <div class="ct-field-row">
+            <input type="color" id="ct-bg" value="#f7f5f0" aria-label="背景色を選ぶ">
+            <input type="text" id="ct-bg-hex" value="#f7f5f0" spellcheck="false" maxlength="7">
+          </div>
+        </div>
+        <button type="button" class="ct-swap" id="ct-swap" title="背景色と文字色を入れ替える">⇅</button>
+        <div class="ct-field">
+          <label for="ct-fg-hex">文字色</label>
+          <div class="ct-field-row">
+            <input type="color" id="ct-fg" value="#888780" aria-label="文字色を選ぶ">
+            <input type="text" id="ct-fg-hex" value="#888780" spellcheck="false" maxlength="7">
+          </div>
+        </div>
+      </div>
+
+      <div class="ct-swatches" id="ct-swatches"></div>
+
+      <div class="ct-result">
+        <div class="ct-ratio-box">
+          <span class="ct-ratio" id="ct-ratio">—</span>
+          <span class="ct-ratio-l">コントラスト比</span>
+        </div>
+        <div class="ct-judge" id="ct-judge"></div>
+      </div>
+
+      <div class="ct-preview" id="ct-preview">
+        <p class="ct-pv-lg">大きい文字のサンプル 24px</p>
+        <p class="ct-pv-md">通常サイズの本文です。この明るさで、日光の下でも読めるでしょうか。16px</p>
+        <p class="ct-pv-sm">注釈やキャプションに使う小さめの文字 12px</p>
+        <span class="ct-pv-btn">ボタンのラベル</span>
+      </div>
+
+      <div class="ct-fix" id="ct-fix"></div>
+    </div>
+  </section>
+
+  <section id="cvd" class="ref-section">
+    <div class="ref-sec-hd"><h2>色覚シミュレーション</h2><span class="d">色でしか区別していない情報は、ここで消えます</span></div>
+    <p class="ct-sec-lead">日本人男性のおよそ20人に1人、女性のおよそ500人に1人が、一般的な色覚と異なる見え方をしていると言われます。「赤が必須項目、緑が完了」のように<strong>色だけで意味を分けている</strong>と、その区別が届きません。以下は、指定した2色がどう見えるかの近似です。</p>
+    <div class="ct-cvd" id="ct-cvd"></div>
+  </section>
+
+  <section id="about" class="ref-section">
+    <div class="ref-sec-hd"><h2>基準の読み方</h2></div>
+    <div class="ct-about">
+      <table class="ct-table">
+        <thead><tr><th>対象</th><th>レベルAA</th><th>レベルAAA</th></tr></thead>
+        <tbody>
+          <tr><td>通常サイズの文字</td><td>4.5 : 1</td><td>7 : 1</td></tr>
+          <tr><td>大きい文字（24px以上／太字18.5px以上）</td><td>3 : 1</td><td>4.5 : 1</td></tr>
+          <tr><td>UI部品・図（ボタンの枠線、アイコン、グラフ）</td><td>3 : 1</td><td>—</td></tr>
+          <tr><td>装飾・無効状態の要素・ロゴ</td><td colspan="2">対象外</td></tr>
+        </tbody>
+      </table>
+      <p>実務ではまず<strong>AAの4.5</strong>を基準にしてください。多くの企業サイトや公共調達で求められるのがこの水準です。AAAは本文全体に適用すると配色の自由度がかなり落ちるため、重要な情報に絞るのが現実的です。</p>
+      <p>見落としやすいのは<strong>文字以外</strong>です。入力欄の枠線、チェックボックスの輪郭、グラフの色分け、アイコン単体のボタン——これらも3対1が必要ですが、デザインカンプの段階では話題に上がりません。UI部品ごとの名前と観点は <a href="/tools/ui-parts/">UIコンポーネント名鑑</a> にまとめています。</p>
+      <p class="ct-caveat">なお、この比率はあくまで機械的な計算です。実際の読みやすさには、文字の細さ・字間・画面の明るさ・周囲の照明も効きます。数字が通っていても細い明朝体の12pxが読みにくいことはあります。基準は下限であって目標ではありません。</p>
+    </div>
+  </section>
+
+  <section id="faq" class="ref-section">
+    <div class="ref-sec-hd"><h2>よくある質問</h2></div>
+    <details class="faq-item">
+      <summary class="faq-q"><span>コントラスト比はいくつあればいいですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">WCAG 2.1のレベルAAでは、通常サイズの文字で4.5対1以上、大きい文字（18ポイント以上、または太字で14ポイント以上）で3対1以上が必要です。より厳しいレベルAAAでは、それぞれ7対1と4.5対1になります。ボタンの枠線やアイコンなど、文字ではないUI部品は3対1以上が求められます。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>「大きい文字」の基準はどこからですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">18ポイント（約24px）以上、または太字であれば14ポイント（約18.5px）以上が「大きい文字」として扱われます。日本語は同じサイズでも英字より複雑な字形のため、基準ぎりぎりの大きさなら通常サイズ側の基準で見ておくほうが安全です。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>薄いグレーの注釈文字はなぜ問題になるのですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">デザイン上の意図で情報の優先度を下げた結果、コントラスト比が3を切っていることが多いためです。健常な視力で明るい画面で見れば読めますが、屋外の日光下や、加齢で水晶体が黄変した目、安価な液晶では読めなくなります。読ませる必要がある文字なら4.5を確保してください。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>色覚シミュレーションはどこまで正確ですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">1型2色覚・2型2色覚・3型2色覚という「その錐体が働かない」場合の近似計算です。実際には程度に幅があり、多くの人は完全に見えないのではなく感度が低い状態です。目安として使い、これで区別がつかない配色は避ける、という使い方が向いています。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>入力した色はサーバーに送られますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">送られません。計算はすべてブラウザ内（あなたの端末上）で処理していて、サーバーには一切送信していません。</div>
+    </details>
+  </section>
+
+</div>
+
+<div class="site-description">
+  <p>UI部品ごとの名前とよくあるバグは <a href="/tools/ui-parts/">UIコンポーネント名鑑</a>、画面まわりの観点は <a href="/tools/test-patterns/">TESTパターン集</a>、リリース前の確認項目は <a href="/tools/release-checklist/">リリース前チェックリスト集</a> をどうぞ。</p>
+</div>
+
+<!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一）。テスト検証用ツールなのでヒーローズバナー付き -->
+<div class="footer-heroes"><img src="/assets/images/footer-heroes.jpg" alt="" aria-hidden="true" width="2172" height="264" loading="lazy"></div>
+<footer class="site-footer-app">
+  <div class="sfa-row">
+    <a href="/" class="sfa-logo">BEET<span>LE</span></a>
+    <nav class="sfa-nav">
+      <a href="/">トップ</a>
+      <a href="/test-tools.html">QA支援</a>
+      <a href="/edu-tools.html">教育支援</a>
+      <a href="/blog/">コラム</a>
+      <a href="/#contact">お問い合わせ</a>
+    </nav>
+  </div>
+  <div class="sfa-copy">
+    <a href="/privacy">プライバシーポリシー</a>
+    <span>© 2026 BEETLE Co., LLC</span>
+  </div>
+</footer>
+<button class="scroll-top-float" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script src="/js/common.js"></script>
+<script src="/js/contact-track.js"></script>
+<script src="/js/contrast.js"></script>
+</body>
+</html>

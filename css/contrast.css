@@ -1,0 +1,108 @@
+/* ============================================================
+   contrast.css — コントラスト比チェッカー 固有スタイル
+   共通変数は /style/common.css の --tp-* を流用
+   ============================================================ */
+
+/* ====== 操作パネル ====== */
+.ct-panel{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px 22px}
+
+.ct-inputs{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px}
+.ct-field{flex:1;min-width:200px}
+.ct-field label{display:block;font-size:12px;font-weight:700;color:var(--tp-text2);margin-bottom:7px}
+.ct-field-row{display:flex;align-items:center;gap:8px}
+.ct-field-row input[type=color]{width:52px;height:40px;border:1px solid var(--tp-border2);border-radius:6px;padding:3px;background:#fff;cursor:pointer}
+.ct-field-row input[type=text]{flex:1;min-width:0;border:1px solid var(--tp-border2);border-radius:6px;padding:10px 12px;font-family:'SFMono-Regular','Consolas',monospace;font-size:14px;color:var(--tp-text);background:#fff}
+.ct-field-row input[type=text]:focus{outline:none;border-color:var(--tp-orange)}
+.ct-swap{align-self:flex-end;margin-bottom:2px;width:38px;height:38px;border:1px solid var(--tp-border2);border-radius:2px;background:#fff;color:var(--tp-text2);font-size:16px;cursor:pointer;font-family:inherit}
+.ct-swap:hover{border-color:var(--tp-orange);color:var(--tp-orange)}
+
+/* ====== よく使う組み合わせ ====== */
+.ct-swatches{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--tp-border)}
+.ct-swatch{display:flex;align-items:center;gap:7px;border:1px solid var(--tp-border2);border-radius:99px;background:#fff;padding:4px 12px 4px 5px;cursor:pointer;font-family:inherit}
+.ct-swatch:hover{border-color:var(--tp-orange)}
+.ct-swatch-chip{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;font-size:11px;font-weight:800;border:1px solid var(--tp-border)}
+.ct-swatch-n{font-size:11px;font-weight:700;color:var(--tp-text2)}
+
+/* ====== 判定 ====== */
+.ct-result{display:flex;flex-wrap:wrap;gap:16px;margin-top:20px}
+.ct-ratio-box{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:150px;background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:10px;padding:16px 20px}
+.ct-ratio{font-family:'Syne','M PLUS 1p',sans-serif;font-size:38px;font-weight:900;line-height:1.1;color:var(--tp-text)}
+.ct-ratio.is-pass{color:var(--tp-green)}
+.ct-ratio.is-warn{color:var(--tp-amber)}
+.ct-ratio.is-fail{color:var(--tp-red)}
+.ct-ratio-l{font-size:11px;color:var(--tp-text2);margin-top:4px}
+.ct-judge{flex:1;min-width:260px;display:flex;flex-direction:column;gap:5px}
+.ct-j{display:flex;align-items:center;gap:10px;background:var(--tp-red-bg);border:1px solid rgba(192,57,43,.18);border-radius:6px;padding:7px 12px}
+.ct-j.is-ok{background:var(--tp-green-bg);border-color:rgba(26,122,74,.18)}
+.ct-j-mark{font-size:10px;font-weight:800;color:#fff;background:var(--tp-red);border-radius:3px;padding:2px 7px;white-space:nowrap}
+.ct-j.is-ok .ct-j-mark{background:var(--tp-green)}
+.ct-j-l{font-size:12px;color:var(--tp-text2);flex:1}
+.ct-j-n{font-size:11px;font-family:'SFMono-Regular','Consolas',monospace;color:var(--tp-text3);white-space:nowrap}
+
+/* ====== プレビュー ====== */
+.ct-preview{margin-top:16px;border:1px solid var(--tp-border);border-radius:10px;padding:22px 24px}
+.ct-preview p{margin:0 0 10px;line-height:1.7}
+.ct-pv-lg{font-size:24px;font-weight:800}
+.ct-pv-md{font-size:16px}
+.ct-pv-sm{font-size:12px}
+.ct-pv-btn{display:inline-block;font-size:13px;font-weight:700;border:2px solid currentColor;border-radius:2px;padding:7px 18px}
+
+/* ====== 通る色の提案 ====== */
+.ct-fix{margin-top:16px}
+.ct-note{font-size:12px;line-height:1.8;padding:10px 14px;border-radius:6px;background:var(--tp-amber-bg);color:var(--tp-amber);border:1px solid rgba(179,92,0,.2);font-weight:700}
+.ct-note.is-ok{background:var(--tp-green-bg);color:var(--tp-green);border-color:rgba(26,122,74,.2)}
+.ct-note.is-error{background:var(--tp-red-bg);color:var(--tp-red);border-color:rgba(192,57,43,.2)}
+.ct-note code{font-family:'SFMono-Regular','Consolas',monospace;background:#fff;border-radius:3px;padding:1px 5px}
+.ct-fix-hd{font-size:13px;font-weight:800;color:var(--tp-text2);margin:16px 0 10px;padding-left:10px;border-left:3px solid var(--tp-orange)}
+.ct-fix-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.ct-fix-card{display:flex;flex-direction:column;gap:9px;background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:10px;padding:14px 16px}
+.ct-fix-t{font-size:12px;font-weight:800;color:var(--tp-text)}
+.ct-fix-t span{font-weight:400;color:var(--tp-text3);margin-left:6px}
+.ct-fix-swap{display:flex;align-items:center;gap:8px;font-family:'SFMono-Regular','Consolas',monospace;font-size:12px;color:var(--tp-text2)}
+.ct-fix-swap code{background:#fff;border:1px solid var(--tp-border);border-radius:4px;padding:3px 7px;color:var(--tp-text)}
+.ct-fix-pv{border-radius:6px;padding:12px 14px;font-size:14px;font-weight:700;text-align:center;border:1px solid var(--tp-border)}
+.ct-fix-r{font-size:11px;color:var(--tp-text3);font-family:'SFMono-Regular','Consolas',monospace}
+.ct-apply{align-self:flex-start;font-size:11px;font-weight:700;color:#fff;background:var(--tp-orange);border:none;border-radius:2px;padding:5px 14px;cursor:pointer;font-family:inherit}
+.ct-apply:hover{background:#c94a12}
+
+/* ====== 色覚シミュレーション ====== */
+.ct-sec-lead{font-size:13px;line-height:1.9;color:var(--tp-text2);margin:0 0 16px}
+.ct-sec-lead strong{color:var(--tp-text)}
+.ct-cvd{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.ct-cvd-card{background:#fff;border:1px solid var(--tp-border);border-radius:10px;padding:14px 15px;display:flex;flex-direction:column;gap:8px}
+.ct-cvd-name{font-size:11px;font-weight:800;color:var(--tp-text2);line-height:1.5;min-height:2.4em}
+.ct-cvd-pv{border-radius:6px;padding:16px 12px;font-size:15px;font-weight:700;text-align:center;border:1px solid var(--tp-border)}
+.ct-cvd-hex{display:flex;justify-content:space-between;gap:6px;font-family:'SFMono-Regular','Consolas',monospace;font-size:10px;color:var(--tp-text3)}
+.ct-cvd-r{font-size:11px;color:var(--tp-text2);font-weight:700}
+
+/* ====== 基準の読み方 ====== */
+.ct-about{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:22px 24px}
+.ct-table{border-collapse:collapse;width:100%;font-size:12px;margin-bottom:18px}
+.ct-table th,.ct-table td{border:1px solid var(--tp-border);padding:8px 12px;text-align:left}
+.ct-table th{background:var(--tp-cream2);font-weight:700;color:var(--tp-text2)}
+.ct-table td{color:var(--tp-text2)}
+.ct-table tbody tr:nth-child(even) td{background:var(--tp-cream)}
+.ct-about p{font-size:13px;line-height:2;color:var(--tp-text2);margin:0 0 14px}
+.ct-about p:last-child{margin-bottom:0}
+.ct-about strong{color:var(--tp-text)}
+.ct-about a{color:var(--tp-orange);font-weight:700}
+.ct-caveat{padding-top:14px;border-top:1px dashed var(--tp-border)}
+
+/* ====== FAQ（details/summaryベース。test-data.css と同スタイル） ====== */
+.faq-item{border-bottom:1px solid var(--tp-border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 2px;cursor:pointer;font-weight:700;font-size:14px;color:var(--tp-text);list-style:none}
+.faq-q::-webkit-details-marker{display:none}
+.faq-icon{color:var(--tp-orange);font-weight:700}
+details[open] .faq-icon{transform:rotate(45deg)}
+.faq-a{padding:0 2px 14px;font-size:13px;line-height:1.8;color:var(--tp-text2)}
+
+@media(max-width:900px){
+  .ct-cvd{grid-template-columns:repeat(2,1fr)}
+  .ct-fix-cards{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .ct-panel,.ct-about{padding:16px}
+  .ct-cvd{grid-template-columns:1fr}
+  .ct-swap{align-self:center;margin:0}
+  .ct-ratio-box{width:100%}
+}
