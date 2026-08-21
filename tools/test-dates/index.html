@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>意地悪な日付ジェネレーター｜うるう年・月末・年度またぎのテスト用日付【無料】｜BEETLE</title>
+<meta name="description" content="うるう年の2月29日、月末、年度またぎ、和暦の改元日、2038年問題。日付まわりのテストで使う「意地悪な日付」を基準日から自動で並べ、ワンクリックでコピーできます。1月31日の1ヶ月後がいくつになるかの実装差分も比較表示。完全無料・登録不要・ブラウザ内で完結。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="意地悪な日付ジェネレーター | BEETLE">
+<meta property="og:description" content="うるう年・月末・年度またぎ・改元日・2038年問題。日付テストで使う境界の日付をワンクリックでコピー。完全無料。">
+<meta property="og:url" content="https://www.beetle-web.jp/tools/test-dates/">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="意地悪な日付ジェネレーター | BEETLE">
+<meta name="twitter:description" content="うるう年・月末・年度またぎ・改元日・2038年問題。日付テストで使う境界の日付をワンクリックでコピー。完全無料。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<link rel="canonical" href="https://www.beetle-web.jp/tools/test-dates/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "意地悪な日付ジェネレーター",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "url": "https://www.beetle-web.jp/tools/test-dates/",
+  "description": "うるう年・月末・年度またぎ・曜日・和暦の改元日・システムの日付境界など、日付まわりのテストで使う日付を基準日から生成してコピーできるツール。"
+}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"ツール一覧","item":"https://www.beetle-web.jp/test-tools.html"},{"@type":"ListItem","position":3,"name":"意地悪な日付ジェネレーター","item":"https://www.beetle-web.jp/tools/test-dates/"}]}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "なぜ日付のバグはこんなに多いのですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "月の長さが揃っていない、うるう年がある、年度と年が一致しない、元号が変わる、タイムゾーンで日付がずれる——このどれもが「ふつうの日付」では表に出ないためです。開発中に使うのはたいてい今日の日付で、そこは何の問題も起きません。事故は決まって月末・年度末・2月29日に起きます。" }
+    },
+    {
+      "@type": "Question",
+      "name": "1月31日の1ヶ月後は何日ですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "仕様によります。多くの日付ライブラリは月末に丸めて2月28日（うるう年なら29日）を返しますが、JavaScriptの Date で setMonth を使うと「2月31日」がそのまま繰り上がって3月3日になります。どちらが正しいかは仕様次第なので、まず「決めてあるか」を確認してください。このツールでは両方の答えを並べて表示します。" }
+    },
+    {
+      "@type": "Question",
+      "name": "2038年問題とは何ですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "時刻を1970年1月1日からの経過秒数で32ビット整数に入れている環境で、2038年1月19日3時14分7秒（UTC）を超えると数値があふれてしまう問題です。有効期限や長期の契約期間を扱う画面では、この日をまたぐ日付を入れて確認しておくと安全です。" }
+    },
+    {
+      "@type": "Question",
+      "name": "1900年2月29日という日付は実在しないのでは？",
+      "acceptedAnswer": { "@type": "Answer", "text": "実在しません。1900年は400年ルールでうるう年から外れるためです。それでも表に載せているのは、Excelが互換性のためにこの日を実在するものとして扱っているからです。Excelから取り込んだ日付をそのまま計算に使うと、1日ずれることがあります。" }
+    },
+    {
+      "@type": "Question",
+      "name": "入力した基準日はサーバーに送られますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "送られません。日付の計算はすべてブラウザ内（あなたの端末上）で処理していて、サーバーには一切送信していません。" }
+    }
+  ]
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/style/common.css">
+<link rel="stylesheet" href="/css/reference.css">
+<link rel="stylesheet" href="/css/test-dates.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" style="height:28px;vertical-align:middle;border-radius:6px;"></a>
+  <span>›</span>
+  <a href="/test-tools.html">ツール一覧</a>
+  <span>›</span>
+  <span style="color:#ddd;font-size:13px;">意地悪な日付ジェネレーター</span>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">TOOL</div>
+  <h1>意地悪な<em>日付</em></h1>
+  <p>うるう年、月末、年度またぎ、改元日、2038年。<br>今日の日付では絶対に出ないバグを、狙って踏みにいく。</p>
+</div>
+
+<div class="ref-nav">
+  <a href="#tool">日付を出す</a>
+  <a href="#diff">実装差分が出る計算</a>
+  <a href="#why">なぜ日付で事故るのか</a>
+  <a href="#faq">よくある質問</a>
+</div>
+
+<p class="ref-lead">日付のバグは、開発中には絶対に顔を出しません。作っている最中に使うのはいつも「今日」で、今日はたいてい月の途中だからです。事故が起きるのは決まって<strong>2月29日・月末・年度末・改元日</strong>。このツールは基準日を1つ決めるだけで、その周辺の意地悪な日付をまとめて並べます。クリックでコピーして、そのまま入力欄に流し込んでください。すべてブラウザ内で計算しています。</p>
+
+<div class="sw">
+
+  <section id="tool" class="ref-section">
+    <div class="ref-sec-hd"><h2>日付を出す</h2><span class="d">基準日を決めると、周辺の境界日が並びます</span></div>
+    <div class="dt-panel">
+      <div class="dt-form-row">
+        <label for="dt-base">基準日</label>
+        <input type="date" id="dt-base">
+        <button type="button" class="dt-btn-ghost" id="dt-today">今日</button>
+        <label for="dt-fy">年度の開始</label>
+        <select id="dt-fy">
+          <option value="1">1月</option>
+          <option value="4" selected>4月</option>
+          <option value="7">7月</option>
+          <option value="10">10月</option>
+        </select>
+        <label for="dt-format">表示形式</label>
+        <select id="dt-format">
+          <option value="iso" selected>YYYY-MM-DD</option>
+          <option value="slash">YYYY/MM/DD</option>
+          <option value="compact">YYYYMMDD</option>
+          <option value="ja">YYYY年M月D日</option>
+          <option value="wareki">和暦</option>
+          <option value="datetime">ISO 8601（UTC）</option>
+          <option value="unix">Unix秒</option>
+        </select>
+      </div>
+      <div class="dt-list" id="dt-list"></div>
+      <div class="dt-out-block">
+        <textarea id="dt-out" class="dt-out" rows="5" readonly></textarea>
+        <div class="dt-out-foot">
+          <span id="dt-info" class="dt-info">—</span>
+          <button type="button" class="dt-btn-ghost" id="dt-dl">ダウンロード</button>
+          <button type="button" class="dt-copy" id="dt-copyall">全部コピー</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="diff" class="ref-section">
+    <div class="ref-sec-hd"><h2>実装差分が出る計算</h2><span class="d">同じ式でも、環境によって答えが違う</span></div>
+    <p class="dt-sec-lead">「月末に1ヶ月足す」は、正解が1つに決まりません。仕様で決めていない場合、どちらの答えが返っても文句が言えない状態になります。基準日を変えると、以下の計算結果も追従します。</p>
+    <div class="dt-diff" id="dt-diff"></div>
+  </section>
+
+  <section id="why" class="ref-section">
+    <div class="ref-sec-hd"><h2>なぜ日付で事故るのか</h2></div>
+    <div class="dt-why">
+      <p>日付は「連続した数字」に見えて、実際にはそうではありません。月の長さは28〜31日でばらつき、4年に1度は2月が伸び、100年に1度はその例外が起き、400年に1度は例外の例外が起きます。年度は年と一致せず、元号は予告なく変わり、同じ瞬間でもタイムゾーンをまたげば日付が変わります。</p>
+      <p>それでも開発中は何も起きません。<strong>今日の日付は、そのどれにも当たらない安全な日</strong>だからです。バグは本番稼働から数ヶ月後、たまたま月末に処理を回した日にはじめて姿を現します。</p>
+      <p>だから日付は「意地悪な値を狙って入れる」以外に見つけようがありません。境界値分析の考え方そのままで、月末・年度末・うるう日という<strong>切り替わりの直前と直後</strong>を並べて試すのが確実です。技法としての整理は <a href="/tools/test-techniques/">テスト技法カタログ</a> に、入力欄そのものを壊しにいく値は <a href="/tools/test-data/">意地悪テストデータ生成器</a> にまとめています。</p>
+    </div>
+  </section>
+
+  <section id="faq" class="ref-section">
+    <div class="ref-sec-hd"><h2>よくある質問</h2></div>
+    <details class="faq-item">
+      <summary class="faq-q"><span>なぜ日付のバグはこんなに多いのですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">月の長さが揃っていない、うるう年がある、年度と年が一致しない、元号が変わる、タイムゾーンで日付がずれる——このどれもが「ふつうの日付」では表に出ないためです。開発中に使うのはたいてい今日の日付で、そこは何の問題も起きません。事故は決まって月末・年度末・2月29日に起きます。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>1月31日の1ヶ月後は何日ですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">仕様によります。多くの日付ライブラリは月末に丸めて2月28日（うるう年なら29日）を返しますが、JavaScriptの Date で setMonth を使うと「2月31日」がそのまま繰り上がって3月3日になります。どちらが正しいかは仕様次第なので、まず「決めてあるか」を確認してください。このツールでは両方の答えを並べて表示します。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>2038年問題とは何ですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">時刻を1970年1月1日からの経過秒数で32ビット整数に入れている環境で、2038年1月19日3時14分7秒（UTC）を超えると数値があふれてしまう問題です。有効期限や長期の契約期間を扱う画面では、この日をまたぐ日付を入れて確認しておくと安全です。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>1900年2月29日という日付は実在しないのでは？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">実在しません。1900年は400年ルールでうるう年から外れるためです。それでも表に載せているのは、Excelが互換性のためにこの日を実在するものとして扱っているからです。Excelから取り込んだ日付をそのまま計算に使うと、1日ずれることがあります。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>入力した基準日はサーバーに送られますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">送られません。日付の計算はすべてブラウザ内（あなたの端末上）で処理していて、サーバーには一切送信していません。</div>
+    </details>
+  </section>
+
+</div>
+
+<div class="site-description">
+  <p>入力欄そのものを壊しにいく値は <a href="/tools/test-data/">意地悪テストデータ生成器</a>、境界値分析の考え方は <a href="/tools/test-techniques/">テスト技法カタログ</a>、日付の入力チェックに使う正規表現は <a href="/tools/regex-tester/">正規表現テスター</a> をどうぞ。</p>
+</div>
+
+<!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一）。テスト検証用ツールなのでヒーローズバナー付き -->
+<div class="footer-heroes"><img src="/assets/images/footer-heroes.jpg" alt="" aria-hidden="true" width="2172" height="264" loading="lazy"></div>
+<footer class="site-footer-app">
+  <div class="sfa-row">
+    <a href="/" class="sfa-logo">BEET<span>LE</span></a>
+    <nav class="sfa-nav">
+      <a href="/">トップ</a>
+      <a href="/test-tools.html">QA支援</a>
+      <a href="/edu-tools.html">教育支援</a>
+      <a href="/blog/">コラム</a>
+      <a href="/#contact">お問い合わせ</a>
+    </nav>
+  </div>
+  <div class="sfa-copy">
+    <a href="/privacy">プライバシーポリシー</a>
+    <span>© 2026 BEETLE Co., LLC</span>
+  </div>
+</footer>
+<button class="scroll-top-float" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script src="/js/common.js"></script>
+<script src="/js/contact-track.js"></script>
+<script src="/js/test-dates.js"></script>
+</body>
+</html>
