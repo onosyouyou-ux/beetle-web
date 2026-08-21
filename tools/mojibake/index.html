@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文字化け再現ビューア｜UTF-8・Shift_JIS・EUC-JPの化け方と原因の逆引き【無料】｜BEETLE</title>
+<meta name="description" content="文字列を入れると、UTF-8・Shift_JIS・EUC-JP・Latin-1を取り違えたときにどう化けるかを並べて表示。バイト列も確認できます。逆引き機能では、化けた文字列を貼るだけで「どの文字コードをどう読み違えた結果か」を推定して元の文字列を復元します。完全無料・登録不要・ブラウザ内で完結。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="文字化け再現ビューア | BEETLE">
+<meta property="og:description" content="UTF-8・Shift_JIS・EUC-JPの取り違えでどう化けるかを再現。化けた文字列から原因を逆引きして復元もできます。完全無料。">
+<meta property="og:url" content="https://www.beetle-web.jp/tools/mojibake/">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="文字化け再現ビューア | BEETLE">
+<meta name="twitter:description" content="UTF-8・Shift_JIS・EUC-JPの取り違えでどう化けるかを再現。化けた文字列から原因を逆引きして復元もできます。完全無料。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<link rel="canonical" href="https://www.beetle-web.jp/tools/mojibake/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "文字化け再現ビューア",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "url": "https://www.beetle-web.jp/tools/mojibake/",
+  "description": "UTF-8・Shift_JIS・EUC-JP・Latin-1の取り違えで文字列がどう化けるかを並べて表示し、化けた文字列から原因を逆引きして復元するツール。"
+}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"ツール一覧","item":"https://www.beetle-web.jp/test-tools.html"},{"@type":"ListItem","position":3,"name":"文字化け再現ビューア","item":"https://www.beetle-web.jp/tools/mojibake/"}]}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "入力した文字列はサーバーに送られますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "送られません。変換も逆引きもすべてブラウザ内（あなたの端末上）で処理していて、サーバーには一切送信していません。本番データの一部を貼り付けても大丈夫です。" }
+    },
+    {
+      "@type": "Question",
+      "name": "「譁?蟄怜喧縺?」のような化け方は何が起きていますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "UTF-8で書かれたバイト列を、Shift_JISだと思って読んだときの典型的な見た目です。UTF-8の日本語は1文字3バイトなので、2バイトずつ区切るShift_JISで読むと文字の切れ目がずれ、意味のない漢字が並びます。読み込み側の文字コード指定を疑ってください。" }
+    },
+    {
+      "@type": "Question",
+      "name": "「æ±äº¬」のように記号が並ぶ化け方は？",
+      "acceptedAnswer": { "@type": "Answer", "text": "UTF-8のバイト列を、Latin-1（ISO-8859-1）やWindows-1252として1バイトずつ読んだ結果です。海外製のライブラリやメールヘッダ、古いCSV取り込みでよく出ます。バイトそのものは壊れていないため、正しい文字コードで読み直せば完全に元に戻ります。" }
+    },
+    {
+      "@type": "Question",
+      "name": "「???」や「□」ばかりになるのはなぜですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "これは読み違いではなく、変換時に文字が失われた状態です。絵文字やサロゲートペア（𠮷・𩸽）はShift_JISに存在しないため、変換の時点で捨てられます。この場合は元に戻せません。保存する前の入り口で弾くか、UTF-8のまま扱う必要があります。" }
+    },
+    {
+      "@type": "Question",
+      "name": "逆引きはどうやって原因を当てているのですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "化けた文字列を各文字コードでバイト列に戻し、それを別の文字コードで読み直す組み合わせを総当たりで試しています。その結果に日本語らしい文字がどれだけ含まれるかで点数をつけ、上位を候補として表示します。元の変換で文字が失われている場合は完全には戻りません。" }
+    }
+  ]
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/style/common.css">
+<link rel="stylesheet" href="/css/reference.css">
+<link rel="stylesheet" href="/css/mojibake.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" style="height:28px;vertical-align:middle;border-radius:6px;"></a>
+  <span>›</span>
+  <a href="/test-tools.html">ツール一覧</a>
+  <span>›</span>
+  <span style="color:#ddd;font-size:13px;">文字化け再現ビューア</span>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">TOOL</div>
+  <h1>文字化け<em>ビューア</em></h1>
+  <p>その化け方には、名前がある。<br>どの文字コードを、どう読み違えたのか。</p>
+</div>
+
+<div class="ref-nav">
+  <a href="#tool">化け方を見る</a>
+  <a href="#reverse">原因を逆引き</a>
+  <a href="#why">なぜ化けるのか</a>
+  <a href="#faq">よくある質問</a>
+</div>
+
+<p class="ref-lead">文字化けは、ランダムに壊れているわけではありません。<strong>どの文字コードで書かれたバイト列を、どの文字コードだと思って読んだか</strong>——その組み合わせごとに、決まった見た目になります。見慣れれば、化けた文字を見ただけで原因の見当がつきます。ここでは正しい文字列から化け方を再現し、逆に化けた文字列から原因を推定して復元します。すべてブラウザ内で処理しています。</p>
+
+<div class="sw">
+
+  <section id="tool" class="ref-section">
+    <div class="ref-sec-hd"><h2>化け方を見る</h2><span class="d">正しい文字列を入れると、取り違えたときの姿が並びます</span></div>
+    <div class="mb-panel">
+      <div class="mb-lbl-row">
+        <label for="mb-in">元の文字列</label>
+        <span class="mb-preset-row">
+          <button type="button" class="mb-preset" data-preset="address">住所</button>
+          <button type="button" class="mb-preset" data-preset="dakuten">ソ・表・能</button>
+          <button type="button" class="mb-preset" data-preset="kana">半角カナ</button>
+          <button type="button" class="mb-preset" data-preset="emoji">絵文字・機種依存</button>
+        </span>
+      </div>
+      <textarea id="mb-in" class="mb-in" rows="3" spellcheck="false" placeholder="ここに文字列を入れてください（送信されません）"></textarea>
+      <div class="mb-warn" id="mb-warn"></div>
+      <div class="mb-results" id="mb-results"></div>
+      <h3 class="mb-sub">バイト列</h3>
+      <div class="mb-bytes" id="mb-bytes"></div>
+    </div>
+  </section>
+
+  <section id="reverse" class="ref-section">
+    <div class="ref-sec-hd"><h2>原因を逆引き</h2><span class="d">化けた文字列から、元の文字列と原因を推定します</span></div>
+    <div class="mb-panel">
+      <label class="mb-lbl" for="mb-rev-in">化けた文字列</label>
+      <textarea id="mb-rev-in" class="mb-in" rows="3" spellcheck="false" placeholder="化けた文字列を貼り付けてください（例：譁?蟄怜喧縺?）"></textarea>
+      <div class="mb-rev-out" id="mb-rev-out"></div>
+      <p class="mb-caution">元の変換で文字が失われている場合（<code>?</code> や <code>□</code> になっている場合）は、原理的に元へ戻せません。復元できるのは「バイト列は無事だが読み方を間違えた」種類の化けだけです。</p>
+    </div>
+  </section>
+
+  <section id="why" class="ref-section">
+    <div class="ref-sec-hd"><h2>なぜ化けるのか</h2></div>
+    <div class="mb-why">
+      <p>コンピュータが保存しているのは文字ではなく<strong>バイトの並び</strong>です。「東」という文字をどのバイトで表すかは文字コードごとに違い、UTF-8では3バイト、Shift_JISとEUC-JPでは2バイトになります。</p>
+      <p>ここで、書いたときと読むときで文字コードの想定がずれると、同じバイト列が別の区切りで解釈されます。3バイトずつ並んだものを2バイトずつ読めば、文字の切れ目そのものがずれる。結果として、意味のない漢字や記号が延々と並びます。<strong>データは壊れていません。読み方だけが間違っている</strong>——だから正しく読み直せば元に戻ります。</p>
+      <p>やっかいなのはもう1種類、<strong>変換の時点で文字が失われる</strong>化けです。絵文字やサロゲートペア（𠮷・𩸽）はShift_JISに存在しないため、Shift_JISへ変換した瞬間に捨てられて <code>?</code> になります。こちらは後から復元できません。入力欄で弾くか、最後までUTF-8で通す必要があります。実際にどの文字が落ちるかは <a href="/tools/test-data/">意地悪テストデータ生成器</a> の文字種カタログで試せます。</p>
+    </div>
+  </section>
+
+  <section id="faq" class="ref-section">
+    <div class="ref-sec-hd"><h2>よくある質問</h2></div>
+    <details class="faq-item">
+      <summary class="faq-q"><span>入力した文字列はサーバーに送られますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">送られません。変換も逆引きもすべてブラウザ内（あなたの端末上）で処理していて、サーバーには一切送信していません。本番データの一部を貼り付けても大丈夫です。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>「譁?蟄怜喧縺?」のような化け方は何が起きていますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">UTF-8で書かれたバイト列を、Shift_JISだと思って読んだときの典型的な見た目です。UTF-8の日本語は1文字3バイトなので、2バイトずつ区切るShift_JISで読むと文字の切れ目がずれ、意味のない漢字が並びます。読み込み側の文字コード指定を疑ってください。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>「æ±äº¬」のように記号が並ぶ化け方は？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">UTF-8のバイト列を、Latin-1（ISO-8859-1）やWindows-1252として1バイトずつ読んだ結果です。海外製のライブラリやメールヘッダ、古いCSV取り込みでよく出ます。バイトそのものは壊れていないため、正しい文字コードで読み直せば完全に元に戻ります。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>「???」や「□」ばかりになるのはなぜですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">これは読み違いではなく、変換時に文字が失われた状態です。絵文字やサロゲートペア（𠮷・𩸽）はShift_JISに存在しないため、変換の時点で捨てられます。この場合は元に戻せません。保存する前の入り口で弾くか、UTF-8のまま扱う必要があります。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>逆引きはどうやって原因を当てているのですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">化けた文字列を各文字コードでバイト列に戻し、それを別の文字コードで読み直す組み合わせを総当たりで試しています。その結果に日本語らしい文字がどれだけ含まれるかで点数をつけ、上位を候補として表示します。元の変換で文字が失われている場合は完全には戻りません。</div>
+    </details>
+  </section>
+
+</div>
+
+<div class="site-description">
+  <p>どの文字が変換で落ちるかを確かめたいときは <a href="/tools/test-data/">意地悪テストデータ生成器</a>、入力欄まわりの観点は <a href="/tools/test-patterns/">TESTパターン集</a>、バリデーションの正規表現は <a href="/tools/regex-tester/">正規表現テスター</a> をどうぞ。</p>
+</div>
+
+<!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一）。テスト検証用ツールなのでヒーローズバナー付き -->
+<div class="footer-heroes"><img src="/assets/images/footer-heroes.jpg" alt="" aria-hidden="true" width="2172" height="264" loading="lazy"></div>
+<footer class="site-footer-app">
+  <div class="sfa-row">
+    <a href="/" class="sfa-logo">BEET<span>LE</span></a>
+    <nav class="sfa-nav">
+      <a href="/">トップ</a>
+      <a href="/test-tools.html">QA支援</a>
+      <a href="/edu-tools.html">教育支援</a>
+      <a href="/blog/">コラム</a>
+      <a href="/#contact">お問い合わせ</a>
+    </nav>
+  </div>
+  <div class="sfa-copy">
+    <a href="/privacy">プライバシーポリシー</a>
+    <span>© 2026 BEETLE Co., LLC</span>
+  </div>
+</footer>
+<button class="scroll-top-float" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script src="/js/common.js"></script>
+<script src="/js/contact-track.js"></script>
+<script src="/js/mojibake.js"></script>
+</body>
+</html>

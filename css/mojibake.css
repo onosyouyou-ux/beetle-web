@@ -1,0 +1,89 @@
+/* ============================================================
+   mojibake.css — 文字化け再現ビューア 固有スタイル
+   共通変数は /style/common.css の --tp-* を流用
+   ============================================================ */
+
+/* ====== 操作パネル ====== */
+.mb-panel{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px 22px}
+.mb-lbl-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:8px}
+.mb-lbl-row label,.mb-lbl{display:block;font-size:12px;font-weight:700;color:var(--tp-text2);margin-bottom:8px}
+.mb-lbl-row label{margin-bottom:0}
+.mb-preset-row{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
+.mb-preset{font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px;border:1px solid var(--tp-border2);background:#fff;color:var(--tp-text2);cursor:pointer;font-family:inherit}
+.mb-preset:hover{background:var(--tp-orange);color:#fff;border-color:var(--tp-orange)}
+.mb-in{width:100%;border:1px solid var(--tp-border2);border-radius:8px;padding:11px 12px;font-size:14px;line-height:1.8;resize:vertical;box-sizing:border-box;background:#fff;color:var(--tp-text);font-family:inherit}
+.mb-in:focus{outline:none;border-color:var(--tp-orange)}
+.mb-copy{align-self:flex-start;font-size:11px;font-weight:700;color:#fff;background:var(--tp-orange);border:none;border-radius:2px;padding:5px 14px;cursor:pointer;font-family:inherit;transition:background .12s}
+.mb-copy:hover{background:#c94a12}
+.mb-copy.is-done{background:var(--tp-green)}
+.mb-empty{font-size:12px;color:var(--tp-text3);margin:14px 0 0}
+
+/* ====== 失われる文字の警告 ====== */
+.mb-warn{margin-top:12px}
+.mb-warn:empty{display:none}
+.mb-warn-item{font-size:12px;line-height:1.8;padding:10px 14px;border-radius:6px;background:var(--tp-red-bg);color:var(--tp-red);border:1px solid rgba(192,57,43,.2)}
+.mb-warn-item + .mb-warn-item{margin-top:6px}
+.mb-warn-chars{font-family:'SFMono-Regular','Consolas',monospace;font-size:14px;font-weight:700;margin:0 6px}
+.mb-warn-note{display:block;font-weight:400;color:var(--tp-text2);margin-top:3px}
+.mb-warn-note code{font-family:'SFMono-Regular','Consolas',monospace;background:#fff;border-radius:3px;padding:1px 5px}
+
+/* ====== 化け方カード ====== */
+.mb-results{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+.mb-case{display:flex;flex-direction:column;gap:9px;background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:10px;padding:14px 16px}
+.mb-case-hd{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
+.mb-tag{font-size:11px;font-weight:800;color:#fff;background:var(--tp-dark);border-radius:3px;padding:2px 8px}
+.mb-tag.is-to{background:var(--tp-orange)}
+.mb-arrow{font-size:11px;color:var(--tp-text2)}
+.mb-garbled{font-family:'SFMono-Regular','Consolas',monospace;font-size:14px;line-height:1.7;background:#fff;border:1px solid var(--tp-border);border-radius:6px;padding:10px 12px;word-break:break-all;min-height:22px;color:var(--tp-text)}
+.mb-garbled.is-lossy{border-color:rgba(192,57,43,.3);background:var(--tp-red-bg)}
+.mb-case-note{font-size:11px;line-height:1.8;color:var(--tp-text2);margin:0;flex:1}
+.mb-case-note em{display:block;font-style:normal;color:var(--tp-red);font-weight:700;margin-top:4px}
+
+/* ====== バイト列 ====== */
+.mb-sub{font-size:13px;font-weight:800;color:var(--tp-text2);margin:22px 0 10px;padding-left:10px;border-left:3px solid var(--tp-orange)}
+.mb-bytes{display:flex;flex-direction:column;gap:6px}
+.mb-byte-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:6px;padding:8px 12px}
+.mb-byte-l{font-size:11px;font-weight:800;color:var(--tp-text2);min-width:130px}
+.mb-byte-v{font-family:'SFMono-Regular','Consolas',monospace;font-size:11px;color:var(--tp-text);flex:1;word-break:break-all;line-height:1.7}
+.mb-byte-n{font-size:11px;color:var(--tp-text3);white-space:nowrap}
+
+/* ====== 逆引きの候補 ====== */
+.mb-rev-out{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.mb-cand{display:flex;flex-direction:column;gap:8px;background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:10px;padding:14px 16px}
+.mb-cand.is-best{border-color:var(--tp-orange-bd);background:var(--tp-orange-bg)}
+.mb-cand-badge{font-size:10px;font-weight:800;color:#fff;background:var(--tp-orange);border-radius:3px;padding:2px 8px;align-self:flex-start}
+.mb-cand-restored{font-size:16px;font-weight:700;line-height:1.7;background:#fff;border:1px solid var(--tp-border);border-radius:6px;padding:10px 12px;word-break:break-all;color:var(--tp-text)}
+.mb-cand-why{font-size:12px;line-height:1.8;color:var(--tp-text2)}
+.mb-cand-why strong{color:var(--tp-text)}
+.mb-cand-why em{display:block;font-style:normal;color:var(--tp-red);font-weight:700;margin-top:4px}
+.mb-note{font-size:12px;line-height:1.8;padding:10px 14px;border-radius:6px;background:var(--tp-amber-bg);color:var(--tp-amber);border:1px solid rgba(179,92,0,.2);font-weight:700}
+.mb-note.is-error{background:var(--tp-red-bg);color:var(--tp-red);border-color:rgba(192,57,43,.2)}
+.mb-note span{display:block;font-weight:400;color:var(--tp-text2);margin-top:3px}
+.mb-note code{font-family:'SFMono-Regular','Consolas',monospace;background:#fff;border-radius:3px;padding:1px 5px}
+.mb-caution{font-size:11px;color:var(--tp-text3);line-height:1.8;margin-top:14px;padding-top:10px;border-top:1px dashed var(--tp-border)}
+.mb-caution code{font-family:'SFMono-Regular','Consolas',monospace;background:var(--tp-cream2);border-radius:3px;padding:1px 5px}
+
+/* ====== 解説 ====== */
+.mb-why{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:22px 24px}
+.mb-why p{font-size:13px;line-height:2;color:var(--tp-text2);margin:0 0 14px}
+.mb-why p:last-child{margin-bottom:0}
+.mb-why strong{color:var(--tp-text)}
+.mb-why a{color:var(--tp-orange);font-weight:700}
+.mb-why code{font-family:'SFMono-Regular','Consolas',monospace;background:var(--tp-cream2);border-radius:3px;padding:1px 5px;font-size:12px}
+
+/* ====== FAQ（details/summaryベース。test-data.css と同スタイル） ====== */
+.faq-item{border-bottom:1px solid var(--tp-border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 2px;cursor:pointer;font-weight:700;font-size:14px;color:var(--tp-text);list-style:none}
+.faq-q::-webkit-details-marker{display:none}
+.faq-icon{color:var(--tp-orange);font-weight:700}
+details[open] .faq-icon{transform:rotate(45deg)}
+.faq-a{padding:0 2px 14px;font-size:13px;line-height:1.8;color:var(--tp-text2)}
+
+@media(max-width:900px){
+  .mb-results{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .mb-panel{padding:16px}
+  .mb-why{padding:18px}
+  .mb-byte-l{min-width:0}
+}
