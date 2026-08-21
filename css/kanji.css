@@ -1,0 +1,139 @@
+/* ============================================================
+   kanji.css — かんじドリル（子ども向け・本体ドメイン配信の静的アプリ）
+   紙面固定（.app-paper 1180px）＋余白はモザイクタイル背景。とけいと同じ系統。
+   ============================================================ */
+
+:root{
+  --kj-ink:#3a3630;
+  --kj-ink2:#7b756a;
+  --kj-ink3:#a9a296;
+  --kj-line:#e6dfd0;
+  --kj-line2:#d3c8b2;
+  --kj-cream:#fdf8ef;
+  --kj-cream2:#f5ecdb;
+  --kj-orange:#e8933f;
+  --kj-orange-dk:#cc7724;
+  --kj-green:#2f7d55;
+  --kj-green-bg:#e9f5ee;
+  --kj-red:#c0503b;
+  --kj-red-bg:#fbeeea;
+}
+
+body{
+  background-color:#ece1cb;
+  background-image:url('/assets/images/bg-mosaic.png');
+  background-size:160px 160px;
+  margin:0;
+  color:var(--kj-ink);
+}
+
+.app-paper{
+  width:100%;
+  max-width:1180px;   /* アプリ紙面の固定幅（全アプリ共通） */
+  margin:0 auto;
+  background:var(--kj-cream);
+  box-shadow:0 0 32px rgba(28,28,46,.16);
+  padding-bottom:36px;
+}
+
+/* ====== ヒーロー ====== */
+.kj-hero{
+  background:linear-gradient(135deg,#fdf1dd 0%,#f6e0d0 100%);
+  border-bottom:1px solid var(--kj-line);
+  padding:32px 40px 28px;
+  text-align:center;
+}
+.kj-eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--kj-orange);margin:0 0 8px}
+.kj-hero h1{font-size:32px;font-weight:900;margin:0 0 12px;letter-spacing:.06em}
+.kj-lead{font-size:14px;line-height:2;color:var(--kj-ink2);margin:0 0 12px}
+.kj-scope{
+  display:inline-block;font-size:11.5px;font-weight:700;color:var(--kj-orange-dk);
+  background:#fff;border:1px solid var(--kj-line2);border-radius:99px;padding:5px 16px;margin:0;
+}
+
+/* ====== メニュー ====== */
+#kj-app{max-width:700px;margin:0 auto;padding:26px 20px 0}
+.kj-group{margin-bottom:22px}
+.kj-group-title{font-size:13px;font-weight:800;color:var(--kj-ink2);margin:0 0 10px;text-align:center;letter-spacing:.1em}
+.kj-choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.kj-choice{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  background:#fff;border:2px solid var(--kj-line2);border-radius:14px;
+  padding:14px 10px;cursor:pointer;font-family:inherit;color:var(--kj-ink);
+}
+.kj-choice:hover{border-color:var(--kj-orange)}
+.kj-choice.is-on{border-color:var(--kj-orange);background:#fff6e9;box-shadow:0 2px 0 var(--kj-orange-dk)}
+.kj-choice-label{font-size:16px;font-weight:800}
+.kj-choice-note{font-size:11px;color:var(--kj-ink3)}
+
+.kj-start{
+  display:block;width:100%;background:var(--kj-orange);color:#fff;border:none;border-radius:14px;
+  padding:16px;font-size:20px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:.1em;
+  box-shadow:0 3px 0 var(--kj-orange-dk);
+}
+.kj-start:hover{background:var(--kj-orange-dk);box-shadow:0 3px 0 #a85d1e}
+.kj-back{
+  display:block;margin:16px auto 0;background:none;border:none;font-size:13px;font-weight:700;
+  color:var(--kj-ink3);cursor:pointer;font-family:inherit;
+}
+.kj-back:hover{color:var(--kj-orange)}
+
+/* ====== プレイ ====== */
+.kj-play{text-align:center}
+.kj-play-head{display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:var(--kj-ink2);margin-bottom:6px}
+.kj-bar{height:8px;background:var(--kj-cream2);border-radius:99px;overflow:hidden;margin-bottom:22px}
+.kj-bar-fill{height:100%;background:var(--kj-orange);border-radius:99px;transition:width .3s}
+.kj-ask-label{font-size:13px;font-weight:700;color:var(--kj-ink2);margin:0 0 10px}
+.kj-ask{
+  background:#fff;border:2px solid var(--kj-line2);border-radius:16px;
+  margin:0 0 22px;padding:26px 20px;font-weight:900;line-height:1.4;
+}
+.kj-ask-word{font-size:46px;letter-spacing:.08em}
+.kj-ask-yomi{font-size:34px;letter-spacing:.06em;color:var(--kj-orange-dk)}
+
+.kj-options{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.kj-opt{
+  background:#fff;border:2px solid var(--kj-line2);border-radius:14px;padding:18px 10px;
+  font-size:24px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--kj-ink);
+}
+.kj-opt:hover:not(:disabled){border-color:var(--kj-orange)}
+.kj-opt:disabled{cursor:default;opacity:.75}
+.kj-opt.is-correct{border-color:var(--kj-green);background:var(--kj-green-bg);opacity:1}
+.kj-opt.is-wrong{border-color:var(--kj-red);background:var(--kj-red-bg);opacity:1}
+
+.kj-feedback{min-height:28px;margin-top:14px;font-size:15px;font-weight:800}
+.kj-feedback.is-ok{color:var(--kj-green)}
+.kj-feedback.is-ng{color:var(--kj-red)}
+
+/* ====== けっか ====== */
+.kj-result{text-align:center;padding:20px 0}
+.kj-result-stars{font-size:44px;letter-spacing:.1em;margin:0 0 10px;color:var(--kj-orange)}
+.kj-result-score{font-size:22px;font-weight:900;margin:0 0 8px}
+.kj-result-msg{font-size:14px;color:var(--kj-ink2);margin:0 0 12px}
+.kj-missed{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:22px}
+.kj-missed-item{font-size:14px;font-weight:700;background:var(--kj-red-bg);color:var(--kj-red);border-radius:99px;padding:6px 14px}
+
+/* ====== おうちのかたへ ====== */
+.kj-doc{max-width:900px;margin:34px auto 0;padding:0 20px}
+.kj-doc h2{font-size:18px;font-weight:900;margin:28px 0 14px;padding-left:12px;border-left:4px solid var(--kj-orange)}
+.kj-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.kj-step{background:#fff;border:1px solid var(--kj-line);border-radius:12px;padding:18px 20px}
+.kj-step-n{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--kj-orange);color:#fff;font-size:13px;font-weight:900;margin-bottom:10px}
+.kj-step h3{font-size:14px;font-weight:800;margin:0 0 7px}
+.kj-step p{font-size:12.5px;line-height:1.9;color:var(--kj-ink2);margin:0}
+.kj-faq{border-bottom:1px solid var(--kj-line);background:#fff}
+.kj-faq summary{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;font-weight:800;font-size:14px;list-style:none}
+.kj-faq summary::-webkit-details-marker{display:none}
+.kj-faq summary span{color:var(--kj-orange)}
+.kj-faq[open] summary span{transform:rotate(45deg)}
+.kj-faq div{padding:0 16px 14px;font-size:13px;line-height:1.9;color:var(--kj-ink2)}
+.kj-more{font-size:13px;line-height:1.9;color:var(--kj-ink2);margin:24px 0 0;padding-top:16px;border-top:1px dashed var(--kj-line)}
+.kj-more a{color:var(--kj-orange);font-weight:700}
+
+@media(max-width:760px){
+  .kj-hero{padding:26px 20px 22px}
+  .kj-hero h1{font-size:26px}
+  .kj-ask-word{font-size:38px}
+  .kj-ask-yomi{font-size:28px}
+  .kj-steps{grid-template-columns:1fr}
+}
