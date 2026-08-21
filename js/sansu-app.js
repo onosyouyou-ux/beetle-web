@@ -84,6 +84,67 @@
     };
   }
 
+  // かけざん：むずかしさで「何の段まで出るか」を決める。ちょうなんもんだけ2けた×1けた
+  function makeMul(diff) {
+    let a, b;
+    if (diff.max <= 5) { a = pick([2, 5]); b = randInt(1, 9); }
+    else if (diff.max <= 10) { a = randInt(1, 5); b = randInt(1, 9); }
+    else if (diff.max <= 20) { a = randInt(1, 9); b = randInt(1, 9); }
+    else { a = randInt(11, 99); b = randInt(2, 9); }
+    const answer = a * b;
+    return {
+      layout: 'plain',
+      prompt: 'こたえは どれ?',
+      text: a + ' × ' + b,
+      answer: answer,
+      options: buildMulOptions(a, b, answer)
+    };
+  }
+
+  // かけざんのまちがいは「1つとなりの段」が圧倒的に多いので、それを選択肢に混ぜる。
+  // ±1・±2 のような足し算のまちがい方を並べても、九九の練習にならない
+  function buildMulOptions(a, b, correct) {
+    const near = [(a + 1) * b, (a - 1) * b, a * (b + 1), a * (b - 1)];
+    const opts = new Set([correct]);
+    shuffle(near).forEach((v) => { if (v > 0 && v !== correct && opts.size < 4) opts.add(v); });
+    let guard = 0;
+    while (opts.size < 4 && guard++ < 300) {
+      const v = randInt(Math.max(1, correct - 12), correct + 12);
+      if (v !== correct) opts.add(v);
+    }
+    return shuffle(Array.from(opts));
+  }
+
+  // わりざん：わりきれる問題が基本。ちょうなんもんだけ「あまり」を答えさせる
+  // （こたえは数字1つでないと4択にできないため、商ではなく あまり を聞く形にしている）
+  function makeDiv(diff) {
+    if (diff.max >= 100) {
+      const b = randInt(2, 9);
+      const rest = randInt(1, b - 1);
+      const a = b * randInt(1, 9) + rest;
+      return {
+        layout: 'plain',
+        prompt: 'あまりは どれ?',
+        text: a + ' ÷ ' + b,
+        answer: rest,
+        // わる数より大きい「あまり」も選択肢に出す（よくあるまちがい）
+        options: buildOptions(rest, 0, Math.min(9, b + 1))
+      };
+    }
+    let b;
+    if (diff.max <= 5) b = pick([2, 5]);
+    else if (diff.max <= 10) b = randInt(2, 5);
+    else b = randInt(2, 9);
+    const q = randInt(1, 9);
+    return {
+      layout: 'plain',
+      prompt: 'こたえは どれ?',
+      text: (b * q) + ' ÷ ' + b,
+      answer: q,
+      options: buildOptions(q, 1, 9)
+    };
+  }
+
   // さくらんぼ算：うしろの数を「キリのいい数をつくる分」と「あまり」に分ける。
   // 教科書どおり「大きいほうを10にする」ため、前の数 a は必ず b 以上にする
   // （6+8 で 8 を崩すのは不自然。8+6 で 6 を 2 と 4 に分けるのが本来の形）
@@ -119,9 +180,19 @@
       icon: 'addition', diffNote: (d) => d.max + 'までの たしざん' },
     { id: 'hikizan', name: 'ひきざん', emoji: '➖', ready: true, make: makeSub,
       icon: 'subtraction', diffNote: (d) => d.max + 'までの ひきざん' },
+    { id: 'kakezan', name: 'かけざん', emoji: '✖️', ready: true, make: makeMul,
+      icon: 'multiplication',
+      diffNote: (d) => (d.max >= 100 ? '2けた × 1けた'
+        : d.max >= 20 ? '1〜9の だん'
+          : d.max >= 10 ? '1〜5の だん' : '2と5の だん') },
+    { id: 'warizan', name: 'わりざん', emoji: '➗', ready: true, make: makeDiv,
+      icon: 'division',
+      diffNote: (d) => (d.max >= 100 ? 'あまりを こたえる'
+        : d.max >= 20 ? '9の だんまで'
+          : d.max >= 10 ? '5の だんまで' : '2と5で わる') },
     // さくらんぼ算は「10のかたまり」を作る技法なので、前の数の大きさで難しさが決まる
     { id: 'sakuranbo', name: 'さくらんぼざん', emoji: '🍒', ready: true, make: makeCherry,
-      icon: 'multiplication',
+      icon: 'cherry',
       diffNote: (d) => (d.max >= 100 ? '2けたの くり上がり'
         : d.max >= 20 ? '1けたどうし'
           : d.max >= 10 ? '7〜9に たす' : '8・9に たす') }
@@ -250,7 +321,7 @@
     // さくらんぼざんの となりに、やりかた解説へのリファレンスボタンを置く
     const refBtn = el('button', 'sa-ref');
     refBtn.type = 'button';
-    refBtn.appendChild(icon('multiplication', 'sa-ref-icon'));
+    refBtn.appendChild(icon('cherry', 'sa-ref-icon'));
     const refBody = el('span', 'sa-choice-body');
     refBody.appendChild(el('span', 'sa-choice-label', 'やりかた'));
     refBody.appendChild(el('span', 'sa-choice-note', 'さくらんぼざん って?'));
