@@ -140,3 +140,31 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
   .footer-link-nav { justify-content: center; }
   .footer-link-right { justify-content: center; }
 }
+
+/* ── ブロックごとの系統色（2026-08-22）──
+   同じ見た目のカードが延々と続いて「いまどのブロックを見ているか」が分からなかった。
+   セクションごとに1色だけ差し、カード上端の細い線・アイコンチップ・番号に効かせる。
+   --sec を定義していないページ（edu-tools など）では var() のフォールバックで
+   これまでどおりの見た目になる（カード上端の線はフォールバックなし＝透明で出ない）。
+   カード末尾の「詳しく見る →」はカードルールどおりアクセント色のまま変えない。 */
+#reference { --sec:#3a5f86; --sec-bg:#eef2f7; }   /* 読んで参照する資料 → 藍 */
+#tools     { --sec:#C0634C; --sec-bg:#fdf0ec; }   /* 操作して使う道具 → BEETLEオレンジ */
+#column    { --sec:#5c5470; --sec-bg:#f1eff5; }   /* 読みもの → 墨紫 */
+#services  { --sec:#2f7d55; --sec-bg:#ecf5f0; }   /* 仕事の依頼 → 深緑 */
+
+.section-num { color: var(--sec, var(--tp-orange)); }
+
+.tool-card::before {
+  content: '';
+  position: absolute; left: 0; right: 0; top: 0; height: 3px;
+  background: var(--sec);
+  border-radius: 12px 12px 0 0;
+  opacity: .5;
+  transition: opacity .15s;
+}
+.tool-card:hover::before { opacity: 1; }
+/* サムネつきカード（edu-tools）は画像の上端に線がかぶるので出さない */
+.tool-card:has(.tool-thumb)::before { display: none; }
+
+.tool-icon { background: var(--sec-bg, var(--tp-cream2)); color: var(--sec, var(--tp-orange)); }
+.tool-card:hover { border-color: var(--sec, var(--tp-orange-bd)); }
