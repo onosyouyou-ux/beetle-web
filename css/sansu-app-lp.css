@@ -137,11 +137,12 @@ img { max-width: 100%; height: auto; }
 .slp-kicker span { font-size: 14px; }
 .slp-hero h1 {
   margin: 0 0 22px;
-  font-size: clamp(36px, 4.5vw, 55px);
+  font-size: clamp(34px, 4vw, 46px);
   font-weight: 800;
   line-height: 1.28;
   letter-spacing: .01em;
 }
+.slp-title-line { display: block; white-space: nowrap; }
 .slp-hero h1 .accent {
   color: var(--sl-gold);
   text-shadow: 0 0 24px rgba(255, 212, 90, .2);
@@ -659,7 +660,7 @@ img { max-width: 100%; height: auto; }
   .slp-wrap { padding: 0 18px; }
   .slp-hero { padding: 56px 0 48px; }
   .slp-kicker { font-size: 10px; }
-  .slp-hero h1 { font-size: 34px; }
+  .slp-hero h1 { font-size: clamp(27px, 8.4vw, 34px); }
   .slp-hero-copy { font-size: 14px; line-height: 1.85; }
   .slp-cta-row { display: grid; grid-template-columns: 1fr; }
   .slp-cta-row .slp-btn { width: 100%; }
