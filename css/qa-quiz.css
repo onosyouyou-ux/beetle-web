@@ -1,0 +1,94 @@
+/* ============================================================
+   qa-quiz.css — QA用語クイズ 固有スタイル
+   共通変数は /style/common.css の --tp-* を流用
+   ============================================================ */
+
+.qq-panel{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:22px}
+
+/* ====== メニュー ====== */
+.qq-menu{max-width:620px;margin:0 auto}
+.qq-group{margin-bottom:20px}
+.qq-group-title{font-size:12px;font-weight:700;color:var(--tp-text2);letter-spacing:.06em;margin:0 0 8px}
+.qq-choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.qq-choice{
+  display:flex;flex-direction:column;gap:2px;align-items:flex-start;
+  background:#fff;border:1px solid var(--tp-border2);border-radius:8px;padding:11px 14px;
+  cursor:pointer;font-family:inherit;color:var(--tp-text);text-align:left;
+  transition:border-color .12s,background .12s;
+}
+.qq-choice:hover{border-color:var(--tp-orange)}
+.qq-choice.is-on{border-color:var(--tp-orange);background:var(--tp-orange-bg,#fdf0ec);border-width:2px;padding:10px 13px}
+.qq-choice-label{font-size:13px;font-weight:700}
+.qq-choice-note{font-size:11px;color:var(--tp-text3)}
+.qq-note{font-size:12px;color:var(--tp-text3);text-align:center;margin:0 0 14px}
+.qq-start{
+  display:block;width:100%;background:var(--tp-orange);color:#fff;border:none;border-radius:2px;
+  padding:14px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;
+}
+.qq-start:hover{background:#a9543f}
+
+/* ====== 出題 ====== */
+.qq-play{max-width:660px;margin:0 auto;text-align:center}
+.qq-play-head{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;color:var(--tp-text2);margin-bottom:6px}
+.qq-bar{height:6px;background:var(--tp-cream2);border-radius:99px;overflow:hidden;margin-bottom:20px}
+.qq-bar-fill{height:100%;background:var(--tp-orange);border-radius:99px;transition:width .3s}
+.qq-ask{font-size:13px;font-weight:700;color:var(--tp-text2);margin:0 0 12px}
+
+.qq-stage{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:12px;
+  padding:26px 20px;margin-bottom:20px;
+}
+.qq-stage-term{font-size:26px;font-weight:900;letter-spacing:.02em;color:var(--tp-text);line-height:1.35}
+.qq-stage-read{font-size:12px;color:var(--tp-text3)}
+.qq-stage-def{padding:22px 24px}
+.qq-stage-deftext{font-size:15px;line-height:1.9;color:var(--tp-text);text-align:left}
+
+.qq-options{display:grid;gap:9px}
+/* 意味は長いので1列。用語は短いので2列に並べる */
+.qq-options-term2def{grid-template-columns:1fr}
+.qq-options-def2term{grid-template-columns:repeat(2,1fr)}
+.qq-opt{
+  background:#fff;border:1px solid var(--tp-border2);border-radius:8px;padding:13px 16px;
+  font-size:13.5px;line-height:1.75;font-weight:600;cursor:pointer;font-family:inherit;
+  color:var(--tp-text);text-align:left;transition:border-color .12s;
+}
+.qq-options-def2term .qq-opt{font-size:14.5px;font-weight:700;text-align:center}
+.qq-opt:hover:not(:disabled){border-color:var(--tp-orange)}
+.qq-opt:disabled{cursor:default;opacity:.7}
+.qq-opt.is-correct{border-color:var(--tp-green,#2f7d55);background:#eef6f1;opacity:1;border-width:2px}
+.qq-opt.is-wrong{border-color:var(--tp-orange);background:#fdf0ec;opacity:1;border-width:2px}
+
+.qq-feedback{min-height:24px;margin-top:16px;font-size:13px;line-height:1.85;font-weight:600;text-align:left}
+.qq-feedback.is-ok{color:var(--tp-green,#2f7d55)}
+.qq-feedback.is-ng{color:var(--tp-text2)}
+.qq-next{
+  display:block;margin:12px auto 0;background:var(--tp-dark);color:#fff;border:none;border-radius:2px;
+  padding:10px 28px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
+}
+.qq-next:hover{background:var(--tp-dark2)}
+
+.qq-back{
+  display:block;margin:22px auto 0;background:none;border:none;
+  font-size:12px;font-weight:700;color:var(--tp-text3);cursor:pointer;font-family:inherit;
+}
+.qq-back:hover{color:var(--tp-orange)}
+
+/* ====== 結果 ====== */
+.qq-result{max-width:660px;margin:0 auto;text-align:center}
+.qq-result-score{font-size:22px;font-weight:900;margin:6px 0 8px;color:var(--tp-text)}
+.qq-result-msg{font-size:13.5px;line-height:1.85;color:var(--tp-text2);margin:0 0 20px}
+.qq-missed{background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:12px;padding:18px 20px;text-align:left;margin-bottom:20px}
+.qq-missed h3{font-size:13px;font-weight:800;margin:0 0 12px;color:var(--tp-text)}
+.qq-missed-item{padding:10px 0;border-top:1px solid var(--tp-border)}
+.qq-missed-item:first-of-type{border-top:none;padding-top:0}
+.qq-missed-term{display:block;font-size:14.5px;font-weight:800;color:var(--tp-text);margin-bottom:3px}
+.qq-missed-def{display:block;font-size:12.5px;line-height:1.8;color:var(--tp-text2)}
+.qq-missed-link{font-size:12.5px;color:var(--tp-text3);margin:14px 0 0}
+.qq-missed-link a{color:var(--tp-orange);font-weight:700}
+
+@media (max-width:640px){
+  .qq-options-def2term{grid-template-columns:1fr}
+  .qq-stage-term{font-size:21px}
+  .qq-panel{padding:16px}
+}
