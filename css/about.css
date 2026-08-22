@@ -7,6 +7,8 @@
 .article-meta{display:flex;align-items:center;gap:10px;}
 .avatar{width:36px;height:36px;border-radius:50%;background:#2C2C2A;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--color-accent);flex-shrink:0;}
 .article-meta-text{font-size:12px;color:#888;}
+.article-portrait{width:min(100%,400px);margin:24px auto 0;overflow:hidden;border-radius:14px;box-shadow:0 14px 36px rgba(28,28,46,.14);}
+.article-portrait img{display:block;width:100%;height:auto;}
 
 .article-body{font-size:15px;line-height:2;color:#333;}
 .article-body p{margin-bottom:1.6em;}
