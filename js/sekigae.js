@@ -40,8 +40,23 @@
     return s;
   }
 
+  // 改行だけでなく、カンマ・読点・タブ・セミコロンでも人を区切る。
+  // スペースは「田中 そうた」のように名前の中で使われるので、ふだんは区切りにしない
+  // （「スペースでも区切る」を押されたときだけ splitOnSpace を立てる）。
+  var NAME_SEP = /[\n\r\t,、，;；]+/;
+  var NAME_SEP_SP = /[\n\r\t,、，;；\s　]+/;
+  var splitOnSpace = false;
+
+  // 1つの名前に語が3つ以上あると、複数人が1行に詰まっている見込みが高い
+  // （「田中 そうた」は2語まで。「田中 佐藤 鈴木」は3語）
+  function looksCrammed(names) {
+    return names.some(function (n) {
+      return n.split(/[\s　]+/).filter(Boolean).length >= 3;
+    });
+  }
+
   function parseNames(text) {
-    var raw = text.split('\n').map(cleanName).filter(Boolean);
+    var raw = text.split(splitOnSpace ? NAME_SEP_SP : NAME_SEP).map(cleanName).filter(Boolean);
     // 同姓同名は区別できないので、2人目以降に印をつけて別人として扱う
     var seen = {}, out = [];
     raw.forEach(function (n) {
@@ -351,13 +366,43 @@
   }
 
   function updateCount() {
-    var n = parseNames($('sk-names').value).length;
+    var names = parseNames($('sk-names').value);
+    var n = names.length;
     $('sk-count').textContent = n + '人';
+    updateSepNote(names);
     var rows = parseInt($('sk-rows').value, 10);
     var cols = parseInt($('sk-cols').value, 10);
     var seats = rows * cols;
     $('sk-seats').textContent = '席は ' + seats + '（' + cols + '×' + rows + '）' +
       (n ? '・' + (seats >= n ? 'あき ' + (seats - n) + '席' : n - seats + '席たりません') : '');
+  }
+
+  // 「1行に1人」が伝わりにくいので、詰まって見えるときだけその場で直せるようにする
+  function updateSepNote(names) {
+    var note = $('sk-sep-note');
+    if (!note) return;
+    if (splitOnSpace) {
+      note.hidden = false;
+      note.innerHTML = 'スペースでも区切って ' + names.length + '人 として読んでいます。' +
+        '<button type="button" class="sk-mini" id="sk-sep-off">もとに戻す</button>';
+      $('sk-sep-off').addEventListener('click', function () {
+        splitOnSpace = false;
+        updateCount();
+      });
+      return;
+    }
+    if (looksCrammed(names)) {
+      note.hidden = false;
+      note.innerHTML = '名前が1行に詰まっていませんか？ いまは ' + names.length + '人 として読んでいます。' +
+        '<button type="button" class="sk-mini" id="sk-sep-on">スペースでも区切る</button>';
+      $('sk-sep-on').addEventListener('click', function () {
+        splitOnSpace = true;
+        updateCount();
+      });
+      return;
+    }
+    note.hidden = true;
+    note.innerHTML = '';
   }
 
   function copyText(text, btn) {

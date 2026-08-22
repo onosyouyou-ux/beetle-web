@@ -47,7 +47,7 @@
   "@type": "HowTo",
   "name": "席替えメーカーで座席表を作る手順",
   "step": [
-    { "@type": "HowToStep", "name": "名簿を貼る", "text": "児童・生徒の名前を1行に1人ずつ貼り付けます。空欄のままでも「1番」「2番」と番号で作れます。" },
+    { "@type": "HowToStep", "name": "名簿を貼る", "text": "児童・生徒の名前を1行に1人ずつ貼り付けます。「、」やカンマ・タブで区切ってもかまいません。空欄のままでも「1番」「2番」と番号で作れます。" },
     { "@type": "HowToStep", "name": "席の数と配慮を決める", "text": "縦と横の席の数を選び、「離す」「前列」「後列」「固定」の配慮を1行ずつ書きます。" },
     { "@type": "HowToStep", "name": "作って印刷する", "text": "「席替えする」を押すと配慮を守った座席表ができます。気に入らなければ何度でも引き直し、決まったら印刷します。" }
   ]
@@ -114,8 +114,9 @@
             <span class="sk-count" id="sk-count">0人</span>
             <button type="button" class="sk-mini" id="sk-sample">見本を入れる</button>
           </div>
-          <textarea id="sk-names" rows="10" spellcheck="false" placeholder="1行に1人ずつ貼り付けてください&#10;空のままでも「1番」「2番」で作れます"></textarea>
-          <p class="sk-hint">出席番号つきの名簿（「1 田中」など）をそのまま貼っても大丈夫です。</p>
+          <textarea id="sk-names" rows="10" spellcheck="false" placeholder="田中 そうた&#10;佐藤 みゆき&#10;鈴木 かい&#10;&#10;↑ このように 1行に1人ずつ。空のままでも「1番」「2番」で作れます"></textarea>
+          <p class="sk-sep-note" id="sk-sep-note" hidden></p>
+          <p class="sk-hint"><b>1行に1人</b>ずつ書きます。「、」やカンマ・タブで区切ってもかまいません。出席番号つきの名簿（「1 田中」など）をそのまま貼っても大丈夫です。</p>
         </div>
 
         <div class="sk-col">
@@ -161,7 +162,7 @@
         <div class="sk-step">
           <span class="sk-step-n">1</span>
           <h3>名簿を貼る</h3>
-          <p>Excelや名簿ソフトから、名前の列をそのままコピーして貼り付けてください。「1 田中」のように出席番号がついていても読み取ります。空のままなら「1番」「2番」の番号で作ります。</p>
+          <p>Excelや名簿ソフトから、名前の列をそのままコピーして貼り付けてください。<b>1行に1人</b>ずつです（「、」やカンマ・タブで区切ってもかまいません）。「1 田中」のように出席番号がついていても読み取ります。空のままなら「1番」「2番」の番号で作ります。</p>
         </div>
         <div class="sk-step">
           <span class="sk-step-n">2</span>

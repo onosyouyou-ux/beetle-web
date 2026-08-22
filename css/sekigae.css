@@ -69,6 +69,14 @@ body{
   color:var(--sk-ink);font-family:inherit;
 }
 .sk-panel textarea:focus{outline:none;border-color:var(--sk-orange)}
+/* 「1行に1人」が伝わっていないときだけ出す、その場で直せる注意書き */
+.sk-sep-note{
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px;
+  font-size:11.5px;line-height:1.7;font-weight:700;color:var(--sk-ink2);
+  background:var(--sk-cream2);border-radius:8px;padding:8px 10px;margin:7px 0 0;
+}
+.sk-sep-note .sk-mini{margin-left:0}
+
 .sk-hint{font-size:11.5px;line-height:1.8;color:var(--sk-ink3);margin:7px 0 0}
 .sk-hint code,.sk-table code{font-family:'SFMono-Regular','Consolas',monospace;background:var(--sk-cream2);border-radius:3px;padding:1px 6px;color:var(--sk-ink2)}
 
