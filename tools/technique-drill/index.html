@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>テスト技法ドリル｜境界値・同値分割・デシジョンテーブルを演習【無料】｜BEETLE</title>
+<meta name="description" content="「1以上100以下の整数」なら境界値は何件？条件が4つならデシジョンテーブルは何通り？ 境界値分析・同値分割・デシジョンテーブル・ペアワイズの4技法を、その場で作られる仕様で演習できる無料ドリル。1問ごとに理由の解説つき。仕様は毎回ランダムに組み立てるので同じ問題は出ません。登録不要・ブラウザ内で完結。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="テスト技法ドリル | BEETLE">
+<meta property="og:description" content="境界値分析・同値分割・デシジョンテーブル・ペアワイズを4択で演習。仕様は毎回ランダム生成、1問ごとに解説つき。完全無料。">
+<meta property="og:url" content="https://www.beetle-web.jp/tools/technique-drill/">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="テスト技法ドリル | BEETLE">
+<meta name="twitter:description" content="境界値分析・同値分割・デシジョンテーブル・ペアワイズを4択で演習。仕様は毎回ランダム生成、解説つき。完全無料。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<link rel="canonical" href="https://www.beetle-web.jp/tools/technique-drill/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "テスト技法ドリル",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "url": "https://www.beetle-web.jp/tools/technique-drill/",
+  "description": "境界値分析・同値分割・デシジョンテーブル・ペアワイズの4技法を、その場で組み立てた仕様で演習できる無料ドリル。1セット10問、1問ごとに理由の解説つき。"
+}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"QA支援","item":"https://www.beetle-web.jp/test-tools.html"},{"@type":"ListItem","position":3,"name":"テスト技法ドリル","item":"https://www.beetle-web.jp/tools/technique-drill/"}]}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "どの技法が出ますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "境界値分析・同値分割・デシジョンテーブル・ペアワイズの4つです。「ぜんぶ」を選ぶと4技法から順に出ます。1つに絞って繰り返すこともできます。1セットは10問です。" }
+    },
+    {
+      "@type": "Question",
+      "name": "問題は決まっていますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "決まっていません。仕様（数値の範囲・区分・条件の数・因子と水準）をその場で組み立てて出題するので、同じ問題は基本的に出ません。答えは必ず計算で1つに定まるものだけを扱っています。" }
+    },
+    {
+      "@type": "Question",
+      "name": "2値の境界値分析と3値の違いは何ですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "2値は「境界そのもの」と「その1つ外側」を取ります。1以上100以下なら 0・1・100・101 の4件です。3値はさらに内側も取り、0・1・2・99・100・101 の6件になります。どちらを使うかは現場のルール次第なので、このドリルでは問題文でどちらかを明示しています。" }
+    },
+    {
+      "@type": "Question",
+      "name": "ペアワイズの「理論上の下限」とは何ですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "水準数がいちばん多い2つの因子だけを見ても、その全組み合わせは必ず1回ずつ必要になります。だから「その2つの水準数の積」より少ない件数にはできません。実際の生成結果はこの下限より少し多いあたりに落ち着きます。実物の表はペアワイズ生成器で作れます。" }
+    },
+    {
+      "@type": "Question",
+      "name": "成績は保存されますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "保存していません。10問終わると、まちがえた問題と解説が結果画面に残ります。ページを閉じると消えます。計算も採点もすべてブラウザの中で行っていて、サーバーには何も送信していません。" }
+    }
+  ]
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/style/common.css">
+<link rel="stylesheet" href="/css/reference.css">
+<link rel="stylesheet" href="/css/technique-drill.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" style="height:28px;vertical-align:middle;border-radius:6px;"></a>
+  <span>›</span>
+  <a href="/test-tools.html">ツール一覧</a>
+  <span>›</span>
+  <span style="color:#ddd;font-size:13px;">テスト技法ドリル</span>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">TOOL</div>
+  <h1>テスト技法<em>ドリル</em></h1>
+  <p>「1以上100以下」の境界値は、何件とる？<br>読んで知っている技法を、手が動く技法にする。</p>
+</div>
+
+<div class="ref-nav">
+  <a href="#tool">ドリルを解く</a>
+  <a href="#howto">使い方</a>
+  <a href="#about">4つの技法</a>
+  <a href="#faq">よくある質問</a>
+</div>
+
+<p class="ref-lead">技法の説明は読めば分かります。困るのは、目の前の仕様を渡されたときに<strong>「で、何件とればいいんだっけ」</strong>で止まることのほうです。このドリルは仕様をその場で組み立てて出題します。数値の範囲も、条件の数も、因子と水準も毎回変わるので、答えを覚えることができません。1問ごとに「なぜその数になるか」を出すので、まちがえたところから埋められます。<a href="/tools/test-techniques/">テスト技法カタログ</a>が「読む」側、こちらが「使う」側です。入力も成績もブラウザの外に出ません。</p>
+
+<div class="sw">
+
+  <section id="tool" class="ref-section">
+    <div class="ref-sec-hd"><h2>ドリルを解く</h2><span class="d">技法を選んでスタート。1セット10問、解説つき</span></div>
+    <div class="td-panel">
+      <div id="td-app"></div>
+    </div>
+  </section>
+
+  <section id="howto" class="ref-section">
+    <div class="ref-sec-hd"><h2>使い方</h2><span class="d">3ステップ</span></div>
+    <div class="ref-grid">
+      <div class="ref-card">
+        <h3>1. 技法を選ぶ</h3>
+        <p>「ぜんぶ」なら4技法から順に出ます。苦手が分かっているなら、境界値分析だけ・デシジョンテーブルだけ、と絞って繰り返すほうが早く固まります。</p>
+      </div>
+      <div class="ref-card">
+        <h3>2. 仕様を読んで答える</h3>
+        <p>問題文の仕様は毎回その場で作られます。「2値」「3値」「全網羅」「下限」など、答えが変わる言葉は問題文で必ず明示しているので、そこを読んでから選んでください。</p>
+      </div>
+      <div class="ref-card">
+        <h3>3. 解説を読む</h3>
+        <p>答えた直後に、なぜその数になるかが出ます。まちがえた問題は解説ごと結果画面に残るので、そこだけ読み返してもう一度回してください。成績は保存していません。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="ref-section">
+    <div class="ref-sec-hd"><h2>4つの技法</h2><span class="d">このドリルで出るもの</span></div>
+    <div class="ref-grid">
+      <div class="ref-card">
+        <h3>境界値分析</h3>
+        <p>バグは範囲の境目に集まります。「1以上100以下」なら、2値で 0・1・100・101 の4件、3値なら 2 と 99 も足して6件。下限が0のときに外側が -1 になる、といった引っかけも出ます。</p>
+      </div>
+      <div class="ref-card">
+        <h3>同値分割</h3>
+        <p>同じ扱いを受ける値をひとかたまりにして、代表を1件だけ試す考え方。「この値と同じ区分に入るのはどれ？」と「区分はいくつある？」の2つの形で出ます。</p>
+      </div>
+      <div class="ref-card">
+        <h3>デシジョンテーブル</h3>
+        <p>条件の組み合わせを表にする技法。Yes/No が4つなら16通り、3値と2値が混ざれば掛け算。足し算ではなく掛け算になるところが、組み合わせが爆発する理由です。</p>
+      </div>
+      <div class="ref-card">
+        <h3>ペアワイズ</h3>
+        <p>全網羅の件数と、2因子間網羅でこれ以上減らせない下限を問います。下限は「水準数がいちばん多い2因子の積」。実物の表は <a href="/tools/pairwise/">ペアワイズ生成器</a> で作れます。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="ref-section">
+    <div class="ref-sec-hd"><h2>よくある質問</h2></div>
+
+    <details class="faq-item">
+      <summary class="faq-q"><span>どの技法が出ますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">境界値分析・同値分割・デシジョンテーブル・ペアワイズの4つです。「ぜんぶ」を選ぶと4技法から順に出ます。1つに絞って繰り返すこともできます。1セットは10問です。</div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-q"><span>問題は決まっていますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">決まっていません。仕様（数値の範囲・区分・条件の数・因子と水準）をその場で組み立てて出題するので、同じ問題は基本的に出ません。答えは必ず計算で1つに定まるものだけを扱っています。</div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-q"><span>2値の境界値分析と3値の違いは何ですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">2値は「境界そのもの」と「その1つ外側」を取ります。1以上100以下なら 0・1・100・101 の4件です。3値はさらに内側も取り、0・1・2・99・100・101 の6件になります。どちらを使うかは現場のルール次第なので、このドリルでは問題文でどちらかを明示しています。</div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-q"><span>ペアワイズの「理論上の下限」とは何ですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">水準数がいちばん多い2つの因子だけを見ても、その全組み合わせは必ず1回ずつ必要になります。だから「その2つの水準数の積」より少ない件数にはできません。実際の生成結果はこの下限より少し多いあたりに落ち着きます。実物の表は <a href="/tools/pairwise/">ペアワイズ生成器</a> で作れます。</div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-q"><span>成績は保存されますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">保存していません。10問終わると、まちがえた問題と解説が結果画面に残ります。ページを閉じると消えます。計算も採点もすべてブラウザの中で行っていて、サーバーには何も送信していません。</div>
+    </details>
+  </section>
+
+</div>
+
+<div class="site-description">
+  <p>技法そのものの説明は <a href="/tools/test-techniques/">テスト技法カタログ</a>、ペアワイズの表を作るなら <a href="/tools/pairwise/">ペアワイズ生成器</a>、用語のほうを確かめるなら <a href="/tools/qa-quiz/">QA用語クイズ</a> をどうぞ。</p>
+</div>
+
+<!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一）。テスト検証用ツールなのでヒーローズバナー付き -->
+<div class="footer-heroes"><img src="/assets/images/footer-heroes.jpg" alt="" aria-hidden="true" width="2172" height="264" loading="lazy"></div>
+<footer class="site-footer-app">
+  <div class="sfa-row">
+    <a href="/" class="sfa-logo">BEET<span>LE</span></a>
+    <nav class="sfa-nav">
+      <a href="/">トップ</a>
+      <a href="/test-tools.html">QA支援</a>
+      <a href="/edu-tools.html">教育支援</a>
+      <a href="/blog/">コラム</a>
+      <a href="/#contact">お問い合わせ</a>
+    </nav>
+  </div>
+  <div class="sfa-copy">
+    <a href="/privacy">プライバシーポリシー</a>
+    <span>© 2026 BEETLE Co., LLC</span>
+  </div>
+</footer>
+<button class="scroll-top-float" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script src="/js/common.js"></script>
+<script src="/js/contact-track.js"></script>
+<script src="/js/technique-drill.js"></script>
+</body>
+</html>
