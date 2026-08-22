@@ -135,8 +135,9 @@
 
   function qEquivalence() {
     var c = pick(EQ_CASES);
+    // 区分名を「」で囲むと仕様全体の「」と二重になって読みにくいので ＝ でつなぐ
     var specLines = c.bands.map(function (b) {
-      return b[1] + '〜' + b[2] + c.unit + ' は「' + b[0] + '」';
+      return b[1] + '〜' + b[2] + c.unit + '＝' + b[0];
     }).join('／');
     var spec = '「' + c.subject + 'は ' + specLines + '」';
 
