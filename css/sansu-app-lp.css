@@ -1,17 +1,22 @@
-/* ── さんすう うちゅうたんけん ランディング（Tool系・子ども向け）
-   アプリ本体（sansu-app.css）と同じ宇宙×パープルのトーン。
-   ページ地はクリーム、ヒーローだけ宇宙のダーク。カードは白＋やわらかい影 ── */
+/* ── さんすう うちゅうたんけん ランディング
+   宇宙のワクワク感と、保護者が短時間で機能を理解できる情報設計を両立する。 ── */
 
 :root {
-  --sl-ink: #241f4d;
-  --sl-purple: #7c5cf0;
-  --sl-purple-d: #6a49dd;
-  --sl-purple-soft: #b6a8f5;
-  --sl-gold: #f2c230;
-  --sl-cream: #faf8f3;
-  --sl-line: #ece7f7;
+  --sl-ink: #211c4b;
+  --sl-ink-soft: #5d5878;
+  --sl-space: #0b1230;
+  --sl-space-2: #121b47;
+  --sl-purple: #7657e8;
+  --sl-purple-dark: #5a3bd0;
+  --sl-purple-pale: #f1edff;
+  --sl-gold: #ffd45a;
+  --sl-orange: #ff7b42;
+  --sl-cream: #fbf9f4;
+  --sl-white: #fff;
+  --sl-line: #e7e0f7;
 }
 
+html { scroll-behavior: smooth; }
 body {
   margin: 0;
   background: var(--sl-cream);
@@ -20,240 +25,684 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
-.slp-wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+.slp-wrap { width: min(1120px, 100%); margin: 0 auto; padding: 0 28px; }
 img { max-width: 100%; height: auto; }
 
 /* ── ボタン ── */
 .slp-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  padding: 15px 30px;
+  min-height: 54px;
+  padding: 14px 28px;
   border-radius: 999px;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 800;
+  line-height: 1.4;
   text-decoration: none;
   cursor: pointer;
-  transition: transform .12s, box-shadow .12s, background .12s;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
 }
 .slp-btn-primary {
-  background: linear-gradient(160deg, #8b6cf6, #6a49dd);
+  background: linear-gradient(135deg, #ff5d52 0%, #ffae32 100%);
   color: #fff;
-  box-shadow: 0 8px 22px rgba(106, 73, 221, .4);
+  box-shadow: 0 10px 26px rgba(255, 114, 60, .35);
 }
-.slp-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(106, 73, 221, .5); }
+.slp-btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 34px rgba(255, 114, 60, .48); }
 .slp-btn-ghost {
-  background: rgba(255, 255, 255, .12);
+  background: rgba(255, 255, 255, .09);
   color: #fff;
-  border: 2px solid rgba(255, 255, 255, .5);
+  border: 1.5px solid rgba(255, 255, 255, .46);
 }
-.slp-btn-ghost:hover { border-color: #fff; background: rgba(255, 255, 255, .2); }
+.slp-btn-ghost:hover { transform: translateY(-2px); border-color: #fff; background: rgba(255, 255, 255, .17); }
+.slp-btn-secondary {
+  background: linear-gradient(145deg, #8062ed, #5b3bd1);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(90, 59, 208, .25);
+}
+.slp-btn-secondary:hover { transform: translateY(-3px); box-shadow: 0 15px 32px rgba(90, 59, 208, .36); }
+.slp-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--sl-purple-dark);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+}
+.slp-text-link span { transition: transform .15s ease; }
+.slp-text-link:hover span { transform: translateX(4px); }
 
-/* ── ヒーロー（宇宙のダーク）── */
+/* ── ヒーロー ── */
 .slp-hero {
   position: relative;
-  padding: 64px 0 76px;
-  background:
-    linear-gradient(180deg, rgba(10, 15, 34, .72), rgba(12, 19, 50, .92)),
-    #0a0f22 url('/assets/images/sansu/bg-space.jpg') center / cover no-repeat;
+  isolation: isolate;
+  padding: 82px 0 76px;
   color: #fff;
   overflow: hidden;
+  background:
+    radial-gradient(circle at 77% 22%, rgba(110, 76, 230, .38), transparent 26%),
+    radial-gradient(circle at 8% 72%, rgba(45, 117, 220, .22), transparent 32%),
+    linear-gradient(135deg, rgba(8, 13, 36, .82), rgba(12, 18, 48, .94)),
+    var(--sl-space) url('/assets/images/sansu/bg-space.jpg') center / cover no-repeat;
+}
+.slp-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: .7;
+  background-image:
+    radial-gradient(circle at 12% 18%, #fff 0 1px, transparent 1.5px),
+    radial-gradient(circle at 28% 76%, #ffd75e 0 1.5px, transparent 2px),
+    radial-gradient(circle at 60% 14%, #fff 0 1px, transparent 1.5px),
+    radial-gradient(circle at 92% 67%, #fff 0 1px, transparent 1.5px);
+  background-size: 180px 180px, 240px 240px, 210px 210px, 260px 260px;
+}
+.slp-hero::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -250px;
+  width: 780px;
+  height: 420px;
+  z-index: -1;
+  border: 1px solid rgba(255, 212, 90, .24);
+  border-radius: 50%;
+  transform: rotate(-8deg);
+  box-shadow: 0 0 60px rgba(118, 87, 232, .18);
 }
 .slp-hero-grid {
   display: grid;
-  grid-template-columns: 1.05fr .95fr;
-  gap: 44px;
+  grid-template-columns: .9fr 1.1fr;
+  gap: 58px;
   align-items: center;
 }
-.slp-badge {
-  display: inline-block;
-  margin-bottom: 18px;
-  padding: 7px 16px;
+.slp-hero-copy-col { position: relative; z-index: 2; }
+.slp-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 7px 14px;
+  border: 1px solid rgba(255, 212, 90, .4);
   border-radius: 999px;
-  background: rgba(242, 194, 48, .16);
-  border: 1px solid rgba(242, 194, 48, .5);
+  background: rgba(255, 212, 90, .1);
   color: var(--sl-gold);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
+  letter-spacing: .04em;
 }
+.slp-kicker span { font-size: 14px; }
 .slp-hero h1 {
-  margin: 0 0 18px;
-  font-size: clamp(30px, 4.4vw, 46px);
+  margin: 0 0 22px;
+  font-size: clamp(36px, 4.5vw, 55px);
   font-weight: 800;
   line-height: 1.28;
   letter-spacing: .01em;
 }
-.slp-hero h1 .accent { color: #ffd75e; }
+.slp-hero h1 .accent {
+  color: var(--sl-gold);
+  text-shadow: 0 0 24px rgba(255, 212, 90, .2);
+}
 .slp-hero-copy {
-  margin: 0 0 28px;
+  max-width: 560px;
+  margin: 0 0 30px;
+  color: rgba(255, 255, 255, .83);
   font-size: 16px;
   font-weight: 500;
-  line-height: 1.9;
-  color: rgba(255, 255, 255, .86);
+  line-height: 1.95;
 }
-.slp-cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
-.slp-hero-note {
+.slp-cta-row { display: flex; gap: 13px; flex-wrap: wrap; }
+.slp-parent-note {
   display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-  margin-top: 22px;
-  font-size: 13px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, .82);
-}
-.slp-hero-note span { display: inline-flex; align-items: center; gap: 6px; }
-.slp-hero-note i { color: var(--sl-gold); font-style: normal; }
-
-.slp-hero-visual { position: relative; }
-.slp-hero-img {
-  width: 100%;
-  border-radius: 18px;
-  box-shadow: 0 0 30px rgba(139, 92, 246, .35), 0 20px 50px rgba(0, 0, 0, .5);
-}
-.slp-float {
-  position: absolute;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: #fff;
-  color: var(--sl-ink);
-  font-size: 13px;
-  font-weight: 800;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, .3);
-}
-.slp-float.one { top: -14px; left: -14px; }
-.slp-float.two { bottom: -14px; right: -10px; color: var(--sl-purple-d); }
-
-/* ── セクション共通 ── */
-.slp-section { padding: 68px 0; }
-.slp-section.tint { background: #f2eefb; }
-.slp-head { text-align: center; max-width: 640px; margin: 0 auto 40px; }
-.slp-eyebrow {
-  display: inline-block;
-  margin-bottom: 12px;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: .14em;
-  color: var(--sl-purple);
-}
-.slp-head h2 { margin: 0 0 14px; font-size: clamp(23px, 3.2vw, 31px); font-weight: 800; line-height: 1.4; }
-.slp-head p { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.9; color: #5c5678; }
-
-/* ── モード3カード（イラスト・クリックでアプリへ）── */
-.slp-modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.slp-mode-card {
-  display: block;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 10px 26px rgba(36, 31, 77, .12);
-  transition: transform .14s, box-shadow .14s;
-}
-.slp-mode-card:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(36, 31, 77, .22); }
-.slp-mode-card img { display: block; width: 100%; }
-
-/* ── あそびかた（イラストパネル・クリックでアプリへ）── */
-.slp-plays { display: flex; flex-direction: column; align-items: center; gap: 26px; }
-.slp-play-panel {
-  display: block;
-  width: 100%;
-  max-width: 520px;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 14px 34px rgba(36, 31, 77, .16);
-  transition: transform .14s, box-shadow .14s;
-}
-.slp-play-panel.wide { max-width: 640px; }
-.slp-play-panel:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(36, 31, 77, .26); }
-.slp-play-panel img { display: block; width: 100%; }
-
-/* ── さくらんぼ算ハイライト ── */
-.slp-cherry {
-  display: grid;
-  grid-template-columns: .95fr 1.05fr;
-  gap: 40px;
   align-items: center;
-  padding: 40px;
-  background: #fff;
-  border: 1px solid var(--sl-line);
-  border-radius: 24px;
-  box-shadow: 0 16px 40px rgba(36, 31, 77, .1);
+  gap: 7px;
+  margin: 20px 0 0;
+  color: rgba(255, 255, 255, .72);
+  font-size: 12px;
+  font-weight: 700;
 }
-.slp-cherry img { border-radius: 16px; }
-.slp-cherry h3 { margin: 0 0 12px; font-size: 23px; font-weight: 800; }
-.slp-cherry p { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.95; color: #5c5678; }
+.slp-parent-note span { color: var(--sl-gold); }
 
-/* ── 使い方3ステップ ── */
-.slp-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.slp-step {
+.slp-hero-visual { position: relative; padding: 18px 0; }
+.slp-screen {
   position: relative;
-  padding: 30px 24px 26px;
-  background: #fff;
-  border: 1px solid var(--sl-line);
-  border-radius: 20px;
-  box-shadow: 0 10px 26px rgba(36, 31, 77, .06);
+  display: block;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, .2);
+  border-radius: 24px;
+  background: #10183e;
+  box-shadow: 0 32px 76px rgba(0, 0, 0, .5), 0 0 44px rgba(118, 87, 232, .28);
+  transform: rotate(1deg);
+  transition: transform .2s ease, box-shadow .2s ease;
 }
-.slp-step-no {
+.slp-screen:hover { transform: rotate(0) translateY(-4px); box-shadow: 0 38px 82px rgba(0, 0, 0, .56), 0 0 54px rgba(118, 87, 232, .38); }
+.slp-hero-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.42 / 1;
+  object-fit: cover;
+  object-position: center 25%;
+}
+.slp-float-card {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  min-width: 154px;
+  padding: 11px 14px;
+  border: 1px solid rgba(255, 255, 255, .55);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .95);
+  color: var(--sl-ink);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .26);
+  backdrop-filter: blur(10px);
+}
+.slp-float-card strong { color: var(--sl-purple-dark); font-size: 20px; line-height: 1.15; }
+.slp-float-card span { margin-top: 3px; color: #66617d; font-size: 10px; font-weight: 700; }
+.slp-float-one { top: -6px; right: -20px; }
+.slp-float-two { bottom: -5px; left: -24px; }
+
+/* ── 数字サマリー ── */
+.slp-proof {
+  position: relative;
+  z-index: 3;
+  border-bottom: 1px solid var(--sl-line);
+  background: #fff;
+  box-shadow: 0 12px 35px rgba(33, 28, 75, .06);
+}
+.slp-proof-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+.slp-proof-item {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
-  margin-bottom: 14px;
-  border-radius: 50%;
-  background: linear-gradient(160deg, #8b6cf6, #6a49dd);
+  gap: 12px;
+  min-height: 94px;
+  padding: 18px 20px;
+  border-right: 1px solid var(--sl-line);
+}
+.slp-proof-item:last-child { border-right: 0; }
+.slp-proof-item strong { color: var(--sl-purple-dark); font-size: 30px; font-weight: 800; line-height: 1; }
+.slp-proof-item span { color: var(--sl-ink-soft); font-size: 12px; font-weight: 700; }
+
+/* ── セクション共通 ── */
+.slp-section { padding: 88px 0; }
+.slp-section.tint { background: linear-gradient(180deg, #f3effd 0%, #f8f5ff 100%); }
+.slp-head { max-width: 700px; margin: 0 auto 46px; text-align: center; }
+.slp-eyebrow {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: var(--sl-purple);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .14em;
+}
+.slp-head h2,
+.slp-cherry-copy h2 {
+  margin: 0 0 15px;
+  font-size: clamp(27px, 3.4vw, 38px);
+  font-weight: 800;
+  line-height: 1.45;
+}
+.slp-head p {
+  margin: 0;
+  color: var(--sl-ink-soft);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.9;
+}
+
+/* ── 5つの計算 ── */
+.slp-modes-section { background: var(--sl-cream); }
+.slp-calc-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+}
+.slp-calc-card {
+  --card-color: var(--sl-purple);
+  --card-soft: #f3efff;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 356px;
+  padding: 20px 18px 18px;
+  border: 1px solid var(--sl-line);
+  border-top: 5px solid var(--card-color);
+  border-radius: 20px;
+  background: #fff;
+  color: var(--sl-ink);
+  text-decoration: none;
+  box-shadow: 0 11px 30px rgba(33, 28, 75, .07);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.slp-calc-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(33, 28, 75, .15); }
+.slp-calc-card.is-add { --card-color: #ed9b18; --card-soft: #fff8dd; }
+.slp-calc-card.is-sub { --card-color: #3982d6; --card-soft: #edf6ff; }
+.slp-calc-card.is-mul { --card-color: #8d52d8; --card-soft: #f6efff; }
+.slp-calc-card.is-div { --card-color: #345bb9; --card-soft: #eef2ff; }
+.slp-calc-card.is-cherry { --card-color: #2e9c61; --card-soft: #edf9f1; }
+.slp-card-index { color: var(--card-color); font-size: 9px; font-weight: 800; letter-spacing: .1em; }
+.slp-calc-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 92px;
+  margin: 13px 0 16px;
+  border-radius: 14px;
+  background: var(--card-soft);
+}
+.slp-calc-icon img { width: 142px; max-height: 76px; object-fit: contain; }
+.slp-calc-card h3 { margin: 0 0 8px; font-size: 19px; font-weight: 800; }
+.slp-calc-card p { flex: 1; margin: 0 0 16px; color: var(--sl-ink-soft); font-size: 12px; font-weight: 500; line-height: 1.75; }
+.slp-card-link { display: flex; justify-content: space-between; gap: 7px; color: var(--card-color); font-size: 11px; font-weight: 800; }
+.slp-card-link b { font-size: 15px; }
+
+.slp-level-callout {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 22px;
+  align-items: center;
+  margin-top: 24px;
+  padding: 24px 26px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 85% 10%, rgba(118, 87, 232, .3), transparent 28%),
+    var(--sl-space-2);
   color: #fff;
-  font-size: 20px;
+  box-shadow: 0 14px 36px rgba(20, 25, 65, .14);
+}
+.slp-level-mark {
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  border: 2px solid rgba(255, 212, 90, .55);
+  border-radius: 50%;
+  color: var(--sl-gold);
+  font-size: 18px;
   font-weight: 800;
 }
-.slp-step h3 { margin: 0 0 8px; font-size: 17px; font-weight: 800; }
-.slp-step p { margin: 0; font-size: 14px; font-weight: 500; line-height: 1.85; color: #5c5678; }
+.slp-level-callout h3 { margin: 0 0 5px; font-size: 18px; font-weight: 800; }
+.slp-level-callout p { margin: 0; color: rgba(255, 255, 255, .68); font-size: 12px; font-weight: 500; line-height: 1.7; }
+.slp-level-callout .slp-text-link {
+  padding: 11px 16px;
+  border-radius: 999px;
+  background: #fff;
+  white-space: nowrap;
+}
+
+/* ── 2つの遊び方 ── */
+.slp-play-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.slp-play-card {
+  overflow: hidden;
+  border: 1px solid var(--sl-line);
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 16px 40px rgba(33, 28, 75, .09);
+}
+.slp-play-media {
+  display: grid;
+  place-items: center;
+  min-height: 230px;
+  padding: 26px;
+  background: linear-gradient(145deg, #fff, #eeeaff);
+}
+.slp-play-card.is-space .slp-play-media {
+  background:
+    radial-gradient(circle at 82% 20%, rgba(118, 87, 232, .4), transparent 30%),
+    var(--sl-space-2);
+}
+.slp-play-media img {
+  display: block;
+  width: 100%;
+  max-height: 190px;
+  object-fit: contain;
+  border-radius: 14px;
+  filter: drop-shadow(0 9px 18px rgba(33, 28, 75, .14));
+}
+.slp-play-copy { padding: 28px 30px 30px; }
+.slp-play-label {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--sl-purple-pale);
+  color: var(--sl-purple-dark);
+  font-size: 10px;
+  font-weight: 800;
+}
+.slp-play-copy h3 { margin: 0 0 10px; font-size: 24px; font-weight: 800; }
+.slp-play-copy p { margin: 0 0 16px; color: var(--sl-ink-soft); font-size: 14px; font-weight: 500; line-height: 1.85; }
+.slp-play-copy ul { display: flex; gap: 7px; flex-wrap: wrap; margin: 0 0 20px; padding: 0; list-style: none; }
+.slp-play-copy li {
+  padding: 5px 9px;
+  border: 1px solid var(--sl-line);
+  border-radius: 7px;
+  color: #696281;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* ── さくらんぼ算 ── */
+.slp-cherry-section {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 8% 20%, rgba(118, 87, 232, .25), transparent 28%),
+    radial-gradient(circle at 92% 80%, rgba(255, 123, 66, .16), transparent 26%),
+    var(--sl-space);
+  color: #fff;
+}
+.slp-cherry {
+  display: grid;
+  grid-template-columns: .8fr 1.2fr;
+  gap: 54px;
+  align-items: center;
+}
+.slp-cherry-copy .slp-eyebrow { color: var(--sl-gold); }
+.slp-cherry-copy p { margin: 0 0 22px; color: rgba(255, 255, 255, .72); font-size: 14px; font-weight: 500; line-height: 1.9; }
+.slp-check-list { display: grid; gap: 10px; margin: 0 0 28px; padding: 0; list-style: none; }
+.slp-check-list li { position: relative; padding-left: 25px; color: rgba(255, 255, 255, .86); font-size: 13px; font-weight: 700; }
+.slp-check-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--sl-gold);
+  color: var(--sl-ink);
+  font-size: 10px;
+  font-weight: 800;
+}
+.slp-cherry-board {
+  padding: 28px;
+  border: 2px solid #dcd2fb;
+  border-radius: 24px;
+  background: #fff;
+  color: var(--sl-ink);
+  box-shadow: 0 26px 66px rgba(0, 0, 0, .36), inset 0 0 0 6px #f6f2ff;
+}
+.slp-cherry-equation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding: 18px;
+  border: 1px solid var(--sl-line);
+  border-radius: 15px;
+  background: #fbfaff;
+  font-size: clamp(34px, 5vw, 50px);
+  font-weight: 800;
+  line-height: 1;
+}
+.is-blue { color: #3578cf; }
+.is-red { color: #e24e5a; }
+.is-purple { color: #8857d8; }
+.is-orange { color: #ee722a; }
+.slp-cherry-steps { display: grid; gap: 11px; margin: 0; padding: 0; list-style: none; }
+.slp-cherry-steps li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 13px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--sl-line);
+  border-radius: 13px;
+}
+.slp-cherry-no {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--sl-purple);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+}
+.slp-cherry-steps small { display: block; margin-bottom: 2px; color: #8b849e; font-size: 9px; font-weight: 800; }
+.slp-cherry-steps strong { font-size: 14px; line-height: 1.65; }
+.slp-number-ball {
+  display: inline-grid;
+  place-items: center;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  color: #fff;
+}
+.is-blue-bg { background: #3578cf; }
+.is-green-bg { background: #38a96a; }
+.slp-cherry-answer {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border: 2px solid #f0c64e;
+  border-radius: 13px;
+  background: #fff8d9;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+}
+.slp-cherry-answer strong { margin-left: 8px; font-size: 23px; }
+.slp-cherry-answer strong span { color: var(--sl-orange); font-size: 30px; }
+
+/* ── 使い方 ── */
+.slp-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.slp-step {
+  position: relative;
+  padding: 24px;
+  border: 1px solid var(--sl-line);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(33, 28, 75, .06);
+}
+.slp-step:not(:last-child)::after {
+  content: '→';
+  position: absolute;
+  top: 68px;
+  right: -19px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--sl-line);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--sl-purple);
+  font-weight: 800;
+}
+.slp-step-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+.slp-step-no {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #8062ed, #5b3bd1);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+}
+.slp-step-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 72px;
+  min-width: 150px;
+  flex: 1;
+  border-radius: 14px;
+  background: var(--sl-purple-pale);
+}
+.slp-step-art.is-select { gap: 5px; }
+.slp-step-art.is-select i {
+  display: grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--sl-purple-dark);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 800;
+  box-shadow: 0 3px 8px rgba(33, 28, 75, .08);
+}
+.slp-step-art.is-question { color: var(--sl-ink); font-size: 19px; font-weight: 800; }
+.slp-step-art.is-question i { color: var(--sl-purple); font-size: 28px; font-style: normal; }
+.slp-step-art.is-rocket { gap: 2px; overflow: hidden; }
+.slp-step-art.is-rocket img { width: 66px; height: 66px; object-fit: contain; transform: rotate(8deg); }
+.slp-step-art.is-rocket b { color: #f1bc25; font-size: 25px; }
+.slp-step h3 { margin: 0 0 9px; font-size: 18px; font-weight: 800; }
+.slp-step p { margin: 0; color: var(--sl-ink-soft); font-size: 13px; font-weight: 500; line-height: 1.8; }
+.slp-center-cta { margin-top: 34px; text-align: center; }
 
 /* ── FAQ ── */
-.slp-faq { max-width: 760px; margin: 0 auto; }
+.slp-faq { max-width: 800px; margin: 0 auto; }
 .slp-faq details {
   margin-bottom: 12px;
-  background: #fff;
-  border: 1px solid var(--sl-line);
-  border-radius: 14px;
   overflow: hidden;
+  border: 1px solid var(--sl-line);
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 7px 20px rgba(33, 28, 75, .035);
 }
 .slp-faq summary {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 14px;
-  padding: 18px 22px;
+  padding: 19px 22px;
+  color: var(--sl-ink);
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;
   list-style: none;
 }
 .slp-faq summary::-webkit-details-marker { display: none; }
-.slp-faq summary::after { content: '＋'; color: var(--sl-purple); font-weight: 800; }
+.slp-faq summary::after {
+  content: '＋';
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--sl-purple-pale);
+  color: var(--sl-purple);
+  font-size: 17px;
+}
 .slp-faq details[open] summary::after { content: '−'; }
-.slp-faq .slp-faq-a { padding: 0 22px 20px; font-size: 14px; font-weight: 500; line-height: 1.9; color: #5c5678; }
+.slp-faq .slp-faq-a { padding: 0 22px 22px; color: var(--sl-ink-soft); font-size: 14px; font-weight: 500; line-height: 1.9; }
 
 /* ── 最後のCTA ── */
 .slp-final {
-  padding: 72px 0;
+  position: relative;
+  overflow: hidden;
+  padding: 86px 0;
   text-align: center;
-  background:
-    linear-gradient(180deg, rgba(10, 15, 34, .78), rgba(12, 19, 50, .94)),
-    #0a0f22 url('/assets/images/sansu/bg-space.jpg') center / cover no-repeat;
   color: #fff;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(118, 87, 232, .42), transparent 35%),
+    linear-gradient(180deg, rgba(10, 15, 34, .78), rgba(12, 19, 50, .94)),
+    var(--sl-space) url('/assets/images/sansu/bg-space.jpg') center / cover no-repeat;
 }
-.slp-final h2 { margin: 0 0 16px; font-size: clamp(24px, 3.4vw, 32px); font-weight: 800; line-height: 1.5; }
-.slp-final p { margin: 0 0 30px; font-size: 15px; font-weight: 500; line-height: 1.9; color: rgba(255, 255, 255, .86); }
+.slp-final::before {
+  content: '✦  ·  ✧  ·  ✦';
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  color: rgba(255, 212, 90, .7);
+  font-size: 20px;
+  letter-spacing: .5em;
+  transform: translateX(-50%);
+}
+.slp-final h2 { margin: 0 0 15px; font-size: clamp(28px, 3.8vw, 40px); font-weight: 800; line-height: 1.5; }
+.slp-final p { margin: 0 0 30px; color: rgba(255, 255, 255, .78); font-size: 15px; font-weight: 500; line-height: 1.9; }
 
 /* ── レスポンシブ ── */
-@media (max-width: 860px) {
-  .slp-hero-grid { grid-template-columns: 1fr; gap: 32px; }
-  .slp-hero-visual { max-width: 420px; margin: 0 auto; }
-  .slp-modes { grid-template-columns: 1fr; }
+@media (max-width: 1020px) {
+  .slp-hero-grid { grid-template-columns: 1fr; gap: 46px; }
+  .slp-hero-copy-col { max-width: 760px; text-align: center; margin: 0 auto; }
+  .slp-hero-copy { margin-left: auto; margin-right: auto; }
+  .slp-cta-row { justify-content: center; }
+  .slp-parent-note { justify-content: center; }
+  .slp-hero-visual { width: min(760px, 100%); margin: 0 auto; }
+  .slp-calc-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .slp-calc-card { min-height: 330px; }
+  .slp-cherry { grid-template-columns: 1fr; }
+  .slp-cherry-copy { max-width: 720px; text-align: center; margin: 0 auto; }
+  .slp-check-list { width: fit-content; margin-left: auto; margin-right: auto; text-align: left; }
+  .slp-cherry-board { width: min(760px, 100%); margin: 0 auto; }
+}
+@media (max-width: 780px) {
+  .slp-wrap { padding: 0 22px; }
+  .slp-proof-grid { grid-template-columns: repeat(2, 1fr); }
+  .slp-proof-item:nth-child(2) { border-right: 0; }
+  .slp-proof-item:nth-child(-n+2) { border-bottom: 1px solid var(--sl-line); }
+  .slp-calc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .slp-level-callout { grid-template-columns: auto 1fr; }
+  .slp-level-callout .slp-text-link { grid-column: 1 / -1; justify-self: stretch; justify-content: center; }
+  .slp-play-grid { grid-template-columns: 1fr; }
   .slp-steps { grid-template-columns: 1fr; }
-  .slp-cherry { grid-template-columns: 1fr; padding: 28px; }
+  .slp-step:not(:last-child)::after { top: auto; right: 50%; bottom: -19px; transform: translateX(50%) rotate(90deg); }
 }
 @media (max-width: 560px) {
-  .slp-hero { padding: 44px 0 54px; }
-  .slp-section { padding: 52px 0; }
-  .slp-cta-row .slp-btn { flex: 1; justify-content: center; }
+  .slp-wrap { padding: 0 18px; }
+  .slp-hero { padding: 56px 0 48px; }
+  .slp-kicker { font-size: 10px; }
+  .slp-hero h1 { font-size: 34px; }
+  .slp-hero-copy { font-size: 14px; line-height: 1.85; }
+  .slp-cta-row { display: grid; grid-template-columns: 1fr; }
+  .slp-cta-row .slp-btn { width: 100%; }
+  .slp-parent-note { align-items: flex-start; text-align: left; }
+  .slp-hero-visual { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; padding-bottom: 0; }
+  .slp-screen { grid-column: 1 / -1; border-radius: 17px; transform: none; }
+  .slp-float-card { position: static; min-width: 0; padding: 9px 10px; }
+  .slp-float-card strong { font-size: 17px; }
+  .slp-float-card span { font-size: 8px; }
+  .slp-proof-item { min-height: 76px; padding: 14px 8px; gap: 8px; }
+  .slp-proof-item strong { font-size: 23px; }
+  .slp-proof-item span { font-size: 10px; }
+  .slp-section { padding: 64px 0; }
+  .slp-head { margin-bottom: 34px; }
+  .slp-head h2,
+  .slp-cherry-copy h2 { font-size: 27px; }
+  .slp-head p { font-size: 13px; line-height: 1.8; }
+  .slp-calc-grid { grid-template-columns: 1fr; }
+  .slp-calc-card { min-height: 0; padding: 18px; }
+  .slp-calc-icon { height: 78px; margin: 10px 0 14px; }
+  .slp-calc-card p { min-height: 0; }
+  .slp-level-callout { grid-template-columns: 1fr; padding: 21px; text-align: center; }
+  .slp-level-mark { width: 58px; height: 58px; margin: 0 auto; }
+  .slp-play-media { min-height: 180px; padding: 18px; }
+  .slp-play-copy { padding: 23px 21px 25px; }
+  .slp-cherry { gap: 34px; }
+  .slp-cherry-board { padding: 17px; border-radius: 18px; }
+  .slp-cherry-equation { gap: 9px; padding: 15px 8px; font-size: 35px; }
+  .slp-cherry-steps li { grid-template-columns: 32px 1fr; gap: 9px; padding: 10px; }
+  .slp-cherry-no { width: 32px; height: 32px; }
+  .slp-cherry-steps strong { font-size: 11px; }
+  .slp-number-ball { width: 23px; height: 23px; }
+  .slp-cherry-answer strong { display: block; margin: 4px 0 0; }
+  .slp-step { padding: 19px; }
+  .slp-step-art { min-width: 0; }
+  .slp-step-art.is-select i { width: 25px; height: 25px; }
+  .slp-final { padding: 78px 0 68px; }
+  .slp-final .slp-btn { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .slp-btn,
+  .slp-screen,
+  .slp-calc-card,
+  .slp-text-link span { transition: none; }
 }
