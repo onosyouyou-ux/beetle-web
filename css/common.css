@@ -164,6 +164,18 @@ a{text-decoration:none;}
   .service-peek { display: none; }
 }
 
+/* ── 紙面アプリ（.app-paper）はフッターを画面下に貼りつける（2026-08-22）──
+   中身が短いページ（かんじドリルのメニュー画面など）で、フッターの下に
+   タイル背景が数十px残って見えるバグの修正。body を縦フレックスにして
+   紙面を伸ばし、フッターが必ず画面下端に来るようにする。 */
+body:has(> .app-paper) {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+body:has(> .app-paper) > .app-paper { flex: 1 0 auto; }
+body:has(> .app-paper) > .site-footer-app { flex-shrink: 0; }
+
 /* ── アプリ共通フッター（全アプリ統一。2026-07-15）──
    bug-checker・gakkyu-tsushin・rubi-shokunin・えいごよんで・テストコンテンツ・
    正規表現テスター・さんすうアプリ が共有する。

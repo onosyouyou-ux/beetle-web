@@ -92,6 +92,22 @@ body{
 .tk-ask{font-size:20px;font-weight:900;margin:0 0 14px;letter-spacing:.05em}
 .tk-stage{display:flex;justify-content:center;margin-bottom:18px}
 
+/* ヒント（こたえは言わず、どっちの はりを どう よむかだけ出す） */
+.tk-hint-btn{
+  display:inline-flex;align-items:center;gap:6px;margin:0 auto 12px;
+  background:#fff;border:2px solid var(--tk-orange);border-radius:99px;
+  padding:8px 18px;font-size:14px;font-weight:800;font-family:inherit;
+  color:var(--tk-orange-dk);cursor:pointer;
+}
+.tk-hint-btn::before{content:"💡";font-size:15px}
+.tk-hint-btn:hover{background:#fdf1e2}
+.tk-hint{
+  background:var(--tk-cream2);border-radius:14px;padding:14px 16px;margin:0 0 16px;
+  text-align:left;font-size:14px;line-height:1.85;font-weight:700;color:var(--tk-ink2);
+}
+.tk-hint p{margin:0}
+.tk-hint p + p{margin-top:8px}
+
 .tk-options{display:grid;gap:10px}
 .tk-options.is-text{grid-template-columns:repeat(2,1fr)}
 .tk-options.is-clock{grid-template-columns:repeat(4,1fr)}

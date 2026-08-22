@@ -149,6 +149,40 @@
     return { answer: answer, options: shuffle(opts) };
   }
 
+  /* ---------- ヒント ----------
+     こたえそのものは言わず、「どっちの はりを 見て、どう かぞえるか」だけを出す。
+     とけいを よむ／さがす で見るべきものが逆になるので、文面も分ける。 */
+
+  function hintLines(mode, t) {
+    var h = t.h, m = t.m;
+    var next = h % 12 + 1;
+    var lines = [];
+
+    if (mode === 'read') {
+      lines.push(m === 0
+        ? 'みじかい はり（あかいはり）は 「' + h + '」を ぴったり さして いるね。それが 「じ」だよ。'
+        : 'みじかい はり（あかいはり）は 「' + h + '」と 「' + next + '」の あいだ。まえの すう字の 「' + h + 'じ」だよ。');
+      if (m === 0) {
+        lines.push('ながい はり（あおいはり）は 「12」。ちょうど の とけいだね。');
+      } else if (m % 5 === 0) {
+        lines.push('ながい はり（あおいはり）が さす すう字を 5ばい すると 「ぷん」。いまは 「' + (m / 5) + '」を さして いるよ。');
+      } else {
+        lines.push('ながい はり（あおいはり）は 「' + Math.floor(m / 5) + '」を すぎた ところ。'
+          + '「' + (Math.floor(m / 5) * 5) + punOf(Math.floor(m / 5) * 5) + '」から めもりを 1つずつ かぞえて みよう。');
+      }
+    } else {
+      lines.push(m === 0
+        ? 'みじかい はり（あかいはり）が 「' + h + '」を ぴったり さして いる とけいを さがそう。'
+        : 'みじかい はり（あかいはり）は 「' + h + '」を すこし すぎた ところ。「' + next + '」に ちかい とけいは まちがいだよ。');
+      lines.push(m === 0
+        ? 'ながい はり（あおいはり）は 「12」を さして いるよ。'
+        : m % 5 === 0
+          ? '「' + m + punOf(m) + '」は 5で わると 「' + (m / 5) + '」。ながい はり（あおいはり）は その すう字を さすよ。'
+          : '「' + m + punOf(m) + '」は 「' + (Math.floor(m / 5) * 5) + punOf(Math.floor(m / 5) * 5) + '」から めもり ' + (m % 5) + 'つぶん さき。ながい はりの さきを よく 見よう。');
+    }
+    return lines;
+  }
+
   /* ---------- 画面 ---------- */
 
   function el(tag, cls, text) {
@@ -262,6 +296,23 @@
         options.appendChild(b);
       });
     }
+
+    // ヒント（こたえは言わない。押すまでは出さない）
+    var hintBtn = el('button', 'tk-hint-btn', 'ヒントを 見る');
+    hintBtn.type = 'button';
+    hintBtn.setAttribute('aria-expanded', 'false');
+    var hint = el('div', 'tk-hint');
+    hint.hidden = true;
+    hintLines(state.modeId, q.answer).forEach(function (line) {
+      hint.appendChild(el('p', null, line));
+    });
+    hintBtn.addEventListener('click', function () {
+      hint.hidden = !hint.hidden;
+      hintBtn.setAttribute('aria-expanded', String(!hint.hidden));
+      hintBtn.textContent = hint.hidden ? 'ヒントを 見る' : 'ヒントを とじる';
+    });
+    wrap.appendChild(hintBtn);
+    wrap.appendChild(hint);
 
     wrap.appendChild(options);
     var fb = el('div', 'tk-feedback');
