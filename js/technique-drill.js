@@ -34,7 +34,6 @@
     return a;
   }
   function nums(list) { return list.join('、'); }
-  function uniqPush(arr, v) { if (arr.indexOf(v) < 0) arr.push(v); }
 
   // 選択肢は「正解 ＋ ありがちな間違い」で作る。
   // 足りなければ近い数字で埋めるが、正解と重複しないようにする。
@@ -152,8 +151,16 @@
       if (correct === target) {          // 幅が1しかない区分に当たったときの保険
         return qEquivalence();
       }
+      // 誤答は「ほかの区分の値」から3つ。区分が3つしかない仕様もあるので、
+      // 区分を1つずつ配るのではなく、値が3つ揃うまで引き直す
+      // （区分ごとに1つ配る作りだと、3区分の仕様で選択肢が3つになっていた）
       var others = c.bands.filter(function (b, i) { return i !== idx; });
-      var wrongs = shuffle(others).slice(0, 3).map(inBand);
+      var wrongs = [], guard2 = 0;
+      while (wrongs.length < 3 && guard2++ < 300) {
+        var v = inBand(pick(others));
+        if (v === correct || v === target || wrongs.indexOf(v) >= 0) continue;
+        wrongs.push(v);
+      }
       var opts = shuffle([correct].concat(wrongs));
       return {
         tech: '同値分割',
