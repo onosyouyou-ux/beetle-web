@@ -170,33 +170,65 @@
     </section>
 
     <!-- あそびかた -->
-    <section class="slp-section tint">
+    <section class="slp-section tint slp-play-section">
       <div class="slp-wrap">
         <div class="slp-head">
-          <div class="slp-eyebrow">あそびかた</div>
-          <h2>2つの モードで、あきずに つづく。</h2>
-          <p>「10もんチャレンジ」で星をあつめる日も、「とことん（太陽系ツアー）」で100問正解をめざす日も。気分に合わせて選べます。連続正解の「COMBO」でどんどんもりあがります。</p>
+          <div class="slp-eyebrow">選べる2つのあそびかた</div>
+          <h2>短く集中する日も、<br>じっくり宇宙を進む日も。</h2>
+          <p>その日の時間や気分に合わせて選べるから、無理なく続けられます。</p>
         </div>
-        <div class="slp-plays">
-          <a class="slp-play-panel" href="/tools/sansu-app/">
-            <img src="/assets/images/sansu/lp/play-challenge.png" alt="10もんチャレンジ：1セット10問。ぜんぶ解くと、せいせきに合わせて星が3段階でもらえる。連続正解のCOMBOでもりあがる" width="455" height="183" loading="lazy">
-          </a>
-          <a class="slp-play-panel wide" href="/tools/sansu-app/">
-            <img src="/assets/images/sansu/lp/play-endless.png" alt="うちゅうたんけん（とことん）：10問正解するごとに次の星へ出発。地球から月・火星と太陽系をめぐりながら、100問正解でコンプリート" width="590" height="183" loading="lazy">
-          </a>
+        <div class="slp-play-grid">
+          <article class="slp-play-card">
+            <div class="slp-play-media">
+              <img src="/assets/images/sansu/lp/play-challenge.png" alt="10問チャレンジで成績に応じて星を集める画面" width="455" height="183" loading="lazy">
+            </div>
+            <div class="slp-play-copy">
+              <span class="slp-play-label">5分から遊べる</span>
+              <h3>10もんチャレンジ</h3>
+              <p>1セット10問。終わると正解数に合わせて星をゲット。短い時間でも、達成感を持って終われます。</p>
+              <ul><li>星3段階のせいせき</li><li>最大COMBOも記録</li></ul>
+              <a class="slp-text-link" href="/tools/sansu-app/">10問に挑戦する <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+          <article class="slp-play-card is-space">
+            <div class="slp-play-media">
+              <img src="/assets/images/sansu/lp/play-endless.png" alt="地球から月や惑星をめぐる宇宙探検モード" width="590" height="183" loading="lazy">
+            </div>
+            <div class="slp-play-copy">
+              <span class="slp-play-label">100問で宇宙を一周</span>
+              <h3>うちゅうたんけん</h3>
+              <p>10問正解するごとに次の星へ。月・火星・木星と進み、100問正解で太陽系ツアーをコンプリートします。</p>
+              <ul><li>間違えても続けられる</li><li>進むたび惑星が点灯</li></ul>
+              <a class="slp-text-link" href="/tools/sansu-app/">ロケットを出発させる <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
         </div>
       </div>
     </section>
 
     <!-- さくらんぼ算ハイライト -->
-    <section class="slp-section">
+    <section class="slp-section slp-cherry-section">
       <div class="slp-wrap">
         <div class="slp-cherry">
-          <img src="/assets/images/sansu/lp/cherry-steps.jpg" alt="さくらんぼ算のかいせつ画面。8＋5を例に、10のまとまりを作る手順を1ステップずつ表示" width="1100" height="851" loading="lazy">
-          <div>
-            <div class="slp-eyebrow">さくらんぼ算</div>
-            <h3>さくらんぼ算で、<br>10のかたまりを目で見て理解。</h3>
-            <p>「大きいほうを10にする」考え方を、さくらんぼの図で1ステップずつ表示。8＋5をれいに、くり上がりのしくみを見ながら覚えられます。答えるまで式の「＝?」は伏せて、自分で考える力を育てます。</p>
+          <div class="slp-cherry-copy">
+            <div class="slp-eyebrow">つまずきやすい計算も</div>
+            <h2>「10のまとまり」が、<br>目で見てわかる。</h2>
+            <p>さくらんぼ算は、大きい数を10にする考え方を1ステップずつ表示。答えだけでなく、どう考えればよいかが自然に身につきます。</p>
+            <ul class="slp-check-list">
+              <li>答えるまでは「＝？」のまま</li>
+              <li>分ける数を4択で考える</li>
+              <li>正解後に式の流れを確認できる</li>
+            </ul>
+            <a class="slp-btn slp-btn-secondary" href="/tools/sansu-app/">さくらんぼ算をやってみる <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="slp-cherry-board" aria-label="8たす5を、10のまとまりを作って計算する3ステップ">
+            <div class="slp-cherry-equation"><span class="is-blue">8</span><b>＋</b><span class="is-red">5</span><b>＝</b><span class="is-purple">？</span></div>
+            <ol class="slp-cherry-steps">
+              <li><span class="slp-cherry-no">1</span><div><small>あといくつ？</small><strong><span class="is-blue">8</span> を10にするには、あと <span class="is-red">2</span></strong></div></li>
+              <li><span class="slp-cherry-no">2</span><div><small>数をわける</small><strong><span class="is-red">5</span> を <span class="slp-number-ball is-blue-bg">2</span> と <span class="slp-number-ball is-green-bg">3</span> にわける</strong></div></li>
+              <li><span class="slp-cherry-no">3</span><div><small>10をつくる</small><strong><span class="is-blue">8＋2＝10</span>、10＋3＝<span class="is-orange">13</span></strong></div></li>
+            </ol>
+            <div class="slp-cherry-answer">だから <strong>8＋5＝<span>13</span></strong></div>
           </div>
         </div>
       </div>
