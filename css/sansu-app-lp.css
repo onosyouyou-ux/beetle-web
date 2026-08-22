@@ -359,10 +359,10 @@ img { max-width: 100%; height: auto; }
 }
 .slp-play-media img {
   display: block;
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   max-height: 190px;
   object-fit: contain;
-  border-radius: 14px;
   filter: drop-shadow(0 9px 18px rgba(33, 28, 75, .14));
 }
 .slp-play-copy { padding: 28px 30px 30px; }
