@@ -28,7 +28,7 @@ required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#too
 
 ## 問題バンク（`JSTQB_Q`）
 
-- **124問**。内訳は 第1章22／第2章20／第3章16／第4章30／第5章24／第6章12
+- **200問**。内訳は 第1章36／第2章32／第3章26／第4章48／第5章38／第6章20
 - 形式: `{ ch, q, o[4], a, why }`。`a` は正解の添字、`why` は解説（**正誤よりここが主眼**）
 - `JSTQB_CHAPTERS` に章の `name` / `note` / `exam`（模試での出題数）を持つ。`exam` の合計は40
 
