@@ -48,9 +48,29 @@ document.addEventListener('DOMContentLoaded', () => {
         .join('');
     }
   });
+  // メールソフトを使わない人向けのアドレスコピー
+  const copyEmailButton = document.querySelector('[data-copy-email]');
+  const copyEmailStatus = document.querySelector('.cta-copy-status');
+  if (copyEmailButton) {
+    copyEmailButton.addEventListener('click', async () => {
+      const email = copyEmailButton.dataset.copyEmail || '';
+      try {
+        await navigator.clipboard.writeText(email);
+        copyEmailButton.textContent = 'コピー済み';
+        if (copyEmailStatus) copyEmailStatus.textContent = `${email} をコピーしました。`;
+      } catch (error) {
+        if (copyEmailStatus) copyEmailStatus.textContent = 'コピーできませんでした。アドレスを選択してコピーしてください。';
+      }
+    });
+  }
+
   loadPartial('site-footer', '/partials/footer.html').then(() => {
     const btn = document.getElementById('scrollTopBtn');
     if (!btn) return;
+    btn.addEventListener('click', () => {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
     window.addEventListener('scroll', () => {
       // バナー画像を含むフッター全体の上で止める（パーシャル型は #site-footer、
       // アプリ統一フッター型はヒーローズバナー or .site-footer-app が基準）

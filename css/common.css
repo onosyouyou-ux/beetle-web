@@ -71,6 +71,12 @@ a{text-decoration:none;}
 .cta-eyebrow { font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(28,28,46,0.75); margin-bottom: 20px; }
 .cta-title { font-size: clamp(1.5rem, 2.8vw, 2.1rem); font-weight: 700; color: #1c1c2e; line-height: 1.5; margin-bottom: 18px; }
 .cta-body { font-size: 0.9rem; font-weight: 500; color: rgba(28,28,46,0.9); line-height: 1.9; margin-bottom: 28px; }
+.cta-email-box { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center; max-width: 560px; margin: 0 auto; padding: 14px 16px; border: 1px solid rgba(28,28,46,0.18); border-radius: 6px; background: #fdf6ec; color: #1c1c2e; text-align: left; }
+.cta-email-label { color: #6b6b7b; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+.cta-email-address { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.03em; user-select: all; }
+.cta-copy-btn { padding: 8px 14px; border: 1px solid rgba(28,28,46,0.22); border-radius: 4px; background: #fff; color: var(--color-accent); font: inherit; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: background .15s, color .15s; }
+.cta-copy-btn:hover { background: #1c1c2e; color: #fff; }
+.cta-copy-status { min-height: 1.5em; margin: 7px 0 12px; color: rgba(28,28,46,0.82); font-size: 0.78rem; font-weight: 700; }
 .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 .btn-cta-main { background: #fdf6ec; color: var(--color-accent); font-weight: 700; font-size: 0.95rem; padding: 12px 32px; border-radius: 4px; border: none; cursor: pointer; transition: transform .15s; display: inline-block; }
 .btn-cta-main:hover { transform: translateY(-2px); }
@@ -81,6 +87,10 @@ a{text-decoration:none;}
   .cta-eyebrow { color: rgba(255,255,255,0.75); margin-bottom: 12px; }
   .cta-title { color: #fff; margin-bottom: 12px; }
   .cta-body { color: rgba(255,255,255,0.92); line-height: 1.75; margin-bottom: 20px; }
+  .cta-email-box { grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; padding: 13px 14px; }
+  .cta-email-label { grid-column: 1 / -1; }
+  .cta-email-address { font-size: 0.92rem; overflow-wrap: anywhere; }
+  .cta-copy-status { color: rgba(255,255,255,0.92); }
   .cta-btns .btn-cta-main, .cta-btns .btn-cta-sub { flex: 1; white-space: nowrap; padding: 14px 10px; font-size: 0.85rem; }
 }
 
@@ -197,3 +207,13 @@ body:has(> .app-paper) > .site-footer-app { flex-shrink: 0; }
 .sfa-copy { display: flex; align-items: center; justify-content: center; gap: 1rem; font-size: 12px; color: #888; flex-wrap: wrap; white-space: normal; }
 .sfa-copy a { color: #888; text-decoration: none; transition: color .15s; }
 .sfa-copy a:hover { color: #fff; }
+
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
