@@ -15,6 +15,9 @@ html { scroll-behavior: smooth; }
 section[id], div[id] { scroll-margin-top: 105px; }
 body { background: var(--bg); color: var(--navy); font-family: var(--font-ja); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
 a { color: inherit; text-decoration: none; }
+.skip-link { position: fixed; top: 8px; left: 8px; z-index: 200; padding: 10px 16px; border-radius: 4px; background: var(--navy); color: var(--white); font-weight: 700; transform: translateY(-160%); transition: transform .2s; }
+.skip-link:focus { transform: translateY(0); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 3px; }
 
 /* ─── HEADER（2段：ロゴ＋グローバルメニュー／セクションリンク行。2026-07-15にボタン→テキストリンク化・白背景化） ─── */
 .header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; flex-direction: column; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid #ebebeb; }
@@ -69,13 +72,13 @@ a { color: inherit; text-decoration: none; }
 
 .hero-label { font-family: var(--font-en); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.2em; color: var(--color-accent); text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
 .hero-label::before { content: ''; display: block; width: 32px; height: 2px; background: var(--color-accent); }
-.hero-heading-top { font-family: var(--font-ja); font-weight: 800; font-size: clamp(2.4rem, 5vw, 4.2rem); letter-spacing: 0.03em; color: var(--navy); line-height: 1.2; margin-bottom: 4px; }
-.hero-heading { font-family: var(--font-ja); font-weight: 800; font-size: clamp(2.4rem, 5vw, 4.2rem); letter-spacing: 0.03em; color: var(--navy); line-height: 1.25; margin-bottom: 16px; }
+.hero-heading-top { display: block; font-family: var(--font-ja); font-weight: 800; font-size: clamp(2.4rem, 5vw, 4.2rem); letter-spacing: 0.03em; color: var(--navy); line-height: 1.2; margin-bottom: 4px; }
+.hero-heading { display: block; font-family: var(--font-ja); font-weight: 800; font-size: clamp(2.4rem, 5vw, 4.2rem); letter-spacing: 0.03em; color: var(--navy); line-height: 1.25; margin-bottom: 16px; }
 .hero-heading .accent { color: var(--color-accent); position: relative; display: inline-block; }
 .hero-heading .accent::after { content: ''; position: absolute; bottom: 4px; left: 0; right: 0; height: 4px; background: var(--color-accent); opacity: 0.3; border-radius: 2px; }
 .hero-sub { font-family: var(--font-ja); font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 500; color: var(--navy); opacity: 0.75; margin: 28px 0 12px; line-height: 2.2; letter-spacing: 0.06em; }
 .hero-sub strong { color: var(--navy); opacity: 1; font-weight: 700; }
-.hero-note { font-size: 0.88rem; color: var(--gray); margin-bottom: 44px; line-height: 2.2; letter-spacing: 0.04em; border-left: 3px solid var(--color-accent); padding-left: 16px; }
+.hero-note { font-size: 0.88rem; color: var(--gray); margin-bottom: 0; line-height: 2.2; letter-spacing: 0.04em; border-left: 3px solid var(--color-accent); padding-left: 16px; }
 .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 24px; }
 .btn-main { background: var(--color-accent); color: var(--white); font-family: var(--font-ja); font-weight: 700; font-size: 0.95rem; padding: 16px 36px; border-radius: 4px; border: none; cursor: pointer; transition: background .2s, transform .15s; display: inline-block; }
 .btn-main:hover { background: #a5503c; transform: translateY(-2px); }
@@ -212,6 +215,7 @@ a { color: inherit; text-decoration: none; }
 .bug-badge { font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 2px; }
 .bug-badge.critical { background: rgba(192,99,76,0.12); color: var(--color-accent); border: 1px solid rgba(192,99,76,0.3); }
 .bug-badge.high { background: rgba(28,28,46,0.06); color: var(--navy); border: 1px solid rgba(28,28,46,0.15); }
+.bug-badge.medium { background: rgba(107,107,123,0.08); color: var(--gray); border: 1px solid rgba(107,107,123,0.2); }
 .bug-badge.status { background: #e8f5e9; color: #388e3c; border: 1px solid #c8e6c9; }
 .case-note { margin-top: 40px; font-size: 0.75rem; color: var(--gray); opacity: 0.7; text-align: center; }
 
@@ -366,7 +370,7 @@ a { color: inherit; text-decoration: none; }
   .supported-tags { flex-wrap: wrap; padding-left: 6px; }
   .problems-grid { grid-template-columns: repeat(2, 1fr); }
   .services-grid { grid-template-columns: 1fr; }
-  .case-layout { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .case-layout { grid-template-columns: 1fr; gap: 28px; }
   .why-grid { grid-template-columns: 1fr; gap: 12px; margin-top: 32px; }
   .why-card { padding: 20px; column-gap: 10px; }
   .why-card-num { font-size: 1.3rem; }
@@ -444,4 +448,23 @@ a { color: inherit; text-decoration: none; }
 /* SP（480px以下）はグローバルメニューをQA・教育に短縮表示（2026-07-19決定。common.cssの.nav-trimと同期） */
 @media (max-width: 480px) {
   .header-entry .nav-trim { display: none; }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .marquee,
+  .hero-decor-item,
+  .hero-label,
+  .hero-heading,
+  .hero-sub,
+  .hero-note,
+  .hero-btns,
+  .hero-stat { animation: none; }
+  .skip-link,
+  .header-entry,
+  .header-nav a,
+  .btn-main,
+  .btn-sub,
+  .back-to-top { transition: none; }
 }
