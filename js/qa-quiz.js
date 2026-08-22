@@ -120,6 +120,7 @@
   function renderPlay() {
     var s = state.session;
     var q = s.qs[s.index];
+    s.locked = false;   // 次の問題を出すたびに解除する（忘れると2問目以降が押せない）
     app.innerHTML = '';
     var wrap = el('div', 'qq-play');
 
