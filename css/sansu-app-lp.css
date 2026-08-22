@@ -268,18 +268,14 @@ img { max-width: 100%; height: auto; }
   display: flex;
   flex-direction: column;
   min-width: 0;
-  min-height: 356px;
   padding: 20px 18px 18px;
   border: 1px solid var(--sl-line);
   border-top: 5px solid var(--card-color);
   border-radius: 20px;
   background: #fff;
   color: var(--sl-ink);
-  text-decoration: none;
   box-shadow: 0 11px 30px rgba(33, 28, 75, .07);
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-.slp-calc-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(33, 28, 75, .15); }
 .slp-calc-card.is-add { --card-color: #ed9b18; --card-soft: #fff8dd; }
 .slp-calc-card.is-sub { --card-color: #3982d6; --card-soft: #edf6ff; }
 .slp-calc-card.is-mul { --card-color: #8d52d8; --card-soft: #f6efff; }
@@ -297,9 +293,7 @@ img { max-width: 100%; height: auto; }
 }
 .slp-calc-icon img { width: 142px; max-height: 76px; object-fit: contain; }
 .slp-calc-card h3 { margin: 0 0 8px; font-size: 19px; font-weight: 800; }
-.slp-calc-card p { flex: 1; margin: 0 0 16px; color: var(--sl-ink-soft); font-size: 12px; font-weight: 500; line-height: 1.75; }
-.slp-card-link { display: flex; justify-content: space-between; gap: 7px; color: var(--card-color); font-size: 11px; font-weight: 800; }
-.slp-card-link b { font-size: 15px; }
+.slp-calc-card p { margin: 0; color: var(--sl-ink-soft); font-size: 12px; font-weight: 500; line-height: 1.75; }
 
 .slp-level-callout {
   display: grid;
@@ -638,7 +632,6 @@ img { max-width: 100%; height: auto; }
   .slp-parent-note { justify-content: center; }
   .slp-hero-visual { width: min(760px, 100%); margin: 0 auto; }
   .slp-calc-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .slp-calc-card { min-height: 330px; }
   .slp-cherry { grid-template-columns: 1fr; }
   .slp-cherry-copy { max-width: 720px; text-align: center; margin: 0 auto; }
   .slp-check-list { width: fit-content; margin-left: auto; margin-right: auto; text-align: left; }
