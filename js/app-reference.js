@@ -3,7 +3,7 @@
 var path=location.pathname.replace(/index\.html$/,'');
 var data={
 '/tools/sekigae/':{hero:'.sk-hero',img:'/assets/images/sekigae-hero.jpg',alt:'教室の座席表と黒板のイラスト',landing:'/tools/sekigae/landing.html'},
-'/tools/kanji/':{hero:'.kj-hero',img:'/assets/images/kanji-hero.jpg',alt:'漢字練習帳と読み方カードのイラスト',landing:'/tools/kanji/landing.html'},
+'/tools/kanji/':{hero:'.kj-hero',img:'/assets/images/kanji-hero-safe.jpg',alt:'空白の学習ノートと木・太陽・山・川の絵カードのイラスト',landing:'/tools/kanji/landing.html'},
 '/tools/tokei/':{hero:'.tk-hero',img:'/assets/images/tokei-hero.jpg',alt:'アナログ時計と時刻カードのイラスト',landing:'/tools/tokei/landing.html'}
 };
 var c=data[path];if(!c)return;
