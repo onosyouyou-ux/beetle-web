@@ -1,8 +1,8 @@
 ---
 page: 席替えメーカー
 urls: ["/tools/sekigae/"]
-canonical: self
-sitemap: true
+canonical: "https://www.beetle-web.jp/tools/sekigae/landing.html"
+sitemap: false
 title_contains: "席替えメーカー"
 og_image: "/assets/images/OG.jpg"
 required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#sk-names", "#sk-rules", "#sk-cols", "#sk-rows", "#sk-gen", "#sk-board", "#sk-msg", "#sk-out", "#howto"]
@@ -15,8 +15,8 @@ e2e: true
   名簿という個人情報を扱うため、**サーバーに一切送らないこと自体が機能**であり、それを画面上でも明示する（`.sk-privacy`）
 - **レイアウト型**: 教育系の静的アプリ（[_common.md](_common.md) 参照）。紙面 `.app-paper` 1180px ＋ 余白はモザイクタイル `bg-mosaic.png`。
   ヘッダーは共通パーシャル、フッターはアプリ共通フッター（**ヒーローズバナーは付けない**＝テスト検証用ツールのみ）。
-  ランディングを持たないため canonical は自分自身で、SEO用の本文（使い方・配慮の書き方・FAQ）を同じページの下部に置く
-- ヒーローに教室の画像と「リファレンス」ボタンを表示し、アプリ内モーダルで3ステップ・配慮4種類・個人情報の扱いを確認できる
+  SEOは `landing.html` に集約し、アプリ本体の canonical もランディングへ向ける。既存の使い方・配慮・FAQは利用中の補助情報として残す
+- ヒーローに教室の画像と「リファレンス」リンクを表示し、`landing.html` へ移動する
 - **トーン**: 子ども向けアプリ（さんすう・えいご）より落ち着いた配色。先生が職員室で使う画面という想定
 - **主要素**: `#sk-names`（名簿）・`#sk-rules`（配慮）・`#sk-cols`／`#sk-rows`（2〜10。既定6×5）・`#sk-count`・`#sk-seats`・`#sk-sample`（見本）・`#sk-gen`／`#sk-again`・`#sk-board`（座席表）・`#sk-msg`・`#sk-info`・`#sk-out`（TSV）・`#sk-copy`・`#sk-print`
 

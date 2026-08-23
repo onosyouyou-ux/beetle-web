@@ -1,8 +1,8 @@
 ---
 page: かんじドリル
 urls: ["/tools/kanji/"]
-canonical: self
-sitemap: true
+canonical: "https://www.beetle-web.jp/tools/kanji/landing.html"
+sitemap: false
 title_contains: "かんじドリル"
 og_image: "/assets/images/OG.jpg"
 required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#kj-app", "#howto"]
@@ -15,8 +15,8 @@ e2e: true
 - **収録範囲**: **小1（80字）・小2（160字）の240字**。1026字すべては入れていない。
   範囲は画面上（`.kj-scope`）とFAQに明記し、「学年別」とだけ書いて全学年あるように見せない
 - **レイアウト型**: 教育系の静的アプリ（[_common.md](_common.md) 参照）。紙面 `.app-paper` 1180px ＋ モザイクタイル背景。
-  ランディングを持たないため canonical は自分自身
-- ヒーローに学習イメージ画像と「リファレンス」ボタンを表示し、アプリ内モーダルで3ステップ・2つの練習モード・収録範囲を確認できる
+  SEOは `landing.html` に集約し、アプリ本体の canonical もランディングへ向ける
+- ヒーローに学習イメージ画像と「リファレンス」リンクを表示し、`landing.html` へ移動する
 - **画面構成**: メニュー → プレイ（1セット10問）→ けっか（★3段階＋**まちがえたことばの一覧**）
 - **といかた（2モード）**: `yomi`＝ことばを見て よみ を4択／`kanji`＝よみ を聞いて ことば を4択
 - **がくねん**: 小1／小2／ぜんぶ。**`GRADES` はデータから自動で組み立てる**ので、

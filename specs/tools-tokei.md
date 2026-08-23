@@ -1,8 +1,8 @@
 ---
 page: とけいのれんしゅう
 urls: ["/tools/tokei/"]
-canonical: self
-sitemap: true
+canonical: "https://www.beetle-web.jp/tools/tokei/landing.html"
+sitemap: false
 title_contains: "とけいのれんしゅう"
 og_image: "/assets/images/OG.jpg"
 required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tk-app", "#howto"]
@@ -13,8 +13,8 @@ e2e: true
 
 - **目的**: アナログ時計の読み方を4択で練習する子ども向けの静的アプリ。小1〜2のつまずきどころに絞る
 - **レイアウト型**: 教育系の静的アプリ（[_common.md](_common.md) 参照）。紙面 `.app-paper` 1180px ＋ モザイクタイル背景。
-  ランディングを持たないため canonical は自分自身。SEO用の本文（おうちのかたへ・FAQ）を同じページ下部に置く
-- ヒーローに時計学習の画像と「リファレンス」ボタンを表示し、アプリ内モーダルで3ステップ・針の見方・保存方針を確認できる
+  SEOは `landing.html` に集約し、アプリ本体の canonical もランディングへ向ける。既存の「おうちのかたへ・FAQ」は利用中の補助情報として残す
+- ヒーローに時計学習の画像と「リファレンス」リンクを表示し、`landing.html` へ移動する
 - **画面構成**: メニュー → プレイ（1セット10問）→ けっか（★3段階）。`#tk-app` に JS が描画する
 - **といかた（2モード）**: `read`＝時計を見て時刻を4択／`find`＝時刻を読んで4つの時計から選ぶ。**どちらも4択**にしてある
   （針をドラッグさせる形は操作が難しく、自動テストもできないため採らない）
