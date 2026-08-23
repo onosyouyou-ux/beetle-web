@@ -20,7 +20,7 @@
   box-shadow: 0 2px 12px rgba(239, 138, 60, 0.12);
 }
 /* サムネイルが内容を伝えるため、カード名はアイコンなしで明快に見せる */
-.tool-card:has(.tool-thumb) .tool-name {
+.tool-card .tool-name {
   font-size: 15px;
   font-weight: 800;
 }
