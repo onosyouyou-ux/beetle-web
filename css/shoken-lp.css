@@ -25,10 +25,15 @@ body {
   padding: 56px 24px 52px;
 }
 .sl-hero-in {
-  max-width: 780px;
+  max-width: 1080px;
   margin: 0 auto;
-  text-align: center;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  gap: 48px;
+  align-items: center;
+  text-align: left;
 }
+.sl-hero-copy { min-width: 0; }
 .sl-eyebrow {
   margin: 0 0 14px;
   font-family: 'Syne', sans-serif;
@@ -45,12 +50,24 @@ body {
   letter-spacing: -0.01em;
 }
 .sl-lead {
-  margin: 0 auto;
+  margin: 0;
   max-width: 640px;
   font-size: 15px;
   color: var(--sl-sub);
 }
-.sl-lead-c { text-align: center; }
+.sl-lead-c { margin: 0 auto; text-align: center; }
+.sl-hero-visual {
+  overflow: hidden;
+  border: 1px solid rgba(133, 103, 69, .14);
+  border-radius: 20px;
+  background: #fffaf1;
+  box-shadow: 0 14px 38px rgba(92, 63, 35, .16);
+}
+.sl-hero-visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
 .sl-cta { margin-top: 26px; }
 .sl-btn {
   display: inline-block;
@@ -259,6 +276,12 @@ body {
 /* ── 末尾CTA ── */
 .sl-end { text-align: center; }
 
+@media (max-width: 820px) {
+  .sl-hero { padding-top: 42px; }
+  .sl-hero-in { grid-template-columns: 1fr; gap: 30px; text-align: center; }
+  .sl-lead { margin: 0 auto; }
+  .sl-hero-visual { width: min(560px, 100%); margin: 0 auto; border-radius: 16px; }
+}
 @media (max-width: 720px) {
   .sl-pain, .sl-feat, .sl-steps { grid-template-columns: 1fr; }
   .sl-safe { grid-template-columns: repeat(2, minmax(0, 1fr)); }

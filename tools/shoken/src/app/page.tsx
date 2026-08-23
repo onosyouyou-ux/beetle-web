@@ -148,7 +148,7 @@ export default function Home() {
               <span className="ph-collapsed-title">所見メーカー</span>
             </div>
           ) : (
-            <div className="hero-inner hero-inner-solo">
+            <div className="hero-inner">
               <div className="hero-copy">
                 <h1 className="hero-title">所見メーカー</h1>
                 <p className="hero-desc">
@@ -156,6 +156,13 @@ export default function Home() {
                   <br />
                   <b>名前は入力しません</b>（番号だけで並べます）。できた文章は先生が直してから使ってください。
                 </p>
+                <a className="ph-ref" href="https://www.beetle-web.jp/tools/shoken/" target="_blank" rel="noopener">
+                  リファレンス
+                </a>
+              </div>
+              <div className="hero-visual" aria-hidden="true">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/hero-shoken.jpg" alt="" className="hero-img" />
               </div>
             </div>
           )}

@@ -539,7 +539,3 @@ select:focus {
     transition-duration: 0.01ms !important;
   }
 }
-
-/* ── 所見メーカー固有 ──────────────────────────────
-   ヒーローに画像を置いていないので1カラムにする（画像を足すときはこの上書きを外す） */
-.hero-inner-solo { grid-template-columns: 1fr; }

@@ -4,8 +4,8 @@ urls: ["/tools/shoken/"]
 canonical: self
 sitemap: true
 title_contains: "所見メーカー"
-og_image: "/assets/images/OG.jpg"
-required_selectors: ["#site-header", ".footer-skyline-bar", ".footer-link-bar"]
+og_image: "/assets/images/shoken-hero-people.jpg"
+required_selectors: ["#site-header", ".sl-hero-visual", ".footer-skyline-bar", ".footer-link-bar"]
 ---
 
 # 所見メーカーランディング（`tools/shoken/index.html`）
