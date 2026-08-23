@@ -169,7 +169,7 @@ body{
   body{background:#fff}
   .app-paper{max-width:none;box-shadow:none;background:#fff}
   #site-header,.sk-hero,.sk-panel,.sk-doc,.sk-actions,.sk-out,
-  .site-footer-app,.scroll-top-float,.sk-msg{display:none !important}
+  .site-footer-app,.scroll-top-float,.sk-msg,.paper-release{display:none !important}
   .sk-main{padding:0}
   .sk-result{margin:0}
   .sk-board-wrap{border:none;padding:0}
