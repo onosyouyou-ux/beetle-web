@@ -1,14 +1,14 @@
 ---
-page: かんじドリル ランディング
+page: かんじ修行 ランディング
 urls: ["/tools/kanji/landing.html"]
 canonical: self
 sitemap: true
-title_contains: "かんじドリル"
+title_contains: "かんじ修行"
 og_image: "/assets/images/kanji-hero-people.jpg"
 required_selectors: ["#site-header", ".eal-hero", "#howto", "#faq", ".eal-final", ".eal-footer"]
 ---
 
-# かんじドリル ランディング
+# かんじ修行 ランディング
 
 - **目的**: note・検索・教育ツール一覧から受けるSEO集客面。アプリ本体 `/tools/kanji/` への入口
 - **レイアウト型**: 教育系Toolランディング。温かいクリーム＋オレンジ、生成済み漢字学習画像を使用

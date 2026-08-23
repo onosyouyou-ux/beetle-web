@@ -1,15 +1,15 @@
 ---
-page: とけいのれんしゅう
+page: とけい修行
 urls: ["/tools/tokei/"]
 canonical: "https://www.beetle-web.jp/tools/tokei/landing.html"
 sitemap: false
-title_contains: "とけいのれんしゅう"
+title_contains: "とけい修行"
 og_image: "/assets/images/OG.jpg"
 required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tk-app", "#howto"]
 e2e: true
 ---
 
-# とけいのれんしゅう（`tools/tokei/`）
+# とけい修行（`tools/tokei/`）
 
 - **目的**: アナログ時計の読み方を4択で練習する子ども向けの静的アプリ。小1〜2のつまずきどころに絞る
 - **レイアウト型**: 教育系の静的アプリ（[_common.md](_common.md) 参照）。紙面 `.app-paper` 1180px ＋ モザイクタイル背景。

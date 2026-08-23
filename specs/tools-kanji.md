@@ -1,15 +1,15 @@
 ---
-page: かんじドリル
+page: かんじ修行
 urls: ["/tools/kanji/"]
 canonical: "https://www.beetle-web.jp/tools/kanji/landing.html"
 sitemap: false
-title_contains: "かんじドリル"
+title_contains: "かんじ修行"
 og_image: "/assets/images/OG.jpg"
 required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#kj-app", "#howto"]
 e2e: true
 ---
 
-# かんじドリル（`tools/kanji/`）
+# かんじ修行（`tools/kanji/`）
 
 - **目的**: 学年別漢字配当表にもとづく漢字を4択で練習する子ども向けの静的アプリ
 - **収録範囲**: **小1（80字）・小2（160字）の240字**。1026字すべては入れていない。

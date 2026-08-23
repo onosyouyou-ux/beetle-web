@@ -1,14 +1,14 @@
 ---
-page: とけいのれんしゅう ランディング
+page: とけい修行 ランディング
 urls: ["/tools/tokei/landing.html"]
 canonical: self
 sitemap: true
-title_contains: "とけいのれんしゅう"
+title_contains: "とけい修行"
 og_image: "/assets/images/tokei-hero-people.jpg"
 required_selectors: ["#site-header", ".eal-hero", "#howto", "#faq", ".eal-final", ".eal-footer"]
 ---
 
-# とけいのれんしゅう ランディング
+# とけい修行 ランディング
 
 - **目的**: note・検索・教育ツール一覧から受けるSEO集客面。アプリ本体 `/tools/tokei/` への入口
 - **レイアウト型**: 教育系Toolランディング。温かいクリーム＋オレンジ、生成済み時計学習画像を使用
