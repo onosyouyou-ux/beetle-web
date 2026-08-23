@@ -4,7 +4,7 @@ urls: ["/tools/tokei/landing.html"]
 canonical: self
 sitemap: true
 title_contains: "とけいのれんしゅう"
-og_image: "/assets/images/tokei-hero.jpg"
+og_image: "/assets/images/tokei-hero-people.jpg"
 required_selectors: ["#site-header", ".eal-hero", "#howto", "#faq", ".eal-final", ".eal-footer"]
 ---
 

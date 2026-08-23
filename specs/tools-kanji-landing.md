@@ -4,7 +4,7 @@ urls: ["/tools/kanji/landing.html"]
 canonical: self
 sitemap: true
 title_contains: "かんじドリル"
-og_image: "/assets/images/kanji-hero-safe.jpg"
+og_image: "/assets/images/kanji-hero-people.jpg"
 required_selectors: ["#site-header", ".eal-hero", "#howto", "#faq", ".eal-final", ".eal-footer"]
 ---
 

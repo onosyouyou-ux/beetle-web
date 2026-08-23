@@ -4,7 +4,7 @@ urls: ["/tools/sekigae/landing.html"]
 canonical: self
 sitemap: true
 title_contains: "席替えメーカー"
-og_image: "/assets/images/sekigae-hero.jpg"
+og_image: "/assets/images/sekigae-hero-people.jpg"
 required_selectors: ["#site-header", ".eal-hero", "#howto", "#faq", ".eal-final", ".eal-footer"]
 ---
 
