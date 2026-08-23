@@ -1,0 +1,181 @@
+/* ============================================================
+   katakana.css — カタカナのれんしゅう（子ども向け・本体ドメイン配信の静的アプリ）
+   紙面固定（.app-paper 1180px）＋余白はモザイクタイル背景。かんじドリル・とけいと同じ系統。
+   ============================================================ */
+
+:root{
+  --kt-ink:#3a3630;
+  --kt-ink2:#7b756a;
+  --kt-ink3:#a9a296;
+  --kt-line:#e6dfd0;
+  --kt-line2:#d3c8b2;
+  --kt-cream:#fdf8ef;
+  --kt-cream2:#f5ecdb;
+  --kt-orange:#e8933f;
+  --kt-orange-dk:#cc7724;
+  --kt-green:#2f7d55;
+  --kt-green-bg:#e9f5ee;
+  --kt-red:#c0503b;
+  --kt-red-bg:#fbeeea;
+}
+
+body{
+  background-color:#ece1cb;
+  background-image:url('/assets/images/bg-mosaic.png');
+  background-size:160px 160px;
+  margin:0;
+  color:var(--kt-ink);
+}
+
+.app-paper{
+  width:100%;
+  max-width:1180px;   /* アプリ紙面の固定幅（全アプリ共通） */
+  margin:0 auto;
+  background:var(--kt-cream);
+  box-shadow:0 0 32px rgba(28,28,46,.16);
+  padding-bottom:36px;
+}
+
+/* ====== ヒーロー ====== */
+.kt-hero{
+  background:linear-gradient(135deg,#fdf1dd 0%,#f6e0d0 100%);
+  border-bottom:1px solid var(--kt-line);
+  padding:32px 40px 28px;
+  text-align:center;
+}
+.kt-eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--kt-orange);margin:0 0 8px}
+.kt-hero h1{font-size:32px;font-weight:900;margin:0 0 12px;letter-spacing:.06em}
+.kt-lead{font-size:14px;line-height:2;color:var(--kt-ink2);margin:0 0 12px}
+.kt-scope{
+  display:inline-block;font-size:11.5px;font-weight:700;color:var(--kt-orange-dk);
+  background:#fff;border:1px solid var(--kt-line2);border-radius:99px;padding:5px 16px;margin:0;
+}
+
+/* ====== アプリ本体の幅 ====== */
+#kt-app{max-width:700px;margin:0 auto;padding:26px 20px 0}
+
+/* ====== メニュー ====== */
+.kt-menu-lead{text-align:center;font-size:14px;font-weight:700;color:var(--kt-ink2);margin:0 0 16px}
+.kt-modes{display:grid;gap:10px}
+.kt-mode{
+  display:flex;flex-direction:column;gap:4px;align-items:center;
+  padding:18px 16px;border:2px solid var(--kt-line2);border-radius:14px;
+  background:#fff;cursor:pointer;font-family:inherit;transition:border-color .15s,transform .15s;
+}
+.kt-mode:hover{border-color:var(--kt-orange);transform:translateY(-2px)}
+.kt-mode-t{font-size:19px;font-weight:900;letter-spacing:.06em}
+.kt-mode-s{font-size:12.5px;color:var(--kt-ink2)}
+
+/* ルール表（このアプリの中心。いつでも見られる） */
+.kt-rules{
+  margin-top:22px;border:1px solid var(--kt-line);border-radius:14px;
+  background:var(--kt-cream2);padding:18px 20px;
+}
+.kt-rules h2{font-size:14px;font-weight:900;margin:0 0 12px;text-align:center;letter-spacing:.06em}
+.kt-rules ol{margin:0;padding-left:1.3em}
+.kt-rules li{font-size:13.5px;line-height:1.9;margin-bottom:6px}
+.kt-rules li b{font-weight:800}
+.kt-rules li span{display:block;font-size:12.5px;color:var(--kt-orange-dk);font-weight:700}
+.kt-rules-note{font-size:12.5px;color:var(--kt-ink2);margin:12px 0 0;line-height:1.8}
+
+/* ====== もんだい ====== */
+.kt-bar{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;font-weight:700;color:var(--kt-ink2);margin-bottom:12px;
+}
+.kt-score{color:var(--kt-orange-dk)}
+.kt-q{
+  border:1px solid var(--kt-line);border-radius:14px;background:#fff;
+  padding:26px 20px;text-align:center;
+}
+.kt-q-lead{font-size:13px;font-weight:700;color:var(--kt-ink2);margin:0 0 14px}
+.kt-q-word{font-size:34px;font-weight:900;letter-spacing:.12em;margin:0;line-height:1.4}
+.kt-q-word.is-big{font-size:84px;letter-spacing:.1em}
+
+.kt-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+.kt-choices.is-two{grid-template-columns:repeat(2,1fr)}
+.kt-choice{
+  padding:16px 12px;border:2px solid var(--kt-line2);border-radius:12px;background:#fff;
+  font-family:inherit;font-size:20px;font-weight:800;letter-spacing:.08em;cursor:pointer;
+  transition:border-color .15s,background .15s;
+}
+.kt-choice:hover:not(:disabled){border-color:var(--kt-orange)}
+.kt-choice:disabled{cursor:default;opacity:.75}
+.kt-choice.is-correct{border-color:var(--kt-green);background:var(--kt-green-bg);color:var(--kt-green);opacity:1}
+.kt-choice.is-wrong{border-color:var(--kt-red);background:var(--kt-red-bg);color:var(--kt-red);opacity:1}
+
+/* ====== 答え合わせ（「なぜ」を必ず出す場所） ====== */
+.kt-answer{display:none}
+.kt-answer.is-on{
+  display:block;margin-top:14px;border-radius:14px;padding:18px 20px;
+  border:2px solid var(--kt-line2);background:#fff;text-align:center;
+}
+.kt-answer.is-ok{border-color:var(--kt-green);background:var(--kt-green-bg)}
+.kt-answer.is-ng{border-color:var(--kt-red);background:var(--kt-red-bg)}
+.kt-a-head{font-size:16px;font-weight:900;margin:0 0 6px}
+.kt-a-head b{font-size:22px;letter-spacing:.08em}
+.kt-a-cat{
+  display:inline-block;font-size:11.5px;font-weight:800;color:var(--kt-orange-dk);
+  background:#fff;border:1px solid var(--kt-line2);border-radius:99px;padding:3px 12px;margin:0 0 8px;
+}
+.kt-a-why{font-size:15px;font-weight:700;line-height:1.9;margin:0 0 14px}
+
+.kt-next{
+  padding:13px 30px;border:none;border-radius:10px;background:var(--kt-orange);
+  color:#fff;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:background .15s;
+}
+.kt-next:hover{background:var(--kt-orange-dk)}
+.kt-sub{
+  padding:13px 24px;border:2px solid var(--kt-line2);border-radius:10px;background:#fff;
+  color:var(--kt-ink);font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;
+}
+.kt-sub:hover{border-color:var(--kt-orange)}
+
+/* ====== けっか ====== */
+.kt-result{text-align:center}
+.kt-result-score{font-size:20px;font-weight:800;margin:0 0 18px}
+.kt-result-score b{font-size:30px;color:var(--kt-orange-dk)}
+.kt-allok{font-size:16px;font-weight:800;color:var(--kt-green);margin:0 0 18px}
+.kt-missed{
+  text-align:left;border:1px solid var(--kt-line);border-radius:14px;
+  background:#fff;padding:18px 20px;margin-bottom:18px;
+}
+.kt-missed h2{font-size:13px;font-weight:900;margin:0 0 12px;letter-spacing:.06em}
+.kt-missed-item{padding:9px 0;border-bottom:1px dashed var(--kt-line)}
+.kt-missed-item:last-of-type{border-bottom:none}
+.kt-missed-item b{font-size:19px;font-weight:900;letter-spacing:.08em;margin-right:10px}
+.kt-missed-item span{font-size:13px;color:var(--kt-ink2)}
+.kt-missed-note{font-size:12.5px;color:var(--kt-ink2);margin:12px 0 0}
+.kt-result-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* ====== おうちのかたへ・FAQ ====== */
+.kt-doc{max-width:700px;margin:40px auto 0;padding:0 20px}
+.kt-doc h2{font-size:15px;font-weight:900;margin:28px 0 14px;letter-spacing:.06em}
+.kt-steps{display:grid;gap:12px}
+.kt-step{border:1px solid var(--kt-line);border-radius:12px;background:#fff;padding:16px 18px}
+.kt-step-n{
+  display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;
+  background:var(--kt-orange);color:#fff;font-size:12px;font-weight:800;margin-bottom:8px;
+}
+.kt-step h3{font-size:14px;font-weight:800;margin:0 0 6px}
+.kt-step p{font-size:13px;line-height:1.9;color:var(--kt-ink2);margin:0}
+
+.kt-faq{border:1px solid var(--kt-line);border-radius:12px;background:#fff;margin-bottom:10px}
+.kt-faq summary{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 18px;font-size:13.5px;font-weight:800;cursor:pointer;list-style:none;
+}
+.kt-faq summary::-webkit-details-marker{display:none}
+.kt-faq summary span{color:var(--kt-orange);font-size:18px}
+.kt-faq[open] summary span{transform:rotate(45deg)}
+.kt-faq div{padding:0 18px 15px;font-size:13px;line-height:1.9;color:var(--kt-ink2)}
+.kt-more{font-size:13px;color:var(--kt-ink2);margin:20px 0 0;line-height:1.9}
+.kt-more a{color:var(--kt-orange-dk);font-weight:700}
+
+@media (max-width:640px){
+  .kt-hero{padding:24px 20px 22px}
+  .kt-hero h1{font-size:26px}
+  .kt-q-word{font-size:28px}
+  .kt-q-word.is-big{font-size:64px}
+  .kt-choice{font-size:18px;padding:14px 10px}
+}
