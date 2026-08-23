@@ -314,7 +314,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-accent); 
 .btn-cta-sub { background: rgba(253,246,236,0.15); color: #fdf6ec; font-family: var(--font-ja); font-weight: 700; font-size: 0.85rem; padding: 12px 26px; border-radius: 4px; border: 2px solid rgba(253,246,236,0.7); transition: border-color .2s; display: inline-block; }
 .btn-cta-sub:hover { border-color: var(--white); }
 /* メールソフトが開かない人向けに、アドレスを文字でも出す（2026-08-23） */
-.cta-mail-note { margin: 16px 0 0; font-size: 0.8rem; font-weight: 500; color: rgba(28,28,46,0.82); }
+.cta-mail-note { display: inline-block; margin: 18px 0 0; padding: 7px 16px; border-radius: 4px; background: rgba(253,246,236,0.88); font-size: 0.8rem; font-weight: 600; color: #1c1c2e; }
 .cta-mail-note a { color: var(--navy); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 
 /* ─── FOOTER ─── */
@@ -386,8 +386,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-accent); 
   .cta-eyebrow { color: rgba(255,255,255,0.75); margin-bottom: 12px; }
   .cta-title { color: #fff; margin-bottom: 12px; }
   .cta-body { color: rgba(255,255,255,0.92); line-height: 1.75; margin-bottom: 20px; }
-  .cta-mail-note { color: rgba(255,255,255,0.92); }
-  .cta-mail-note a { color: #fff; }
+  .cta-mail-note { margin-top: 14px; padding: 6px 12px; font-size: 0.74rem; }
   .cta-btns { flex-wrap: nowrap; }
   .cta-btns .btn-cta-main, .cta-btns .btn-cta-sub { flex: 1; white-space: nowrap; padding: 14px 10px; font-size: 0.85rem; }
   .footer-logo { font-size: 1.4rem; }
