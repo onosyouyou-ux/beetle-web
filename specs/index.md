@@ -16,7 +16,7 @@ required_selectors: [".header-entry", ".hero", ".footer-skyline-bar", ".footer-l
 - **固定ルール**:
   - ヘッダー背景は白（rgba(255,255,255,0.96)）。`aria-current` はHTML直書き
   - 自社ツールはQA系6カードのみ。教育カードは置かず一覧リンクで誘導
-  - お問い合わせCTAはメールアドレスを直接表示し、コピー操作とGoogleフォームの両方を提供する
+  - お問い合わせCTAは「メールで相談する」（mailto）を主ボタン・Googleフォームを副ボタンにし、その下に `info@beetle-web.jp` を文字でも書く（メールソフトが開かない人向け。2026-08-23にコピーUIから戻した）
   - カードのリンク表示・ホバー演出は [_common.md](_common.md)「カード・リンク共通ルール」に従う
   - Organization JSON-LD の `address` は**登記住所を市まで**（`streetAddress`・`postalCode` は入れない。2026-08-21変更。番地まで書くとGoogleが登記地点にピンを立てるため）。作業ラボは別途 `location`（Place）に建物名まで記載。表示側の表記ルールは [privacy.md](privacy.md) 参照
-- **手動確認観点**: ヒーローのQAバグ装飾のSP非表示／サービスカードのhover演出がSPで非表示／CTAのメールアドレスコピーとGoogleフォームが機能するか
+- **手動確認観点**: ヒーローのQAバグ装飾のSP非表示／サービスカードのhover演出がSPで非表示／CTAのmailtoとGoogleフォームが生きているか

@@ -48,21 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .join('');
     }
   });
-  // メールソフトを使わない人向けのアドレスコピー
-  const copyEmailButton = document.querySelector('[data-copy-email]');
-  const copyEmailStatus = document.querySelector('.cta-copy-status');
-  if (copyEmailButton) {
-    copyEmailButton.addEventListener('click', async () => {
-      const email = copyEmailButton.dataset.copyEmail || '';
-      try {
-        await navigator.clipboard.writeText(email);
-        copyEmailButton.textContent = 'コピー済み';
-        if (copyEmailStatus) copyEmailStatus.textContent = `${email} をコピーしました。`;
-      } catch (error) {
-        if (copyEmailStatus) copyEmailStatus.textContent = 'コピーできませんでした。アドレスを選択してコピーしてください。';
-      }
-    });
-  }
 
   loadPartial('site-footer', '/partials/footer.html').then(() => {
     const btn = document.getElementById('scrollTopBtn');

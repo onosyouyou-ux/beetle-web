@@ -1,21 +1,5 @@
   // header menu（2026-07-13廃止。ヘッダーは2段構成＝ロゴ＋事業入口ボタン／セクションリンク行）
 
-  // メールソフトを使わない人向けのアドレスコピー
-  const copyEmailButton = document.querySelector('[data-copy-email]');
-  const copyEmailStatus = document.querySelector('.cta-copy-status');
-  if (copyEmailButton) {
-    copyEmailButton.addEventListener('click', async () => {
-      const email = copyEmailButton.dataset.copyEmail || '';
-      try {
-        await navigator.clipboard.writeText(email);
-        copyEmailButton.textContent = 'コピー済み';
-        if (copyEmailStatus) copyEmailStatus.textContent = `${email} をコピーしました。`;
-      } catch (error) {
-        if (copyEmailStatus) copyEmailStatus.textContent = 'コピーできませんでした。アドレスを選択してコピーしてください。';
-      }
-    });
-  }
-
   // back to top（フッターにかぶらないよう、フッター上端で止める）
   const backToTop = document.querySelector('.back-to-top');
   const pageFooter = document.querySelector('.footer');
