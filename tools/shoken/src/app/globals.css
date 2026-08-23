@@ -1,0 +1,545 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg-primary:    #f7f5f0;
+  --color-bg-card:       #ffffff;
+  --color-bg-muted:      #faf9f7;
+  --color-text-primary:  #1c1c2e;
+  --color-text-secondary:#555555;
+  --color-text-muted:    #999999;
+  --color-accent:        #C0634C;
+  --color-orange:        #ef8a3c;
+  --color-border:        #e8e4de;
+  --color-border-input:  #dddddd;
+  --app-paper-width:     1180px;  /* アプリ紙面の固定幅（全アプリ共通） */
+}
+
+html { scroll-behavior: smooth; }
+
+/* ── アプリ共通レイアウト（紙面固定＋余白は背景）
+   学校・子ども向けツールの背景はモザイクタイル（テスト検証用は青海波） ── */
+body {
+  background-color: #ece1cb;
+  background-image: url('/images/bg-mosaic.png');
+  background-size: 160px 160px;
+  color: var(--color-text-primary);
+}
+.app-paper {
+  width: 100%;
+  max-width: var(--app-paper-width);
+  margin: 0 auto;
+  background: var(--color-bg-primary);
+  box-shadow: 0 0 32px rgba(28, 28, 46, 0.16);
+}
+
+/* ── フォーム要素：フォーカス時だけオレンジ ── */
+input[type="text"]:focus,
+input:not([type]):focus,
+textarea:focus,
+select:focus {
+  border-color: var(--color-orange) !important;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(239, 138, 60, 0.15);
+}
+
+/* ── 共通入力スタイル ── */
+.input-base {
+  width: 100%;
+  border: 1px solid var(--color-border-input);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background: #fff;
+}
+
+.textarea-base {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid var(--color-border-input);
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--color-text-primary);
+  background: #fff;
+}
+.textarea-base:disabled {
+  background: #f4f3f0;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+/* ── 記事ボックスのカラーテーマ ── */
+.article-box-orange {
+  border-color: #f5c08a;
+  background: #fffaf5;
+}
+.article-box-blue {
+  border-color: #9fc5e8;
+  background: #f5f8ff;
+}
+.article-box-green {
+  border-color: #8ecfab;
+  background: #f4faf6;
+}
+
+/* ── ヒントチップ ── */
+.hint-chip {
+  font-size: 11px;
+  color: #888;
+  background: #f5f3ef;
+  border: 1px solid #e8e4de;
+  border-radius: 999px;
+  padding: 2px 9px;
+  white-space: nowrap;
+}
+/* data-tooltip でホバー時に即表示されるツールチップ */
+[data-tooltip] {
+  position: relative;
+  cursor: help;
+}
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1c1c2e;
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.7;
+  padding: 7px 12px;
+  border-radius: 6px;
+  white-space: pre-line;
+  min-width: 200px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 50;
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+}
+
+/* アンカー遷移時に固定ヘッダー分の余白を確保 */
+[id] { scroll-margin-top: 72px; }
+
+/* ── 共通ライトナビ（全アプリ統一ヘッダー。ベースは本体 common.css の .nav） ── */
+.site-nav {
+  border-bottom: 1px solid #ebebeb;
+  position: sticky;
+  top: 0;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+}
+.site-nav-inner {
+  max-width: 1232px;
+  margin: 0 auto;
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.site-nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: 0.08em;
+  color: #1c1c2e;
+  text-decoration: none;
+}
+.site-nav-logo span { color: var(--color-accent); }
+.site-nav-links { display: flex; gap: 6px 22px; align-items: center; flex-wrap: wrap; }
+/* グローバルメニュー（本体LPと同型のテキストリンク。2026-07-15にボタン→テキスト化） */
+.site-nav-links a {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #55555f;
+  text-decoration: none;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 2px;
+  white-space: nowrap;
+  transition: color .15s;
+}
+.site-nav-links a:hover { color: var(--color-accent); text-decoration: underline; }
+/* リファレンスボタン（ヒーロー内のタイトル・注釈の下。2026-07-15にヘッダーから移設） */
+.ph-ref {
+  display: inline-block;
+  margin-top: 14px;
+  color: #fff;
+  background: #ef8a3c;
+  border: 1px solid #ef8a3c;
+  border-radius: 2px;
+  font-weight: 700;
+  font-size: 12.5px;
+  padding: 6px 18px;
+  text-decoration: none;
+  transition: background .15s;
+}
+.ph-ref:hover { background: #e07428; border-color: #e07428; color: #fff; }
+@media (max-width: 480px) {
+  /* ロゴ＋リンクは1行のまま（本体ヘッダーと同じ。縦積みはくずれて見える） */
+  .site-nav-inner { gap: 8px; padding: 10px 14px; }
+  .site-nav-links { gap: 4px 13px; justify-content: flex-end; }
+  .site-nav-links a { font-size: 12.5px; }
+}
+@media (max-width: 360px) {
+  .site-nav-logo { font-size: 1.05rem; }
+  .site-nav-links { gap: 4px 9px; }
+  .site-nav-links a { font-size: 11.5px; }
+}
+
+/* ── Page header ── */
+.page-header {
+  background: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border);
+}
+.page-header-wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 24px 22px;
+}
+.page-header-en {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.page-header-inner {
+  border-left: 3px solid var(--color-accent);
+  padding-left: 16px;
+}
+.page-header-title {
+  font-family: 'M PLUS 1p', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  line-height: 1.1;
+  letter-spacing: -.01em;
+  margin-bottom: 10px;
+}
+.page-header-desc {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.75;
+  max-width: 640px;
+}
+
+/* ── Field label ── */
+.field-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  letter-spacing: .05em;
+  margin-bottom: 6px;
+}
+
+/* ── Site footer（全アプリ共通のテキストロゴ版。2026-07-15統一）
+   1段目「BEETLEロゴ＋ナビリンク」、2段目「プライバシーポリシー・会社名」。PC・スマホとも中央揃え ── */
+.site-footer-app {
+  background: #1a1a1a;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  text-align: center;
+}
+.sfa-row { display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+.sfa-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  color: #fff;
+  text-decoration: none;
+}
+.sfa-logo span { color: var(--color-accent); }
+.sfa-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+.sfa-nav a { font-size: 13px; color: #888; text-decoration: none; transition: color .15s; }
+.sfa-nav a:hover { color: #fff; }
+.sfa-copy { display: flex; align-items: center; justify-content: center; gap: 1rem; font-size: 12px; color: #888; flex-wrap: wrap; white-space: normal; }
+.sfa-copy a { color: #888; text-decoration: none; transition: color .15s; }
+.sfa-copy a:hover { color: #fff; }
+
+/* ── ローディングのスピナー ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin 0.7s linear infinite; }
+
+/* ── Hero band ── */
+.hero-band {
+  background: linear-gradient(155deg, #fdf3e3 0%, #fffaf2 65%);
+  border-bottom: 1px solid #f0e4cf;
+}
+.hero-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 4px 24px 30px; /* 上はたたむトグル行が確保するので詰める */
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 36px;
+  align-items: center;
+}
+.hero-copy { min-width: 0; }
+.hero-title {
+  font-family: 'M PLUS 1p', sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  color: var(--color-text-primary);
+  margin: 8px 0 12px;
+}
+.hero-desc {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+  max-width: 500px;
+  margin: 0;
+}
+/* ── Hero static visual + decorations ── */
+.hero-visual {
+  position: relative;
+  flex-shrink: 0;
+  pointer-events: none;
+  user-select: none;
+  padding: 24px 36px 24px 20px;
+}
+.hero-img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.07);
+  display: block;
+}
+.deco {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+}
+.deco-clip   { width: 72px;  top: 2px;     left: -4px;   }
+.deco-leaf   { width: 58px;  top: 48%;     left: -8px;   transform: translateY(-50%); }
+.deco-note   { width: 44px;  top: 20px;    right: 18px;  }
+.deco-flower { width: 66px;  top: -6px;    right: 8px;   }
+.deco-pencil { width: 54px;  top: 36%;     right: 0px;   transform: translateY(-50%) rotate(12deg); }
+.deco-sticky { width: 70px;  bottom: 18px; right: 6px;   }
+@media (max-width: 960px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-visual { display: none; }
+}
+
+/* ── ヒーローのたたみ機能（bug-checker の page-header と同型） ── */
+.ph-toggle {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+.ph-toggle:hover { color: var(--color-text-primary); }
+.ph-toggle-row {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 24px 0;
+}
+/* たたんだ状態：タイトル1行 */
+.ph-collapsed {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 24px;
+}
+.ph-collapsed .ph-toggle { margin-left: auto; }
+.ph-collapsed-title {
+  font-family: 'M PLUS 1p', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--color-text-primary);
+}
+
+/* ── ランディング準拠の「使い方」「FAQ」セクション（bug-checker と同型） ── */
+.app-section { margin-top: 44px; }
+.app-eyebrow {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: var(--color-accent);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: .12em;
+}
+.app-h2 {
+  font-family: 'M PLUS 1p', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+.app-lead {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.app-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+.app-step-card, .app-faq-card {
+  padding: 18px;
+  background: rgba(255, 255, 255, .6);
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(28, 28, 46, .05);
+}
+.app-step-card h3, .app-faq-card h3 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+.app-step-card p, .app-faq-card p {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  line-height: 1.7;
+  margin-top: 8px;
+}
+.app-step-no {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--color-text-primary);
+  color: #fff;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+.app-flow-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+.app-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .7);
+  border: 1px solid var(--color-border);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  font-size: 12px;
+}
+.app-faq-grid { display: grid; gap: 12px; margin-top: 16px; }
+@media (max-width: 640px) {
+  .app-steps { grid-template-columns: 1fr; }
+}
+
+/* 紙面（ボディ）の一番右下に置く更新日 */
+.paper-release {
+  margin-top: auto;
+  align-self: flex-end;
+  padding: 8px 20px 10px;
+  font-size: 11px;
+  color: #b4b2a9;
+  font-family: var(--font-mono, ui-monospace, monospace);
+}
+
+/* ── 上に戻るボタン（本体 common.css の .scroll-top-float と同一） ── */
+.scroll-top-float {
+  position: fixed;
+  bottom: 28px;
+  right: 24px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #2C2C2A;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 18px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s, background .15s;
+  z-index: 200;
+}
+.scroll-top-float.visible { opacity: 1; pointer-events: auto; }
+.scroll-top-float:hover { background: #444; }
+
+/* ── PreviewControls ── */
+.ctrl-grid { display: flex; flex-direction: row; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.ctrl-row { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 80px; }
+.ctrl-lbl {
+  width: auto;
+  font-size: 11px;
+  font-weight: 700;
+  color: #888;
+  flex-shrink: 0;
+  letter-spacing: .03em;
+}
+.ctrl-select {
+  flex: 1;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 13px;
+  color: #1c1c2e;
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+}
+.ctrl-select:focus { border-color: var(--color-accent); }
+
+/* ── Section label ── */
+.sec-label {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--color-border);
+  margin-bottom: 14px;
+}
+.sec-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── 所見メーカー固有 ──────────────────────────────
+   ヒーローに画像を置いていないので1カラムにする（画像を足すときはこの上書きを外す） */
+.hero-inner-solo { grid-template-columns: 1fr; }
