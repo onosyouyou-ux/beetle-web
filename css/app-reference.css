@@ -6,7 +6,8 @@
 .app-ref-copy .app-ref-button{margin-left:0}
 .app-ref-visual{min-height:260px}
 .app-ref-visual img{width:100%;height:100%;display:block;object-fit:cover}
-.app-ref-dialog{width:min(920px,calc(100% - 32px));max-height:calc(100dvh - 32px);padding:0;border:0;border-radius:12px;background:#faf7f1;color:#2b2a26;box-shadow:0 24px 80px #1c1c2e55;overflow:hidden}
+.app-ref-dialog{position:fixed;inset:0;width:min(920px,calc(100% - 32px));max-height:calc(100dvh - 32px);margin:auto;padding:0;border:0;border-radius:12px;background:#faf7f1;color:#2b2a26;box-shadow:0 24px 80px #1c1c2e55;overflow:hidden}
+body.app-ref-modal-open{overflow:hidden}
 .app-ref-dialog::backdrop{background:#231f1b99;backdrop-filter:blur(3px)}
 .app-ref-head{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:20px 24px;border-bottom:1px solid #e2ddd2;background:#fff}
 .app-ref-kicker,.app-ref-label{margin:0 0 4px;color:#df8435;font-size:9px;font-weight:900;letter-spacing:.16em}

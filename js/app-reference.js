@@ -14,7 +14,8 @@ var steps=c.steps.map(function(s,i){return '<article class="app-ref-step"><span 
 var items=c.items.map(function(g){return '<article><b>'+g[0]+'</b><code>'+g[1]+'</code><p>'+g[2]+'</p></article>';}).join('');
 dialog.innerHTML='<div class="app-ref-head"><div><p class="app-ref-kicker">APP REFERENCE</p><h2>'+c.title+' の使い方</h2></div><button class="app-ref-x" type="button" data-ref-close aria-label="閉じる">×</button></div><div class="app-ref-body"><p class="app-ref-lead">'+c.lead+'</p><section class="app-ref-steps">'+steps+'</section><section class="app-ref-section"><p class="app-ref-label">QUICK GUIDE</p><h3>'+c.guide+'</h3><div class="app-ref-guide">'+items+'</div></section><p class="app-ref-note">'+c.note+'</p><button class="app-ref-start" type="button" data-ref-close>アプリにもどる</button></div>';
 document.body.appendChild(dialog);
-var openButton=document.querySelector('.app-ref-button');if(openButton)openButton.addEventListener('click',function(){dialog.showModal();});
+var openButton=document.querySelector('.app-ref-button');if(openButton)openButton.addEventListener('click',function(){document.body.classList.add('app-ref-modal-open');dialog.showModal();});
 dialog.querySelectorAll('[data-ref-close]').forEach(function(b){b.addEventListener('click',function(){dialog.close();});});
 dialog.addEventListener('click',function(e){if(e.target===dialog)dialog.close();});
+dialog.addEventListener('close',function(){document.body.classList.remove('app-ref-modal-open');});
 })();
