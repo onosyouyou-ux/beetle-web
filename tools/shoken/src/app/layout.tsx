@@ -5,7 +5,7 @@ import './globals.css';
 const GA_ID = 'G-N6JXJGQ1Q6';
 // アプリ本体は vercel.app 配信。集客(SEO)は本体ドメインの静的ランディングが担当。
 // アプリ画面はランディングを正規URLとして指す（評価をランディングに集約）。
-const APP_URL = 'https://shoken-maker.vercel.app';
+const APP_URL = 'https://shoken-maker-topaz.vercel.app';
 const LANDING_URL = 'https://www.beetle-web.jp/tools/shoken/';
 const TITLE = '所見メーカー';
 const DESC = '子どもの様子のメモを人数分貼るだけ。AIが通知表の所見の下書きをまとめて作ります。名前は入力しません。';

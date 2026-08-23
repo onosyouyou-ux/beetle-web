@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 // アプリは vercel.app 配信（SEOの正規面は本体ドメインの静的ランディング）。
-const SITE_URL = 'https://shoken-maker.vercel.app';
+const SITE_URL = 'https://shoken-maker-topaz.vercel.app';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

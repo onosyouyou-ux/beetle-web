@@ -1,0 +1,267 @@
+/* ============================================================
+   shoken-lp.css — 所見メーカーのランディング（Tool系・教育＝温かいトーン）
+   アプリ本体は https://shoken-maker.vercel.app（別Vercel）。ここは集客面。
+   ============================================================ */
+
+:root {
+  --sl-cream: #fdf7ec;
+  --sl-line:  #ecdfc9;
+  --sl-ink:   #2b2b33;
+  --sl-sub:   #6b6459;
+}
+
+body {
+  margin: 0;
+  background: var(--sl-cream);
+  color: var(--sl-ink);
+  font-family: 'M PLUS 1p', 'Zen Kaku Gothic New', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.9;
+}
+
+/* ── ヒーロー ── */
+.sl-hero {
+  background: linear-gradient(160deg, #fbe9cf 0%, #fdf7ec 70%);
+  border-bottom: 1px solid var(--sl-line);
+  padding: 56px 24px 52px;
+}
+.sl-hero-in {
+  max-width: 780px;
+  margin: 0 auto;
+  text-align: center;
+}
+.sl-eyebrow {
+  margin: 0 0 14px;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: var(--color-accent);
+}
+.sl-title {
+  margin: 0 0 18px;
+  font-size: clamp(1.7rem, 4.4vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+.sl-lead {
+  margin: 0 auto;
+  max-width: 640px;
+  font-size: 15px;
+  color: var(--sl-sub);
+}
+.sl-lead-c { text-align: center; }
+.sl-cta { margin-top: 26px; }
+.sl-btn {
+  display: inline-block;
+  padding: 15px 34px;
+  border-radius: 2px;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: background .18s, transform .18s;
+}
+.sl-btn:hover { background: #a9543f; transform: translateY(-2px); }
+.sl-btn .arr { margin-left: 6px; }
+.sl-note {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--sl-sub);
+}
+.sl-note a { color: var(--color-accent); font-weight: 700; }
+
+/* ── セクション ── */
+.sl-wrap {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 24px 64px;
+}
+.sl-sec { margin-top: 56px; }
+.sl-h2 {
+  margin: 0 0 24px;
+  font-size: clamp(1.2rem, 2.6vw, 1.5rem);
+  font-weight: 800;
+  text-align: center;
+}
+
+/* ── カード（悩み・できること共通） ── */
+.sl-card {
+  position: relative;
+  border: 1px solid var(--sl-line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 20px 20px 18px;
+}
+.sl-card h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 800;
+}
+.sl-card p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--sl-sub);
+}
+.sl-pain {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.sl-feat {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.sl-tag {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 2px 10px;
+  border-radius: 2px;
+  background: var(--color-accent);
+  color: #fff;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* ── 安心のつくり ── */
+.sl-safe {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+.sl-safe-item {
+  border: 1px solid var(--sl-line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 16px 14px;
+  text-align: center;
+}
+.sl-safe-item span {
+  display: block;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-accent);
+}
+.sl-safe-item p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+/* ── 入力例 → 出力例 ── */
+.sl-ex {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  align-items: center;
+}
+.sl-ex-box {
+  border: 1px solid var(--sl-line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 18px;
+}
+.sl-ex-box.out { border-color: var(--color-accent); }
+.sl-ex-box p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.95;
+}
+.sl-ex-lb {
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--sl-sub);
+}
+.sl-ex-box.out .sl-ex-lb { color: var(--color-accent); }
+.sl-ex-ar {
+  font-size: 20px;
+  color: var(--color-accent);
+}
+.sl-fine {
+  margin: 14px 0 0;
+  font-size: 12px;
+  color: var(--sl-sub);
+  text-align: center;
+}
+
+/* ── 3ステップ ── */
+.sl-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.sl-step {
+  border: 1px solid var(--sl-line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 18px;
+}
+.sl-step .hd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.sl-step .n {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: #fff;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+}
+.sl-step .t { font-size: 15px; font-weight: 800; }
+.sl-step p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--sl-sub);
+}
+
+/* ── FAQ（JS不要の details/summary） ── */
+.sl-faq {
+  border: 1px solid var(--sl-line);
+  border-radius: 10px;
+  background: #fff;
+  margin-bottom: 10px;
+}
+.sl-faq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 18px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+.sl-faq summary::-webkit-details-marker { display: none; }
+.sl-faq summary span { color: var(--color-accent); font-size: 18px; }
+.sl-faq[open] summary span { transform: rotate(45deg); }
+.sl-faq div {
+  padding: 0 18px 16px;
+  font-size: 14px;
+  color: var(--sl-sub);
+}
+
+/* ── 末尾CTA ── */
+.sl-end { text-align: center; }
+
+@media (max-width: 720px) {
+  .sl-pain, .sl-feat, .sl-steps { grid-template-columns: 1fr; }
+  .sl-safe { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sl-ex { grid-template-columns: 1fr; }
+  .sl-ex-ar { transform: rotate(90deg); text-align: center; }
+}
