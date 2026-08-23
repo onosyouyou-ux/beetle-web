@@ -207,6 +207,12 @@
     <loc>https://www.beetle-web.jp/tools/katakana/landing.html</loc>
     <lastmod>2026-08-23</lastmod>
     <priority>0.8</priority>
+
+  <url>
+    <loc>https://www.beetle-web.jp/tools/romaji/landing.html</loc>
+    <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
   </url>
   </url>
 
