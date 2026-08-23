@@ -56,7 +56,14 @@ BashツールはWindows側のGit Bashで動くため、WSLパスに直接 `cd` �
   wsl -e bash -c "cd /home/owner/projects/beetle-web/tools/rubi-shokunin && npx vercel --prod"
   ```
 
-URL: https://gakkyu-tsushin.vercel.app / https://bug-checker.vercel.app / https://rubi-shokunin.vercel.app
+- **shoken-maker（所見メーカー。2026-08-23追加）**：Root Directory は `tools/shoken`。アプリのディレクトリから実行する：
+  ```powershell
+  wsl -e bash -c "cd /home/owner/projects/beetle-web/tools/shoken && npx vercel --prod"
+  ```
+  ⚠️ **本番URLは `shoken-maker-topaz.vercel.app`**。`shoken-maker.vercel.app` は他所が使用中で取れなかったため、
+  Vercel が `-topaz` 付きのドメインを割り当てている。canonical・robots・sitemap・ランディングのCTAは全部こちらを指す。
+
+URL: https://gakkyu-tsushin.vercel.app / https://bug-checker.vercel.app / https://rubi-shokunin.vercel.app / https://shoken-maker-topaz.vercel.app
 
 ※コミット時に毎回出る `geometric repack ... Permission denied` は Git の自動メンテナンスがWSLパスで失敗しているだけで無害（コミット・プッシュは成功している）。
 
@@ -327,4 +334,5 @@ QA事業と教育事業の二本立てに合わせ、入口を分ける。**LP�
 - **bug-checker**: この型（静的ランディング `tools/bug-checker/landing.html` ＋アプリ vercel.app）で運用中。紙面ルールの基準アプリ。
 - **gakkyu-tsushin**: `tools/gakkyu-tsushin/index.html` がランディング（canonical: `/tools/gakkyu-tsushin/`）。アプリは vercel.app。`landing.html` は不要なため削除済み。紙面ルール適用済み（2026-07-13）。
 - **rubi-shokunin**: `tools/rubi-shokunin/index.html` がランディング（canonical: `/tools/rubi-shokunin/`）。アプリは vercel.app。紙面ルール適用済み（2026-07-13）。
+- **shoken-maker（所見メーカー）**: `tools/shoken/index.html` が静的ランディング（canonical: `/tools/shoken/`）。アプリは `shoken-maker-topaz.vercel.app`（Next.js・Claude API はサーバー側）。**`ANTHROPIC_API_KEY` の設定が必須**。
 - **えいごよんで（eigo）**: 静的ツール（AIなし）。`tools/eigo/landing.html` がランディング、`index.html` がアプリ本体。どちらも本体ドメイン配信。
