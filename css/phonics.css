@@ -1,0 +1,198 @@
+/* ============================================================
+   phonics.css — フォニックス修行（子ども向け・本体ドメイン配信の静的アプリ）
+   紙面固定（.app-paper 1180px）＋余白はモザイクタイル背景。かんじドリル・とけいと同じ系統。
+   ============================================================ */
+
+:root{
+  --pn-ink:#3a3630;
+  --pn-ink2:#7b756a;
+  --pn-ink3:#a9a296;
+  --pn-line:#e6dfd0;
+  --pn-line2:#d3c8b2;
+  --pn-cream:#fdf8ef;
+  --pn-cream2:#f5ecdb;
+  --pn-orange:#e8933f;
+  --pn-orange-dk:#cc7724;
+  --pn-green:#2f7d55;
+  --pn-green-bg:#e9f5ee;
+  --pn-red:#c0503b;
+  --pn-red-bg:#fbeeea;
+}
+
+body{
+  background-color:#ece1cb;
+  background-image:url('/assets/images/bg-mosaic.png');
+  background-size:160px 160px;
+  margin:0;
+  color:var(--pn-ink);
+}
+
+.app-paper{
+  width:100%;
+  max-width:1180px;   /* アプリ紙面の固定幅（全アプリ共通） */
+  margin:0 auto;
+  background:var(--pn-cream);
+  box-shadow:0 0 32px rgba(28,28,46,.16);
+  padding-bottom:36px;
+}
+
+/* ====== ヒーロー ====== */
+.pn-hero{
+  background:linear-gradient(135deg,#fdf1dd 0%,#f6e0d0 100%);
+  border-bottom:1px solid var(--pn-line);
+  padding:32px 40px 28px;
+  text-align:center;
+}
+.pn-eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--pn-orange);margin:0 0 8px}
+.pn-hero h1{font-size:32px;font-weight:900;margin:0 0 12px;letter-spacing:.06em}
+.pn-lead{font-size:14px;line-height:2;color:var(--pn-ink2);margin:0 0 12px}
+.pn-scope{
+  display:inline-block;font-size:11.5px;font-weight:700;color:var(--pn-orange-dk);
+  background:#fff;border:1px solid var(--pn-line2);border-radius:99px;padding:5px 16px;margin:0;
+}
+
+/* ====== アプリ本体の幅 ====== */
+#pn-app{max-width:700px;margin:0 auto;padding:26px 20px 0}
+
+/* ====== メニュー ====== */
+.pn-menu-lead{text-align:center;font-size:14px;font-weight:700;color:var(--pn-ink2);margin:0 0 16px}
+.pn-modes{display:grid;gap:10px}
+.pn-mode{
+  display:flex;flex-direction:column;gap:4px;align-items:center;
+  padding:18px 16px;border:2px solid var(--pn-line2);border-radius:14px;
+  background:#fff;cursor:pointer;font-family:inherit;transition:border-color .15s,transform .15s;
+}
+.pn-mode:hover{border-color:var(--pn-orange);transform:translateY(-2px)}
+.pn-mode-t{font-size:19px;font-weight:900;letter-spacing:.06em}
+.pn-mode-s{font-size:12.5px;color:var(--pn-ink2)}
+
+/* ルール表（このアプリの中心。いつでも見られる） */
+.pn-rules{
+  margin-top:22px;border:1px solid var(--pn-line);border-radius:14px;
+  background:var(--pn-cream2);padding:18px 20px;
+}
+.pn-rules h2{font-size:14px;font-weight:900;margin:0 0 12px;text-align:center;letter-spacing:.06em}
+.pn-rules ol{margin:0;padding-left:1.3em}
+.pn-rules li{font-size:13.5px;line-height:1.9;margin-bottom:6px}
+.pn-rules li b{font-weight:800}
+.pn-rules li span{display:block;font-size:12.5px;color:var(--pn-orange-dk);font-weight:700}
+.pn-rules-note{font-size:12.5px;color:var(--pn-ink2);margin:12px 0 0;line-height:1.8}
+
+/* ====== もんだい ====== */
+.pn-bar{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;font-weight:700;color:var(--pn-ink2);margin-bottom:12px;
+}
+.pn-score{color:var(--pn-orange-dk)}
+.pn-q{
+  border:1px solid var(--pn-line);border-radius:14px;background:#fff;
+  padding:26px 20px;text-align:center;
+}
+.pn-q-lead{font-size:13px;font-weight:700;color:var(--pn-ink2);margin:0 0 14px}
+.pn-q-word{font-size:34px;font-weight:900;letter-spacing:.12em;margin:0;line-height:1.4}
+.pn-q-word.is-big{font-size:84px;letter-spacing:.1em}
+
+.pn-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+.pn-choices.is-two{grid-template-columns:repeat(2,1fr)}
+.pn-choice{
+  padding:16px 12px;border:2px solid var(--pn-line2);border-radius:12px;background:#fff;
+  font-family:inherit;font-size:20px;font-weight:800;letter-spacing:.08em;cursor:pointer;
+  transition:border-color .15s,background .15s;
+}
+.pn-choice:hover:not(:disabled){border-color:var(--pn-orange)}
+.pn-choice:disabled{cursor:default;opacity:.75}
+.pn-choice.is-correct{border-color:var(--pn-green);background:var(--pn-green-bg);color:var(--pn-green);opacity:1}
+.pn-choice.is-wrong{border-color:var(--pn-red);background:var(--pn-red-bg);color:var(--pn-red);opacity:1}
+
+/* ====== 答え合わせ（「なぜ」を必ず出す場所） ====== */
+.pn-answer{display:none}
+.pn-answer.is-on{
+  display:block;margin-top:14px;border-radius:14px;padding:18px 20px;
+  border:2px solid var(--pn-line2);background:#fff;text-align:center;
+}
+.pn-answer.is-ok{border-color:var(--pn-green);background:var(--pn-green-bg)}
+.pn-answer.is-ng{border-color:var(--pn-red);background:var(--pn-red-bg)}
+.pn-a-head{font-size:16px;font-weight:900;margin:0 0 6px}
+.pn-a-head b{font-size:22px;letter-spacing:.08em}
+.pn-a-cat{
+  display:inline-block;font-size:11.5px;font-weight:800;color:var(--pn-orange-dk);
+  background:#fff;border:1px solid var(--pn-line2);border-radius:99px;padding:3px 12px;margin:0 0 8px;
+}
+.pn-a-why{font-size:15px;font-weight:700;line-height:1.9;margin:0 0 14px}
+
+.pn-next{
+  padding:13px 30px;border:none;border-radius:10px;background:var(--pn-orange);
+  color:#fff;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:background .15s;
+}
+.pn-next:hover{background:var(--pn-orange-dk)}
+.pn-sub{
+  padding:13px 24px;border:2px solid var(--pn-line2);border-radius:10px;background:#fff;
+  color:var(--pn-ink);font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;
+}
+.pn-sub:hover{border-color:var(--pn-orange)}
+
+/* ====== けっか ====== */
+.pn-result{text-align:center}
+.pn-result-score{font-size:20px;font-weight:800;margin:0 0 18px}
+.pn-result-score b{font-size:30px;color:var(--pn-orange-dk)}
+.pn-allok{font-size:16px;font-weight:800;color:var(--pn-green);margin:0 0 18px}
+.pn-missed{
+  text-align:left;border:1px solid var(--pn-line);border-radius:14px;
+  background:#fff;padding:18px 20px;margin-bottom:18px;
+}
+.pn-missed h2{font-size:13px;font-weight:900;margin:0 0 12px;letter-spacing:.06em}
+.pn-missed-item{padding:9px 0;border-bottom:1px dashed var(--pn-line)}
+.pn-missed-item:last-of-type{border-bottom:none}
+.pn-missed-item b{font-size:19px;font-weight:900;letter-spacing:.08em;margin-right:10px}
+.pn-missed-item span{font-size:13px;color:var(--pn-ink2)}
+.pn-missed-note{font-size:12.5px;color:var(--pn-ink2);margin:12px 0 0}
+.pn-result-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* ====== おうちのかたへ・FAQ ====== */
+.pn-doc{max-width:700px;margin:40px auto 0;padding:0 20px}
+.pn-doc h2{font-size:15px;font-weight:900;margin:28px 0 14px;letter-spacing:.06em}
+.pn-steps{display:grid;gap:12px}
+.pn-step{border:1px solid var(--pn-line);border-radius:12px;background:#fff;padding:16px 18px}
+.pn-step-n{
+  display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;
+  background:var(--pn-orange);color:#fff;font-size:12px;font-weight:800;margin-bottom:8px;
+}
+.pn-step h3{font-size:14px;font-weight:800;margin:0 0 6px}
+.pn-step p{font-size:13px;line-height:1.9;color:var(--pn-ink2);margin:0}
+
+.pn-faq{border:1px solid var(--pn-line);border-radius:12px;background:#fff;margin-bottom:10px}
+.pn-faq summary{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 18px;font-size:13.5px;font-weight:800;cursor:pointer;list-style:none;
+}
+.pn-faq summary::-webkit-details-marker{display:none}
+.pn-faq summary span{color:var(--pn-orange);font-size:18px}
+.pn-faq[open] summary span{transform:rotate(45deg)}
+.pn-faq div{padding:0 18px 15px;font-size:13px;line-height:1.9;color:var(--pn-ink2)}
+.pn-more{font-size:13px;color:var(--pn-ink2);margin:20px 0 0;line-height:1.9}
+.pn-more a{color:var(--pn-orange-dk);font-weight:700}
+
+@media (max-width:640px){
+  .pn-hero{padding:24px 20px 22px}
+  .pn-hero h1{font-size:26px}
+  .pn-q-word{font-size:28px}
+  .pn-q-word.is-big{font-size:64px}
+  .pn-choice{font-size:18px;padding:14px 10px}
+}
+
+/* ====== フォニックス修行 固有 ====== */
+
+/* 英語の 文字・単語は 大きく、読みやすい 欧文で */
+.pn-q-word{font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;font-size:56px;letter-spacing:.1em}
+
+/* こたえあわせの ボタン（音を きく／つぎへ） */
+.pn-a-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* ABCが読めない理由の 3点セット（メニュー常設） */
+.pn-rules ol{padding-left:1.3em}
+.pn-rules li{margin-bottom:10px}
+.pn-rules li span{color:var(--pn-ink2);font-weight:400}
+
+@media (max-width:640px){
+  .pn-q-word{font-size:40px}
+}
