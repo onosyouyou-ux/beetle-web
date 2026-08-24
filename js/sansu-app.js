@@ -739,6 +739,7 @@
     buttons.forEach((b) => { b.disabled = true; });
 
     const ok = val === q.answer;
+    showAnswerEffect(ok);
     if (ok) {
       btn.classList.add('is-correct');
       s.correct += 1;
@@ -800,6 +801,33 @@
     setTimeout(() => { if (session) nextQuestion(); }, 1200);
   }
 
+
+  // 画面中央に短く出す答え合わせ演出。次の問題を邪魔しないようDOMは自動で片づける。
+  function showAnswerEffect(ok) {
+    const old = document.querySelector('.sa-answer-effect');
+    if (old) old.remove();
+    const effect = el('div', 'sa-answer-effect ' + (ok ? 'is-correct' : 'is-wrong'));
+    effect.setAttribute('role', 'status');
+    effect.setAttribute('aria-live', 'polite');
+    const burst = el('div', 'sa-answer-burst');
+    burst.setAttribute('aria-hidden', 'true');
+    if (ok) ['★', '●', '★', '●', '★', '●', '★', '●'].forEach((mark, i) => {
+      const particle = el('span', 'sa-answer-particle', mark);
+      particle.style.setProperty('--i', i);
+      burst.appendChild(particle);
+    });
+    const badge = el('div', 'sa-answer-badge');
+    const mascot = el('img', 'sa-answer-icon');
+    mascot.src = ok ? '/assets/images/sansu/icons/answer-maru.png' : '/assets/images/sansu/icons/answer-batsu.png';
+    mascot.alt = ok ? 'まる' : 'ばつ';
+    mascot.width = 240; mascot.height = 240;
+    badge.appendChild(mascot);
+    badge.appendChild(el('strong', 'sa-answer-title', ok ? 'せいかい!' : 'おしい!'));
+    badge.appendChild(el('span', 'sa-answer-note', ok ? 'そのちょうし!' : 'こたえを みてみよう'));
+    effect.appendChild(burst); effect.appendChild(badge); document.body.appendChild(effect);
+    setTimeout(() => effect.classList.add('is-leaving'), 850);
+    setTimeout(() => effect.remove(), 1150);
+  }
   // ---- けっか ----
   function renderResult(complete) {
     const s = session;

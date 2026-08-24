@@ -711,6 +711,32 @@ body::after {
 .sa-feedback.is-ok { color: #2f9469; }
 .sa-feedback.is-ng { color: #e04555; }
 
+/* ── 答え合わせ：画面中央に一瞬だけ出る演出 ── */
+.sa-answer-effect { position:fixed; inset:0; z-index:1000; display:grid; place-items:center; pointer-events:none; background:rgba(20,25,55,.08); animation:sa-effect-in .18s ease-out both; }
+.sa-answer-badge { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; width:190px; min-height:190px; padding:18px; border:6px solid #fff; border-radius:50%; color:#fff; text-align:center; box-shadow:0 18px 45px rgba(25,25,55,.28),inset 0 0 0 3px rgba(255,255,255,.25); }
+.sa-answer-effect.is-correct .sa-answer-badge { background:linear-gradient(145deg,#58d49b,#299d70); animation:sa-correct-pop .55s cubic-bezier(.2,1.35,.45,1) both; }
+.sa-answer-effect.is-wrong .sa-answer-badge { background:linear-gradient(145deg,#ff8390,#e34b61); animation:sa-wrong-wiggle .48s ease-out both; }
+.sa-answer-icon { font-size:72px; font-weight:800; line-height:.75; }
+.sa-answer-title { margin-top:12px; font-size:26px; line-height:1.15; }
+.sa-answer-note { margin-top:5px; font-size:12px; font-weight:800; }
+.sa-answer-burst { position:absolute; width:220px; height:220px; }
+.sa-answer-particle { --angle:calc(var(--i) * 45deg); position:absolute; top:50%; left:50%; color:#ffd75e; font-size:22px; text-shadow:0 2px 0 #fff; animation:sa-particle-fly .65s .08s ease-out both; }
+.sa-answer-effect.is-leaving { animation:sa-effect-out .25s ease-in both; }
+@keyframes sa-effect-in { from { opacity:0; } to { opacity:1; } }
+@keyframes sa-effect-out { to { opacity:0; transform:scale(.96); } }
+@keyframes sa-correct-pop { 0% { opacity:0; transform:scale(.35) rotate(-12deg); } 62% { opacity:1; transform:scale(1.12) rotate(3deg); } 100% { transform:scale(1) rotate(0); } }
+@keyframes sa-wrong-wiggle { 0% { opacity:0; transform:scale(.65); } 38% { opacity:1; transform:scale(1.04) translateX(-9px); } 58% { transform:scale(1.04) translateX(8px); } 76% { transform:scale(1.02) translateX(-4px); } 100% { transform:scale(1) translateX(0); } }
+@keyframes sa-particle-fly { from { opacity:0; transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-64px) scale(.3); } 30% { opacity:1; } to { opacity:0; transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-145px) scale(1.2); } }
+@media (prefers-reduced-motion:reduce) { .sa-answer-effect,.sa-answer-effect.is-leaving,.sa-answer-effect.is-correct .sa-answer-badge,.sa-answer-effect.is-wrong .sa-answer-badge,.sa-answer-particle { animation-duration:.01ms; animation-iteration-count:1; } }
+/* 生成した「まる・ばつ」キャラクターを主役にする */
+.sa-answer-badge { width:280px; min-height:300px; padding:0; border:0; border-radius:0; background:none; box-shadow:none; }
+.sa-answer-effect.is-correct .sa-answer-badge,.sa-answer-effect.is-wrong .sa-answer-badge { background:none; }
+.sa-answer-icon { display:block; width:240px; height:240px; object-fit:contain; filter:drop-shadow(0 14px 18px rgba(25,25,55,.2)); }
+.sa-answer-title { margin-top:-18px; padding:8px 24px; border:4px solid #fff; border-radius:999px; background:#fff; box-shadow:0 8px 20px rgba(25,25,55,.16); font-size:27px; }
+.is-correct .sa-answer-title { color:#27946b; }
+.is-wrong .sa-answer-title { color:#dd435a; }
+.sa-answer-note { padding:5px 13px; border-radius:999px; background:rgba(31,34,70,.72); color:#fff; }
+
 /* ── けっか ── */
 .sa-result { text-align: center; }
 .sa-result-emoji { font-size: 60px; line-height: 1.1; }
