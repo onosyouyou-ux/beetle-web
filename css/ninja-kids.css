@@ -1113,3 +1113,33 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.pn
     flex:0 0 auto;
   }
 }
+/* Kanji board: fixed play frame and continuous dark lower stage. */
+.ninja-kids.ninja-kanji .app-paper,
+.ninja-kids.ninja-kanji .kj-doc {
+  background:#07131a;
+}
+.ninja-kids.ninja-kanji .kj-doc>h2 {
+  color:#f7fbfc;
+}
+.ninja-kids.ninja-kanji .kj-more {
+  color:#c7d5d8;
+}
+.ninja-kids.ninja-kanji .kj-more a {
+  color:#ffad92;
+}
+.ninja-kids.ninja-kanji .paper-release {
+  color:#91a3a8;
+}
+@media (min-width:760px) {
+  .ninja-kids.ninja-kanji .kj-play {
+    height:316px;
+    min-height:316px;
+    box-sizing:border-box;
+  }
+}
+@media (min-width:760px) and (max-height:820px) {
+  .ninja-kids.ninja-kanji .kj-play {
+    height:275px;
+    min-height:275px;
+  }
+}
