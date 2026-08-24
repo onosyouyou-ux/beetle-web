@@ -960,8 +960,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.pn
 
 /* Feedback polish: decorative items stay in menus and rewards; answers stay neutral. */
 .ninja-kids {
-  --nk-feedback-ok:url('/assets/images/ninja/feedback/correct-ninja-v1.png');
-  --nk-feedback-ng:url('/assets/images/ninja/feedback/try-again-ninja-v1.png');
+  --nk-feedback-ok:url('/assets/images/sansu/icons/answer-maru.png');
+  --nk-feedback-ng:url('/assets/images/sansu/icons/answer-batsu.png');
 }
 .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) { position:relative; }
 .ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar)::after { content:none; }
@@ -1017,8 +1017,6 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.pn
 }
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-ok::before { background-image:var(--nk-feedback-ok); }
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-ng::before { background-image:var(--nk-feedback-ng); }
-.ninja-space .sa-answer-effect.is-correct .sa-answer-icon { content:url('/assets/images/ninja/feedback/correct-ninja-v1.png'); }
-.ninja-space .sa-answer-effect.is-wrong .sa-answer-icon { content:url('/assets/images/ninja/feedback/try-again-ninja-v1.png'); }
 @keyframes ninjaFeedbackVeil {
   from { opacity:0; }
   to { opacity:1; }
