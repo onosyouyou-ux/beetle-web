@@ -1,0 +1,239 @@
+/* Theme layer for the child-facing Ninja Training landing pages. */
+body.ninja-landing {
+  --nl-accent:#b44a35;
+  --nl-dark:#74291e;
+  --nl-soft:#f4dfba;
+  --nl-art:url('/assets/images/ninja/kanji-scroll.png');
+  color:#2f281f;
+  background:#15283a url('/assets/images/bg-mosaic.png') 0 0/160px;
+}
+body.ninja-lp-tokei { --nl-accent:#d47b1f;--nl-dark:#81470d;--nl-soft:#f5d89e;--nl-art:url('/assets/images/ninja/tokei-clockwork.png'); }
+body.ninja-lp-kanji { --nl-accent:#b64632;--nl-dark:#72271d;--nl-soft:#efc9a5;--nl-art:url('/assets/images/ninja/kanji-scroll.png'); }
+body.ninja-lp-katakana { --nl-accent:#168c8b;--nl-dark:#0c5960;--nl-soft:#b9dfd3;--nl-art:url('/assets/images/ninja/katakana-infiltration.png'); }
+body.ninja-lp-romaji { --nl-accent:#7652b8;--nl-dark:#452b79;--nl-soft:#d3c0ee;--nl-art:url('/assets/images/ninja/romaji-cipher.png'); }
+body.ninja-lp-phonics { --nl-accent:#4b8e42;--nl-dark:#285d25;--nl-soft:#c5dba2;--nl-art:url('/assets/images/ninja/phonics-listen.png'); }
+.ninja-landing main {
+  overflow:hidden;
+  background:#fffaf0;
+  box-shadow:0 0 46px rgba(0,0,0,.28);
+}
+.ninja-landing .eal-hero {
+  position:relative;
+  overflow:hidden;
+  color:#fff;
+  background:
+    linear-gradient(90deg,rgba(15,31,44,.98) 0 54%,rgba(15,31,44,.55) 74%,rgba(15,31,44,.84)),
+    repeating-linear-gradient(135deg,#51331f 0 24px,#63402a 25px 27px,#4a2d1c 28px 54px);
+  border-bottom:8px solid var(--nl-accent);
+}
+.ninja-landing .eal-hero::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  opacity:.24;
+  background:
+    radial-gradient(circle at 12% 20%,#fff 0 1px,transparent 2px),
+    radial-gradient(circle at 32% 65%,#fff 0 1px,transparent 2px);
+  background-size:90px 90px,130px 130px;
+}
+.ninja-landing .eal-hero .eal-container {
+  position:relative;
+  z-index:1;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(330px,.78fr)!important;
+  align-items:center;
+  min-height:500px;
+  gap:28px;
+}
+.ninja-landing .eal-hero .eal-container::after {
+  content:'';
+  grid-column:2;
+  grid-row:1;
+  align-self:stretch;
+  min-height:420px;
+  background:var(--nl-art) center/contain no-repeat;
+  filter:drop-shadow(0 18px 16px rgba(0,0,0,.38));
+}
+.ninja-landing .eal-hero-copy {
+  grid-column:1;
+  grid-row:1;
+  position:relative;
+  z-index:2;
+}
+.ninja-landing .eal-hero-img { display:none!important; }
+.ninja-landing .eal-badge {
+  color:#fff;
+  border:1px solid color-mix(in srgb,var(--nl-accent) 65%,#fff);
+  background:color-mix(in srgb,var(--nl-accent) 78%,transparent);
+}
+.ninja-landing .eal-hero h1,
+.ninja-landing .eal-hero h1 span { color:#fff; }
+.ninja-landing .eal-hero h1 span { color:#ffd67b; }
+.ninja-landing .eal-lead { color:#eef4f4; }
+.ninja-landing .eal-btn-primary {
+  border-color:var(--nl-accent);
+  background:var(--nl-accent);
+  box-shadow:0 5px 0 var(--nl-dark);
+  clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);
+}
+.ninja-landing .eal-btn-primary:hover { background:var(--nl-dark); }
+.ninja-landing .eal-btn-ghost {
+  color:#fff;
+  border-color:#ffffff8f;
+  background:#ffffff14;
+}
+.ninja-landing .eal-checks span::before { color:#ffd67b; }
+.ninja-landing .eal-section {
+  position:relative;
+  background:
+    linear-gradient(rgba(255,251,241,.97),rgba(255,251,241,.97)),
+    repeating-linear-gradient(0deg,transparent 0 31px,rgba(90,58,31,.11) 32px);
+}
+.ninja-landing .eal-section-tint {
+  background:
+    linear-gradient(color-mix(in srgb,var(--nl-soft) 26%,#fff),color-mix(in srgb,var(--nl-soft) 45%,#fff)),
+    repeating-linear-gradient(90deg,transparent 0 39px,rgba(90,58,31,.08) 40px);
+  border-block:10px solid #5b3722;
+}
+.ninja-landing .eal-eyebrow { color:var(--nl-dark); }
+.ninja-landing .eal-head h2::after {
+  content:'';
+  display:block;
+  width:70px;
+  height:5px;
+  margin:14px auto 0;
+  background:var(--nl-accent);
+  clip-path:polygon(0 0,100% 0,92% 100%,8% 100%);
+}
+.ninja-landing .eal-card {
+  position:relative;
+  overflow:hidden;
+  border:1px solid #d2bc91;
+  border-radius:6px;
+  background:#fffdf7;
+  box-shadow:0 6px 0 #c8ad7b,0 14px 22px rgba(69,43,21,.1);
+  clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);
+}
+.ninja-landing .eal-card::before {
+  content:'修行';
+  position:absolute;
+  right:-24px;
+  top:14px;
+  width:90px;
+  padding:4px;
+  rotate:42deg;
+  color:#fff;
+  background:var(--nl-accent);
+  font-size:10px;
+  font-weight:900;
+  text-align:center;
+}
+.ninja-landing .eal-card-num {
+  color:#fff;
+  background:var(--nl-accent);
+  box-shadow:0 3px 0 var(--nl-dark);
+}
+.ninja-landing .eal-feature>img {
+  width:100%;
+  max-height:430px;
+  padding:18px;
+  object-fit:contain;
+  border:2px solid color-mix(in srgb,var(--nl-accent) 48%,#c9b48c);
+  background:linear-gradient(145deg,#fffdf5,var(--nl-soft));
+  box-shadow:0 8px 0 #b89b69;
+}
+.ninja-landing .eal-point {
+  border-left:5px solid var(--nl-accent);
+  background:#fffdf7;
+}
+.ninja-landing .eal-faq details {
+  border-color:#d2bc91;
+  background:#fffdf7;
+}
+.ninja-landing .eal-faq summary::after { color:var(--nl-accent); }
+.ninja-landing .eal-final {
+  position:relative;
+  color:#fff;
+  border-top:8px solid var(--nl-accent);
+  background:
+    linear-gradient(110deg,rgba(16,35,49,.96),rgba(45,31,54,.9)),
+    url('/assets/images/bg-mosaic.png') center/160px;
+}
+.ninja-landing .eal-final h2,
+.ninja-landing .eal-final p { color:#fff; }
+.ninja-landing .eal-footer {
+  color:#e9eef1;
+  background:#0f1f2d;
+}
+
+/* Keep the established space journey, now presented as a space-ninja village. */
+body.ninja-lp-space {
+  background:#050d22 url('/assets/images/ninja/space-village-bg.png') center top/cover fixed;
+}
+.ninja-lp-space .slp-hero {
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(90deg,rgba(5,14,37,.96),rgba(33,20,74,.8)),
+    url('/assets/images/ninja/space-village-bg.png') center/cover;
+}
+.ninja-lp-space .slp-hero::before {
+  content:'宇宙忍者の里';
+  display:inline-block;
+  position:absolute;
+  top:28px;
+  left:50%;
+  z-index:3;
+  translate:-50% 0;
+  padding:7px 20px;
+  color:#fff3a8;
+  border:1px solid #a98cff;
+  background:#241858c9;
+  font-weight:800;
+  letter-spacing:.16em;
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+}
+.ninja-lp-space .slp-hero-visual {
+  min-height:410px;
+  background:url('/assets/images/ninja/sansu-space.png') center/contain no-repeat;
+  filter:drop-shadow(0 18px 15px rgba(0,0,0,.45));
+}
+.ninja-lp-space .slp-screen { visibility:hidden; }
+.ninja-lp-space .slp-float-card { filter:none; }
+.ninja-lp-space .slp-section,
+.ninja-lp-space .slp-proof {
+  background:linear-gradient(rgba(9,20,48,.97),rgba(17,24,63,.97));
+  color:#eef2ff;
+}
+.ninja-lp-space .slp-section.tint { background:linear-gradient(#17133f,#0d2445); }
+.ninja-lp-space .slp-section h2,
+.ninja-lp-space .slp-section h3,
+.ninja-lp-space .slp-section p,
+.ninja-lp-space .slp-proof span { color:#eef2ff; }
+.ninja-lp-space .slp-calc-card,
+.ninja-lp-space .slp-play-card,
+.ninja-lp-space .slp-step,
+.ninja-lp-space .slp-faq details {
+  color:#20213a;
+  border-color:#7f65ca;
+  background:#f9f6ff;
+  box-shadow:0 6px 0 #5a40a7;
+}
+.ninja-lp-space .slp-calc-card h3,
+.ninja-lp-space .slp-calc-card p,
+.ninja-lp-space .slp-play-card h3,
+.ninja-lp-space .slp-play-card p,
+.ninja-lp-space .slp-step h3,
+.ninja-lp-space .slp-step p { color:#20213a; }
+
+@media (max-width:760px) {
+  .ninja-landing .eal-hero .eal-container {
+    grid-template-columns:1fr!important;
+    min-height:auto;
+    padding-top:48px;
+  }
+  .ninja-landing .eal-hero-copy { grid-column:1;grid-row:1;text-align:center; }
+  .ninja-landing .eal-hero .eal-container::after { grid-column:1;grid-row:2;min-height:260px; }
+  .ninja-lp-space .slp-hero::before { top:12px; }
+  .ninja-lp-space .slp-hero-visual { min-height:290px; }
+}

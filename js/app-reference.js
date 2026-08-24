@@ -9,12 +9,20 @@ var data={
 var c=data[path];if(!c)return;
 var hero=document.querySelector(c.hero);
 if(hero){
+  var mascot=hero.querySelector('.ninja-mascot');
   hero.classList.add('app-ref-hero');
   var copy=document.createElement('div');copy.className='app-ref-copy';
   while(hero.firstChild)copy.appendChild(hero.firstChild);
   var link=document.createElement('a');link.className='app-ref-button';link.href=c.landing;link.textContent='リファレンス';
   copy.appendChild(link);hero.appendChild(copy);
   var visual=document.createElement('div');visual.className='app-ref-visual';
-  visual.innerHTML='<img src="'+c.img+'" width="960" height="640" alt="'+c.alt+'">';hero.appendChild(visual);
+  if(mascot){
+    visual.classList.add('is-ninja');
+    mascot.classList.add('ninja-hero-art');
+    visual.appendChild(mascot);
+  }else{
+    visual.innerHTML='<img src="'+c.img+'" width="960" height="640" alt="'+c.alt+'">';
+  }
+  hero.appendChild(visual);
 }
 })();
