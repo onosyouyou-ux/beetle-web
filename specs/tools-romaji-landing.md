@@ -4,7 +4,7 @@ urls: ["/tools/romaji/landing.html"]
 canonical: self
 sitemap: true
 title_contains: "ローマ字修行"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ninja/romaji-cipher-og.jpg"
 required_selectors: ["#site-header", ".eal-hero", "#howto", "#faq", ".eal-final", ".eal-footer"]
 ---
 

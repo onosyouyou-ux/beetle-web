@@ -3,15 +3,15 @@ body.ninja-landing {
   --nl-accent:#b44a35;
   --nl-dark:#74291e;
   --nl-soft:#f4dfba;
-  --nl-art:url('/assets/images/ninja/kanji-scroll.png');
+  --nl-art:url('/assets/images/ninja/kanji-scroll.webp');
   color:#2f281f;
   background:#15283a url('/assets/images/bg-mosaic.png') 0 0/160px;
 }
-body.ninja-lp-tokei { --nl-accent:#d47b1f;--nl-dark:#81470d;--nl-soft:#f5d89e;--nl-art:url('/assets/images/ninja/tokei-clockwork.png'); }
-body.ninja-lp-kanji { --nl-accent:#b64632;--nl-dark:#72271d;--nl-soft:#efc9a5;--nl-art:url('/assets/images/ninja/kanji-scroll.png'); }
-body.ninja-lp-katakana { --nl-accent:#168c8b;--nl-dark:#0c5960;--nl-soft:#b9dfd3;--nl-art:url('/assets/images/ninja/katakana-infiltration.png'); }
-body.ninja-lp-romaji { --nl-accent:#7652b8;--nl-dark:#452b79;--nl-soft:#d3c0ee;--nl-art:url('/assets/images/ninja/romaji-cipher.png'); }
-body.ninja-lp-phonics { --nl-accent:#4b8e42;--nl-dark:#285d25;--nl-soft:#c5dba2;--nl-art:url('/assets/images/ninja/phonics-listen.png'); }
+body.ninja-lp-tokei { --nl-accent:#d47b1f;--nl-dark:#81470d;--nl-soft:#f5d89e;--nl-art:url('/assets/images/ninja/tokei-clockwork.webp'); }
+body.ninja-lp-kanji { --nl-accent:#b64632;--nl-dark:#72271d;--nl-soft:#efc9a5;--nl-art:url('/assets/images/ninja/kanji-scroll.webp'); }
+body.ninja-lp-katakana { --nl-accent:#168c8b;--nl-dark:#0c5960;--nl-soft:#b9dfd3;--nl-art:url('/assets/images/ninja/katakana-infiltration.webp'); }
+body.ninja-lp-romaji { --nl-accent:#7652b8;--nl-dark:#452b79;--nl-soft:#d3c0ee;--nl-art:url('/assets/images/ninja/romaji-cipher.webp'); }
+body.ninja-lp-phonics { --nl-accent:#4b8e42;--nl-dark:#285d25;--nl-soft:#c5dba2;--nl-art:url('/assets/images/ninja/phonics-listen.webp'); }
 .ninja-landing main {
   overflow:hidden;
   background:#fffaf0;
@@ -168,14 +168,14 @@ body.ninja-lp-phonics { --nl-accent:#4b8e42;--nl-dark:#285d25;--nl-soft:#c5dba2;
 
 /* Keep the established space journey, now presented as a space-ninja village. */
 body.ninja-lp-space {
-  background:#050d22 url('/assets/images/ninja/space-village-bg.png') center top/cover fixed;
+  background:#050d22 url('/assets/images/ninja/space-village-bg.webp') center top/cover fixed;
 }
 .ninja-lp-space .slp-hero {
   position:relative;
   overflow:hidden;
   background:
     linear-gradient(90deg,rgba(5,14,37,.96),rgba(33,20,74,.8)),
-    url('/assets/images/ninja/space-village-bg.png') center/cover;
+    url('/assets/images/ninja/space-village-bg.webp') center/cover;
 }
 .ninja-lp-space .slp-hero::before {
   content:'宇宙忍者の里';
@@ -199,7 +199,7 @@ body.ninja-lp-space {
 }
 .ninja-lp-space .slp-hero-visual {
   min-height:410px;
-  background:url('/assets/images/ninja/sansu-space.png') center/contain no-repeat;
+  background:url('/assets/images/ninja/sansu-space.webp') center/contain no-repeat;
   filter:drop-shadow(0 18px 15px rgba(0,0,0,.45));
 }
 .ninja-lp-space .slp-screen { visibility:hidden; }
@@ -339,11 +339,11 @@ body.ninja-lp-space {
 }
 
 /* Collectible item art for themed landing cards. */
-body.ninja-lp-tokei { --nl-items:url('/assets/images/ninja/items/tokei-items.png'); }
-body.ninja-lp-kanji { --nl-items:url('/assets/images/ninja/items/kanji-items.png'); }
-body.ninja-lp-katakana { --nl-items:url('/assets/images/ninja/items/katakana-items.png'); }
-body.ninja-lp-romaji { --nl-items:url('/assets/images/ninja/items/romaji-items.png'); }
-body.ninja-lp-phonics { --nl-items:url('/assets/images/ninja/items/phonics-items.png'); }
+body.ninja-lp-tokei { --nl-items:url('/assets/images/ninja/items/tokei-items.webp'); }
+body.ninja-lp-kanji { --nl-items:url('/assets/images/ninja/items/kanji-items.webp'); }
+body.ninja-lp-katakana { --nl-items:url('/assets/images/ninja/items/katakana-items.webp'); }
+body.ninja-lp-romaji { --nl-items:url('/assets/images/ninja/items/romaji-items.webp'); }
+body.ninja-lp-phonics { --nl-items:url('/assets/images/ninja/items/phonics-items.webp'); }
 .ninja-landing .eal-hero + .eal-section .eal-head::before {
   content:'';
   display:block;

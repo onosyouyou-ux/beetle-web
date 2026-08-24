@@ -4,7 +4,7 @@ urls: ["/tools/kanji/landing.html"]
 canonical: self
 sitemap: true
 title_contains: "かんじ修行"
-og_image: "/assets/images/kanji-hero-people.jpg"
+og_image: "/assets/images/ninja/kanji-scroll-og.jpg"
 required_selectors: ["#site-header", ".eal-hero", "#howto", "#faq", ".eal-final", ".eal-footer"]
 ---
 

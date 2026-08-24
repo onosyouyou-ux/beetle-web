@@ -4,7 +4,7 @@ urls: ["/tools/phonics/"]
 canonical: "https://www.beetle-web.jp/tools/phonics/landing.html"
 sitemap: false
 title_contains: "フォニックス修行"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ninja/phonics-listen-og.jpg"
 required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#pn-app", "#howto"]
 ---
 

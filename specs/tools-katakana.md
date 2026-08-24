@@ -4,7 +4,7 @@ urls: ["/tools/katakana/"]
 canonical: "https://www.beetle-web.jp/tools/katakana/landing.html"
 sitemap: false
 title_contains: "カタカナ修行"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ninja/katakana-infiltration-og.jpg"
 required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#kt-app", "#howto"]
 ---
 

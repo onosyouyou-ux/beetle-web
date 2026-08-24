@@ -42,7 +42,7 @@ body:is(.ninja-tokei,.ninja-kanji,.ninja-katakana,.ninja-romaji,.ninja-phonics) 
 }
 body.ninja-space {
   --nk-accent:#8b5cf6;
-  background:#071329 url('/assets/images/ninja/space-village-bg.png') center top / cover fixed no-repeat;
+  background:#071329 url('/assets/images/ninja/space-village-bg.webp') center top / cover fixed no-repeat;
 }
 @media (max-width:759px) {
   body:is(.ninja-tokei,.ninja-kanji,.ninja-katakana,.ninja-romaji,.ninja-phonics) { background-attachment:scroll; }
@@ -820,11 +820,11 @@ body.ninja-space {
 }
 
 /* Theme collectibles and choice icons. */
-body.ninja-tokei { --nk-items:url('/assets/images/ninja/items/tokei-items.png'); }
-body.ninja-kanji { --nk-items:url('/assets/images/ninja/items/kanji-items.png'); }
-body.ninja-katakana { --nk-items:url('/assets/images/ninja/items/katakana-items.png'); }
-body.ninja-romaji { --nk-items:url('/assets/images/ninja/items/romaji-items.png'); }
-body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.png'); }
+body.ninja-tokei { --nk-items:url('/assets/images/ninja/items/tokei-items.webp'); }
+body.ninja-kanji { --nk-items:url('/assets/images/ninja/items/kanji-items.webp'); }
+body.ninja-katakana { --nk-items:url('/assets/images/ninja/items/katakana-items.webp'); }
+body.ninja-romaji { --nk-items:url('/assets/images/ninja/items/romaji-items.webp'); }
+body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.webp'); }
 
 .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) {
   position:relative;
