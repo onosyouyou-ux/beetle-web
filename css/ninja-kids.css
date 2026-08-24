@@ -1004,6 +1004,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.pn
 }
 .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) {
   position:absolute;
+  grid-column:1 / -1;
+  grid-row:1 / -1;
   inset:0;
   z-index:20;
   display:flex;
