@@ -96,22 +96,61 @@ function buildUserMessage(input: ShokenInput): string {
   return parts.join('\n');
 }
 
-/** 1件あたりの出力見込みから max_tokens を決める（日本語は1字≒1トークンで概算） */
+/**
+ * max_tokens を決める（日本語は1字≒1トークンで概算）。
+ * Opus 5 は思考がデフォルトONで、**思考トークンも max_tokens を消費する**。
+ * 本文ぶんだけで見積もると思考で使い切って JSON が途中で切れる（2026-08-24 の生成失敗の原因）。
+ * そのため「本文の見込み ＋ 思考の余裕」で確保する。
+ */
+const THINKING_HEADROOM = 8000;
+
 function calcMaxTokens(input: ShokenInput): number {
-  const perDraft = Math.round(input.length * 1.8) + 40;
-  const total = input.entries.length * input.drafts * perDraft + 600;
-  return Math.min(16000, Math.max(2000, total));
+  const perDraft = Math.round(input.length * 1.8) + 60;
+  const body = input.entries.length * input.drafts * perDraft + 800;
+  return Math.min(32000, body + THINKING_HEADROOM);
 }
 
+/** 出力JSONの形をモデル側に保証させる（前置きやコードフェンスが混ざらなくなる） */
+const OUTPUT_SCHEMA = {
+  type: 'object',
+  properties: {
+    results: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          no: { type: 'integer' },
+          drafts: { type: 'array', items: { type: 'string' } },
+        },
+        required: ['no', 'drafts'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ['results'],
+  additionalProperties: false,
+};
+
 export async function generateShoken(input: ShokenInput): Promise<ShokenDraftSet[]> {
-  const response = await getClient().messages.create({
-    model: 'claude-opus-5',
-    max_tokens: calcMaxTokens(input),
-    // 文章の質は要るが長考は不要な仕事なので、思考は既定（adaptive）のまま effort を下げる
-    output_config: { effort: 'medium' },
-    system: SYSTEM_PROMPT,
-    messages: [{ role: 'user', content: buildUserMessage(input) }],
-  });
+  // 人数×案数ぶんの長い出力になるので、HTTPタイムアウトを避けてストリーミングで受ける
+  const response = await getClient()
+    .messages.stream({
+      model: 'claude-opus-5',
+      max_tokens: calcMaxTokens(input),
+      // 文章の質は要るが長考は不要な仕事なので、思考は既定（adaptive）のまま effort を下げる
+      output_config: {
+        effort: 'medium',
+        format: { type: 'json_schema', schema: OUTPUT_SCHEMA },
+      },
+      system: SYSTEM_PROMPT,
+      messages: [{ role: 'user', content: buildUserMessage(input) }],
+    })
+    .finalMessage();
+
+  // 途中で切れたまま JSON.parse すると原因のわからない失敗になるので、ここで弾く
+  if (response.stop_reason === 'max_tokens') {
+    throw new Error(`Output truncated (max_tokens=${calcMaxTokens(input)})`);
+  }
 
   const content = response.content.find((b) => b.type === 'text');
   if (!content || content.type !== 'text') throw new Error('Unexpected response type');

@@ -16,8 +16,15 @@ const TERMS = ['1学期', '2学期', '3学期', '前期', '後期', '学年末']
 const LENGTHS = [80, 100, 120, 150, 200];
 const FOCUS_OPTIONS = ['学習面', '生活面', '行事・特別活動', '係・当番', '友達との関わり', '学期を通した成長'];
 
-/** 1リクエストあたりの人数（サーバー側の上限と合わせる） */
-const CHUNK = 8;
+/**
+ * 1リクエストあたりの人数。
+ * Vercelの関数上限は60秒。4人×2案×120字で約46秒かかったため、
+ * 「案の数 × 文字数」から1回の分量を見積もって、上限に余裕をもって収まる人数に割る。
+ */
+const CHUNK_BUDGET = 800; // 1リクエストで作る「案の数 × 文字数」の目安（960で約46秒だったので余裕を見る）
+function chunkSize(drafts: number, length: number): number {
+  return Math.min(8, Math.max(1, Math.floor(CHUNK_BUDGET / (drafts * length))));
+}
 
 const SAMPLE_MEMO = `1 音読の宿題を毎日続けた。漢字の小テストで満点が増えた。
 2 係の仕事を忘れずにやる。発表のとき声が小さい。
@@ -86,7 +93,8 @@ export default function Home() {
     setEdited({});
 
     const chunks: { no: number; memo: string }[][] = [];
-    for (let i = 0; i < entries.length; i += CHUNK) chunks.push(entries.slice(i, i + CHUNK));
+    const size = chunkSize(drafts, length);
+    for (let i = 0; i < entries.length; i += size) chunks.push(entries.slice(i, i + size));
 
     setProgress({ done: 0, total: entries.length });
     const acc: DraftSet[] = [];
