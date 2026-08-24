@@ -1095,3 +1095,17 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.pn
     padding:16px 10px;
   }
 }
+/* Keep arithmetic expressions on one line by giving the space board more room. */
+@media (min-width:760px) {
+  .ninja-space .app-paper {
+    width:min(900px,100%);
+    max-width:900px;
+  }
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem {
+    flex-wrap:nowrap;
+    white-space:nowrap;
+  }
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem>* {
+    flex:0 0 auto;
+  }
+}
