@@ -333,3 +333,38 @@ body.ninja-lp-space {
       linear-gradient(135deg,var(--nl-soft),color-mix(in srgb,var(--nl-soft) 60%,#fff));
   }
 }
+
+/* Collectible item art for themed landing cards. */
+body.ninja-lp-tokei { --nl-items:url('/assets/images/ninja/items/tokei-items.png'); }
+body.ninja-lp-kanji { --nl-items:url('/assets/images/ninja/items/kanji-items.png'); }
+body.ninja-lp-katakana { --nl-items:url('/assets/images/ninja/items/katakana-items.png'); }
+body.ninja-lp-romaji { --nl-items:url('/assets/images/ninja/items/romaji-items.png'); }
+body.ninja-lp-phonics { --nl-items:url('/assets/images/ninja/items/phonics-items.png'); }
+.ninja-landing .eal-hero + .eal-section .eal-head::before {
+  content:'';
+  display:block;
+  width:220px;
+  height:64px;
+  margin:0 auto 10px;
+  background:var(--nl-items) center/contain no-repeat;
+  filter:drop-shadow(0 6px 7px rgba(30,25,20,.14));
+}
+.ninja-landing .eal-grid-3 .eal-card::before {
+  content:'';
+  position:static;
+  display:block;
+  width:58px;
+  height:58px;
+  margin:0 0 14px;
+  padding:0;
+  rotate:0deg;
+  color:transparent;
+  background-color:transparent;
+  background-image:var(--nl-items);
+  background-repeat:no-repeat;
+  background-size:400% 100%;
+  background-position:0 50%;
+}
+.ninja-landing .eal-grid-3 .eal-card:nth-child(2)::before { background-position:33.333% 50%; }
+.ninja-landing .eal-grid-3 .eal-card:nth-child(3)::before { background-position:66.666% 50%; }
+.ninja-landing .eal-grid-3 .eal-card:nth-child(4)::before { background-position:100% 50%; }

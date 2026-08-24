@@ -789,3 +789,171 @@ body.ninja-space {
     min-height:180px;
   }
 }
+
+/* Theme collectibles and choice icons. */
+body.ninja-tokei { --nk-items:url('/assets/images/ninja/items/tokei-items.png'); }
+body.ninja-kanji { --nk-items:url('/assets/images/ninja/items/kanji-items.png'); }
+body.ninja-katakana { --nk-items:url('/assets/images/ninja/items/katakana-items.png'); }
+body.ninja-romaji { --nk-items:url('/assets/images/ninja/items/romaji-items.png'); }
+body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.png'); }
+
+.ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) {
+  position:relative;
+  padding-top:78px;
+}
+.ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu)::before {
+  content:'';
+  position:absolute;
+  top:12px;
+  left:50%;
+  width:240px;
+  height:62px;
+  translate:-50% 0;
+  background:var(--nk-items) center/contain no-repeat;
+  filter:drop-shadow(0 6px 7px rgba(31,27,20,.16));
+  animation:ninjaItemsFloat 3.2s ease-in-out infinite;
+}
+.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar) {
+  position:relative;
+}
+.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar)::after {
+  content:'';
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:126px;
+  height:38px;
+  translate:-50% -50%;
+  background:var(--nk-items) center/contain no-repeat;
+  filter:drop-shadow(0 4px 5px rgba(31,27,20,.13));
+  pointer-events:none;
+}
+.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask) {
+  position:relative;
+  overflow:hidden;
+}
+.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask)::after {
+  content:'';
+  position:absolute;
+  right:-16px;
+  bottom:-16px;
+  width:112px;
+  height:112px;
+  opacity:.2;
+  background-image:var(--nk-items);
+  background-repeat:no-repeat;
+  background-size:400% 100%;
+  background-position:0 50%;
+  rotate:-8deg;
+  pointer-events:none;
+}
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock) {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock)::before {
+  content:'';
+  flex:0 0 38px;
+  width:38px;
+  height:38px;
+  background-image:var(--nk-items);
+  background-repeat:no-repeat;
+  background-size:400% 100%;
+  background-position:0 50%;
+  filter:drop-shadow(0 3px 3px rgba(30,25,20,.12));
+}
+.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices)>:nth-child(2)::before { background-position:33.333% 50%!important; }
+.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices)>:nth-child(3)::before { background-position:66.666% 50%!important; }
+.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices)>:nth-child(4)::before { background-position:100% 50%!important; }
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before {
+  content:'';
+  display:block;
+  width:190px;
+  height:54px;
+  margin:0 auto 8px;
+  background:var(--nk-items) center/contain no-repeat;
+  filter:drop-shadow(0 7px 8px rgba(0,0,0,.2));
+}
+.ninja-kids :is(.tk-result,.kj-result,.kt-result,.rj-result,.pn-result)::before {
+  content:'';
+  display:block;
+  width:240px;
+  height:68px;
+  margin:0 auto 12px;
+  background:var(--nk-items) center/contain no-repeat;
+  filter:drop-shadow(0 7px 8px rgba(30,25,20,.14));
+}
+.ninja-kids .rj-type {
+  position:relative;
+  padding-top:50px;
+}
+.ninja-kids .rj-type::before {
+  content:'';
+  position:absolute;
+  top:0;
+  left:50%;
+  width:56px;
+  height:46px;
+  translate:-50% 0;
+  background-image:var(--nk-items);
+  background-repeat:no-repeat;
+  background-size:400% 100%;
+  background-position:33.333% 50%;
+}
+.ninja-space .sa-play-head {
+  position:relative;
+  padding-right:70px;
+}
+.ninja-space .sa-play-head::after {
+  content:'';
+  position:absolute;
+  right:8px;
+  top:50%;
+  width:58px;
+  height:58px;
+  translate:0 -50%;
+  background:url('/assets/images/sansu/icons/rocket-simple.png') center/contain no-repeat;
+  animation:ninjaRocketFloat 2.8s ease-in-out infinite;
+}
+@keyframes ninjaRocketFloat {
+  0%,100% { translate:0 -50%; }
+  50% { translate:0 calc(-50% - 4px); }
+}
+.ninja-space .sa-options .sa-opt {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+.ninja-space .sa-options .sa-opt::before {
+  content:'';
+  width:34px;
+  height:34px;
+  background:center/contain no-repeat;
+}
+.ninja-space .sa-options .sa-opt:nth-child(1)::before { background-image:url('/assets/images/sansu/icons/moon.png'); }
+.ninja-space .sa-options .sa-opt:nth-child(2)::before { background-image:url('/assets/images/sansu/icons/ringed-planet.png'); }
+.ninja-space .sa-options .sa-opt:nth-child(3)::before { background-image:url('/assets/images/sansu/icons/meteor.png'); }
+.ninja-space .sa-options .sa-opt:nth-child(4)::before { background-image:url('/assets/images/sansu/icons/rocket-simple.png'); }
+
+@keyframes ninjaItemsFloat {
+  0%,100% { translate:-50% 0; }
+  50% { translate:-50% -4px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu)::before,
+  .ninja-space .sa-play-head::after { animation:none; }
+}
+@media (max-width:759px) {
+  .ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar)::after {
+    width:94px;
+    height:30px;
+  }
+  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock)::before {
+    flex-basis:30px;
+    width:30px;
+    height:30px;
+  }
+}
