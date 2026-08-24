@@ -6,8 +6,10 @@
 (function () {
   'use strict';
 
+  // 名簿まわり（保存・CSV取り込み・名前の読み取り）は班分けメーカーと共有する
+  var R = window.BeetleRoster;
   var $ = function (id) { return document.getElementById(id); };
-  if (!$('sk-names')) return;
+  if (!$('sk-names') || !R) return;
 
   var ATTEMPTS = 4000;   // ランダム再試行の上限
   var FRONT_DEPTH = 2;   // 「前列」＝前から何列目までか
@@ -31,44 +33,12 @@
 
   /* ---------- 入力を読む ---------- */
 
-  // 「1 田中」「1. 田中」のような出席番号つきでも名前だけを取り出す
-  function cleanName(line) {
-    var s = line.trim();
-    if (!s) return '';
-    var m = s.match(/^\d+\s*[.．、:：]?\s*(.+)$/);
-    if (m && m[1].trim()) return m[1].trim();
-    return s;
-  }
-
-  // 改行だけでなく、カンマ・読点・タブ・セミコロンでも人を区切る。
-  // スペースは「田中 そうた」のように名前の中で使われるので、ふだんは区切りにしない
-  // （「スペースでも区切る」を押されたときだけ splitOnSpace を立てる）。
-  var NAME_SEP = /[\n\r\t,、，;；]+/;
-  var NAME_SEP_SP = /[\n\r\t,、，;；\s　]+/;
+  // 「スペースでも区切る」を押されたときだけ立てる
   var splitOnSpace = false;
 
-  // 1つの名前に語が3つ以上あると、複数人が1行に詰まっている見込みが高い
-  // （「田中 そうた」は2語まで。「田中 佐藤 鈴木」は3語）
-  function looksCrammed(names) {
-    return names.some(function (n) {
-      return n.split(/[\s　]+/).filter(Boolean).length >= 3;
-    });
-  }
-
-  function parseNames(text) {
-    var raw = text.split(splitOnSpace ? NAME_SEP_SP : NAME_SEP).map(cleanName).filter(Boolean);
-    // 同姓同名は区別できないので、2人目以降に印をつけて別人として扱う
-    var seen = {}, out = [];
-    raw.forEach(function (n) {
-      seen[n] = (seen[n] || 0) + 1;
-      out.push(seen[n] > 1 ? n + '（' + seen[n] + '）' : n);
-    });
-    return out;
-  }
-
-  function splitNames(s) {
-    return s.split(/[,、，]/).map(function (x) { return x.trim(); }).filter(Boolean);
-  }
+  function parseNames(text) { return R.parseNames(text, splitOnSpace); }
+  function looksCrammed(names) { return R.looksCrammed(names); }
+  function splitNames(s) { return R.splitList(s); }
 
   function parseRules(text, names) {
     var rules = { apart: [], front: [], back: [], fixed: [] };
@@ -141,13 +111,7 @@
 
   /* ---------- 席を決める ---------- */
 
-  function shuffle(a) {
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
+  function shuffle(a) { return R.shuffle(a); }
 
   function zoneOf(name, rules) {
     if (rules.front.indexOf(name) >= 0) return 'front';
@@ -412,11 +376,7 @@
     return a;
   }
 
-  function esc(s) {
-    return String(s).replace(/[&<>"]/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
-    });
-  }
+  function esc(s) { return R.esc(s); }
 
   function updateCount() {
     var names = parseNames($('sk-names').value);
@@ -458,27 +418,7 @@
     note.innerHTML = '';
   }
 
-  function copyText(text, btn) {
-    var done = function () {
-      var old = btn.textContent;
-      btn.textContent = 'コピーしました';
-      btn.classList.add('is-done');
-      setTimeout(function () { btn.textContent = old; btn.classList.remove('is-done'); }, 1500);
-    };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(done, function () { fallback(text, done); });
-    } else fallback(text, done);
-  }
-  function fallback(text, done) {
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); done(); } catch (e) { /* 何もしない */ }
-    document.body.removeChild(ta);
-  }
+  function copyText(text, btn) { R.copyText(text, btn); }
 
   /* ============================================================
      名簿の保存・よびだし
@@ -486,34 +426,12 @@
      ネットワークには一切出さない（このツールに送信処理は無い）。
      ============================================================ */
 
-  var LS_KEY = 'beetle.sekigae.rosters.v1';
   var currentRosterId = '';
   var prevState = { data: null };   // 前回の席（よびだした名簿にぶら下がっている）
 
-  function loadRosters() {
-    try {
-      var raw = window.localStorage.getItem(LS_KEY);
-      var list = raw ? JSON.parse(raw) : [];
-      return Array.isArray(list) ? list : [];
-    } catch (e) {
-      return [];   // プライベートモードなどで読めないときは「保存なし」として動かす
-    }
-  }
-
-  function saveRosters(list) {
-    try {
-      window.localStorage.setItem(LS_KEY, JSON.stringify(list));
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  function today() {
-    var d = new Date();
-    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
-  }
-  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  function loadRosters() { return R.load(); }
+  function saveRosters(list) { return R.save(list); }
+  function today() { return R.today(); }
 
   function rosterNote(text, kind) {
     var el = $('sk-roster-note');
@@ -537,35 +455,33 @@
     sel.value = currentRosterId && list.some(function (r) { return r.id === currentRosterId; }) ? currentRosterId : '';
   }
 
-  function findRoster(id) {
-    var hit = loadRosters().filter(function (r) { return r.id === id; });
-    return hit.length ? hit[0] : null;
-  }
+  function findRoster(id) { return R.find(id); }
 
   function doSaveRoster(label) {
-    var list = loadRosters();
+    // 名簿は班分けメーカーと共通なので、上書き保存で相手のデータを消さないよう引き継ぐ
+    var current = findRoster(currentRosterId) || {};
     var rec = {
-      id: currentRosterId || ('r' + Date.now()),
+      id: currentRosterId || R.newId(),
       label: label,
       names: $('sk-names').value,
       rules: $('sk-rules').value,
       cols: $('sk-cols').value,
       rows: $('sk-rows').value,
-      // 同じ名簿を上書き保存するときは、おぼえた席順を消さない
-      seating: (findRoster(currentRosterId) || {}).seating || null,
+      seating: current.seating || null,
+      seatingAt: current.seatingAt,
+      hanwakeRules: current.hanwakeRules || '',
+      grouping: current.grouping || null,
+      groupingAt: current.groupingAt,
       savedAt: today()
     };
-    var idx = -1;
-    list.forEach(function (r, i) { if (r.id === rec.id) idx = i; });
-    if (idx >= 0) list[idx] = rec; else list.push(rec);
 
-    if (!saveRosters(list)) {
+    if (!R.upsert(rec)) {
       rosterNote('このブラウザでは保存できませんでした（プライベートモードなどの可能性があります）。', 'error');
       return;
     }
     currentRosterId = rec.id;
     refreshRosterList();
-    rosterNote('「' + label + '」を保存しました。', 'ok');
+    rosterNote('「' + label + '」を保存しました。班分けメーカーからも同じ名簿を使えます。', 'ok');
   }
 
   function doLoadRoster(id) {
@@ -585,8 +501,8 @@
   function doDeleteRoster(id) {
     var rec = findRoster(id);
     if (!rec) { rosterNote('消す名簿をえらんでください。', 'error'); return; }
-    if (!window.confirm('「' + rec.label + '」を消します。よろしいですか？')) return;
-    saveRosters(loadRosters().filter(function (r) { return r.id !== id; }));
+    if (!window.confirm('「' + rec.label + '」を消します。班分けメーカーからも消えます。よろしいですか？')) return;
+    R.remove(id);
     if (currentRosterId === id) { currentRosterId = ''; clearPrev(); }
     refreshRosterList();
     rosterNote('「' + rec.label + '」を消しました。', 'ok');
@@ -626,13 +542,11 @@
       rosterNote('先に「保存」で名簿に名前をつけてください。席順はその名簿におぼえます。', 'error');
       return;
     }
-    var list = loadRosters();
-    var hit = null;
-    list.forEach(function (r) { if (r.id === currentRosterId) hit = r; });
+    var hit = findRoster(currentRosterId);
     if (!hit) { rosterNote('保存した名簿が見つかりませんでした。', 'error'); return; }
     hit.seating = state.grid;
     hit.seatingAt = today();
-    if (!saveRosters(list)) { rosterNote('このブラウザでは保存できませんでした。', 'error'); return; }
+    if (!R.upsert(hit)) { rosterNote('このブラウザでは保存できませんでした。', 'error'); return; }
     applyPrevSeating(hit);
     rosterNote('この席順を「' + hit.label + '」におぼえました。次の席替えで避けられます。', 'ok');
   }
@@ -644,58 +558,16 @@
   var csvRows = null;   // 取り込み待ちの表
   var csvPicked = {};   // 選ばれた列
 
-  /** 学校の名簿CSVは Shift_JIS のことが多いので、化けたら読み直す */
-  function decodeCsv(buffer) {
-    var utf8 = new TextDecoder('utf-8').decode(buffer);
-    if (utf8.indexOf('�') < 0) return utf8;
-    try {
-      return new TextDecoder('shift_jis').decode(buffer);
-    } catch (e) {
-      return utf8;
-    }
-  }
-
-  function detectSep(text) {
-    var head = text.split('\n')[0] || '';
-    return (head.split('\t').length - 1) > (head.split(',').length - 1) ? '\t' : ',';
-  }
-
-  /** 引用符つきのセルにも耐えるCSV/TSVパーサ */
-  function parseDelimited(text, sep) {
-    var rows = [], row = [], cur = '', quoted = false, i = 0;
-    text = text.replace(/^﻿/, '');
-    while (i < text.length) {
-      var ch = text.charAt(i);
-      if (quoted) {
-        if (ch === '"') {
-          if (text.charAt(i + 1) === '"') { cur += '"'; i += 2; continue; }
-          quoted = false; i++; continue;
-        }
-        cur += ch; i++; continue;
-      }
-      if (ch === '"') { quoted = true; i++; continue; }
-      if (ch === sep) { row.push(cur); cur = ''; i++; continue; }
-      if (ch === '\r') { i++; continue; }
-      if (ch === '\n') { row.push(cur); rows.push(row); row = []; cur = ''; i++; continue; }
-      cur += ch; i++;
-    }
-    row.push(cur);
-    rows.push(row);
-    return rows.filter(function (r) {
-      return r.some(function (x) { return x.trim(); });
-    });
-  }
-
   function readCsvFile(file) {
     var reader = new FileReader();
     reader.onload = function () {
-      var text = decodeCsv(reader.result);
-      var rows = parseDelimited(text, detectSep(text));
+      var text = R.decode(reader.result);
+      var rows = R.parseDelimited(text, R.detectSep(text));
       if (!rows.length) { rosterNote('このファイルからは名前を読み取れませんでした。', 'error'); return; }
       csvRows = rows;
       csvPicked = {};
       // 名前が入っていそうな列（漢字・かなが多い列）を最初から選んでおく
-      var guess = guessNameCol(rows);
+      var guess = R.guessNameCol(rows);
       if (guess >= 0) csvPicked[guess] = true;
       renderCsvPick();
     };
@@ -703,24 +575,9 @@
     reader.readAsArrayBuffer(file);
   }
 
-  function guessNameCol(rows) {
-    var body = rows.slice(1, 11);
-    var width = Math.max.apply(null, rows.map(function (r) { return r.length; }));
-    var best = -1, bestScore = 0;
-    for (var c = 0; c < width; c++) {
-      var score = 0;
-      body.forEach(function (r) {
-        var v = (r[c] || '').trim();
-        if (v && /[ぁ-んァ-ヶ一-龠]/.test(v) && !/^\d+$/.test(v)) score++;
-      });
-      if (score > bestScore) { bestScore = score; best = c; }
-    }
-    return bestScore ? best : -1;
-  }
-
   function renderCsvPick() {
     var hasHead = $('sk-csv-head').checked;
-    var width = Math.max.apply(null, csvRows.map(function (r) { return r.length; }));
+    var width = R.colWidth(csvRows);
     var sample = csvRows[hasHead ? 1 : 0] || [];
     var html = '';
     for (var c = 0; c < width; c++) {

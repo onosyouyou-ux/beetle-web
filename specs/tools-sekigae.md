@@ -34,8 +34,13 @@ e2e: true
 
 名前を毎回打ち直さずに済ませるための入口が3つある。いずれも**ネットワークには一切出さない**。
 
+- **名簿まわりは `js/class-roster.js` に共通化**（2026-08-24。班分けメーカーと共有）。
+  保存・CSV取り込み・名前の読み取りはこのモジュールが持ち、DOMとの配線だけ各ツールに置く。
+  **保存先は `beetle.rosters.v1` の1か所**で、席替えで保存したクラスを班分けから呼び出せる（逆も）。
+  旧キー `beetle.sekigae.rosters.v1` からは初回に自動で引き継ぐ。
+  レコードは共通なので、**上書き保存では相手のフィールド（`hanwakeRules`・`grouping`）を引き継ぐこと**
 - **名簿の保存・よびだし**（`#sk-roster-list` / `#sk-roster-load` / `#sk-roster-save` / `#sk-roster-del`）:
-  localStorage の `beetle.sekigae.rosters.v1` に `[{id,label,names,rules,cols,rows,seating,seatingAt,savedAt}]` で持つ。
+  `[{id,label,names,rules,cols,rows,seating,seatingAt,hanwakeRules,grouping,groupingAt,savedAt}]` で持つ。
   クラスを何本でも保存できる。保存名は `#sk-save-row` のインライン入力で付ける（`prompt()` は使わない）。
   localStorage が使えない環境（プライベートモード等）では読み書きとも `try/catch` で握りつぶし、「保存できませんでした」と出して通常動作は続ける
 - **CSV / Excel 取り込み**（`#sk-csv`）: `FileReader` で ArrayBuffer として読み、UTF-8で復号して `�` が混ざれば **Shift_JIS で読み直す**

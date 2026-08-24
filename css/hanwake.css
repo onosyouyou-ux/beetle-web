@@ -1,0 +1,245 @@
+/* ============================================================
+   hanwake.css — 班分けメーカー（先生向け・本体ドメイン配信の静的ツール）
+   席替えメーカーの姉妹ツールなので、配色とトーンは sekigae.css に揃える。
+   学校向けツールの作法：紙面固定（.app-paper 1180px）＋余白はモザイクタイル背景
+   ============================================================ */
+
+:root{
+  --hw-ink:#2b2a26;
+  --hw-ink2:#6f6d66;
+  --hw-ink3:#9c9a93;
+  --hw-line:#e2ddd2;
+  --hw-line2:#cdc7b9;
+  --hw-cream:#faf7f1;
+  --hw-cream2:#f2ede3;
+  --hw-orange:#e08a3c;
+  --hw-orange-dk:#c4712a;
+  --hw-orange-bg:#fdf3e7;
+  --hw-green:#2f7d55;
+  --hw-green-bg:#eaf5ee;
+  --hw-red:#c0503b;
+  --hw-red-bg:#fbeeea;
+}
+
+/* display を指定した要素にも hidden 属性を効かせる */
+[hidden]{display:none !important}
+
+body{
+  background-color:#ece1cb;
+  background-image:url('/assets/images/bg-mosaic.png');
+  background-size:160px 160px;
+  margin:0;
+  color:var(--hw-ink);
+}
+
+.app-paper{
+  width:100%;
+  max-width:1180px;   /* アプリ紙面の固定幅（全アプリ共通） */
+  margin:0 auto;
+  background:var(--hw-cream);
+  box-shadow:0 0 32px rgba(28,28,46,.16);
+}
+
+/* ====== ヒーロー ====== */
+.hw-hero{
+  background:linear-gradient(135deg,#f7efe0 0%,#f3e6d2 100%);
+  border-bottom:1px solid var(--hw-line);
+  padding:34px 40px 30px;
+  text-align:center;
+}
+.hw-eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--hw-orange);margin:0 0 8px}
+.hw-hero h1{font-size:32px;font-weight:900;margin:0 0 12px;letter-spacing:.02em}
+.hw-lead{font-size:14px;line-height:1.9;color:var(--hw-ink2);margin:0 0 12px}
+.hw-privacy{
+  display:inline-block;font-size:11.5px;font-weight:700;color:var(--hw-green);
+  background:var(--hw-green-bg);border:1px solid rgba(47,125,85,.2);border-radius:99px;padding:5px 16px;margin:0;
+}
+
+.hw-main{padding:26px 40px 40px}
+
+/* ====== 入力パネル ====== */
+.hw-panel{background:#fff;border:1px solid var(--hw-line);border-radius:12px;padding:22px 24px}
+.hw-form{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.hw-col{display:flex;flex-direction:column;min-width:0}
+.hw-lbl-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.hw-lbl-row label{font-size:13px;font-weight:800;color:var(--hw-ink)}
+.hw-count{font-size:12px;font-weight:700;color:var(--hw-orange);background:var(--hw-orange-bg);border-radius:99px;padding:2px 12px}
+.hw-mini{margin-left:auto;font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px;border:1px solid var(--hw-line2);background:#fff;color:var(--hw-ink2);cursor:pointer;font-family:inherit}
+.hw-mini:hover{border-color:var(--hw-orange);color:var(--hw-orange)}
+
+.hw-col textarea{
+  width:100%;border:1px solid var(--hw-line2);border-radius:8px;padding:12px 14px;
+  font-family:inherit;font-size:14px;line-height:1.9;color:var(--hw-ink);
+  background:#fff;resize:vertical;box-sizing:border-box;
+}
+.hw-col textarea:focus{outline:2px solid var(--hw-orange);outline-offset:-1px;border-color:var(--hw-orange)}
+
+.hw-sep-note{
+  font-size:11.5px;font-weight:700;color:var(--hw-ink2);display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  background:var(--hw-cream2);border-radius:8px;padding:8px 10px;margin:7px 0 0;
+}
+.hw-sep-note .hw-mini{margin-left:0}
+
+.hw-hint{font-size:11.5px;line-height:1.8;color:var(--hw-ink3);margin:7px 0 0}
+.hw-hint a{color:var(--hw-orange);font-weight:700}
+.hw-hint code,.hw-table code{font-family:'SFMono-Regular','Consolas',monospace;background:var(--hw-cream2);border-radius:3px;padding:1px 6px;color:var(--hw-ink2)}
+.hw-hint-block{background:var(--hw-cream2);border-radius:8px;padding:12px 14px;color:var(--hw-ink2);margin-top:12px}
+
+/* ====== 名簿の保存・よびだし／CSV取り込み ====== */
+.hw-mini2{
+  font-size:11px;font-weight:700;padding:5px 11px;border-radius:6px;
+  border:1px solid var(--hw-line2);background:#fff;color:var(--hw-ink2);
+  cursor:pointer;font-family:inherit;white-space:nowrap;
+}
+.hw-mini2:hover{border-color:var(--hw-orange);color:var(--hw-orange)}
+.hw-mini2.is-go{background:var(--hw-orange);border-color:var(--hw-orange);color:#fff}
+.hw-mini2.is-go:hover{background:var(--hw-orange-dk);border-color:var(--hw-orange-dk);color:#fff}
+.hw-mini2.is-del:hover{border-color:var(--hw-red);color:var(--hw-red)}
+
+.hw-roster-bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:8px}
+.hw-roster-bar select{
+  flex:1 1 150px;min-width:0;border:1px solid var(--hw-line2);border-radius:6px;
+  padding:5px 8px;font-size:12px;font-family:inherit;color:var(--hw-ink);background:#fff;
+}
+.hw-file{
+  font-size:11px;font-weight:700;padding:5px 11px;border-radius:6px;
+  border:1px dashed var(--hw-line2);background:var(--hw-cream2);color:var(--hw-ink2);
+  cursor:pointer;white-space:nowrap;
+}
+.hw-file:hover{border-color:var(--hw-orange);color:var(--hw-orange)}
+.hw-file input{display:none}
+
+.hw-save-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:8px}
+.hw-save-row input{
+  flex:1 1 140px;min-width:0;border:1px solid var(--hw-line2);border-radius:6px;
+  padding:6px 10px;font-size:13px;font-family:inherit;color:var(--hw-ink);background:#fff;
+}
+
+.hw-csv-pick{border:1px solid var(--hw-line2);border-radius:8px;background:var(--hw-cream2);padding:10px 12px;margin-bottom:8px}
+.hw-csv-q{font-size:12px;font-weight:800;color:var(--hw-ink2);margin:0 0 8px}
+.hw-csv-cols{display:flex;flex-wrap:wrap;gap:6px;max-height:150px;overflow-y:auto}
+.hw-csv-col{
+  display:flex;flex-direction:column;gap:2px;text-align:left;
+  border:1px solid var(--hw-line2);border-radius:6px;background:#fff;
+  padding:6px 10px;cursor:pointer;font-family:inherit;max-width:160px;
+}
+.hw-csv-col:hover{border-color:var(--hw-orange)}
+.hw-csv-col.is-on{border-color:var(--hw-orange);background:var(--hw-orange-bg);box-shadow:inset 0 0 0 1px var(--hw-orange)}
+.hw-csv-h{font-size:10.5px;font-weight:800;color:var(--hw-ink3);letter-spacing:.04em}
+.hw-csv-col.is-on .hw-csv-h{color:var(--hw-orange-dk)}
+.hw-csv-v{font-size:12.5px;color:var(--hw-ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hw-csv-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+
+.hw-chk{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--hw-ink2);cursor:pointer}
+.hw-chk input{accent-color:var(--hw-orange);margin:0}
+
+.hw-roster-note{font-size:11.5px;font-weight:700;line-height:1.7;margin:0 0 8px;padding:6px 10px;border-radius:6px;background:var(--hw-cream2);color:var(--hw-ink2)}
+.hw-roster-note.is-ok{background:var(--hw-green-bg);color:var(--hw-green)}
+.hw-roster-note.is-error{background:var(--hw-red-bg);color:var(--hw-red)}
+
+/* ====== 前回の班をさける ====== */
+.hw-prev{
+  display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:16px;
+  padding:10px 14px;border:1px solid rgba(224,138,60,.3);border-radius:8px;background:var(--hw-orange-bg);
+}
+.hw-prev-lbl{font-size:12px;font-weight:800;color:var(--hw-orange-dk)}
+.hw-prev .hw-mini2{margin-left:auto}
+
+/* ====== 操作 ====== */
+.hw-controls{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:18px;padding-top:18px;border-top:1px solid var(--hw-line)}
+.hw-ctl{display:flex;align-items:center;gap:7px}
+.hw-ctl label{font-size:13px;font-weight:800;color:var(--hw-ink2)}
+.hw-ctl select{border:1px solid var(--hw-line2);border-radius:6px;padding:8px 12px;font-size:14px;font-family:inherit;color:var(--hw-ink);background:#fff}
+.hw-plan{font-size:12.5px;color:var(--hw-ink3)}
+.hw-go{
+  margin-left:auto;background:var(--hw-orange);color:#fff;border:none;border-radius:6px;
+  padding:12px 32px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;
+  box-shadow:0 2px 0 var(--hw-orange-dk);
+}
+.hw-go:hover{background:var(--hw-orange-dk);box-shadow:0 2px 0 #a85d1e}
+.hw-sub{background:#fff;border:1px solid var(--hw-line2);border-radius:6px;padding:9px 18px;font-size:13px;font-weight:700;color:var(--hw-ink2);cursor:pointer;font-family:inherit}
+.hw-sub:hover{border-color:var(--hw-orange);color:var(--hw-orange)}
+.hw-sub.is-done{border-color:var(--hw-green);color:var(--hw-green)}
+
+/* ====== メッセージ ====== */
+.hw-msg{margin-top:16px}
+.hw-msg:empty{display:none}
+.hw-note{font-size:13px;line-height:1.9;padding:12px 16px;border-radius:8px;background:var(--hw-orange-bg);color:var(--hw-orange-dk);border:1px solid rgba(224,138,60,.25);font-weight:700}
+.hw-note.is-error{background:var(--hw-red-bg);color:var(--hw-red);border-color:rgba(192,80,59,.25)}
+.hw-note + .hw-note{margin-top:8px}
+.hw-note span{display:block;font-weight:400;color:var(--hw-ink2);margin-top:4px}
+
+/* ====== 班の表 ====== */
+.hw-result{margin-top:22px;display:none}
+.hw-result.is-on{display:block}
+.hw-board{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;
+  background:#fff;border:1px solid var(--hw-line);border-radius:12px;padding:20px;
+}
+.hw-group{border:2px solid var(--hw-line2);border-radius:10px;background:var(--hw-cream);overflow:hidden}
+.hw-group-head{
+  display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+  padding:9px 14px;background:var(--hw-orange-bg);border-bottom:1px solid rgba(224,138,60,.25);
+}
+.hw-group-n{font-size:15px;font-weight:900;color:var(--hw-orange-dk)}
+.hw-group-size{font-size:11px;font-weight:700;color:var(--hw-ink3)}
+.hw-members{list-style:none;margin:0;padding:10px 14px 12px}
+.hw-members li{
+  display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+  font-size:14px;font-weight:700;line-height:1.5;padding:4px 0;word-break:break-all;
+}
+.hw-members li + li{border-top:1px dashed var(--hw-line)}
+.hw-tag{font-size:10px;font-weight:700;color:var(--hw-orange);white-space:nowrap}
+
+.hw-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px}
+.hw-info{font-size:12.5px;color:var(--hw-ink3);flex:1;min-width:120px}
+.hw-out{
+  width:100%;margin-top:12px;border:1px solid var(--hw-line2);border-radius:8px;padding:10px 12px;
+  font-family:'SFMono-Regular','Consolas',monospace;font-size:12px;line-height:1.7;
+  resize:vertical;box-sizing:border-box;background:var(--hw-cream2);color:var(--hw-ink2);white-space:pre;
+}
+
+/* ====== 説明・FAQ ====== */
+.hw-doc{margin-top:34px}
+.hw-doc h2{font-size:19px;font-weight:900;margin:30px 0 14px;padding-left:12px;border-left:4px solid var(--hw-orange)}
+.hw-doc h2:first-child{margin-top:0}
+.hw-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.hw-step{background:#fff;border:1px solid var(--hw-line);border-radius:12px;padding:18px 20px}
+.hw-step-n{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--hw-orange);color:#fff;font-size:13px;font-weight:900;margin-bottom:10px}
+.hw-step h3{font-size:14px;font-weight:800;margin:0 0 7px}
+.hw-step p{font-size:12.5px;line-height:1.9;color:var(--hw-ink2);margin:0}
+.hw-table{border-collapse:collapse;width:100%;font-size:13px;background:#fff}
+.hw-table th,.hw-table td{border:1px solid var(--hw-line);padding:10px 14px;text-align:left;vertical-align:top}
+.hw-table th{background:var(--hw-cream2);font-weight:800;color:var(--hw-ink2)}
+.hw-table td{color:var(--hw-ink2);line-height:1.8}
+.hw-table td:first-child{white-space:nowrap}
+.hw-faq{border-bottom:1px solid var(--hw-line);background:#fff}
+.hw-faq summary{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;font-weight:800;font-size:14px;list-style:none}
+.hw-faq summary::-webkit-details-marker{display:none}
+.hw-faq summary span{color:var(--hw-orange)}
+.hw-faq[open] summary span{transform:rotate(45deg)}
+.hw-faq div{padding:0 16px 14px;font-size:13px;line-height:1.9;color:var(--hw-ink2)}
+.hw-more{font-size:13px;line-height:1.9;color:var(--hw-ink2);margin:24px 0 0;padding-top:16px;border-top:1px dashed var(--hw-line)}
+.hw-more a{color:var(--hw-orange);font-weight:700}
+
+@media(max-width:900px){
+  .hw-form{grid-template-columns:1fr}
+  .hw-steps{grid-template-columns:1fr}
+  .hw-main{padding:22px 20px 32px}
+  .hw-hero{padding:26px 20px 24px}
+  .hw-hero h1{font-size:26px}
+  .hw-go{margin-left:0;width:100%}
+}
+
+/* ====== 印刷：班の表だけを出す ====== */
+@media print{
+  body{background:#fff}
+  .app-paper{max-width:none;box-shadow:none;background:#fff}
+  #site-header,.hw-hero,.hw-panel,.hw-doc,.hw-actions,.hw-out,
+  .site-footer-app,.scroll-top-float,.hw-msg,.paper-release{display:none !important}
+  .hw-main{padding:0}
+  .hw-result{margin:0}
+  .hw-board{border:none;padding:0;gap:10px}
+  .hw-group{border-color:#999;break-inside:avoid}
+  .hw-group-head{background:#f0f0f0}
+}

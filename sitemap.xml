@@ -193,6 +193,12 @@
   </url>
 
   <url>
+    <loc>https://www.beetle-web.jp/tools/hanwake/landing.html</loc>
+    <lastmod>2026-08-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://www.beetle-web.jp/tools/tokei/landing.html</loc>
     <lastmod>2026-08-23</lastmod>
     <priority>0.8</priority>
