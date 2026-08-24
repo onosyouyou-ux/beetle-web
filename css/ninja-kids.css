@@ -9,14 +9,43 @@ body.ninja-kids {
   background-image:linear-gradient(rgba(18,35,52,.82),rgba(18,35,52,.82)),url('/assets/images/bg-mosaic.png');
   background-size:auto,160px 160px;
 }
-body.ninja-tokei { --nk-accent:#d47b1f; --nk-accent-dark:#8f4c0c; --nk-hero-a:#fff0ca; --nk-hero-b:#e8bc76; }
-body.ninja-kanji { --nk-accent:#b64632; --nk-accent-dark:#75281e; --nk-hero-a:#f8e3ca; --nk-hero-b:#dfb087; }
-body.ninja-katakana { --nk-accent:#168c8b; --nk-accent-dark:#0c5e64; --nk-hero-a:#dcf1e9; --nk-hero-b:#9fd3c5; }
-body.ninja-romaji { --nk-accent:#7652b8; --nk-accent-dark:#4c3180; --nk-hero-a:#ece4fa; --nk-hero-b:#c5afe7; }
-body.ninja-phonics { --nk-accent:#4b8e42; --nk-accent-dark:#2d6329; --nk-hero-a:#e7f2d3; --nk-hero-b:#b7d08e; }
+body.ninja-tokei {
+  --nk-accent:#d47b1f; --nk-accent-dark:#8f4c0c; --nk-hero-a:#fff0ca; --nk-hero-b:#e8bc76;
+  background-color:#071427;
+  background-image:linear-gradient(rgba(4,12,24,.16),rgba(4,12,24,.16)),url('/assets/images/ninja/backgrounds/tokei-bg-v1.webp');
+}
+body.ninja-kanji {
+  --nk-accent:#b64632; --nk-accent-dark:#75281e; --nk-hero-a:#f8e3ca; --nk-hero-b:#dfb087;
+  background-color:#170e12;
+  background-image:linear-gradient(rgba(18,8,10,.14),rgba(18,8,10,.14)),url('/assets/images/ninja/backgrounds/kanji-bg-v1.webp');
+}
+body.ninja-katakana {
+  --nk-accent:#168c8b; --nk-accent-dark:#0c5e64; --nk-hero-a:#dcf1e9; --nk-hero-b:#9fd3c5;
+  background-color:#06242c;
+  background-image:linear-gradient(rgba(2,20,26,.12),rgba(2,20,26,.12)),url('/assets/images/ninja/backgrounds/katakana-bg-v1.webp');
+}
+body.ninja-romaji {
+  --nk-accent:#7652b8; --nk-accent-dark:#4c3180; --nk-hero-a:#ece4fa; --nk-hero-b:#c5afe7;
+  background-color:#100923;
+  background-image:linear-gradient(rgba(10,4,24,.12),rgba(10,4,24,.12)),url('/assets/images/ninja/backgrounds/romaji-bg-v1.webp');
+}
+body.ninja-phonics {
+  --nk-accent:#4b8e42; --nk-accent-dark:#2d6329; --nk-hero-a:#e7f2d3; --nk-hero-b:#b7d08e;
+  background-color:#042126;
+  background-image:linear-gradient(rgba(2,20,22,.14),rgba(2,20,22,.14)),url('/assets/images/ninja/backgrounds/phonics-bg-v1.webp');
+}
+body:is(.ninja-tokei,.ninja-kanji,.ninja-katakana,.ninja-romaji,.ninja-phonics) {
+  background-position:center top;
+  background-size:cover;
+  background-attachment:fixed;
+  background-repeat:no-repeat;
+}
 body.ninja-space {
   --nk-accent:#8b5cf6;
   background:#071329 url('/assets/images/ninja/space-village-bg.png') center top / cover fixed no-repeat;
+}
+@media (max-width:759px) {
+  body:is(.ninja-tokei,.ninja-kanji,.ninja-katakana,.ninja-romaji,.ninja-phonics) { background-attachment:scroll; }
 }
 .ninja-kids:not(.ninja-space) .app-paper {
   position:relative;
