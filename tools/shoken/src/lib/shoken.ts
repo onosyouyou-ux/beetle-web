@@ -6,6 +6,21 @@ function getClient(): Anthropic {
   return _client;
 }
 
+/**
+ * メモを所見の文章に整えるのは、長考より丁寧な言い換えが要る仕事なので Sonnet 5 で足りる。
+ * ルビ職人・学級通信メーカーも Sonnet 系で、このリポジトリの既定に揃う。
+ *
+ * 2026-08-24 の実測（4人×2案・目安120字＝許容108〜132字。本番URLに同一入力）:
+ *   Opus 5   effort=medium              → 平均112.0字 / 範囲内 7/8 / 46.3秒
+ *   Sonnet 5 effort=low  （±10%指示）   → 平均 83.6字 / 範囲内 0/8 / 11.1秒 ← 短すぎて不可
+ *   Sonnet 5 effort=medium（明示レンジ） → 平均121.0字 / 範囲内 7/8 / 40.1秒
+ *   Sonnet 5 effort=low  （明示レンジ） → 平均118.1字 / 範囲内 8/8 / 40.6秒 ← 採用
+ * 字数を外していた原因は effort ではなく「±10%をモデルに計算させていたこと」だった。
+ * 下限・上限を数字で渡したら effort=low でも全件が範囲に入り、Opus 5 より字数が正確になった。
+ * 出力単価は Opus $25/1M に対し Sonnet $10/1M（〜2026-08-31 の導入価格。通常 $15/1M）。
+ */
+const MODEL = 'claude-sonnet-5';
+
 export type StyleId = 'desu' | 'dearu';
 
 export interface ShokenEntry {
@@ -54,7 +69,8 @@ const SYSTEM_PROMPT = `あなたは小学校・中学校の先生を支える、
 このように「見えた事実 → 伸びしろの言い方」で結ぶ。断罪や注意喚起の文にしない。
 
 【文章の作り方】
-- 指定された文字数の ±10% に収める。1件ずつ独立した文章にする。
+- 指定された文字数の範囲に必ず収める。**短すぎるのは字数オーバーと同じく不可**で、下限を下回ったら書き足して調整する。
+  書き足すのは「事実の意味づけ」だけで、メモにない出来事は絶対に足さない。1件ずつ独立した文章にする。
 - 指定された文体（敬体／常体）を全文で統一する。
 - 学期のまとめとして自然な言い回しにする（学年・学期は与えられる）。
 - 観点が指定されている場合は、その観点が文章に含まれるようにする。
@@ -76,7 +92,8 @@ function buildUserMessage(input: ShokenInput): string {
     `【学年】${input.grade}`,
     `【学期】${input.term}`,
     `【文体】${STYLE_LABEL[input.style]}`,
-    `【1件あたりの文字数】${input.length}字（±10%以内）`,
+    // 「±10%」をモデルに計算させると短めに寄るので、下限・上限を数字で渡す
+    `【1件あたりの文字数】${lengthRange(input.length).lo}字以上 ${lengthRange(input.length).hi}字以内（目安${input.length}字）`,
     `【1人あたりの案の数】${input.drafts}案`,
     `【入れたい観点】${input.focus.length ? input.focus.join('・') : '指定なし（メモの内容に合わせる）'}`,
     `【クラス共通のできごと】${input.common.trim() || '（なし）'}`,
@@ -88,17 +105,25 @@ function buildUserMessage(input: ShokenInput): string {
     parts.push(`${e.no}: ${e.memo.trim() || '（メモなし）'}`);
   });
 
+  const range = lengthRange(input.length);
   parts.push(
     '',
     `上の ${input.entries.length} 件すべてについて、番号を保ったまま所見の下書きを作ってください。`,
+    `どの案も ${range.lo}字以上 ${range.hi}字以内 にしてください。短くなりそうなときは、` +
+      `メモにない出来事を足すのではなく、書かれている事実の意味づけ（そこで育った力・次につながる姿）を厚くして長さを合わせます。`,
   );
 
   return parts.join('\n');
 }
 
+/** 指定文字数の許容レンジ（±10%）。プロンプトにも検証にも同じ値を使う */
+function lengthRange(length: number): { lo: number; hi: number } {
+  return { lo: Math.round(length * 0.9), hi: Math.round(length * 1.1) };
+}
+
 /**
  * max_tokens を決める（日本語は1字≒1トークンで概算）。
- * Opus 5 は思考がデフォルトONで、**思考トークンも max_tokens を消費する**。
+ * Sonnet 5 は思考がデフォルトONで、**思考トークンも max_tokens を消費する**。
  * 本文ぶんだけで見積もると思考で使い切って JSON が途中で切れる（2026-08-24 の生成失敗の原因）。
  * そのため「本文の見込み ＋ 思考の余裕」で確保する。
  */
@@ -135,11 +160,11 @@ export async function generateShoken(input: ShokenInput): Promise<ShokenDraftSet
   // 人数×案数ぶんの長い出力になるので、HTTPタイムアウトを避けてストリーミングで受ける
   const response = await getClient()
     .messages.stream({
-      model: 'claude-opus-5',
+      model: MODEL,
       max_tokens: calcMaxTokens(input),
-      // 文章の質は要るが長考は不要な仕事なので、思考は既定（adaptive）のまま effort を下げる
+      // 字数は「明示レンジ」で守れるので effort は low で足りる（上の実測を参照）
       output_config: {
-        effort: 'medium',
+        effort: 'low',
         format: { type: 'json_schema', schema: OUTPUT_SCHEMA },
       },
       system: SYSTEM_PROMPT,
