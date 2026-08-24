@@ -1100,6 +1100,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.pn
   .ninja-space .app-paper {
     width:min(900px,100%);
     max-width:900px;
+    min-height:0;
+    padding-bottom:6px;
   }
   .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem {
     flex-wrap:nowrap;
