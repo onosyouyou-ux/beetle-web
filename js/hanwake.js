@@ -1,111 +1,216 @@
 /* ============================================================
    hanwake.js — 班分けメーカー（先生向け）
    名簿と配慮からグループ分けを作る。席替えメーカーの姉妹ツールで、
-   名簿まわり（貼り付け・CSV取り込み・保存）は class-roster.js を共有する。
+   名簿の保存・CSV取り込みは class-roster.js を共有する。
    計算はすべてブラウザ内で完結し、名簿はサーバーに送らない。
+
+   ■ 入力は「1人1行」「配慮1件1行」のフォーム（2026-08-24に textarea から変更）
+   名前を手で打ち直す／名簿と同じ書き方をさせる、という負担をなくすため、
+   配慮の名前は**名簿から選ぶ**方式にした。打ち間違いも「名簿にありません」も起きない。
+   「そろえる」は名簿側のラベルが担うので、配慮は 別々・同じ・ちらす の3種類だけになった。
+   35人をExcelから貼る流れは残したいので、「まとめて貼り付け」も併存させている。
    ============================================================ */
 (function () {
   'use strict';
 
   var R = window.BeetleRoster;
   var $ = function (id) { return document.getElementById(id); };
-  if (!$('hw-names') || !R) return;
+  if (!$('hw-rows') || !R) return;
 
   var ATTEMPTS = 60;         // ランダムに置き直す回数（1回ごとに下の入れ替えで詰める）
   var IMPROVE_ROUNDS = 1200; // 1回の割り当てに対する入れ替えの試行回数
 
-  var SAMPLE_NAMES = [
-    '1 佐藤 みゆき', '2 鈴木 けんた', '3 高橋 あおい', '4 田中 そうた', '5 伊藤 ひなた',
-    '6 渡辺 りく', '7 山本 さくら', '8 中村 はると', '9 小林 ゆい', '10 加藤 だいち',
-    '11 吉田 めい', '12 山田 かなた', '13 佐々木 のあ', '14 山口 いつき', '15 松本 ひまり',
-    '16 井上 そら', '17 木村 あかり', '18 林 ゆうき', '19 清水 みなと', '20 山崎 ひなの',
-    '21 森 かいと', '22 池田 つむぎ', '23 橋本 りひと', '24 石川 えま', '25 前田 あさひ',
-    '26 藤田 ことね', '27 後藤 はやと', '28 岡田 みお', '29 長谷川 れん', '30 村上 ゆあ'
-  ].join('\n');
+  var KIND_LABEL = { apart: '別々', together: '同じ', scatter: 'ちらす' };
 
-  var SAMPLE_RULES = [
-    '別々: 田中 そうた, 中村 はると',
-    '同じ: 小林 ゆい, 石川 えま',
-    'ちらす: 佐藤 みゆき, 渡辺 りく, 林 ゆうき, 前田 あさひ, 村上 ゆあ',
-    'そろえる: 女子 = 佐藤 みゆき, 高橋 あおい, 伊藤 ひなた, 山本 さくら, 小林 ゆい, 吉田 めい, 松本 ひまり, 木村 あかり, 山崎 ひなの, 池田 つむぎ, 石川 えま, 藤田 ことね, 岡田 みお, 村上 ゆあ, 佐々木 のあ'
-  ].join('\n');
+  /* ---------- 画面の状態 ---------- */
 
-  var splitOnSpace = false;
+  var seq = 0;
+  var people = [];   // [{id, name, label}]
+  var rules = [];    // [{id, kind, ids:[personId]}]
+  var currentRosterId = '';
+  var prevState = { pairs: null, when: '' };
+  var state = { groups: null, tagOf: null };
 
-  /* ---------- 配慮を読む ---------- */
+  function nextId() { return ++seq; }
 
-  function parseRules(text, names) {
-    // tagOf は表示専用。「別々」と「ちらす」は中身が同じ制約なので、
-    // 先生が書いたほうの言葉をそのまま結果に出すために覚えておく
-    var rules = { apart: [], together: [], balance: [], tagOf: {} };
+  function personById(id) {
+    for (var i = 0; i < people.length; i++) if (people[i].id === id) return people[i];
+    return null;
+  }
+
+  /**
+   * 表示用の名前を確定させる。同姓同名は区別できないので2人目以降に印をつける
+   * （席替えメーカーの名簿テキストと同じ考え方）。
+   */
+  function displayNames() {
+    var seen = {}, map = {};
+    people.forEach(function (p) {
+      var n = (p.name || '').trim();
+      if (!n) { map[p.id] = ''; return; }
+      seen[n] = (seen[n] || 0) + 1;
+      map[p.id] = seen[n] > 1 ? n + '（' + seen[n] + '）' : n;
+    });
+    return map;
+  }
+
+  function filledPeople() {
+    return people.filter(function (p) { return (p.name || '').trim(); });
+  }
+
+  /* ---------- 名簿の行 ---------- */
+
+  /** 「そろえる項目」（既定は 女／男）。ここを変えれば係や委員会でも使える */
+  function labelSet() {
+    var raw = ($('hw-labelset-input').value || '').split(/[,、，\/／\s　]+/)
+      .map(function (s) { return s.trim(); })
+      .filter(Boolean);
+    // 3つを超えると1行に収まらないので切る
+    return raw.slice(0, 3);
+  }
+
+  function renderRows() {
+    var set = labelSet();
+    var html = '';
+    people.forEach(function (p, i) {
+      // 性別のような2〜3択は、打つより押すほうが速いのでトグルにする
+      var seg = '<span class="hw-seg" role="group" aria-label="' + R.esc(p.name || (i + 1) + '人目') + 'の項目">' +
+        '<button type="button" class="hw-seg-b' + (p.label ? '' : ' is-on') + '" data-label="">—</button>' +
+        set.map(function (l) {
+          return '<button type="button" class="hw-seg-b' + (p.label === l ? ' is-on' : '') +
+            '" data-label="' + R.esc(l) + '">' + R.esc(l) + '</button>';
+        }).join('') +
+        '</span>';
+
+      html += '<div class="hw-row" data-id="' + p.id + '">' +
+        '<span class="hw-row-n">' + (i + 1) + '</span>' +
+        '<input class="hw-row-name" type="text" value="' + R.esc(p.name) + '" placeholder="なまえ" autocomplete="off" spellcheck="false">' +
+        seg +
+        '<button type="button" class="hw-row-del" aria-label="' + R.esc(p.name || (i + 1) + '人目') + 'を消す">×</button>' +
+        '</div>';
+    });
+    $('hw-rows').innerHTML = html;
+    $('hw-rows-h-label').textContent = set.length ? set.join('／') : '—';
+  }
+
+  function addPerson(name, label, focus) {
+    var p = { id: nextId(), name: name || '', label: label || '' };
+    people.push(p);
+    if (focus) {
+      renderRows();
+      var el = $('hw-rows').querySelector('.hw-row[data-id="' + p.id + '"] .hw-row-name');
+      if (el) el.focus();
+    }
+    return p;
+  }
+
+  function removePerson(id) {
+    people = people.filter(function (p) { return p.id !== id; });
+    // 消した人が配慮に入っていたら、そこからも外す
+    rules.forEach(function (r) {
+      r.ids = r.ids.filter(function (x) { return x !== id; });
+    });
+    renderRows();
+    renderRules();
+    updateCount();
+  }
+
+  function setPeople(list) {
+    people = list.map(function (p) {
+      return { id: nextId(), name: (p.name || '').trim(), label: (p.label || '').trim() };
+    });
+    if (!people.length) addPerson();
+    renderRows();
+    updateCount();
+  }
+
+  /* ---------- 配慮の行 ---------- */
+
+  function renderRules() {
+    var names = displayNames();
+    var html = '';
+
+    rules.forEach(function (r) {
+      var chips = r.ids.map(function (pid) {
+        var p = personById(pid);
+        if (!p) return '';
+        return '<span class="hw-chip">' + R.esc(names[pid] || p.name || '（未入力）') +
+          '<button type="button" class="hw-chip-x" data-rule="' + r.id + '" data-person="' + pid + '" aria-label="外す">×</button></span>';
+      }).join('');
+
+      // まだ選ばれていない人だけを候補に出す
+      var options = '<option value="">＋ 人をえらぶ</option>';
+      people.forEach(function (p) {
+        if (!(p.name || '').trim()) return;
+        if (r.ids.indexOf(p.id) >= 0) return;
+        options += '<option value="' + p.id + '">' + R.esc(names[p.id]) + '</option>';
+      });
+
+      html += '<div class="hw-rule" data-rule="' + r.id + '">' +
+        '<select class="hw-rule-kind" aria-label="配慮の種類">' +
+          Object.keys(KIND_LABEL).map(function (k) {
+            return '<option value="' + k + '"' + (r.kind === k ? ' selected' : '') + '>' + KIND_LABEL[k] + '</option>';
+          }).join('') +
+        '</select>' +
+        '<div class="hw-rule-body">' + chips +
+          '<select class="hw-rule-add" aria-label="人を追加">' + options + '</select>' +
+        '</div>' +
+        '<button type="button" class="hw-rule-del" aria-label="この配慮を消す">×</button>' +
+        '</div>';
+    });
+
+    $('hw-rules').innerHTML = html;
+    $('hw-rules-empty').hidden = rules.length > 0;
+    $('hw-rule-count').textContent = rules.length + '件';
+  }
+
+  function addRule(kind, ids) {
+    rules.push({ id: nextId(), kind: kind || 'apart', ids: ids || [] });
+    renderRules();
+  }
+
+  /* ---------- 入力を解く形に組み立てる ---------- */
+
+  /**
+   * 画面の状態から、解く側が使う形に変換する。
+   * balance（そろえる）は配慮欄ではなく、名簿のラベルから作る。
+   */
+  function buildInput() {
+    var names = displayNames();
+    var list = filledPeople().map(function (p) { return names[p.id]; });
+
+    var out = { apart: [], together: [], balance: [], tagOf: {} };
     var errors = [];
-    var known = {};
-    names.forEach(function (n) { known[n] = true; });
 
-    // 名簿がフルネームでも、配慮欄には「田中」だけ書けるようにする
-    var resolve = function (n, lineNo) {
-      if (known[n]) return n;
-      var hit = names.filter(function (x) { return x.indexOf(n) >= 0; });
-      if (hit.length === 1) return hit[0];
-      if (hit.length > 1) {
-        errors.push(lineNo + '行目：「' + n + '」に当てはまる人が' + hit.length + '人います。名簿と同じ書き方にしてください。');
-        return null;
-      }
-      errors.push(lineNo + '行目：「' + n + '」は名簿にありません。');
-      return null;
-    };
-
-    var resolveList = function (body, lineNo) {
-      var list = R.splitList(body).map(function (n) { return resolve(n, lineNo); });
-      return list.some(function (x) { return !x; }) ? null : list;
-    };
-
-    text.split('\n').forEach(function (raw, i) {
-      var line = raw.trim();
-      if (!line || line.charAt(0) === '#') return;
-      var lineNo = i + 1;
-      var m = line.match(/^([^:：]+)[:：](.*)$/);
-      if (!m) {
-        errors.push(lineNo + '行目：「別々: 田中, 佐藤」のように、種類と名前を「:」で区切って書いてください。');
+    rules.forEach(function (r) {
+      var picked = r.ids
+        .map(function (pid) { return names[pid]; })
+        .filter(function (n) { return n; });
+      if (!picked.length) return;                      // 空の行は無視する
+      if (picked.length < 2) {
+        errors.push('「' + KIND_LABEL[r.kind] + '」は2人以上えらんでください。');
         return;
       }
-      var kind = m[1].trim(), body = m[2].trim();
-
-      // 「別々」も「ちらす」も中身は同じ制約（全員ちがう班）。
-      // 書く人の気持ちが違うだけなので、両方の言い方を受ける。
-      var isScatter = /^(ちらす|散らす|分散|リーダー)$/.test(kind);
-      if (/^(別々|別|わける|分ける|ちがう|違う)$/.test(kind) || isScatter) {
-        var apart = resolveList(body, lineNo);
-        if (!apart) return;
-        if (apart.length < 2) { errors.push(lineNo + '行目：「' + kind + '」は2人以上を「,」で並べてください。'); return; }
-        rules.apart.push(apart);
-        apart.forEach(function (n) { rules.tagOf[n] = isScatter ? 'ちらす' : '別々'; });
-
-      } else if (/^(同じ|同|いっしょ|一緒)$/.test(kind)) {
-        var together = resolveList(body, lineNo);
-        if (!together) return;
-        if (together.length < 2) { errors.push(lineNo + '行目：「同じ」は2人以上を「,」で並べてください。'); return; }
-        rules.together.push(together);
-        together.forEach(function (n) { rules.tagOf[n] = '同じ'; });
-
-      } else if (/^(そろえる|揃える|均等|バランス)$/.test(kind)) {
-        var parts = body.split(/[=＝]/);
-        if (parts.length < 2) {
-          errors.push(lineNo + '行目：「そろえる: 女子 = 佐藤, 高橋」のように、まとまりの名前と人を「=」で区切ってください。');
-          return;
-        }
-        var label = parts[0].trim() || 'まとまり';
-        var members = resolveList(parts.slice(1).join('='), lineNo);
-        if (!members) return;
-        if (!members.length) { errors.push(lineNo + '行目：「そろえる」に人が書かれていません。'); return; }
-        rules.balance.push({ label: label, names: members });
-
+      if (r.kind === 'together') {
+        out.together.push(picked);
+        picked.forEach(function (n) { out.tagOf[n] = '同じ'; });
       } else {
-        errors.push(lineNo + '行目：「' + kind + '」は使えません。別々・同じ・ちらす・そろえる のどれかにしてください。');
+        out.apart.push(picked);
+        picked.forEach(function (n) { out.tagOf[n] = KIND_LABEL[r.kind]; });
       }
     });
 
-    return { rules: rules, errors: errors };
+    // ラベルごとに「そろえる」を作る。1人だけのラベルは配りようがないので入れない
+    var byLabel = {};
+    filledPeople().forEach(function (p) {
+      if (!p.label) return;
+      (byLabel[p.label] = byLabel[p.label] || []).push(names[p.id]);
+    });
+    Object.keys(byLabel).forEach(function (label) {
+      if (byLabel[label].length < 2) return;
+      out.balance.push({ label: label, names: byLabel[label] });
+    });
+
+    return { names: list, rules: out, errors: errors };
   }
 
   /* ---------- 班を決める ---------- */
@@ -164,11 +269,7 @@
     return true;
   }
 
-  /**
-   * 1回ぶんの割り当て。「どのかたまりを何班に入れたか」を返す
-   * （あとで入れ替えて改善するので、班の中身ではなく割り当てを持つ）。
-   * うまく入らなければ null を返して呼び出し側でやり直す。
-   */
+  /** 1回ぶんの割り当て。「どのかたまりを何班に入れたか」を返す */
   function tryOnce(clusters, sizes, apartOf) {
     var count = sizes.length;
     var members = [], remain = sizes.slice();
@@ -215,48 +316,13 @@
     return true;
   }
 
-  /**
-   * できた班を入れ替えて改善する（山登り）。
-   * ランダムに置くだけだと「前回と同じ顔ぶれ」がなかなか0にならないため、
-   * 同じ大きさのかたまりを2つ選んで交換し、よくなったときだけ採用する。
-   * 班の人数を崩さないよう、交換するのは同じ大きさのかたまりだけにしている。
-   */
-  function improve(clusters, assign, count, rules, prevPairs, apartOf, floorScore, rounds, forcedPairs) {
-    var groups = buildGroups(clusters, assign, count);
-    var cur = scoreOf(groups, rules.balance, prevPairs, forcedPairs);
-
-    for (var r = 0; r < rounds; r++) {
-      if (cur.total <= floorScore + 0.001) break;
-      var a = Math.floor(Math.random() * clusters.length);
-      var b = Math.floor(Math.random() * clusters.length);
-      if (a === b || assign[a] === assign[b]) continue;
-      if (clusters[a].length !== clusters[b].length) continue;
-
-      var ga = assign[a], gb = assign[b];
-      assign[a] = gb; assign[b] = ga;
-      var next = buildGroups(clusters, assign, count);
-
-      if (!groupOk(next[ga], apartOf) || !groupOk(next[gb], apartOf)) {
-        assign[a] = ga; assign[b] = gb;
-        continue;
-      }
-      var s = scoreOf(next, rules.balance, prevPairs, forcedPairs);
-      if (s.total < cur.total) {
-        cur = s; groups = next;
-      } else {
-        assign[a] = ga; assign[b] = gb;
-      }
-    }
-    return { groups: groups, score: cur };
-  }
-
   function pairKey(a, b) {
-    return a < b ? a + '' + b : b + '' + a;
+    return a < b ? a + '' + b : b + '' + a;
   }
 
   /**
    * できあがりの「よくなさ」を数える。小さいほどよい。
-   * 前回と同じ組み合わせ／まとまりの偏り は、守れないこともある希望なので
+   * 前回と同じ組み合わせ／ラベルの偏り は、守れないこともある希望なので
    * エラーにせずスコアにして、いちばんマシなものを選ぶ。
    */
   function scoreOf(groups, balance, prevPairs, forcedPairs) {
@@ -290,7 +356,7 @@
   }
 
   /**
-   * 「そろえる」の偏りは、完璧に配っても0にはならない。
+   * ラベルの偏りは、完璧に配っても0にはならない。
    * 15人を6班に配れば1班2.5人が理想で、実際は2人か3人にしかできず 0.5×6＝3 残る。
    * この「どうやっても残る分」を先に出しておき、警告の基準と打ち切り判定に使う。
    */
@@ -302,11 +368,46 @@
     }, 0);
   }
 
-  function solve(names, count, rules, prevPairs) {
-    var clusters = buildClusters(names, rules.together);
+  /**
+   * できた班を入れ替えて改善する（山登り）。
+   * ランダムに置くだけだと「前回と同じ顔ぶれ」がなかなか0にならないため、
+   * 同じ大きさのかたまりを2つ選んで交換し、よくなったときだけ採用する。
+   * 班の人数を崩さないよう、交換するのは同じ大きさのかたまりだけにしている。
+   */
+  function improve(clusters, assign, count, rulesObj, prevPairs, apartOf, floorScore, rounds, forcedPairs) {
+    var groups = buildGroups(clusters, assign, count);
+    var cur = scoreOf(groups, rulesObj.balance, prevPairs, forcedPairs);
+
+    for (var r = 0; r < rounds; r++) {
+      if (cur.total <= floorScore + 0.001) break;
+      var a = Math.floor(Math.random() * clusters.length);
+      var b = Math.floor(Math.random() * clusters.length);
+      if (a === b || assign[a] === assign[b]) continue;
+      if (clusters[a].length !== clusters[b].length) continue;
+
+      var ga = assign[a], gb = assign[b];
+      assign[a] = gb; assign[b] = ga;
+      var next = buildGroups(clusters, assign, count);
+
+      if (!groupOk(next[ga], apartOf) || !groupOk(next[gb], apartOf)) {
+        assign[a] = ga; assign[b] = gb;
+        continue;
+      }
+      var s = scoreOf(next, rulesObj.balance, prevPairs, forcedPairs);
+      if (s.total < cur.total) {
+        cur = s; groups = next;
+      } else {
+        assign[a] = ga; assign[b] = gb;
+      }
+    }
+    return { groups: groups, score: cur };
+  }
+
+  function solve(names, count, rulesObj, prevPairs) {
+    var clusters = buildClusters(names, rulesObj.together);
     var sizes = groupSizes(names.length, count);
-    var apartOf = buildApartMap(rules.apart);
-    var floorScore = minBias(rules.balance, count) * 3;   // これ以上はよくならない
+    var apartOf = buildApartMap(rulesObj.apart);
+    var floorScore = minBias(rulesObj.balance, count) * 3;   // これ以上はよくならない
 
     // 「同じ」で必ず一緒になる2人。前回と同じでも当然なので、重複には数えない
     var forcedPairs = {};
@@ -322,7 +423,7 @@
       if (!assign) continue;
 
       // 置いただけでは「前回と同じ顔ぶれ」が残るので、入れ替えて詰める
-      var got = improve(clusters, assign, count, rules, prevPairs, apartOf, floorScore, IMPROVE_ROUNDS, forcedPairs);
+      var got = improve(clusters, assign, count, rulesObj, prevPairs, apartOf, floorScore, IMPROVE_ROUNDS, forcedPairs);
       if (got.score.total < bestScore) {
         bestScore = got.score.total;
         best = got;
@@ -334,12 +435,8 @@
 
   /* ---------- 作れない理由を具体的に出す ---------- */
 
-  function diagnose(names, count, rules) {
+  function diagnose(names, count, rulesObj) {
     var msgs = [];
-    if (count < 1) {
-      msgs.push({ text: '班の数が0です。', error: true });
-      return msgs;
-    }
     if (count > names.length) {
       msgs.push({
         text: '班の数が人数より多いです。',
@@ -348,7 +445,7 @@
       });
     }
 
-    var clusters = buildClusters(names, rules.together);
+    var clusters = buildClusters(names, rulesObj.together);
     var sizes = groupSizes(names.length, count);
     var maxSize = Math.max.apply(null, sizes);
 
@@ -365,7 +462,7 @@
     // 「同じ」と「別々」が同じ2人に付いていたら成立しない
     var rootOf = {};
     clusters.forEach(function (cl, i) { cl.forEach(function (n) { rootOf[n] = i; }); });
-    rules.apart.forEach(function (g) {
+    rulesObj.apart.forEach(function (g) {
       for (var i = 0; i < g.length; i++) {
         for (var j = i + 1; j < g.length; j++) {
           if (rootOf[g[i]] === rootOf[g[j]]) {
@@ -379,7 +476,7 @@
       }
     });
 
-    rules.apart.forEach(function (g) {
+    rulesObj.apart.forEach(function (g) {
       if (g.length > count) {
         msgs.push({
           text: 'ちらしきれません。',
@@ -393,10 +490,6 @@
   }
 
   /* ---------- 画面に出す ---------- */
-
-  var state = { groups: null, rules: null, score: null };
-  var prevState = { pairs: null, when: '' };
-  var currentRosterId = '';
 
   function showMsgs(list) {
     $('hw-msg').innerHTML = list.map(function (m) {
@@ -413,22 +506,20 @@
   }
 
   function run() {
-    var names = R.parseNames($('hw-names').value, splitOnSpace);
-    if (!names.length) {
+    var input = buildInput();
+    if (!input.names.length) {
       $('hw-result').classList.remove('is-on');
-      showMsgs([{ text: '名簿が空です。', sub: '名前を1行に1人ずつ貼り付けるか、「見本を入れる」を押してください。', error: true }]);
+      showMsgs([{ text: '名簿が空です。', sub: '名前を入れるか、「見本を入れる」を押してください。', error: true }]);
+      return;
+    }
+    if (input.errors.length) {
+      $('hw-result').classList.remove('is-on');
+      showMsgs(input.errors.map(function (t) { return { text: t, error: true }; }));
       return;
     }
 
-    var count = groupCount(names.length);
-    var parsed = parseRules($('hw-rules').value, names);
-    if (parsed.errors.length) {
-      $('hw-result').classList.remove('is-on');
-      showMsgs(parsed.errors.map(function (t) { return { text: t, error: true }; }));
-      return;
-    }
-
-    var problems = diagnose(names, count, parsed.rules);
+    var count = groupCount(input.names.length);
+    var problems = diagnose(input.names, count, input.rules);
     if (problems.length) {
       $('hw-result').classList.remove('is-on');
       showMsgs(problems);
@@ -436,24 +527,24 @@
     }
 
     var usePrev = !!(prevState.pairs && $('hw-prev-avoid').checked);
-    var best = solve(names, count, parsed.rules, usePrev ? prevState.pairs : null);
+    var best = solve(input.names, count, input.rules, usePrev ? prevState.pairs : null);
     if (!best) {
       $('hw-result').classList.remove('is-on');
       showMsgs([{
         text: '配慮を全部守れる分け方が見つかりませんでした。',
-        sub: '「別々」や「ちらす」の指定が多すぎるか、「同じ」と重なって身動きが取れなくなっている可能性があります。条件を1つ減らすか、班の数を変えて試してください。',
+        sub: '「別々」や「ちらす」が多すぎるか、「同じ」と重なって身動きが取れなくなっている可能性があります。配慮を1つ減らすか、班の数を変えて試してください。',
         error: true
       }]);
       return;
     }
 
-    state = { groups: best.groups, rules: parsed.rules, score: best.score };
-    showMsgs(softNotes(best.score, parsed.rules, count, usePrev));
+    state = { groups: best.groups, tagOf: input.rules.tagOf, balance: input.rules.balance };
+    showMsgs(softNotes(best.score, input.rules, count, usePrev));
     render();
   }
 
   /** 守りきれなかった希望を、エラーではなく「お知らせ」として出す */
-  function softNotes(score, rules, count, usePrev) {
+  function softNotes(score, rulesObj, count, usePrev) {
     var notes = [];
     if (usePrev && score.repeats > 0) {
       notes.push({
@@ -462,9 +553,9 @@
       });
     }
     // 割り切れないぶんの偏り（どうやっても残る）を超えたときだけ知らせる
-    if (rules.balance.length && score.bias > minBias(rules.balance, count) + 0.001) {
+    if (rulesObj.balance.length && score.bias > minBias(rulesObj.balance, count) + 0.001) {
       notes.push({
-        text: '「そろえる」に偏りが残りました。',
+        text: 'ラベルの人数に偏りが残りました。',
         sub: '「同じ」や「別々」を優先したためです。班ごとの内訳は下の表で確認してください。'
       });
     }
@@ -472,22 +563,20 @@
   }
 
   function render() {
-    var groups = state.groups, rules = state.rules;
-    var board = $('hw-board');
-
+    var groups = state.groups, tagOf = state.tagOf, balance = state.balance;
     var html = '';
+
     groups.forEach(function (g, i) {
       var members = g.map(function (n) {
-        var tag = rules.tagOf[n];
+        var tag = tagOf[n];
         return '<li>' + R.esc(n) + (tag ? '<span class="hw-tag">' + R.esc(tag) + '</span>' : '') + '</li>';
       }).join('');
 
-      // 「そろえる」を指定していたら、班ごとの内訳を出して先生が目で確かめられるようにする
-      var counts = rules.balance.map(function (b) {
+      // ラベルを使っていたら、班ごとの内訳を出して先生が目で確かめられるようにする
+      var counts = balance.map(function (b) {
         var set = {};
         b.names.forEach(function (x) { set[x] = true; });
-        var c = g.filter(function (n) { return set[n]; }).length;
-        return R.esc(b.label) + ' ' + c;
+        return R.esc(b.label) + ' ' + g.filter(function (n) { return set[n]; }).length;
       }).join('・');
 
       html += '<div class="hw-group">' +
@@ -496,51 +585,37 @@
         '<ul class="hw-members">' + members + '</ul>' +
         '</div>';
     });
-    board.innerHTML = html;
+
+    $('hw-board').innerHTML = html;
     $('hw-result').classList.add('is-on');
 
     var total = groups.reduce(function (a, g) { return a + g.length; }, 0);
     $('hw-info').textContent = groups.length + '班 / ' + total + '人';
 
     // Excelに貼れるようタブ区切りで出す（1行＝1班）
-    var lines = groups.map(function (g, i) { return [(i + 1) + '班'].concat(g).join('\t'); });
-    $('hw-out').value = lines.join('\n');
+    $('hw-out').value = groups.map(function (g, i) {
+      return [(i + 1) + '班'].concat(g).join('\t');
+    }).join('\n');
   }
 
   function updateCount() {
-    var names = R.parseNames($('hw-names').value, splitOnSpace);
-    var n = names.length;
+    var n = filledPeople().length;
     $('hw-count').textContent = n + '人';
-    updateSepNote(names);
 
     var info = $('hw-plan');
+    info.classList.remove('is-warn');
     if (!n) { info.textContent = '—'; return; }
+
     var count = groupCount(n);
+    if (count > n) {
+      // 「6班（1班 0〜1人）」のような意味のない表示を出さない
+      info.textContent = n + '人を' + count + '班には分けられません';
+      info.classList.add('is-warn');
+      return;
+    }
     var sizes = groupSizes(n, count);
     var min = Math.min.apply(null, sizes), max = Math.max.apply(null, sizes);
     info.textContent = count + '班（1班 ' + (min === max ? min + '人' : min + '〜' + max + '人') + '）';
-  }
-
-  // 「1行に1人」が伝わりにくいので、詰まって見えるときだけその場で直せるようにする
-  function updateSepNote(names) {
-    var note = $('hw-sep-note');
-    if (!note) return;
-    if (splitOnSpace) {
-      note.hidden = false;
-      note.innerHTML = 'スペースでも区切って ' + names.length + '人 として読んでいます。' +
-        '<button type="button" class="hw-mini" id="hw-sep-off">もとに戻す</button>';
-      $('hw-sep-off').addEventListener('click', function () { splitOnSpace = false; updateCount(); });
-      return;
-    }
-    if (R.looksCrammed(names)) {
-      note.hidden = false;
-      note.innerHTML = '名前が1行に詰まっていませんか？ いまは ' + names.length + '人 として読んでいます。' +
-        '<button type="button" class="hw-mini" id="hw-sep-on">スペースでも区切る</button>';
-      $('hw-sep-on').addEventListener('click', function () { splitOnSpace = true; updateCount(); });
-      return;
-    }
-    note.hidden = true;
-    note.innerHTML = '';
   }
 
   /* ---------- 名簿の保存・よびだし ---------- */
@@ -566,15 +641,23 @@
     sel.value = currentRosterId && list.some(function (r) { return r.id === currentRosterId; }) ? currentRosterId : '';
   }
 
+  /** 席替えメーカーは名簿をテキストで読むので、そちら向けの形も一緒に持つ */
+  function namesText() {
+    return filledPeople().map(function (p) { return p.name.trim(); }).join('\n');
+  }
+
   function doSaveRoster(label) {
     var current = R.find(currentRosterId) || {};
     var rec = {
       id: currentRosterId || R.newId(),
       label: label,
-      names: $('hw-names').value,
-      // 配慮は席替えと班分けで書き方が違うので、それぞれ別に持つ
+      names: namesText(),
+      people: filledPeople().map(function (p) { return { name: p.name.trim(), label: p.label.trim() }; }),
+      hanwakeRules: rules.map(function (r) {
+        return { kind: r.kind, names: r.ids.map(function (id) { var p = personById(id); return p ? p.name.trim() : ''; }).filter(Boolean) };
+      }),
+      // 席替えメーカーのぶんは触らずに引き継ぐ
       rules: current.rules || '',
-      hanwakeRules: $('hw-rules').value,
       cols: current.cols,
       rows: current.rows,
       seating: current.seating || null,
@@ -596,9 +679,24 @@
     var rec = R.find(id);
     if (!rec) { rosterNote('よびだす名簿をえらんでください。', 'error'); return; }
     currentRosterId = rec.id;
-    $('hw-names').value = rec.names || '';
-    $('hw-rules').value = rec.hanwakeRules || '';
-    splitOnSpace = false;
+
+    // 班分けで保存したものはラベルつき。席替えだけで保存されたものは名前だけ
+    if (Array.isArray(rec.people) && rec.people.length) {
+      setPeople(rec.people);
+    } else {
+      setPeople(R.parseNames(rec.names || '').map(function (n) { return { name: n }; }));
+    }
+
+    rules = [];
+    if (Array.isArray(rec.hanwakeRules)) {
+      var byName = {};
+      people.forEach(function (p) { if (!byName[p.name]) byName[p.name] = p.id; });
+      rec.hanwakeRules.forEach(function (r) {
+        var ids = (r.names || []).map(function (n) { return byName[n]; }).filter(function (x) { return x; });
+        if (ids.length) rules.push({ id: nextId(), kind: r.kind || 'apart', ids: ids });
+      });
+    }
+    renderRules();
     applyPrevGrouping(rec);
     updateCount();
     rosterNote('「' + rec.label + '」をよびだしました。', 'ok');
@@ -650,9 +748,9 @@
     rosterNote('この班を「' + rec.label + '」におぼえました。次の班分けで避けられます。', 'ok');
   }
 
-  /* ---------- CSV取り込み ---------- */
+  /* ---------- CSV ---------- */
 
-  var csvRows = null, csvPicked = {};
+  var csvRows = null, csvNameCols = {}, csvLabelCol = -1;
 
   function readCsvFile(file) {
     var reader = new FileReader();
@@ -661,9 +759,10 @@
       var rows = R.parseDelimited(text, R.detectSep(text));
       if (!rows.length) { rosterNote('このファイルからは名前を読み取れませんでした。', 'error'); return; }
       csvRows = rows;
-      csvPicked = {};
+      csvNameCols = {};
+      csvLabelCol = -1;
       var guess = R.guessNameCol(rows);
-      if (guess >= 0) csvPicked[guess] = true;
+      if (guess >= 0) csvNameCols[guess] = true;
       renderCsvPick();
     };
     reader.onerror = function () { rosterNote('ファイルを読めませんでした。', 'error'); };
@@ -678,9 +777,15 @@
     for (var c = 0; c < width; c++) {
       var head = hasHead ? ((csvRows[0][c] || '').trim() || (c + 1) + '列目') : (c + 1) + '列目';
       var val = (sample[c] || '').trim() || '（空）';
-      html += '<button type="button" class="hw-csv-col' + (csvPicked[c] ? ' is-on' : '') +
-        '" data-col="' + c + '"><span class="hw-csv-h">' + R.esc(head) + '</span>' +
-        '<span class="hw-csv-v">' + R.esc(val) + '</span></button>';
+      var cls = 'hw-csv-col';
+      if (csvNameCols[c]) cls += ' is-on';
+      if (csvLabelCol === c) cls += ' is-label';
+      html += '<button type="button" class="' + cls + '" data-col="' + c + '">' +
+        '<span class="hw-csv-h">' + R.esc(head) + '</span>' +
+        '<span class="hw-csv-v">' + R.esc(val) + '</span>' +
+        (csvNameCols[c] ? '<span class="hw-csv-role">なまえ</span>' : '') +
+        (csvLabelCol === c ? '<span class="hw-csv-role">ラベル</span>' : '') +
+        '</button>';
     }
     $('hw-csv-cols').innerHTML = html;
     $('hw-csv-pick').hidden = false;
@@ -688,49 +793,139 @@
   }
 
   function applyCsvPick() {
-    var cols = Object.keys(csvPicked).filter(function (c) { return csvPicked[c]; })
+    var cols = Object.keys(csvNameCols).filter(function (c) { return csvNameCols[c]; })
       .map(Number).sort(function (a, b) { return a - b; });
     if (!cols.length) { rosterNote('名前の列を1つ以上えらんでください。', 'error'); return; }
 
     var body = $('hw-csv-head').checked ? csvRows.slice(1) : csvRows;
-    var names = body.map(function (r) {
-      return cols.map(function (c) { return (r[c] || '').trim(); }).filter(Boolean).join(' ').trim();
-    }).filter(Boolean);
+    var list = body.map(function (r) {
+      var name = cols.map(function (c) { return (r[c] || '').trim(); }).filter(Boolean).join(' ').trim();
+      var label = csvLabelCol >= 0 ? (r[csvLabelCol] || '').trim() : '';
+      return { name: name, label: label };
+    }).filter(function (p) { return p.name; });
 
-    if (!names.length) { rosterNote('えらんだ列に名前が入っていませんでした。', 'error'); return; }
+    if (!list.length) { rosterNote('えらんだ列に名前が入っていませんでした。', 'error'); return; }
 
-    $('hw-names').value = names.join('\n');
-    splitOnSpace = false;
+    setPeople(list);
+    rules = [];
+    renderRules();
     closeCsvPick();
-    updateCount();
-    rosterNote(names.length + '人を読みこみました。', 'ok');
+    rosterNote(list.length + '人を読みこみました。' + (csvLabelCol >= 0 ? 'ラベルも取り込みました。' : ''), 'ok');
   }
 
   function closeCsvPick() {
     $('hw-csv-pick').hidden = true;
     csvRows = null;
-    csvPicked = {};
+    csvNameCols = {};
+    csvLabelCol = -1;
     $('hw-csv').value = '';
+  }
+
+  /** Excelで開いても文字化けしないよう BOM を付けて渡す */
+  function downloadCsv(filename, rows) {
+    var body = rows.map(function (r) {
+      return r.map(function (v) {
+        var s = String(v == null ? '' : v);
+        return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+      }).join(',');
+    }).join('\r\n');
+
+    var blob = new Blob(['﻿' + body], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function downloadTemplate() {
+    downloadCsv('班分け_名簿ひな形.csv', [
+      ['出席番号', 'なまえ', 'ラベル'],
+      ['1', '佐藤 みゆき', '女'],
+      ['2', '鈴木 けんた', '男'],
+      ['3', '高橋 あおい', '女'],
+      ['4', '田中 そうた', '男']
+    ]);
+    rosterNote('ひな形をダウンロードしました。なまえの列を書き換えて「CSVを読む」から取り込めます。', 'ok');
+  }
+
+  function downloadResult() {
+    if (!state.groups) return;
+    var labelOf = {};
+    filledPeople().forEach(function (p) { labelOf[p.name.trim()] = p.label.trim(); });
+
+    var rows = [['班', 'なまえ', 'ラベル']];
+    state.groups.forEach(function (g, i) {
+      g.forEach(function (n) {
+        rows.push([(i + 1) + '班', n, labelOf[n] || '']);
+      });
+    });
+    downloadCsv('班分け.csv', rows);
+  }
+
+  /* ---------- まとめて貼り付け ---------- */
+
+  function openBulk() {
+    $('hw-names').value = namesText();
+    $('hw-bulk').hidden = false;
+    $('hw-names').focus();
+  }
+
+  function applyBulk() {
+    var names = R.parseNames($('hw-names').value, false);
+    if (!names.length) { rosterNote('名前が読み取れませんでした。', 'error'); return; }
+    // 同じ名前の人には、いま付いているラベルを引き継ぐ
+    var labelOf = {};
+    people.forEach(function (p) { if (p.name.trim() && p.label) labelOf[p.name.trim()] = p.label; });
+    setPeople(names.map(function (n) { return { name: n, label: labelOf[n] || '' }; }));
+    renderRules();
+    $('hw-bulk').hidden = true;
+    rosterNote(names.length + '人にしました。', 'ok');
+  }
+
+  /* ---------- 見本 ---------- */
+
+  var SAMPLE = [
+    ['佐藤 みゆき', '女'], ['鈴木 けんた', '男'], ['高橋 あおい', '女'], ['田中 そうた', '男'],
+    ['伊藤 ひなた', '女'], ['渡辺 りく', '男'], ['山本 さくら', '女'], ['中村 はると', '男'],
+    ['小林 ゆい', '女'], ['加藤 だいち', '男'], ['吉田 めい', '女'], ['山田 かなた', '男'],
+    ['佐々木 のあ', '女'], ['山口 いつき', '男'], ['松本 ひまり', '女'], ['井上 そら', '男'],
+    ['木村 あかり', '女'], ['林 ゆうき', '男'], ['清水 みなと', '男'], ['山崎 ひなの', '女'],
+    ['森 かいと', '男'], ['池田 つむぎ', '女'], ['橋本 りひと', '男'], ['石川 えま', '女'],
+    ['前田 あさひ', '男'], ['藤田 ことね', '女'], ['後藤 はやと', '男'], ['岡田 みお', '女'],
+    ['長谷川 れん', '男'], ['村上 ゆあ', '女']
+  ];
+
+  function loadSample() {
+    setPeople(SAMPLE.map(function (s) { return { name: s[0], label: s[1] }; }));
+    var idOf = {};
+    people.forEach(function (p) { idOf[p.name] = p.id; });
+    rules = [
+      { id: nextId(), kind: 'apart', ids: [idOf['田中 そうた'], idOf['中村 はると']] },
+      { id: nextId(), kind: 'together', ids: [idOf['小林 ゆい'], idOf['石川 えま']] },
+      { id: nextId(), kind: 'scatter', ids: ['佐藤 みゆき', '渡辺 りく', '林 ゆうき', '前田 あさひ', '村上 ゆあ'].map(function (n) { return idOf[n]; }) }
+    ];
+    renderRules();
+    $('hw-mode').value = 'groups';
+    rebuildNums();
+    $('hw-num').value = '6';
+    currentRosterId = '';
+    clearPrev();
+    refreshRosterList();
+    rosterNote('');
+    $('hw-bulk').hidden = true;
+    updateCount();
+    run();
   }
 
   /* ---------- 配線 ---------- */
 
-  (function fillNums() {
+  function rebuildNums() {
     var sel = $('hw-num');
-    sel.innerHTML = '';
     var mode = $('hw-mode').value;
-    for (var i = 2; i <= 12; i++) {
-      var o = document.createElement('option');
-      o.value = i;
-      o.textContent = mode === 'per' ? i + '人ずつ' : i + '班';
-      if ((mode === 'per' && i === 4) || (mode === 'groups' && i === 6)) o.selected = true;
-      sel.appendChild(o);
-    }
-  })();
-
-  $('hw-mode').addEventListener('change', function () {
-    var sel = $('hw-num');
-    var mode = this.value;
     var keep = sel.value;
     sel.innerHTML = '';
     for (var i = 2; i <= 12; i++) {
@@ -739,39 +934,147 @@
       o.textContent = mode === 'per' ? i + '人ずつ' : i + '班';
       sel.appendChild(o);
     }
-    sel.value = keep;
-    updateCount();
+    sel.value = keep || (mode === 'per' ? '4' : '6');
+  }
+
+  $('hw-mode').addEventListener('change', function () { rebuildNums(); updateCount(); });
+  $('hw-num').addEventListener('change', updateCount);
+
+  /* 名簿の行 */
+  $('hw-rows').addEventListener('input', function (e) {
+    var row = e.target.closest('.hw-row');
+    if (!row) return;
+    var p = personById(Number(row.getAttribute('data-id')));
+    if (!p) return;
+    if (e.target.classList.contains('hw-row-name')) {
+      p.name = e.target.value;
+      updateCount();
+      renderRules();   // 配慮の候補と表示名を追従させる
+    }
   });
 
-  $('hw-names').addEventListener('input', updateCount);
-  $('hw-num').addEventListener('change', updateCount);
+  $('hw-rows').addEventListener('click', function (e) {
+    var seg = e.target.closest('.hw-seg-b');
+    if (seg) {
+      var r = seg.closest('.hw-row');
+      var p = personById(Number(r.getAttribute('data-id')));
+      if (!p) return;
+      p.label = seg.getAttribute('data-label');
+      // 押した行だけ塗り替える（全部描き直すと入力中のフォーカスが飛ぶ）
+      [].forEach.call(r.querySelectorAll('.hw-seg-b'), function (b) {
+        b.classList.toggle('is-on', b.getAttribute('data-label') === p.label);
+      });
+      return;
+    }
+    var btn = e.target.closest('.hw-row-del');
+    if (!btn) return;
+    removePerson(Number(btn.closest('.hw-row').getAttribute('data-id')));
+  });
+
+  $('hw-labelset-input').addEventListener('change', function () {
+    // 項目から外れたラベルが人に残らないようにする
+    var set = labelSet();
+    people.forEach(function (p) { if (p.label && set.indexOf(p.label) < 0) p.label = ''; });
+    renderRows();
+  });
+
+  // なまえ欄で Enter → 次の人へ。最後の行なら1人足す
+  $('hw-rows').addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' || !e.target.classList.contains('hw-row-name')) return;
+    e.preventDefault();
+    var row = e.target.closest('.hw-row');
+    var next = row.nextElementSibling;
+    if (next) {
+      next.querySelector('.hw-row-name').focus();
+    } else {
+      addPerson('', '', true);
+      updateCount();
+    }
+  });
+
+  // 複数行を貼られたら、そのぶんの行に展開する（Excelからの貼り付けを1行に潰さない）
+  $('hw-rows').addEventListener('paste', function (e) {
+    if (!e.target.classList.contains('hw-row-name')) return;
+    var text = (e.clipboardData || window.clipboardData).getData('text');
+    if (!/[\n\r\t]/.test(text)) return;
+    e.preventDefault();
+
+    var names = R.parseNames(text, false);
+    if (!names.length) return;
+    var row = e.target.closest('.hw-row');
+    var id = Number(row.getAttribute('data-id'));
+    var at = -1;
+    people.forEach(function (p, i) { if (p.id === id) at = i; });
+
+    var added = names.map(function (n) { return { id: nextId(), name: n, label: '' }; });
+    people.splice.apply(people, [at, 1].concat(added));
+    renderRows();
+    renderRules();
+    updateCount();
+    rosterNote(names.length + '人を貼り付けました。', 'ok');
+  });
+
+  $('hw-add').addEventListener('click', function () { addPerson('', '', true); updateCount(); });
+  $('hw-bulk-toggle').addEventListener('click', openBulk);
+  $('hw-bulk-apply').addEventListener('click', applyBulk);
+  $('hw-bulk-cancel').addEventListener('click', function () { $('hw-bulk').hidden = true; });
+
+  /* 配慮の行 */
+  $('hw-rule-add').addEventListener('click', function () { addRule('apart', []); });
+
+  $('hw-rules').addEventListener('change', function (e) {
+    var wrap = e.target.closest('.hw-rule');
+    if (!wrap) return;
+    var rid = Number(wrap.getAttribute('data-rule'));
+    var rule = null;
+    rules.forEach(function (r) { if (r.id === rid) rule = r; });
+    if (!rule) return;
+
+    if (e.target.classList.contains('hw-rule-kind')) {
+      rule.kind = e.target.value;
+      renderRules();
+    } else if (e.target.classList.contains('hw-rule-add')) {
+      var pid = Number(e.target.value);
+      if (pid && rule.ids.indexOf(pid) < 0) rule.ids.push(pid);
+      renderRules();
+    }
+  });
+
+  $('hw-rules').addEventListener('click', function (e) {
+    var x = e.target.closest('.hw-chip-x');
+    if (x) {
+      var rid = Number(x.getAttribute('data-rule')), pid = Number(x.getAttribute('data-person'));
+      rules.forEach(function (r) {
+        if (r.id === rid) r.ids = r.ids.filter(function (i) { return i !== pid; });
+      });
+      renderRules();
+      return;
+    }
+    var del = e.target.closest('.hw-rule-del');
+    if (del) {
+      var id = Number(del.closest('.hw-rule').getAttribute('data-rule'));
+      rules = rules.filter(function (r) { return r.id !== id; });
+      renderRules();
+    }
+  });
+
+  /* 実行・結果 */
   $('hw-gen').addEventListener('click', run);
   $('hw-again').addEventListener('click', run);
   $('hw-copy').addEventListener('click', function () { R.copyText($('hw-out').value, this); });
   $('hw-print').addEventListener('click', function () { window.print(); });
   $('hw-remember').addEventListener('click', rememberGrouping);
+  $('hw-download').addEventListener('click', downloadResult);
+  $('hw-sample').addEventListener('click', loadSample);
 
-  $('hw-sample').addEventListener('click', function () {
-    $('hw-names').value = SAMPLE_NAMES;
-    $('hw-rules').value = SAMPLE_RULES;
-    $('hw-mode').value = 'groups';
-    $('hw-mode').dispatchEvent(new Event('change'));
-    $('hw-num').value = '6';
-    currentRosterId = '';
-    clearPrev();
-    refreshRosterList();
-    rosterNote('');
-    updateCount();
-    run();
-  });
-
+  /* 名簿の保存 */
   $('hw-roster-list').addEventListener('change', function () {
     if (this.value) doLoadRoster(this.value);
   });
   $('hw-roster-load').addEventListener('click', function () { doLoadRoster($('hw-roster-list').value); });
   $('hw-roster-del').addEventListener('click', function () { doDeleteRoster($('hw-roster-list').value); });
   $('hw-roster-save').addEventListener('click', function () {
-    if (!R.parseNames($('hw-names').value, splitOnSpace).length) {
+    if (!filledPeople().length) {
       rosterNote('名簿が空です。名前を入れてから保存してください。', 'error');
       return;
     }
@@ -793,20 +1096,32 @@
 
   $('hw-prev-clear').addEventListener('click', clearPrev);
 
+  /* CSV */
   $('hw-csv').addEventListener('change', function () {
     if (this.files && this.files[0]) readCsvFile(this.files[0]);
   });
+  $('hw-csv-template').addEventListener('click', downloadTemplate);
   $('hw-csv-head').addEventListener('change', function () { if (csvRows) renderCsvPick(); });
   $('hw-csv-cancel').addEventListener('click', closeCsvPick);
   $('hw-csv-ok').addEventListener('click', applyCsvPick);
+  // 1回目のクリックで「なまえ」、もう1回で「ラベル」、もう1回で解除
   $('hw-csv-cols').addEventListener('click', function (e) {
     var btn = e.target.closest('.hw-csv-col');
     if (!btn) return;
-    var c = btn.getAttribute('data-col');
-    csvPicked[c] = !csvPicked[c];
-    btn.classList.toggle('is-on', !!csvPicked[c]);
+    var c = Number(btn.getAttribute('data-col'));
+    if (csvNameCols[c]) {
+      delete csvNameCols[c];
+      csvLabelCol = c;
+    } else if (csvLabelCol === c) {
+      csvLabelCol = -1;
+    } else {
+      csvNameCols[c] = true;
+    }
+    renderCsvPick();
   });
 
+  rebuildNums();
+  setPeople([{ name: '' }, { name: '' }, { name: '' }]);
+  renderRules();
   refreshRosterList();
-  updateCount();
 })();

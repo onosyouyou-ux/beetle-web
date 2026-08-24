@@ -85,6 +85,88 @@ body{
 .hw-hint code,.hw-table code{font-family:'SFMono-Regular','Consolas',monospace;background:var(--hw-cream2);border-radius:3px;padding:1px 6px;color:var(--hw-ink2)}
 .hw-hint-block{background:var(--hw-cream2);border-radius:8px;padding:12px 14px;color:var(--hw-ink2);margin-top:12px}
 
+/* ====== 名簿の行（1人1行） ====== */
+.hw-labelset{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.hw-labelset label{font-size:11.5px;font-weight:800;color:var(--hw-ink2);white-space:nowrap}
+.hw-labelset input{
+  width:110px;border:1px solid var(--hw-line2);border-radius:6px;padding:5px 9px;
+  font-size:12.5px;font-family:inherit;color:var(--hw-ink);background:#fff;
+}
+.hw-labelset-tip{font-size:11px;color:var(--hw-ink3)}
+
+.hw-rows-head{display:flex;align-items:center;gap:8px;padding:0 8px 5px;border-bottom:1px solid var(--hw-line)}
+.hw-rows-h-name{flex:1;font-size:10.5px;font-weight:800;color:var(--hw-ink3);letter-spacing:.06em;padding-left:30px}
+.hw-rows-h-label{width:150px;font-size:10.5px;font-weight:800;color:var(--hw-ink3);letter-spacing:.06em;text-align:center}
+
+.hw-rows{max-height:330px;overflow-y:auto;border:1px solid var(--hw-line2);border-radius:8px;background:#fff;padding:5px}
+.hw-row{display:flex;align-items:center;gap:6px;padding:2px 3px}
+.hw-row + .hw-row{border-top:1px dashed var(--hw-line)}
+.hw-row-n{width:24px;flex:none;text-align:right;font-size:11px;color:var(--hw-ink3);font-variant-numeric:tabular-nums}
+.hw-row-name{
+  flex:1;min-width:0;border:1px solid transparent;border-radius:5px;padding:6px 8px;
+  font-family:inherit;font-size:14px;color:var(--hw-ink);background:transparent;
+}
+.hw-row-name:hover{border-color:var(--hw-line)}
+.hw-row-name:focus{outline:none;border-color:var(--hw-orange);background:var(--hw-orange-bg)}
+.hw-row-del{
+  flex:none;width:24px;height:24px;border:none;background:transparent;color:var(--hw-ink3);
+  font-size:15px;line-height:1;cursor:pointer;border-radius:5px;font-family:inherit;
+}
+.hw-row-del:hover{background:var(--hw-red-bg);color:var(--hw-red)}
+
+.hw-seg{display:inline-flex;flex:none;border:1px solid var(--hw-line2);border-radius:6px;overflow:hidden;background:#fff}
+.hw-seg-b{
+  min-width:34px;padding:5px 8px;border:none;background:#fff;color:var(--hw-ink3);
+  font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;line-height:1.3;
+}
+.hw-seg-b + .hw-seg-b{border-left:1px solid var(--hw-line2)}
+.hw-seg-b:hover{background:var(--hw-cream2)}
+.hw-seg-b.is-on{background:var(--hw-orange);color:#fff}
+
+.hw-rows-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
+.hw-rows-tip{font-size:11px;color:var(--hw-ink3)}
+
+.hw-bulk{margin-top:10px;border:1px solid var(--hw-line2);border-radius:8px;background:var(--hw-cream2);padding:10px 12px}
+.hw-bulk-q{font-size:12px;font-weight:800;color:var(--hw-ink2);margin:0 0 8px}
+.hw-bulk textarea{background:#fff}
+.hw-bulk-foot{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+
+/* ====== 配慮の行 ====== */
+.hw-rules{display:flex;flex-direction:column;gap:8px}
+.hw-rules:empty{display:none}
+.hw-rules-empty{font-size:12px;line-height:1.8;color:var(--hw-ink3);background:var(--hw-cream2);border-radius:8px;padding:12px 14px;margin:0}
+.hw-rule{display:flex;align-items:flex-start;gap:8px;border:1px solid var(--hw-line2);border-radius:8px;background:#fff;padding:8px 10px}
+.hw-rule-kind{
+  flex:none;border:1px solid var(--hw-line2);border-radius:6px;padding:6px 8px;
+  font-size:13px;font-weight:700;font-family:inherit;color:var(--hw-ink);background:var(--hw-cream2);
+}
+.hw-rule-body{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:5px}
+.hw-rule-add{
+  border:1px dashed var(--hw-line2);border-radius:6px;padding:4px 6px;max-width:100%;
+  font-size:12px;font-family:inherit;color:var(--hw-ink2);background:#fff;cursor:pointer;
+}
+.hw-rule-add:hover{border-color:var(--hw-orange);color:var(--hw-orange)}
+.hw-rule-del{
+  flex:none;width:24px;height:24px;border:none;background:transparent;color:var(--hw-ink3);
+  font-size:15px;line-height:1;cursor:pointer;border-radius:5px;font-family:inherit;
+}
+.hw-rule-del:hover{background:var(--hw-red-bg);color:var(--hw-red)}
+
+.hw-chip{
+  display:inline-flex;align-items:center;gap:3px;background:var(--hw-orange-bg);
+  border:1px solid rgba(224,138,60,.35);border-radius:99px;padding:3px 5px 3px 10px;
+  font-size:12.5px;font-weight:700;color:var(--hw-orange-dk);max-width:100%;
+}
+.hw-chip-x{
+  border:none;background:transparent;color:var(--hw-orange-dk);cursor:pointer;
+  font-size:13px;line-height:1;padding:0 3px;font-family:inherit;
+}
+.hw-chip-x:hover{color:var(--hw-red)}
+
+.hw-csv-role{font-size:9.5px;font-weight:800;color:var(--hw-orange-dk);letter-spacing:.04em}
+.hw-csv-col.is-label{border-color:var(--hw-green);background:var(--hw-green-bg);box-shadow:inset 0 0 0 1px var(--hw-green)}
+.hw-csv-col.is-label .hw-csv-h,.hw-csv-col.is-label .hw-csv-role{color:var(--hw-green)}
+
 /* ====== 名簿の保存・よびだし／CSV取り込み ====== */
 .hw-mini2{
   font-size:11px;font-weight:700;padding:5px 11px;border-radius:6px;
@@ -243,3 +325,6 @@ body{
   .hw-group{border-color:#999;break-inside:avoid}
   .hw-group-head{background:#f0f0f0}
 }
+
+.hw-csv-q span{display:block;font-weight:400;font-size:11px;color:var(--hw-ink3);margin-top:3px}
+.hw-plan.is-warn{color:var(--hw-red);font-weight:700}
