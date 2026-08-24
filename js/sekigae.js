@@ -161,7 +161,12 @@
     return true;
   }
 
-  function solve(names, rows, cols, rules) {
+  // prev は「前回の席」を避けるための任意条件。
+  // { seatOf:{name:'r,c'}, nbOf:{name:{other:true}}, avoidSeat:bool, avoidNb:bool }
+  function solve(names, rows, cols, rules, prev) {
+    var avoidSeat = !!(prev && prev.avoidSeat && prev.seatOf);
+    var avoidNb = !!(prev && prev.avoidNb && prev.nbOf);
+
     // 「離す」相手をすぐ引けるようにしておく
     var apartOf = {};
     rules.apart.forEach(function (group) {
@@ -199,13 +204,16 @@
         var spots = [];
         for (var rr = 0; rr < rows; rr++) {
           for (var cc = 0; cc < cols; cc++) {
-            if (grid[rr][cc] === null && seatOk(zone, rr, rows)) spots.push([rr, cc]);
+            if (grid[rr][cc] !== null || !seatOk(zone, rr, rows)) continue;
+            if (avoidSeat && prev.seatOf[name] === rr + ',' + cc) continue;
+            spots.push([rr, cc]);
           }
         }
         shuffle(spots);
         var placed = false;
         for (var s = 0; s < spots.length; s++) {
-          if (!conflicts(grid, spots[s][0], spots[s][1], name, apartOf, rows, cols)) {
+          if (!conflicts(grid, spots[s][0], spots[s][1], name, apartOf, rows, cols) &&
+              !(avoidNb && prevNeighbor(grid, spots[s][0], spots[s][1], name, prev.nbOf, rows, cols))) {
             grid[spots[s][0]][spots[s][1]] = name;
             placed = true;
             break;
@@ -218,18 +226,31 @@
     return null;
   }
 
-  // 前後左右の隣に「離す」相手がいないか（斜めは隣として数えない）
+  var NEIGHBOR_D = [[-1, 0], [1, 0], [0, -1], [0, 1]]; // 斜めは隣として数えない
+
+  /** その席の前後左右にいる名前を集める */
+  function neighborNames(grid, r, c, rows, cols) {
+    var out = [];
+    for (var i = 0; i < NEIGHBOR_D.length; i++) {
+      var nr = r + NEIGHBOR_D[i][0], nc = c + NEIGHBOR_D[i][1];
+      if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
+      if (grid[nr][nc]) out.push(grid[nr][nc]);
+    }
+    return out;
+  }
+
+  // 前後左右の隣に「離す」相手がいないか
   function conflicts(grid, r, c, name, apartOf, rows, cols) {
     var mine = apartOf[name];
     if (!mine) return false;
-    var d = [[-1, 0], [1, 0], [0, -1], [0, 1]];
-    for (var i = 0; i < d.length; i++) {
-      var nr = r + d[i][0], nc = c + d[i][1];
-      if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
-      var other = grid[nr][nc];
-      if (other && mine[other]) return true;
-    }
-    return false;
+    return neighborNames(grid, r, c, rows, cols).some(function (other) { return !!mine[other]; });
+  }
+
+  // 前後左右の隣が「前回も隣だった相手」になっていないか
+  function prevNeighbor(grid, r, c, name, nbOf, rows, cols) {
+    var mine = nbOf[name];
+    if (!mine) return false;
+    return neighborNames(grid, r, c, rows, cols).some(function (other) { return !!mine[other]; });
   }
 
   /* ---------- 作れない理由を具体的に出す ---------- */
@@ -299,7 +320,14 @@
       return;
     }
 
-    var grid = solve(names, rows, cols, parsed.rules);
+    // 「前回とちがう席に」は守れないこともあるので、守れなければ段階的にゆるめる
+    var attempts = prevAttempts();
+    var grid = null, relaxed = null;
+    for (var i = 0; i < attempts.length; i++) {
+      grid = solve(names, rows, cols, parsed.rules, attempts[i].prev);
+      if (grid) { relaxed = attempts[i].note; break; }
+    }
+
     if (!grid) {
       $('sk-result').classList.remove('is-on');
       showMsgs([{
@@ -311,8 +339,33 @@
     }
 
     state = { grid: grid, rows: rows, cols: cols, rules: parsed.rules };
-    showMsgs([]);
+    showMsgs(relaxed ? [{ text: relaxed }] : []);
     render();
+  }
+
+  /**
+   * 前回の席を避ける条件を、きつい順に並べた試行リストを作る。
+   * 前から順に試して、通ったところで採用する（通らない条件は自動で外れる）。
+   */
+  function prevAttempts() {
+    var prev = prevState.data;
+    var wantSeat = prev && $('sk-prev-seat').checked;
+    var wantNb = prev && $('sk-prev-nb').checked;
+    if (!wantSeat && !wantNb) return [{ prev: null, note: '' }];
+
+    var list = [];
+    var mk = function (s, n) { return { seatOf: prev.seatOf, nbOf: prev.nbOf, avoidSeat: s, avoidNb: n }; };
+    if (wantSeat && wantNb) {
+      list.push({ prev: mk(true, true), note: '' });
+      list.push({ prev: mk(false, true), note: '前回と同じ席になった子がいます（「同じ隣にしない」だけ守りました）。' });
+      list.push({ prev: mk(true, false), note: '前回と同じ隣になった子がいます（「同じ席にしない」だけ守りました）。' });
+    } else if (wantSeat) {
+      list.push({ prev: mk(true, false), note: '' });
+    } else {
+      list.push({ prev: mk(false, true), note: '' });
+    }
+    list.push({ prev: null, note: '前回の席を避ける条件は守れなかったので、外して作りました。' });
+    return list;
   }
 
   function render() {
@@ -427,6 +480,287 @@
     document.body.removeChild(ta);
   }
 
+  /* ============================================================
+     名簿の保存・よびだし
+     名前は個人情報なので、この端末の localStorage にだけ置く。
+     ネットワークには一切出さない（このツールに送信処理は無い）。
+     ============================================================ */
+
+  var LS_KEY = 'beetle.sekigae.rosters.v1';
+  var currentRosterId = '';
+  var prevState = { data: null };   // 前回の席（よびだした名簿にぶら下がっている）
+
+  function loadRosters() {
+    try {
+      var raw = window.localStorage.getItem(LS_KEY);
+      var list = raw ? JSON.parse(raw) : [];
+      return Array.isArray(list) ? list : [];
+    } catch (e) {
+      return [];   // プライベートモードなどで読めないときは「保存なし」として動かす
+    }
+  }
+
+  function saveRosters(list) {
+    try {
+      window.localStorage.setItem(LS_KEY, JSON.stringify(list));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function today() {
+    var d = new Date();
+    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+  }
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+
+  function rosterNote(text, kind) {
+    var el = $('sk-roster-note');
+    if (!el) return;
+    if (!text) { el.hidden = true; el.textContent = ''; el.className = 'sk-roster-note'; return; }
+    el.hidden = false;
+    el.textContent = text;
+    el.className = 'sk-roster-note' + (kind ? ' is-' + kind : '');
+  }
+
+  function refreshRosterList() {
+    var sel = $('sk-roster-list');
+    var list = loadRosters();
+    sel.innerHTML = '<option value="">' + (list.length ? '保存した名簿…' : '保存した名簿はまだありません') + '</option>';
+    list.forEach(function (r) {
+      var o = document.createElement('option');
+      o.value = r.id;
+      o.textContent = r.label + '（' + parseNames(r.names || '').length + '人・' + r.savedAt + '）';
+      sel.appendChild(o);
+    });
+    sel.value = currentRosterId && list.some(function (r) { return r.id === currentRosterId; }) ? currentRosterId : '';
+  }
+
+  function findRoster(id) {
+    var hit = loadRosters().filter(function (r) { return r.id === id; });
+    return hit.length ? hit[0] : null;
+  }
+
+  function doSaveRoster(label) {
+    var list = loadRosters();
+    var rec = {
+      id: currentRosterId || ('r' + Date.now()),
+      label: label,
+      names: $('sk-names').value,
+      rules: $('sk-rules').value,
+      cols: $('sk-cols').value,
+      rows: $('sk-rows').value,
+      // 同じ名簿を上書き保存するときは、おぼえた席順を消さない
+      seating: (findRoster(currentRosterId) || {}).seating || null,
+      savedAt: today()
+    };
+    var idx = -1;
+    list.forEach(function (r, i) { if (r.id === rec.id) idx = i; });
+    if (idx >= 0) list[idx] = rec; else list.push(rec);
+
+    if (!saveRosters(list)) {
+      rosterNote('このブラウザでは保存できませんでした（プライベートモードなどの可能性があります）。', 'error');
+      return;
+    }
+    currentRosterId = rec.id;
+    refreshRosterList();
+    rosterNote('「' + label + '」を保存しました。', 'ok');
+  }
+
+  function doLoadRoster(id) {
+    var rec = findRoster(id);
+    if (!rec) { rosterNote('よびだす名簿をえらんでください。', 'error'); return; }
+    currentRosterId = rec.id;
+    $('sk-names').value = rec.names || '';
+    $('sk-rules').value = rec.rules || '';
+    if (rec.cols) $('sk-cols').value = rec.cols;
+    if (rec.rows) $('sk-rows').value = rec.rows;
+    splitOnSpace = false;
+    applyPrevSeating(rec);
+    updateCount();
+    rosterNote('「' + rec.label + '」をよびだしました。', 'ok');
+  }
+
+  function doDeleteRoster(id) {
+    var rec = findRoster(id);
+    if (!rec) { rosterNote('消す名簿をえらんでください。', 'error'); return; }
+    if (!window.confirm('「' + rec.label + '」を消します。よろしいですか？')) return;
+    saveRosters(loadRosters().filter(function (r) { return r.id !== id; }));
+    if (currentRosterId === id) { currentRosterId = ''; clearPrev(); }
+    refreshRosterList();
+    rosterNote('「' + rec.label + '」を消しました。', 'ok');
+  }
+
+  /* ---------- 前回の席 ---------- */
+
+  /** 保存された座席表から「誰がどの席か」「誰と誰が隣か」を引ける形に変換する */
+  function applyPrevSeating(rec) {
+    var g = rec && rec.seating;
+    if (!g || !g.length) { clearPrev(); return; }
+    var seatOf = {}, nbOf = {};
+    var rows = g.length, cols = g[0].length;
+    for (var r = 0; r < rows; r++) {
+      for (var c = 0; c < cols; c++) {
+        var name = g[r][c];
+        if (!name) continue;
+        seatOf[name] = r + ',' + c;
+        neighborNames(g, r, c, rows, cols).forEach(function (other) {
+          (nbOf[name] = nbOf[name] || {})[other] = true;
+        });
+      }
+    }
+    prevState.data = { seatOf: seatOf, nbOf: nbOf, when: rec.seatingAt || rec.savedAt };
+    $('sk-prev').hidden = false;
+    $('sk-prev-lbl').textContent = '前回の席（' + prevState.data.when + '）をよみこみました';
+  }
+
+  function clearPrev() {
+    prevState.data = null;
+    $('sk-prev').hidden = true;
+  }
+
+  function rememberSeating() {
+    if (!state.grid) return;
+    if (!currentRosterId) {
+      rosterNote('先に「保存」で名簿に名前をつけてください。席順はその名簿におぼえます。', 'error');
+      return;
+    }
+    var list = loadRosters();
+    var hit = null;
+    list.forEach(function (r) { if (r.id === currentRosterId) hit = r; });
+    if (!hit) { rosterNote('保存した名簿が見つかりませんでした。', 'error'); return; }
+    hit.seating = state.grid;
+    hit.seatingAt = today();
+    if (!saveRosters(list)) { rosterNote('このブラウザでは保存できませんでした。', 'error'); return; }
+    applyPrevSeating(hit);
+    rosterNote('この席順を「' + hit.label + '」におぼえました。次の席替えで避けられます。', 'ok');
+  }
+
+  /* ============================================================
+     CSV / Excel からの取り込み
+     ============================================================ */
+
+  var csvRows = null;   // 取り込み待ちの表
+  var csvPicked = {};   // 選ばれた列
+
+  /** 学校の名簿CSVは Shift_JIS のことが多いので、化けたら読み直す */
+  function decodeCsv(buffer) {
+    var utf8 = new TextDecoder('utf-8').decode(buffer);
+    if (utf8.indexOf('�') < 0) return utf8;
+    try {
+      return new TextDecoder('shift_jis').decode(buffer);
+    } catch (e) {
+      return utf8;
+    }
+  }
+
+  function detectSep(text) {
+    var head = text.split('\n')[0] || '';
+    return (head.split('\t').length - 1) > (head.split(',').length - 1) ? '\t' : ',';
+  }
+
+  /** 引用符つきのセルにも耐えるCSV/TSVパーサ */
+  function parseDelimited(text, sep) {
+    var rows = [], row = [], cur = '', quoted = false, i = 0;
+    text = text.replace(/^﻿/, '');
+    while (i < text.length) {
+      var ch = text.charAt(i);
+      if (quoted) {
+        if (ch === '"') {
+          if (text.charAt(i + 1) === '"') { cur += '"'; i += 2; continue; }
+          quoted = false; i++; continue;
+        }
+        cur += ch; i++; continue;
+      }
+      if (ch === '"') { quoted = true; i++; continue; }
+      if (ch === sep) { row.push(cur); cur = ''; i++; continue; }
+      if (ch === '\r') { i++; continue; }
+      if (ch === '\n') { row.push(cur); rows.push(row); row = []; cur = ''; i++; continue; }
+      cur += ch; i++;
+    }
+    row.push(cur);
+    rows.push(row);
+    return rows.filter(function (r) {
+      return r.some(function (x) { return x.trim(); });
+    });
+  }
+
+  function readCsvFile(file) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      var text = decodeCsv(reader.result);
+      var rows = parseDelimited(text, detectSep(text));
+      if (!rows.length) { rosterNote('このファイルからは名前を読み取れませんでした。', 'error'); return; }
+      csvRows = rows;
+      csvPicked = {};
+      // 名前が入っていそうな列（漢字・かなが多い列）を最初から選んでおく
+      var guess = guessNameCol(rows);
+      if (guess >= 0) csvPicked[guess] = true;
+      renderCsvPick();
+    };
+    reader.onerror = function () { rosterNote('ファイルを読めませんでした。', 'error'); };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function guessNameCol(rows) {
+    var body = rows.slice(1, 11);
+    var width = Math.max.apply(null, rows.map(function (r) { return r.length; }));
+    var best = -1, bestScore = 0;
+    for (var c = 0; c < width; c++) {
+      var score = 0;
+      body.forEach(function (r) {
+        var v = (r[c] || '').trim();
+        if (v && /[ぁ-んァ-ヶ一-龠]/.test(v) && !/^\d+$/.test(v)) score++;
+      });
+      if (score > bestScore) { bestScore = score; best = c; }
+    }
+    return bestScore ? best : -1;
+  }
+
+  function renderCsvPick() {
+    var hasHead = $('sk-csv-head').checked;
+    var width = Math.max.apply(null, csvRows.map(function (r) { return r.length; }));
+    var sample = csvRows[hasHead ? 1 : 0] || [];
+    var html = '';
+    for (var c = 0; c < width; c++) {
+      var head = hasHead ? ((csvRows[0][c] || '').trim() || (c + 1) + '列目') : (c + 1) + '列目';
+      var val = (sample[c] || '').trim() || '（空）';
+      html += '<button type="button" class="sk-csv-col' + (csvPicked[c] ? ' is-on' : '') +
+        '" data-col="' + c + '"><span class="sk-csv-h">' + esc(head) + '</span>' +
+        '<span class="sk-csv-v">' + esc(val) + '</span></button>';
+    }
+    $('sk-csv-cols').innerHTML = html;
+    $('sk-csv-pick').hidden = false;
+    rosterNote('');
+  }
+
+  function applyCsvPick() {
+    var cols = Object.keys(csvPicked).filter(function (c) { return csvPicked[c]; })
+      .map(Number).sort(function (a, b) { return a - b; });
+    if (!cols.length) { rosterNote('名前の列を1つ以上えらんでください。', 'error'); return; }
+
+    var body = $('sk-csv-head').checked ? csvRows.slice(1) : csvRows;
+    var names = body.map(function (r) {
+      return cols.map(function (c) { return (r[c] || '').trim(); }).filter(Boolean).join(' ').trim();
+    }).filter(Boolean);
+
+    if (!names.length) { rosterNote('えらんだ列に名前が入っていませんでした。', 'error'); return; }
+
+    $('sk-names').value = names.join('\n');
+    splitOnSpace = false;
+    closeCsvPick();
+    updateCount();
+    rosterNote(names.length + '人を読みこみました。', 'ok');
+  }
+
+  function closeCsvPick() {
+    $('sk-csv-pick').hidden = true;
+    csvRows = null;
+    csvPicked = {};
+    $('sk-csv').value = '';
+  }
+
   /* ---------- 配線 ---------- */
 
   (function fillSelects() {
@@ -456,9 +790,64 @@
     // 見本は30人ぶん。席の数もそれに合う既定（6×5）へ戻す
     $('sk-cols').value = '6';
     $('sk-rows').value = '5';
+    currentRosterId = '';
+    clearPrev();
+    refreshRosterList();
+    rosterNote('');
     updateCount();
     run();
   });
 
+  /* 名簿の保存・よびだし */
+  $('sk-roster-list').addEventListener('change', function () {
+    if (this.value) doLoadRoster(this.value);
+  });
+  $('sk-roster-load').addEventListener('click', function () {
+    doLoadRoster($('sk-roster-list').value);
+  });
+  $('sk-roster-del').addEventListener('click', function () {
+    doDeleteRoster($('sk-roster-list').value);
+  });
+  $('sk-roster-save').addEventListener('click', function () {
+    if (!parseNames($('sk-names').value).length) {
+      rosterNote('名簿が空です。名前を入れてから保存してください。', 'error');
+      return;
+    }
+    var current = findRoster(currentRosterId);
+    $('sk-save-name').value = current ? current.label : '';
+    $('sk-save-row').hidden = false;
+    $('sk-save-name').focus();
+  });
+  $('sk-save-cancel').addEventListener('click', function () { $('sk-save-row').hidden = true; });
+  $('sk-save-ok').addEventListener('click', function () {
+    var label = $('sk-save-name').value.trim();
+    if (!label) { rosterNote('名簿の名前を入れてください（例：3年2組）。', 'error'); return; }
+    $('sk-save-row').hidden = true;
+    doSaveRoster(label);
+  });
+  $('sk-save-name').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); $('sk-save-ok').click(); }
+  });
+
+  /* 前回の席 */
+  $('sk-prev-clear').addEventListener('click', clearPrev);
+  $('sk-remember').addEventListener('click', rememberSeating);
+
+  /* CSV取り込み */
+  $('sk-csv').addEventListener('change', function () {
+    if (this.files && this.files[0]) readCsvFile(this.files[0]);
+  });
+  $('sk-csv-head').addEventListener('change', function () { if (csvRows) renderCsvPick(); });
+  $('sk-csv-cancel').addEventListener('click', closeCsvPick);
+  $('sk-csv-ok').addEventListener('click', applyCsvPick);
+  $('sk-csv-cols').addEventListener('click', function (e) {
+    var btn = e.target.closest('.sk-csv-col');
+    if (!btn) return;
+    var c = btn.getAttribute('data-col');
+    csvPicked[c] = !csvPicked[c];
+    btn.classList.toggle('is-on', !!csvPicked[c]);
+  });
+
+  refreshRosterList();
   updateCount();
 })();

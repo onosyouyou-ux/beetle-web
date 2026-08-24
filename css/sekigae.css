@@ -80,6 +80,69 @@ body{
 .sk-hint{font-size:11.5px;line-height:1.8;color:var(--sk-ink3);margin:7px 0 0}
 .sk-hint code,.sk-table code{font-family:'SFMono-Regular','Consolas',monospace;background:var(--sk-cream2);border-radius:3px;padding:1px 6px;color:var(--sk-ink2)}
 
+/* ====== 名簿の保存・よびだし／CSV取り込み ====== */
+/* display を指定した要素にも hidden 属性を効かせる */
+[hidden]{display:none !important}
+
+.sk-mini2{
+  font-size:11px;font-weight:700;padding:5px 11px;border-radius:6px;
+  border:1px solid var(--sk-line2);background:#fff;color:var(--sk-ink2);
+  cursor:pointer;font-family:inherit;white-space:nowrap;
+}
+.sk-mini2:hover{border-color:var(--sk-orange);color:var(--sk-orange)}
+.sk-mini2.is-go{background:var(--sk-orange);border-color:var(--sk-orange);color:#fff}
+.sk-mini2.is-go:hover{background:var(--sk-orange-dk);border-color:var(--sk-orange-dk);color:#fff}
+.sk-mini2.is-del:hover{border-color:var(--sk-red);color:var(--sk-red)}
+
+.sk-roster-bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:8px}
+.sk-roster-bar select{
+  flex:1 1 150px;min-width:0;border:1px solid var(--sk-line2);border-radius:6px;
+  padding:5px 8px;font-size:12px;font-family:inherit;color:var(--sk-ink);background:#fff;
+}
+.sk-file{
+  font-size:11px;font-weight:700;padding:5px 11px;border-radius:6px;
+  border:1px dashed var(--sk-line2);background:var(--sk-cream2);color:var(--sk-ink2);
+  cursor:pointer;white-space:nowrap;
+}
+.sk-file:hover{border-color:var(--sk-orange);color:var(--sk-orange)}
+.sk-file input{display:none}
+
+.sk-save-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:8px}
+.sk-save-row input{
+  flex:1 1 140px;min-width:0;border:1px solid var(--sk-line2);border-radius:6px;
+  padding:6px 10px;font-size:13px;font-family:inherit;color:var(--sk-ink);background:#fff;
+}
+
+.sk-csv-pick{border:1px solid var(--sk-line2);border-radius:8px;background:var(--sk-cream2);padding:10px 12px;margin-bottom:8px}
+.sk-csv-q{font-size:12px;font-weight:800;color:var(--sk-ink2);margin:0 0 8px}
+.sk-csv-cols{display:flex;flex-wrap:wrap;gap:6px;max-height:150px;overflow-y:auto}
+.sk-csv-col{
+  display:flex;flex-direction:column;gap:2px;text-align:left;
+  border:1px solid var(--sk-line2);border-radius:6px;background:#fff;
+  padding:6px 10px;cursor:pointer;font-family:inherit;max-width:160px;
+}
+.sk-csv-col:hover{border-color:var(--sk-orange)}
+.sk-csv-col.is-on{border-color:var(--sk-orange);background:var(--sk-orange-bg);box-shadow:inset 0 0 0 1px var(--sk-orange)}
+.sk-csv-h{font-size:10.5px;font-weight:800;color:var(--sk-ink3);letter-spacing:.04em}
+.sk-csv-col.is-on .sk-csv-h{color:var(--sk-orange-dk)}
+.sk-csv-v{font-size:12.5px;color:var(--sk-ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sk-csv-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+
+.sk-chk{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--sk-ink2);cursor:pointer}
+.sk-chk input{accent-color:var(--sk-orange);margin:0}
+
+.sk-roster-note{font-size:11.5px;font-weight:700;line-height:1.7;margin:0 0 8px;padding:6px 10px;border-radius:6px;background:var(--sk-cream2);color:var(--sk-ink2)}
+.sk-roster-note.is-ok{background:var(--sk-green-bg);color:var(--sk-green)}
+.sk-roster-note.is-error{background:var(--sk-red-bg);color:var(--sk-red)}
+
+/* ====== 前回の席をさける ====== */
+.sk-prev{
+  display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:16px;
+  padding:10px 14px;border:1px solid rgba(224,138,60,.3);border-radius:8px;background:var(--sk-orange-bg);
+}
+.sk-prev-lbl{font-size:12px;font-weight:800;color:var(--sk-orange-dk)}
+.sk-prev .sk-mini2{margin-left:auto}
+
 .sk-controls{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:18px;padding-top:18px;border-top:1px solid var(--sk-line)}
 .sk-ctl{display:flex;align-items:center;gap:7px}
 .sk-ctl label{font-size:13px;font-weight:800;color:var(--sk-ink2)}

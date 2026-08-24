@@ -61,7 +61,7 @@
     {
       "@type": "Question",
       "name": "児童の名前はサーバーに送られますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "送られません。席替えの計算はすべてブラウザ内（先生の端末上）で処理していて、サーバーには一切送信していません。名簿も配慮の内容もこの端末から出ないため、個人情報を外部に預けずに使えます。ページを閉じれば残りません。" }
+      "acceptedAnswer": { "@type": "Answer", "text": "送られません。席替えの計算はすべてブラウザ内（先生の端末上）で処理していて、サーバーには一切送信していません。ふだんはページを閉じれば何も残りません。「保存」を押したときだけ、名簿・配慮・席の数がこの端末のブラウザの中に残ります。それも外には出ませんし、「消す」でいつでも消せます。" }
     },
     {
       "@type": "Question",
@@ -76,7 +76,12 @@
     {
       "@type": "Question",
       "name": "同じ人がいつも同じ席にならないようにできますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "毎回ランダムに並べ直すため、「席替えする」を押すたびに違う配置になります。前回と似た配置が出たときは、もう一度押してください。前回の座席表を記憶する機能はあえて持たせていません（名簿を保存しないためです）。" }
+      "acceptedAnswer": { "@type": "Answer", "text": "できます。名簿を「保存」しておき、できあがった座席表で「この席をおぼえる」を押してください。次に同じ名簿を「よびだす」と、「前回と同じ席にしない」「前回と同じ隣にしない」が選べるようになります。条件がきつくて全部は守れないときは、守れたところまでで作り、そのことを画面に表示します。" }
+    },
+    {
+      "@type": "Question",
+      "name": "Excelの名簿から名前を読み込めますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "読み込めます。名簿をCSVで書き出して「CSVを読む」から選ぶと、どの列が名前かを確認する画面が出ます。姓と名が別の列に分かれていても、両方えらべば1人ぶんにまとまります。学校の名簿に多い Shift_JIS の文字コードもそのまま読めます。読み込んだファイルもサーバーには送りません。" }
     },
     {
       "@type": "Question",
@@ -102,7 +107,7 @@
     <p class="sk-eyebrow">先生向けツール</p>
     <h1>席替えメーカー</h1>
     <p class="sk-lead">名簿を貼って、席の数を決めるだけ。<br>「この2人は離す」「視力配慮で前列」を守ったまま、何度でも引き直せます。</p>
-    <p class="sk-privacy">生徒データは取得しません。どうぞ安心してお使いください。</p>
+    <p class="sk-privacy">名簿はサーバーに送りません。保存を押したときだけ、この端末のブラウザの中にだけ残ります。</p>
   </header>
 
   <main class="sk-main">
@@ -115,9 +120,40 @@
             <span class="sk-count" id="sk-count">0人</span>
             <button type="button" class="sk-mini" id="sk-sample">見本を入れる</button>
           </div>
+          <div class="sk-roster-bar">
+            <select id="sk-roster-list" aria-label="保存した名簿">
+              <option value="">保存した名簿…</option>
+            </select>
+            <button type="button" class="sk-mini2" id="sk-roster-load">よびだす</button>
+            <button type="button" class="sk-mini2" id="sk-roster-save">保存</button>
+            <button type="button" class="sk-mini2 is-del" id="sk-roster-del">消す</button>
+            <label class="sk-file">
+              CSVを読む
+              <input type="file" id="sk-csv" accept=".csv,.tsv,.txt,text/csv,text/plain">
+            </label>
+          </div>
+
+          <div class="sk-save-row" id="sk-save-row" hidden>
+            <input type="text" id="sk-save-name" placeholder="例：3年2組" maxlength="24">
+            <button type="button" class="sk-mini2 is-go" id="sk-save-ok">この名前で保存</button>
+            <button type="button" class="sk-mini2" id="sk-save-cancel">やめる</button>
+          </div>
+
+          <div class="sk-csv-pick" id="sk-csv-pick" hidden>
+            <p class="sk-csv-q">どの列が名前ですか？（姓と名が分かれていれば両方えらべます）</p>
+            <div class="sk-csv-cols" id="sk-csv-cols"></div>
+            <div class="sk-csv-foot">
+              <label class="sk-chk"><input type="checkbox" id="sk-csv-head" checked> 1行目は見出し</label>
+              <button type="button" class="sk-mini2 is-go" id="sk-csv-ok">この列でよみこむ</button>
+              <button type="button" class="sk-mini2" id="sk-csv-cancel">やめる</button>
+            </div>
+          </div>
+
+          <p class="sk-roster-note" id="sk-roster-note" hidden></p>
+
           <textarea id="sk-names" rows="10" spellcheck="false" placeholder="田中 そうた&#10;佐藤 みゆき&#10;鈴木 かい&#10;&#10;↑ このように 1行に1人ずつ。空のままでも「1番」「2番」で作れます"></textarea>
           <p class="sk-sep-note" id="sk-sep-note" hidden></p>
-          <p class="sk-hint"><b>1行に1人</b>ずつ書きます。「、」やカンマ・タブで区切ってもかまいません。出席番号つきの名簿（「1 田中」など）をそのまま貼っても大丈夫です。</p>
+          <p class="sk-hint"><b>1行に1人</b>ずつ書きます。「、」やカンマ・タブで区切ってもかまいません。出席番号つきの名簿（「1 田中」など）をそのまま貼っても大丈夫です。<br><b>保存</b>を押すと、名簿・配慮・席の数をこの端末のブラウザに残して、次回「よびだす」で戻せます。</p>
         </div>
 
         <div class="sk-col">
@@ -125,6 +161,13 @@
           <textarea id="sk-rules" rows="10" spellcheck="false" placeholder="離す: 田中, 佐藤&#10;前列: 鈴木&#10;後列: 高橋&#10;固定: 山本 = 1れつ 1ばん"></textarea>
           <p class="sk-hint">1行に1つ。<code>離す</code> <code>前列</code> <code>後列</code> <code>固定</code> の4種類が使えます。名前は名簿と同じ書き方で。</p>
         </div>
+      </div>
+
+      <div class="sk-prev" id="sk-prev" hidden>
+        <span class="sk-prev-lbl" id="sk-prev-lbl">前回の席</span>
+        <label class="sk-chk"><input type="checkbox" id="sk-prev-seat" checked> 前回と同じ席にしない</label>
+        <label class="sk-chk"><input type="checkbox" id="sk-prev-nb" checked> 前回と同じ隣にしない</label>
+        <button type="button" class="sk-mini2" id="sk-prev-clear">つかわない</button>
       </div>
 
       <div class="sk-controls">
@@ -150,6 +193,7 @@
       </div>
       <div class="sk-actions">
         <span class="sk-info" id="sk-info">—</span>
+        <button type="button" class="sk-sub" id="sk-remember">この席をおぼえる</button>
         <button type="button" class="sk-sub" id="sk-copy">表をコピー</button>
         <button type="button" class="sk-sub" id="sk-print">印刷する</button>
         <button type="button" class="sk-go" id="sk-again">もう一度ひく</button>
@@ -163,7 +207,7 @@
         <div class="sk-step">
           <span class="sk-step-n">1</span>
           <h3>名簿を貼る</h3>
-          <p>Excelや名簿ソフトから、名前の列をそのままコピーして貼り付けてください。<b>1行に1人</b>ずつです（「、」やカンマ・タブで区切ってもかまいません）。「1 田中」のように出席番号がついていても読み取ります。空のままなら「1番」「2番」の番号で作ります。</p>
+          <p>Excelや名簿ソフトから、名前の列をそのままコピーして貼り付けてください。<b>1行に1人</b>ずつです（「、」やカンマ・タブで区切ってもかまいません）。「1 田中」のように出席番号がついていても読み取ります。空のままなら「1番」「2番」の番号で作ります。<br><b>「CSVを読む」</b>を使えば、名簿CSVから名前の列を選んで流し込めます。<b>「保存」</b>を押しておくと、次回は<b>「よびだす」</b>で名簿ごと戻せます（この端末のブラウザにだけ残ります）。</p>
         </div>
         <div class="sk-step">
           <span class="sk-step-n">2</span>
@@ -173,7 +217,7 @@
         <div class="sk-step">
           <span class="sk-step-n">3</span>
           <h3>作って、引き直して、印刷する</h3>
-          <p>「席替えする」を押すと配慮を守った表ができます。納得いくまで「もう一度ひく」を押して、決まったら印刷してください。印刷では座席表だけが出ます。</p>
+          <p>「席替えする」を押すと配慮を守った表ができます。納得いくまで「もう一度ひく」を押して、決まったら印刷してください。印刷では座席表だけが出ます。決まった席で<b>「この席をおぼえる」</b>を押しておくと、次の席替えのときに「前回と同じ席・同じ隣にしない」が選べます。</p>
         </div>
       </div>
 
@@ -191,7 +235,7 @@
       <h2>よくある質問</h2>
       <details class="sk-faq">
         <summary>児童の名前はサーバーに送られますか？<span>+</span></summary>
-        <div>送られません。席替えの計算はすべてブラウザ内（先生の端末上）で処理していて、サーバーには一切送信していません。名簿も配慮の内容もこの端末から出ないため、個人情報を外部に預けずに使えます。ページを閉じれば残りません。</div>
+        <div>送られません。席替えの計算はすべてブラウザ内（先生の端末上）で処理していて、サーバーには一切送信していません。ふだんはページを閉じれば何も残りません。「保存」を押したときだけ、名簿・配慮・席の数がこの端末のブラウザの中に残ります。それも外には出ませんし、「消す」でいつでも消せます。</div>
       </details>
       <details class="sk-faq">
         <summary>「この2人は離す」はどこまで離れますか？<span>+</span></summary>
@@ -203,7 +247,11 @@
       </details>
       <details class="sk-faq">
         <summary>同じ人がいつも同じ席にならないようにできますか？<span>+</span></summary>
-        <div>毎回ランダムに並べ直すため、「席替えする」を押すたびに違う配置になります。前回と似た配置が出たときは、もう一度押してください。前回の座席表を記憶する機能はあえて持たせていません（名簿を保存しないためです）。</div>
+        <div>できます。名簿を「保存」しておき、できあがった座席表で「この席をおぼえる」を押してください。次に同じ名簿を「よびだす」と、「前回と同じ席にしない」「前回と同じ隣にしない」が選べるようになります。条件がきつくて全部は守れないときは、守れたところまでで作り、そのことを画面に表示します。</div>
+      </details>
+      <details class="sk-faq">
+        <summary>Excelの名簿から名前を読み込めますか？<span>+</span></summary>
+        <div>読み込めます。名簿をCSVで書き出して「CSVを読む」から選ぶと、どの列が名前かを確認する画面が出ます。姓と名が別の列に分かれていても、両方えらべば1人ぶんにまとまります。学校の名簿に多い Shift_JIS の文字コードもそのまま読めます。読み込んだファイルもサーバーには送りません。</div>
       </details>
       <details class="sk-faq">
         <summary>班（グループ）の形の席にはできますか？<span>+</span></summary>
