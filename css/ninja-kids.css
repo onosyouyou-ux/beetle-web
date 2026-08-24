@@ -1,0 +1,106 @@
+/* Shared visual system for the child-facing Ninja Training series. */
+body.ninja-kids {
+  --nk-accent:#b44a35;
+  --nk-accent-dark:#7e2d21;
+  --nk-hero-a:#f7e8c9;
+  --nk-hero-b:#e9c997;
+  --nk-ink:#30281f;
+  background-color:#18293c;
+  background-image:linear-gradient(rgba(18,35,52,.82),rgba(18,35,52,.82)),url('/assets/images/bg-mosaic.png');
+  background-size:auto,160px 160px;
+}
+body.ninja-tokei { --nk-accent:#d47b1f; --nk-accent-dark:#8f4c0c; --nk-hero-a:#fff0ca; --nk-hero-b:#e8bc76; }
+body.ninja-kanji { --nk-accent:#b64632; --nk-accent-dark:#75281e; --nk-hero-a:#f8e3ca; --nk-hero-b:#dfb087; }
+body.ninja-katakana { --nk-accent:#168c8b; --nk-accent-dark:#0c5e64; --nk-hero-a:#dcf1e9; --nk-hero-b:#9fd3c5; }
+body.ninja-romaji { --nk-accent:#7652b8; --nk-accent-dark:#4c3180; --nk-hero-a:#ece4fa; --nk-hero-b:#c5afe7; }
+body.ninja-phonics { --nk-accent:#4b8e42; --nk-accent-dark:#2d6329; --nk-hero-a:#e7f2d3; --nk-hero-b:#b7d08e; }
+body.ninja-space {
+  --nk-accent:#8b5cf6;
+  background:#071329 url('/assets/images/ninja/space-village-bg.png') center top / cover fixed no-repeat;
+}
+.ninja-kids:not(.ninja-space) .app-paper {
+  position:relative;
+  overflow:hidden;
+  background:#fbf6ea;
+  border-inline:1px solid rgba(102,70,38,.24);
+  box-shadow:0 0 38px rgba(0,0,0,.34);
+}
+.ninja-kids:not(.ninja-space) .app-paper::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.22;
+  background-image:repeating-linear-gradient(0deg,transparent 0 27px,rgba(106,74,40,.07) 28px);
+}
+.ninja-kids .tk-hero,.ninja-kids .kj-hero,.ninja-kids .kt-hero,.ninja-kids .rj-hero,.ninja-kids .pn-hero {
+  position:relative;
+  isolation:isolate;
+  min-height:126px;
+  padding:18px 40px 16px;
+  overflow:hidden;
+  border-bottom:4px solid var(--nk-accent);
+  background:linear-gradient(135deg,var(--nk-hero-a),var(--nk-hero-b));
+}
+.ninja-kids .tk-hero::after,.ninja-kids .kj-hero::after,.ninja-kids .kt-hero::after,.ninja-kids .rj-hero::after,.ninja-kids .pn-hero::after {
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  opacity:.16;
+  background:repeating-linear-gradient(135deg,transparent 0 23px,var(--nk-accent) 24px 25px,transparent 26px 48px);
+}
+.ninja-mascot {
+  position:absolute;
+  left:max(22px,calc(50% - 355px));
+  bottom:-18px;
+  width:150px;
+  height:150px;
+  object-fit:contain;
+  filter:drop-shadow(0 8px 9px rgba(47,31,17,.24));
+  pointer-events:none;
+}
+.ninja-kids .tk-eyebrow,.ninja-kids .kj-eyebrow,.ninja-kids .kt-eyebrow,.ninja-kids .rj-eyebrow,.ninja-kids .pn-eyebrow { color:var(--nk-accent-dark); }
+.ninja-kids .tk-hero h1,.ninja-kids .kj-hero h1,.ninja-kids .kt-hero h1,.ninja-kids .rj-hero h1,.ninja-kids .pn-hero h1 { color:var(--nk-ink); text-shadow:0 1px #fff8; }
+.ninja-kids .tk-scope,.ninja-kids .kj-scope,.ninja-kids .kt-scope,.ninja-kids .rj-scope,.ninja-kids .pn-scope { border-color:color-mix(in srgb,var(--nk-accent) 38%,#fff); color:var(--nk-accent-dark); }
+.ninja-kids .tk-mode:hover,.ninja-kids .kj-mode:hover,.ninja-kids .kt-mode:hover,.ninja-kids .rj-mode:hover,.ninja-kids .pn-mode:hover { border-color:var(--nk-accent); }
+.ninja-kids .tk-next,.ninja-kids .kj-next,.ninja-kids .kt-next,.ninja-kids .rj-next,.ninja-kids .pn-next { background:var(--nk-accent); box-shadow:0 3px 0 var(--nk-accent-dark); }
+.ninja-kids .tk-next:hover,.ninja-kids .kj-next:hover,.ninja-kids .kt-next:hover,.ninja-kids .rj-next:hover,.ninja-kids .pn-next:hover { background:var(--nk-accent-dark); }
+.ninja-space .app-paper { border-color:#6846b7; background:linear-gradient(rgba(8,20,48,.9),rgba(11,21,51,.94)); }
+.ninja-space .app-paper::before { opacity:.22; }
+.ninja-space .sa-head-badge { width:96px; height:96px; object-fit:contain; filter:drop-shadow(0 8px 12px rgba(0,0,0,.35)); }
+
+/* Fit the interactive area inside a 720-768px-tall notebook or landscape tablet viewport. */
+@media (min-width:760px) and (max-height:820px) {
+  .ninja-kids .tk-hero,.ninja-kids .kj-hero,.ninja-kids .kt-hero,.ninja-kids .rj-hero,.ninja-kids .pn-hero { min-height:82px; padding:8px 32px 7px; }
+  .ninja-mascot { left:max(16px,calc(50% - 320px)); bottom:-13px; width:100px; height:100px; }
+  .ninja-kids .tk-eyebrow,.ninja-kids .kj-eyebrow,.ninja-kids .kt-eyebrow,.ninja-kids .rj-eyebrow,.ninja-kids .pn-eyebrow { margin-bottom:2px; font-size:10px; }
+  .ninja-kids .tk-hero h1,.ninja-kids .kj-hero h1,.ninja-kids .kt-hero h1,.ninja-kids .rj-hero h1,.ninja-kids .pn-hero h1 { margin-bottom:3px; font-size:24px; }
+  .ninja-kids .tk-lead,.ninja-kids .kj-lead,.ninja-kids .kt-lead,.ninja-kids .rj-lead,.ninja-kids .pn-lead { margin-bottom:3px; font-size:11.5px; line-height:1.45; }
+  .ninja-kids .tk-scope,.ninja-kids .kj-scope,.ninja-kids .kt-scope,.ninja-kids .rj-scope,.ninja-kids .pn-scope { padding:2px 11px; font-size:10.5px; }
+  .ninja-kids #tk-app,.ninja-kids #kj-app,.ninja-kids #kt-app,.ninja-kids #rj-app,.ninja-kids #pn-app { padding-top:12px; }
+  .ninja-kids .tk-menu-lead,.ninja-kids .kj-menu-lead,.ninja-kids .kt-menu-lead,.ninja-kids .rj-menu-lead,.ninja-kids .pn-menu-lead { margin-bottom:8px; }
+  .ninja-kids .tk-mode,.ninja-kids .kj-mode,.ninja-kids .kt-mode,.ninja-kids .rj-mode,.ninja-kids .pn-mode { padding:10px 12px; }
+  .ninja-kids .tk-rules,.ninja-kids .kt-rules,.ninja-kids .rj-rules,.ninja-kids .pn-rules { margin-top:12px; padding:10px 16px; }
+  .ninja-space .app-paper { min-height:0; margin:8px auto; padding-bottom:6px; }
+  .ninja-space .sa-app { padding:9px 18px 4px; }
+  .ninja-space .sa-head { margin-bottom:5px; gap:8px; }
+  .ninja-space .sa-head-badge { width:64px; height:64px; }
+  .ninja-space .sa-title { font-size:24px; }
+  .ninja-space .sa-lead { font-size:11px; }
+  .ninja-space .sa-total { margin-bottom:8px; }
+  .ninja-space .sa-group { margin-bottom:7px; }
+  .ninja-space .sa-group-title { margin-bottom:4px; }
+  .ninja-space .sa-choices { gap:6px 10px; }
+  .ninja-space .sa-choice,.ninja-space .sa-ref { min-height:50px; padding-top:5px; padding-bottom:6px; }
+  .ninja-space .sa-choice-icon { height:32px; }
+  .ninja-space .sa-choice-label { font-size:15px; }
+  .ninja-space .sa-choice-note { font-size:10.5px; }
+  .ninja-space .sa-start { margin-top:7px; padding:10px 62px 13px; font-size:22px; }
+  .ninja-space .sa-reset { margin-top:7px; }
+  .ninja-space .paper-about,.ninja-space .paper-release { display:none; }
+}
+@media (max-width:700px) {
+  .ninja-mascot { position:relative; left:auto; bottom:auto; width:82px; height:82px; margin:-7px auto -12px; }
+  .ninja-kids .tk-hero,.ninja-kids .kj-hero,.ninja-kids .kt-hero,.ninja-kids .rj-hero,.ninja-kids .pn-hero { padding-inline:16px; }
+}
