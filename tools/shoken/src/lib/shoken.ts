@@ -18,6 +18,12 @@ function getClient(): Anthropic {
  * 字数を外していた原因は effort ではなく「±10%をモデルに計算させていたこと」だった。
  * 下限・上限を数字で渡したら effort=low でも全件が範囲に入り、Opus 5 より字数が正確になった。
  * 出力単価は Opus $25/1M に対し Sonnet $10/1M（〜2026-08-31 の導入価格。通常 $15/1M）。
+ *
+ * さらに usage を実測したところ、effort=low でも**出力3,518トークンのうち2,587（74%）が思考**で、
+ * 本文1文字目まで28.5秒／本文の吐き出しは5秒だけだった。この仕事に長考は不要なので思考を切った：
+ *   思考ON  → 出力3,518トークン / 33.7秒 / 字数 8/8
+ *   思考OFF → 出力  905トークン / 14.5秒 / 字数 8/8  ← 採用（質は変わらず、出力74%減）
+ * 同じシステムプロンプトを人数ぶん投げ直すので `cache_control` も付けた（2回目以降 1,350トークンがキャッシュ読み）。
  */
 const MODEL = 'claude-sonnet-5';
 
@@ -116,6 +122,14 @@ function buildUserMessage(input: ShokenInput): string {
   return parts.join('\n');
 }
 
+/**
+ * 生成の内訳をサーバーログに残す。
+ * メモは個人情報なので**中身は絶対に出さない**（件数とトークン数と時間だけ）。
+ */
+function logUsage(m: Record<string, number>): void {
+  console.log('[shoken] ' + Object.entries(m).map(([k, v]) => `${k}=${v}`).join(' '));
+}
+
 /** 指定文字数の許容レンジ（±10%）。プロンプトにも検証にも同じ値を使う */
 function lengthRange(length: number): { lo: number; hi: number } {
   return { lo: Math.round(length * 0.9), hi: Math.round(length * 1.1) };
@@ -157,20 +171,50 @@ const OUTPUT_SCHEMA = {
 };
 
 export async function generateShoken(input: ShokenInput): Promise<ShokenDraftSet[]> {
+  const startedAt = Date.now();
+  // 最初の1文字が届くまでの時間。ここまでが「待ち」、以降が「吐き出し」
+  let firstTextAt = 0;
+
   // 人数×案数ぶんの長い出力になるので、HTTPタイムアウトを避けてストリーミングで受ける
-  const response = await getClient()
+  const stream = getClient()
     .messages.stream({
       model: MODEL,
       max_tokens: calcMaxTokens(input),
-      // 字数は「明示レンジ」で守れるので effort は low で足りる（上の実測を参照）
+      // 思考は切る。メモを整える仕事に長考は要らず、出力の74%が思考トークンで
+      // 時間の大半（本文1文字目まで28.5秒）もそこに消えていた（下の実測を参照）
+      thinking: { type: 'disabled' },
       output_config: {
         effort: 'low',
         format: { type: 'json_schema', schema: OUTPUT_SCHEMA },
       },
-      system: SYSTEM_PROMPT,
+      // 人数ぶん何回も投げるので、毎回同じシステムプロンプトはキャッシュさせる
+      system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
       messages: [{ role: 'user', content: buildUserMessage(input) }],
-    })
-    .finalMessage();
+    });
+
+  stream.on('text', () => {
+    if (!firstTextAt) firstTextAt = Date.now();
+  });
+
+  const response = await stream.finalMessage();
+
+  // どこに時間がかかっているかを後から追えるようにする（本文は出さない。人数とトークン数だけ）
+  const total = Date.now() - startedAt;
+  const ttft = firstTextAt ? firstTextAt - startedAt : total;
+  const out = response.usage.output_tokens;
+  logUsage({
+    entries: input.entries.length,
+    drafts: input.drafts,
+    length: input.length,
+    inputTokens: response.usage.input_tokens,
+    cacheReadTokens: response.usage.cache_read_input_tokens ?? 0,
+    cacheWriteTokens: response.usage.cache_creation_input_tokens ?? 0,
+    outputTokens: out,
+    thinkingTokens: response.usage.output_tokens_details?.thinking_tokens ?? 0,
+    ttftMs: ttft,
+    totalMs: total,
+    tokensPerSec: total > 0 ? Math.round((out / total) * 1000) : 0,
+  });
 
   // 途中で切れたまま JSON.parse すると原因のわからない失敗になるので、ここで弾く
   if (response.stop_reason === 'max_tokens') {

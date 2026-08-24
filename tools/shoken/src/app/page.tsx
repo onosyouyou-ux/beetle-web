@@ -18,10 +18,10 @@ const FOCUS_OPTIONS = ['学習面', '生活面', '行事・特別活動', '係�
 
 /**
  * 1リクエストあたりの人数。
- * Vercelの関数上限は60秒。4人×2案×120字で約46秒かかったため、
+ * Vercelの関数上限は60秒。思考OFFの Sonnet 5 で4人×2案×120字が約15秒。
  * 「案の数 × 文字数」から1回の分量を見積もって、上限に余裕をもって収まる人数に割る。
  */
-const CHUNK_BUDGET = 800; // 1リクエストで作る「案の数 × 文字数」の目安（960で約46秒だったので余裕を見る）
+const CHUNK_BUDGET = 1800; // 1リクエストで作る「案の数 × 文字数」の目安（思考OFFで4人×2案×120字＝960が15秒になったので引き上げ）
 function chunkSize(drafts: number, length: number): number {
   return Math.min(8, Math.max(1, Math.floor(CHUNK_BUDGET / (drafts * length))));
 }
