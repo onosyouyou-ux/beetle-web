@@ -957,3 +957,78 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.pn
     height:30px;
   }
 }
+
+/* Feedback polish: decorative items stay in menus and rewards; answers stay neutral. */
+.ninja-kids {
+  --nk-feedback-ok:url('/assets/images/ninja/feedback/correct-ninja-v1.png');
+  --nk-feedback-ng:url('/assets/images/ninja/feedback/try-again-ninja-v1.png');
+}
+.ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) { position:relative; }
+.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar)::after { content:none; }
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock) {
+  gap:0;
+  min-height:68px;
+}
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock)::before {
+  content:none;
+  display:none;
+}
+.ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) {
+  position:absolute;
+  inset:0;
+  z-index:20;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  min-height:0;
+  margin:0;
+  padding:18px;
+  color:#fff;
+  border-radius:18px;
+  background:rgba(5,19,27,.82);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+  backdrop-filter:blur(3px);
+  font-size:18px;
+  text-align:center;
+  pointer-events:none;
+  animation:ninjaFeedbackVeil .22s ease-out both;
+}
+.ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before {
+  content:'';
+  display:block;
+  width:clamp(150px,19vw,205px);
+  aspect-ratio:1;
+  margin-bottom:-2px;
+  background:center/contain no-repeat;
+  filter:drop-shadow(0 12px 18px rgba(0,0,0,.28));
+  animation:ninjaFeedbackPop .38s cubic-bezier(.2,1.28,.42,1) both;
+}
+.ninja-kids :is(.tk-feedback,.kj-feedback).is-ok::before { background-image:var(--nk-feedback-ok); }
+.ninja-kids :is(.tk-feedback,.kj-feedback).is-ng::before { background-image:var(--nk-feedback-ng); }
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before {
+  width:clamp(88px,10vw,116px);
+  height:auto;
+  aspect-ratio:1;
+  margin:0 auto -4px;
+  background:center/contain no-repeat;
+  animation:ninjaFeedbackPop .38s cubic-bezier(.2,1.28,.42,1) both;
+}
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-ok::before { background-image:var(--nk-feedback-ok); }
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-ng::before { background-image:var(--nk-feedback-ng); }
+.ninja-space .sa-answer-effect.is-correct .sa-answer-icon { content:url('/assets/images/ninja/feedback/correct-ninja-v1.png'); }
+.ninja-space .sa-answer-effect.is-wrong .sa-answer-icon { content:url('/assets/images/ninja/feedback/try-again-ninja-v1.png'); }
+@keyframes ninjaFeedbackVeil {
+  from { opacity:0; }
+  to { opacity:1; }
+}
+@keyframes ninjaFeedbackPop {
+  from { opacity:0;transform:translateY(10px) scale(.72) rotate(-4deg); }
+  to { opacity:1;transform:translateY(0) scale(1) rotate(0); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng),
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before,
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before { animation:none; }
+}
