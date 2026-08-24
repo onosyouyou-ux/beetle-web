@@ -328,3 +328,8 @@ body{
 
 .hw-csv-q span{display:block;font-weight:400;font-size:11px;color:var(--hw-ink3);margin-top:3px}
 .hw-plan.is-warn{color:var(--hw-red);font-weight:700}
+
+.hw-csv-role-sel{
+  margin-top:4px;width:100%;border:1px solid var(--hw-line2);border-radius:5px;
+  padding:3px 4px;font-size:11px;font-family:inherit;color:var(--hw-ink2);background:#fff;cursor:pointer;
+}

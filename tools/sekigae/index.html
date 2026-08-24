@@ -61,7 +61,7 @@
     {
       "@type": "Question",
       "name": "児童の名前はサーバーに送られますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "送られません。席替えの計算はすべてブラウザ内（先生の端末上）で処理していて、サーバーには一切送信していません。ふだんはページを閉じれば何も残りません。「保存」を押したときだけ、名簿・配慮・席の数がこの端末のブラウザの中に残ります。それも外には出ませんし、「消す」でいつでも消せます。" }
+      "acceptedAnswer": { "@type": "Answer", "text": "送られません。席替えの計算もCSVの読み書きも、すべてブラウザ内（先生の端末上）で処理していて、サーバーには一切送信していません。ブラウザにも保存しません。ページを閉じれば何も残らないので、続きは「CSVで保存」したファイルから戻してください。ファイルは先生の手元にあるので、職員室と自宅など別のパソコンでも使えます。" }
     },
     {
       "@type": "Question",
@@ -76,7 +76,7 @@
     {
       "@type": "Question",
       "name": "同じ人がいつも同じ席にならないようにできますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "できます。名簿を「保存」しておき、できあがった座席表で「この席をおぼえる」を押してください。次に同じ名簿を「よびだす」と、「前回と同じ席にしない」「前回と同じ隣にしない」が選べるようになります。条件がきつくて全部は守れないときは、守れたところまでで作り、そのことを画面に表示します。" }
+      "acceptedAnswer": { "@type": "Answer", "text": "できます。できあがった座席表を「この席ごとCSVで保存」しておき、次回そのファイルを「CSVを読む」から取り込んでください。「前回と同じ席にしない」「前回と同じ隣にしない」が選べるようになります。条件がきつくて全部は守れないときは、守れたところまでで作り、そのことを画面に表示します。" }
     },
     {
       "@type": "Question",
@@ -86,7 +86,7 @@
     {
       "@type": "Question",
       "name": "班（グループ）の形の席にはできますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "現在は縦横に並んだ座席表のみに対応しています。班の形で使いたい場合は、横の席数を班の人数に合わせて作り、印刷後に区切り線を引く使い方をされている先生が多いです。" }
+      "acceptedAnswer": { "@type": "Answer", "text": "このツールは縦横に並んだ座席表のみに対応しています。誰と誰を同じ班にするかを決めたいときは、姉妹ツールの「班分けメーカー」をお使いください。「この2人は別々に」「世話役は各班に1人ずつ」「男女はそろえる」を守ってグループ分けができ、名簿もこのツールと共通です。" }
     }
   ]
 }
@@ -107,7 +107,7 @@
     <p class="sk-eyebrow">先生向けツール</p>
     <h1>席替えメーカー</h1>
     <p class="sk-lead">名簿を貼って、席の数を決めるだけ。<br>「この2人は離す」「視力配慮で前列」を守ったまま、何度でも引き直せます。</p>
-    <p class="sk-privacy">名簿はサーバーに送りません。保存を押したときだけ、この端末のブラウザの中にだけ残ります。</p>
+    <p class="sk-privacy">名簿はどこにも保存しません。計算は全部この端末の中で行い、サーバーにもブラウザにも残しません。</p>
   </header>
 
   <main class="sk-main">
@@ -121,22 +121,12 @@
             <button type="button" class="sk-mini" id="sk-sample">見本を入れる</button>
           </div>
           <div class="sk-roster-bar">
-            <select id="sk-roster-list" aria-label="保存した名簿">
-              <option value="">保存した名簿…</option>
-            </select>
-            <button type="button" class="sk-mini2" id="sk-roster-load">よびだす</button>
-            <button type="button" class="sk-mini2" id="sk-roster-save">保存</button>
-            <button type="button" class="sk-mini2 is-del" id="sk-roster-del">消す</button>
             <label class="sk-file">
               CSVを読む
               <input type="file" id="sk-csv" accept=".csv,.tsv,.txt,text/csv,text/plain">
             </label>
-          </div>
-
-          <div class="sk-save-row" id="sk-save-row" hidden>
-            <input type="text" id="sk-save-name" placeholder="例：3年2組" maxlength="24">
-            <button type="button" class="sk-mini2 is-go" id="sk-save-ok">この名前で保存</button>
-            <button type="button" class="sk-mini2" id="sk-save-cancel">やめる</button>
+            <button type="button" class="sk-mini2 is-go" id="sk-csv-save">CSVで保存</button>
+            <button type="button" class="sk-mini2" id="sk-csv-template">ひな形CSV</button>
           </div>
 
           <div class="sk-csv-pick" id="sk-csv-pick" hidden>
@@ -153,7 +143,7 @@
 
           <textarea id="sk-names" rows="10" spellcheck="false" placeholder="田中 そうた&#10;佐藤 みゆき&#10;鈴木 かい&#10;&#10;↑ このように 1行に1人ずつ。空のままでも「1番」「2番」で作れます"></textarea>
           <p class="sk-sep-note" id="sk-sep-note" hidden></p>
-          <p class="sk-hint"><b>1行に1人</b>ずつ書きます。「、」やカンマ・タブで区切ってもかまいません。出席番号つきの名簿（「1 田中」など）をそのまま貼っても大丈夫です。<br><b>保存</b>を押すと、名簿・配慮・席の数をこの端末のブラウザに残して、次回「よびだす」で戻せます。</p>
+          <p class="sk-hint"><b>1行に1人</b>ずつ書きます。「、」やカンマ・タブで区切ってもかまいません。出席番号つきの名簿（「1 田中」など）をそのまま貼っても大丈夫です。<br><b>CSVで保存</b>すると、名簿・配慮・できた席を1枚のファイルに書き出します。次回そのファイルを<b>CSVを読む</b>から取り込めば、そのまま続きから始められます。</p>
         </div>
 
         <div class="sk-col">
@@ -193,8 +183,8 @@
       </div>
       <div class="sk-actions">
         <span class="sk-info" id="sk-info">—</span>
-        <button type="button" class="sk-sub" id="sk-remember">この席をおぼえる</button>
         <button type="button" class="sk-sub" id="sk-copy">表をコピー</button>
+        <button type="button" class="sk-sub" id="sk-download">この席ごとCSVで保存</button>
         <button type="button" class="sk-sub" id="sk-print">印刷する</button>
         <button type="button" class="sk-go" id="sk-again">もう一度ひく</button>
       </div>
@@ -207,7 +197,7 @@
         <div class="sk-step">
           <span class="sk-step-n">1</span>
           <h3>名簿を貼る</h3>
-          <p>Excelや名簿ソフトから、名前の列をそのままコピーして貼り付けてください。<b>1行に1人</b>ずつです（「、」やカンマ・タブで区切ってもかまいません）。「1 田中」のように出席番号がついていても読み取ります。空のままなら「1番」「2番」の番号で作ります。<br><b>「CSVを読む」</b>を使えば、名簿CSVから名前の列を選んで流し込めます。<b>「保存」</b>を押しておくと、次回は<b>「よびだす」</b>で名簿ごと戻せます（この端末のブラウザにだけ残ります）。</p>
+          <p>Excelや名簿ソフトから、名前の列をそのままコピーして貼り付けてください。<b>1行に1人</b>ずつです（「、」やカンマ・タブで区切ってもかまいません）。「1 田中」のように出席番号がついていても読み取ります。空のままなら「1番」「2番」の番号で作ります。<br><b>「CSVを読む」</b>を使えば、名簿CSVから名前の列を選んで流し込めます。<b>「CSVで保存」</b>すると、名簿と配慮を1枚のファイルに書き出せます（<b>ひな形CSV</b>も配布しています）。</p>
         </div>
         <div class="sk-step">
           <span class="sk-step-n">2</span>
@@ -217,7 +207,7 @@
         <div class="sk-step">
           <span class="sk-step-n">3</span>
           <h3>作って、引き直して、印刷する</h3>
-          <p>「席替えする」を押すと配慮を守った表ができます。納得いくまで「もう一度ひく」を押して、決まったら印刷してください。印刷では座席表だけが出ます。決まった席で<b>「この席をおぼえる」</b>を押しておくと、次の席替えのときに「前回と同じ席・同じ隣にしない」が選べます。</p>
+          <p>「席替えする」を押すと配慮を守った表ができます。納得いくまで「もう一度ひく」を押して、決まったら印刷してください。印刷では座席表だけが出ます。決まった席を<b>「この席ごとCSVで保存」</b>しておくと、次回そのファイルを読み込むだけで「前回と同じ席・同じ隣にしない」が選べます。</p>
         </div>
       </div>
 
@@ -235,7 +225,7 @@
       <h2>よくある質問</h2>
       <details class="sk-faq">
         <summary>児童の名前はサーバーに送られますか？<span>+</span></summary>
-        <div>送られません。席替えの計算はすべてブラウザ内（先生の端末上）で処理していて、サーバーには一切送信していません。ふだんはページを閉じれば何も残りません。「保存」を押したときだけ、名簿・配慮・席の数がこの端末のブラウザの中に残ります。それも外には出ませんし、「消す」でいつでも消せます。</div>
+        <div>送られません。席替えの計算もCSVの読み書きも、すべてブラウザ内（先生の端末上）で処理していて、サーバーには一切送信していません。ブラウザにも保存しません。ページを閉じれば何も残らないので、続きは「CSVで保存」したファイルから戻してください。ファイルは先生の手元にあるので、職員室と自宅など別のパソコンでも使えます。</div>
       </details>
       <details class="sk-faq">
         <summary>「この2人は離す」はどこまで離れますか？<span>+</span></summary>
@@ -247,7 +237,7 @@
       </details>
       <details class="sk-faq">
         <summary>同じ人がいつも同じ席にならないようにできますか？<span>+</span></summary>
-        <div>できます。名簿を「保存」しておき、できあがった座席表で「この席をおぼえる」を押してください。次に同じ名簿を「よびだす」と、「前回と同じ席にしない」「前回と同じ隣にしない」が選べるようになります。条件がきつくて全部は守れないときは、守れたところまでで作り、そのことを画面に表示します。</div>
+        <div>できます。できあがった座席表を「この席ごとCSVで保存」しておき、次回そのファイルを「CSVを読む」から取り込んでください。「前回と同じ席にしない」「前回と同じ隣にしない」が選べるようになります。条件がきつくて全部は守れないときは、守れたところまでで作り、そのことを画面に表示します。</div>
       </details>
       <details class="sk-faq">
         <summary>Excelの名簿から名前を読み込めますか？<span>+</span></summary>
@@ -255,10 +245,10 @@
       </details>
       <details class="sk-faq">
         <summary>班（グループ）の形の席にはできますか？<span>+</span></summary>
-        <div>現在は縦横に並んだ座席表のみに対応しています。班の形で使いたい場合は、横の席数を班の人数に合わせて作り、印刷後に区切り線を引く使い方をされている先生が多いです。</div>
+        <div>このツールは縦横に並んだ座席表のみに対応しています。誰と誰を同じ班にするかを決めたいときは、姉妹ツールの <a href="/tools/hanwake/">班分けメーカー</a> をお使いください。「この2人は別々に」「世話役は各班に1人ずつ」「男女はそろえる」を守ってグループ分けができ、名簿もこのツールと共通です。</div>
       </details>
 
-      <p class="sk-more">クラスだよりを書くときは <a href="/tools/gakkyu-tsushin/">学級通信メーカー</a>、配布プリントに ふりがな をつけるなら <a href="/tools/rubi-shokunin/">ルビメーカー</a> もどうぞ。</p>
+      <p class="sk-more">班（グループ）を決めるなら <a href="/tools/hanwake/">班分けメーカー</a>、クラスだよりを書くときは <a href="/tools/gakkyu-tsushin/">学級通信メーカー</a>、配布プリントに ふりがな をつけるなら <a href="/tools/rubi-shokunin/">ルビメーカー</a> もどうぞ。</p>
     </section>
 
   </main>
@@ -286,6 +276,7 @@
 <script src="/js/common.js"></script>
 <script src="/js/contact-track.js"></script>
 <script src="/js/app-reference.js"></script>
+<script src="/js/class-roster.js"></script>
 <script src="/js/sekigae.js"></script>
 </body>
 </html>

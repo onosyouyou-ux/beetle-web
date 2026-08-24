@@ -4,84 +4,17 @@
 
    ■ 個人情報の扱い（このファイルの存在理由）
    名簿は児童の氏名そのものなので、**ネットワークには一切出さない**。
-   保存先はこの端末の localStorage だけで、送信処理はここにも呼び出し側にも無い。
+   さらに 2026-08-24 に **localStorage への保存もやめた**（CSVファイルに一本化）。
+   配慮も前回の席／班もCSVに入れられるようになり、ブラウザ保存は役割が重なったうえ、
+   端末ごとに分かれて職員室と自宅で共有できず、
+   「名簿は一切保存しません」と言い切れなくなるため。
+   つまりこのツール群は、どこにも保存しない。
 
-   ■ 名簿を1つ保存すれば、席替えでも班分けでも使えるようにしている
-   レコードは共通で、ツール固有の結果だけ別フィールドに持つ：
-     seating / seatingAt   … 席替えメーカーの前回の座席表
-     grouping / groupingAt … 班分けメーカーの前回の班
+   持っているのは「CSVの読み取り」と「名前の読み取り」だけ。
    DOMには触らない（idがツールごとに違うため、画面との配線は各ツール側）。
    ============================================================ */
 (function (global) {
   'use strict';
-
-  var KEY = 'beetle.rosters.v1';
-  var OLD_KEYS = ['beetle.sekigae.rosters.v1'];   // 席替え専用だった頃の保存先
-
-  /* ---------- 保存・よびだし ---------- */
-
-  function readKey(key) {
-    try {
-      var raw = global.localStorage.getItem(key);
-      var list = raw ? JSON.parse(raw) : [];
-      return Array.isArray(list) ? list : [];
-    } catch (e) {
-      return [];   // プライベートモードなどで読めないときは「保存なし」として動かす
-    }
-  }
-
-  /** 保存済みの名簿を全部返す。旧キーに残っていたら1度だけ引き継ぐ */
-  function load() {
-    var list = readKey(KEY);
-    if (list.length) return list;
-
-    for (var i = 0; i < OLD_KEYS.length; i++) {
-      var old = readKey(OLD_KEYS[i]);
-      if (old.length) {
-        save(old);
-        return old;
-      }
-    }
-    return [];
-  }
-
-  function save(list) {
-    try {
-      global.localStorage.setItem(KEY, JSON.stringify(list));
-      return true;
-    } catch (e) {
-      return false;   // 容量オーバーやプライベートモード。呼び出し側で「保存できません」と出す
-    }
-  }
-
-  function find(id) {
-    if (!id) return null;
-    var hit = load().filter(function (r) { return r.id === id; });
-    return hit.length ? hit[0] : null;
-  }
-
-  /** 同じidがあれば置き換え、無ければ足す */
-  function upsert(rec) {
-    var list = load();
-    var idx = -1;
-    list.forEach(function (r, i) { if (r.id === rec.id) idx = i; });
-    if (idx >= 0) list[idx] = rec; else list.push(rec);
-    return save(list) ? list : null;
-  }
-
-  function remove(id) {
-    return save(load().filter(function (r) { return r.id !== id; }));
-  }
-
-  function newId() {
-    return 'r' + Date.now();
-  }
-
-  function today() {
-    var d = new Date();
-    var p = function (n) { return (n < 10 ? '0' : '') + n; };
-    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
-  }
 
   /* ---------- 名前の読み取り ---------- */
 
@@ -230,8 +163,6 @@
   }
 
   global.BeetleRoster = {
-    load: load, save: save, find: find, upsert: upsert, remove: remove,
-    newId: newId, today: today,
     cleanName: cleanName, parseNames: parseNames, looksCrammed: looksCrammed, splitList: splitList,
     decode: decode, detectSep: detectSep, parseDelimited: parseDelimited,
     guessNameCol: guessNameCol, colWidth: colWidth,

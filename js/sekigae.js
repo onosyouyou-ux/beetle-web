@@ -421,17 +421,13 @@
   function copyText(text, btn) { R.copyText(text, btn); }
 
   /* ============================================================
-     名簿の保存・よびだし
-     名前は個人情報なので、この端末の localStorage にだけ置く。
-     ネットワークには一切出さない（このツールに送信処理は無い）。
+     保存はCSVファイルだけ（2026-08-24決定）
+     配慮も前回の席もCSVに入るので、ブラウザ保存（localStorage）はやめた。
+     ブラウザ保存は端末ごとに分かれて職員室と自宅で共有できないうえ、
+     「名簿は一切保存しません」と言い切れなくなるため。
      ============================================================ */
 
-  var currentRosterId = '';
-  var prevState = { data: null };   // 前回の席（よびだした名簿にぶら下がっている）
-
-  function loadRosters() { return R.load(); }
-  function saveRosters(list) { return R.save(list); }
-  function today() { return R.today(); }
+  var prevState = { data: null };   // 前回の席（読みこんだCSVから作る）
 
   function rosterNote(text, kind) {
     var el = $('sk-roster-note');
@@ -442,93 +438,26 @@
     el.className = 'sk-roster-note' + (kind ? ' is-' + kind : '');
   }
 
-  function refreshRosterList() {
-    var sel = $('sk-roster-list');
-    var list = loadRosters();
-    sel.innerHTML = '<option value="">' + (list.length ? '保存した名簿…' : '保存した名簿はまだありません') + '</option>';
-    list.forEach(function (r) {
-      var o = document.createElement('option');
-      o.value = r.id;
-      o.textContent = r.label + '（' + parseNames(r.names || '').length + '人・' + r.savedAt + '）';
-      sel.appendChild(o);
-    });
-    sel.value = currentRosterId && list.some(function (r) { return r.id === currentRosterId; }) ? currentRosterId : '';
-  }
-
-  function findRoster(id) { return R.find(id); }
-
-  function doSaveRoster(label) {
-    // 名簿は班分けメーカーと共通なので、上書き保存で相手のデータを消さないよう引き継ぐ
-    var current = findRoster(currentRosterId) || {};
-    var rec = {
-      id: currentRosterId || R.newId(),
-      label: label,
-      names: $('sk-names').value,
-      rules: $('sk-rules').value,
-      cols: $('sk-cols').value,
-      rows: $('sk-rows').value,
-      seating: current.seating || null,
-      seatingAt: current.seatingAt,
-      hanwakeRules: current.hanwakeRules || '',
-      grouping: current.grouping || null,
-      groupingAt: current.groupingAt,
-      savedAt: today()
-    };
-
-    if (!R.upsert(rec)) {
-      rosterNote('このブラウザでは保存できませんでした（プライベートモードなどの可能性があります）。', 'error');
-      return;
-    }
-    currentRosterId = rec.id;
-    refreshRosterList();
-    rosterNote('「' + label + '」を保存しました。班分けメーカーからも同じ名簿を使えます。', 'ok');
-  }
-
-  function doLoadRoster(id) {
-    var rec = findRoster(id);
-    if (!rec) { rosterNote('よびだす名簿をえらんでください。', 'error'); return; }
-    currentRosterId = rec.id;
-    $('sk-names').value = rec.names || '';
-    $('sk-rules').value = rec.rules || '';
-    if (rec.cols) $('sk-cols').value = rec.cols;
-    if (rec.rows) $('sk-rows').value = rec.rows;
-    splitOnSpace = false;
-    applyPrevSeating(rec);
-    updateCount();
-    rosterNote('「' + rec.label + '」をよびだしました。', 'ok');
-  }
-
-  function doDeleteRoster(id) {
-    var rec = findRoster(id);
-    if (!rec) { rosterNote('消す名簿をえらんでください。', 'error'); return; }
-    if (!window.confirm('「' + rec.label + '」を消します。班分けメーカーからも消えます。よろしいですか？')) return;
-    R.remove(id);
-    if (currentRosterId === id) { currentRosterId = ''; clearPrev(); }
-    refreshRosterList();
-    rosterNote('「' + rec.label + '」を消しました。', 'ok');
-  }
-
   /* ---------- 前回の席 ---------- */
 
-  /** 保存された座席表から「誰がどの席か」「誰と誰が隣か」を引ける形に変換する */
-  function applyPrevSeating(rec) {
-    var g = rec && rec.seating;
-    if (!g || !g.length) { clearPrev(); return; }
+  /** 座席表から「誰がどの席か」「誰と誰が隣か」を引ける形に変換する */
+  function applyPrevSeating(grid) {
+    if (!grid || !grid.length) { clearPrev(); return; }
     var seatOf = {}, nbOf = {};
-    var rows = g.length, cols = g[0].length;
+    var rows = grid.length, cols = grid[0].length;
     for (var r = 0; r < rows; r++) {
       for (var c = 0; c < cols; c++) {
-        var name = g[r][c];
+        var name = grid[r][c];
         if (!name) continue;
         seatOf[name] = r + ',' + c;
-        neighborNames(g, r, c, rows, cols).forEach(function (other) {
+        neighborNames(grid, r, c, rows, cols).forEach(function (other) {
           (nbOf[name] = nbOf[name] || {})[other] = true;
         });
       }
     }
-    prevState.data = { seatOf: seatOf, nbOf: nbOf, when: rec.seatingAt || rec.savedAt };
+    prevState.data = { seatOf: seatOf, nbOf: nbOf };
     $('sk-prev').hidden = false;
-    $('sk-prev-lbl').textContent = '前回の席（' + prevState.data.when + '）をよみこみました';
+    $('sk-prev-lbl').textContent = '読みこんだCSVの席を「前回の席」として使います';
   }
 
   function clearPrev() {
@@ -536,27 +465,27 @@
     $('sk-prev').hidden = true;
   }
 
-  function rememberSeating() {
-    if (!state.grid) return;
-    if (!currentRosterId) {
-      rosterNote('先に「保存」で名簿に名前をつけてください。席順はその名簿におぼえます。', 'error');
-      return;
-    }
-    var hit = findRoster(currentRosterId);
-    if (!hit) { rosterNote('保存した名簿が見つかりませんでした。', 'error'); return; }
-    hit.seating = state.grid;
-    hit.seatingAt = today();
-    if (!R.upsert(hit)) { rosterNote('このブラウザでは保存できませんでした。', 'error'); return; }
-    applyPrevSeating(hit);
-    rosterNote('この席順を「' + hit.label + '」におぼえました。次の席替えで避けられます。', 'ok');
-  }
-
   /* ============================================================
      CSV / Excel からの取り込み
      ============================================================ */
 
-  var csvRows = null;   // 取り込み待ちの表
-  var csvPicked = {};   // 選ばれた列
+  var csvRows = null, csvRoles = {};   // 列番号 → 'name' | 'rule' | 'seat'
+
+  var ROLE_LABEL = { '': '（使わない）', name: 'なまえ', rule: '配慮', seat: '前回の席' };
+
+  /** 見出しから列の役割を当てる。自分が書き出したCSVはそのまま読み戻せる */
+  function autoDetectRoles(head) {
+    var roles = {};
+    head.forEach(function (raw, c) {
+      var h = (raw || '').trim();
+      if (!h) return;
+      if (/^(出席番号|番号|no\.?|#)$/i.test(h)) return;
+      if (/(なまえ|名前|氏名|生徒名|児童名|姓|名|name)/i.test(h)) roles[c] = 'name';
+      else if (/(配慮|はいりょ)/i.test(h)) roles[c] = 'rule';
+      else if (/(席|座席|seat)/i.test(h)) roles[c] = 'seat';
+    });
+    return roles;
+  }
 
   function readCsvFile(file) {
     var reader = new FileReader();
@@ -565,10 +494,11 @@
       var rows = R.parseDelimited(text, R.detectSep(text));
       if (!rows.length) { rosterNote('このファイルからは名前を読み取れませんでした。', 'error'); return; }
       csvRows = rows;
-      csvPicked = {};
-      // 名前が入っていそうな列（漢字・かなが多い列）を最初から選んでおく
-      var guess = R.guessNameCol(rows);
-      if (guess >= 0) csvPicked[guess] = true;
+      csvRoles = $('sk-csv-head').checked ? autoDetectRoles(rows[0]) : {};
+      if (!Object.keys(csvRoles).some(function (c) { return csvRoles[c] === 'name'; })) {
+        var guess = R.guessNameCol(rows);
+        if (guess >= 0) csvRoles[guess] = 'name';
+      }
       renderCsvPick();
     };
     reader.onerror = function () { rosterNote('ファイルを読めませんでした。', 'error'); };
@@ -583,39 +513,181 @@
     for (var c = 0; c < width; c++) {
       var head = hasHead ? ((csvRows[0][c] || '').trim() || (c + 1) + '列目') : (c + 1) + '列目';
       var val = (sample[c] || '').trim() || '（空）';
-      html += '<button type="button" class="sk-csv-col' + (csvPicked[c] ? ' is-on' : '') +
-        '" data-col="' + c + '"><span class="sk-csv-h">' + esc(head) + '</span>' +
-        '<span class="sk-csv-v">' + esc(val) + '</span></button>';
+      var role = csvRoles[c] || '';
+      html += '<div class="sk-csv-col' + (role ? ' is-on' : '') + '">' +
+        '<span class="sk-csv-h">' + esc(head) + '</span>' +
+        '<span class="sk-csv-v">' + esc(val) + '</span>' +
+        '<select class="sk-csv-role-sel" data-col="' + c + '" aria-label="' + esc(head) + 'の役割">' +
+        Object.keys(ROLE_LABEL).map(function (k) {
+          return '<option value="' + k + '"' + (role === k ? ' selected' : '') + '>' + ROLE_LABEL[k] + '</option>';
+        }).join('') +
+        '</select></div>';
     }
     $('sk-csv-cols').innerHTML = html;
     $('sk-csv-pick').hidden = false;
     rosterNote('');
   }
 
-  function applyCsvPick() {
-    var cols = Object.keys(csvPicked).filter(function (c) { return csvPicked[c]; })
+  function colsWithRole(role) {
+    return Object.keys(csvRoles).filter(function (c) { return csvRoles[c] === role; })
       .map(Number).sort(function (a, b) { return a - b; });
-    if (!cols.length) { rosterNote('名前の列を1つ以上えらんでください。', 'error'); return; }
+  }
+
+  /** 「2れつ3ばん」「2-3」どちらの書き方でも席として読む */
+  function parseSeat(cell) {
+    var nums = String(cell || '').match(/\d+/g);
+    if (!nums || nums.length < 2) return null;
+    return { c: Number(nums[0]) - 1, r: Number(nums[1]) - 1 };
+  }
+
+  function applyCsvPick() {
+    var nameCols = colsWithRole('name');
+    if (!nameCols.length) { rosterNote('「なまえ」の列を1つ以上えらんでください。', 'error'); return; }
+    var ruleCol = colsWithRole('rule')[0];
+    var seatCol = colsWithRole('seat')[0];
 
     var body = $('sk-csv-head').checked ? csvRows.slice(1) : csvRows;
-    var names = body.map(function (r) {
-      return cols.map(function (c) { return (r[c] || '').trim(); }).filter(Boolean).join(' ').trim();
-    }).filter(Boolean);
+    var names = [], ruleCells = [], seatCells = [];
+    body.forEach(function (r) {
+      var name = nameCols.map(function (c) { return (r[c] || '').trim(); }).filter(Boolean).join(' ').trim();
+      if (!name) return;
+      names.push(name);
+      ruleCells.push(ruleCol === undefined ? '' : (r[ruleCol] || '').trim());
+      seatCells.push(seatCol === undefined ? '' : (r[seatCol] || '').trim());
+    });
 
     if (!names.length) { rosterNote('えらんだ列に名前が入っていませんでした。', 'error'); return; }
 
     $('sk-names').value = names.join('\n');
     splitOnSpace = false;
+
+    // 配慮：同じ「離すN」どうしを1行にまとめ、前列・後列・固定はその場で1行にする
+    var apartGroups = {}, lines = [];
+    ruleCells.forEach(function (cell, i) {
+      String(cell).split(/[;；]+/).forEach(function (t) {
+        t = t.trim();
+        if (!t) return;
+        var m = t.match(/^離す\s*(\d*)$/);
+        if (m) { (apartGroups[m[1] || '1'] = apartGroups[m[1] || '1'] || []).push(names[i]); return; }
+        if (/^前列$/.test(t)) { lines.push('前列: ' + names[i]); return; }
+        if (/^後列$/.test(t)) { lines.push('後列: ' + names[i]); return; }
+        var f = t.match(/^固定\s*(.+)$/);
+        if (f) {
+          var s = parseSeat(f[1]);
+          if (s) lines.push('固定: ' + names[i] + ' = ' + (s.c + 1) + 'れつ ' + (s.r + 1) + 'ばん');
+        }
+      });
+    });
+    var apartLines = Object.keys(apartGroups).sort().filter(function (k) { return apartGroups[k].length >= 2; })
+      .map(function (k) { return '離す: ' + apartGroups[k].join(', '); });
+    var ruleText = apartLines.concat(lines).join('\n');
+    if (ruleCol !== undefined) $('sk-rules').value = ruleText;
+
+    // 前回の席：席の列から座席表を組み直す
+    var maxC = 0, maxR = 0, seats = [];
+    seatCells.forEach(function (cell, i) {
+      var s = parseSeat(cell);
+      if (!s) return;
+      seats.push({ name: names[i], r: s.r, c: s.c });
+      maxC = Math.max(maxC, s.c); maxR = Math.max(maxR, s.r);
+    });
+    if (seats.length > 1) {
+      var grid = [];
+      for (var r = 0; r <= maxR; r++) grid.push(new Array(maxC + 1).fill(null));
+      seats.forEach(function (s) { grid[s.r][s.c] = s.name; });
+      applyPrevSeating(grid);
+      // 席の数も前回に合わせておく
+      if (maxC + 1 >= 2 && maxC + 1 <= 10) $('sk-cols').value = String(maxC + 1);
+      if (maxR + 1 >= 2 && maxR + 1 <= 10) $('sk-rows').value = String(maxR + 1);
+    } else {
+      clearPrev();
+    }
+
     closeCsvPick();
     updateCount();
-    rosterNote(names.length + '人を読みこみました。', 'ok');
+    var got = [names.length + '人'];
+    if (ruleText) got.push('配慮');
+    if (seats.length > 1) got.push('前回の席');
+    rosterNote(got.join('・') + ' を読みこみました。', 'ok');
   }
 
   function closeCsvPick() {
     $('sk-csv-pick').hidden = true;
     csvRows = null;
-    csvPicked = {};
+    csvRoles = {};
     $('sk-csv').value = '';
+  }
+
+  /* ---------- CSVに書き出す ---------- */
+
+  /** Excelで開いても文字化けしないよう BOM を付けて渡す */
+  function downloadCsv(filename, rows) {
+    var body = rows.map(function (r) {
+      return r.map(function (v) {
+        var s = String(v == null ? '' : v);
+        return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+      }).join(',');
+    }).join('\r\n');
+
+    var blob = new Blob(['﻿' + body], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  /** いまの配慮欄を、人ごとのセル（「離す1」「前列」「固定2-3」）に直す */
+  function ruleCellsByName(names) {
+    var parsed = parseRules($('sk-rules').value, names);
+    var cells = {};
+    var add = function (n, code) { cells[n] = cells[n] ? cells[n] + ';' + code : code; };
+    parsed.rules.apart.forEach(function (g, i) {
+      g.forEach(function (n) { add(n, '離す' + (i + 1)); });
+    });
+    parsed.rules.front.forEach(function (n) { add(n, '前列'); });
+    parsed.rules.back.forEach(function (n) { add(n, '後列'); });
+    parsed.rules.fixed.forEach(function (f) { add(f.name, '固定' + (f.c + 1) + '-' + (f.r + 1)); });
+    return cells;
+  }
+
+  function downloadState(withSeats) {
+    var names = parseNames($('sk-names').value);
+    if (!names.length) { rosterNote('名簿が空です。', 'error'); return; }
+    var cells = ruleCellsByName(names);
+
+    var seatOf = {};
+    if (withSeats && state.grid) {
+      for (var r = 0; r < state.rows; r++) {
+        for (var c = 0; c < state.cols; c++) {
+          if (state.grid[r][c]) seatOf[state.grid[r][c]] = (c + 1) + 'れつ' + (r + 1) + 'ばん';
+        }
+      }
+    }
+
+    var rows = [['出席番号', 'なまえ', '配慮', '席']];
+    names.forEach(function (n, i) {
+      rows.push([String(i + 1), n, cells[n] || '', seatOf[n] || '']);
+    });
+    downloadCsv(withSeats ? '席替え.csv' : '席替え_名簿.csv', rows);
+    rosterNote('CSVに保存しました。次回このファイルを「CSVを読む」から取り込めば、' +
+      (withSeats ? '名簿・配慮・前回の席' : '名簿と配慮') + 'がそのまま戻ります。', 'ok');
+  }
+
+  function downloadTemplate() {
+    downloadCsv('席替え_名簿ひな形.csv', [
+      ['出席番号', 'なまえ', '配慮', '席'],
+      ['1', '佐藤 みゆき', '固定1-1', ''],
+      ['2', '鈴木 けんた', '', ''],
+      ['3', '高橋 あおい', '前列', ''],
+      ['4', '田中 そうた', '離す1', ''],
+      ['5', '中村 はると', '離す1', ''],
+      ['6', '長谷川 れん', '後列', '']
+    ]);
+    rosterNote('ひな形をダウンロードしました。配慮は「離す1」のように、同じ番号どうしが1つの組になります。', 'ok');
   }
 
   /* ---------- 配線 ---------- */
@@ -647,64 +719,31 @@
     // 見本は30人ぶん。席の数もそれに合う既定（6×5）へ戻す
     $('sk-cols').value = '6';
     $('sk-rows').value = '5';
-    currentRosterId = '';
     clearPrev();
-    refreshRosterList();
     rosterNote('');
     updateCount();
     run();
   });
 
-  /* 名簿の保存・よびだし */
-  $('sk-roster-list').addEventListener('change', function () {
-    if (this.value) doLoadRoster(this.value);
-  });
-  $('sk-roster-load').addEventListener('click', function () {
-    doLoadRoster($('sk-roster-list').value);
-  });
-  $('sk-roster-del').addEventListener('click', function () {
-    doDeleteRoster($('sk-roster-list').value);
-  });
-  $('sk-roster-save').addEventListener('click', function () {
-    if (!parseNames($('sk-names').value).length) {
-      rosterNote('名簿が空です。名前を入れてから保存してください。', 'error');
-      return;
-    }
-    var current = findRoster(currentRosterId);
-    $('sk-save-name').value = current ? current.label : '';
-    $('sk-save-row').hidden = false;
-    $('sk-save-name').focus();
-  });
-  $('sk-save-cancel').addEventListener('click', function () { $('sk-save-row').hidden = true; });
-  $('sk-save-ok').addEventListener('click', function () {
-    var label = $('sk-save-name').value.trim();
-    if (!label) { rosterNote('名簿の名前を入れてください（例：3年2組）。', 'error'); return; }
-    $('sk-save-row').hidden = true;
-    doSaveRoster(label);
-  });
-  $('sk-save-name').addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') { e.preventDefault(); $('sk-save-ok').click(); }
-  });
-
   /* 前回の席 */
   $('sk-prev-clear').addEventListener('click', clearPrev);
-  $('sk-remember').addEventListener('click', rememberSeating);
 
-  /* CSV取り込み */
+  /* CSV */
   $('sk-csv').addEventListener('change', function () {
     if (this.files && this.files[0]) readCsvFile(this.files[0]);
   });
+  $('sk-csv-save').addEventListener('click', function () { downloadState(false); });
+  $('sk-csv-template').addEventListener('click', downloadTemplate);
+  $('sk-download').addEventListener('click', function () { downloadState(true); });
   $('sk-csv-head').addEventListener('change', function () { if (csvRows) renderCsvPick(); });
   $('sk-csv-cancel').addEventListener('click', closeCsvPick);
   $('sk-csv-ok').addEventListener('click', applyCsvPick);
-  $('sk-csv-cols').addEventListener('click', function (e) {
-    var btn = e.target.closest('.sk-csv-col');
-    if (!btn) return;
-    var c = btn.getAttribute('data-col');
-    csvPicked[c] = !csvPicked[c];
-    btn.classList.toggle('is-on', !!csvPicked[c]);
+  // 列ごとに役割をえらぶ（見出しから自動で当たっていることが多い）
+  $('sk-csv-cols').addEventListener('change', function (e) {
+    if (!e.target.classList.contains('sk-csv-role-sel')) return;
+    csvRoles[Number(e.target.getAttribute('data-col'))] = e.target.value;
+    renderCsvPick();
   });
 
-  refreshRosterList();
   updateCount();
 })();

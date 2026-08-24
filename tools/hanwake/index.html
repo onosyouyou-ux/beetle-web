@@ -61,7 +61,7 @@
     {
       "@type": "Question",
       "name": "児童の名前はサーバーに送られますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "送られません。班分けの計算はすべてブラウザ内（先生の端末上）で処理していて、サーバーには一切送信していません。ふだんはページを閉じれば何も残りません。「保存」を押したときだけ、名簿がこの端末のブラウザの中に残ります。それも外には出ませんし、「消す」でいつでも消せます。" }
+      "acceptedAnswer": { "@type": "Answer", "text": "送られません。班分けの計算もCSVの読み書きも、すべてブラウザ内（先生の端末上）で処理していて、サーバーには一切送信していません。ブラウザにも保存しません。ページを閉じれば何も残らないので、続きは「CSVで保存」したファイルから戻してください。ファイルは先生の手元にあるので、職員室と自宅など別のパソコンでも使えます。" }
     },
     {
       "@type": "Question",
@@ -76,12 +76,12 @@
     {
       "@type": "Question",
       "name": "前回と同じ班にならないようにできますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "できます。名簿を「保存」しておき、できあがった班で「この班をおぼえる」を押してください。次に同じ名簿を「よびだす」と「前回と同じ人と同じ班にしない」が選べます。人数と班の数によっては避けきれないことがあり、そのときは何組残ったかを画面に表示します。" }
+      "acceptedAnswer": { "@type": "Answer", "text": "できます。できあがった班を「この班ごとCSVで保存」しておき、次回そのファイルを「CSVを読む」から取り込んでください。CSVの「班」の列が前回の班として読まれ、「前回と同じ人と同じ班にしない」が選べます。人数と班の数によっては避けきれないことがあり、そのときは何組残ったかを画面に表示します。" }
     },
     {
       "@type": "Question",
       "name": "席替えメーカーと名簿を共有できますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "できます。保存した名簿はこの端末の中で共通なので、席替えメーカーで保存した「3年2組」を班分けメーカーからそのまま呼び出せます。配慮の内容は書き方が違うため、ツールごとに別々に覚えます。" }
+      "acceptedAnswer": { "@type": "Answer", "text": "どちらも同じ「出席番号・なまえ・配慮」の形でCSVを読み書きします。席替えで保存したCSVを班分けで読めば名簿がそのまま入ります（配慮の書き方はツールごとに違うので、そこは読み替えられません）。" }
     }
   ]
 }
@@ -103,7 +103,7 @@
     <p class="hw-eyebrow">先生向けツール</p>
     <h1>班分けメーカー</h1>
     <p class="hw-lead">名簿を貼って、班の数を決めるだけ。<br>「この2人は別々に」「世話役は各班に1人」を守ったまま、何度でも引き直せます。</p>
-    <p class="hw-privacy">名簿はサーバーに送りません。保存を押したときだけ、この端末のブラウザの中にだけ残ります。</p>
+    <p class="hw-privacy">名簿はどこにも保存しません。計算は全部この端末の中で行い、サーバーにもブラウザにも残しません。</p>
   </header>
 
   <main class="hw-main">
@@ -118,23 +118,12 @@
           </div>
 
           <div class="hw-roster-bar">
-            <select id="hw-roster-list" aria-label="保存した名簿">
-              <option value="">保存した名簿…</option>
-            </select>
-            <button type="button" class="hw-mini2" id="hw-roster-load">よびだす</button>
-            <button type="button" class="hw-mini2" id="hw-roster-save">保存</button>
-            <button type="button" class="hw-mini2 is-del" id="hw-roster-del">消す</button>
             <label class="hw-file">
               CSVを読む
               <input type="file" id="hw-csv" accept=".csv,.tsv,.txt,text/csv,text/plain">
             </label>
+            <button type="button" class="hw-mini2 is-go" id="hw-csv-save">CSVで保存</button>
             <button type="button" class="hw-mini2" id="hw-csv-template">ひな形CSV</button>
-          </div>
-
-          <div class="hw-save-row" id="hw-save-row" hidden>
-            <input type="text" id="hw-save-name" placeholder="例：3年2組" maxlength="24">
-            <button type="button" class="hw-mini2 is-go" id="hw-save-ok">この名前で保存</button>
-            <button type="button" class="hw-mini2" id="hw-save-cancel">やめる</button>
           </div>
 
           <div class="hw-csv-pick" id="hw-csv-pick" hidden>
@@ -150,14 +139,16 @@
           <p class="hw-roster-note" id="hw-roster-note" hidden></p>
 
           <div class="hw-labelset">
-            <label for="hw-labelset-input">そろえる項目</label>
-            <input type="text" id="hw-labelset-input" value="女, 男" maxlength="40" spellcheck="false">
+            <label for="hw-labelset-name">そろえる項目</label>
+            <input type="text" id="hw-labelset-name" value="性別" maxlength="12" spellcheck="false" aria-label="そろえる項目の名前">
+            <span class="hw-labelset-eq">＝</span>
+            <input type="text" id="hw-labelset-input" value="女, 男" maxlength="40" spellcheck="false" aria-label="そろえる項目の選択肢">
             <span class="hw-labelset-tip">各班になるべく同じ人数ずつ配ります</span>
           </div>
 
           <div class="hw-rows-head">
             <span class="hw-rows-h-name">なまえ</span>
-            <span class="hw-rows-h-label" id="hw-rows-h-label">女／男</span>
+            <span class="hw-rows-h-label" id="hw-rows-h-label">性別</span>
           </div>
           <div class="hw-rows" id="hw-rows"></div>
 
@@ -177,7 +168,7 @@
             </div>
           </div>
 
-          <p class="hw-hint">なまえの右のボタンで<b>そろえる項目</b>を選ぶと、各班の人数がなるべく同じになるように配ります。男女以外にも使えます（「そろえる項目」を <code>A, B</code> や <code>体育係, 図書係</code> に変えてください）。<br>保存した名簿は <a href="/tools/sekigae/">席替えメーカー</a> と共通です。どちらで保存しても、もう一方から呼び出せます。</p>
+          <p class="hw-hint">なまえの右のボタンで<b>そろえる項目</b>を選ぶと、各班の人数がなるべく同じになるように配ります。男女以外にも使えます（「そろえる項目」を <code>A, B</code> や <code>体育係, 図書係</code> に変えてください）。<br>CSVの形は <a href="/tools/sekigae/">席替えメーカー</a> とそろえてあります。名簿はどこにも保存しないので、続きはCSVファイルから戻してください。</p>
         </div>
 
         <div class="hw-col">
@@ -228,9 +219,8 @@
       <div class="hw-board" id="hw-board"></div>
       <div class="hw-actions">
         <span class="hw-info" id="hw-info">—</span>
-        <button type="button" class="hw-sub" id="hw-remember">この班をおぼえる</button>
         <button type="button" class="hw-sub" id="hw-copy">表をコピー</button>
-        <button type="button" class="hw-sub" id="hw-download">CSVで保存</button>
+        <button type="button" class="hw-sub" id="hw-download">この班ごとCSVで保存</button>
         <button type="button" class="hw-sub" id="hw-print">印刷する</button>
         <button type="button" class="hw-go" id="hw-again">もう一度ひく</button>
       </div>
@@ -243,7 +233,7 @@
         <div class="hw-step">
           <span class="hw-step-n">1</span>
           <h3>名簿を入れる</h3>
-          <p>なまえを1人ずつ入れます。<b>Enter で次の人に進み</b>、最後の行で押すと1人増えます。Excelから何人分かを<b>まとめて貼り付ければ、そのぶんの行に自動で分かれます</b>。「CSVを読む」で名簿CSVから流し込むこともできます（<b>ひな形CSV</b>を配布しています）。「保存」しておくと、次回は「よびだす」で戻せます。</p>
+          <p>なまえを1人ずつ入れます。<b>Enter で次の人に進み</b>、最後の行で押すと1人増えます。Excelから何人分かを<b>まとめて貼り付ければ、そのぶんの行に自動で分かれます</b>。「CSVを読む」で名簿CSVから流し込むこともできます（<b>ひな形CSV</b>を配布しています）。<b>「CSVで保存」</b>しておくと、次回そのファイルを読み込むだけで、名簿も配慮も前回の班もそのまま戻ります。</p>
         </div>
         <div class="hw-step">
           <span class="hw-step-n">2</span>
@@ -253,7 +243,7 @@
         <div class="hw-step">
           <span class="hw-step-n">3</span>
           <h3>作って、引き直して、印刷する</h3>
-          <p>「班分けする」を押すと配慮を守った班ができます。納得いくまで「もう一度ひく」を押して、決まったら印刷してください。「この班をおぼえる」を押しておくと、次の班分けで同じ顔ぶれを避けられます。</p>
+          <p>「班分けする」を押すと配慮を守った班ができます。納得いくまで「もう一度ひく」を押して、決まったら印刷してください。決まった班を<b>「この班ごとCSVで保存」</b>しておくと、次回そのファイルを読み込むだけで同じ顔ぶれを避けられます。</p>
         </div>
       </div>
 
@@ -272,7 +262,7 @@
       <h2>よくある質問</h2>
       <details class="hw-faq">
         <summary>児童の名前はサーバーに送られますか？<span>+</span></summary>
-        <div>送られません。班分けの計算はすべてブラウザ内（先生の端末上）で処理していて、サーバーには一切送信していません。ふだんはページを閉じれば何も残りません。「保存」を押したときだけ、名簿がこの端末のブラウザの中に残ります。それも外には出ませんし、「消す」でいつでも消せます。</div>
+        <div>送られません。班分けの計算もCSVの読み書きも、すべてブラウザ内（先生の端末上）で処理していて、サーバーには一切送信していません。ブラウザにも保存しません。ページを閉じれば何も残らないので、続きは「CSVで保存」したファイルから戻してください。ファイルは先生の手元にあるので、職員室と自宅など別のパソコンでも使えます。</div>
       </details>
       <details class="hw-faq">
         <summary>「ちらす」と「別々」はどう違いますか？<span>+</span></summary>
@@ -284,11 +274,11 @@
       </details>
       <details class="hw-faq">
         <summary>前回と同じ班にならないようにできますか？<span>+</span></summary>
-        <div>できます。名簿を「保存」しておき、できあがった班で「この班をおぼえる」を押してください。次に同じ名簿を「よびだす」と「前回と同じ人と同じ班にしない」が選べます。人数と班の数によっては避けきれないことがあり、そのときは何組残ったかを画面に表示します。</div>
+        <div>できます。できあがった班を「この班ごとCSVで保存」しておき、次回そのファイルを「CSVを読む」から取り込んでください。CSVの「班」の列が前回の班として読まれ、「前回と同じ人と同じ班にしない」が選べます。人数と班の数によっては避けきれないことがあり、そのときは何組残ったかを画面に表示します。</div>
       </details>
       <details class="hw-faq">
         <summary>席替えメーカーと名簿を共有できますか？<span>+</span></summary>
-        <div>できます。保存した名簿はこの端末の中で共通なので、席替えメーカーで保存した「3年2組」を班分けメーカーからそのまま呼び出せます。配慮の内容は書き方が違うため、ツールごとに別々に覚えます。</div>
+        <div>どちらも同じ「出席番号・なまえ・配慮」の形でCSVを読み書きします。席替えで保存したCSVを班分けで読めば名簿がそのまま入ります（配慮の書き方はツールごとに違うので、そこは読み替えられません）。</div>
       </details>
 
       <p class="hw-more">席の並びを決めるなら <a href="/tools/sekigae/">席替えメーカー</a>、クラスだよりを書くなら <a href="/tools/gakkyu-tsushin/">学級通信メーカー</a>、通知表の所見には <a href="/tools/shoken/">所見メーカー</a> もどうぞ。</p>

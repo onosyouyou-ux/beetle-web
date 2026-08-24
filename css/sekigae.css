@@ -238,3 +238,12 @@ body{
   .sk-board-wrap{border:none;padding:0}
   .sk-seat{border-color:#999}
 }
+
+/* CSV取り込みの列カード（2026-08-24：役割をプルダウンで選ぶ形に変更） */
+.sk-csv-col{position:relative}
+.sk-csv-role-sel{
+  margin-top:4px;width:100%;border:1px solid var(--sk-line2);border-radius:5px;
+  padding:3px 4px;font-size:11px;font-family:inherit;color:var(--sk-ink2);background:#fff;cursor:pointer;
+}
+.sk-csv-col.is-on{border-color:var(--sk-orange);background:var(--sk-orange-bg)}
+.sk-csv-col.is-on .sk-csv-h{color:var(--sk-orange-dk)}

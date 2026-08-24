@@ -1,13 +1,18 @@
 /* ============================================================
    hanwake.js — 班分けメーカー（先生向け）
    名簿と配慮からグループ分けを作る。席替えメーカーの姉妹ツールで、
-   名簿の保存・CSV取り込みは class-roster.js を共有する。
+   CSV取り込み・名前の読み取りは class-roster.js を共有する。
    計算はすべてブラウザ内で完結し、名簿はサーバーに送らない。
 
    ■ 入力は「1人1行」「配慮1件1行」のフォーム（2026-08-24に textarea から変更）
    名前を手で打ち直す／名簿と同じ書き方をさせる、という負担をなくすため、
    配慮の名前は**名簿から選ぶ**方式にした。打ち間違いも「名簿にありません」も起きない。
-   「そろえる」は名簿側のラベルが担うので、配慮は 別々・同じ・ちらす の3種類だけになった。
+   「そろえる」は名簿側のトグルが担うので、配慮は 別々・同じ・ちらす の3種類だけになった。
+
+   ■ 保存はCSVファイルだけ（2026-08-24決定）
+   配慮も前回の班もCSVに入るようになったので、ブラウザ保存（localStorage）は役割が重なった。
+   ブラウザ保存は端末ごとに分かれて職員室と自宅で共有できないうえ、
+   「名簿は一切保存しません」と言い切れなくなるため、CSVに一本化した。
    35人をExcelから貼る流れは残したいので、「まとめて貼り付け」も併存させている。
    ============================================================ */
 (function () {
@@ -27,7 +32,6 @@
   var seq = 0;
   var people = [];   // [{id, name, label}]
   var rules = [];    // [{id, kind, ids:[personId]}]
-  var currentRosterId = '';
   var prevState = { pairs: null, when: '' };
   var state = { groups: null, tagOf: null };
 
@@ -59,7 +63,12 @@
 
   /* ---------- 名簿の行 ---------- */
 
-  /** 「そろえる項目」（既定は 女／男）。ここを変えれば係や委員会でも使える */
+  /** そろえる項目の名前（既定は「性別」）。CSVの見出しにも使う */
+  function labelSetName() {
+    return ($('hw-labelset-name').value || '').trim() || '性別';
+  }
+
+  /** そろえる項目の選択肢（既定は 女／男）。ここを変えれば係や委員会でも使える */
   function labelSet() {
     var raw = ($('hw-labelset-input').value || '').split(/[,、，\/／\s　]+/)
       .map(function (s) { return s.trim(); })
@@ -89,7 +98,7 @@
         '</div>';
     });
     $('hw-rows').innerHTML = html;
-    $('hw-rows-h-label').textContent = set.length ? set.join('／') : '—';
+    $('hw-rows-h-label').textContent = set.length ? labelSetName() : '—';
   }
 
   function addPerson(name, label, focus) {
@@ -628,104 +637,23 @@
     el.className = 'hw-roster-note' + (kind ? ' is-' + kind : '');
   }
 
-  function refreshRosterList() {
-    var sel = $('hw-roster-list');
-    var list = R.load();
-    sel.innerHTML = '<option value="">' + (list.length ? '保存した名簿…' : '保存した名簿はまだありません') + '</option>';
-    list.forEach(function (r) {
-      var o = document.createElement('option');
-      o.value = r.id;
-      o.textContent = r.label + '（' + R.parseNames(r.names || '').length + '人・' + r.savedAt + '）';
-      sel.appendChild(o);
-    });
-    sel.value = currentRosterId && list.some(function (r) { return r.id === currentRosterId; }) ? currentRosterId : '';
-  }
-
-  /** 席替えメーカーは名簿をテキストで読むので、そちら向けの形も一緒に持つ */
-  function namesText() {
-    return filledPeople().map(function (p) { return p.name.trim(); }).join('\n');
-  }
-
-  function doSaveRoster(label) {
-    var current = R.find(currentRosterId) || {};
-    var rec = {
-      id: currentRosterId || R.newId(),
-      label: label,
-      names: namesText(),
-      people: filledPeople().map(function (p) { return { name: p.name.trim(), label: p.label.trim() }; }),
-      hanwakeRules: rules.map(function (r) {
-        return { kind: r.kind, names: r.ids.map(function (id) { var p = personById(id); return p ? p.name.trim() : ''; }).filter(Boolean) };
-      }),
-      // 席替えメーカーのぶんは触らずに引き継ぐ
-      rules: current.rules || '',
-      cols: current.cols,
-      rows: current.rows,
-      seating: current.seating || null,
-      seatingAt: current.seatingAt,
-      grouping: current.grouping || null,
-      groupingAt: current.groupingAt,
-      savedAt: R.today()
-    };
-    if (!R.upsert(rec)) {
-      rosterNote('このブラウザでは保存できませんでした（プライベートモードなどの可能性があります）。', 'error');
-      return;
-    }
-    currentRosterId = rec.id;
-    refreshRosterList();
-    rosterNote('「' + label + '」を保存しました。席替えメーカーからも同じ名簿を使えます。', 'ok');
-  }
-
-  function doLoadRoster(id) {
-    var rec = R.find(id);
-    if (!rec) { rosterNote('よびだす名簿をえらんでください。', 'error'); return; }
-    currentRosterId = rec.id;
-
-    // 班分けで保存したものはラベルつき。席替えだけで保存されたものは名前だけ
-    if (Array.isArray(rec.people) && rec.people.length) {
-      setPeople(rec.people);
-    } else {
-      setPeople(R.parseNames(rec.names || '').map(function (n) { return { name: n }; }));
-    }
-
-    rules = [];
-    if (Array.isArray(rec.hanwakeRules)) {
-      var byName = {};
-      people.forEach(function (p) { if (!byName[p.name]) byName[p.name] = p.id; });
-      rec.hanwakeRules.forEach(function (r) {
-        var ids = (r.names || []).map(function (n) { return byName[n]; }).filter(function (x) { return x; });
-        if (ids.length) rules.push({ id: nextId(), kind: r.kind || 'apart', ids: ids });
-      });
-    }
-    renderRules();
-    applyPrevGrouping(rec);
-    updateCount();
-    rosterNote('「' + rec.label + '」をよびだしました。', 'ok');
-  }
-
-  function doDeleteRoster(id) {
-    var rec = R.find(id);
-    if (!rec) { rosterNote('消す名簿をえらんでください。', 'error'); return; }
-    if (!window.confirm('「' + rec.label + '」を消します。席替えメーカーからも消えます。よろしいですか？')) return;
-    R.remove(id);
-    if (currentRosterId === id) { currentRosterId = ''; clearPrev(); }
-    refreshRosterList();
-    rosterNote('「' + rec.label + '」を消しました。', 'ok');
-  }
-
   /* ---------- 前回の班 ---------- */
 
-  function applyPrevGrouping(rec) {
-    var g = rec && rec.grouping;
-    if (!g || !g.length) { clearPrev(); return; }
+  /**
+   * 読みこんだCSVの「班」列から、前回いっしょだった組み合わせを取り出す。
+   * ブラウザには何も保存しないので、前回の班はCSV経由でしか入ってこない。
+   */
+  function applyPrevGrouping(groups, when) {
+    if (!groups || groups.length < 2) { clearPrev(); return; }
     var pairs = {};
-    g.forEach(function (members) {
+    groups.forEach(function (members) {
       for (var i = 0; i < members.length; i++) {
         for (var j = i + 1; j < members.length; j++) pairs[pairKey(members[i], members[j])] = true;
       }
     });
-    prevState = { pairs: pairs, when: rec.groupingAt || rec.savedAt };
+    prevState = { pairs: pairs, when: when || '' };
     $('hw-prev').hidden = false;
-    $('hw-prev-lbl').textContent = '前回の班（' + prevState.when + '）をよみこみました';
+    $('hw-prev-lbl').textContent = '読みこんだCSVの班を「前回の班」として使います';
   }
 
   function clearPrev() {
@@ -733,24 +661,26 @@
     $('hw-prev').hidden = true;
   }
 
-  function rememberGrouping() {
-    if (!state.groups) return;
-    if (!currentRosterId) {
-      rosterNote('先に「保存」で名簿に名前をつけてください。班はその名簿におぼえます。', 'error');
-      return;
-    }
-    var rec = R.find(currentRosterId);
-    if (!rec) { rosterNote('保存した名簿が見つかりませんでした。', 'error'); return; }
-    rec.grouping = state.groups;
-    rec.groupingAt = R.today();
-    if (!R.upsert(rec)) { rosterNote('このブラウザでは保存できませんでした。', 'error'); return; }
-    applyPrevGrouping(rec);
-    rosterNote('この班を「' + rec.label + '」におぼえました。次の班分けで避けられます。', 'ok');
-  }
-
   /* ---------- CSV ---------- */
 
-  var csvRows = null, csvNameCols = {}, csvLabelCol = -1;
+  var csvRows = null, csvRoles = {};   // 列番号 → 'name' | 'label' | 'rule' | 'group'
+
+  var ROLE_LABEL = { '': '（使わない）', name: 'なまえ', label: 'ラベル', rule: '配慮', group: '前回の班' };
+
+  /** 見出しから列の役割を当てる。自分が書き出したCSVはそのまま読み戻せる */
+  function autoDetectRoles(head) {
+    var roles = {};
+    head.forEach(function (raw, c) {
+      var h = (raw || '').trim();
+      if (!h) return;
+      if (/^(出席番号|番号|no\.?|#)$/i.test(h)) return;              // 番号は使わない
+      if (/(なまえ|名前|氏名|生徒名|児童名|姓|名|name)/i.test(h)) roles[c] = 'name';
+      else if (/(ラベル|性別|せいべつ|gender|sex)/i.test(h)) roles[c] = 'label';
+      else if (/(配慮|はいりょ)/i.test(h)) roles[c] = 'rule';
+      else if (/(班|グループ|group|team)/i.test(h)) roles[c] = 'group';
+    });
+    return roles;
+  }
 
   function readCsvFile(file) {
     var reader = new FileReader();
@@ -759,10 +689,11 @@
       var rows = R.parseDelimited(text, R.detectSep(text));
       if (!rows.length) { rosterNote('このファイルからは名前を読み取れませんでした。', 'error'); return; }
       csvRows = rows;
-      csvNameCols = {};
-      csvLabelCol = -1;
-      var guess = R.guessNameCol(rows);
-      if (guess >= 0) csvNameCols[guess] = true;
+      csvRoles = $('hw-csv-head').checked ? autoDetectRoles(rows[0]) : {};
+      if (!Object.keys(csvRoles).some(function (c) { return csvRoles[c] === 'name'; })) {
+        var guess = R.guessNameCol(rows);
+        if (guess >= 0) csvRoles[guess] = 'name';
+      }
       renderCsvPick();
     };
     reader.onerror = function () { rosterNote('ファイルを読めませんでした。', 'error'); };
@@ -774,50 +705,97 @@
     var width = R.colWidth(csvRows);
     var sample = csvRows[hasHead ? 1 : 0] || [];
     var html = '';
+
     for (var c = 0; c < width; c++) {
       var head = hasHead ? ((csvRows[0][c] || '').trim() || (c + 1) + '列目') : (c + 1) + '列目';
       var val = (sample[c] || '').trim() || '（空）';
-      var cls = 'hw-csv-col';
-      if (csvNameCols[c]) cls += ' is-on';
-      if (csvLabelCol === c) cls += ' is-label';
-      html += '<button type="button" class="' + cls + '" data-col="' + c + '">' +
+      var role = csvRoles[c] || '';
+      html += '<div class="hw-csv-col' + (role ? ' is-on' : '') + '">' +
         '<span class="hw-csv-h">' + R.esc(head) + '</span>' +
         '<span class="hw-csv-v">' + R.esc(val) + '</span>' +
-        (csvNameCols[c] ? '<span class="hw-csv-role">なまえ</span>' : '') +
-        (csvLabelCol === c ? '<span class="hw-csv-role">ラベル</span>' : '') +
-        '</button>';
+        '<select class="hw-csv-role-sel" data-col="' + c + '" aria-label="' + R.esc(head) + 'の役割">' +
+        Object.keys(ROLE_LABEL).map(function (k) {
+          return '<option value="' + k + '"' + (role === k ? ' selected' : '') + '>' + ROLE_LABEL[k] + '</option>';
+        }).join('') +
+        '</select></div>';
     }
     $('hw-csv-cols').innerHTML = html;
     $('hw-csv-pick').hidden = false;
     rosterNote('');
   }
 
-  function applyCsvPick() {
-    var cols = Object.keys(csvNameCols).filter(function (c) { return csvNameCols[c]; })
+  function colsWithRole(role) {
+    return Object.keys(csvRoles).filter(function (c) { return csvRoles[c] === role; })
       .map(Number).sort(function (a, b) { return a - b; });
-    if (!cols.length) { rosterNote('名前の列を1つ以上えらんでください。', 'error'); return; }
+  }
+
+  /** 「別々1」「同じ2;ちらす3」のような書き方をほどく */
+  function parseRuleCell(cell) {
+    return String(cell || '').split(/[;；,、，\/／\s　]+/).map(function (t) {
+      var m = t.trim().match(/^(別々|同じ|ちらす)\s*(\d*)$/);
+      if (!m) return null;
+      var kind = m[1] === '同じ' ? 'together' : (m[1] === 'ちらす' ? 'scatter' : 'apart');
+      return { kind: kind, no: m[2] || '1' };
+    }).filter(Boolean);
+  }
+
+  function applyCsvPick() {
+    var nameCols = colsWithRole('name');
+    if (!nameCols.length) { rosterNote('「なまえ」の列を1つ以上えらんでください。', 'error'); return; }
+    var labelCol = colsWithRole('label')[0];
+    var ruleCol = colsWithRole('rule')[0];
+    var groupCol = colsWithRole('group')[0];
 
     var body = $('hw-csv-head').checked ? csvRows.slice(1) : csvRows;
-    var list = body.map(function (r) {
-      var name = cols.map(function (c) { return (r[c] || '').trim(); }).filter(Boolean).join(' ').trim();
-      var label = csvLabelCol >= 0 ? (r[csvLabelCol] || '').trim() : '';
-      return { name: name, label: label };
-    }).filter(function (p) { return p.name; });
+    var list = [], ruleCells = [], groupCells = [];
+
+    body.forEach(function (r) {
+      var name = nameCols.map(function (c) { return (r[c] || '').trim(); }).filter(Boolean).join(' ').trim();
+      if (!name) return;
+      list.push({ name: name, label: labelCol >= 0 && labelCol !== undefined ? (r[labelCol] || '').trim() : '' });
+      ruleCells.push(ruleCol === undefined ? '' : (r[ruleCol] || '').trim());
+      groupCells.push(groupCol === undefined ? '' : (r[groupCol] || '').trim());
+    });
 
     if (!list.length) { rosterNote('えらんだ列に名前が入っていませんでした。', 'error'); return; }
 
     setPeople(list);
+
+    // 配慮：同じ「種類＋番号」の人どうしを1件にまとめる
     rules = [];
+    var buckets = {};
+    ruleCells.forEach(function (cell, i) {
+      parseRuleCell(cell).forEach(function (t) {
+        var key = t.kind + t.no;
+        (buckets[key] = buckets[key] || { kind: t.kind, ids: [] }).ids.push(people[i].id);
+      });
+    });
+    Object.keys(buckets).sort().forEach(function (k) {
+      if (buckets[k].ids.length >= 2) rules.push({ id: nextId(), kind: buckets[k].kind, ids: buckets[k].ids });
+    });
     renderRules();
+
+    // 前回の班：班ごとに名前を集めて「同じ顔ぶれを避ける」の材料にする
+    var byGroup = {};
+    groupCells.forEach(function (g, i) {
+      if (!g) return;
+      (byGroup[g] = byGroup[g] || []).push(list[i].name);
+    });
+    var groupsFound = Object.keys(byGroup);
+    applyPrevGrouping(groupsFound.sort().map(function (k) { return byGroup[k]; }));
+
     closeCsvPick();
-    rosterNote(list.length + '人を読みこみました。' + (csvLabelCol >= 0 ? 'ラベルも取り込みました。' : ''), 'ok');
+    var got = [list.length + '人'];
+    if (labelCol !== undefined) got.push('ラベル');
+    if (rules.length) got.push('配慮' + rules.length + '件');
+    if (groupsFound.length > 1) got.push('前回の班');
+    rosterNote(got.join('・') + ' を読みこみました。', 'ok');
   }
 
   function closeCsvPick() {
     $('hw-csv-pick').hidden = true;
     csvRows = null;
-    csvNameCols = {};
-    csvLabelCol = -1;
+    csvRoles = {};
     $('hw-csv').value = '';
   }
 
@@ -841,29 +819,59 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   }
 
-  function downloadTemplate() {
-    downloadCsv('班分け_名簿ひな形.csv', [
-      ['出席番号', 'なまえ', 'ラベル'],
-      ['1', '佐藤 みゆき', '女'],
-      ['2', '鈴木 けんた', '男'],
-      ['3', '高橋 あおい', '女'],
-      ['4', '田中 そうた', '男']
-    ]);
-    rosterNote('ひな形をダウンロードしました。なまえの列を書き換えて「CSVを読む」から取り込めます。', 'ok');
-  }
+  var KIND_JP = { apart: '別々', together: '同じ', scatter: 'ちらす' };
 
-  function downloadResult() {
-    if (!state.groups) return;
-    var labelOf = {};
-    filledPeople().forEach(function (p) { labelOf[p.name.trim()] = p.label.trim(); });
-
-    var rows = [['班', 'なまえ', 'ラベル']];
-    state.groups.forEach(function (g, i) {
-      g.forEach(function (n) {
-        rows.push([(i + 1) + '班', n, labelOf[n] || '']);
+  /** 人ごとの配慮セル（「別々1」「同じ2;ちらす3」）を作る */
+  function ruleCellsByPerson() {
+    var cells = {};
+    var no = { apart: 0, together: 0, scatter: 0 };
+    rules.forEach(function (r) {
+      if (r.ids.length < 2) return;
+      no[r.kind] += 1;
+      var code = KIND_JP[r.kind] + no[r.kind];
+      r.ids.forEach(function (pid) {
+        cells[pid] = cells[pid] ? cells[pid] + ';' + code : code;
       });
     });
-    downloadCsv('班分け.csv', rows);
+    return cells;
+  }
+
+  function downloadTemplate() {
+    downloadCsv('班分け_名簿ひな形.csv', [
+      ['出席番号', 'なまえ', '性別', '配慮', '班'],
+      ['1', '佐藤 みゆき', '女', 'ちらす1', ''],
+      ['2', '鈴木 けんた', '男', '', ''],
+      ['3', '高橋 あおい', '女', '', ''],
+      ['4', '田中 そうた', '男', '別々1', ''],
+      ['5', '中村 はると', '男', '別々1', ''],
+      ['6', '小林 ゆい', '女', '同じ1', ''],
+      ['7', '石川 えま', '女', '同じ1', '']
+    ]);
+    rosterNote('ひな形をダウンロードしました。配慮は「別々1」のように、同じ番号どうしが1つの組になります。', 'ok');
+  }
+
+  /**
+   * 名簿・そろえる項目・配慮・（あれば）できた班を1枚に書き出す。
+   * このファイルを読み戻せば全部そのまま復元でき、班の列は「前回の班」として使われる。
+   */
+  function downloadState(withGroups) {
+    var names = displayNames();
+    var cells = ruleCellsByPerson();
+    var groupOf = {};
+    if (withGroups && state.groups) {
+      state.groups.forEach(function (g, i) {
+        g.forEach(function (n) { groupOf[n] = (i + 1) + '班'; });
+      });
+    }
+
+    var rows = [['出席番号', 'なまえ', labelSetName(), '配慮', '班']];
+    filledPeople().forEach(function (p, i) {
+      var n = names[p.id];
+      rows.push([String(i + 1), n, p.label || '', cells[p.id] || '', groupOf[n] || '']);
+    });
+    downloadCsv(withGroups ? '班分け.csv' : '班分け_名簿.csv', rows);
+    rosterNote('CSVに保存しました。次回このファイルを「CSVを読む」から取り込めば、' +
+      (withGroups ? '名簿・配慮・前回の班' : '名簿と配慮') + 'がそのまま戻ります。', 'ok');
   }
 
   /* ---------- まとめて貼り付け ---------- */
@@ -900,6 +908,9 @@
   ];
 
   function loadSample() {
+    // 見本は女／男でラベルを付けてあるので、そろえる項目も既定に戻す
+    $('hw-labelset-name').value = '性別';
+    $('hw-labelset-input').value = '女, 男';
     setPeople(SAMPLE.map(function (s) { return { name: s[0], label: s[1] }; }));
     var idOf = {};
     people.forEach(function (p) { idOf[p.name] = p.id; });
@@ -912,9 +923,7 @@
     $('hw-mode').value = 'groups';
     rebuildNums();
     $('hw-num').value = '6';
-    currentRosterId = '';
     clearPrev();
-    refreshRosterList();
     rosterNote('');
     $('hw-bulk').hidden = true;
     updateCount();
@@ -1063,36 +1072,9 @@
   $('hw-again').addEventListener('click', run);
   $('hw-copy').addEventListener('click', function () { R.copyText($('hw-out').value, this); });
   $('hw-print').addEventListener('click', function () { window.print(); });
-  $('hw-remember').addEventListener('click', rememberGrouping);
-  $('hw-download').addEventListener('click', downloadResult);
+  $('hw-download').addEventListener('click', function () { downloadState(true); });
+  $('hw-csv-save').addEventListener('click', function () { downloadState(false); });
   $('hw-sample').addEventListener('click', loadSample);
-
-  /* 名簿の保存 */
-  $('hw-roster-list').addEventListener('change', function () {
-    if (this.value) doLoadRoster(this.value);
-  });
-  $('hw-roster-load').addEventListener('click', function () { doLoadRoster($('hw-roster-list').value); });
-  $('hw-roster-del').addEventListener('click', function () { doDeleteRoster($('hw-roster-list').value); });
-  $('hw-roster-save').addEventListener('click', function () {
-    if (!filledPeople().length) {
-      rosterNote('名簿が空です。名前を入れてから保存してください。', 'error');
-      return;
-    }
-    var current = R.find(currentRosterId);
-    $('hw-save-name').value = current ? current.label : '';
-    $('hw-save-row').hidden = false;
-    $('hw-save-name').focus();
-  });
-  $('hw-save-cancel').addEventListener('click', function () { $('hw-save-row').hidden = true; });
-  $('hw-save-ok').addEventListener('click', function () {
-    var label = $('hw-save-name').value.trim();
-    if (!label) { rosterNote('名簿の名前を入れてください（例：3年2組）。', 'error'); return; }
-    $('hw-save-row').hidden = true;
-    doSaveRoster(label);
-  });
-  $('hw-save-name').addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') { e.preventDefault(); $('hw-save-ok').click(); }
-  });
 
   $('hw-prev-clear').addEventListener('click', clearPrev);
 
@@ -1104,24 +1086,15 @@
   $('hw-csv-head').addEventListener('change', function () { if (csvRows) renderCsvPick(); });
   $('hw-csv-cancel').addEventListener('click', closeCsvPick);
   $('hw-csv-ok').addEventListener('click', applyCsvPick);
-  // 1回目のクリックで「なまえ」、もう1回で「ラベル」、もう1回で解除
-  $('hw-csv-cols').addEventListener('click', function (e) {
-    var btn = e.target.closest('.hw-csv-col');
-    if (!btn) return;
-    var c = Number(btn.getAttribute('data-col'));
-    if (csvNameCols[c]) {
-      delete csvNameCols[c];
-      csvLabelCol = c;
-    } else if (csvLabelCol === c) {
-      csvLabelCol = -1;
-    } else {
-      csvNameCols[c] = true;
-    }
+  // 列ごとに役割をえらぶ（見出しから自動で当たっていることが多い）
+  $('hw-csv-cols').addEventListener('change', function (e) {
+    if (!e.target.classList.contains('hw-csv-role-sel')) return;
+    csvRoles[Number(e.target.getAttribute('data-col'))] = e.target.value;
     renderCsvPick();
   });
 
   rebuildNums();
   setPeople([{ name: '' }, { name: '' }, { name: '' }]);
   renderRules();
-  refreshRosterList();
+
 })();
