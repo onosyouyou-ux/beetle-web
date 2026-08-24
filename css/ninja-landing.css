@@ -237,3 +237,99 @@ body.ninja-lp-space {
   .ninja-lp-space .slp-hero::before { top:12px; }
   .ninja-lp-space .slp-hero-visual { min-height:290px; }
 }
+
+/* Ninja landing v2 — match the modern in-app art direction. */
+.ninja-landing {
+  --nl-deep:#0c202a;
+  --nl-deeper:#08161e;
+  background:#0a1720 url('/assets/images/bg-mosaic.png') 0 0/160px;
+}
+.ninja-landing main {
+  background:#f4f0e7;
+  box-shadow:0 24px 70px rgba(0,0,0,.42);
+}
+.ninja-landing .eal-hero {
+  border-bottom:0;
+  background:
+    linear-gradient(102deg,var(--nl-deep) 0 60%,transparent 60.3%),
+    linear-gradient(135deg,var(--nl-soft),color-mix(in srgb,var(--nl-soft) 60%,#fff));
+  box-shadow:inset 0 -6px 0 var(--nl-accent);
+}
+.ninja-landing .eal-hero::before {
+  opacity:.2;
+  background:
+    radial-gradient(circle at 8% 18%,#fff 0 1px,transparent 2px),
+    radial-gradient(circle at 25% 72%,#fff 0 1px,transparent 2px);
+  background-size:80px 80px,120px 120px;
+}
+.ninja-landing .eal-hero .eal-container { min-height:480px; }
+.ninja-landing .eal-hero .eal-container::after {
+  min-height:400px;
+  filter:drop-shadow(0 20px 18px rgba(0,0,0,.3));
+}
+.ninja-landing .eal-badge {
+  border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.1);
+}
+.ninja-landing .eal-btn-primary {
+  border:0;
+  border-radius:10px;
+  box-shadow:0 5px 0 var(--nl-dark);
+  clip-path:none;
+}
+.ninja-landing .eal-section {
+  background:#f8f5ee;
+}
+.ninja-landing .eal-section-tint {
+  border-block:0;
+  background:color-mix(in srgb,var(--nl-soft) 30%,#f8f5ee);
+}
+.ninja-landing .eal-head h2::after {
+  height:4px;
+  border-radius:99px;
+  clip-path:none;
+}
+.ninja-landing .eal-card {
+  border:0;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 10px 28px rgba(45,35,25,.1);
+  clip-path:none;
+}
+.ninja-landing .eal-card::before { display:none; }
+.ninja-landing .eal-card-num {
+  box-shadow:none;
+}
+.ninja-landing .eal-point {
+  border:0;
+  border-left:4px solid var(--nl-accent);
+  border-radius:10px;
+  background:#fff;
+  box-shadow:0 6px 18px rgba(45,35,25,.08);
+}
+.ninja-landing .eal-feature>img {
+  border:0;
+  border-radius:18px;
+  background:linear-gradient(145deg,#fff,var(--nl-soft));
+  box-shadow:0 14px 34px rgba(45,35,25,.14);
+}
+.ninja-landing .eal-faq details {
+  overflow:hidden;
+  border:0;
+  border-radius:10px;
+  background:#fff;
+  box-shadow:0 4px 14px rgba(45,35,25,.07);
+}
+.ninja-landing .eal-final {
+  border-top:0;
+  background:
+    radial-gradient(circle at 80% 20%,color-mix(in srgb,var(--nl-accent) 24%,transparent),transparent 35%),
+    linear-gradient(120deg,var(--nl-deeper),var(--nl-deep));
+}
+@media (max-width:760px) {
+  .ninja-landing .eal-hero {
+    background:
+      linear-gradient(var(--nl-deep) 0 58%,transparent 58.3%),
+      linear-gradient(135deg,var(--nl-soft),color-mix(in srgb,var(--nl-soft) 60%,#fff));
+  }
+}
