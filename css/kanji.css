@@ -130,7 +130,7 @@ body{
 .kj-more{font-size:13px;line-height:1.9;color:var(--kj-ink2);margin:24px 0 0;padding-top:16px;border-top:1px dashed var(--kj-line)}
 .kj-more a{color:var(--kj-orange);font-weight:700}
 
-@media(max-width:760px){
+@media(max-width:767px){
   .kj-hero{padding:26px 20px 22px}
   .kj-hero h1{font-size:26px}
   .kj-ask-word{font-size:38px}

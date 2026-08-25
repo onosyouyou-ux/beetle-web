@@ -172,7 +172,7 @@ body{
 .rj-more{font-size:13px;color:var(--rj-ink2);margin:20px 0 0;line-height:1.9}
 .rj-more a{color:var(--rj-orange-dk);font-weight:700}
 
-@media (max-width:640px){
+@media (max-width:767px){
   .rj-hero{padding:24px 20px 22px}
   .rj-hero h1{font-size:26px}
   .rj-q-word{font-size:28px}
@@ -204,7 +204,7 @@ body{
 .rj-input.is-wrong{border-color:var(--rj-red);background:var(--rj-red-bg);color:var(--rj-red)}
 .rj-input:disabled{opacity:1}
 
-@media (max-width:640px){
+@media (max-width:767px){
   .rj-input{font-size:18px;min-width:0}
   .rj-table{font-size:12.5px}
 }

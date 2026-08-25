@@ -172,7 +172,7 @@ body{
 .pn-more{font-size:13px;color:var(--pn-ink2);margin:20px 0 0;line-height:1.9}
 .pn-more a{color:var(--pn-orange-dk);font-weight:700}
 
-@media (max-width:640px){
+@media (max-width:767px){
   .pn-hero{padding:24px 20px 22px}
   .pn-hero h1{font-size:26px}
   .pn-q-word{font-size:28px}
@@ -193,6 +193,6 @@ body{
 .pn-rules li{margin-bottom:10px}
 .pn-rules li span{color:var(--pn-ink2);font-weight:400}
 
-@media (max-width:640px){
+@media (max-width:767px){
   .pn-q-word{font-size:40px}
 }

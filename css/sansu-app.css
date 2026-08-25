@@ -792,7 +792,7 @@ body::after {
 }
 
 /* ── スマホ：コンテンツエリアは画面幅-24px（最大560px）── */
-@media (max-width: 700px) {
+@media (max-width: 767px) {
   .app-paper {
     max-width: 560px;
     margin: 12px auto;

@@ -44,7 +44,7 @@ body.ninja-space {
   --nk-accent:#8b5cf6;
   background:#071329 url('/assets/images/ninja/space-village-bg.webp') center top / cover fixed no-repeat;
 }
-@media (max-width:759px) {
+@media (max-width:767px) {
   body:is(.ninja-tokei,.ninja-kanji,.ninja-katakana,.ninja-romaji,.ninja-phonics) { background-attachment:scroll; }
 }
 .ninja-kids:not(.ninja-space) .app-paper {
@@ -100,7 +100,7 @@ body.ninja-space {
 .ninja-space .sa-head-badge { width:96px; height:96px; object-fit:contain; filter:drop-shadow(0 8px 12px rgba(0,0,0,.35)); }
 
 /* Fit the interactive area inside a 720-768px-tall notebook or landscape tablet viewport. */
-@media (min-width:760px) and (max-height:820px) {
+@media (min-width:768px) and (max-height:820px) {
   .ninja-kids .tk-hero,.ninja-kids .kj-hero,.ninja-kids .kt-hero,.ninja-kids .rj-hero,.ninja-kids .pn-hero { min-height:82px; padding:8px 32px 7px; }
   .ninja-mascot { left:max(16px,calc(50% - 320px)); bottom:-13px; width:100px; height:100px; }
   .ninja-kids .tk-eyebrow,.ninja-kids .kj-eyebrow,.ninja-kids .kt-eyebrow,.ninja-kids .rj-eyebrow,.ninja-kids .pn-eyebrow { margin-bottom:2px; font-size:10px; }
@@ -129,7 +129,7 @@ body.ninja-space {
   .ninja-space .sa-reset { margin-top:7px; }
   .ninja-space .paper-about,.ninja-space .paper-release { display:none; }
 }
-@media (max-width:700px) {
+@media (max-width:767px) {
   .ninja-mascot { position:relative; left:auto; bottom:auto; width:82px; height:82px; margin:-7px auto -12px; }
   .ninja-kids .tk-hero,.ninja-kids .kj-hero,.ninja-kids .kt-hero,.ninja-kids .rj-hero,.ninja-kids .pn-hero { padding-inline:16px; }
 }
@@ -458,7 +458,7 @@ body.ninja-space {
   margin:0;
 }
 
-@media (min-width:760px) and (max-height:820px) {
+@media (min-width:768px) and (max-height:820px) {
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) {
     min-height:154px!important;
     grid-template-columns:minmax(0,1fr) 230px!important;
@@ -488,7 +488,7 @@ body.ninja-space {
   .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card) { padding-block:12px; }
 }
 
-@media (max-width:759px) {
+@media (max-width:767px) {
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),
   .ninja-kids .app-ref-hero {
     grid-template-columns:1fr!important;
@@ -786,7 +786,7 @@ body.ninja-space {
   background:#fff;
   box-shadow:0 4px 14px rgba(50,39,27,.06);
 }
-@media (min-width:760px) and (max-height:820px) {
+@media (min-width:768px) and (max-height:820px) {
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) {
     min-height:150px!important;
   }
@@ -800,7 +800,7 @@ body.ninja-space {
     height:145px;
   }
 }
-@media (max-width:759px) {
+@media (max-width:767px) {
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) {
     background:
       linear-gradient(var(--nk-deep) 0 58%,transparent 58.3%),
@@ -975,7 +975,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu)::before,
   .ninja-space .sa-play-head::after { animation:none; }
 }
-@media (max-width:759px) {
+@media (max-width:767px) {
   .ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar)::after {
     width:94px;
     height:30px;
@@ -996,7 +996,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 .ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar)::after { content:none; }
 .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock) {
   gap:0;
-  min-height:68px;
+  min-height:var(--nk-tap);
 }
 .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock)::before {
   content:none;
@@ -1072,7 +1072,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   background:linear-gradient(145deg,#fff,#f4f0ff);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.9),0 8px 20px rgba(64,42,125,.1);
 }
-@media (min-width:760px) {
+@media (min-width:768px) {
   .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card) {
     grid-template-rows:auto minmax(168px,1fr) auto;
     align-items:stretch;
@@ -1091,14 +1091,14 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     margin:0;
   }
 }
-@media (max-width:759px) {
+@media (max-width:767px) {
   .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem {
     min-height:138px;
     padding:16px 10px;
   }
 }
 /* Keep arithmetic expressions on one line by giving the space board more room. */
-@media (min-width:760px) {
+@media (min-width:768px) {
   .ninja-space .app-paper {
     width:min(900px,100%);
     max-width:900px;
@@ -1130,16 +1130,178 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 .ninja-kids.ninja-kanji .paper-release {
   color:#91a3a8;
 }
-@media (min-width:760px) {
+@media (min-width:768px) {
   .ninja-kids.ninja-kanji .kj-play {
     height:316px;
     min-height:316px;
     box-sizing:border-box;
   }
 }
-@media (min-width:760px) and (max-height:820px) {
+@media (min-width:768px) and (max-height:820px) {
   .ninja-kids.ninja-kanji .kj-play {
     height:275px;
     min-height:275px;
   }
+}
+
+/* ============================================================
+   3段レスポンシブ（PC／タブレット／スマホ）2026-08-25
+   スマホ       : ~767px              → 1カラム
+   タブレット縦 : 768~1179px portrait  → 1カラム（大きめ）
+   タブレット横 : 768~1179px landscape → 2カラム（大きめ）
+   PC           : 1180px~             → 2カラム（既定）
+   タップ領域は --nk-tap で段ごとに一括指定する。
+   ============================================================ */
+.ninja-kids { --nk-tap:68px; }
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) { min-height:var(--nk-tap); }
+
+/* ---------- スマホ（~767px） ---------- */
+@media (max-width:767px) {
+  .ninja-kids { --nk-tap:60px; }
+  .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) { min-height:56px; }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) {
+    min-height:0!important;
+    padding:16px 16px 18px!important;
+  }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero)::before { content:none; }
+  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) {
+    grid-template-rows:auto;
+    gap:10px;
+    min-height:0;
+    padding:14px 12px 16px;
+    border-radius:14px;
+  }
+  /* 盤面の子要素は行の明示指定をやめ、上から順に積む */
+  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz)>*,
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>* {
+    grid-column:1;
+    grid-row:auto;
+  }
+  /* ○×の全面フィードバックは盤面全体に重ねたまま保つ */
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) {
+    grid-column:1 / -1;
+    grid-row:1 / -1;
+  }
+  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices) { gap:8px; }
+  .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) {
+    padding:14px;
+    padding-top:66px;
+    border-radius:14px;
+  }
+  .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu)::before { width:180px; height:48px; }
+  .ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) { padding:32px 16px 44px; }
+}
+
+/* ---------- タブレット共通（768~1179px） ---------- */
+@media (min-width:768px) and (max-width:1179px) {
+  .ninja-kids { --nk-tap:76px; }
+  .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) { min-height:72px; }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),
+  .ninja-kids .app-ref-hero {
+    grid-template-columns:minmax(0,1fr) 210px!important;
+    padding:16px 22px 16px 26px!important;
+  }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero)::before {
+    right:224px;
+    font-size:98px;
+  }
+  .ninja-kids .app-ref-visual.is-ninja .ninja-mascot,
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot {
+    width:196px;
+    height:148px;
+  }
+  .ninja-kids .app-ref-visual.is-ninja { min-height:148px; }
+  .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) {
+    padding:20px clamp(16px,3vw,34px) 24px;
+  }
+  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) { font-size:20px; }
+  .ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) { padding:40px 28px 52px; }
+}
+
+/* ---------- タブレット縦（768~1179px・縦持ち） ---------- */
+@media (min-width:768px) and (max-width:1179px) and (orientation:portrait) {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) { min-height:170px!important; }
+
+  /* 盤面を1カラムに積む：もんだい → こたえ */
+  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz),
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card) {
+    grid-template-columns:1fr;
+    grid-template-rows:auto;
+    gap:14px;
+    min-height:0;
+    padding:18px 18px 20px;
+  }
+  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz)>*,
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>* {
+    grid-column:1;
+    grid-row:auto;
+  }
+  /* ○×の全面フィードバックは盤面全体に重ねたまま保つ */
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) {
+    grid-column:1 / -1;
+    grid-row:1 / -1;
+  }
+  .ninja-kids :is(.tk-ask,.kj-ask,.kt-q,.rj-q,.pn-q) { min-height:220px; }
+  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices) { gap:12px; }
+
+  /* こたえあわせパネルは選択肢の位置に重ねず、下に出す */
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on {
+    grid-column:1;
+    grid-row:auto;
+    min-height:0;
+    padding:20px 24px;
+  }
+
+  /* とけい修行・さんすう：より詳細度の高い列指定を上書きして積む */
+  .ninja-kids .tk-play>:is(.tk-play-head,.tk-bar,.tk-ask,.tk-stage,.tk-options,.tk-hint-btn,.tk-hint,.tk-feedback,.tk-back) {
+    grid-column:1;
+    grid-row:auto;
+  }
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>:is(.sa-question-text,.sa-problem,.sa-options,.sa-feedback) {
+    grid-column:1;
+    grid-row:auto;
+  }
+
+  /* とけい修行：時計のステージを大きく取る */
+  .ninja-kids .tk-play>.tk-stage { min-height:280px; }
+  .ninja-kids .tk-play>.tk-stage .tk-clock { width:min(280px,100%); }
+  .ninja-kids .tk-play:not(:has(.tk-stage))>.tk-ask { min-height:220px; font-size:34px; }
+  .ninja-kids .tk-play>.tk-options.is-clock .tk-clock { width:min(150px,100%); }
+
+  /* かんじ修行：横持ち用の固定高さを解除 */
+  .ninja-kids.ninja-kanji .kj-play { height:auto; min-height:0; }
+
+  /* さんすう：式は折り返してよい（1行固定は横持ちだけ） */
+  .ninja-space .app-paper { width:min(760px,100%); max-width:760px; }
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem {
+    flex-wrap:wrap;
+    white-space:normal;
+    min-height:200px;
+  }
+  .ninja-space .sa-options { gap:16px; }
+  .ninja-space .sa-opt { font-size:32px; }
+}
+
+/* ---------- タブレット横（768~1179px・横持ち） ---------- */
+@media (min-width:768px) and (max-width:1179px) and (orientation:landscape) {
+  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) {
+    grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
+    gap:12px 18px;
+    padding:14px 16px 16px;
+  }
+  .ninja-kids .tk-play {
+    grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
+  }
+  .ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask,.tk-ask) { min-height:170px; }
+  .ninja-kids .tk-play>.tk-stage { min-height:190px; }
+  .ninja-kids .tk-play>.tk-stage .tk-clock { width:min(180px,100%); }
+  .ninja-kids .tk-play>.tk-options.is-clock .tk-clock { width:min(104px,100%); }
+  .ninja-space .app-paper { width:min(100%,1000px); max-width:1000px; }
+  .ninja-space .sa-opt { font-size:28px; }
+}
+
+/* 1カラムに積むとき（スマホ・タブレット縦）は、といのラベルを重ねず上に置く */
+@media (max-width:767px), (min-width:768px) and (max-width:1179px) and (orientation:portrait) {
+  .ninja-kids .kj-ask-label { margin:0; }
+  .ninja-kids .kj-ask { padding-top:0; }
 }

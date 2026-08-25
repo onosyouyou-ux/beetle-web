@@ -172,7 +172,7 @@ body{
 .kt-more{font-size:13px;color:var(--kt-ink2);margin:20px 0 0;line-height:1.9}
 .kt-more a{color:var(--kt-orange-dk);font-weight:700}
 
-@media (max-width:640px){
+@media (max-width:767px){
   .kt-hero{padding:24px 20px 22px}
   .kt-hero h1{font-size:26px}
   .kt-q-word{font-size:28px}
