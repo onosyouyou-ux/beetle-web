@@ -1638,3 +1638,143 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     background:rgba(10,28,38,.78);
   }
 }
+
+/* とけいのメニューは選択肢が短い。紙面いっぱいに広げると文字が箱の中で浮くので、
+   メニューの中身だけ幅を絞る（なんいどを縦1列にしたぶん、間延びも防ぐ）。 */
+@media (min-width:768px) {
+  .ninja-kids.ninja-tokei .tk-menu { width:min(100%,640px); }
+}
+
+/* とけいのメニューも1画面に収める。
+   なんいどを縦4段にしたぶん縦に伸びるので、幅のある画面では
+   「といかた＋設定＋見本の時計」と「なんいど」を左右に分ける。 */
+@media (min-width:768px) {
+  .ninja-kids.ninja-tokei .tk-menu {
+    width:min(100%,860px);
+    display:grid;
+    grid-template-columns:minmax(0,.82fr) minmax(0,1fr);
+    grid-template-rows:auto auto auto auto;
+    column-gap:24px;
+    align-items:start;
+    padding-top:60px;
+  }
+  .ninja-kids.ninja-tokei .tk-menu>.tk-group:nth-of-type(1) { grid-column:1; grid-row:1; }
+  .ninja-kids.ninja-tokei .tk-menu>.tk-group:nth-of-type(2) { grid-column:2; grid-row:1 / 4; margin-bottom:0; }
+  .ninja-kids.ninja-tokei .tk-menu>.tk-toggle { grid-column:1; grid-row:2; }
+  .ninja-kids.ninja-tokei .tk-menu>.tk-preview { grid-column:1; grid-row:3; }
+  .ninja-kids.ninja-tokei .tk-menu>.tk-start { grid-column:1 / -1; grid-row:4; }
+  .ninja-kids.ninja-tokei .tk-menu::before { width:180px; height:46px; top:9px; }
+}
+
+/* 見本の時計・アイテム絵・行の高さを画面の高さから決める（px固定をやめる） */
+.ninja-kids.ninja-tokei .tk-preview svg {
+  width:auto;
+  height:clamp(88px,15dvh,150px);
+}
+.ninja-kids.ninja-tokei .tk-group { margin-bottom:14px; }
+
+@media (max-width:767px) {
+  .ninja-kids.ninja-tokei .tk-menu { padding-top:48px; }
+  .ninja-kids.ninja-tokei .tk-menu::before { width:150px; height:38px; top:8px; }
+  .ninja-kids.ninja-tokei .tk-group { margin-bottom:10px; }
+  .ninja-kids.ninja-tokei .tk-group-title { margin-bottom:6px; }
+  .ninja-kids.ninja-tokei .tk-start { padding-block:12px; }
+}
+
+/* 寝かせた画面：見本の時計とアイテム絵は畳んで、選ぶところだけ残す */
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-kids.ninja-tokei .tk-menu { padding-top:12px; }
+  .ninja-kids.ninja-tokei .tk-menu::before { content:none; }
+  .ninja-kids.ninja-tokei .tk-preview { display:none; }
+  .ninja-kids.ninja-tokei .tk-menu>.tk-start { grid-row:3; }
+  .ninja-kids.ninja-tokei .tk-menu>.tk-group:nth-of-type(2) { grid-row:1 / 3; }
+  .ninja-kids.ninja-tokei .tk-group { margin-bottom:8px; }
+}
+
+/* メニューで「いま選んでいるもの」をはっきり出す。
+   v3のスキンが border を0（左の5pxだけ）にしたため、各アプリのCSSが持つ
+   .is-on（枠の色替え）が効かず、初期選択がどれか分からなくなっていた。 */
+.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) {
+  position:relative;
+}
+.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice).is-on {
+  border-left-color:var(--nk-accent);
+  background:color-mix(in srgb,var(--nk-accent) 11%,#fff);
+  box-shadow:
+    inset 0 0 0 2px var(--nk-accent),
+    0 5px 0 color-mix(in srgb,var(--nk-accent) 42%,#d2c9b8);
+}
+.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice).is-on::after {
+  content:'✓';
+  position:absolute;
+  top:5px;
+  right:9px;
+  color:var(--nk-accent);
+  font-size:13px;
+  font-weight:900;
+  line-height:1;
+  pointer-events:none;
+}
+.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice).is-on :is(.tk-choice-label,.kj-choice-label,.kt-choice-label) {
+  color:var(--nk-accent-dark);
+}
+
+/* 寝かせた画面は幅が768pxに満たない端末（iPhone SE 横=667px など）もあるので、
+   2カラムのメニューは「幅」ではなく「寝かせているか」で出す。 */
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-kids.ninja-tokei .tk-menu {
+    width:min(100%,780px);
+    display:grid;
+    grid-template-columns:minmax(0,.8fr) minmax(0,1fr);
+    grid-template-rows:auto auto auto;
+    column-gap:16px;
+    align-items:start;
+  }
+  .ninja-kids.ninja-tokei .tk-menu>.tk-group:nth-of-type(1) { grid-column:1; grid-row:1; }
+  .ninja-kids.ninja-tokei .tk-menu>.tk-group:nth-of-type(2) { grid-column:2; grid-row:1 / 4; margin-bottom:0; }
+  .ninja-kids.ninja-tokei .tk-menu>.tk-toggle { grid-column:1; grid-row:2; }
+  /* スタートは左の列に置く。全幅にすると なんいど の下に1行増えて入らない */
+  .ninja-kids.ninja-tokei .tk-menu>.tk-start { grid-column:1; grid-row:3; padding-block:9px; font-size:17px; }
+  .ninja-kids.ninja-tokei .tk-group-title { margin-bottom:4px; font-size:11px; }
+  .ninja-kids.ninja-tokei .tk-choices { gap:6px; }
+  .ninja-kids.ninja-tokei .tk-choices-level .tk-choice { padding:5px 10px; }
+  .ninja-kids.ninja-tokei .tk-choice-label { font-size:14px; }
+  .ninja-kids.ninja-tokei .tk-choice-note { font-size:10px; }
+  .ninja-kids.ninja-tokei .tk-shuriken { width:13px; height:13px; }
+}
+
+/* スマホ縦：メニューも1画面に収める */
+@media (max-width:767px) and (orientation:portrait) {
+  .ninja-kids.ninja-tokei .tk-menu { padding-top:34px; padding-bottom:12px; }
+  .ninja-kids.ninja-tokei .tk-menu::before { width:120px; height:30px; top:6px; }
+  .ninja-kids.ninja-tokei .tk-group { margin-bottom:8px; }
+  .ninja-kids.ninja-tokei .tk-group-title { margin-bottom:5px; font-size:11.5px; }
+  .ninja-kids.ninja-tokei .tk-choices { gap:7px; }
+  .ninja-kids.ninja-tokei .tk-choices-level .tk-choice { padding:6px 12px; }
+  .ninja-kids.ninja-tokei .tk-choice-note { font-size:10.5px; }
+  .ninja-kids.ninja-tokei .tk-start { padding-block:11px; font-size:19px; }
+  .ninja-kids.ninja-tokei .tk-preview svg { height:clamp(64px,11dvh,120px); }
+  .ninja-kids.ninja-tokei .tk-toggle { margin-block:2px; }
+}
+
+/* 背の低いスマホ（640px級）は見本の時計まで置くと入らない。
+   「ぷんの すう字を 出す」はラベルで意味が通るので、そこだけ畳む。 */
+@media (max-width:767px) and (orientation:portrait) and (max-height:699px) {
+  .ninja-kids.ninja-tokei .tk-preview { display:none; }
+}
+
+/* 最後の数pxを詰める（実測で 360x640 と 852x393 がわずかに溢れていた） */
+@media (max-width:767px) and (orientation:portrait) {
+  .ninja-kids.ninja-tokei .tk-menu { padding-top:30px; padding-bottom:10px; }
+}
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-kids.ninja-tokei .tk-menu { padding-bottom:8px; }
+  .ninja-kids.ninja-tokei .tk-choices { gap:5px; }
+  .ninja-kids.ninja-tokei .tk-menu>.tk-start { padding-block:7px; }
+}
+
+/* 寝かせた画面ではタブレット段のタップ領域(72px)が効いてメニューが伸びる。
+   横持ちは高さが足りないので、メニューの選択肢だけ下限を下げる。 */
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) { min-height:44px; }
+}

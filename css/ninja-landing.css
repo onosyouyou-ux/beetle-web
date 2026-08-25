@@ -343,7 +343,7 @@ body.ninja-lp-tokei { --nl-items:url('/assets/images/ninja/items/tokei-items.web
 body.ninja-lp-kanji { --nl-items:url('/assets/images/ninja/items/kanji-items.webp'); }
 body.ninja-lp-katakana { --nl-items:url('/assets/images/ninja/items/katakana-items.webp'); }
 body.ninja-lp-romaji { --nl-items:url('/assets/images/ninja/items/romaji-items.webp'); }
-body.ninja-lp-phonics { --nl-items:url('/assets/images/ninja/items/phonics-items.webp'); }
+body.ninja-lp-phonics { --nl-items:url('/assets/images/ninja/items/phonics-ninja-tools.png'); }
 .ninja-landing .eal-hero + .eal-section .eal-head::before {
   content:'';
   display:block;
@@ -372,6 +372,9 @@ body.ninja-lp-phonics { --nl-items:url('/assets/images/ninja/items/phonics-items
 .ninja-landing .eal-grid-3 .eal-card:nth-child(2)::before { background-position:33.333% 50%; }
 .ninja-landing .eal-grid-3 .eal-card:nth-child(3)::before { background-position:66.666% 50%; }
 .ninja-landing .eal-grid-3 .eal-card:nth-child(4)::before { background-position:100% 50%; }
+.ninja-landing .eal-feature-copy .eal-head { text-align:left; margin:0 0 22px; }
+body.ninja-lp-phonics .eal-card-num { display:none; }
+
 
 /* ランディングのヒーロー画像（.eal-container::after）はモバイルでも400px高のまま
    だったため、本文のあとに大きな画像の塊が入って「改行」したように見えていた。

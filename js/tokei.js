@@ -197,7 +197,7 @@
     var wrap = el('div', 'tk-menu');
 
     wrap.appendChild(group('といかた', MODES, 'modeId'));
-    wrap.appendChild(group('むずかしさ', STEPS, 'stepId'));
+    wrap.appendChild(group('なんいど', STEPS, 'stepId', true));
 
     var opt = el('label', 'tk-toggle');
     var cb = document.createElement('input');
@@ -223,13 +223,35 @@
     app.appendChild(wrap);
   }
 
-  function group(title, items, key) {
+  // 手裏剣1枚。中心の穴は fill-rule="evenodd" で抜いている
+  var SHURIKEN_SVG = '<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">'
+    + '<path fill-rule="evenodd" d="M12 1 17.2 6.8 23 12 17.2 17.2 12 23 6.8 17.2 1 12 6.8 6.8Z'
+    + 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/></svg>';
+
+  // なんいどは手裏剣の数で見せる（全部で total 枚、うち level 枚が光る）。
+  // 数字も文字も読まずに「どれが やさしいか」が分かるようにするため。
+  function levelBadge(level, total) {
+    var box = el('span', 'tk-level');
+    box.setAttribute('aria-hidden', 'true');
+    for (var i = 1; i <= total; i++) {
+      var one = el('span', i <= level ? 'tk-shuriken is-on' : 'tk-shuriken');
+      one.innerHTML = SHURIKEN_SVG;
+      box.appendChild(one);
+    }
+    return box;
+  }
+
+  function group(title, items, key, withLevel) {
     var sec = el('section', 'tk-group');
     sec.appendChild(el('h2', 'tk-group-title', title));
-    var grid = el('div', 'tk-choices');
-    items.forEach(function (item) {
+    var grid = el('div', withLevel ? 'tk-choices tk-choices-level' : 'tk-choices');
+    items.forEach(function (item, i) {
       var btn = el('button', 'tk-choice');
       btn.type = 'button';
+      if (withLevel) {
+        btn.appendChild(levelBadge(i + 1, items.length));
+        btn.setAttribute('aria-label', item.name + '（なんいど ' + (i + 1) + ' / ' + items.length + '）');
+      }
       btn.appendChild(el('span', 'tk-choice-label', item.name));
       btn.appendChild(el('span', 'tk-choice-note', item.note));
       if (state[key] === item.id) btn.classList.add('is-on');

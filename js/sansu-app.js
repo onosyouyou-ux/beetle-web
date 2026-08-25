@@ -801,7 +801,6 @@
     setTimeout(() => { if (session) nextQuestion(); }, 1200);
   }
 
-
   // 画面中央に短く出す答え合わせ演出。次の問題を邪魔しないようDOMは自動で片づける。
   function showAnswerEffect(ok) {
     const old = document.querySelector('.sa-answer-effect');
@@ -828,6 +827,8 @@
     setTimeout(() => effect.classList.add('is-leaving'), 850);
     setTimeout(() => effect.remove(), 1150);
   }
+
+
   // ---- けっか ----
   function renderResult(complete) {
     const s = session;
