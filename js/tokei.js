@@ -12,8 +12,8 @@
   var SET_LENGTH = 10;
 
   var STEPS = [
-    { id: 'hour', name: 'ちょうど', note: '〇じ ぴったり', step: 60 },
-    { id: 'half', name: '30ぷん', note: '〇じはん も', step: 30 },
+    { id: 'hour', name: 'じかんのみ', note: '〇じ ぴったり', step: 60 },
+    { id: 'half', name: '30ぷんきざみ', note: '〇じはん も', step: 30 },
     { id: 'five', name: '5ふんきざみ', note: '5・10・15…', step: 5 },
     { id: 'one', name: '1ぷんきざみ', note: 'ぜんぶの ぷん', step: 1 }
   ];
@@ -205,7 +205,7 @@
     cb.checked = state.showMinutes;
     cb.addEventListener('change', function () { state.showMinutes = cb.checked; });
     opt.appendChild(cb);
-    opt.appendChild(el('span', null, 'ぷんの すう字を 出す'));
+    opt.appendChild(el('span', null, 'とけいに ふんを ひょうじする'));
     wrap.appendChild(opt);
 
     var preview = el('div', 'tk-preview');

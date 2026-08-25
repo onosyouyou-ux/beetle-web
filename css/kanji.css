@@ -55,7 +55,7 @@ body{
 #kj-app{max-width:700px;margin:0 auto;padding:26px 20px 0}
 .kj-group{margin-bottom:22px}
 .kj-group-title{font-size:13px;font-weight:800;color:var(--kj-ink2);margin:0 0 10px;text-align:center;letter-spacing:.1em}
-.kj-choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.kj-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .kj-choice{
   display:flex;flex-direction:column;align-items:center;gap:3px;
   background:#fff;border:2px solid var(--kj-line2);border-radius:14px;
@@ -136,4 +136,13 @@ body{
   .kj-ask-word{font-size:38px}
   .kj-ask-yomi{font-size:28px}
   .kj-steps{grid-template-columns:1fr}
+}
+
+/* ====== 設定は列にならべる（とけい修行に合わせる。2026-08-25） ======
+   がくねんは 小1→小2→ぜんぶ の順があるので縦1列。
+   といかた（よみかた／かんじ）は順序のない2択なので横2つのまま。 */
+.kj-choices-column{grid-template-columns:1fr}
+.kj-choices-column .kj-choice{
+  display:grid;grid-template-columns:1fr;justify-items:start;
+  text-align:left;gap:1px;padding:10px 16px;
 }

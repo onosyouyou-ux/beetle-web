@@ -121,7 +121,7 @@
   function renderMenu() {
     app.innerHTML = '';
     var wrap = el('div', 'kj-menu');
-    wrap.appendChild(group('がくねん', GRADES, 'gradeId'));
+    wrap.appendChild(group('がくねん', GRADES, 'gradeId', true));
     wrap.appendChild(group('といかた', MODES, 'modeId'));
 
     var start = el('button', 'kj-start', 'スタート');
@@ -131,10 +131,10 @@
     app.appendChild(wrap);
   }
 
-  function group(title, items, key) {
+  function group(title, items, key, column) {
     var sec = el('section', 'kj-group');
     sec.appendChild(el('h2', 'kj-group-title', title));
-    var grid = el('div', 'kj-choices');
+    var grid = el('div', column ? 'kj-choices kj-choices-column' : 'kj-choices');
     items.forEach(function (item) {
       var btn = el('button', 'kj-choice');
       btn.type = 'button';

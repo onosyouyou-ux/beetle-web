@@ -16,4 +16,4 @@ required_selectors: ["#site-header", ".eal-hero", "#howto", "#faq", ".eal-final"
   **カードの絵と番号は同じ行**に置く（1カラムに折り返したときに大きな塊・余分な改行を作らない）
 - **構成**: ヒーロー → 特徴3つ → 難しさ4段階 → 使い方3ステップ → FAQ → CTA
 - **SEO**: SoftwareApplication・HowTo・FAQPage、canonical self。アプリ本体のcanonicalもこのURLへ向ける
-- **手動確認観点**: ちょうど・30分・5分・1分の4段階が明記され、アプリCTAが `/tools/tokei/` へ向いていること
+- **手動確認観点**: じかんのみ・30ぷんきざみ・5ふんきざみ・1ぷんきざみ の4段階が明記され、アプリCTAが `/tools/tokei/` へ向いていること

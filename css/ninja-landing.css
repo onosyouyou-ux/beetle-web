@@ -432,3 +432,26 @@ body.ninja-lp-phonics .eal-card-num { display:none; }
   grid-column:1 / -1;
   grid-row:3;
 }
+
+/* ステップ番号を忍者道具のアイコンに差し替える（番号は絵の中に描かれている）。
+   数字テキストは読み上げのために残し、font-size:0 で見た目だけ消す。
+   アイテム絵（::before）と並べると絵が2つで うるさいので、こちらに一本化する。 */
+.ninja-landing .eal-grid-3 .eal-card::before { content:none; }
+.ninja-landing .eal-grid-3 .eal-card {
+  grid-template-columns:auto 1fr;
+}
+.ninja-landing .eal-grid-3 .eal-card-num {
+  grid-column:1;
+  grid-row:1;
+  width:52px;
+  height:52px;
+  border-radius:0;
+  background:center/contain no-repeat;
+  box-shadow:none;
+  font-size:0;
+  filter:drop-shadow(0 3px 4px rgba(40,28,16,.18));
+}
+.ninja-landing .eal-grid-3 .eal-card:nth-child(1) .eal-card-num { background-image:url('/assets/images/ninja/steps/step-1.png'); }
+.ninja-landing .eal-grid-3 .eal-card:nth-child(2) .eal-card-num { background-image:url('/assets/images/ninja/steps/step-2.png'); }
+.ninja-landing .eal-grid-3 .eal-card:nth-child(3) .eal-card-num { background-image:url('/assets/images/ninja/steps/step-3.png'); }
+.ninja-landing .eal-grid-3 .eal-card:nth-child(4) .eal-card-num { background-image:url('/assets/images/ninja/steps/step-4.png'); }

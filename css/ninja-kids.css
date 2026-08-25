@@ -1793,3 +1793,49 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 @media (max-width:767px) and (orientation:portrait) and (max-height:699px) {
   .ninja-kids.ninja-tokei .tk-menu { padding-bottom:4px; }
 }
+
+/* アプリ内「おうちのかたへ」3ステップの番号も、ランディングと同じ忍者道具アイコンにする。
+   数字テキストは読み上げのために残し、font-size:0 で見た目だけ消す。 */
+.ninja-kids :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) {
+  width:46px;
+  height:46px;
+  margin-bottom:8px;
+  border-radius:0;
+  background:center/contain no-repeat;
+  box-shadow:none;
+  font-size:0;
+  filter:drop-shadow(0 3px 4px rgba(40,28,16,.18));
+}
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step):nth-child(1) :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) { background-image:url('/assets/images/ninja/steps/step-1.png'); }
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step):nth-child(2) :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) { background-image:url('/assets/images/ninja/steps/step-2.png'); }
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step):nth-child(3) :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) { background-image:url('/assets/images/ninja/steps/step-3.png'); }
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step):nth-child(4) :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) { background-image:url('/assets/images/ninja/steps/step-4.png'); }
+
+
+/* かんじも とけい と同じ2カラムメニューにする。
+   がくねんを縦1列にしたぶん縦に伸びるので、といかた＋スタートを左、がくねんを右に置く。
+   DOM順は がくねん→といかた なので nth-of-type(1) が がくねん。 */
+@media (min-width:768px), (orientation:landscape) and (max-height:500px) {
+  .ninja-kids.ninja-kanji .kj-menu {
+    width:min(100%,640px);
+    display:grid;
+    grid-template-columns:minmax(0,.9fr) minmax(0,1fr);
+    grid-template-rows:auto auto;
+    column-gap:22px;
+    align-items:start;
+  }
+  .ninja-kids.ninja-kanji .kj-menu>.kj-group:nth-of-type(1) { grid-column:2; grid-row:1 / 3; margin-bottom:0; }
+  .ninja-kids.ninja-kanji .kj-menu>.kj-group:nth-of-type(2) { grid-column:1; grid-row:1; }
+  .ninja-kids.ninja-kanji .kj-menu>.kj-start { grid-column:1; grid-row:2; align-self:end; }
+}
+
+/* かんじのスマホ縦：がくねんを縦1列にしたぶんを詰めて1画面に収める */
+@media (max-width:767px) and (orientation:portrait) {
+  .ninja-kids.ninja-kanji .kj-menu { padding-top:34px; padding-bottom:8px; }
+  .ninja-kids.ninja-kanji .kj-menu::before { width:120px; height:30px; top:6px; }
+  .ninja-kids.ninja-kanji .kj-group { margin-bottom:8px; }
+  .ninja-kids.ninja-kanji .kj-group-title { margin-bottom:5px; font-size:11.5px; }
+  .ninja-kids.ninja-kanji .kj-choices { gap:7px; }
+  .ninja-kids.ninja-kanji .kj-choices-column .kj-choice { padding:6px 12px; }
+  .ninja-kids.ninja-kanji .kj-start { padding-block:11px; font-size:19px; }
+}
