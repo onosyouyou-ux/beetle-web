@@ -1839,3 +1839,29 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids.ninja-kanji .kj-choices-column .kj-choice { padding:6px 12px; }
   .ninja-kids.ninja-kanji .kj-start { padding-block:11px; font-size:19px; }
 }
+
+/* 番号アイコンと見出しは同じ行に置く（アイコンだけで1行使わない）。
+   本文はその下に、カードの左端から始める。 */
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step) {
+  display:grid;
+  grid-template-columns:auto 1fr;
+  align-items:center;
+  column-gap:12px;
+}
+.ninja-kids :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) {
+  grid-column:1;
+  grid-row:1;
+  margin-bottom:0;
+}
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step)>h3 {
+  grid-column:2;
+  grid-row:1;
+  margin:0;
+}
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step)>p {
+  grid-column:1 / -1;
+  grid-row:2;
+  margin-top:10px;
+}
+
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step)>h3 { font-size:15.5px; line-height:1.5; }

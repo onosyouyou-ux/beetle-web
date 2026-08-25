@@ -700,3 +700,17 @@ img { max-width: 100%; height: auto; }
   .slp-calc-card,
   .slp-text-link span { transition: none; }
 }
+/* さんすうランディングのステップ番号も、修行シリーズと同じ忍者道具アイコンにする。
+   （さくらんぼ算の図で使う .slp-number-ball は説明図の一部なので触らない） */
+.slp-steps .slp-step-no {
+  width:46px;
+  height:46px;
+  border-radius:0;
+  background:center/contain no-repeat;
+  font-size:0;
+  filter:drop-shadow(0 3px 5px rgba(0,0,0,.3));
+}
+.slp-steps .slp-step:nth-child(1) .slp-step-no { background-image:url("/assets/images/ninja/steps/step-1.png"); }
+.slp-steps .slp-step:nth-child(2) .slp-step-no { background-image:url("/assets/images/ninja/steps/step-2.png"); }
+.slp-steps .slp-step:nth-child(3) .slp-step-no { background-image:url("/assets/images/ninja/steps/step-3.png"); }
+.slp-steps .slp-step:nth-child(4) .slp-step-no { background-image:url("/assets/images/ninja/steps/step-4.png"); }

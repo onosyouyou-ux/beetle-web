@@ -424,13 +424,14 @@ body.ninja-lp-phonics .eal-card-num { display:none; }
   margin:0;
 }
 .ninja-landing .eal-grid-3 .eal-card h3 {
-  grid-column:1 / -1;
-  grid-row:2;
-  margin:14px 0 6px;
+  grid-column:2;
+  grid-row:1;
+  margin:0;
 }
 .ninja-landing .eal-grid-3 .eal-card p {
+  grid-row:2;
+  margin-top:12px;
   grid-column:1 / -1;
-  grid-row:3;
 }
 
 /* ステップ番号を忍者道具のアイコンに差し替える（番号は絵の中に描かれている）。
@@ -441,6 +442,7 @@ body.ninja-lp-phonics .eal-card-num { display:none; }
   grid-template-columns:auto 1fr;
 }
 .ninja-landing .eal-grid-3 .eal-card-num {
+  display:grid;
   grid-column:1;
   grid-row:1;
   width:52px;
@@ -455,3 +457,19 @@ body.ninja-lp-phonics .eal-card-num { display:none; }
 .ninja-landing .eal-grid-3 .eal-card:nth-child(2) .eal-card-num { background-image:url('/assets/images/ninja/steps/step-2.png'); }
 .ninja-landing .eal-grid-3 .eal-card:nth-child(3) .eal-card-num { background-image:url('/assets/images/ninja/steps/step-3.png'); }
 .ninja-landing .eal-grid-3 .eal-card:nth-child(4) .eal-card-num { background-image:url('/assets/images/ninja/steps/step-4.png'); }
+
+/* 画像まわりの枠（内側の余白＋下地の色）はやめて、そのぶん絵を大きく見せる。
+   切り抜きではなく背景ごとの1枚絵なので、額装せず cover で角丸に収める。 */
+.ninja-landing .eal-feature>img {
+  padding:0;
+  max-height:none;
+  aspect-ratio:16 / 9;
+  object-fit:cover;
+  background:none;
+  border-radius:18px;
+  box-shadow:0 14px 34px rgba(45,35,25,.16);
+}
+
+/* アイコンと同じ行に置くぶん、見出しは少し大きくして釣り合いを取る */
+.ninja-landing .eal-grid-3 .eal-card h3 { font-size:17.5px; line-height:1.5; }
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step)>h3 { font-size:15.5px; line-height:1.5; }
