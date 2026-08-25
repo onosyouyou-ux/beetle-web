@@ -49,8 +49,9 @@ a{text-decoration:none;color:inherit}
 .eal-footer{background:#1a1a1a;color:#888;padding:28px 20px;text-align:center;font-size:12px}
 .eal-footer-logo{display:block;color:#fff;font-size:22px;font-weight:900;letter-spacing:.08em;margin-bottom:10px}.eal-footer-logo span{color:#df8435}
 .eal-footer nav{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-bottom:10px}.eal-footer a:hover{color:#fff}
-@media(max-width:760px){
+@media(max-width:767px){
   .eal-hero{padding:34px 0}.eal-hero-grid,.eal-feature{grid-template-columns:1fr}.eal-hero-grid{gap:24px}.eal-hero-copy{text-align:center}.eal-actions,.eal-checks{justify-content:center}
   .eal-grid-3{grid-template-columns:1fr}.eal-section{padding:58px 0}.eal-feature-copy{order:-1}
 }
 @media(max-width:480px){.eal-container{width:min(calc(100% - 28px),1120px)}.eal-hero h1{font-size:32px}.eal-btn{width:100%}}
+

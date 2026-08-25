@@ -230,7 +230,7 @@ body.ninja-lp-space {
 .ninja-lp-space .slp-step h3,
 .ninja-lp-space .slp-step p { color:#20213a; }
 
-@media (max-width:760px) {
+@media (max-width:767px) {
   .ninja-landing .eal-hero .eal-container {
     grid-template-columns:1fr!important;
     min-height:auto;
@@ -330,7 +330,7 @@ body.ninja-lp-space {
     radial-gradient(circle at 80% 20%,color-mix(in srgb,var(--nl-accent) 24%,transparent),transparent 35%),
     linear-gradient(120deg,var(--nl-deeper),var(--nl-deep));
 }
-@media (max-width:760px) {
+@media (max-width:767px) {
   .ninja-landing .eal-hero {
     background:
       linear-gradient(var(--nl-deep) 0 58%,transparent 58.3%),
@@ -372,3 +372,60 @@ body.ninja-lp-phonics { --nl-items:url('/assets/images/ninja/items/phonics-items
 .ninja-landing .eal-grid-3 .eal-card:nth-child(2)::before { background-position:33.333% 50%; }
 .ninja-landing .eal-grid-3 .eal-card:nth-child(3)::before { background-position:66.666% 50%; }
 .ninja-landing .eal-grid-3 .eal-card:nth-child(4)::before { background-position:100% 50%; }
+
+/* ランディングのヒーロー画像（.eal-container::after）はモバイルでも400px高のまま
+   だったため、本文のあとに大きな画像の塊が入って「改行」したように見えていた。
+   幅の3段ルールに合わせ、画面の高さから決めた帯にする。 */
+@media (max-width:767px) {
+  .ninja-landing .eal-hero .eal-container { min-height:0; }
+  .ninja-landing .eal-hero .eal-container::after {
+    grid-column:1;
+    grid-row:2;
+    min-height:clamp(150px,26dvh,230px);
+  }
+}
+
+/* 明暗の切り分けを「割合」でやると、ヒーローの高さが変わったときに
+   切れ目が本文の途中に来て文字が読めなくなる。モバイルでは
+   ヒーロー全体を暗くし、明るい面はイラストの箱だけが持つようにする。 */
+@media (max-width:767px) {
+  .ninja-landing .eal-hero {
+    background:linear-gradient(160deg,var(--nl-deep),var(--nl-deeper));
+  }
+  .ninja-landing .eal-hero .eal-container::after {
+    margin-top:6px;
+    border-radius:16px;
+    background-color:color-mix(in srgb,var(--nl-soft) 72%,#fff);
+  }
+  .ninja-landing .eal-checks { color:#cbd6d9; }
+}
+
+/* カード頭の「アイテム絵 → 番号 → 見出し → 本文」が全部別の行になり、
+   1枚のカードで4段も積み上がって縦に伸びていた。
+   絵と番号は同じ行に並べ、行数を1つ減らす。 */
+.ninja-landing .eal-grid-3 .eal-card {
+  display:grid;
+  grid-template-columns:auto 1fr;
+  align-items:center;
+  gap:0 12px;
+}
+.ninja-landing .eal-grid-3 .eal-card::before {
+  grid-column:1;
+  grid-row:1;
+  margin:0;
+}
+.ninja-landing .eal-grid-3 .eal-card-num {
+  grid-column:2;
+  grid-row:1;
+  justify-self:start;
+  margin:0;
+}
+.ninja-landing .eal-grid-3 .eal-card h3 {
+  grid-column:1 / -1;
+  grid-row:2;
+  margin:14px 0 6px;
+}
+.ninja-landing .eal-grid-3 .eal-card p {
+  grid-column:1 / -1;
+  grid-row:3;
+}
