@@ -1778,3 +1778,18 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 @media (orientation:landscape) and (max-height:500px) {
   .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) { min-height:44px; }
 }
+
+/* 寝かせた画面ではメニューも詰める（とけい以外の修行アプリにも同じ扱いを広げる）。
+   アイテム絵の余白・行の内側余白・スタートの高さが積み上がって1画面を超えていた。 */
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) { padding-top:12px; }
+  .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu)::before { content:none; }
+  .ninja-kids :is(.tk-group,.kj-group) { margin-bottom:8px; }
+  .ninja-kids :is(.tk-group-title,.kj-group-title) { margin-bottom:4px; }
+  .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode) { padding-block:6px; }
+  .ninja-kids :is(.tk-start,.kj-start) { padding-block:8px; font-size:18px; }
+}
+
+@media (max-width:767px) and (orientation:portrait) and (max-height:699px) {
+  .ninja-kids.ninja-tokei .tk-menu { padding-bottom:4px; }
+}
