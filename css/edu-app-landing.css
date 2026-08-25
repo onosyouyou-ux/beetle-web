@@ -55,3 +55,31 @@ a{text-decoration:none;color:inherit}
 }
 @media(max-width:480px){.eal-container{width:min(calc(100% - 28px),1120px)}.eal-hero h1{font-size:32px}.eal-btn{width:100%}}
 
+
+/* 見出しが大きすぎて「1分刻みま／で。」のように語の途中で折り返していた。
+   全体を一段小さくし、日本語は文節で折り返す（word-break:auto-phrase）。
+   auto-phrase 未対応のブラウザは従来どおりの折り返しになるだけで崩れない。 */
+.eal-hero h1 { font-size:clamp(28px,4vw,44px); }
+.eal-head h2,
+.eal-feature h2 { font-size:clamp(23px,2.6vw,32px); line-height:1.45; }
+.eal-lead { font-size:15px; }
+.eal-card h3 { font-size:16.5px; }
+.eal-card p { font-size:13.5px; }
+.eal-feature p { font-size:14.5px; }
+
+.eal-hero h1,
+.eal-head h2,
+.eal-feature h2,
+.eal-lead,
+.eal-card h3,
+.eal-card p,
+.eal-feature p {
+  word-break:auto-phrase;
+}
+
+@media (max-width:767px) {
+  .eal-hero h1 { font-size:clamp(24px,7vw,32px); }
+  .eal-head h2,
+  .eal-feature h2 { font-size:clamp(20px,5.4vw,26px); }
+  .eal-lead { font-size:14px; }
+}

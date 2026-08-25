@@ -36,7 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
       ],
       '/edu-tools.html': [
         ['#cando', 'できること'],
-        ['#family', 'おうちで使える'],
+        ['#family', 'おうちのかた'],
+        ['#kids', 'お子さん'],
         ['#teacher', '先生向け'],
         ['#contact', 'お問い合わせ'],
       ],
@@ -61,7 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
       // アプリ統一フッター型はヒーローズバナー or .site-footer-app が基準）
       const footer = document.getElementById('site-footer')
         || document.querySelector('.footer-heroes')
-        || document.querySelector('footer.site-footer-app');
+        || document.querySelector('footer.site-footer-app')
+        // LP型2段フッター（トップ・QA支援・教育支援・サービスページ）。
+        // ここを入れ忘れていたため、LPページでは上に戻るボタンが出なかった
+        || document.querySelector('footer.footer-lp');
       if (!footer) return;
       const footerTop = footer.getBoundingClientRect().top;
       if (window.scrollY > 200) {
