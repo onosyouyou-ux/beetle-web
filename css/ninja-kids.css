@@ -1263,8 +1263,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   }
 
   /* とけい修行：時計のステージを大きく取る */
-  .ninja-kids .tk-play>.tk-stage { min-height:280px; }
-  .ninja-kids .tk-play>.tk-stage .tk-clock { width:min(280px,100%); }
+  .ninja-kids .tk-play>.tk-stage { min-height:clamp(180px,24dvh,280px); }
+  .ninja-kids .tk-play>.tk-stage .tk-clock { width:auto; height:clamp(150px,21dvh,240px); }
   .ninja-kids .tk-play:not(:has(.tk-stage))>.tk-ask { min-height:220px; font-size:34px; }
   .ninja-kids .tk-play>.tk-options.is-clock .tk-clock { width:min(150px,100%); }
 
@@ -1304,4 +1304,337 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 @media (max-width:767px), (min-width:768px) and (max-width:1179px) and (orientation:portrait) {
   .ninja-kids .kj-ask-label { margin:0; }
   .ninja-kids .kj-ask { padding-top:0; }
+}
+
+/* ============================================================
+   モバイルは1画面に収める（2026-08-25）
+   縦・横どちらに回しても「ナビ＋ヒーロー＋盤面」がビューポートに収まるようにする。
+   高さは dvh 基準の clamp で決め、端末差やアドレスバーの伸縮にも追従させる。
+   ・スマホ縦（~767px portrait）  … 1カラムのまま、ヒーローを1行に畳む
+   ・寝かせた画面（高さ ~500px）  … 左右2カラムに戻して縦を詰める
+   ============================================================ */
+
+/* ---------- スマホ縦：ヒーローを1行に畳んで盤面に高さを渡す ---------- */
+@media (max-width:767px) and (orientation:portrait) {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),
+  .ninja-kids .app-ref-hero {
+    grid-template-columns:minmax(0,1fr) 76px!important;
+    align-items:center!important;
+    gap:0 10px;
+    min-height:0!important;
+    padding:6px 14px!important;
+    text-align:left!important;
+  }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot {
+    grid-column:2;
+    grid-row:1 / 9;
+    justify-self:center;
+  }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,
+  .ninja-kids .app-ref-visual.is-ninja .ninja-mascot { width:76px; height:60px; }
+  .ninja-kids .app-ref-visual.is-ninja { min-height:60px; }
+  .ninja-kids .app-ref-copy { text-align:left; }
+  .ninja-kids :is(.tk-eyebrow,.kj-eyebrow,.kt-eyebrow,.rj-eyebrow,.pn-eyebrow) { margin-bottom:1px; font-size:9.5px; }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) h1 { margin-bottom:2px; font-size:21px; }
+  .ninja-kids :is(.tk-lead,.kj-lead,.kt-lead,.rj-lead,.pn-lead) { display:none; }
+  .ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope) {
+    justify-self:start;
+    margin:0;
+    padding:2px 8px;
+    font-size:9.5px;
+  }
+  .ninja-kids .app-ref-button { padding:4px 10px; font-size:11px; }
+
+  /* 盤面：問題パネルの高さを画面の高さから決める */
+  .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) { padding:10px 10px 14px; }
+  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) { gap:8px; padding:10px 10px 12px; }
+  .ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask) { min-height:clamp(96px,21dvh,190px); }
+  .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-big { font-size:clamp(34px,9dvh,64px); }
+  .ninja-kids .tk-play>.tk-stage { min-height:clamp(120px,24dvh,230px); }
+  .ninja-kids .tk-play>.tk-stage .tk-clock { width:auto; height:clamp(104px,21dvh,200px); }
+  .ninja-kids .tk-play>.tk-options.is-clock .tk-clock { width:auto; height:clamp(52px,9dvh,88px); }
+  .ninja-kids .tk-play:not(:has(.tk-stage))>.tk-ask { min-height:clamp(96px,21dvh,190px); }
+  .ninja-space .sa-app { padding:10px 10px 6px; }
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem { min-height:clamp(96px,20dvh,180px); }
+}
+
+/* ---------- 寝かせた画面：左右2カラムに戻して縦を詰める ---------- */
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-kids { --nk-tap:46px; }
+
+  /* ヒーローは見出しだけ残して1行に */
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),
+  .ninja-kids .app-ref-hero {
+    grid-template-columns:minmax(0,1fr) 86px!important;
+    align-items:center!important;
+    gap:0 10px;
+    min-height:0!important;
+    padding:5px 14px!important;
+    text-align:left!important;
+  }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero)::before { content:none; }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot {
+    grid-column:2;
+    grid-row:1 / 9;
+    justify-self:center;
+  }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,
+  .ninja-kids .app-ref-visual.is-ninja .ninja-mascot { width:86px; height:46px; }
+  .ninja-kids .app-ref-visual.is-ninja { min-height:46px; }
+  .ninja-kids .app-ref-copy { text-align:left; }
+  .ninja-kids :is(.tk-eyebrow,.kj-eyebrow,.kt-eyebrow,.rj-eyebrow,.pn-eyebrow),
+  .ninja-kids :is(.tk-lead,.kj-lead,.kt-lead,.rj-lead,.pn-lead),
+  .ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope) { display:none; }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) h1 { margin:0 0 2px; font-size:18px; }
+  .ninja-kids .app-ref-button { padding:4px 10px; font-size:11px; }
+
+  /* 盤面は左右2カラム（縦積みだと1画面に入らないため） */
+  .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) { padding:8px 10px 12px; }
+  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz),
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card) {
+    grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);
+    grid-template-rows:auto auto auto auto;
+    gap:6px 12px;
+    min-height:0;
+    padding:8px 10px 10px;
+  }
+  .ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar) { grid-column:1 / -1; grid-row:1; }
+  .ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask) {
+    grid-column:1;
+    grid-row:2;
+    min-height:clamp(84px,30dvh,170px);
+  }
+  .ninja-kids .kj-ask { padding-top:8px; }
+  .ninja-kids .kj-ask-label { grid-column:1; grid-row:2; margin:6px 10px; }
+  .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-big { font-size:clamp(30px,13dvh,60px); }
+  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices) {
+    grid-column:2;
+    grid-row:2;
+    gap:6px;
+    margin:0;
+  }
+  .ninja-kids :is(.tk-feedback,.kj-feedback) { grid-column:1; grid-row:3; }
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) { grid-column:1 / -1; grid-row:1 / -1; }
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before { width:clamp(84px,26dvh,130px); }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer) { grid-column:2; grid-row:3; }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on {
+    grid-column:2;
+    grid-row:2;
+    min-height:100%;
+    padding:10px 14px;
+  }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before { width:clamp(46px,12dvh,80px); }
+  .ninja-kids :is(.tk-back,.kj-back) { grid-column:1; grid-row:4; }
+
+  /* とけい修行：時計を1画面ぶんの高さに合わせる */
+  .ninja-kids .tk-play { grid-template-rows:auto 6px auto 1fr auto auto auto; }
+  .ninja-kids .tk-play>.tk-play-head { grid-column:1 / -1; grid-row:1; }
+  .ninja-kids .tk-play>.tk-bar { grid-column:1 / -1; grid-row:2; }
+  .ninja-kids .tk-play>.tk-ask { grid-column:1; grid-row:3; font-size:14px; }
+  .ninja-kids .tk-play>.tk-stage {
+    grid-column:1;
+    grid-row:4 / 6;
+    min-height:clamp(96px,30dvh,180px);
+    padding:2px 8px 8px;
+  }
+  .ninja-kids .tk-play>.tk-stage .tk-clock { width:auto; height:clamp(88px,28dvh,170px); }
+  .ninja-kids .tk-play>.tk-options { grid-column:2; grid-row:3 / 5; }
+  .ninja-kids .tk-play>.tk-options.is-clock .tk-clock { width:auto; height:clamp(40px,11dvh,72px); }
+  .ninja-kids .tk-play:not(:has(.tk-stage))>.tk-ask { grid-row:3 / 6; min-height:clamp(84px,30dvh,170px); font-size:22px; }
+  .ninja-kids .tk-play>.tk-hint-btn { grid-column:2; grid-row:5; margin:0; }
+  .ninja-kids .tk-play>.tk-hint { grid-column:2; grid-row:6; }
+  .ninja-kids .tk-play>.tk-feedback { grid-column:1; grid-row:6; }
+  .ninja-kids .tk-play>.tk-back { grid-column:1; grid-row:7; }
+
+  /* さんすう うちゅうたんけん */
+  .ninja-space .app-paper { width:min(100%,900px); max-width:900px; margin:6px auto; }
+  .ninja-space .sa-app { padding:8px 10px 4px; }
+  .ninja-space .sa-head { min-height:0; margin-bottom:6px; padding:6px 12px; }
+  .ninja-space .sa-head-badge { width:44px; height:44px; }
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text { grid-column:1; grid-row:1; margin:0; }
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem {
+    grid-column:1;
+    grid-row:2;
+    flex-wrap:nowrap;
+    white-space:nowrap;
+    min-height:clamp(80px,28dvh,150px);
+    padding:10px;
+  }
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-options { grid-column:2; grid-row:1 / 3; align-self:center; margin:0; }
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-feedback { grid-column:1 / -1; grid-row:3; margin:4px 0 0; }
+  .ninja-space .sa-opt { padding:8px 0; font-size:22px; }
+}
+
+/* 寝かせた画面の詰め：行割りの取りこぼしと、選択肢の高さを整理する */
+@media (orientation:landscape) and (max-height:500px) {
+  /* 選択肢は指で押せる下限（46px）まで詰める */
+  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):not(.tk-opt-clock) {
+    padding-block:5px;
+    font-size:15px;
+    line-height:1.25;
+  }
+  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) { min-height:var(--nk-tap); }
+
+  /* かんじ修行：しんちょくバーが余った行に落ちるので行を明示する */
+  .ninja-kids.ninja-kanji .kj-play { height:auto; min-height:0; grid-template-rows:auto 6px 1fr auto; }
+  .ninja-kids .kj-play>.kj-play-head { grid-column:1 / -1; grid-row:1; }
+  .ninja-kids .kj-play>.kj-bar { grid-column:1 / -1; grid-row:2; }
+  .ninja-kids .kj-play>:is(.kj-ask,.kj-ask-label) { grid-column:1; grid-row:3; }
+  .ninja-kids .kj-play>.kj-options { grid-column:2; grid-row:3; align-self:center; }
+  .ninja-kids .kj-play>.kj-feedback { grid-column:1; grid-row:4; }
+  .ninja-kids .kj-play>.kj-back { grid-column:2; grid-row:4; justify-self:end; margin:0; }
+
+  /* こたえ／もどるは1行にまとめて縦を稼ぐ */
+  .ninja-kids :is(.tk-back,.kj-back) { grid-row:4; }
+
+  /* 共通ヘッダーも寝かせたときだけ薄くする */
+  /* （ナビの詰めは後段の .nav-inner で行う） */
+
+}
+
+/* ○×のアクション画像は「盤面の高さ」に合わせる。
+   px固定だと、盤面が低いスマホ（とくに横持ち）で上下が見切れる。 */
+.ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before {
+  width:auto;
+  height:min(52%,190px);
+  aspect-ratio:1;
+}
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before {
+  width:auto;
+  height:min(34%,110px);
+  aspect-ratio:1;
+}
+
+@media (max-width:767px) and (orientation:portrait) {
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) { font-size:16px; padding:12px; }
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before { height:min(48%,150px); }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before { height:min(30%,84px); }
+}
+
+@media (orientation:landscape) and (max-height:500px) {
+  /* 共通ヘッダーは寝かせたときだけ薄くする（クラスは .nav / .nav-inner） */
+  .ninja-kids .nav-inner { padding:6px 14px; }
+  .ninja-kids .nav-logo { font-size:1rem; }
+
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) { font-size:15px; padding:8px; }
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before { height:min(46%,120px); }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before { height:min(28%,64px); }
+
+  /* とけい修行：とい・ヒントボタン・時計を1画面ぶんまで詰める */
+  .ninja-kids .tk-play>.tk-ask { padding:4px 10px 2px; font-size:13px; }
+  .ninja-kids .tk-play>.tk-hint-btn { padding:4px 10px; font-size:12px; }
+  .ninja-kids .tk-play>.tk-stage { min-height:clamp(88px,26dvh,180px); }
+  .ninja-kids .tk-play>.tk-stage .tk-clock { height:clamp(80px,24dvh,170px); }
+}
+
+/* 小さめのスマホ縦（360x640 など）でも1画面に入るよう、
+   ヒーローと選択肢の高さをもう一段詰める。 */
+@media (max-width:767px) and (orientation:portrait) {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) h1 { font-size:19px; }
+  .ninja-kids .app-ref-copy { display:flex; flex-direction:column; align-items:flex-start; gap:3px; }
+  .ninja-kids .app-ref-button { margin:0; }
+
+  .ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask) { min-height:clamp(84px,19dvh,190px); }
+  .ninja-kids .tk-play:not(:has(.tk-stage))>.tk-ask { min-height:clamp(84px,19dvh,190px); }
+  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):not(.tk-opt-clock) {
+    padding-block:8px;
+    font-size:16px;
+    line-height:1.3;
+  }
+  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) { min-height:var(--nk-tap); }
+
+  /* とけい修行：時計まわりを画面の高さに追従させる */
+  .ninja-kids .tk-play>.tk-ask { padding:6px 12px 2px; font-size:14px; }
+  .ninja-kids .tk-play>.tk-hint-btn { padding:5px 12px; font-size:12px; }
+  .ninja-kids .tk-play>.tk-stage { min-height:clamp(104px,21dvh,230px); }
+  .ninja-kids .tk-play>.tk-stage .tk-clock { height:clamp(92px,19dvh,200px); }
+  .ninja-kids .tk-play>.tk-options.is-clock .tk-clock { height:clamp(44px,8dvh,88px); }
+  .ninja-kids .tk-play>.tk-options.is-clock .tk-opt-clock { padding:4px; }
+}
+
+/* さんすう うちゅうたんけん：ヘッダー・ロケット進捗も含めて1画面に収める */
+@media (max-width:767px) and (orientation:portrait) {
+  .ninja-space .sa-head { min-height:0; margin-bottom:8px; padding:8px 12px; }
+  .ninja-space .sa-head-badge { width:48px; height:48px; }
+  .ninja-space .sa-title { font-size:18px; }
+  .ninja-space .sa-lead { display:none; }
+  .ninja-space .sa-play-head { margin-bottom:8px; }
+  .ninja-space .sa-track-card { margin-bottom:8px; padding:8px 12px 10px; border-radius:14px; }
+  .ninja-space .sa-track-label { margin-bottom:5px; font-size:11px; }
+  .ninja-space .sa-track { height:20px; }
+  .ninja-space .sa-play-foot { margin-top:8px; }
+  .ninja-space .sa-card { padding:12px 10px; border-radius:18px; }
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem {
+    min-height:clamp(84px,17dvh,180px);
+    padding:12px;
+  }
+  .ninja-space .sa-question-text { margin-bottom:8px; font-size:13px; }
+  .ninja-space .sa-opt { padding:10px 0; font-size:24px; }
+  .ninja-space .sa-options { gap:10px; }
+}
+
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-space .sa-title { font-size:16px; }
+  .ninja-space .sa-lead { display:none; }
+  .ninja-space .sa-play-head { margin-bottom:6px; }
+  .ninja-space .sa-track-card { margin-bottom:6px; padding:5px 12px 6px; border-radius:12px; }
+  .ninja-space .sa-track-label { margin-bottom:3px; font-size:10px; }
+  .ninja-space .sa-track { height:14px; }
+  .ninja-space .sa-play-foot { margin-top:6px; }
+  .ninja-space .sa-card { padding:8px 10px; border-radius:14px; }
+  .ninja-space .sa-question-text { margin-bottom:4px; font-size:12px; }
+  .ninja-space .sa-options { gap:8px; }
+}
+
+/* さんすう：もう一段詰めて、小さい端末・寝かせた画面でも1画面に収める */
+@media (max-width:767px) and (orientation:portrait) {
+  .ninja-space .sa-head { margin-bottom:6px; padding:6px 10px; }
+  .ninja-space .sa-head-badge { width:42px; height:42px; }
+  .ninja-space .sa-title { font-size:16px; }
+  .ninja-space .sa-track-card { margin-bottom:6px; padding:6px 10px 8px; }
+  .ninja-space .sa-track-label { margin-bottom:4px; font-size:10px; }
+  .ninja-space .sa-track { height:16px; }
+  .ninja-space .sa-play-foot { margin-top:6px; }
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem { min-height:clamp(76px,14dvh,180px); }
+}
+
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-space .sa-head { margin-bottom:4px; padding:4px 10px; }
+  .ninja-space .sa-head-badge { width:34px; height:34px; }
+  .ninja-space .sa-title { font-size:14px; }
+  .ninja-space .sa-play-head { margin-bottom:4px; }
+  .ninja-space .sa-track-card { margin-bottom:4px; padding:4px 10px 5px; }
+  .ninja-space .sa-track-label { display:none; }
+  .ninja-space .sa-track { height:10px; }
+  .ninja-space .sa-play-foot { margin-top:4px; }
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem {
+    min-height:clamp(70px,22dvh,150px);
+    padding:8px;
+  }
+}
+
+/* ○×の全面フィードバックの土台。
+   絶対配置のグリッド項目は「行・列を明示すると、その grid area が包含ブロック」になる。
+   1カラムに積む段では明示行が1本しかなく、1 / -1 だと帯が1行ぶん（約24px）に潰れて
+   アクション画像が見切れていた。行・列を auto にして、包含ブロックを
+   盤面のパディングボックスに固定する（段によらず盤面いっぱいに重なる）。 */
+.ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) {
+  grid-column:auto;
+  grid-row:auto;
+}
+/* こたえあわせパネルの○×は、パネル高さが min-height 基準で不定になるため
+   % ではなく dvh で決める。 */
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before {
+  width:clamp(48px,10dvh,110px);
+  height:auto;
+  aspect-ratio:1;
+}
+
+/* モバイルはヒーローが薄いので、リファレンスボタンが斜めグラデの明るい側に
+   かかると白文字が読めなくなる。下地を敷いて、どちら側でも読めるようにする。 */
+@media (max-width:767px), (orientation:landscape) and (max-height:500px) {
+  .ninja-kids .app-ref-button {
+    border-color:rgba(255,255,255,.45);
+    background:rgba(10,28,38,.78);
+  }
 }
