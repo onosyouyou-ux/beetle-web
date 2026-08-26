@@ -343,7 +343,7 @@ body.ninja-lp-tokei { --nl-items:url('/assets/images/ninja/items/tokei-items.web
 body.ninja-lp-kanji { --nl-items:url('/assets/images/ninja/items/kanji-items.webp'); }
 body.ninja-lp-katakana { --nl-items:url('/assets/images/ninja/items/katakana-items.webp'); }
 body.ninja-lp-romaji { --nl-items:url('/assets/images/ninja/items/romaji-items.webp'); }
-body.ninja-lp-phonics { --nl-items:url('/assets/images/ninja/items/phonics-ninja-tools.png'); }
+body.ninja-lp-phonics { --nl-items:url('/assets/images/ninja/items/phonics-items.webp'); }
 .ninja-landing .eal-hero + .eal-section .eal-head::before {
   content:'';
   display:block;

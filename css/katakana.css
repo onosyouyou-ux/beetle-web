@@ -152,7 +152,7 @@ body{
 /* ====== おうちのかたへ・FAQ ====== */
 .kt-doc{max-width:700px;margin:40px auto 0;padding:0 20px}
 .kt-doc h2{font-size:15px;font-weight:900;margin:28px 0 14px;letter-spacing:.06em}
-.kt-steps{display:grid;gap:12px}
+.kt-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .kt-step{border:1px solid var(--kt-line);border-radius:12px;background:#fff;padding:16px 18px}
 .kt-step-n{
   display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;
@@ -175,6 +175,7 @@ body{
 
 @media (max-width:767px){
   .kt-hero{padding:24px 20px 22px}
+  .kt-steps{grid-template-columns:1fr}
   .kt-hero h1{font-size:26px}
   .kt-q-word{font-size:28px}
   .kt-q-word.is-big{font-size:64px}

@@ -54,16 +54,33 @@
 
   function pick(arr, n) { return shuffle(arr.slice()).slice(0, n); }
 
+  // 同じ見た目の選択肢が2つ並ぶと「どっちも正解では？」になるので、必ず落とす
+  function uniq(arr) {
+    var seen = {};
+    return arr.filter(function (v) {
+      if (seen[v]) return false;
+      seen[v] = true;
+      return true;
+    });
+  }
+
   /* ---------- 出題づくり ---------- */
 
   // 1. もじの おと：文字を見て「名前」ではなく「音」を えらぶ
   function buildOto() {
     return pick(D.letters, QUESTIONS).map(function (x) {
-      var others = D.letters.filter(function (y) {
-        return y.l !== x.l && y.oto !== x.oto && y.oto !== x.name;
+      // c と k はどちらも「ク」のように、別の文字でも音が同じことがある。
+      // 音で重複を落としてから2つ取らないと、同じ選択肢が2つ並ぶ
+      var used = {};
+      used[x.oto] = true;
+      used[x.name] = true;
+      var others = shuffle(D.letters.slice()).filter(function (y) {
+        if (y.l === x.l || used[y.oto]) return false;
+        used[y.oto] = true;
+        return true;
       });
       // まちがい選択肢に **その文字の「名前」** を まぜる（ここが つまずきの 正体）
-      var wrongs = pick(others, 2).map(function (y) { return y.oto; });
+      var wrongs = others.slice(0, 2).map(function (y) { return y.oto; });
       return {
         type: 'oto',
         show: x.l,
@@ -71,7 +88,7 @@
         word: x.oto,
         cat: 'もじの おと',
         hint: '「' + x.l + '」の 名前は ' + x.name + '。でも 音は ' + x.oto + '。' + x.ex + '（' + x.ja + '）の はじめの 音です。',
-        choices: shuffle([x.oto, x.name].concat(wrongs)),
+        choices: shuffle(uniq([x.oto, x.name].concat(wrongs))),
       };
     });
   }
@@ -89,7 +106,7 @@
           var hit = D.letters.filter(function (y) { return y.l === c; })[0];
           return hit ? hit.oto : c;
         }).join('・') + ' を つなげて「' + x.w + '」（' + x.ja + '）。',
-        choices: shuffle([x.w].concat(x.near.slice(0, 3))),
+        choices: shuffle(uniq([x.w].concat(x.near.slice(0, 3)))),
       };
     });
   }
@@ -105,7 +122,7 @@
         cat: 'まほうの e',
         hint: 'さいごの e は 読みません。でも まえの 母音を 名前の 音に かえます。' +
               'ローマ字読みだと「' + x.romaji + '」ですが、英語では「' + x.yomi + '」（' + x.ja + '）。',
-        choices: shuffle([x.yomi, x.romaji, x.eYomi]),
+        choices: shuffle(uniq([x.yomi, x.romaji, x.eYomi])),
       };
     });
   }

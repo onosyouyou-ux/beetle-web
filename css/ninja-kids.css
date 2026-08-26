@@ -1925,3 +1925,31 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 .ninja-kids.ninja-kanji .nk-doc-ref a { color:#ffad92; }
 .ninja-kids.ninja-kanji .nk-back-tools a { border-color:#ffad92; color:#ffad92; }
 .ninja-kids.ninja-kanji .nk-back-tools a:hover { background:#ffad92; color:#07131a; }
+
+/* 選択肢の通し番号（2026-08-26）。
+   「2ばんめの やつ」と口で言えるように、1問ごとに 1 から振り直して左上に出す。
+   文字は中央ぞろえのままにしたいので、番号は絶対配置にしてレイアウトに影響させない。 */
+.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices) {
+  counter-reset:nk-opt;
+}
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice) {
+  position:relative;
+}
+.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice)::before {
+  counter-increment:nk-opt;
+  content:counter(nk-opt);
+  display:grid;
+  place-items:center;
+  position:absolute;
+  top:5px;
+  left:7px;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:color-mix(in srgb,var(--nk-accent) 15%,#fff);
+  color:var(--nk-accent-dark);
+  font-size:11px;
+  font-weight:900;
+  line-height:1;
+  pointer-events:none;
+}
