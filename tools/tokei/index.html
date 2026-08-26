@@ -41,39 +41,6 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"教育支援","item":"https://www.beetle-web.jp/edu-tools.html"},{"@type":"ListItem","position":3,"name":"とけい修行","item":"https://www.beetle-web.jp/tools/tokei/landing.html"}]}
 </script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "時計の読み方はどの順番で教えるといいですか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "「ちょうど（〇時）」→「〇時半（30分）」→「5分きざみ」→「1分きざみ」の順が定番です。このアプリのむずかしさもこの4段階に対応しています。5分きざみに入る前に、長い針が1めもり動くと1分、数字1つぶん動くと5分、という関係をおさえておくとつまずきにくくなります。" }
-    },
-    {
-      "@type": "Question",
-      "name": "長い針と短い針を取りちがえてしまいます。",
-      "acceptedAnswer": { "@type": "Answer", "text": "よくあるつまずきです。このアプリでは、まちがえやすい選択肢としてわざと「針を入れかえた時刻」を混ぜています。たとえば3時50分の時計に対して10時15分を選んでしまうのがこのタイプです。えらんだあとに正しい読み方を出すので、その場で気づけます。答えに迷うときは問題の下の「ヒントを 見る」を押すと、短い針・長い針のどちらをどう読むかだけを教えてくれます（答えそのものは出ません）。" }
-    },
-    {
-      "@type": "Question",
-      "name": "「3時50分」を「3時10分」と読んでしまいます。",
-      "acceptedAnswer": { "@type": "Answer", "text": "長い針がさしている数字をそのまま分として読んでしまうまちがいです（10をさしているので10分と読む）。数字1つぶんが5分なので、10×5で50分になります。このまちがいも選択肢に混ぜてあります。" }
-    },
-    {
-      "@type": "Question",
-      "name": "分の数字は消せますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "消せます。はじめは文字ばんの外がわに「5・10・15…」の数字を出しておき、慣れてきたら「ぷんの数字を出す」のチェックを外してください。数字なしで読めるようになったら本物の時計も読めます。" }
-    },
-    {
-      "@type": "Question",
-      "name": "入力した内容や成績はどこかに送られますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "送られません。出題も採点もすべてブラウザの中（この端末の上）で行っていて、サーバーには何も送信していません。成績も保存していないので、ページを閉じれば消えます。" }
-    }
-  ]
-}
-</script>
 <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 <link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/css/app-reference.css">
@@ -97,50 +64,31 @@
   <div id="tk-app"></div>
 
   <section class="tk-doc" id="howto">
-    <h2>おうちのかたへ</h2>
+    <h2>あそびかた</h2>
     <div class="tk-steps">
       <div class="tk-step">
         <span class="tk-step-n">1</span>
-        <h3>4だんかいで すすむ</h3>
-        <p>「じかんのみ」→「30ぷんきざみ」→「5ふんきざみ」→「1ぷんきざみ」の順に用意しています。学校で習う順番と同じなので、今やっているところに合わせて選んでください。</p>
+        <h3>しゅぎょうを えらぶ</h3>
+        <p>「とけいを よむ」か「とけいを さがす」を えらびます。</p>
       </div>
       <div class="tk-step">
         <span class="tk-step-n">2</span>
-        <h3>2つの といかた</h3>
-        <p>「とけいを よむ」は時計から時刻を答えます。「とけいを さがす」は逆に、時刻を読んで4つの時計から選びます。同じ時刻でも、この2つは別の力が要ります。</p>
+        <h3>なんいどを えらぶ</h3>
+        <p>じかんのみ → 30ぷんきざみ → 5ふんきざみ → 1ぷんきざみ。いま ならって いるところで だいじょうぶです。</p>
       </div>
       <div class="tk-step">
         <span class="tk-step-n">3</span>
-        <h3>まちがいを ねらって出す</h3>
-        <p>選択肢には、針の取りちがえ・数字をそのまま分と読むまちがいなど、つまずきやすい読み方をわざと混ぜています。まちがえた時にその場で正しい読み方が出ます。</p>
+        <h3>10もん こたえる</h3>
+        <p>まよったら「ヒントを 見る」。こたえは 出ないので、じぶんで よめます。</p>
       </div>
     </div>
 
-    <h2>よくある しつもん</h2>
-    <details class="tk-faq">
-      <summary>時計の読み方はどの順番で教えるといいですか？<span>+</span></summary>
-      <div>「ちょうど（〇時）」→「〇時半（30分）」→「5分きざみ」→「1分きざみ」の順が定番です。このアプリのむずかしさもこの4段階に対応しています。5分きざみに入る前に、長い針が1めもり動くと1分、数字1つぶん動くと5分、という関係をおさえておくとつまずきにくくなります。</div>
-    </details>
-    <details class="tk-faq">
-      <summary>長い針と短い針を取りちがえてしまいます。<span>+</span></summary>
-      <div>よくあるつまずきです。このアプリでは、まちがえやすい選択肢としてわざと「針を入れかえた時刻」を混ぜています。たとえば3時50分の時計に対して10時15分を選んでしまうのがこのタイプです。えらんだあとに正しい読み方を出すので、その場で気づけます。答えに迷うときは問題の下の「ヒントを 見る」を押すと、短い針・長い針のどちらをどう読むかだけを教えてくれます（答えそのものは出ません）。</div>
-    </details>
-    <details class="tk-faq">
-      <summary>「3時50分」を「3時10分」と読んでしまいます。<span>+</span></summary>
-      <div>長い針がさしている数字をそのまま分として読んでしまうまちがいです（10をさしているので10分と読む）。数字1つぶんが5分なので、10×5で50分になります。このまちがいも選択肢に混ぜてあります。</div>
-    </details>
-    <details class="tk-faq">
-      <summary>分の数字は消せますか？<span>+</span></summary>
-      <div>消せます。はじめは文字ばんの外がわに「5・10・15…」の数字を出しておき、慣れてきたら「ぷんの数字を出す」のチェックを外してください。数字なしで読めるようになったら本物の時計も読めます。</div>
-    </details>
-    <details class="tk-faq">
-      <summary>入力した内容や成績はどこかに送られますか？<span>+</span></summary>
-      <div>送られません。出題も採点もすべてブラウザの中（この端末の上）で行っていて、サーバーには何も送信していません。成績も保存していないので、ページを閉じれば消えます。</div>
-    </details>
+    <p class="nk-doc-ref">おうちのかたへ・よくある しつもんは <a href="/tools/tokei/landing.html">このアプリに ついて</a> に まとめています。</p>
 
     <p class="tk-more">けいさんの れんしゅうは <a href="/tools/sansu-app/landing.html">さんすう うちゅうたんけん</a>、えいごは <a href="/tools/eigo/landing.html">えいごよんで！</a>、かんじの ふりがなは <a href="/tools/rubi-shokunin/">ルビメーカー</a> をどうぞ。</p>
   </section>
-  <p class="paper-release">更新日：2026-08-23</p>
+  <p class="nk-back-tools"><a href="/edu-tools.html#kids">← ほかの こども向けツールを 見る</a></p>
+  <p class="paper-release">更新日：2026-08-26</p>
 </div>
 
 <!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一） -->

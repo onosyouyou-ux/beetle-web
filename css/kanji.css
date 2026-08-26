@@ -54,7 +54,7 @@ body{
 /* ====== メニュー ====== */
 #kj-app{max-width:700px;margin:0 auto;padding:26px 20px 0}
 .kj-group{margin-bottom:22px}
-.kj-group-title{font-size:13px;font-weight:800;color:var(--kj-ink2);margin:0 0 10px;text-align:center;letter-spacing:.1em}
+.kj-group-title{font-size:13px;font-weight:800;color:var(--kj-ink2);margin:0 0 10px;text-align:left;letter-spacing:.1em}
 .kj-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .kj-choice{
   display:flex;flex-direction:column;align-items:center;gap:3px;
@@ -139,8 +139,7 @@ body{
 }
 
 /* ====== 設定は列にならべる（とけい修行に合わせる。2026-08-25） ======
-   がくねんは 小1→小2→ぜんぶ の順があるので縦1列。
-   といかた（よみかた／かんじ）は順序のない2択なので横2つのまま。 */
+   がくねん・といかた とも、ラベルが長いので縦1列にする（2026-08-26）。 */
 .kj-choices-column{grid-template-columns:1fr}
 .kj-choices-column .kj-choice{
   display:grid;grid-template-columns:1fr;justify-items:start;

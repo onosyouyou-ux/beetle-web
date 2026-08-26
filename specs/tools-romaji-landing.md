@@ -5,7 +5,7 @@ canonical: self
 sitemap: true
 title_contains: "ローマ字修行"
 og_image: "/assets/images/ninja/romaji-cipher-og.jpg"
-required_selectors: ["#site-header", ".eal-hero", "#howto", "#faq", ".eal-final", ".eal-footer"]
+required_selectors: ["#site-header", ".eal-hero", "#howto", "#for-family", "#faq", ".eal-final", ".eal-footer"]
 ---
 
 # ローマ字修行 ランディング
@@ -16,6 +16,7 @@ required_selectors: ["#site-header", ".eal-hero", "#howto", "#faq", ".eal-final"
 - **レスポンシブ**: [_common.md](_common.md) の「レスポンシブ共通ルール」に従う。スマホでは**ヒーロー画像を画面の高さから決めた帯**にし、
   **カードの絵と番号は同じ行**に置く（1カラムに折り返したときに大きな塊・余分な改行を作らない）
 - **構成**: ヒーロー → 3つの修行 → つまずきやすい3点（っ・ん・のばす音）→ 使い方 → FAQ → CTA
+- **おうちのかたへ（`#for-family`）**: アプリ画面から移した大人向けの説明3つ。FAQもアプリ側の設問を取り込み済み（2026-08-26）
 - **ヒーロー画像は未設定**。`.eal-hero-grid` を使わず1カラムで組んである（画像が来たら2カラムにするだけ）
 - **訴求の軸**: 「ローマ字は書き方が2つある」。ローマ字表を配るだけの既存教材が説明していない部分をここに置く。
   タイピング速度の練習として売らない（そこは既存サービスが強い）

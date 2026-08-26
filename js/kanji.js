@@ -20,17 +20,17 @@
     gs.sort(function (a, b) { return a - b; });
     var list = gs.map(function (g) {
       var n = DATA.filter(function (e) { return e.g === g; }).length;
-      return { id: 'g' + g, name: '小' + g + 'ねん', note: n + 'じ', grades: [g] };
+      return { id: 'g' + g, name: '小' + g + 'で ならう かんじ', note: n + 'じ', grades: [g] };
     });
     if (gs.length > 1) {
-      list.push({ id: 'all', name: 'ぜんぶ', note: DATA.length + 'じ', grades: gs });
+      list.push({ id: 'all', name: 'ぜんぶ まとめて', note: DATA.length + 'じ', grades: gs });
     }
     return list;
   })();
 
   var MODES = [
-    { id: 'yomi', name: 'よみかた', note: 'かんじ → よみ' },
-    { id: 'kanji', name: 'かんじ', note: 'よみ → かんじ' }
+    { id: 'yomi', name: 'かんじを よむ しゅぎょう', note: 'かんじの ことば → よみかたを えらぶ' },
+    { id: 'kanji', name: 'かんじに する しゅぎょう', note: 'よみかた → かんじの ことばを えらぶ' }
   ];
 
   var state = { gradeId: GRADES[0].id, modeId: 'yomi', session: null };
@@ -122,7 +122,7 @@
     app.innerHTML = '';
     var wrap = el('div', 'kj-menu');
     wrap.appendChild(group('がくねん', GRADES, 'gradeId', true));
-    wrap.appendChild(group('といかた', MODES, 'modeId'));
+    wrap.appendChild(group('といかた', MODES, 'modeId', true));
 
     var start = el('button', 'kj-start', 'スタート');
     start.type = 'button';

@@ -19,6 +19,7 @@ a{text-decoration:none;color:inherit}
 .eal-checks{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px;color:var(--lp-soft);font-size:12px;font-weight:800}
 .eal-checks span::before{content:'✓';color:var(--lp-green);margin-right:5px}
 .eal-hero-img{width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border-radius:20px;box-shadow:var(--lp-shadow)}
+.eal-hero-img-wide{aspect-ratio:16/9}
 .eal-section{padding:80px 0}
 .eal-hero + .eal-section{padding-top:64px}
 .eal-section-tint{background:var(--lp-cream)}
@@ -83,3 +84,15 @@ a{text-decoration:none;color:inherit}
   .eal-feature h2 { font-size:clamp(20px,5.4vw,26px); }
   .eal-lead { font-size:14px; }
 }
+
+/* カードの番号バッジが見出しの上で1行使っていた。番号と見出しを同じ行に置く（2026-08-26）。
+   番号を持たないカード（はんわけ など）はこれまでどおり縦積みのままにするため :has で絞る。 */
+.eal-card:has(.eal-card-num) {
+  display:grid;
+  grid-template-columns:auto 1fr;
+  align-items:center;
+  gap:0 12px;
+}
+.eal-card:has(.eal-card-num)>.eal-card-num { grid-column:1; grid-row:1; margin:0; }
+.eal-card:has(.eal-card-num)>h3 { grid-column:2; grid-row:1; margin:0; }
+.eal-card:has(.eal-card-num)>p { grid-column:1 / -1; grid-row:2; margin-top:12px; }

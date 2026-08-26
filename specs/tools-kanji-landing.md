@@ -5,7 +5,7 @@ canonical: self
 sitemap: true
 title_contains: "かんじ修行"
 og_image: "/assets/images/ninja/kanji-scroll-og.jpg"
-required_selectors: ["#site-header", ".eal-hero", "#howto", "#faq", ".eal-final", ".eal-footer"]
+required_selectors: ["#site-header", ".eal-hero", "#howto", "#for-family", "#faq", ".eal-final", ".eal-footer"]
 ---
 
 # かんじ修行 ランディング
@@ -15,5 +15,6 @@ required_selectors: ["#site-header", ".eal-hero", "#howto", "#faq", ".eal-final"
 - **レスポンシブ**: [_common.md](_common.md) の「レスポンシブ共通ルール」に従う。スマホでは**ヒーロー画像を画面の高さから決めた帯**にし、
   **カードの絵と番号は同じ行**に置く（1カラムに折り返したときに大きな塊・余分な改行を作らない）
 - **構成**: ヒーロー → 特徴3つ → 学習範囲 → 使い方3ステップ → FAQ → CTA
+- **おうちのかたへ（`#for-family`）**: アプリ画面から移した大人向けの説明3つ。FAQもアプリ側の設問を取り込み済み（2026-08-26）
 - **SEO**: SoftwareApplication・HowTo・FAQPage、canonical self。アプリ本体のcanonicalもこのURLへ向ける
 - **手動確認観点**: 収録範囲が小1・小2の240字と明記され、アプリCTAが `/tools/kanji/` へ向いていること

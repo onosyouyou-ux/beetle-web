@@ -41,39 +41,6 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"教育支援","item":"https://www.beetle-web.jp/edu-tools.html"},{"@type":"ListItem","position":3,"name":"かんじ修行","item":"https://www.beetle-web.jp/tools/kanji/landing.html"}]}
 </script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "どの学年の漢字が入っていますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "学年別漢字配当表にもとづく小学1年の80字と、2年の160字、あわせて240字です。3年生以上は今のところ入っていません。学年を選ぶか「ぜんぶ」でまとめて練習できます。" }
-    },
-    {
-      "@type": "Question",
-      "name": "書き取りの練習はできますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "できません。このアプリは「読み方」と「どの漢字を使うか」を選んで答える形に絞っています。書き取りは紙に書く練習のほうが身につくため、あえて画面上では扱っていません。" }
-    },
-    {
-      "@type": "Question",
-      "name": "音読みと訓読みを取りちがえてしまいます。",
-      "acceptedAnswer": { "@type": "Answer", "text": "よくあるつまずきなので、選択肢にわざと「同じ漢字の別の読み方」を混ぜています。たとえば「右手（みぎて）」に対して「左右（さゆう）」の読みが選択肢に出ます。まちがえたときは正しい読みがその場で出るので、両方の読み方をセットで覚えられます。" }
-    },
-    {
-      "@type": "Question",
-      "name": "成績は保存されますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "保存していません。1セット10問が終わると、まちがえたことばの一覧が出ます。ページを閉じると消えるので、続けて練習したいときはその場でもう一度どうぞ。" }
-    },
-    {
-      "@type": "Question",
-      "name": "入力した内容はどこかに送られますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "送られません。出題も採点もすべてブラウザの中（この端末の上）で行っていて、サーバーには何も送信していません。" }
-    }
-  ]
-}
-</script>
 <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 <link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/css/app-reference.css">
@@ -92,56 +59,36 @@
     <p class="kj-eyebrow">巻物をあつめる漢字忍術</p>
     <h1>かんじしゅぎょう</h1>
     <p class="kj-lead">かんじを よんで、ことばを えらぶ。<br>おなじ かんじの べつの よみかたも、いっしょに おぼえられます。</p>
-    <p class="kj-scope">いま入っているのは 小1（80字）・小2（160字）の 240字です</p>
   </header>
 
   <div id="kj-app"></div>
 
   <section class="kj-doc" id="howto">
-    <h2>おうちのかたへ</h2>
+    <h2>あそびかた</h2>
     <div class="kj-steps">
       <div class="kj-step">
         <span class="kj-step-n">1</span>
-        <h3>学年別漢字配当表にそって</h3>
-        <p>小学1年の80字、2年の160字を、学年別漢字配当表のとおりに収録しています。ことばに使う漢字も、その学年までに習うものにとどめてあります（習っていない字はひらがなにしています）。</p>
+        <h3>しゅぎょうを えらぶ</h3>
+        <p>「かんじを よむ」か「かんじに する」を えらび、ならう がくねんを えらびます。</p>
       </div>
       <div class="kj-step">
         <span class="kj-step-n">2</span>
-        <h3>2つの といかた</h3>
-        <p>「よみかた」は漢字のことばを読みます。「かんじ」は逆に、読みを聞いてどのことばかを選びます。読めるけれど書けない・選べない、という状態に気づけます。</p>
+        <h3>10もん こたえる</h3>
+        <p>4つの なかから えらぶだけ。まちがえても、その場で ただしい よみかたが 出ます。</p>
       </div>
       <div class="kj-step">
         <span class="kj-step-n">3</span>
-        <h3>まちがえた ことばが のこる</h3>
-        <p>10問おわると、まちがえたことばの一覧が出ます。そこだけノートに書き出して、もう一度やってみてください。成績は保存していません。</p>
+        <h3>まちがえた ことばを 見る</h3>
+        <p>さいごに、まちがえた ことばだけが ならびます。そこだけ ノートに 書いて、もういちど やってみましょう。</p>
       </div>
     </div>
 
-    <h2>よくある しつもん</h2>
-    <details class="kj-faq">
-      <summary>どの学年の漢字が入っていますか？<span>+</span></summary>
-      <div>学年別漢字配当表にもとづく小学1年の80字と、2年の160字、あわせて240字です。3年生以上は今のところ入っていません。学年を選ぶか「ぜんぶ」でまとめて練習できます。</div>
-    </details>
-    <details class="kj-faq">
-      <summary>書き取りの練習はできますか？<span>+</span></summary>
-      <div>できません。このアプリは「読み方」と「どの漢字を使うか」を選んで答える形に絞っています。書き取りは紙に書く練習のほうが身につくため、あえて画面上では扱っていません。</div>
-    </details>
-    <details class="kj-faq">
-      <summary>音読みと訓読みを取りちがえてしまいます。<span>+</span></summary>
-      <div>よくあるつまずきなので、選択肢にわざと「同じ漢字の別の読み方」を混ぜています。たとえば「右手（みぎて）」に対して「左右（さゆう）」の読みが選択肢に出ます。まちがえたときは正しい読みがその場で出るので、両方の読み方をセットで覚えられます。</div>
-    </details>
-    <details class="kj-faq">
-      <summary>成績は保存されますか？<span>+</span></summary>
-      <div>保存していません。1セット10問が終わると、まちがえたことばの一覧が出ます。ページを閉じると消えるので、続けて練習したいときはその場でもう一度どうぞ。</div>
-    </details>
-    <details class="kj-faq">
-      <summary>入力した内容はどこかに送られますか？<span>+</span></summary>
-      <div>送られません。出題も採点もすべてブラウザの中（この端末の上）で行っていて、サーバーには何も送信していません。</div>
-    </details>
+    <p class="nk-doc-ref">おうちのかたへ・よくある しつもんは <a href="/tools/kanji/landing.html">このアプリに ついて</a> に まとめています。</p>
 
     <p class="kj-more">漢字にふりがなをつけたいときは <a href="/tools/rubi-shokunin/">ルビメーカー</a>、けいさんは <a href="/tools/sansu-app/landing.html">さんすう うちゅうたんけん</a>、とけいは <a href="/tools/tokei/landing.html">とけい修行</a> をどうぞ。</p>
   </section>
-  <p class="paper-release">更新日：2026-08-23</p>
+  <p class="nk-back-tools"><a href="/edu-tools.html#kids">← ほかの こども向けツールを 見る</a></p>
+  <p class="paper-release">更新日：2026-08-26</p>
 </div>
 
 <!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一） -->
