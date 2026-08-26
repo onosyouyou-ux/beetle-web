@@ -12,7 +12,7 @@
   var SET_LENGTH = 10;
 
   var STEPS = [
-    { id: 'hour', name: 'じかんのみ', note: '〇じ ぴったり', step: 60 },
+    { id: 'hour', name: 'ちょうどの じかん', note: '3じ・8じ など', step: 60 },
     { id: 'half', name: '30ぷんきざみ', note: '〇じはん も', step: 30 },
     { id: 'five', name: '5ふんきざみ', note: '5・10・15…', step: 5 },
     { id: 'one', name: '1ぷんきざみ', note: 'ぜんぶの ぷん', step: 1 }

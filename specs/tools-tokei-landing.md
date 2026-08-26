@@ -17,4 +17,4 @@ required_selectors: ["#site-header", ".eal-hero", "#howto", "#for-family", "#faq
 - **構成**: ヒーロー → 特徴3つ → 難しさ4段階 → 使い方3ステップ → FAQ → CTA
 - **おうちのかたへ（`#for-family`）**: アプリ画面から移した大人向けの説明3つ。FAQもアプリ側の設問を取り込み済み（2026-08-26）
 - **SEO**: SoftwareApplication・HowTo・FAQPage、canonical self。アプリ本体のcanonicalもこのURLへ向ける
-- **手動確認観点**: じかんのみ・30ぷんきざみ・5ふんきざみ・1ぷんきざみ の4段階が明記され、アプリCTAが `/tools/tokei/` へ向いていること
+- **手動確認観点**: ちょうどの じかん・30ぷんきざみ・5ふんきざみ・1ぷんきざみ の4段階が明記され、アプリCTAが `/tools/tokei/` へ向いていること

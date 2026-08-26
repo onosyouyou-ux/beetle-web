@@ -1665,7 +1665,10 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids.ninja-tokei .tk-menu>.tk-group:nth-of-type(2) { grid-column:2; grid-row:1 / 4; margin-bottom:0; }
   .ninja-kids.ninja-tokei .tk-menu>.tk-toggle { grid-column:1; grid-row:2; }
   .ninja-kids.ninja-tokei .tk-menu>.tk-preview { grid-column:1; grid-row:3; }
-  .ninja-kids.ninja-tokei .tk-menu>.tk-start { grid-column:1 / -1; grid-row:4; }
+  .ninja-kids.ninja-tokei .tk-menu>.tk-start {
+    grid-column:1 / -1; grid-row:4;
+    width:min(100%,320px); margin:6px auto 0; justify-self:center;
+  }
   .ninja-kids.ninja-tokei .tk-menu::before { width:180px; height:46px; top:9px; }
 }
 

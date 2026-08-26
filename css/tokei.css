@@ -51,8 +51,18 @@ body{
 /* ====== メニュー ====== */
 #tk-app{max-width:767px;margin:0 auto;padding:26px 20px 0}
 .tk-group{margin-bottom:22px}
-.tk-group-title{font-size:13px;font-weight:800;color:var(--tk-ink2);margin:0 0 10px;text-align:center;letter-spacing:.1em}
-.tk-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tk-group-title{font-size:13px;font-weight:800;color:var(--tk-ink2);margin:0 0 10px;text-align:left;letter-spacing:.1em}
+.tk-choices{display:grid;grid-template-columns:1fr;gap:10px}
+/* といかたも なんいど と同じ縦1列・左詰めにそろえる（かんじ修行と同じ型。2026-08-26） */
+.tk-choices:not(.tk-choices-level) .tk-choice{
+  display:grid;grid-template-columns:1fr;justify-items:start;
+  text-align:left;gap:1px;padding:10px 16px;
+}
+/* ただしスマホ縦は、といかたを縦に積むとスタートが画面の外に出る。
+   ここだけ2つ横並びに戻す（左詰めは維持）。 */
+@media (max-width:767px) and (orientation:portrait){
+  .tk-choices:not(.tk-choices-level){grid-template-columns:repeat(2,1fr)}
+}
 .tk-choice{
   display:flex;flex-direction:column;align-items:center;gap:3px;
   background:#fff;border:2px solid var(--tk-line2);border-radius:14px;
@@ -63,7 +73,7 @@ body{
 .tk-choice-label{font-size:16px;font-weight:800}
 .tk-choice-note{font-size:11px;color:var(--tk-ink3)}
 
-.tk-toggle{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:700;color:var(--tk-ink2);cursor:pointer;margin-bottom:14px}
+.tk-toggle{display:flex;align-items:center;justify-content:flex-start;gap:8px;font-size:13px;font-weight:700;color:var(--tk-ink2);cursor:pointer;margin-bottom:14px}
 .tk-toggle input{width:18px;height:18px}
 .tk-preview{display:flex;justify-content:center;margin-bottom:20px}
 
