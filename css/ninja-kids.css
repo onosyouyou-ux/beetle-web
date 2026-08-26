@@ -600,14 +600,21 @@ body.ninja-space {
   background:rgba(255,255,255,.09)!important;
   backdrop-filter:blur(4px);
 }
+/* 紹介ページへの導線は、注釈と同じ行に流さず1行使う。
+   色は本体の入口ボタンと同じオレンジ（2026-08-26）。 */
 .ninja-kids .app-ref-button {
+  display:block;
+  width:fit-content;
+  margin:12px 0 0;
+  padding:8px 20px;
   color:#fff;
-  border:1px solid rgba(255,255,255,.3);
-  background:rgba(255,255,255,.1);
+  border:0;
+  border-radius:2px;
+  background:#ef8a3c;
   box-shadow:none;
   clip-path:none;
 }
-.ninja-kids .app-ref-button:hover { background:rgba(255,255,255,.2); }
+.ninja-kids .app-ref-button:hover { background:#d87529; }
 .ninja-kids .app-ref-visual.is-ninja {
   min-height:188px;
   background:
@@ -1346,7 +1353,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     padding:2px 8px;
     font-size:9.5px;
   }
-  .ninja-kids .app-ref-button { padding:4px 10px; font-size:11px; }
+  .ninja-kids .app-ref-button { margin-top:5px; padding:4px 10px; font-size:11px; }
 
   /* 盤面：問題パネルの高さを画面の高さから決める */
   .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) { padding:10px 10px 14px; }
@@ -1389,7 +1396,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids :is(.tk-lead,.kj-lead,.kt-lead,.rj-lead,.pn-lead),
   .ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope) { display:none; }
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) h1 { margin:0 0 2px; font-size:18px; }
-  .ninja-kids .app-ref-button { padding:4px 10px; font-size:11px; }
+  .ninja-kids .app-ref-button { margin-top:5px; padding:4px 10px; font-size:11px; }
 
   /* 盤面は左右2カラム（縦積みだと1画面に入らないため） */
   .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) { padding:8px 10px 12px; }
@@ -1633,14 +1640,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   aspect-ratio:1;
 }
 
-/* モバイルはヒーローが薄いので、リファレンスボタンが斜めグラデの明るい側に
-   かかると白文字が読めなくなる。下地を敷いて、どちら側でも読めるようにする。 */
-@media (max-width:767px), (orientation:landscape) and (max-height:500px) {
-  .ninja-kids .app-ref-button {
-    border-color:rgba(255,255,255,.45);
-    background:rgba(10,28,38,.78);
-  }
-}
+/* ヒーローが薄い側にかかっても読めるよう、以前はモバイルだけ暗い下地を敷いていた。
+   ボタン自体をオレンジの塗りにした（2026-08-26）ので下地は不要。 */
 
 /* とけいのメニューは選択肢が短い。紙面いっぱいに広げると文字が箱の中で浮くので、
    メニューの中身だけ幅を絞る（なんいどを縦1列にしたぶん、間延びも防ぐ）。 */
