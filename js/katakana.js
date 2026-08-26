@@ -121,10 +121,10 @@
   function buildDotchi() {
     var half = Math.round(QUESTIONS / 2);
     var kata = pick(D.words, half).map(function (x) {
-      return { type: 'dotchi', show: x.k, answer: 'kata', word: x.w, hint: x.hint, cat: D.cats[x.c] ? D.cats[x.c].label : '' };
+      return { type: 'dotchi', show: x.k, ex: x.ex, answer: 'kata', word: x.w, hint: x.hint, cat: D.cats[x.c] ? D.cats[x.c].label : '' };
     });
     var hira = pick(D.wago, QUESTIONS - half).map(function (x) {
-      return { type: 'dotchi', show: x.k, answer: 'hira', word: x.k, hint: x.hint, cat: 'ひらがな（かんじ）で 書くことば' };
+      return { type: 'dotchi', show: x.k, ex: x.ex, answer: 'hira', word: x.k, hint: x.hint, cat: 'ひらがな（かんじ）で 書くことば' };
     });
     return shuffle(kata.concat(hira));
   }
@@ -189,7 +189,7 @@
             '<li><b>おとや なきごえ</b><span>ワンワン・ガタンゴトン</span></li>' +
             '<li><b>いきものの 名前</b><span>カブトムシ・タンポポ</span></li>' +
           '</ol>' +
-          '<p class="kt-rules-note">むかしから 日本に あることば（やま・いぬ・ごはん）は ひらがなや かんじで 書きます。</p>' +
+          '<p class="kt-rules-note">日本の ことば（やま・いぬ・ごはん）は ひらがなや かんじで 書きます。</p>' +
         '</div>' +
       '</div>';
 
@@ -222,7 +222,8 @@
           '<span class="kt-score">' + state.ok + 'もん せいかい</span></div>' +
         '<div class="kt-q">' +
           '<p class="kt-q-lead">' + esc(questionLead(q)) + '</p>' +
-          '<p class="kt-q-word' + (q.type === 'nigata' ? ' is-big' : '') + '">' + esc(q.show) + '</p>' +
+          '<p class="kt-q-word' + (q.type === 'nigata' ? ' is-big' : '') + (q.ex ? ' is-sentence' : '') + '">' +
+            (q.ex ? sentence(q.ex, q.show, 'kt-target') : esc(q.show)) + '</p>' +
         '</div>' +
         '<div class="kt-choices' + (q.type === 'dotchi' ? ' is-two' : '') + '">' +
           choices.map(function (c) {
@@ -237,8 +238,15 @@
     });
   }
 
+  // ことば1つだけ見せても どちらで書くか 決められない（「かぜ」だけでは 分からない）。
+  // 例文の中に置いて、あてはめる ことばに 下線を引く。
+  function sentence(ex, word, cls) {
+    var parts = String(ex).split('{}');
+    return esc(parts[0]) + '<u class="' + cls + '">' + esc(word) + '</u>' + esc(parts[1] || '');
+  }
+
   function questionLead(q) {
-    if (q.type === 'dotchi') return 'この ことばは どっちで 書く？';
+    if (q.type === 'dotchi') return 'したせんの ことばは どっちで 書く？';
     if (q.type === 'naosu') return 'カタカナで 書くと どれ？';
     return 'この 字は どっち？';
   }
@@ -271,7 +279,8 @@
     var box = document.getElementById('kt-answer');
     box.className = 'kt-answer is-on' + (ok ? ' is-ok' : ' is-ng');
     box.innerHTML =
-      '<p class="kt-a-head">' + (ok ? 'せいかい！' : 'おしい！') + '　<b>' + esc(q.word) + '</b></p>' +
+      '<p class="kt-a-head">' + (ok ? 'せいかい！' : 'おしい！') + '　' +
+        (q.ex ? '<b>' + sentence(q.ex, q.word, 'kt-a-target') + '</b>' : '<b>' + esc(q.word) + '</b>') + '</p>' +
       (q.cat ? '<p class="kt-a-cat">' + esc(q.cat) + '</p>' : '') +
       '<p class="kt-a-why">' + esc(q.hint) + '</p>' +
       '<button type="button" class="kt-next" id="kt-next">' +
