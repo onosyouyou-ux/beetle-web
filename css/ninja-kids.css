@@ -1954,3 +1954,9 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   line-height:1;
   pointer-events:none;
 }
+
+/* 「かんじの れんしゅうは …」のツール相互リンクは中央ぞろえ（2026-08-26）。
+   すぐ上の紹介ページ導線（.nk-doc-ref）と行の見え方をそろえる。 */
+.ninja-kids :is(.tk-more,.kj-more,.kt-more,.rj-more,.pn-more) {
+  text-align:center;
+}
