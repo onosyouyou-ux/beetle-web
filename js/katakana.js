@@ -181,16 +181,6 @@
             '</button>';
           }).join('') +
         '</div>' +
-        '<div class="kt-rules">' +
-          '<h2>カタカナで かく ことば は この4つ</h2>' +
-          '<ol>' +
-            '<li><b>がいこくから きた ことば</b><span>パン・ノート・ケーキ</span></li>' +
-            '<li><b>がいこくの 国や 人の 名前</b><span>アメリカ・トム</span></li>' +
-            '<li><b>おとや なきごえ</b><span>ワンワン・ガタンゴトン</span></li>' +
-            '<li><b>いきものの 名前</b><span>カブトムシ・タンポポ</span></li>' +
-          '</ol>' +
-          '<p class="kt-rules-note">日本の ことば（やま・いぬ・ごはん）は ひらがなや かんじで 書きます。</p>' +
-        '</div>' +
       '</div>';
 
     Array.prototype.forEach.call(root.querySelectorAll('.kt-mode'), function (btn) {

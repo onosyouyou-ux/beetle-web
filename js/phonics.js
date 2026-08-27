@@ -147,14 +147,6 @@
             '</button>';
           }).join('') +
         '</div>' +
-        '<div class="pn-rules">' +
-          '<h2>ABC が 言えても 単語が 読めない わけ</h2>' +
-          '<ol>' +
-            '<li><b>名前と 音は ちがう</b><span>b の 名前は「ビー」、音は「ブ」。単語を 読むのに いるのは 音のほう</span></li>' +
-            '<li><b>ローマ字とは ちがう</b><span>ローマ字なら name は「ナメ」。でも 英語は「ネイム」</span></li>' +
-            '<li><b>音を つなげる</b><span>ク・ア・トゥ → cat。1つずつ 読めても つなげられないと 単語に ならない</span></li>' +
-          '</ol>' +
-        '</div>' +
       '</div>';
 
     Array.prototype.forEach.call(root.querySelectorAll('.pn-mode'), function (btn) {

@@ -177,6 +177,21 @@
 
   /* ---------- 画面 ---------- */
 
+  /* ふたつの書き方の対応表。盤面ではなく、下の解説エリアに1回だけ描く。
+     しゅぎょう中も残るので、迷ったら下を見て確かめられる。 */
+  function renderRules() {
+    var box = document.getElementById('rj-rules');
+    if (!box) return;
+    box.innerHTML =
+      '<h2>ローマ字には 書き方が 2つ あります</h2>' +
+      '<table class="rj-table"><thead><tr><th>かな</th><th>学校（訓令式）</th><th>パソコン（ヘボン式）</th></tr></thead><tbody>' +
+        D.futatsu.map(function (p) {
+          return '<tr><td>' + esc(p.kana) + '</td><td>' + esc(p.kunrei) + '</td><td>' + esc(p.hepburn) + '</td></tr>';
+        }).join('') +
+      '</tbody></table>' +
+      '<p class="rj-rules-note">どちらも 正しい 書き方です。テストで 出るのは 学校で ならう ほう、キーボードで うつときは どちらでも 入ります。</p>';
+  }
+
   function renderMenu() {
     root.innerHTML =
       '<div class="rj-menu">' +
@@ -188,15 +203,6 @@
               '<span class="rj-mode-s">' + esc(MODES[id].sub) + '</span>' +
             '</button>';
           }).join('') +
-        '</div>' +
-        '<div class="rj-rules">' +
-          '<h2>ローマ字には 書き方が 2つ あります</h2>' +
-          '<table class="rj-table"><thead><tr><th>かな</th><th>学校（訓令式）</th><th>パソコン（ヘボン式）</th></tr></thead><tbody>' +
-            D.futatsu.map(function (p) {
-              return '<tr><td>' + esc(p.kana) + '</td><td>' + esc(p.kunrei) + '</td><td>' + esc(p.hepburn) + '</td></tr>';
-            }).join('') +
-          '</tbody></table>' +
-          '<p class="rj-rules-note">どちらも 正しい 書き方です。テストで 出るのは 学校で ならう ほう、キーボードで うつときは どちらでも 入ります。</p>' +
         '</div>' +
       '</div>';
 
@@ -341,5 +347,6 @@
     document.getElementById('rj-menu').addEventListener('click', renderMenu);
   }
 
+  renderRules();
   renderMenu();
 })();

@@ -11,28 +11,38 @@ body.ninja-kids {
 }
 body.ninja-tokei {
   --nk-accent:#d47b1f; --nk-accent-dark:#8f4c0c; --nk-hero-a:#fff0ca; --nk-hero-b:#e8bc76;
+  --nk-bg-img:url('/assets/images/ninja/backgrounds/tokei-bg-v1.webp');
+  --nk-mascot:url('/assets/images/ninja/tokei-clockwork.webp');
   background-color:#071427;
-  background-image:linear-gradient(rgba(4,12,24,.16),rgba(4,12,24,.16)),url('/assets/images/ninja/backgrounds/tokei-bg-v1.webp');
+  background-image:linear-gradient(rgba(4,12,24,.16),rgba(4,12,24,.16)),var(--nk-bg-img);
 }
 body.ninja-kanji {
   --nk-accent:#b64632; --nk-accent-dark:#75281e; --nk-hero-a:#f8e3ca; --nk-hero-b:#dfb087;
+  --nk-bg-img:url('/assets/images/ninja/backgrounds/kanji-bg-v1.webp');
+  --nk-mascot:url('/assets/images/ninja/kanji-scroll.webp');
   background-color:#170e12;
-  background-image:linear-gradient(rgba(18,8,10,.14),rgba(18,8,10,.14)),url('/assets/images/ninja/backgrounds/kanji-bg-v1.webp');
+  background-image:linear-gradient(rgba(18,8,10,.14),rgba(18,8,10,.14)),var(--nk-bg-img);
 }
 body.ninja-katakana {
   --nk-accent:#168c8b; --nk-accent-dark:#0c5e64; --nk-hero-a:#dcf1e9; --nk-hero-b:#9fd3c5;
+  --nk-bg-img:url('/assets/images/ninja/backgrounds/katakana-bg-v1.webp');
+  --nk-mascot:url('/assets/images/ninja/katakana-infiltration.webp');
   background-color:#06242c;
-  background-image:linear-gradient(rgba(2,20,26,.12),rgba(2,20,26,.12)),url('/assets/images/ninja/backgrounds/katakana-bg-v1.webp');
+  background-image:linear-gradient(rgba(2,20,26,.12),rgba(2,20,26,.12)),var(--nk-bg-img);
 }
 body.ninja-romaji {
   --nk-accent:#7652b8; --nk-accent-dark:#4c3180; --nk-hero-a:#ece4fa; --nk-hero-b:#c5afe7;
+  --nk-bg-img:url('/assets/images/ninja/backgrounds/romaji-bg-v1.webp');
+  --nk-mascot:url('/assets/images/ninja/romaji-cipher.webp');
   background-color:#100923;
-  background-image:linear-gradient(rgba(10,4,24,.12),rgba(10,4,24,.12)),url('/assets/images/ninja/backgrounds/romaji-bg-v1.webp');
+  background-image:linear-gradient(rgba(10,4,24,.12),rgba(10,4,24,.12)),var(--nk-bg-img);
 }
 body.ninja-phonics {
   --nk-accent:#4b8e42; --nk-accent-dark:#2d6329; --nk-hero-a:#e7f2d3; --nk-hero-b:#b7d08e;
+  --nk-bg-img:url('/assets/images/ninja/backgrounds/phonics-bg-v1.webp');
+  --nk-mascot:url('/assets/images/ninja/phonics-listen.webp');
   background-color:#042126;
-  background-image:linear-gradient(rgba(2,20,22,.14),rgba(2,20,22,.14)),url('/assets/images/ninja/backgrounds/phonics-bg-v1.webp');
+  background-image:linear-gradient(rgba(2,20,22,.14),rgba(2,20,22,.14)),var(--nk-bg-img);
 }
 body:is(.ninja-tokei,.ninja-kanji,.ninja-katakana,.ninja-romaji,.ninja-phonics) {
   background-position:center top;
@@ -1959,4 +1969,61 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
    すぐ上の紹介ページ導線（.nk-doc-ref）と行の見え方をそろえる。 */
 .ninja-kids :is(.tk-more,.kj-more,.kt-more,.rj-more,.pn-more) {
   text-align:center;
+}
+
+
+/* ============================================================
+   メニュー下の「読み物」ブロック（対応表・ルール解説）
+   2026-08-27：盤面の中から下の解説エリアへ移した。カタカナ・ローマ字・
+   フォニックスで共通なのでここに一元化する。枠はアプリごとの背景画像
+   （--nk-bg-img）をベールごしに敷いて装飾。表や箇条書きの地は白のまま
+   なので、背景を入れても読みやすさは落ちない。
+   ============================================================ */
+.ninja-kids :is(.kt-doc,.rj-doc,.pn-doc) :is(.kt-rules,.rj-rules,.pn-rules) {
+  position:relative;
+  margin:0 0 8px;
+  padding:20px 22px 18px;
+  border:2px solid var(--nk-accent-dark);
+  border-radius:16px;
+  background-color:#fdf8ef;
+  background-image:linear-gradient(rgba(252,249,243,.78),rgba(253,248,239,.93)),var(--nk-bg-img);
+  background-size:auto,cover;
+  background-position:center,center top;
+  box-shadow:0 2px 10px rgba(30,20,10,.12);
+}
+/* 見出しの前に そのアプリの忍者。飾りなので読み上げには入れない */
+.ninja-kids :is(.kt-doc,.rj-doc,.pn-doc) :is(.kt-rules,.rj-rules,.pn-rules) > h2 {
+  display:flex;align-items:center;gap:8px;
+  font-size:15px;margin:0 0 14px;color:var(--nk-accent-dark);
+}
+.ninja-kids :is(.kt-doc,.rj-doc,.pn-doc) :is(.kt-rules,.rj-rules,.pn-rules) > h2::before {
+  content:'';flex:none;width:22px;height:22px;
+  background:var(--nk-mascot) center/contain no-repeat;
+}
+/* 箇条書き型（カタカナ・フォニックス）も表型（ローマ字）と同じ地にする */
+.ninja-kids :is(.kt-doc,.rj-doc,.pn-doc) :is(.kt-rules,.rj-rules,.pn-rules) > ol {
+  background:#fff;border-radius:10px;
+  margin:0;padding:14px 16px 14px 2.2em;
+  border:1px solid rgba(60,45,25,.14);
+  box-shadow:0 1px 4px rgba(30,20,10,.08);
+}
+.ninja-kids :is(.kt-doc,.rj-doc,.pn-doc) .rj-table { box-shadow:0 1px 4px rgba(30,20,10,.08); }
+.ninja-kids :is(.kt-doc,.rj-doc,.pn-doc) :is(.kt-rules-note,.rj-rules-note,.pn-rules-note) {
+  margin-bottom:0;
+}
+@media (max-width:767px) {
+  .ninja-kids :is(.kt-doc,.rj-doc,.pn-doc) :is(.kt-rules,.rj-rules,.pn-rules) {
+    padding:16px 14px 14px;border-radius:14px;
+  }
+}
+
+/* しゅぎょうが3つだけのアプリ（カタカナ・ローマ字・フォニックス）は、
+   縦に3段積むと そのぶん盤面が下へ押される。768px以上では横3分割にして
+   メニューを1段に収める（スマホは3段ルールどおり1カラムのまま）。 */
+@media (min-width:768px) {
+  .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes) {
+    grid-template-columns:repeat(3,1fr);
+    align-items:stretch;
+  }
+  .ninja-kids :is(.kt-mode,.rj-mode,.pn-mode) { height:100%; }
 }
