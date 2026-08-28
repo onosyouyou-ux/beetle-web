@@ -352,7 +352,7 @@ body.ninja-space {
   grid-column:1 / -1;
   grid-row:4;
   justify-self:center;
-  align-self:end;
+  align-self:start;
   margin:0;
 }
 .ninja-kids :is(.kt-back,.rj-back,.pn-back) { grid-row:4; }
@@ -692,6 +692,7 @@ body.ninja-space {
 .ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar) {
   color:#59666a;
 }
+.ninja-kids :is(.tk-play>.tk-bar,.kj-play>.kj-bar) { display:none; }
 .ninja-kids :is(.tk-bar,.kj-bar) {
   background:#ddd7cb;
 }
@@ -727,14 +728,32 @@ body.ninja-space {
 
 /* 問題エリアが312pxになったぶん、といと問題の文字を大きくする（2026-08-28）。
    スマホ・タブレット縦は1画面に収める都合があるので、2カラムの段だけ効かせる。 */
-@media (min-width:768px) {
-  .ninja-kids :is(.kj-ask-label,.kt-q-lead,.rj-q-lead,.pn-q-lead) { font-size:18px; }
-  .ninja-kids .kj-ask-word { font-size:64px; }
-  .ninja-kids .kj-ask-yomi { font-size:46px; }
-  .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word) { font-size:46px; }
-  .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-sentence { font-size:32px; }
-  .ninja-kids .tk-play>.tk-ask { font-size:22px; }
+/* 文字の大きさは問題エリアの高さ --nk-qh から比率で決める（2026-08-28）。
+   段ごとに px を並べるとバランスが崩れるので、比率はここ1か所だけに持たせる。
+   かんじは1〜3文字、カタカナ・ローマ字・フォニックスは3〜6文字なので係数を分ける
+   （同じ係数にすると、長いことばが枠からはみ出す）。 */
+.ninja-kids {
+  --nk-fs-label:    clamp(13px, calc(var(--nk-qh) * .070), 24px);
+  /* かんじは最長5文字（組み立てる）。2行に折り返しても「なんと よむ?」に
+     かからない大きさが .24。よみは最長7文字（しょうがっこう）で1行に収まるのが .17。 */
+  --nk-fs-word:     clamp(28px, calc(var(--nk-qh) * .240), 84px);
+  --nk-fs-yomi:     clamp(22px, calc(var(--nk-qh) * .170), 60px);
+  --nk-fs-kana:     clamp(22px, calc(var(--nk-qh) * .170), 58px);
+  --nk-fs-big:      clamp(44px, calc(var(--nk-qh) * .380), 120px);
+  --nk-fs-sentence: clamp(18px, calc(var(--nk-qh) * .105), 34px);
+  --nk-fs-opt:      clamp(16px, calc(var(--nk-qh) * .075), 26px);
+  --nk-fs-head:     clamp(12px, calc(var(--nk-qh) * .050), 17px);
 }
+.ninja-kids :is(.kj-ask-label,.kt-q-lead,.rj-q-lead,.pn-q-lead) { font-size:var(--nk-fs-label); }
+.ninja-kids .kj-ask-word { font-size:var(--nk-fs-word); }
+.ninja-kids .kj-ask-yomi { font-size:var(--nk-fs-yomi); }
+.ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word) { font-size:var(--nk-fs-kana); }
+.ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-sentence { font-size:var(--nk-fs-sentence); }
+.ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-big { font-size:var(--nk-fs-big); }
+.ninja-kids .tk-play>.tk-ask { font-size:var(--nk-fs-label); }
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice) { font-size:var(--nk-fs-opt); }
+.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar) { font-size:var(--nk-fs-head); }
+.ninja-kids :is(.tk-back,.kj-back,.kt-back,.rj-back,.pn-back) { font-size:var(--nk-fs-head); }
 /* 選択肢は修行ごとのアクセント色で塗り分ける（2026-08-28）。
    文字は濃い墨のままにして、色は下地・枠・影で出す（子どもが読めることを優先）。 */
 .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) {
@@ -812,6 +831,7 @@ body.ninja-space {
   filter:drop-shadow(0 10px 12px rgba(0,0,0,.28));
 }
 .ninja-kids :is(.tk-feedback,.kj-feedback) {
+  min-height:0;
   padding-inline:8px;
   border-radius:99px;
 }
@@ -1492,14 +1512,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     min-height:clamp(84px,30dvh,170px);
   }
   .ninja-kids .kj-ask { padding-top:8px; }
-  .ninja-kids .kj-ask-label { grid-column:1; grid-row:2; justify-self:center; margin:6px 10px; font-size:13px; }
-  .ninja-kids :is(.kt-q-lead,.rj-q-lead,.pn-q-lead) { font-size:13px; }
-  .ninja-kids .kj-ask-word { font-size:38px; }
-  .ninja-kids .kj-ask-yomi { font-size:28px; }
-  .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word) { font-size:28px; }
-  .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-sentence { font-size:22px; }
-  .ninja-kids .tk-play>.tk-ask { font-size:18px; }
-  .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-big { font-size:clamp(30px,13dvh,60px); }
+  .ninja-kids .kj-ask-label { grid-column:1; grid-row:2; justify-self:center; margin:6px 10px; }
   .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),
   .ninja-kids .tk-play>.tk-options {
     grid-column:2;
