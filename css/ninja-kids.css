@@ -216,12 +216,22 @@ body.ninja-space {
   filter:drop-shadow(0 10px 10px rgba(40,24,14,.25));
 }
 .ninja-kids .app-ref-button {
-  border:0;
+  border:1px solid var(--nk-accent);
   border-radius:4px;
   background:var(--nk-accent);
+  color:#fff;
   box-shadow:0 4px 0 var(--nk-accent-dark);
   clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
 }
+.ninja-kids .app-ref-button:hover { background:var(--nk-accent-dark); }
+/* 「アプリ一覧」は控えめな抜き文字。色は修行カラーに合わせる。 */
+.ninja-kids .app-ref-button.is-sub {
+  background:transparent;
+  color:var(--nk-hero-a);
+  border-color:var(--nk-hero-a);
+  box-shadow:0 4px 0 color-mix(in srgb,var(--nk-accent-dark) 70%,transparent);
+}
+.ninja-kids .app-ref-button.is-sub:hover { background:var(--nk-accent); color:#fff; border-color:var(--nk-accent); }
 .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) {
   position:relative;
   max-width:1020px;
@@ -709,24 +719,39 @@ body.ninja-space {
   grid-row:2;
   z-index:2;
   align-self:start;
-  margin:20px 22px;
+  justify-self:center;
+  margin:18px 0 0;
   color:#b9cacc;
 }
-.ninja-kids .kj-ask { padding-top:48px; }
+.ninja-kids .kj-ask { padding-top:0; }
+
+/* 問題エリアが312pxになったぶん、といと問題の文字を大きくする（2026-08-28）。
+   スマホ・タブレット縦は1画面に収める都合があるので、2カラムの段だけ効かせる。 */
+@media (min-width:768px) {
+  .ninja-kids :is(.kj-ask-label,.kt-q-lead,.rj-q-lead,.pn-q-lead) { font-size:18px; }
+  .ninja-kids .kj-ask-word { font-size:64px; }
+  .ninja-kids .kj-ask-yomi { font-size:46px; }
+  .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word) { font-size:46px; }
+  .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-sentence { font-size:32px; }
+  .ninja-kids .tk-play>.tk-ask { font-size:22px; }
+}
+/* 選択肢は修行ごとのアクセント色で塗り分ける（2026-08-28）。
+   文字は濃い墨のままにして、色は下地・枠・影で出す（子どもが読めることを優先）。 */
 .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) {
   min-height:62px;
   color:#17272e;
-  border:0;
-  border-left:5px solid color-mix(in srgb,var(--nk-accent) 72%,#fff);
+  border:2px solid color-mix(in srgb,var(--nk-accent) 45%,#fff);
+  border-left:6px solid var(--nk-accent);
   border-radius:10px;
-  background:var(--nk-card);
-  box-shadow:0 5px 0 #d2c9b8;
+  background:color-mix(in srgb,var(--nk-accent) 9%,#fff);
+  box-shadow:0 5px 0 color-mix(in srgb,var(--nk-accent) 32%,#cfc6b4);
   transition:translate .15s,box-shadow .15s,background .15s;
 }
 .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):hover:not(:disabled) {
   translate:0 -3px;
   border-color:var(--nk-accent);
-  box-shadow:0 8px 0 #c7bca9;
+  background:color-mix(in srgb,var(--nk-accent) 16%,#fff);
+  box-shadow:0 8px 0 color-mix(in srgb,var(--nk-accent) 45%,#c7bca9);
 }
 .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):focus-visible {
   outline:3px solid color-mix(in srgb,var(--nk-accent) 55%,#fff);
@@ -905,6 +930,21 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   position:relative;
   overflow:hidden;
 }
+/* 問題エリアの地紋（七宝つなぎ）。白い線のPNGを薄く重ねるので、
+   修行ごとのアクセント色は下地のグラデーションがそのまま出る。1枚で5アプリ共用。 */
+.ninja-kids { --nk-q-pattern:url('/assets/images/ninja/backgrounds/q-shippou.png'); }
+.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask,.tk-play>.tk-stage,.tk-play>.tk-ask)::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background:var(--nk-q-pattern) center/cover no-repeat;
+  opacity:.09;
+  pointer-events:none;
+}
+.ninja-kids :is(.tk-play>.tk-stage,.tk-play>.tk-ask) { position:relative; overflow:hidden; }
+.ninja-kids :is(.kt-q-lead,.rj-q-lead,.pn-q-lead,.kt-q-word,.rj-q-word,.pn-q-word),
+.ninja-kids .tk-play>.tk-stage .tk-clock { position:relative; z-index:1; }
 .ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask)::after {
   content:'';
   position:absolute;
@@ -1351,7 +1391,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 
 /* 1カラムに積むとき（スマホ・タブレット縦）は、といのラベルを重ねず上に置く */
 @media (max-width:767px), (min-width:768px) and (max-width:1179px) and (orientation:portrait) {
-  .ninja-kids .kj-ask-label { margin:0; }
+  .ninja-kids .kj-ask-label { justify-self:stretch; margin:0 0 6px; }
   .ninja-kids .kj-ask { padding-top:0; }
 }
 
@@ -1452,14 +1492,25 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     min-height:clamp(84px,30dvh,170px);
   }
   .ninja-kids .kj-ask { padding-top:8px; }
-  .ninja-kids .kj-ask-label { grid-column:1; grid-row:2; margin:6px 10px; }
+  .ninja-kids .kj-ask-label { grid-column:1; grid-row:2; justify-self:center; margin:6px 10px; font-size:13px; }
+  .ninja-kids :is(.kt-q-lead,.rj-q-lead,.pn-q-lead) { font-size:13px; }
+  .ninja-kids .kj-ask-word { font-size:38px; }
+  .ninja-kids .kj-ask-yomi { font-size:28px; }
+  .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word) { font-size:28px; }
+  .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-sentence { font-size:22px; }
+  .ninja-kids .tk-play>.tk-ask { font-size:18px; }
   .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-big { font-size:clamp(30px,13dvh,60px); }
-  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices) {
+  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),
+  .ninja-kids .tk-play>.tk-options {
     grid-column:2;
     grid-row:2;
     gap:6px;
     margin:0;
+    min-height:0;
+    align-self:center;
+    align-content:center;
   }
+  .ninja-kids .tk-play>.tk-options { grid-row:3 / 5; }
   .ninja-kids :is(.tk-feedback,.kj-feedback) { grid-column:1; grid-row:3; }
   .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) { grid-column:1 / -1; grid-row:1 / -1; }
   .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before { width:clamp(84px,26dvh,130px); }
