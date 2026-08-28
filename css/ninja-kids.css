@@ -699,14 +699,58 @@ body.ninja-space {
 .ninja-kids :is(.tk-bar-fill,.kj-bar-fill) {
   background:var(--nk-accent);
 }
+/* 問題エリアの枠は忍者札に見立てる（2026-08-28）。
+   左上と右下を斜めに落とし（既存のボタンと同じ角落としの作法）、
+   内側にアクセントの罫＋白の細い罫を重ねて掛け軸の表装のように見せる。
+   ::before は地紋、::after はアイテム絵で埋まっているので、
+   枠は clip-path と inset の box-shadow だけで作ること。 */
+.ninja-kids {
+  --nk-q-notch:18px;
+  --nk-q-frame:
+    inset 0 0 0 2px color-mix(in srgb,var(--nk-accent) 58%,transparent),
+    inset 0 0 0 8px rgba(255,255,255,.045),
+    inset 0 0 0 9px rgba(255,255,255,.14),
+    inset 0 22px 44px rgba(0,0,0,.30);
+}
+.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask,.tk-play>.tk-ask,.tk-play>.tk-stage) {
+  filter:
+    drop-shadow(0 10px 22px rgba(0,0,0,.34))
+    drop-shadow(0 0 14px color-mix(in srgb,var(--nk-accent) 42%,transparent));
+}
 .ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask) {
   color:#fff;
   border:0;
-  border-radius:13px;
+  border-radius:0;
+  clip-path:polygon(
+    var(--nk-q-notch) 0, 100% 0,
+    100% calc(100% - var(--nk-q-notch)), calc(100% - var(--nk-q-notch)) 100%,
+    0 100%, 0 var(--nk-q-notch));
   background:
     radial-gradient(circle at 82% 18%,color-mix(in srgb,var(--nk-accent) 24%,transparent),transparent 38%),
     linear-gradient(145deg,#173842,#0c252e);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+  box-shadow:var(--nk-q-frame);
+}
+/* とけいは「といのバー＋時計ステージ」で1枚の札になる。
+   角落としは外側の角だけ（上は左上、下は右下）にして、合わせ目は切らない。 */
+.ninja-kids .tk-play>.tk-ask {
+  border-radius:0;
+  clip-path:polygon(var(--nk-q-notch) 0, 100% 0, 100% 100%, 0 100%, 0 var(--nk-q-notch));
+  box-shadow:
+    inset 2px 0 0 color-mix(in srgb,var(--nk-accent) 58%,transparent),
+    inset -2px 0 0 color-mix(in srgb,var(--nk-accent) 58%,transparent),
+    inset 0 2px 0 color-mix(in srgb,var(--nk-accent) 58%,transparent),
+    inset 0 22px 44px rgba(0,0,0,.30);
+}
+.ninja-kids .tk-play>.tk-stage {
+  border-radius:0;
+  clip-path:polygon(
+    0 0, 100% 0,
+    100% calc(100% - var(--nk-q-notch)), calc(100% - var(--nk-q-notch)) 100%,
+    0 100%);
+  box-shadow:
+    inset 2px 0 0 color-mix(in srgb,var(--nk-accent) 58%,transparent),
+    inset -2px 0 0 color-mix(in srgb,var(--nk-accent) 58%,transparent),
+    inset 0 -2px 0 color-mix(in srgb,var(--nk-accent) 58%,transparent);
 }
 .ninja-kids :is(.kt-q-lead,.rj-q-lead,.pn-q-lead) {
   color:#b9cacc;
@@ -744,7 +788,18 @@ body.ninja-space {
   --nk-fs-opt:      clamp(16px, calc(var(--nk-qh) * .075), 26px);
   --nk-fs-head:     clamp(12px, calc(var(--nk-qh) * .050), 17px);
 }
-.ninja-kids :is(.kj-ask-label,.kt-q-lead,.rj-q-lead,.pn-q-lead) { font-size:var(--nk-fs-label); }
+.ninja-kids :is(.kj-ask-label,.kt-q-lead,.rj-q-lead,.pn-q-lead) {
+  font-size:var(--nk-fs-label);
+  justify-self:center;
+  width:fit-content;
+  padding:.28em 1.1em;
+  color:#fff!important;
+  font-weight:800;
+  letter-spacing:.08em;
+  background:linear-gradient(var(--nk-accent),color-mix(in srgb,var(--nk-accent) 72%,#000));
+  box-shadow:0 2px 0 color-mix(in srgb,var(--nk-accent-dark) 80%,#000);
+  clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px);
+}
 .ninja-kids .kj-ask-word { font-size:var(--nk-fs-word); }
 .ninja-kids .kj-ask-yomi { font-size:var(--nk-fs-yomi); }
 .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word) { font-size:var(--nk-fs-kana); }
@@ -1256,7 +1311,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 /* ---------- スマホ（~767px） ---------- */
 @media (max-width:767px) {
   /* 1カラムに積む段は盤面・回答エリアの固定高さを外す（1画面に収めるルールが優先） */
-  .ninja-kids { --nk-tap:60px; --nk-board-h:0px; }
+  .ninja-kids { --nk-tap:60px; --nk-board-h:0px; --nk-q-notch:12px; }
   .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),
   .ninja-kids .tk-play>.tk-options { align-self:auto; min-height:0; }
   .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) { min-height:56px; }
@@ -2108,9 +2163,48 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
    縦に3段積むと そのぶん盤面が下へ押される。768px以上では横3分割にして
    メニューを1段に収める（スマホは3段ルールどおり1カラムのまま）。 */
 @media (min-width:768px) {
+  /* しゅぎょうの札は、選ぶ枠いっぱいまで広げる（2026-08-28）。
+     メニューを縦のフレックスにして、札の行に余った高さを全部わたす。 */
+  .ninja-kids :is(.kt-menu,.rj-menu,.pn-menu) {
+    display:flex;
+    flex-direction:column;
+  }
   .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes) {
+    flex:1;
     grid-template-columns:repeat(3,1fr);
     align-items:stretch;
+    gap:16px;
   }
-  .ninja-kids :is(.kt-mode,.rj-mode,.pn-mode) { height:100%; }
+  .ninja-kids :is(.kt-mode,.rj-mode,.pn-mode) {
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    gap:10px;
+    padding:24px 24px 26px;
+    text-align:left;
+  }
+  /* 広がったぶん、なんのしゅぎょうかが読んで分かるように大きくする */
+  .ninja-kids :is(.kt-mode-t,.rj-mode-t,.pn-mode-t) { font-size:26px; line-height:1.35; }
+  .ninja-kids :is(.kt-mode-s,.rj-mode-s,.pn-mode-s) { font-size:15px; line-height:1.95; }
+  /* 札ごとに忍具の絵を1つずつ透かしで入れる（items スプライトの1〜3コマ目）。
+     ::after は選択中の✓で使っているので、透かしは ::before に置くこと。 */
+  .ninja-kids :is(.kt-mode,.rj-mode,.pn-mode)::before {
+    content:'';
+    position:absolute;
+    left:50%;
+    top:26px;
+    width:132px;
+    height:132px;
+    translate:-50% 0;
+    opacity:.9;
+    background-image:var(--nk-items);
+    background-repeat:no-repeat;
+    background-size:400% 100%;
+    background-position:0 50%;
+    rotate:-8deg;
+    pointer-events:none;
+  }
+  .ninja-kids :is(.kt-mode,.rj-mode,.pn-mode):nth-of-type(2)::before { background-position:33.333% 50%; }
+  .ninja-kids :is(.kt-mode,.rj-mode,.pn-mode):nth-of-type(3)::before { background-position:66.666% 50%; }
 }
