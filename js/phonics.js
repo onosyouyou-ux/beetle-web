@@ -178,7 +178,10 @@
           }).join('') +
         '</div>' +
         '<div class="pn-answer" id="pn-answer"></div>' +
+        '<button type="button" class="pn-back">← メニューに もどる</button>' +
       '</div>';
+
+    root.querySelector('.pn-back').addEventListener('click', renderMenu);
 
     Array.prototype.forEach.call(root.querySelectorAll('.pn-choice'), function (btn) {
       btn.addEventListener('click', function () { answer(btn.getAttribute('data-key'), btn); });

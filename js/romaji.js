@@ -246,7 +246,10 @@
         '</div>' +
         body +
         '<div class="rj-answer" id="rj-answer"></div>' +
+        '<button type="button" class="rj-back">← メニューに もどる</button>' +
       '</div>';
+
+    root.querySelector('.rj-back').addEventListener('click', renderMenu);
 
     if (q.type === 'utsu') {
       var input = document.getElementById('rj-input');

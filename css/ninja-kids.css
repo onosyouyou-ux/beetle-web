@@ -229,8 +229,18 @@ body.ninja-space {
   margin-inline:auto;
   padding:18px 30px 22px;
 }
+/* 盤面の大きさは変数3本で決める（2026-08-28 標準化・チケット#1）。
+   基準は「とけい修行」の実測値で、ほかの修行アプリをこれに合わせる。
+     --nk-qh      … 問題エリア（左カラム）の高さ。回答エリアもこの高さに揃える
+     --nk-board-h … 盤面としゅぎょう選択画面の最小高さ。画面が切り替わっても箱が動かないようにする
+     --nk-ask-h   … とけいだけ「といのバー＋時計ステージ」の合成なので、その差分（バー＋行間）
+   ここが基本値＝PC（1180px以上）。段ごとの上書きは、この下のレスポンシブ節で
+   この変数だけを差し替える（各アプリのCSSに数値を直書きしない）。 */
+.ninja-kids { --nk-qh:312px; --nk-board-h:446px; --nk-ask-h:54px; }
+
 .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) {
   position:relative;
+  min-height:var(--nk-board-h);
   padding:16px 20px;
   border:1px solid #d4bb8c;
   border-radius:8px;
@@ -251,10 +261,11 @@ body.ninja-space {
 .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) {
   display:grid;
   grid-template-columns:minmax(260px,.92fr) minmax(340px,1.08fr);
-  grid-template-rows:auto 1fr auto;
+  grid-template-rows:auto var(--nk-qh) auto;
   gap:12px 24px;
   align-items:center;
-  min-height:306px;
+  align-content:start;
+  min-height:var(--nk-board-h);
   padding:16px 20px 18px;
   border:2px solid #cfb27d;
   border-radius:10px;
@@ -274,7 +285,7 @@ body.ninja-space {
   align-self:stretch;
   display:grid;
   place-content:center;
-  min-height:190px;
+  min-height:var(--nk-qh);
   margin:0;
   border:2px solid var(--nk-line);
   border-radius:8px;
@@ -285,16 +296,21 @@ body.ninja-space {
   grid-row:2;
   display:grid;
   place-items:center;
-  min-height:170px;
+  min-height:var(--nk-qh);
   margin:0;
   border:2px solid var(--nk-line);
   border-radius:8px;
   background:linear-gradient(145deg,#fff,#f8ebcd);
 }
+/* 回答エリアは問題エリアと対（つい）の箱にする。天地を揃えて同じ高さまで伸ばし、
+   中身だけを縦中央に置く（2026-08-28）。以前は align-self:center で高さが中身なりだったため、
+   アプリごとに右カラムの始まる位置がバラバラだった。 */
 .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices) {
   grid-column:2;
   grid-row:2;
-  align-self:center;
+  align-self:stretch;
+  align-content:center;
+  min-height:var(--nk-qh);
   margin:0;
 }
 .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) {
@@ -317,10 +333,17 @@ body.ninja-space {
   grid-row:3;
   margin:0;
 }
-.ninja-kids :is(.tk-back,.kj-back) {
+.ninja-kids :is(.tk-back,.kj-back,.kt-back,.rj-back,.pn-back) {
   grid-column:1;
   grid-row:4;
   justify-self:start;
+}
+/* カタカナ・ローマ字・フォニックスは「こたえあわせ」が右カラムの3行目なので、
+   もどるは左カラムの3行目＝問題欄のすぐ下に置く（2026-08-28追加）。 */
+.ninja-kids :is(.kt-back,.rj-back,.pn-back) {
+  grid-row:3;
+  align-self:start;
+  margin:0;
 }
 /* 各アプリのCSSの margin:16px auto 0 が auto マージンで justify-self に勝ち、
    盤面の中で中途半端に中央寄せになっていた（2026-08-26修正）。 */
@@ -377,8 +400,9 @@ body.ninja-space {
 /* Clock training has an extra clock stage; keep it inside the left question panel. */
 .ninja-kids .tk-play {
   grid-template-columns:minmax(300px,.92fr) minmax(390px,1.08fr);
-  grid-template-rows:auto 8px auto 1fr auto auto auto;
-  min-height:386px;
+  grid-template-rows:auto 8px auto calc(var(--nk-qh) - var(--nk-ask-h)) auto auto auto;
+  min-height:var(--nk-board-h);
+  align-content:start;
   gap:8px 24px;
 }
 .ninja-kids .tk-play>.tk-play-head {
@@ -407,12 +431,12 @@ body.ninja-space {
 }
 .ninja-kids .tk-play>.tk-stage {
   grid-column:1;
-  grid-row:4 / 6;
+  grid-row:4;
   align-self:stretch;
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:250px;
+  min-height:calc(var(--nk-qh) - var(--nk-ask-h));
   margin:0;
   padding:4px 12px 12px;
   border:2px solid var(--nk-line);
@@ -425,10 +449,11 @@ body.ninja-space {
   height:auto;
 }
 .ninja-kids .tk-play:not(:has(.tk-stage))>.tk-ask {
-  grid-row:3 / 6;
+  grid-row:3 / 5;
+  align-self:stretch;
   display:grid;
   place-items:center;
-  min-height:270px;
+  min-height:var(--nk-qh);
   padding:24px;
   border-bottom:2px solid var(--nk-line);
   border-radius:9px;
@@ -437,7 +462,8 @@ body.ninja-space {
 .ninja-kids .tk-play>.tk-options {
   grid-column:2;
   grid-row:3 / 5;
-  align-self:center;
+  align-self:stretch;
+  align-content:center;
   margin:0;
 }
 .ninja-kids .tk-play>.tk-options.is-clock {
@@ -488,15 +514,12 @@ body.ninja-space {
     min-height:300px;
     padding:12px 26px 15px;
   }
+  .ninja-kids { --nk-qh:270px; --nk-board-h:392px; }
   .ninja-kids :is(.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) {
-    min-height:275px;
     padding:11px 16px;
   }
-  .ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask) { min-height:154px; }
-  .ninja-kids .tk-play { min-height:318px;padding:11px 16px; }
-  .ninja-kids .tk-play>.tk-stage { min-height:205px; }
+  .ninja-kids .tk-play { padding:11px 16px; }
   .ninja-kids .tk-play>.tk-stage .tk-clock { width:198px; }
-  .ninja-kids .tk-play:not(:has(.tk-stage))>.tk-ask { min-height:220px; }
   .ninja-space .sa-head { min-height:86px; }
   .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card) { padding-block:12px; }
 }
@@ -1029,10 +1052,11 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   inset:0;
   z-index:20;
   display:flex;
-  flex-direction:column;
+  flex-direction:row;
+  flex-wrap:wrap;
   align-items:center;
   justify-content:center;
-  gap:2px;
+  gap:clamp(10px,2.4vw,30px);
   min-height:0;
   margin:0;
   padding:18px;
@@ -1041,17 +1065,20 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   background:rgba(5,19,27,.82);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
   backdrop-filter:blur(3px);
-  font-size:18px;
-  text-align:center;
+  font-size:clamp(22px,3.4vw,40px);
+  font-weight:900;
+  line-height:1.3;
+  text-align:left;
   pointer-events:none;
   animation:ninjaFeedbackVeil .22s ease-out both;
 }
 .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before {
   content:'';
   display:block;
+  flex:none;
   width:clamp(150px,19vw,205px);
   aspect-ratio:1;
-  margin-bottom:-2px;
+  margin-bottom:0;
   background:center/contain no-repeat;
   filter:drop-shadow(0 12px 18px rgba(0,0,0,.28));
   animation:ninjaFeedbackPop .38s cubic-bezier(.2,1.28,.42,1) both;
@@ -1152,15 +1179,9 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 }
 @media (min-width:768px) {
   .ninja-kids.ninja-kanji .kj-play {
-    height:316px;
-    min-height:316px;
+    height:var(--nk-board-h);
+    min-height:var(--nk-board-h);
     box-sizing:border-box;
-  }
-}
-@media (min-width:768px) and (max-height:820px) {
-  .ninja-kids.ninja-kanji .kj-play {
-    height:275px;
-    min-height:275px;
   }
 }
 
@@ -1177,7 +1198,10 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 
 /* ---------- スマホ（~767px） ---------- */
 @media (max-width:767px) {
-  .ninja-kids { --nk-tap:60px; }
+  /* 1カラムに積む段は盤面・回答エリアの固定高さを外す（1画面に収めるルールが優先） */
+  .ninja-kids { --nk-tap:60px; --nk-board-h:0px; }
+  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),
+  .ninja-kids .tk-play>.tk-options { align-self:auto; min-height:0; }
   .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) { min-height:56px; }
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) {
     min-height:0!important;
@@ -1240,6 +1264,10 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 
 /* ---------- タブレット縦（768~1179px・縦持ち） ---------- */
 @media (min-width:768px) and (max-width:1179px) and (orientation:portrait) {
+  /* 1カラムに積む段は盤面・回答エリアの固定高さを外す（1画面に収めるルールが優先） */
+  .ninja-kids { --nk-board-h:0px; }
+  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),
+  .ninja-kids .tk-play>.tk-options { align-self:auto; min-height:0; }
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) { min-height:170px!important; }
 
   /* 盤面を1カラムに積む：もんだい → こたえ */
@@ -1261,7 +1289,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     grid-column:1 / -1;
     grid-row:1 / -1;
   }
-  .ninja-kids :is(.tk-ask,.kj-ask,.kt-q,.rj-q,.pn-q) { min-height:220px; }
+  .ninja-kids { --nk-qh:220px; }
+  .ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask,.tk-ask) { min-height:var(--nk-qh); }
   .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices) { gap:12px; }
 
   /* こたえあわせパネルは選択肢の位置に重ねず、下に出す */
@@ -1285,7 +1314,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   /* とけい修行：時計のステージを大きく取る */
   .ninja-kids .tk-play>.tk-stage { min-height:clamp(180px,24dvh,280px); }
   .ninja-kids .tk-play>.tk-stage .tk-clock { width:auto; height:clamp(150px,21dvh,240px); }
-  .ninja-kids .tk-play:not(:has(.tk-stage))>.tk-ask { min-height:220px; font-size:34px; }
+  .ninja-kids .tk-play:not(:has(.tk-stage))>.tk-ask { font-size:34px; }
   .ninja-kids .tk-play>.tk-options.is-clock .tk-clock { width:min(150px,100%); }
 
   /* かんじ修行：横持ち用の固定高さを解除 */
@@ -1312,8 +1341,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids .tk-play {
     grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
   }
-  .ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask,.tk-ask) { min-height:170px; }
-  .ninja-kids .tk-play>.tk-stage { min-height:190px; }
+  .ninja-kids { --nk-qh:252px; --nk-board-h:402px; }
   .ninja-kids .tk-play>.tk-stage .tk-clock { width:min(180px,100%); }
   .ninja-kids .tk-play>.tk-options.is-clock .tk-clock { width:min(104px,100%); }
   .ninja-space .app-paper { width:min(100%,1000px); max-width:1000px; }
@@ -1368,12 +1396,10 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   /* 盤面：問題パネルの高さを画面の高さから決める */
   .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) { padding:10px 10px 14px; }
   .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) { gap:8px; padding:10px 10px 12px; }
-  .ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask) { min-height:clamp(96px,21dvh,190px); }
   .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-big { font-size:clamp(34px,9dvh,64px); }
   .ninja-kids .tk-play>.tk-stage { min-height:clamp(120px,24dvh,230px); }
   .ninja-kids .tk-play>.tk-stage .tk-clock { width:auto; height:clamp(104px,21dvh,200px); }
   .ninja-kids .tk-play>.tk-options.is-clock .tk-clock { width:auto; height:clamp(52px,9dvh,88px); }
-  .ninja-kids .tk-play:not(:has(.tk-stage))>.tk-ask { min-height:clamp(96px,21dvh,190px); }
   .ninja-space .sa-app { padding:10px 10px 6px; }
   .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem { min-height:clamp(96px,20dvh,180px); }
 }
@@ -1460,7 +1486,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids .tk-play>.tk-stage .tk-clock { width:auto; height:clamp(88px,28dvh,170px); }
   .ninja-kids .tk-play>.tk-options { grid-column:2; grid-row:3 / 5; }
   .ninja-kids .tk-play>.tk-options.is-clock .tk-clock { width:auto; height:clamp(40px,11dvh,72px); }
-  .ninja-kids .tk-play:not(:has(.tk-stage))>.tk-ask { grid-row:3 / 6; min-height:clamp(84px,30dvh,170px); font-size:22px; }
+  .ninja-kids { --nk-qh:clamp(84px,30dvh,170px); --nk-board-h:0px; }
+  .ninja-kids .tk-play:not(:has(.tk-stage))>.tk-ask { grid-row:3 / 6; font-size:22px; }
   .ninja-kids .tk-play>.tk-hint-btn { grid-column:2; grid-row:5; margin:0; }
   .ninja-kids .tk-play>.tk-hint { grid-column:2; grid-row:6; }
   .ninja-kids .tk-play>.tk-feedback { grid-column:1; grid-row:6; }
@@ -1526,7 +1553,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 }
 
 @media (max-width:767px) and (orientation:portrait) {
-  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) { font-size:16px; padding:12px; }
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) { font-size:clamp(19px,5.2vw,28px); padding:12px; }
   .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before { height:min(48%,150px); }
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before { height:min(30%,84px); }
 }
@@ -1536,7 +1563,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids .nav-inner { padding:6px 14px; }
   .ninja-kids .nav-logo { font-size:1rem; }
 
-  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) { font-size:15px; padding:8px; }
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) { font-size:clamp(18px,4vw,26px); padding:8px; }
   .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before { height:min(46%,120px); }
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before { height:min(28%,64px); }
 
@@ -1554,8 +1581,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids .app-ref-copy { display:flex; flex-direction:column; align-items:flex-start; gap:3px; }
   .ninja-kids .app-ref-button { margin:0; }
 
-  .ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask) { min-height:clamp(84px,19dvh,190px); }
-  .ninja-kids .tk-play:not(:has(.tk-stage))>.tk-ask { min-height:clamp(84px,19dvh,190px); }
+  .ninja-kids { --nk-qh:clamp(84px,19dvh,190px); }
   .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):not(.tk-opt-clock) {
     padding-block:8px;
     font-size:16px;
@@ -1656,7 +1682,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 /* とけいのメニューは選択肢が短い。紙面いっぱいに広げると文字が箱の中で浮くので、
    メニューの中身だけ幅を絞る（なんいどを縦1列にしたぶん、間延びも防ぐ）。 */
 @media (min-width:768px) {
-  .ninja-kids.ninja-tokei .tk-menu { width:min(100%,640px); }
+  .ninja-kids.ninja-tokei .tk-menu { padding-inline:max(20px,calc((100% - 640px) / 2)); }
 }
 
 /* とけいのメニューも1画面に収める。
@@ -1664,7 +1690,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
    「といかた＋設定＋見本の時計」と「なんいど」を左右に分ける。 */
 @media (min-width:768px) {
   .ninja-kids.ninja-tokei .tk-menu {
-    width:min(100%,860px);
+    width:min(100%,1000px);
+    padding-inline:max(20px,calc((100% - 860px) / 2));
     display:grid;
     grid-template-columns:minmax(0,.82fr) minmax(0,1fr);
     grid-template-rows:auto auto auto auto;
@@ -1834,7 +1861,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
    DOM順は がくねん→といかた なので nth-of-type(1) が がくねん。 */
 @media (min-width:768px), (orientation:landscape) and (max-height:500px) {
   .ninja-kids.ninja-kanji .kj-menu {
-    width:min(100%,640px);
+    width:min(100%,1000px);
+    padding-inline:max(20px,calc((100% - 640px) / 2));
     display:grid;
     grid-template-columns:minmax(0,1fr) minmax(0,1fr);
     grid-template-rows:auto auto;

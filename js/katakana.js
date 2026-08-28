@@ -221,7 +221,10 @@
           }).join('') +
         '</div>' +
         '<div class="kt-answer" id="kt-answer"></div>' +
+        '<button type="button" class="kt-back">← メニューに もどる</button>' +
       '</div>';
+
+    root.querySelector('.kt-back').addEventListener('click', renderMenu);
 
     Array.prototype.forEach.call(root.querySelectorAll('.kt-choice'), function (btn) {
       btn.addEventListener('click', function () { answer(btn.getAttribute('data-key'), btn); });
