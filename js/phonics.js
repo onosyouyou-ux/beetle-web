@@ -178,7 +178,7 @@
           }).join('') +
         '</div>' +
         '<div class="pn-answer" id="pn-answer"></div>' +
-        '<button type="button" class="pn-back">← メニューに もどる</button>' +
+        '<button type="button" class="pn-back">← もんだいせんたくに もどる</button>' +
       '</div>';
 
     root.querySelector('.pn-back').addEventListener('click', renderMenu);

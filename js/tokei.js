@@ -340,7 +340,7 @@
     var fb = el('div', 'tk-feedback');
     wrap.appendChild(fb);
 
-    var back = el('button', 'tk-back', '← メニューに もどる');
+    var back = el('button', 'tk-back', '← もんだいせんたくに もどる');
     back.type = 'button';
     back.addEventListener('click', renderMenu);
     wrap.appendChild(back);
@@ -393,7 +393,7 @@
     again.addEventListener('click', startSession);
     wrap.appendChild(again);
 
-    var back = el('button', 'tk-back', '← メニューに もどる');
+    var back = el('button', 'tk-back', '← もんだいせんたくに もどる');
     back.type = 'button';
     back.addEventListener('click', renderMenu);
     wrap.appendChild(back);

@@ -309,10 +309,14 @@ body.ninja-space {
   grid-column:2;
   grid-row:2;
   align-self:stretch;
-  align-content:center;
+  align-content:stretch;
   min-height:var(--nk-qh);
   margin:0;
 }
+/* 1行しかない並び（2択・時計の絵・入力欄）は伸ばすと1個が巨大になるので中央寄せのまま。 */
+.ninja-kids :is(.kt-choices,.rj-choices,.pn-choices).is-two,
+.ninja-kids .tk-options.is-clock,
+.ninja-kids .rj-type { align-content:center; }
 .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) {
   min-height:58px;
   border:2px solid #d4bd92;
@@ -333,18 +337,15 @@ body.ninja-space {
   grid-row:3;
   margin:0;
 }
+/* 「もどる」は盤面の一番下・中央揃え（2026-08-28）。左下だと見つけにくかった。 */
 .ninja-kids :is(.tk-back,.kj-back,.kt-back,.rj-back,.pn-back) {
-  grid-column:1;
+  grid-column:1 / -1;
   grid-row:4;
-  justify-self:start;
-}
-/* カタカナ・ローマ字・フォニックスは「こたえあわせ」が右カラムの3行目なので、
-   もどるは左カラムの3行目＝問題欄のすぐ下に置く（2026-08-28追加）。 */
-.ninja-kids :is(.kt-back,.rj-back,.pn-back) {
-  grid-row:3;
-  align-self:start;
+  justify-self:center;
+  align-self:end;
   margin:0;
 }
+.ninja-kids :is(.kt-back,.rj-back,.pn-back) { grid-row:4; }
 /* 各アプリのCSSの margin:16px auto 0 が auto マージンで justify-self に勝ち、
    盤面の中で中途半端に中央寄せになっていた（2026-08-26修正）。 */
 .ninja-kids :is(.tk-play,.kj-play)>:is(.tk-back,.kj-back) { margin:0; }
@@ -463,7 +464,7 @@ body.ninja-space {
   grid-column:2;
   grid-row:3 / 5;
   align-self:stretch;
-  align-content:center;
+  align-content:stretch;
   margin:0;
 }
 .ninja-kids .tk-play>.tk-options.is-clock {
@@ -491,9 +492,9 @@ body.ninja-space {
   margin:0;
 }
 .ninja-kids .tk-play>.tk-back {
-  grid-column:1;
+  grid-column:1 / -1;
   grid-row:7;
-  justify-self:start;
+  justify-self:center;
   margin:0;
 }
 
@@ -1470,7 +1471,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     padding:10px 14px;
   }
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before { width:clamp(46px,12dvh,80px); }
-  .ninja-kids :is(.tk-back,.kj-back) { grid-column:1; grid-row:4; }
+  .ninja-kids :is(.tk-back,.kj-back,.kt-back,.rj-back,.pn-back) { grid-column:1 / -1; grid-row:4; justify-self:center; }
 
   /* とけい修行：時計を1画面ぶんの高さに合わせる */
   .ninja-kids .tk-play { grid-template-rows:auto 6px auto 1fr auto auto auto; }
@@ -1491,7 +1492,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids .tk-play>.tk-hint-btn { grid-column:2; grid-row:5; margin:0; }
   .ninja-kids .tk-play>.tk-hint { grid-column:2; grid-row:6; }
   .ninja-kids .tk-play>.tk-feedback { grid-column:1; grid-row:6; }
-  .ninja-kids .tk-play>.tk-back { grid-column:1; grid-row:7; }
+  .ninja-kids .tk-play>.tk-back { grid-column:1 / -1; grid-row:7; justify-self:center; }
 
   /* さんすう うちゅうたんけん */
   .ninja-space .app-paper { width:min(100%,900px); max-width:900px; margin:6px auto; }
@@ -1529,10 +1530,10 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids .kj-play>:is(.kj-ask,.kj-ask-label) { grid-column:1; grid-row:3; }
   .ninja-kids .kj-play>.kj-options { grid-column:2; grid-row:3; align-self:center; }
   .ninja-kids .kj-play>.kj-feedback { grid-column:1; grid-row:4; }
-  .ninja-kids .kj-play>.kj-back { grid-column:2; grid-row:4; justify-self:end; margin:0; }
+  .ninja-kids .kj-play>.kj-back { grid-column:1 / -1; grid-row:4; justify-self:center; margin:0; }
 
   /* こたえ／もどるは1行にまとめて縦を稼ぐ */
-  .ninja-kids :is(.tk-back,.kj-back) { grid-row:4; }
+  .ninja-kids :is(.tk-back,.kj-back,.kt-back,.rj-back,.pn-back) { grid-row:4; justify-self:center; }
 
   /* 共通ヘッダーも寝かせたときだけ薄くする */
   /* （ナビの詰めは後段の .nav-inner で行う） */

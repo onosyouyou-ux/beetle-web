@@ -82,7 +82,7 @@ body{
 /* ====== もんだい ====== */
 .rj-back{
   display:block;margin:0;padding:0;background:none;border:none;font-size:13px;font-weight:700;
-  color:var(--rj-ink2);cursor:pointer;font-family:inherit;text-align:left;
+  color:var(--rj-ink2);cursor:pointer;font-family:inherit;text-align:center;
 }
 .rj-back:hover{color:var(--rj-orange)}
 .rj-bar{

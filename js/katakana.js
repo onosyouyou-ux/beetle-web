@@ -221,7 +221,7 @@
           }).join('') +
         '</div>' +
         '<div class="kt-answer" id="kt-answer"></div>' +
-        '<button type="button" class="kt-back">← メニューに もどる</button>' +
+        '<button type="button" class="kt-back">← もんだいせんたくに もどる</button>' +
       '</div>';
 
     root.querySelector('.kt-back').addEventListener('click', renderMenu);

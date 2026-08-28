@@ -191,7 +191,7 @@
     wrap.appendChild(options);
     wrap.appendChild(el('div', 'kj-feedback'));
 
-    var back = el('button', 'kj-back', '← メニューに もどる');
+    var back = el('button', 'kj-back', '← もんだいせんたくに もどる');
     back.type = 'button';
     back.addEventListener('click', renderMenu);
     wrap.appendChild(back);
@@ -242,7 +242,7 @@
     again.addEventListener('click', startSession);
     wrap.appendChild(again);
 
-    var back = el('button', 'kj-back', '← メニューに もどる');
+    var back = el('button', 'kj-back', '← もんだいせんたくに もどる');
     back.type = 'button';
     back.addEventListener('click', renderMenu);
     wrap.appendChild(back);
