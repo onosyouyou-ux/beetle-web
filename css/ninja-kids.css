@@ -850,12 +850,24 @@ body.ninja-space {
   clip-path:none;
 }
 .ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) {
+  position:relative;
   max-width:960px;
   margin:0 auto;
   padding:48px 28px 64px;
   border-top:0;
   background:#f4f0e7;
 }
+.ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc)::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background:var(--nk-q-pattern) center/150px 150px repeat;
+  filter:invert(1);
+  opacity:.05;
+  pointer-events:none;
+}
+.ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc)>* { position:relative; z-index:1; }
 .ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) h2 {
   padding:0 0 10px;
   border:0;
@@ -958,7 +970,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   position:absolute;
   inset:0;
   z-index:0;
-  background:var(--nk-q-pattern) center/cover no-repeat;
+  background:var(--nk-q-pattern) center/104px 104px repeat;
   opacity:.09;
   pointer-events:none;
 }
@@ -1221,23 +1233,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     flex:0 0 auto;
   }
 }
-/* Kanji board: fixed play frame and continuous dark lower stage. */
-.ninja-kids.ninja-kanji .app-paper,
-.ninja-kids.ninja-kanji .kj-doc {
-  background:#07131a;
-}
-.ninja-kids.ninja-kanji .kj-doc>h2 {
-  color:#f7fbfc;
-}
-.ninja-kids.ninja-kanji .kj-more {
-  color:#c7d5d8;
-}
-.ninja-kids.ninja-kanji .kj-more a {
-  color:#ffad92;
-}
-.ninja-kids.ninja-kanji .paper-release {
-  color:#91a3a8;
-}
+/* Kanji board: fixed play frame. */
 @media (min-width:768px) {
   .ninja-kids.ninja-kanji .kj-play {
     height:var(--nk-board-h);
@@ -2027,8 +2023,6 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 /* かんじ修行だけ紙面下部が暗いので、文字色を反転させる */
 .ninja-kids.ninja-kanji .nk-doc-ref { color:#c7d5d8; }
 .ninja-kids.ninja-kanji .nk-doc-ref a { color:#ffad92; }
-.ninja-kids.ninja-kanji .nk-back-tools a { border-color:#ffad92; color:#ffad92; }
-.ninja-kids.ninja-kanji .nk-back-tools a:hover { background:#ffad92; color:#07131a; }
 
 /* 選択肢の通し番号（2026-08-26）。
    「2ばんめの やつ」と口で言えるように、1問ごとに 1 から振り直して左上に出す。
