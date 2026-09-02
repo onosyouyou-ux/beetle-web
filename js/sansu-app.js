@@ -817,7 +817,7 @@
     });
     const badge = el('div', 'sa-answer-badge');
     const mascot = el('img', 'sa-answer-icon');
-    mascot.src = ok ? '/assets/images/sansu/icons/answer-maru.png' : '/assets/images/sansu/icons/answer-batsu.png';
+    mascot.src = ok ? '/assets/images/sansu/icons/answer-maru.webp' : '/assets/images/sansu/icons/answer-batsu.webp';
     mascot.alt = ok ? 'まる' : 'ばつ';
     mascot.width = 240; mascot.height = 240;
     badge.appendChild(mascot);

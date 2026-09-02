@@ -1160,8 +1160,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 
 /* Feedback polish: decorative items stay in menus and rewards; answers stay neutral. */
 .ninja-kids {
-  --nk-feedback-ok:url('/assets/images/ninja/feedback/ninja-maru.png');
-  --nk-feedback-ng:url('/assets/images/ninja/feedback/ninja-batsu.png');
+  --nk-feedback-ok:url('/assets/images/ninja/feedback/ninja-maru.webp');
+  --nk-feedback-ng:url('/assets/images/ninja/feedback/ninja-batsu.webp');
 }
 .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) { position:relative; }
 .ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar)::after { content:none; }
