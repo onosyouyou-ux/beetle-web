@@ -1231,10 +1231,12 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   grid-column:1 / -1;
   grid-row:2;
   display:grid;
-  grid-template-columns:auto minmax(0,1fr);
+  grid-template-columns:auto minmax(0,auto);
   grid-template-rows:1fr auto;
   align-items:center;
   justify-items:start;
+  justify-content:center;
+  align-content:center;
   column-gap:clamp(14px,2.4vw,30px);
   row-gap:clamp(8px,1.4vw,16px);
   padding:clamp(16px,2.2vw,26px) clamp(18px,3vw,34px);
@@ -1251,6 +1253,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   grid-column:2;
   grid-row:1;
   min-width:0;
+  max-width:min(620px,100%);
   align-self:center;
 }
 .ninja-kids .nk-a-body>*:last-child { margin-bottom:0; }
@@ -2257,6 +2260,104 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
    （幅の % は auto 列だと循環参照になり 0 になるので vw で決める） */
 @media (max-width:767px) {
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before {
-    width:clamp(76px,26vw,132px);
+    width:clamp(62px,20vw,104px);
   }
+}
+
+/* こたえあわせパネル: 明るい地色・大きい文字・目立つボタン（2026-09-02） */
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on { background-blend-mode:normal; }
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-ok {
+  background:linear-gradient(145deg,#1d9273,#137055);
+}
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-ng {
+  background:linear-gradient(145deg,#c96a3e,#a24b28);
+}
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-head,.rj-a-head,.pn-a-head) {
+  font-size:clamp(18px,2.1vw,24px);
+  line-height:1.5;
+  margin:0 0 10px;
+}
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-head,.rj-a-head,.pn-a-head) b {
+  font-size:clamp(26px,3.2vw,36px);
+}
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-cat,.rj-a-cat,.pn-a-cat) {
+  font-size:clamp(13px,1.5vw,17px);
+  padding:5px 14px;
+  margin:0 0 10px;
+}
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-why,.rj-a-why,.pn-a-why) {
+  font-size:clamp(16px,1.9vw,21px);
+  line-height:1.8;
+}
+/* 「つぎの もんだい」は次の行動なので、白ボタンではなくオレンジの塗りにする */
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-next,.rj-next,.pn-next) {
+  color:#3d2208!important;
+  background:linear-gradient(180deg,#ffc464,#f59a2e)!important;
+  font-size:clamp(17px,2vw,22px);
+  font-weight:900;
+  padding:14px 32px;
+  border-radius:12px;
+  box-shadow:0 5px 0 #bd6c17,0 10px 18px rgba(0,0,0,.28);
+}
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-next,.rj-next,.pn-next):hover {
+  background:linear-gradient(180deg,#ffd083,#ffa945)!important;
+}
+/* 音を きく は補助なので白のまま、少しだけ大きく */
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on .pn-sub {
+  font-size:clamp(15px,1.7vw,19px);
+  padding:12px 22px;
+}
+
+/* ヒーローの忍者は 320x320 の正方形。箱が 238x178 だと横60pxが余り、実寸178pxまでしか出ていなかった。
+   箱を正方形にして大きくするが、縦に余裕のある画面だけ（1画面に収めるルールを優先） */
+@media (min-width:1000px) and (min-height:821px) {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,
+  .ninja-kids .app-ref-visual.is-ninja .ninja-mascot {
+    width:230px;
+    height:230px;
+  }
+}
+
+/* 1カラムの段はパネルが下に積まれるので、選択肢は隠すのではなく畳んで場所を空ける
+   （隠すだけだと空白の穴が残り、1画面に収まらなくなる） */
+@media (max-width:767px) {
+  .ninja-kids :is(.kt-quiz,.rj-quiz,.pn-quiz):has(:is(.kt-answer,.rj-answer,.pn-answer).is-on)
+    :is(.kt-choices,.rj-choices,.rj-type,.pn-choices) { display:none; }
+}
+
+/* こたえあわせパネル: 縦の余裕がない段は文字と余白を詰める（1画面に収める） */
+@media (max-width:900px),(max-height:820px) {
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on {
+    padding:10px 12px;
+    row-gap:4px;
+    column-gap:12px;
+  }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-head,.rj-a-head,.pn-a-head) {
+    font-size:clamp(15px,1.8vw,19px);
+    margin:0 0 6px;
+  }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-head,.rj-a-head,.pn-a-head) b { font-size:clamp(20px,2.6vw,27px); }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-cat,.rj-a-cat,.pn-a-cat) {
+    font-size:clamp(11px,1.3vw,14px);
+    padding:3px 10px;
+    margin:0 0 6px;
+  }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-why,.rj-a-why,.pn-a-why) {
+    font-size:clamp(13px,1.6vw,17px);
+    line-height:1.55;
+  }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-next,.rj-next,.pn-next) {
+    font-size:clamp(14px,1.7vw,18px);
+    padding:10px 22px;
+    box-shadow:0 4px 0 #bd6c17,0 6px 12px rgba(0,0,0,.24);
+  }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on .pn-sub { font-size:clamp(12px,1.5vw,16px); padding:9px 16px; }
+}
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on { padding:6px 10px; row-gap:3px; }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-head,.rj-a-head,.pn-a-head) { font-size:14px; margin:0 0 4px; }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-head,.rj-a-head,.pn-a-head) b { font-size:19px; }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-cat,.rj-a-cat,.pn-a-cat) { font-size:11px; margin:0 0 4px; }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-why,.rj-a-why,.pn-a-why) { font-size:13px; line-height:1.5; }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-next,.rj-next,.pn-next) { font-size:14px; padding:8px 18px; }
 }

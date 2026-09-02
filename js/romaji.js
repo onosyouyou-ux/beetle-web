@@ -130,7 +130,7 @@
         show: render(x.k, style),
         word: x.k,
         hint: x.hint,
-        cat: style === 'kunrei' ? '訓令式（学校で ならう 書き方）' : 'ヘボン式（パソコン・パスポートの 書き方）',
+        cat: style === 'kunrei' ? 'くんれいしき（がっこうで ならう かきかた）' : 'ヘボンしき（パソコン・パスポートの かきかた）',
         choices: shuffle([x.k].concat(wrongs)),
       };
     });
@@ -144,7 +144,7 @@
         word: render(x.k, 'kunrei') + ' / ' + render(x.k, 'hepburn'),
         answers: romanizations(x.k),
         hint: x.hint,
-        cat: 'どちらの 書き方でも 正解',
+        cat: 'どちらの かきかたでも せいかい',
       };
     });
   }
@@ -158,10 +158,10 @@
         qs.push({
           type: 'futatsu',
           show: p.kana,
-          lead: askKunrei ? '学校で ならう 書き方（訓令式）は どっち？' : 'パソコンで つかう 書き方（ヘボン式）は どっち？',
+          lead: askKunrei ? 'がっこうで ならう かきかた（くんれいしき）は どっち？' : 'パソコンで つかう かきかた（ヘボンしき）は どっち？',
           word: askKunrei ? p.kunrei : p.hepburn,
           hint: D.whyTwo.replace('{kunrei}', p.kunrei).replace('{hepburn}', p.hepburn) + '　例：' + p.ex,
-          cat: '2とおりの 書き方',
+          cat: '2とおりの かきかた',
           choices: shuffle([p.kunrei, p.hepburn]),
         });
       });
@@ -172,7 +172,7 @@
   var MODES = {
     yomu:    { label: 'ローマ字を よむ',   sub: 'ローマ字を 見て ことばを あてる', build: buildYomu },
     utsu:    { label: 'キーボードで うつ', sub: 'ひらがなを ローマ字で 入力する',  build: buildUtsu },
-    futatsu: { label: 'ふたつの 書き方',   sub: 'si と shi、どちらも 正しい',      build: buildFutatsu },
+    futatsu: { label: 'ふたつの かきかた',   sub: 'si と shi、どちらも ただしい',      build: buildFutatsu },
   };
 
   /* ---------- 画面 ---------- */
@@ -183,13 +183,13 @@
     var box = document.getElementById('rj-rules');
     if (!box) return;
     box.innerHTML =
-      '<h2>ローマ字には 書き方が 2つ あります</h2>' +
+      '<h2>ローマ字には かきかたが 2つ あります</h2>' +
       '<table class="rj-table"><thead><tr><th>かな</th><th>学校（訓令式）</th><th>パソコン（ヘボン式）</th></tr></thead><tbody>' +
         D.futatsu.map(function (p) {
           return '<tr><td>' + esc(p.kana) + '</td><td>' + esc(p.kunrei) + '</td><td>' + esc(p.hepburn) + '</td></tr>';
         }).join('') +
       '</tbody></table>' +
-      '<p class="rj-rules-note">どちらも 正しい 書き方です。テストで 出るのは 学校で ならう ほう、キーボードで うつときは どちらでも 入ります。</p>';
+      '<p class="rj-rules-note">どちらも ただしい かきかたです。テストで でるのは がっこうで ならう ほう、キーボードで うつときは どちらでも はいります。</p>';
   }
 
   function renderMenu() {
