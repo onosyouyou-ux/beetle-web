@@ -216,9 +216,11 @@
     var box = document.getElementById('pn-answer');
     box.className = 'pn-answer is-on' + (ok ? ' is-ok' : ' is-ng');
     box.innerHTML =
+      '<div class="nk-a-body">' +
       '<p class="pn-a-head">' + (ok ? 'せいかい！' : 'おしい！') + '　<b>' + esc(q.word) + '</b></p>' +
       '<p class="pn-a-cat">' + esc(q.cat) + '</p>' +
       '<p class="pn-a-why">' + esc(q.hint) + '</p>' +
+      '</div>' +
       '<div class="pn-a-btns">' +
         '<button type="button" class="pn-sub" id="pn-listen">🔊 ' + esc(q.speak) + ' を きく</button>' +
         '<button type="button" class="pn-next" id="pn-next">' +

@@ -1223,6 +1223,50 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 }
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-ok::before { background-image:var(--nk-feedback-ok); }
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-ng::before { background-image:var(--nk-feedback-ng); }
+/* パネルが盤面を覆うので、はみ出した選択肢のふちが下から覗かないように隠す */
+.ninja-kids :is(.kt-quiz,.rj-quiz,.pn-quiz):has(:is(.kt-answer,.rj-answer,.pn-answer).is-on)
+  :is(.kt-choices,.rj-choices,.rj-type,.pn-choices) { visibility:hidden; }
+/* こたえあわせパネル: 盤面いっぱいの横長で、イラスト左・説明右・ボタン下（2026-09-02） */
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on {
+  grid-column:1 / -1;
+  grid-row:2;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  grid-template-rows:1fr auto;
+  align-items:center;
+  justify-items:start;
+  column-gap:clamp(14px,2.4vw,30px);
+  row-gap:clamp(8px,1.4vw,16px);
+  padding:clamp(16px,2.2vw,26px) clamp(18px,3vw,34px);
+  text-align:left;
+}
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before {
+  grid-column:1;
+  grid-row:1;
+  align-self:center;
+  margin:0;
+  filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 5px #fff) drop-shadow(0 10px 14px rgba(0,0,0,.32));
+}
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on>.nk-a-body {
+  grid-column:2;
+  grid-row:1;
+  min-width:0;
+  align-self:center;
+}
+.ninja-kids .nk-a-body>*:last-child { margin-bottom:0; }
+.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on>:is(.kt-next,.rj-next,.pn-a-btns) {
+  grid-column:1 / -1;
+  grid-row:2;
+  justify-self:center;
+  margin:0;
+}
+@media (max-width:767px) {
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on {
+    grid-column:1;
+    grid-row:auto;
+    column-gap:12px;
+  }
+}
 @keyframes ninjaFeedbackVeil {
   from { opacity:0; }
   to { opacity:1; }
@@ -1787,7 +1831,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 /* こたえあわせパネルの○×は、パネル高さが min-height 基準で不定になるため
    % ではなく dvh で決める。 */
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before {
-  width:clamp(48px,10dvh,110px);
+  width:clamp(84px,20dvh,190px);
   height:auto;
   aspect-ratio:1;
 }
@@ -2207,4 +2251,12 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   }
   .ninja-kids :is(.kt-mode,.rj-mode,.pn-mode):nth-of-type(2)::before { background-position:33.333% 50%; }
   .ninja-kids :is(.kt-mode,.rj-mode,.pn-mode):nth-of-type(3)::before { background-position:66.666% 50%; }
+}
+
+/* こたえあわせパネルの○×：1カラムの段は幅が狭いので、絵が紙面を食わないよう小さめに。
+   （幅の % は auto 列だと循環参照になり 0 になるので vw で決める） */
+@media (max-width:767px) {
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before {
+    width:clamp(76px,26vw,132px);
+  }
 }

@@ -272,10 +272,12 @@
     var box = document.getElementById('kt-answer');
     box.className = 'kt-answer is-on' + (ok ? ' is-ok' : ' is-ng');
     box.innerHTML =
+      '<div class="nk-a-body">' +
       '<p class="kt-a-head">' + (ok ? 'せいかい！' : 'おしい！') + '　' +
         (q.ex ? '<b>' + sentence(q.ex, q.word, 'kt-a-target') + '</b>' : '<b>' + esc(q.word) + '</b>') + '</p>' +
       (q.cat ? '<p class="kt-a-cat">' + esc(q.cat) + '</p>' : '') +
       '<p class="kt-a-why">' + esc(q.hint) + '</p>' +
+      '</div>' +
       '<button type="button" class="kt-next" id="kt-next">' +
         (state.i + 1 >= QUESTIONS ? 'けっかを 見る' : 'つぎの もんだい') + '</button>';
 

@@ -309,9 +309,11 @@
     var box = document.getElementById('rj-answer');
     box.className = 'rj-answer is-on' + (ok ? ' is-ok' : ' is-ng');
     box.innerHTML =
+      '<div class="nk-a-body">' +
       '<p class="rj-a-head">' + (ok ? 'せいかい！' : 'おしい！') + '　<b>' + esc(shownAnswer) + '</b></p>' +
       (q.cat ? '<p class="rj-a-cat">' + esc(q.cat) + '</p>' : '') +
       '<p class="rj-a-why">' + esc(q.hint) + '</p>' +
+      '</div>' +
       '<button type="button" class="rj-next" id="rj-next">' +
         (state.i + 1 >= QUESTIONS ? 'けっかを 見る' : 'つぎの もんだい') + '</button>';
 
