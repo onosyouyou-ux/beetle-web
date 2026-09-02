@@ -138,13 +138,18 @@
 
   function buildUtsu() {
     return pick(D.words, QUESTIONS).map(function (x) {
+      var kunrei = render(x.k, 'kunrei');
+      var hepburn = render(x.k, 'hepburn');
+      // 「やさい」のように si/ti/tu を ふくまない ことばは 2つの 書き方が 同じになる。
+      // その ときに 'yasai / yasai' と 並べると、ちがいが あるように 見えて まぎらわしい。
+      var same = kunrei === hepburn;
       return {
         type: 'utsu',
         show: x.k,
-        word: render(x.k, 'kunrei') + ' / ' + render(x.k, 'hepburn'),
+        word: same ? kunrei : kunrei + ' / ' + hepburn,
         answers: romanizations(x.k),
         hint: x.hint,
-        cat: 'どちらの かきかたでも せいかい',
+        cat: same ? 'かきかたは ひとつだけ' : 'どちらの かきかたでも せいかい',
       };
     });
   }
@@ -170,8 +175,8 @@
   }
 
   var MODES = {
-    yomu:    { label: 'ローマ字を よむ',   sub: 'ローマ字を 見て ことばを あてる', build: buildYomu },
-    utsu:    { label: 'キーボードで うつ', sub: 'ひらがなを ローマ字で 入力する',  build: buildUtsu },
+    yomu:    { label: 'ローマ字を よむ',   sub: 'ローマ字を みて ことばを あてる', build: buildYomu },
+    utsu:    { label: 'キーボードで うつ', sub: 'ひらがなを ローマ字で うつ',  build: buildUtsu },
     futatsu: { label: 'ふたつの かきかた',   sub: 'si と shi、どちらも ただしい',      build: buildFutatsu },
   };
 
