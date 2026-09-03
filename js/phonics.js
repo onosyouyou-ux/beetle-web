@@ -243,7 +243,7 @@
   function renderResult() {
     var missed = state.missed;
     root.innerHTML =
-      '<div class="pn-result">' +
+      '<div class="pn-result' + (state.ok === QUESTIONS ? ' is-perfect' : '') + '">' +
         '<p class="pn-result-score">' + QUESTIONS + 'もん ちゅう <b>' + state.ok + 'もん</b> せいかい</p>' +
         (missed.length
           ? '<div class="pn-missed">' +

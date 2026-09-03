@@ -295,7 +295,7 @@
   function renderResult() {
     var missed = state.missed;
     root.innerHTML =
-      '<div class="kt-result">' +
+      '<div class="kt-result' + (state.ok === QUESTIONS ? ' is-perfect' : '') + '">' +
         '<p class="kt-result-score">' + QUESTIONS + 'もん ちゅう <b>' + state.ok + 'もん</b> せいかい</p>' +
         (missed.length
           ? '<div class="kt-missed">' +

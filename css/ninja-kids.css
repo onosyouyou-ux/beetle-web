@@ -1098,6 +1098,24 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   background:var(--nk-items) center/contain no-repeat;
   filter:drop-shadow(0 7px 8px rgba(30,25,20,.14));
 }
+/* 全問正解のごほうび（2026-09-03）。10問ぜんぶ当たったときだけ、
+   忍具の並びを6人そろい踏みの「ぜんもんせいかい！」に差し替える。
+   絵に文字が入っているので、10/10 以外では絶対に出さないこと。 */
+.ninja-kids :is(.tk-result,.kj-result,.kt-result,.rj-result,.pn-result).is-perfect::before {
+  width:min(100%,320px);
+  height:auto;
+  aspect-ratio:560 / 539;
+  margin-bottom:4px;
+  background-image:url('/assets/images/ninja/zenmon-seikai.webp');
+  filter:drop-shadow(0 10px 14px rgba(0,0,0,.28));
+}
+/* 絵が「ぜんもんせいかい！」と言っているので、★は出さない（重複するため） */
+.ninja-kids :is(.tk-result,.kj-result).is-perfect :is(.tk-result-stars,.kj-result-stars) { display:none; }
+@media (max-width:767px) {
+  .ninja-kids :is(.tk-result,.kj-result,.kt-result,.rj-result,.pn-result).is-perfect::before {
+    width:min(100%,240px);
+  }
+}
 /* 「キーボードで うつ」は入力欄と こたえる を縦に積む（2026-09-03）。
    横に並べると入力欄が細くなり、打った文字が見えにくかった。 */
 .ninja-kids .rj-type {

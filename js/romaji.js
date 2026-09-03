@@ -347,7 +347,7 @@
   function renderResult() {
     var missed = state.missed;
     root.innerHTML =
-      '<div class="rj-result">' +
+      '<div class="rj-result' + (state.ok === QUESTIONS ? ' is-perfect' : '') + '">' +
         '<p class="rj-result-score">' + QUESTIONS + 'もん ちゅう <b>' + state.ok + 'もん</b> せいかい</p>' +
         (missed.length
           ? '<div class="rj-missed">' +

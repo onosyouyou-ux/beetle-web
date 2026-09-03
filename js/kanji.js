@@ -226,6 +226,8 @@
     var s = state.session;
     app.innerHTML = '';
     var wrap = el('div', 'kj-result');
+    // 全問正解のときだけ、お祝いの絵に差し替える（2026-09-03）
+    if (s.correct === SET_LENGTH) wrap.classList.add('is-perfect');
     var stars = s.correct >= 10 ? 3 : s.correct >= 8 ? 2 : s.correct >= 5 ? 1 : 0;
     wrap.appendChild(el('p', 'kj-result-stars', '★★★☆☆☆'.slice(3 - stars, 6 - stars)));
     wrap.appendChild(el('p', 'kj-result-score', SET_LENGTH + 'もんちゅう ' + s.correct + 'もん せいかい!'));
