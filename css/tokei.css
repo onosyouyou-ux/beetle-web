@@ -155,8 +155,6 @@ body{
 .tk-faq summary span{color:var(--tk-orange)}
 .tk-faq[open] summary span{transform:rotate(45deg)}
 .tk-faq div{padding:0 16px 14px;font-size:13px;line-height:1.9;color:var(--tk-ink2)}
-.tk-more{font-size:13px;line-height:1.9;color:var(--tk-ink2);margin:24px 0 0;padding-top:16px;border-top:1px dashed var(--tk-line)}
-.tk-more a{color:var(--tk-orange);font-weight:700}
 
 @media(max-width:767px){
   .tk-hero{padding:26px 20px 22px}

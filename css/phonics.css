@@ -175,8 +175,6 @@ body{
 .pn-faq summary span{color:var(--pn-orange);font-size:18px}
 .pn-faq[open] summary span{transform:rotate(45deg)}
 .pn-faq div{padding:0 18px 15px;font-size:13px;line-height:1.9;color:var(--pn-ink2)}
-.pn-more{font-size:13px;color:var(--pn-ink2);margin:20px 0 0;line-height:1.9}
-.pn-more a{color:var(--pn-orange-dk);font-weight:700}
 
 @media (max-width:767px){
   .pn-hero{padding:24px 20px 22px}

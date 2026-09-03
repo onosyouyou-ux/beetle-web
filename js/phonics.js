@@ -147,6 +147,7 @@
             '</button>';
           }).join('') +
         '</div>' +
+        NinjaLinks.html('phonics') +
       '</div>';
 
     Array.prototype.forEach.call(root.querySelectorAll('.pn-mode'), function (btn) {

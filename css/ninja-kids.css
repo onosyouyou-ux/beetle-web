@@ -2156,11 +2156,6 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   pointer-events:none;
 }
 
-/* 「かんじの れんしゅうは …」のツール相互リンクは中央ぞろえ（2026-08-26）。
-   すぐ上の紹介ページ導線（.nk-doc-ref）と行の見え方をそろえる。 */
-.ninja-kids :is(.tk-more,.kj-more,.kt-more,.rj-more,.pn-more) {
-  text-align:center;
-}
 
 
 /* ============================================================
@@ -2362,4 +2357,53 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-cat,.rj-a-cat,.pn-a-cat) { font-size:11px; margin:0 0 4px; }
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-why,.rj-a-why,.pn-a-why) { font-size:13px; line-height:1.5; }
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-next,.rj-next,.pn-next) { font-size:14px; padding:8px 18px; }
+}
+
+/* ============================================================
+   修行アプリ間の相互リンク（設定画面のみ。2026-09-03・チケット#16）
+   ボタンは1枚絵（/assets/images/ninja/nk-link-*.webp・960x380）。
+   アプリ名と説明は絵に入っているので、読み上げは <img> の alt が担当する。
+   6アプリ共通なのでスタイルはここ1箇所だけに書く（アプリ個別CSSに複製しない）。
+   ============================================================ */
+.nk-links { margin-top:28px; }
+/* とけい・かんじのメニューは幅のある画面で2カラムのグリッドになる。
+   相互リンクは列に入れず、最下段に全幅で置く。 */
+.ninja-kids :is(.tk-menu,.kj-menu) > .nk-links { grid-column:1 / -1; }
+.nk-links-title {
+  margin:0 0 10px;
+  font-size:14px;
+  font-weight:800;
+  color:#6b6b76;
+  text-align:center;
+  letter-spacing:.04em;
+}
+/* さんすうは紙面が濃紺なので、見出しだけ明るい色に振る */
+.ninja-space .nk-links-title { color:#9fb3d9; }
+/* 幅の上限420px＝ボタン1枚が高さ約166px。3枚＋見出しで約556pxに収まる。
+   絵のまま640pxまで広げると1枚233pxになり、設定画面の主役（しゅぎょうを えらぶ）より
+   相互リンクのほうが大きくなってしまう（チケット#16の見積もりと同じ理由）。 */
+.nk-links-list {
+  display:grid;
+  gap:12px;
+  width:min(100%,420px);
+  margin-inline:auto;
+}
+.nk-link {
+  display:block;
+  border-radius:14px;
+  line-height:0;
+  text-decoration:none;
+  transition:translate .12s ease, filter .12s ease;
+}
+.nk-link:hover { translate:0 -2px; filter:brightness(1.05); }
+.nk-link:active { translate:0 1px; filter:brightness(.97); }
+.nk-link:focus-visible { outline:3px solid var(--nk-accent,#c0634c); outline-offset:3px; }
+.nk-link-img { display:block; width:100%; height:auto; }
+@media (prefers-reduced-motion:reduce) {
+  .nk-link { transition:none; }
+  .nk-link:hover, .nk-link:active { translate:0 0; }
+}
+@media (max-width:767px) {
+  .nk-links { margin-top:20px; }
+  .nk-links-list { gap:10px; }
 }

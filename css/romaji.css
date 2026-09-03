@@ -176,8 +176,6 @@ body{
 .rj-faq summary span{color:var(--rj-orange);font-size:18px}
 .rj-faq[open] summary span{transform:rotate(45deg)}
 .rj-faq div{padding:0 18px 15px;font-size:13px;line-height:1.9;color:var(--rj-ink2)}
-.rj-more{font-size:13px;color:var(--rj-ink2);margin:20px 0 0;line-height:1.9}
-.rj-more a{color:var(--rj-orange-dk);font-weight:700}
 
 @media (max-width:767px){
   .rj-hero{padding:24px 20px 22px}

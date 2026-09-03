@@ -181,6 +181,7 @@
             '</button>';
           }).join('') +
         '</div>' +
+        NinjaLinks.html('katakana') +
       '</div>';
 
     Array.prototype.forEach.call(root.querySelectorAll('.kt-mode'), function (btn) {

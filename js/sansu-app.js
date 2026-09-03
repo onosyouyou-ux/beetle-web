@@ -363,6 +363,8 @@
       renderMenu();
     });
     app.appendChild(reset);
+
+    app.appendChild(NinjaLinks.el('sansu'));
   }
 
   function icon(name, cls) {

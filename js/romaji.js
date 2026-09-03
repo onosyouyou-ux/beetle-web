@@ -209,6 +209,7 @@
             '</button>';
           }).join('') +
         '</div>' +
+        NinjaLinks.html('romaji') +
       '</div>';
 
     Array.prototype.forEach.call(root.querySelectorAll('.rj-mode'), function (btn) {

@@ -128,6 +128,7 @@
     start.type = 'button';
     start.addEventListener('click', startSession);
     wrap.appendChild(start);
+    wrap.appendChild(NinjaLinks.el('kanji'));
     app.appendChild(wrap);
   }
 

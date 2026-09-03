@@ -219,6 +219,7 @@
     start.type = 'button';
     start.addEventListener('click', startSession);
     wrap.appendChild(start);
+    wrap.appendChild(NinjaLinks.el('tokei'));
 
     app.appendChild(wrap);
   }
