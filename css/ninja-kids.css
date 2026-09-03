@@ -2251,6 +2251,23 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   }
   .ninja-kids :is(.kt-mode,.rj-mode,.pn-mode):nth-of-type(2)::before { background-position:33.333% 50%; }
   .ninja-kids :is(.kt-mode,.rj-mode,.pn-mode):nth-of-type(3)::before { background-position:66.666% 50%; }
+
+  /* カタカナ修行だけ、忍具スプライトの流用からモード専用の絵に差し替える
+     （2026-09-03・チケット#20）。ほかのアプリは絵が来るまでスプライトのまま。
+     絵は忍者そのものなので、忍具のときの傾け（rotate）と透かしは外す。 */
+  .ninja-kids.ninja-katakana .kt-mode[data-mode]::before {
+    top:16px;
+    width:154px;
+    height:154px;
+    opacity:1;
+    rotate:none;
+    background-image:var(--nk-mode-img);
+    background-size:contain;
+    background-position:center;
+  }
+  .ninja-kids.ninja-katakana .kt-mode[data-mode="dotchi"] { --nk-mode-img:url('/assets/images/ninja/modes/katakana-dotchi.png'); }
+  .ninja-kids.ninja-katakana .kt-mode[data-mode="naosu"]  { --nk-mode-img:url('/assets/images/ninja/modes/katakana-naosu.png'); }
+  .ninja-kids.ninja-katakana .kt-mode[data-mode="nigata"] { --nk-mode-img:url('/assets/images/ninja/modes/katakana-nigata.png'); }
 }
 
 /* こたえあわせパネルの○×：1カラムの段は幅が狭いので、絵が紙面を食わないよう小さめに。
