@@ -227,14 +227,11 @@
 
     var body;
     if (q.type === 'utsu') {
-      // ヒントは「うつ ローマ字」をそのまま見せる。打ちながら覚えるタイピングの練習を兼ねる。
       body =
         '<div class="rj-type">' +
           '<input type="text" id="rj-input" class="rj-input" autocomplete="off" autocapitalize="off" ' +
             'autocorrect="off" spellcheck="false" placeholder="ローマ字で うってね" aria-label="ローマ字を入力">' +
           '<button type="button" class="rj-next" id="rj-send">こたえる</button>' +
-          '<button type="button" class="rj-hint-btn" id="rj-hint-btn">ヒントを 見る</button>' +
-          '<p class="rj-hint" id="rj-hint" hidden></p>' +
         '</div>';
     } else {
       body =
@@ -252,6 +249,12 @@
         '<div class="rj-q">' +
           '<p class="rj-q-lead">' + esc(q.lead || questionLead(q)) + '</p>' +
           '<p class="rj-q-word' + (q.type === 'futatsu' ? ' is-big' : '') + '">' + esc(q.show) + '</p>' +
+          // ヒントは「うつ ローマ字」をそのまま見せる。打ちながら覚えるタイピングの練習を兼ねる。
+          // 問題（ひらがな）のすぐ下に置き、見ながら打てるようにする。
+          (q.type === 'utsu'
+            ? '<button type="button" class="rj-hint-btn" id="rj-hint-btn">ヒントを 見る</button>' +
+              '<p class="rj-hint" id="rj-hint" hidden></p>'
+            : '') +
         '</div>' +
         body +
         '<div class="rj-answer" id="rj-answer"></div>' +

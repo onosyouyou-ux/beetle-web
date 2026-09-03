@@ -1116,17 +1116,47 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     width:min(100%,240px);
   }
 }
-/* 「キーボードで うつ」は入力欄と こたえる を縦に積む（2026-09-03）。
-   横に並べると入力欄が細くなり、打った文字が見えにくかった。 */
+/* 「キーボードで うつ」だけは盤面を縦に積む（2026-09-03）。
+   ほかのしゅぎょうは「問題（左）＋選ぶ（右）」の2カラムだが、うつ しゅぎょうは
+   入力欄が1本あるだけなので、右カラムに置くと欄が細く、打った文字が見えにくい。
+   入力欄のある盤面（:has(.rj-type)）だけ1カラムにして、問題の下に入力欄を置く。 */
+.ninja-kids .rj-quiz:has(.rj-type) {
+  grid-template-columns:minmax(0,1fr);
+  grid-template-rows:auto;
+}
+.ninja-kids .rj-quiz:has(.rj-type)>* {
+  grid-column:1;
+  grid-row:auto;
+}
+.ninja-kids .rj-quiz:has(.rj-type)>.rj-q {
+  min-height:0;
+  padding-block:22px;
+}
+.ninja-kids .rj-quiz:has(.rj-type)>.rj-type {
+  align-self:auto;
+  min-height:0;
+}
+/* こたえあわせパネルは盤面に重ねず、入力欄の下に出す。
+   入力欄は visibility:hidden のままだと場所だけ残って空きができるので、畳む。 */
+.ninja-kids .rj-quiz:has(.rj-type)>.rj-answer.is-on {
+  grid-column:1;
+  grid-row:auto;
+  min-height:0;
+}
+.ninja-kids .rj-quiz:has(.rj-answer.is-on)>.rj-type { display:none; }
 .ninja-kids .rj-type {
   position:relative;
   display:flex;
-  flex-direction:column;
   gap:12px;
   padding-top:50px;
 }
-.ninja-kids .rj-type .rj-input { width:100%; min-width:0; flex:none; }
-.ninja-kids .rj-type .rj-next { width:100%; }
+.ninja-kids .rj-type .rj-input { flex:1; min-width:0; }
+/* スマホは横に並べると入力欄が細いので縦に積む */
+@media (max-width:767px) {
+  .ninja-kids .rj-type { flex-direction:column; }
+  .ninja-kids .rj-type .rj-input { flex:none; width:100%; }
+  .ninja-kids .rj-type .rj-next { width:100%; }
+}
 .ninja-kids .rj-type::before {
   content:'';
   position:absolute;
