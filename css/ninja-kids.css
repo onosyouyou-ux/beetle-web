@@ -2234,39 +2234,21 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   /* 広がったぶん、なんのしゅぎょうかが読んで分かるように大きくする */
   .ninja-kids :is(.kt-mode-t,.rj-mode-t,.pn-mode-t) { font-size:26px; line-height:1.35; }
   .ninja-kids :is(.kt-mode-s,.rj-mode-s,.pn-mode-s) { font-size:15px; line-height:1.95; }
-  /* 札ごとに忍具の絵を1つずつ透かしで入れる（items スプライトの1〜3コマ目）。
-     ::after は選択中の✓で使っているので、透かしは ::before に置くこと。 */
+  /* 札ごとにモード専用の絵を1つずつ入れる（2026-09-03・チケット#20）。
+     以前は items スプライト（忍具4つ並び）の1〜3コマ目を流用していたが、
+     モードの中身と対応していなかったので、カタカナ・ローマ字・フォニックスの
+     3アプリぶん9枚を描き起こして差し替えた。絵は下の --nk-mode-img で指定する。
+     ::after は選択中の✓で使っているので、絵は ::before に置くこと。 */
   .ninja-kids :is(.kt-mode,.rj-mode,.pn-mode)::before {
     content:'';
     position:absolute;
     left:50%;
-    top:26px;
-    width:132px;
-    height:132px;
-    translate:-50% 0;
-    opacity:.9;
-    background-image:var(--nk-items);
-    background-repeat:no-repeat;
-    background-size:400% 100%;
-    background-position:0 50%;
-    rotate:-8deg;
-    pointer-events:none;
-  }
-  .ninja-kids :is(.kt-mode,.rj-mode,.pn-mode):nth-of-type(2)::before { background-position:33.333% 50%; }
-  .ninja-kids :is(.kt-mode,.rj-mode,.pn-mode):nth-of-type(3)::before { background-position:66.666% 50%; }
-
-  /* 忍具スプライトの流用から、モード専用の絵に差し替える（2026-09-03・チケット#20）。
-     絵が来たアプリから順に切り替える。フォニックスは絵が来るまでスプライトのまま。
-     絵は忍者そのものなので、忍具のときの傾け（rotate）と透かしは外す。 */
-  .ninja-kids:is(.ninja-katakana,.ninja-romaji) :is(.kt-mode,.rj-mode)[data-mode]::before {
     top:16px;
     width:154px;
     height:154px;
-    opacity:1;
-    rotate:none;
-    background-image:var(--nk-mode-img);
-    background-size:contain;
-    background-position:center;
+    translate:-50% 0;
+    background:var(--nk-mode-img) center/contain no-repeat;
+    pointer-events:none;
   }
   .ninja-kids.ninja-katakana .kt-mode[data-mode="dotchi"] { --nk-mode-img:url('/assets/images/ninja/modes/katakana-dotchi.png'); }
   .ninja-kids.ninja-katakana .kt-mode[data-mode="naosu"]  { --nk-mode-img:url('/assets/images/ninja/modes/katakana-naosu.png'); }
@@ -2274,6 +2256,9 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids.ninja-romaji .rj-mode[data-mode="yomu"]    { --nk-mode-img:url('/assets/images/ninja/modes/romaji-yomu.png'); }
   .ninja-kids.ninja-romaji .rj-mode[data-mode="utsu"]    { --nk-mode-img:url('/assets/images/ninja/modes/romaji-utsu.png'); }
   .ninja-kids.ninja-romaji .rj-mode[data-mode="futatsu"] { --nk-mode-img:url('/assets/images/ninja/modes/romaji-futatsu.png'); }
+  .ninja-kids.ninja-phonics .pn-mode[data-mode="oto"]     { --nk-mode-img:url('/assets/images/ninja/modes/phonics-oto.png'); }
+  .ninja-kids.ninja-phonics .pn-mode[data-mode="tsunage"] { --nk-mode-img:url('/assets/images/ninja/modes/phonics-tsunage.png'); }
+  .ninja-kids.ninja-phonics .pn-mode[data-mode="mahou"]   { --nk-mode-img:url('/assets/images/ninja/modes/phonics-mahou.png'); }
 }
 
 /* こたえあわせパネルの○×：1カラムの段は幅が狭いので、絵が紙面を食わないよう小さめに。
