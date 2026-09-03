@@ -199,13 +199,13 @@ body.ninja-space {
   padding:0!important;
   align-self:center;
 }
+/* マスコットの後ろは丸いぼかしだけにする。斜めの linear-gradient を重ねると
+   箱の四辺で色が切れて「うっすら四角い枠」に見える（2026-09-03修正）。 */
 .ninja-kids .app-ref-visual.is-ninja {
   display:grid;
   place-items:center;
   min-height:178px;
-  background:
-    radial-gradient(circle at 50% 42%,rgba(255,255,255,.58),transparent 52%),
-    linear-gradient(145deg,color-mix(in srgb,var(--nk-accent) 14%,transparent),transparent);
+  background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.58),transparent 52%);
 }
 .ninja-kids .app-ref-visual.is-ninja .ninja-mascot {
   position:static;
@@ -660,11 +660,20 @@ body.ninja-space {
   clip-path:none;
 }
 .ninja-kids .app-ref-button:hover { background:#d87529; }
+/* 「アプリ一覧」は2番手のボタン。抜き文字にしていたが、ヒーローの地色が
+   濃紺→淡い修行カラーへグラデするため、明るい側で文字が消えていた
+   （スマホで実際に読めなくなっていた。2026-09-03修正）。
+   白の下地＋濃い文字にして、どちらの地色の上でも読めるようにする。 */
+.ninja-kids .app-ref-button.is-sub {
+  border:0;
+  background:rgba(255,255,255,.92);
+  color:var(--nk-accent-dark);
+  box-shadow:none;
+}
+.ninja-kids .app-ref-button.is-sub:hover { background:#fff; color:var(--nk-accent-dark); }
 .ninja-kids .app-ref-visual.is-ninja {
   min-height:188px;
-  background:
-    radial-gradient(circle at 50% 46%,rgba(255,255,255,.65),transparent 56%),
-    linear-gradient(145deg,rgba(255,255,255,.08),transparent);
+  background:radial-gradient(circle at 50% 46%,rgba(255,255,255,.65),transparent 56%);
 }
 .ninja-kids .app-ref-visual.is-ninja .ninja-mascot,
 .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot {
@@ -958,9 +967,12 @@ body.ninja-space {
   }
 }
 @media (max-width:767px) {
+  /* 濃紺と修行カラーの境目は、PCと同じく斜めに切る（2026-09-03）。
+     角度なしの linear-gradient は真横の帯になり、ただの2色の帯に見えていた。
+     横長・低いヒーローなので、PCの102degではなく170deg（水平から10度）で傾ける。 */
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) {
     background:
-      linear-gradient(var(--nk-deep) 0 58%,transparent 58.3%),
+      linear-gradient(170deg,var(--nk-deep) 0 62%,transparent 62.3%),
       linear-gradient(135deg,var(--nk-hero-a),var(--nk-hero-b))!important;
   }
   .ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope) {
@@ -1526,11 +1538,11 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 @media (max-width:767px) and (orientation:portrait) {
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),
   .ninja-kids .app-ref-hero {
-    grid-template-columns:minmax(0,1fr) 76px!important;
+    grid-template-columns:minmax(0,1fr) 108px!important;
     align-items:center!important;
     gap:0 10px;
     min-height:0!important;
-    padding:6px 14px!important;
+    padding:8px 14px!important;
     text-align:left!important;
   }
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot {
@@ -1539,17 +1551,24 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     justify-self:center;
   }
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,
-  .ninja-kids .app-ref-visual.is-ninja .ninja-mascot { width:76px; height:60px; }
-  .ninja-kids .app-ref-visual.is-ninja { min-height:60px; }
+  .ninja-kids .app-ref-visual.is-ninja .ninja-mascot { width:108px; height:92px; }
+  .ninja-kids .app-ref-visual.is-ninja { min-height:92px; }
   .ninja-kids .app-ref-copy { text-align:left; }
   .ninja-kids :is(.tk-eyebrow,.kj-eyebrow,.kt-eyebrow,.rj-eyebrow,.pn-eyebrow) { margin-bottom:1px; font-size:9.5px; }
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) h1 { margin-bottom:2px; font-size:21px; }
   .ninja-kids :is(.tk-lead,.kj-lead,.kt-lead,.rj-lead,.pn-lead) { display:none; }
+  /* 注釈は2行に折り返る。日本語は文字単位でどこでも折れてしまうので、
+     word-break:auto-phrase で文節の切れ目に寄せ、text-wrap:balance で行長をそろえる
+     （「どち／らの」のような不格好な切れ方を防ぐ）。 */
   .ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope) {
     justify-self:start;
     margin:0;
-    padding:2px 8px;
-    font-size:9.5px;
+    padding:3px 10px;
+    border-radius:9px;
+    font-size:10px;
+    line-height:1.6;
+    word-break:auto-phrase;
+    text-wrap:balance;
   }
   .ninja-kids .app-ref-button { margin-top:5px; padding:4px 10px; font-size:11px; }
 
