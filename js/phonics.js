@@ -147,8 +147,8 @@
             '</button>';
           }).join('') +
         '</div>' +
-        NinjaLinks.html('phonics') +
-      '</div>';
+      '</div>' +
+      NinjaLinks.html('phonics');
 
     Array.prototype.forEach.call(root.querySelectorAll('.pn-mode'), function (btn) {
       btn.addEventListener('click', function () { start(btn.getAttribute('data-mode')); });

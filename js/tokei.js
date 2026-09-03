@@ -219,9 +219,9 @@
     start.type = 'button';
     start.addEventListener('click', startSession);
     wrap.appendChild(start);
-    wrap.appendChild(NinjaLinks.el('tokei'));
 
     app.appendChild(wrap);
+    app.appendChild(NinjaLinks.el('tokei'));
   }
 
   // 手裏剣1枚。中心の穴は fill-rule="evenodd" で抜いている

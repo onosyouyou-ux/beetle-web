@@ -209,8 +209,8 @@
             '</button>';
           }).join('') +
         '</div>' +
-        NinjaLinks.html('romaji') +
-      '</div>';
+      '</div>' +
+      NinjaLinks.html('romaji');
 
     Array.prototype.forEach.call(root.querySelectorAll('.rj-mode'), function (btn) {
       btn.addEventListener('click', function () { start(btn.getAttribute('data-mode')); });

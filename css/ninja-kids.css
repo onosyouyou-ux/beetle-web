@@ -2365,22 +2365,39 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
    アプリ名と説明は絵に入っているので、読み上げは <img> の alt が担当する。
    6アプリ共通なのでスタイルはここ1箇所だけに書く（アプリ個別CSSに複製しない）。
    ============================================================ */
-.nk-links { margin-top:28px; }
-/* とけい・かんじのメニューは幅のある画面で2カラムのグリッドになる。
-   相互リンクは列に入れず、最下段に全幅で置く。 */
-.ninja-kids :is(.tk-menu,.kj-menu) > .nk-links { grid-column:1 / -1; }
+/* 設定（といかた・なんいど・スタート）のカードとは別の区画にする。
+   カードの中に入れると「これも設定の一部」に見えるため、カードの外＝紙面の上に置く。
+   区切りは両側に罫を引いた見出しだけで、この区画に下地は敷かない。 */
+.nk-links {
+  margin:24px auto 0;
+  width:min(100%,900px);
+  padding:0 18px;
+}
 .nk-links-title {
-  margin:0 0 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin:0 0 12px;
   font-size:14px;
   font-weight:800;
-  color:#6b6b76;
+  color:#c7d5d8;
   text-align:center;
   letter-spacing:.04em;
 }
-/* さんすうは紙面が濃紺なので、見出しだけ明るい色に振る */
+.nk-links-title::before,
+.nk-links-title::after {
+  content:"";
+  flex:1;
+  max-width:90px;
+  height:1px;
+  background:currentColor;
+  opacity:.4;
+}
+/* さんすうは紙面が濃紺。見出しだけ紙面に合う明るさに振る */
 .ninja-space .nk-links-title { color:#9fb3d9; }
-/* 幅のある画面は2列×3行。6つ全部を並べても、絵の比率のまま450px前後に収まる。
-   スマホは2列にすると絵の中の文字が読めなくなるので1列のまま（そのぶん縦に伸びる）。 */
+/* 幅のある画面は3列×2行。6つ全部並べても絵の比率のまま250px前後に収まる。
+   スマホは3列にすると絵の中の文字が読めなくなるので1列のまま（そのぶん縦に伸びる）。 */
 .nk-links-list {
   display:grid;
   grid-template-columns:1fr;
@@ -2390,9 +2407,9 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 }
 @media (min-width:768px) {
   .nk-links-list {
-    grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-columns:repeat(3,minmax(0,1fr));
     gap:12px 14px;
-    width:min(100%,700px);
+    width:100%;
   }
 }
 .nk-link {
