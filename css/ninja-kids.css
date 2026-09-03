@@ -246,7 +246,7 @@ body.ninja-space {
      --nk-ask-h   … とけいだけ「といのバー＋時計ステージ」の合成なので、その差分（バー＋行間）
    ここが基本値＝PC（1180px以上）。段ごとの上書きは、この下のレスポンシブ節で
    この変数だけを差し替える（各アプリのCSSに数値を直書きしない）。 */
-.ninja-kids { --nk-qh:312px; --nk-board-h:446px; --nk-ask-h:54px; }
+.ninja-kids { --nk-qh:312px; --nk-board-h:446px; --nk-ask-h:54px; --nk-seam:8px; }
 
 .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) {
   position:relative;
@@ -448,7 +448,8 @@ body.ninja-space {
   align-items:center;
   justify-content:center;
   min-height:calc(var(--nk-qh) - var(--nk-ask-h));
-  margin:0;
+  /* といのバーと1枚の札に見せるため、行間ぶんだけ引き上げて合わせ目の地色を消す */
+  margin:calc(-1 * var(--nk-seam)) 0 0;
   padding:4px 12px 12px;
   border:2px solid var(--nk-line);
   border-top:0;
@@ -1358,7 +1359,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 /* ---------- スマホ（~767px） ---------- */
 @media (max-width:767px) {
   /* 1カラムに積む段は盤面・回答エリアの固定高さを外す（1画面に収めるルールが優先） */
-  .ninja-kids { --nk-tap:60px; --nk-board-h:0px; --nk-q-notch:12px; }
+  .ninja-kids { --nk-tap:60px; --nk-board-h:0px; --nk-q-notch:12px; --nk-seam:10px; }
   .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),
   .ninja-kids .tk-play>.tk-options { align-self:auto; min-height:0; }
   .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) { min-height:56px; }
@@ -1424,7 +1425,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 /* ---------- タブレット縦（768~1179px・縦持ち） ---------- */
 @media (min-width:768px) and (max-width:1179px) and (orientation:portrait) {
   /* 1カラムに積む段は盤面・回答エリアの固定高さを外す（1画面に収めるルールが優先） */
-  .ninja-kids { --nk-board-h:0px; }
+  .ninja-kids { --nk-board-h:0px; --nk-seam:14px; }
   .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),
   .ninja-kids .tk-play>.tk-options { align-self:auto; min-height:0; }
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) { min-height:170px!important; }
@@ -1500,7 +1501,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids .tk-play {
     grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
   }
-  .ninja-kids { --nk-qh:252px; --nk-board-h:402px; }
+  .ninja-kids { --nk-qh:252px; --nk-board-h:402px; --nk-seam:12px; }
   .ninja-kids .tk-play>.tk-stage .tk-clock { width:min(180px,100%); }
   .ninja-kids .tk-play>.tk-options.is-clock .tk-clock { width:min(104px,100%); }
   .ninja-space .app-paper { width:min(100%,1000px); max-width:1000px; }
@@ -1554,6 +1555,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 
   /* 盤面：問題パネルの高さを画面の高さから決める */
   .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) { padding:10px 10px 14px; }
+  .ninja-kids { --nk-seam:8px; }
   .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) { gap:8px; padding:10px 10px 12px; }
   .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-big { font-size:clamp(34px,9dvh,64px); }
   .ninja-kids .tk-play>.tk-stage { min-height:clamp(120px,24dvh,230px); }
@@ -1565,7 +1567,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 
 /* ---------- 寝かせた画面：左右2カラムに戻して縦を詰める ---------- */
 @media (orientation:landscape) and (max-height:500px) {
-  .ninja-kids { --nk-tap:46px; }
+  .ninja-kids { --nk-tap:46px; --nk-seam:6px; }
 
   /* ヒーローは見出しだけ残して1行に */
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),
