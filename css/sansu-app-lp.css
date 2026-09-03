@@ -339,25 +339,18 @@ img { max-width: 100%; height: auto; }
   background: #fff;
   box-shadow: 0 16px 40px rgba(33, 28, 75, .09);
 }
+/* あそびかたカードの絵は2枚とも16:9のイラストにした（2026-09-03）。
+   枠いっぱいに敷いて、2枚の見え方をそろえる。 */
 .slp-play-media {
-  display: grid;
-  place-items: center;
-  min-height: 230px;
-  padding: 26px;
-  background: linear-gradient(145deg, #fff, #eeeaff);
-}
-.slp-play-card.is-space .slp-play-media {
-  background:
-    radial-gradient(circle at 82% 20%, rgba(118, 87, 232, .4), transparent 30%),
-    var(--sl-space-2);
+  display: block;
+  background: var(--sl-space-2);
 }
 .slp-play-media img {
   display: block;
-  width: auto;
-  max-width: 100%;
-  max-height: 190px;
-  object-fit: contain;
-  filter: drop-shadow(0 9px 18px rgba(33, 28, 75, .14));
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 }
 .slp-play-copy { padding: 28px 30px 30px; }
 .slp-play-label {
@@ -677,7 +670,6 @@ img { max-width: 100%; height: auto; }
   .slp-calc-card p { min-height: 0; }
   .slp-level-callout { grid-template-columns: 1fr; padding: 21px; text-align: center; }
   .slp-level-mark { width: 58px; height: 58px; margin: 0 auto; }
-  .slp-play-media { min-height: 180px; padding: 18px; }
   .slp-play-copy { padding: 23px 21px 25px; }
   .slp-cherry { gap: 34px; }
   .slp-cherry-board { padding: 17px; border-radius: 18px; }
