@@ -2379,14 +2379,21 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 }
 /* さんすうは紙面が濃紺なので、見出しだけ明るい色に振る */
 .ninja-space .nk-links-title { color:#9fb3d9; }
-/* 幅の上限420px＝ボタン1枚が高さ約166px。3枚＋見出しで約556pxに収まる。
-   絵のまま640pxまで広げると1枚233pxになり、設定画面の主役（しゅぎょうを えらぶ）より
-   相互リンクのほうが大きくなってしまう（チケット#16の見積もりと同じ理由）。 */
+/* 幅のある画面は2列×3行。6つ全部を並べても、絵の比率のまま450px前後に収まる。
+   スマホは2列にすると絵の中の文字が読めなくなるので1列のまま（そのぶん縦に伸びる）。 */
 .nk-links-list {
   display:grid;
+  grid-template-columns:1fr;
   gap:12px;
   width:min(100%,420px);
   margin-inline:auto;
+}
+@media (min-width:768px) {
+  .nk-links-list {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px 14px;
+    width:min(100%,700px);
+  }
 }
 .nk-link {
   display:block;
@@ -2396,6 +2403,9 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   transition:translate .12s ease, filter .12s ease;
 }
 .nk-link:hover { translate:0 -2px; filter:brightness(1.05); }
+/* いま開いている修行。押せるままにしておくが、「ここにいる」と分かるよう落とす */
+.nk-link[aria-current] { opacity:.5; }
+.nk-link[aria-current]:hover { translate:0 0; filter:none; }
 .nk-link:active { translate:0 1px; filter:brightness(.97); }
 .nk-link:focus-visible { outline:3px solid var(--nk-accent,#c0634c); outline-offset:3px; }
 .nk-link-img { display:block; width:100%; height:auto; }

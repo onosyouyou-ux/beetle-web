@@ -17,17 +17,12 @@
     sansu:    { name: 'さんすう',         note: 'けいさんを する',     img: 'nk-link-sansu.webp',    href: '/tools/sansu-app/' }
   };
 
-  /* どのアプリから、どの3つを、どの順で出すか */
-  var RELATED = {
-    kanji:    ['katakana', 'romaji', 'tokei'],
-    katakana: ['kanji', 'romaji', 'sansu'],
-    romaji:   ['phonics', 'katakana', 'kanji'],
-    phonics:  ['romaji', 'katakana', 'kanji'],
-    tokei:    ['sansu', 'kanji', 'katakana'],
-    sansu:    ['tokei', 'kanji', 'katakana']
-  };
+  /* 6つ全部を、いつも同じ順で出す（2026-09-03改定）。
+     2列に並べたときに3行ちょうどで埋まるよう、いま開いている修行も外さない。
+     いま開いているものは aria-current="page" を付けて「ここにいる」と分かるようにする。 */
+  var ORDER = ['kanji', 'katakana', 'romaji', 'phonics', 'tokei', 'sansu'];
 
-  var TITLE = 'ほかの しゅぎょう';
+  var TITLE = 'しゅぎょう いちらん';
   var IMG_BASE = '/assets/images/ninja/';
 
   function esc(s) {
@@ -36,15 +31,14 @@
 
   /* HTML文字列を返す（innerHTML で組み立てているアプリ用） */
   function html(currentId) {
-    var ids = RELATED[currentId] || [];
-    if (!ids.length) return '';
     return '<section class="nk-links">' +
       '<h2 class="nk-links-title">' + esc(TITLE) + '</h2>' +
       '<div class="nk-links-list">' +
-        ids.map(function (id) {
+        ORDER.map(function (id) {
           var a = APPS[id];
           if (!a) return '';
-          return '<a class="nk-link" href="' + esc(a.href) + '">' +
+          var here = id === currentId ? ' aria-current="page"' : '';
+          return '<a class="nk-link" href="' + esc(a.href) + '"' + here + '>' +
             '<img class="nk-link-img" src="' + esc(IMG_BASE + a.img) + '"' +
               ' width="' + IMG_W + '" height="' + IMG_H + '"' +
               ' alt="' + esc(a.name + '（' + a.note + '）') + '">' +
@@ -61,5 +55,5 @@
     return wrap.firstChild;
   }
 
-  global.NinjaLinks = { html: html, el: el, APPS: APPS, RELATED: RELATED };
+  global.NinjaLinks = { html: html, el: el, APPS: APPS, ORDER: ORDER };
 })(window);
