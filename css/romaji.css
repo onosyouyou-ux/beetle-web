@@ -209,6 +209,20 @@ body{
 .rj-input.is-correct{border-color:var(--rj-green);background:var(--rj-green-bg);color:var(--rj-green)}
 .rj-input.is-wrong{border-color:var(--rj-red);background:var(--rj-red-bg);color:var(--rj-red)}
 .rj-input:disabled{opacity:1}
+/* ヒント：うつ ローマ字をそのまま見せる（タイピングの練習を兼ねる。2026-09-03） */
+.rj-hint-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  margin:0 auto;padding:8px 18px;
+  border:2px solid var(--rj-orange);border-radius:99px;background:#fff;
+  color:var(--rj-orange-dk);font:800 14px/1.5 inherit;cursor:pointer;
+}
+.rj-hint-btn::before{content:"💡";font-size:15px}
+.rj-hint-btn:hover{background:#fdf1e2}
+.rj-hint{
+  margin:0;padding:12px 16px;border-radius:14px;background:var(--rj-cream2);
+  color:var(--rj-ink2);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:20px;font-weight:700;letter-spacing:.06em;text-align:center;
+}
 
 @media (max-width:767px){
   .rj-input{font-size:18px;min-width:0}

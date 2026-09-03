@@ -227,11 +227,14 @@
 
     var body;
     if (q.type === 'utsu') {
+      // ヒントは「うつ ローマ字」をそのまま見せる。打ちながら覚えるタイピングの練習を兼ねる。
       body =
         '<div class="rj-type">' +
           '<input type="text" id="rj-input" class="rj-input" autocomplete="off" autocapitalize="off" ' +
             'autocorrect="off" spellcheck="false" placeholder="ローマ字で うってね" aria-label="ローマ字を入力">' +
           '<button type="button" class="rj-next" id="rj-send">こたえる</button>' +
+          '<button type="button" class="rj-hint-btn" id="rj-hint-btn">ヒントを 見る</button>' +
+          '<p class="rj-hint" id="rj-hint" hidden></p>' +
         '</div>';
     } else {
       body =
@@ -263,6 +266,14 @@
         if (e.key === 'Enter') { e.preventDefault(); answerTyped(); }
       });
       document.getElementById('rj-send').addEventListener('click', answerTyped);
+      var hintBtn = document.getElementById('rj-hint-btn');
+      hintBtn.addEventListener('click', function () {
+        var hint = document.getElementById('rj-hint');
+        hint.textContent = 'こう うつよ： ' + q.word;
+        hint.hidden = false;
+        hintBtn.hidden = true;
+        input.focus();
+      });
       input.focus();
     } else {
       Array.prototype.forEach.call(root.querySelectorAll('.rj-choice'), function (btn) {
