@@ -1145,10 +1145,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 }
 .ninja-kids .rj-quiz:has(.rj-answer.is-on)>.rj-type { display:none; }
 .ninja-kids .rj-type {
-  position:relative;
   display:flex;
   gap:12px;
-  padding-top:50px;
 }
 .ninja-kids .rj-type .rj-input { flex:1; min-width:0; }
 /* スマホは横に並べると入力欄が細いので縦に積む */
@@ -1156,19 +1154,6 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids .rj-type { flex-direction:column; }
   .ninja-kids .rj-type .rj-input { flex:none; width:100%; }
   .ninja-kids .rj-type .rj-next { width:100%; }
-}
-.ninja-kids .rj-type::before {
-  content:'';
-  position:absolute;
-  top:0;
-  left:50%;
-  width:56px;
-  height:46px;
-  translate:-50% 0;
-  background-image:var(--nk-items);
-  background-repeat:no-repeat;
-  background-size:400% 100%;
-  background-position:33.333% 50%;
 }
 .ninja-space .sa-play-head {
   position:relative;
