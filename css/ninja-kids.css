@@ -2224,9 +2224,12 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     display:flex;
     flex-direction:column;
     justify-content:flex-end;
+    align-items:center;
     gap:10px;
     padding:24px 24px 26px;
-    text-align:left;
+    /* 絵が札の真ん中にあるので、見出しとひとことも中央にそろえる（2026-09-03）。
+       設定の選択肢は左詰めが基本だが、この3枚だけは絵が主役なので例外にする。 */
+    text-align:center;
   }
   /* 広がったぶん、なんのしゅぎょうかが読んで分かるように大きくする */
   .ninja-kids :is(.kt-mode-t,.rj-mode-t,.pn-mode-t) { font-size:26px; line-height:1.35; }
