@@ -177,26 +177,9 @@ body.ninja-lp-space {
     linear-gradient(90deg,rgba(5,14,37,.96),rgba(33,20,74,.8)),
     url('/assets/images/ninja/space-village-bg.webp') center/cover;
 }
-.ninja-lp-space .slp-hero::before {
-  content:'宇宙忍者の里';
-  display:inline-block;
-  position:absolute;
-  inset:auto;
-  top:28px;
-  left:max(28px,calc(50% - 532px));
-  z-index:3;
-  width:auto;
-  height:auto;
-  opacity:1;
-  translate:0 0;
-  padding:7px 20px;
-  color:#fff3a8;
-  border:1px solid #a98cff;
-  background:#241858c9;
-  font-weight:800;
-  letter-spacing:.16em;
-  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
-}
+/* 「宇宙忍者の里」のバッジは廃止（2026-09-03）。絶対配置で左端に置いていたため、
+   中央ぞろえのキャッチや導線と目線がそろわず、間隔がずれて見えていた。
+   ::before を上書きしないことで、sansu-app-lp.css の星の点描がそのまま出る。 */
 .ninja-lp-space .slp-hero-visual {
   min-height:410px;
   background:url('/assets/images/ninja/sansu-space.webp') center/contain no-repeat;
@@ -238,7 +221,6 @@ body.ninja-lp-space {
   }
   .ninja-landing .eal-hero-copy { grid-column:1;grid-row:1;text-align:center; }
   .ninja-landing .eal-hero .eal-container::after { grid-column:1;grid-row:2;min-height:260px; }
-  .ninja-lp-space .slp-hero::before { top:12px; }
   .ninja-lp-space .slp-hero-visual { min-height:290px; }
 }
 

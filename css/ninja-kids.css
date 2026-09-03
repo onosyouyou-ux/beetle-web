@@ -1098,10 +1098,17 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   background:var(--nk-items) center/contain no-repeat;
   filter:drop-shadow(0 7px 8px rgba(30,25,20,.14));
 }
+/* 「キーボードで うつ」は入力欄と こたえる を縦に積む（2026-09-03）。
+   横に並べると入力欄が細くなり、打った文字が見えにくかった。 */
 .ninja-kids .rj-type {
   position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
   padding-top:50px;
 }
+.ninja-kids .rj-type .rj-input { width:100%; min-width:0; flex:none; }
+.ninja-kids .rj-type .rj-next { width:100%; }
 .ninja-kids .rj-type::before {
   content:'';
   position:absolute;
@@ -1538,7 +1545,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 @media (max-width:767px) and (orientation:portrait) {
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),
   .ninja-kids .app-ref-hero {
-    grid-template-columns:minmax(0,1fr) 108px!important;
+    grid-template-columns:minmax(0,1fr) clamp(104px,32vw,148px)!important;
     align-items:center!important;
     gap:0 10px;
     min-height:0!important;
@@ -1550,26 +1557,31 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     grid-row:1 / 9;
     justify-self:center;
   }
+  /* 注釈バッジを消したぶん、忍者を大きく見せる（2026-09-03）。
+     枠は正方形にして、絵が枠の幅そのままの大きさで出るようにする
+     （object-fit:contain なので、横長の枠だと高さぶんまでしか大きくならない）。 */
   .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,
-  .ninja-kids .app-ref-visual.is-ninja .ninja-mascot { width:108px; height:92px; }
-  .ninja-kids .app-ref-visual.is-ninja { min-height:92px; }
+  .ninja-kids .app-ref-visual.is-ninja .ninja-mascot {
+    width:100%;
+    height:auto;
+    aspect-ratio:1;
+  }
+  .ninja-kids .app-ref-visual.is-ninja { min-height:0; }
   .ninja-kids .app-ref-copy { text-align:left; }
   .ninja-kids :is(.tk-eyebrow,.kj-eyebrow,.kt-eyebrow,.rj-eyebrow,.pn-eyebrow) { margin-bottom:1px; font-size:9.5px; }
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) h1 { margin-bottom:2px; font-size:21px; }
-  .ninja-kids :is(.tk-lead,.kj-lead,.kt-lead,.rj-lead,.pn-lead) { display:none; }
-  /* 注釈は2行に折り返る。日本語は文字単位でどこでも折れてしまうので、
-     word-break:auto-phrase で文節の切れ目に寄せ、text-wrap:balance で行長をそろえる
-     （「どち／らの」のような不格好な切れ方を防ぐ）。 */
-  .ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope) {
-    justify-self:start;
-    margin:0;
-    padding:3px 10px;
-    border-radius:9px;
-    font-size:10px;
-    line-height:1.6;
+  /* いちばん長い「フォニックスしゅぎょう」対策（2026-09-03）。
+     幅に合わせて縮めたうえで、折り返すときは word-break:auto-phrase で
+     文節の切れ目（フォニックス／しゅぎょう）に寄せる。 */
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) h1 {
+    margin-bottom:2px;
+    font-size:clamp(16px,5vw,22px);
     word-break:auto-phrase;
-    text-wrap:balance;
   }
+  .ninja-kids :is(.tk-lead,.kj-lead,.kt-lead,.rj-lead,.pn-lead) { display:none; }
+  /* 注釈バッジはスマホでは出さない（2026-09-03）。2行に折り返って
+     ヒーローでいちばん大きい塊になり、アプリ名とボタンの邪魔をしていた。
+     同じ内容はランディングの「おうちのかたへ」に書いてある。 */
+  .ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope) { display:none; }
   .ninja-kids .app-ref-button { margin-top:5px; padding:4px 10px; font-size:11px; }
 
   /* 盤面：問題パネルの高さを画面の高さから決める */
@@ -1761,7 +1773,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 /* 小さめのスマホ縦（360x640 など）でも1画面に入るよう、
    ヒーローと選択肢の高さをもう一段詰める。 */
 @media (max-width:767px) and (orientation:portrait) {
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) h1 { font-size:19px; }
+  /* h1 の固定19pxは廃止（2026-09-03）。上のブロックの clamp(16px,5vw,22px) で
+     画面幅に合わせて縮むようにしたので、ここで固定すると狭い画面で折り返す。 */
   .ninja-kids .app-ref-copy { display:flex; flex-direction:column; align-items:flex-start; gap:3px; }
   .ninja-kids .app-ref-button { margin:0; }
 
@@ -1981,7 +1994,10 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids.ninja-tokei .tk-choices-level .tk-choice { padding:6px 12px; }
   .ninja-kids.ninja-tokei .tk-choice-note { font-size:10.5px; }
   .ninja-kids.ninja-tokei .tk-start { padding-block:11px; font-size:19px; }
-  .ninja-kids.ninja-tokei .tk-preview svg { height:clamp(64px,11dvh,120px); }
+  /* 忍者を大きくしたぶん、見本の時計まわりを詰める。
+     ここを詰めないと 390x740 でスタートが画面の外に出る（実測。2026-09-03）。 */
+  .ninja-kids.ninja-tokei .tk-preview { margin-bottom:8px; }
+  .ninja-kids.ninja-tokei .tk-preview svg { height:clamp(64px,9dvh,120px); }
   .ninja-kids.ninja-tokei .tk-toggle { margin-block:2px; }
 }
 
@@ -2020,6 +2036,13 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 
 @media (max-width:767px) and (orientation:portrait) and (max-height:699px) {
   .ninja-kids.ninja-tokei .tk-menu { padding-bottom:4px; }
+  /* 縦が短い端末（360x640 など）は忍者を一段小さくしてヒーローを詰める。
+     ここを詰めないと、とけいのスタートが画面の外に出る（実測）。 */
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),
+  .ninja-kids .app-ref-hero {
+    grid-template-columns:minmax(0,1fr) clamp(72px,22vw,92px)!important;
+    padding-block:6px!important;
+  }
 }
 
 /* アプリ内「おうちのかたへ」3ステップの番号も、ランディングと同じ忍者道具アイコンにする。
