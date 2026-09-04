@@ -2,8 +2,9 @@
    romaji.js — ローマ字修行（3モード・1セット10問）
    データは js/romaji-data.js（window.ROMAJI_DATA）が単一のデータ源。
 
-   このアプリの中心は「訓令式（学校）とヘボン式（パソコン・パスポート）の2つがあり、
-   どちらも正しい」と分かること。だから「うつ」モードは **どちらの書き方でも正解にする**。
+   このアプリの中心は「いま学校で習うのはヘボン式（2025年12月の内閣告示で基本に）、
+   まえの教科書は訓令式で、どちらも間違いではない」と分かること。
+   だから「うつ」モードは **どちらの書き方でも正解にする**。
    採点はすべてブラウザの中で行い、サーバーには何も送らない。
    ============================================================ */
 (function () {
@@ -54,7 +55,7 @@
     return out;
   }
 
-  /* ---------- モーラ → ありうる ローマ字（訓令式・ヘボン式の どちらも） ----------
+  /* ---------- モーラ → ありうる ローマ字（ヘボン式・訓令式の どちらも） ----------
      ・ちいさい「っ」は つぎの 音の さいしょの 字を かさねる（kitte・gakkou）
      ・「ん」は n。ただし つぎが 母音や y で 始まるときは nn か n'（sin'you） */
 
@@ -114,8 +115,9 @@
     return out;
   }
 
+  /* mora の配列は 先頭がヘボン式（いま習う形）、2つ目以降が訓令式など まえの書き方 */
   function pickStyle(variants, style) {
-    if (style === 'hepburn') return variants[variants.length > 1 ? 1 : 0];
+    if (style === 'kunrei') return variants[variants.length > 1 ? 1 : 0];
     return variants[0];
   }
 
@@ -130,7 +132,7 @@
         show: render(x.k, style),
         word: x.k,
         hint: x.hint,
-        cat: style === 'kunrei' ? 'くんれいしき（がっこうで ならう かきかた）' : 'ヘボンしき（パソコン・パスポートの かきかた）',
+        cat: style === 'hepburn' ? 'ヘボンしき（いま がっこうで ならう かきかた）' : 'くんれいしき（まえの きょうかしょの かきかた）',
         choices: shuffle([x.k].concat(wrongs)),
       };
     });
@@ -140,13 +142,13 @@
     return pick(D.words, QUESTIONS).map(function (x) {
       var kunrei = render(x.k, 'kunrei');
       var hepburn = render(x.k, 'hepburn');
-      // 「やさい」のように si/ti/tu を ふくまない ことばは 2つの 書き方が 同じになる。
+      // 「やさい」のように shi/chi/tsu を ふくまない ことばは 2つの 書き方が 同じになる。
       // その ときに 'yasai / yasai' と 並べると、ちがいが あるように 見えて まぎらわしい。
       var same = kunrei === hepburn;
       return {
         type: 'utsu',
         show: x.k,
-        word: same ? kunrei : kunrei + ' / ' + hepburn,
+        word: same ? hepburn : hepburn + ' / ' + kunrei,
         answers: romanizations(x.k),
         hint: x.hint,
         cat: same ? 'かきかたは ひとつだけ' : 'どちらの かきかたでも せいかい',
@@ -159,15 +161,15 @@
     while (qs.length < QUESTIONS) {
       shuffle(D.futatsu.slice()).forEach(function (p) {
         if (qs.length >= QUESTIONS) return;
-        var askKunrei = Math.random() < 0.5;
+        var askHepburn = Math.random() < 0.5;
         qs.push({
           type: 'futatsu',
           show: p.kana,
-          lead: askKunrei ? 'がっこうで ならう かきかた（くんれいしき）は どっち？' : 'パソコンで つかう かきかた（ヘボンしき）は どっち？',
-          word: askKunrei ? p.kunrei : p.hepburn,
+          lead: askHepburn ? 'いま がっこうで ならう かきかた（ヘボンしき）は どっち？' : 'まえの きょうかしょの かきかた（くんれいしき）は どっち？',
+          word: askHepburn ? p.hepburn : p.kunrei,
           hint: D.whyTwo.replace('{kunrei}', p.kunrei).replace('{hepburn}', p.hepburn) + '　例：' + p.ex,
           cat: '2とおりの かきかた',
-          choices: shuffle([p.kunrei, p.hepburn]),
+          choices: shuffle([p.hepburn, p.kunrei]),
         });
       });
     }
@@ -177,7 +179,7 @@
   var MODES = {
     yomu:    { label: 'ローマ字を よむ',   sub: 'ローマ字を みて ことばを あてる', build: buildYomu },
     utsu:    { label: 'キーボードで うつ', sub: 'ひらがなを ローマ字で うつ',  build: buildUtsu },
-    futatsu: { label: 'ふたつの かきかた',   sub: 'si と shi、どちらも ただしい',      build: buildFutatsu },
+    futatsu: { label: 'ふたつの かきかた',   sub: 'shi と si、どちらも ただしい',      build: buildFutatsu },
   };
 
   /* ---------- 画面 ---------- */
@@ -189,12 +191,12 @@
     if (!box) return;
     box.innerHTML =
       '<h2>ローマ字には かきかたが 2つ あります</h2>' +
-      '<table class="rj-table"><thead><tr><th>かな</th><th>学校（訓令式）</th><th>パソコン（ヘボン式）</th></tr></thead><tbody>' +
+      '<table class="rj-table"><thead><tr><th>かな</th><th>いま（ヘボン式）</th><th>まえ（訓令式）</th></tr></thead><tbody>' +
         D.futatsu.map(function (p) {
-          return '<tr><td>' + esc(p.kana) + '</td><td>' + esc(p.kunrei) + '</td><td>' + esc(p.hepburn) + '</td></tr>';
+          return '<tr><td>' + esc(p.kana) + '</td><td>' + esc(p.hepburn) + '</td><td>' + esc(p.kunrei) + '</td></tr>';
         }).join('') +
       '</tbody></table>' +
-      '<p class="rj-rules-note">どちらも ただしい かきかたです。テストで でるのは がっこうで ならう ほう、キーボードで うつときは どちらでも はいります。</p>';
+      '<p class="rj-rules-note">2025年12月22日に くにの きまり（内閣告示）が 70年ぶりに かわり、いま がっこうで ならうのは ヘボン式が 基本です。まえの きょうかしょの 訓令式も まちがいでは ありません。キーボードで うつときは どちらでも おなじ ひらがなが 出ます。</p>';
   }
 
   function renderMenu() {
