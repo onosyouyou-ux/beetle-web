@@ -339,10 +339,12 @@
     app.appendChild(NinjaLinks.el('tokei'));
   }
 
-  // 手裏剣1枚。中心の穴は fill-rule="evenodd" で抜いている
-  var SHURIKEN_SVG = '<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">'
-    + '<path fill-rule="evenodd" d="M12 1 17.2 6.8 23 12 17.2 17.2 12 23 6.8 17.2 1 12 6.8 6.8Z'
-    + 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/></svg>';
+  // 手裏剣の絵（56pxのWebP。もとの絵は 1254px の透過PNG）。
+  // 色を塗り分けるのではなく、光っている／いないで別の画像にしている。
+  var SHURIKEN_SRC = {
+    on: '/assets/images/ninja/shuriken-on.webp',
+    off: '/assets/images/ninja/shuriken-off.webp'
+  };
 
   // なんいどは手裏剣の数で見せる（全部で total 枚、うち level 枚が光る）。
   // 数字も文字も読まずに「どれが やさしいか」が分かるようにするため。
@@ -350,9 +352,15 @@
     var box = el('span', 'tk-level');
     box.setAttribute('aria-hidden', 'true');
     for (var i = 1; i <= total; i++) {
-      var one = el('span', i <= level ? 'tk-shuriken is-on' : 'tk-shuriken');
-      one.innerHTML = SHURIKEN_SVG;
-      box.appendChild(one);
+      var on = i <= level;
+      var img = document.createElement('img');
+      img.className = on ? 'tk-shuriken is-on' : 'tk-shuriken';
+      img.src = on ? SHURIKEN_SRC.on : SHURIKEN_SRC.off;
+      img.width = 19;
+      img.height = 19;
+      img.alt = '';
+      img.decoding = 'async';
+      box.appendChild(img);
     }
     return box;
   }
