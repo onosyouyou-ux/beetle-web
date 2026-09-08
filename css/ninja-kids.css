@@ -2024,7 +2024,10 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids.ninja-tokei .tk-group { margin-bottom:8px; }
   .ninja-kids.ninja-tokei .tk-group-title { margin-bottom:5px; font-size:11.5px; }
   .ninja-kids.ninja-tokei .tk-choices { gap:7px; }
-  .ninja-kids.ninja-tokei .tk-choices-level .tk-choice { padding:6px 12px; }
+  /* なんいどを2列に折り返した段。「ちょうどの じかん」が1行に収まる余白と字の大きさにする
+     （360px幅で折り返して行の高さがそろわなかった。2026-09-08 実測） */
+  .ninja-kids.ninja-tokei .tk-choices-level .tk-choice { padding:6px 8px; }
+  .ninja-kids.ninja-tokei .tk-choices-level .tk-choice-label { font-size:14px; }
   .ninja-kids.ninja-tokei .tk-choice-note { font-size:10.5px; }
   .ninja-kids.ninja-tokei .tk-start { padding-block:11px; font-size:19px; }
   /* 忍者を大きくしたぶん、見本の時計まわりを詰める。
