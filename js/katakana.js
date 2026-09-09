@@ -216,7 +216,7 @@
           '<p class="kt-q-word' + (q.type === 'nigata' ? ' is-big' : '') + (q.ex ? ' is-sentence' : '') + '">' +
             (q.ex ? sentence(q.ex, q.show, 'kt-target') : esc(q.show)) + '</p>' +
         '</div>' +
-        '<div class="kt-choices' + (q.type === 'dotchi' ? ' is-two' : '') + '">' +
+        '<div class="kt-choices' + (choices.length === 2 ? ' is-two' : '') + '">' +
           choices.map(function (c) {
             return '<button type="button" class="kt-choice" data-key="' + esc(c.key) + '"><span class="nk-answer-label">' + esc(c.label) + '</span></button>';
           }).join('') +
