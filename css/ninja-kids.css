@@ -2451,11 +2451,16 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 
 /* こたえあわせパネル: 明るい地色・大きい文字・目立つボタン（2026-09-02） */
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on { background-blend-mode:normal; }
+/* こたえあわせの地。彩度を上げて濁りを抜き、七宝の地紋を薄く重ねる（2026-09-09）。
+   「おしい」は茶がかったオレンジだと濁って見えたので珊瑚（コーラル）に振る。 */
+.ninja-kids { --nk-answer-pattern:url('/assets/images/ninja/patterns/answer-shippou.png'); }
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-ok {
-  background:linear-gradient(145deg,#1d9273,#137055);
+  background:var(--nk-answer-pattern) center/104px 104px repeat,
+             linear-gradient(150deg,#15a077,#0b7a5c);
 }
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-ng {
-  background:linear-gradient(145deg,#c96a3e,#a24b28);
+  background:var(--nk-answer-pattern) center/104px 104px repeat,
+             linear-gradient(150deg,#e9664f,#c9402c);
 }
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-head,.rj-a-head,.pn-a-head) {
   font-size:clamp(18px,2.1vw,24px);
@@ -2669,4 +2674,30 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     >:is(.kt-answer,.rj-answer,.pn-answer).is-on { grid-column:1; grid-row:2 / 4; }
   .ninja-kids :is(.kt-quiz,.rj-quiz,.pn-quiz):has(:is(.kt-choices,.rj-choices,.pn-choices).is-two)
     >:is(.kt-back,.rj-back,.pn-back) { grid-column:1; grid-row:4; }
+}
+
+
+/* ============================================================
+   選択肢の地紋（2026-09-09）
+   ------------------------------------------------------------
+   白いだけの札はそっけないので、和柄をごく薄く敷く。
+   **1〜4で柄を変える**ので「上から2つめの青海波」のように口でも指せる。
+   濃さはPNGに焼き込んである（線 #281c10・アルファ40/255）ので、
+   CSSは重ねるだけ。色を変えたいときはタイルを作り直す
+   （生成スクリプトは Pillow・4倍で描いて縮小・タイルの外側まで描いて継ぎ目を消す）。
+   ::before は忍具のアイコン、::after は選択中の印で埋まっているので、
+   擬似要素ではなく背景のレイヤーとして敷く（中身より下に来るのもこちらが確実）。
+   ============================================================ */
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice) {
+  --nk-opt-pattern:url('/assets/images/ninja/patterns/opt-shippou.png');
+  background:var(--nk-opt-pattern) center/56px 56px repeat, #fff;
+}
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(2) {
+  --nk-opt-pattern:url('/assets/images/ninja/patterns/opt-seigaiha.png');
+}
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(3) {
+  --nk-opt-pattern:url('/assets/images/ninja/patterns/opt-asanoha.png');
+}
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(4) {
+  --nk-opt-pattern:url('/assets/images/ninja/patterns/opt-uroko.png');
 }
