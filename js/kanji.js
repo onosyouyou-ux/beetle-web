@@ -184,7 +184,8 @@
 
     var options = el('div', 'kj-options');
     q.options.forEach(function (o) {
-      var b = el('button', 'kj-opt', o.v);
+      var b = el('button', 'kj-opt');
+      b.appendChild(el('span', 'nk-answer-label', o.v));
       b.type = 'button';
       b.addEventListener('click', function () { choose(o, b, options); });
       options.appendChild(b);

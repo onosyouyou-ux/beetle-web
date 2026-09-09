@@ -218,7 +218,7 @@
         '</div>' +
         '<div class="kt-choices' + (q.type === 'dotchi' ? ' is-two' : '') + '">' +
           choices.map(function (c) {
-            return '<button type="button" class="kt-choice" data-key="' + esc(c.key) + '">' + esc(c.label) + '</button>';
+            return '<button type="button" class="kt-choice" data-key="' + esc(c.key) + '"><span class="nk-answer-label">' + esc(c.label) + '</span></button>';
           }).join('') +
         '</div>' +
         '<div class="kt-answer" id="kt-answer"></div>' +

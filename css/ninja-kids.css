@@ -2268,6 +2268,27 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids.ninja-tokei .tk-answer-label { font-size:clamp(16px,2.2vw,20px); }
 }
 
+/* 全修行アプリの文字回答：忍具＋左揃え（2026-09-09）。 */
+.ninja-kids :is(.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kj-opt,.kt-choice,.rj-choice,.pn-choice) {
+  display:flex; align-items:center; justify-content:flex-start;
+  padding:12px 20px; gap:12px; text-align:left;
+}
+.ninja-kids :is(.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kj-opt,.kt-choice,.rj-choice,.pn-choice)::before {
+  content:''; position:static; width:48px; height:48px; flex:0 0 48px;
+  border-radius:0; box-shadow:none;
+  background:transparent var(--nk-answer-icon) center/contain no-repeat;
+}
+.ninja-kids :is(.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(1) { --nk-answer-icon:url('/assets/images/ninja/tokei-ui/kunai.webp'); }
+.ninja-kids :is(.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(2) { --nk-answer-icon:url('/assets/images/ninja/tokei-ui/shuriken.webp'); }
+.ninja-kids :is(.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(2)::before { rotate:45deg; }
+.ninja-kids :is(.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(3) { --nk-answer-icon:url('/assets/images/ninja/tokei-ui/scroll.webp'); }
+.ninja-kids :is(.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(4) { --nk-answer-icon:url('/assets/images/ninja/tokei-ui/smoke.webp'); }
+.ninja-kids .nk-answer-label { min-width:0; overflow-wrap:anywhere; }
+@media (max-width:767px), (orientation:landscape) and (max-height:500px) {
+  .ninja-kids :is(.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kj-opt,.kt-choice,.rj-choice,.pn-choice) { padding:8px 12px; gap:8px; }
+  .ninja-kids :is(.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kj-opt,.kt-choice,.rj-choice,.pn-choice)::before { width:36px; height:36px; flex-basis:36px; }
+}
+
 /* 選択肢の通し番号（2026-08-26）。
    「2ばんめの やつ」と口で言えるように、1問ごとに 1 から振り直して左上に出す。
    文字は中央ぞろえのままにしたいので、番号は絶対配置にしてレイアウトに影響させない。 */
@@ -2277,7 +2298,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice) {
   position:relative;
 }
-.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice)::before {
+:where(.ninja-kids) :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice)::before {
   counter-increment:nk-opt;
   content:counter(nk-opt);
   display:grid;

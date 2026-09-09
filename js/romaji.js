@@ -239,7 +239,7 @@
       body =
         '<div class="rj-choices' + (q.type === 'futatsu' ? ' is-two' : '') + '">' +
           q.choices.map(function (c) {
-            return '<button type="button" class="rj-choice" data-key="' + esc(c) + '">' + esc(c) + '</button>';
+            return '<button type="button" class="rj-choice" data-key="' + esc(c) + '"><span class="nk-answer-label">' + esc(c) + '</span></button>';
           }).join('') +
         '</div>';
     }

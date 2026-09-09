@@ -175,7 +175,7 @@
         '</div>' +
         '<div class="pn-choices">' +
           q.choices.map(function (c) {
-            return '<button type="button" class="pn-choice" data-key="' + esc(c) + '">' + esc(c) + '</button>';
+            return '<button type="button" class="pn-choice" data-key="' + esc(c) + '"><span class="nk-answer-label">' + esc(c) + '</span></button>';
           }).join('') +
         '</div>' +
         '<div class="pn-answer" id="pn-answer"></div>' +
