@@ -670,7 +670,13 @@ body::after {
 }
 .sa-cherry-ball.is-filled { background: #e6f7ee; color: #2f9469; box-shadow: none; }
 .sa-cherry-ball.is-target.is-filled { box-shadow: 0 0 0 3px #7ad0a8; }
+/* 「8 と あわせて 10」の注記。nowrap のまま行に並べると左の玉の列が
+   50px→86px に広がり、式が問題パネルからはみ出す（2026-09-09 実測）。
+   幅を0にして絵の中心から左右へこぼれさせ、玉の並びの幅は玉だけで決める。 */
 .sa-cherry-cap {
+  width: 0;
+  overflow: visible;
+  text-align: center;
   font-size: 11px;
   font-weight: 800;
   color: #d98b12;

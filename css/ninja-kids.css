@@ -1389,6 +1389,12 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem>* {
     flex:0 0 auto;
   }
+  /* さくらんぼ算は「a ＋ さくらんぼ ＝ ?」で式が長い。既定の .9fr では
+     問題パネルに入りきらず「8 ＋」が枠の外へこぼれていた（2026-09-09 実測）。
+     この型のときだけ問題側の列を広げる。 */
+  .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card):has(.sa-problem-cherry) {
+    grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);
+  }
 }
 /* Kanji board: fixed play frame. */
 @media (min-width:768px) {
@@ -2533,4 +2539,52 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 @media (max-width:767px) {
   .nk-links { margin-top:20px; }
   .nk-links-list { gap:10px; }
+}
+
+
+/* ============================================================
+   2択の盤面は「問題を上・こたえを下」に積む（2026-09-09決定）
+   ------------------------------------------------------------
+   左右2カラムだと、右半分に短いボタンが2つ浮いて余白ばかりが目立ち、
+   「文を読む → えらぶ」の流れも左右に折れる。2択のときだけ縦に積む。
+   対象：カタカナ修行「どっちで かく？」「にた字 みつけ」、
+         ローマ字修行「ふたつの 書きかた」（3択・4択は2カラムのまま）。
+   寝かせた画面（max-height:500px）は高さが足りないので対象外＝2カラムのまま。
+   ============================================================ */
+@media (min-width:768px) and (min-height:501px) {
+  .ninja-kids :is(.kt-quiz,.rj-quiz,.pn-quiz):has(:is(.kt-choices,.rj-choices,.pn-choices).is-two) {
+    grid-template-columns:minmax(0,1fr);
+    grid-template-rows:auto auto auto auto;
+    /* 縦に積むぶん問題の箱は低くする。字の大きさもここから決める（px直書きしない） */
+    --nk-qh-stack:clamp(150px,24dvh,240px);
+  }
+  /* 子要素は明示指定を持っているので、1カラム側でも1つずつ置きなおす */
+  .ninja-kids :is(.kt-quiz,.rj-quiz,.pn-quiz):has(:is(.kt-choices,.rj-choices,.pn-choices).is-two)
+    >:is(.kt-bar,.rj-bar,.pn-bar) { grid-column:1; grid-row:1; }
+  .ninja-kids :is(.kt-quiz,.rj-quiz,.pn-quiz):has(:is(.kt-choices,.rj-choices,.pn-choices).is-two)
+    >:is(.kt-q,.rj-q,.pn-q) {
+    grid-column:1;
+    grid-row:2;
+    min-height:var(--nk-qh-stack);
+  }
+  /* 1字だけの問題（にた字 みつけ・ふたつの かきかた）は --nk-qh（312px）から
+     字の大きさを取ると 118px になり、全幅の箱では大きすぎる。低くした箱に合わせる。 */
+  .ninja-kids :is(.kt-quiz,.rj-quiz,.pn-quiz):has(:is(.kt-choices,.rj-choices,.pn-choices).is-two)
+    :is(.kt-q-word,.rj-q-word,.pn-q-word).is-big {
+    font-size:calc(var(--nk-qh-stack) * .30);
+  }
+  .ninja-kids :is(.kt-quiz,.rj-quiz,.pn-quiz)
+    >:is(.kt-choices,.rj-choices,.pn-choices).is-two {
+    grid-column:1;
+    grid-row:3;
+    min-height:0;
+    align-content:start;
+  }
+  .ninja-kids :is(.kt-quiz,.rj-quiz,.pn-quiz):has(:is(.kt-choices,.rj-choices,.pn-choices).is-two)
+    >:is(.kt-answer,.rj-answer,.pn-answer) { grid-column:1; grid-row:3; }
+  /* こたえあわせは、問題と選択肢の2行ぶんに重ねる（選択肢は visibility:hidden で場所だけ残る） */
+  .ninja-kids :is(.kt-quiz,.rj-quiz,.pn-quiz):has(:is(.kt-choices,.rj-choices,.pn-choices).is-two)
+    >:is(.kt-answer,.rj-answer,.pn-answer).is-on { grid-column:1; grid-row:2 / 4; }
+  .ninja-kids :is(.kt-quiz,.rj-quiz,.pn-quiz):has(:is(.kt-choices,.rj-choices,.pn-choices).is-two)
+    >:is(.kt-back,.rj-back,.pn-back) { grid-column:1; grid-row:4; }
 }
