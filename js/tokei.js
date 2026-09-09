@@ -478,7 +478,8 @@
       wrap.appendChild(stage);
       options.classList.add('is-text');
       q.options.forEach(function (o) {
-        var b = el('button', 'tk-opt', answerText(o, hands));
+        var b = el('button', 'tk-opt');
+        b.appendChild(el('span', 'tk-answer-label', answerText(o, hands)));
         b.type = 'button';
         b.addEventListener('click', function () { choose(o, b, options); });
         options.appendChild(b);
