@@ -187,7 +187,7 @@
 
   /* ながい はりだけ。5ふんきざみに固定する。
      1ぷんきざみは いちばん上の段（りょうほうの はり）にまかせて、
-     ここは「すう字を 5ばい する」だけに集中させる。 */
+     ここは「12から 5とびで かぞえる」だけに集中させる。 */
   function makeMinuteHandQuestion() {
     var m = randInt(0, 11) * 5;
     var answer = { h: 12, m: m };
@@ -260,11 +260,11 @@
         lines.push('ながい はり（あおいはり）だけの とけいだよ。さして いる すう字を 見よう。');
         lines.push(m === 0
           ? '「12」を さして いる ときは 0ぷん（ちょうど）だよ。'
-          : 'すう字を 5ばい すると 「ぷん」。いまは 「' + (m / 5) + '」を さして いるね。');
+          : '「12」から 右まわりに 5・10・15… と 5とびで かぞえて いくよ。いまは 「' + (m / 5) + '」の ところまで きて いるね。');
       } else {
         lines.push(m === 0
           ? '0ぷん の ながい はり（あおいはり）は 「12」を さすよ。'
-          : '「' + m + punOf(m) + '」は 5で わると 「' + (m / 5) + '」。ながい はりが その すう字を さす とけいを さがそう。');
+          : '「12」から 5・10・15… と 5とびで かぞえて 「' + m + punOf(m) + '」に なるのは 「' + (m / 5) + '」の ところ。ながい はりが その すう字を さす とけいを さがそう。');
         lines.push('ぎゃくまわりに かぞえないように、「12」から 右まわりで たしかめよう。');
       }
       return lines;
@@ -277,7 +277,7 @@
       if (m === 0) {
         lines.push('ながい はり（あおいはり）は 「12」。ちょうど の とけいだね。');
       } else if (m % 5 === 0) {
-        lines.push('ながい はり（あおいはり）が さす すう字を 5ばい すると 「ぷん」。いまは 「' + (m / 5) + '」を さして いるよ。');
+        lines.push('ながい はり（あおいはり）は 「12」から 右まわりに 5・10・15… と 5とびで かぞえるよ。いまは 「' + (m / 5) + '」の ところ。');
       } else {
         lines.push('ながい はり（あおいはり）は 「' + Math.floor(m / 5) + '」を すぎた ところ。'
           + '「' + (Math.floor(m / 5) * 5) + punOf(Math.floor(m / 5) * 5) + '」から めもりを 1つずつ かぞえて みよう。');
@@ -289,7 +289,7 @@
       lines.push(m === 0
         ? 'ながい はり（あおいはり）は 「12」を さして いるよ。'
         : m % 5 === 0
-          ? '「' + m + punOf(m) + '」は 5で わると 「' + (m / 5) + '」。ながい はり（あおいはり）は その すう字を さすよ。'
+          ? '「12」から 5とびで かぞえて 「' + m + punOf(m) + '」に なるのは 「' + (m / 5) + '」の ところ。ながい はり（あおいはり）は その すう字を さすよ。'
           : '「' + m + punOf(m) + '」は 「' + (Math.floor(m / 5) * 5) + punOf(Math.floor(m / 5) * 5) + '」から めもり ' + (m % 5) + 'つぶん さき。ながい はりの さきを よく 見よう。');
     }
     return lines;
@@ -347,6 +347,12 @@
     img.height = 28;
     return img;
   }
+  // 手裏剣の絵（56pxのWebP。もとの絵は 1254px の透過PNG）。
+  // 色を塗り分けるのではなく、光っている／いないで別の画像にしている。
+  var SHURIKEN_SRC = {
+    on: '/assets/images/ninja/shuriken-on.webp',
+    off: '/assets/images/ninja/shuriken-off.webp'
+  };
 
   // なんいどは手裏剣の数で見せる（全部で total 枚、うち level 枚が光る）。
   // 数字も文字も読まずに「どれが やさしいか」が分かるようにするため。
@@ -354,9 +360,15 @@
     var box = el('span', 'tk-level');
     box.setAttribute('aria-hidden', 'true');
     for (var i = 1; i <= total; i++) {
-      var one = el('span', i <= level ? 'tk-shuriken is-on' : 'tk-shuriken');
-      one.appendChild(toolIcon('shuriken'));
-      box.appendChild(one);
+      var on = i <= level;
+      var img = document.createElement('img');
+      img.className = on ? 'tk-shuriken is-on' : 'tk-shuriken';
+      img.src = on ? SHURIKEN_SRC.on : SHURIKEN_SRC.off;
+      img.width = 19;
+      img.height = 19;
+      img.alt = '';
+      img.decoding = 'async';
+      box.appendChild(img);
     }
     return box;
   }
