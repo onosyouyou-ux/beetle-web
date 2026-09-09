@@ -1281,7 +1281,9 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 /* パネルが盤面を覆うので、はみ出した選択肢のふちが下から覗かないように隠す */
 .ninja-kids :is(.kt-quiz,.rj-quiz,.pn-quiz):has(:is(.kt-answer,.rj-answer,.pn-answer).is-on)
   :is(.kt-choices,.rj-choices,.rj-type,.pn-choices) { visibility:hidden; }
-/* こたえあわせパネル: 盤面いっぱいの横長で、イラスト左・説明右・ボタン下（2026-09-02） */
+/* こたえあわせパネル: 盤面いっぱいの横長で、イラスト左・説明右・ボタン下（2026-09-02）。
+   文字は説明のエリアの中央にそろえる（2026-09-09）。左詰めだと行の長さがばらつき、
+   パネルの中央に置いた「つぎのもんだい」とも軸がずれて落ち着かなかった。 */
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on {
   grid-column:1 / -1;
   grid-row:2;
@@ -1289,13 +1291,13 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   grid-template-columns:auto minmax(0,auto);
   grid-template-rows:1fr auto;
   align-items:center;
-  justify-items:start;
+  justify-items:center;
   justify-content:center;
   align-content:center;
   column-gap:clamp(14px,2.4vw,30px);
   row-gap:clamp(8px,1.4vw,16px);
   padding:clamp(16px,2.2vw,26px) clamp(18px,3vw,34px);
-  text-align:left;
+  text-align:center;
 }
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before {
   grid-column:1;
@@ -1312,8 +1314,10 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   align-self:center;
 }
 .ninja-kids .nk-a-body>*:last-child { margin-bottom:0; }
+/* ボタンは説明の列の下に置く。パネル全体の中央に置くと、絵のぶん左にずれた
+   文字の軸と合わず、ちぐはぐに見えた（2026-09-09）。 */
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on>:is(.kt-next,.rj-next,.pn-a-btns) {
-  grid-column:1 / -1;
+  grid-column:2;
   grid-row:2;
   justify-self:center;
   margin:0;
