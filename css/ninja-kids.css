@@ -1917,6 +1917,15 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   height:auto;
   aspect-ratio:1;
 }
+/* 幅のある画面では、絵を2行ぶん（説明＋ボタン）にまたがらせて大きくする。
+   1行目だけに置くとボタンの左が空いて、パネルの左下だけがぽっかり空いていた（2026-09-09）。
+   寝かせた画面は高さが足りないので対象外。 */
+@media (min-width:768px) and (min-height:501px) {
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before {
+    grid-row:1 / -1;
+    width:clamp(150px,26dvh,250px);
+  }
+}
 
 /* ヒーローが薄い側にかかっても読めるよう、以前はモバイルだけ暗い下地を敷いていた。
    ボタン自体をオレンジの塗りにした（2026-08-26）ので下地は不要。 */
