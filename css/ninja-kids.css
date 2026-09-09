@@ -2206,6 +2206,37 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 .ninja-kids.ninja-kanji .nk-doc-ref { color:#c7d5d8; }
 .ninja-kids.ninja-kanji .nk-doc-ref a { color:#ffad92; }
 
+/* とけい修行の忍具と進行表示（2026-09-09） */
+.ninja-kids.ninja-tokei .tk-tool-icon { width:28px; height:28px; object-fit:contain; flex:none; }
+.ninja-kids.ninja-tokei .tk-shuriken .tk-tool-icon { width:100%; height:100%; filter:grayscale(1); opacity:.23; }
+.ninja-kids.ninja-tokei .tk-shuriken.is-on .tk-tool-icon { filter:none; opacity:1; }
+.ninja-kids.ninja-tokei .tk-play>.tk-play-head {
+  display:flex; flex-wrap:wrap; gap:5px 12px; align-items:center;
+  padding:5px 12px; border-inline:4px solid #bda278; border-radius:8px;
+  background:#eee3ce; color:#173f5f;
+}
+.ninja-kids.ninja-tokei :is(.tk-play-count,.tk-play-score) { display:flex; align-items:center; gap:6px; white-space:nowrap; }
+.ninja-kids.ninja-tokei .tk-play-score { margin-left:auto; }
+.ninja-kids.ninja-tokei .tk-progress-marks { display:flex; justify-content:center; flex-basis:100%; gap:6px; }
+.ninja-kids.ninja-tokei .tk-progress-marks i { width:8px; height:5px; border-radius:3px; background:#cbbfa9; }
+.ninja-kids.ninja-tokei .tk-progress-marks .is-done { background:#173f5f; }
+.ninja-kids.ninja-tokei .tk-progress-marks .is-current { background:var(--nk-accent); }
+.ninja-kids.ninja-tokei .tk-play-score.is-celebrating img { animation:tk-earned .45s ease-out; }
+@keyframes tk-earned { 50% { transform:translateY(-5px) rotate(30deg) scale(1.15); } }
+@media (prefers-reduced-motion:reduce) { .ninja-kids.ninja-tokei .tk-play-score.is-celebrating img { animation:none; } }
+.ninja-kids.ninja-tokei .tk-result { color:#fff4dd; }
+.ninja-kids.ninja-tokei .tk-result .tk-result-msg { color:#e6d7bd; }
+.ninja-kids.ninja-tokei .tk-result>.tk-start { width:min(100%,320px); margin:20px auto 0; }
+.ninja-kids.ninja-tokei .tk-result>.tk-back { margin:24px auto 0; padding:8px 12px; color:#e6d7bd; }
+.ninja-kids.ninja-tokei .tk-options>.tk-opt::before {
+  content:''; width:28px; height:28px; border-radius:0; box-shadow:none;
+  background:transparent var(--tk-option-icon) center/contain no-repeat;
+}
+.ninja-kids.ninja-tokei .tk-opt:nth-child(1) { --tk-option-icon:url('/assets/images/ninja/tokei-ui/kunai.webp'); }
+.ninja-kids.ninja-tokei .tk-opt:nth-child(2) { --tk-option-icon:url('/assets/images/ninja/tokei-ui/shuriken.webp'); }
+.ninja-kids.ninja-tokei .tk-opt:nth-child(3) { --tk-option-icon:url('/assets/images/ninja/tokei-ui/scroll.webp'); }
+.ninja-kids.ninja-tokei .tk-opt:nth-child(4) { --tk-option-icon:url('/assets/images/ninja/tokei-ui/smoke.webp'); }
+
 /* 選択肢の通し番号（2026-08-26）。
    「2ばんめの やつ」と口で言えるように、1問ごとに 1 から振り直して左上に出す。
    文字は中央ぞろえのままにしたいので、番号は絶対配置にしてレイアウトに影響させない。 */

@@ -339,10 +339,14 @@
     app.appendChild(NinjaLinks.el('tokei'));
   }
 
-  // 手裏剣1枚。中心の穴は fill-rule="evenodd" で抜いている
-  var SHURIKEN_SVG = '<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">'
-    + '<path fill-rule="evenodd" d="M12 1 17.2 6.8 23 12 17.2 17.2 12 23 6.8 17.2 1 12 6.8 6.8Z'
-    + 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/></svg>';
+  function toolIcon(name) {
+    var img = el('img', 'tk-tool-icon');
+    img.src = '/assets/images/ninja/tokei-ui/' + name + '.webp';
+    img.alt = '';
+    img.width = 28;
+    img.height = 28;
+    return img;
+  }
 
   // なんいどは手裏剣の数で見せる（全部で total 枚、うち level 枚が光る）。
   // 数字も文字も読まずに「どれが やさしいか」が分かるようにするため。
@@ -351,7 +355,7 @@
     box.setAttribute('aria-hidden', 'true');
     for (var i = 1; i <= total; i++) {
       var one = el('span', i <= level ? 'tk-shuriken is-on' : 'tk-shuriken');
-      one.innerHTML = SHURIKEN_SVG;
+      one.appendChild(toolIcon('shuriken'));
       box.appendChild(one);
     }
     return box;
@@ -431,8 +435,20 @@
     var wrap = el('div', 'tk-play');
 
     var head = el('div', 'tk-play-head');
-    head.appendChild(el('span', 'tk-play-count', (s.index + 1) + ' / ' + SET_LENGTH));
-    head.appendChild(el('span', 'tk-play-score', 'せいかい ' + s.correct));
+    var count = el('span', 'tk-play-count');
+    count.appendChild(toolIcon('scroll'));
+    count.appendChild(el('span', null, '第' + (s.index + 1) + '問 / 全' + SET_LENGTH + '問'));
+    head.appendChild(count);
+    var score = el('span', 'tk-play-score');
+    score.appendChild(toolIcon('shuriken'));
+    score.appendChild(el('span', 'tk-score-text', 'できた！ ' + s.correct + '問'));
+    head.appendChild(score);
+    var trail = el('span', 'tk-progress-marks');
+    trail.setAttribute('aria-hidden', 'true');
+    for (var mark = 0; mark < SET_LENGTH; mark++) {
+      trail.appendChild(el('i', mark < s.index ? 'is-done' : mark === s.index ? 'is-current' : ''));
+    }
+    head.appendChild(trail);
     wrap.appendChild(head);
 
     var bar = el('div', 'tk-bar');
@@ -503,7 +519,11 @@
     var q = s.q;
     var hands = s.hands;
     var ok = chosen.h === q.answer.h && chosen.m === q.answer.m;
-    if (ok) s.correct++;
+    if (ok) {
+      s.correct++;
+      app.querySelector('.tk-score-text').textContent = 'できた！ ' + s.correct + '問';
+      app.querySelector('.tk-play-score').classList.add('is-celebrating');
+    }
 
     Array.prototype.forEach.call(options.querySelectorAll('.tk-opt'), function (b, i) {
       b.disabled = true;
