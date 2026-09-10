@@ -9,13 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPartial('site-header', '/partials/header.html').then(() => {
     const path = location.pathname;
 
-    // グローバルメニュー（トップ・QA支援・教育支援・コラム）は全画面共通のテキストリンク
+    // グローバルメニュー（トップ・QA支援・教育支援・アプリ・コラム）は全画面共通のテキストリンク
     // （2026-07-15にボタン→テキスト化）。現在ページのリンクに aria-current を付与して色替え
     const currentHref =
       path === '/' || path === '/index.html' ? '/'
       : path.startsWith('/blog/') ? '/blog/'
       : path === '/test-tools.html' ? '/test-tools.html'
       : path === '/edu-tools.html' ? '/edu-tools.html'
+      : path === '/apps.html' ? '/apps.html'
       : null;
     if (currentHref) {
       const link = document.querySelector(`.nav-links a[href="${currentHref}"]`);
@@ -33,6 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
         ['#column', '検証コラム'],
         ['#services', 'QAサービス'],
         ['#contact', 'お問い合わせ'],
+      ],
+      '/apps.html': [
+        ['#kids', 'こども'],
+        ['#teacher', '先生'],
+        ['#qa-apps', '検証ツール'],
+        ['#qa-ref', 'リファレンス'],
       ],
       '/edu-tools.html': [
         ['#cando', 'できること'],

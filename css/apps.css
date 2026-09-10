@@ -1,0 +1,9 @@
+/* apps.html — アプリ・ツールの全部入り一覧（2026-09-10）
+   カードとグリッドは test-tools.css を流用し、ここでは差分だけ持つ。 */
+.apps-foot {
+  text-align: center;
+  font-size: 14px;
+  color: #55555f;
+  line-height: 2;
+}
+.apps-foot a { color: var(--color-accent); font-weight: 700; }
