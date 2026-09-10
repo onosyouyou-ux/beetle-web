@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>その正規表現、本当にマッチしますか。日本向けパターン集つきの無料テスターを作った | BEETLE</title>
+<meta name="description" content="メールアドレス・電話番号・郵便番号の正規表現を、検索でコピーしてそのまま貼っていませんか。日本の入力でよく使うパターン集と、その場で文字列を当てて確認できるテスターをまとめた無料ツールの話。登録不要、ブラウザの中だけで動きます。">
+<link rel="canonical" href="https://www.beetle-web.jp/blog/posts/regex-tester.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="その正規表現、本当にマッチしますか。日本向けパターン集つきの無料テスターを作った | BEETLE">
+<meta property="og:description" content="検索で拾った正規表現をそのまま貼ると、通ってほしい入力が弾かれます。日本向けのパターン集と、その場で試せるテスターをまとめた無料ツールです。">
+<meta property="og:url" content="https://www.beetle-web.jp/blog/posts/regex-tester.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/blog/qa-column-hero.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="675">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="その正規表現、本当にマッチしますか。日本向けパターン集つきの無料テスターを作った | BEETLE合同会社">
+<meta name="twitter:description" content="検索で拾った正規表現をそのまま貼ると、通ってほしい入力が弾かれます。日本向けのパターン集と、その場で試せるテスターをまとめた無料ツールです。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/blog/qa-column-hero.jpg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"その正規表現、本当にマッチしますか。日本向けパターン集つきの無料テスターを作った","datePublished":"2026-09-10","dateModified":"2026-09-10","description":"メール・電話番号・郵便番号など日本の入力でよく使う正規表現のパターン集と、その場でマッチを確認できるテスターをまとめた無料ツールの紹介。","image":"https://www.beetle-web.jp/assets/images/blog/qa-column-hero.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/regex-tester.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"その正規表現、本当にマッチしますか。日本向けパターン集つきの無料テスターを作った","item":"https://www.beetle-web.jp/blog/posts/regex-tester.html"}]}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-09-10</span>
+        <span class="post-tag qa">QA</span>
+      </div>
+      <h1 class="post-h1">その正規表現、本当にマッチしますか。日本向けパターン集つきの無料テスターを作った</h1>
+    </div>
+
+    <img class="post-eyecatch" src="/assets/images/blog/qa-column-hero.jpg" width="1200" height="675" alt="BEETLEのQA支援・無料QAテストツールのバナー">
+
+    <div class="post-body">
+      <p class="lead">入力チェックの不具合を追っていると、だいたい同じところに行き着きます。「正規表現、どこかからコピーしてきましたよね？」</p>
+
+      <p>悪気はないんです。メールアドレスの正規表現なんて、毎回書きたいものではありません。検索して、上に出てきたものを貼る。動いているように見える。レビューでも誰も読まない。そうやって、本番で <code>foo+bar@example.co.jp</code> が弾かれます。</p>
+
+      <h2>「動いているように見える」がいちばん厄介です</h2>
+
+      <p>正規表現の怖いところは、間違っていても<strong>ふつうの入力では通ってしまう</strong>ことです。<code>tanaka@example.com</code> は何を貼っても通ります。落ちるのは、プラス記号の入ったアドレス、長いドメイン、ハイフン入りの会社名。つまり、実際に使っている人のごく一部です。</p>
+
+      <p>QAの目で見ると、これは典型的な「代表値だけ確認して通ったつもりになる」パターンです。テスト設計で境界値や異常系を並べるのと同じことを、正規表現にもやる必要があります。ところが、そのための場所が意外とない。エディタで確かめるには実装に組み込むしかなく、オンラインのテスターは英語圏の例ばかりで、日本の電話番号や郵便番号は自分で書くことになります。</p>
+
+      <h2>パターン集と、その場で試す欄をひとつにしました</h2>
+
+      <p>作ったのは<a href="/tools/regex-tester/">正規表現テスター</a>です。日本の入力でよく使うパターンを並べておいて、押すとテスターに入る形にしました。</p>
+
+      <ul>
+        <li><strong>メールアドレス</strong>・<strong>電話番号</strong>（ハイフンあり／なし）・<strong>郵便番号</strong>・<strong>URL</strong></li>
+        <li><strong>ひらがなだけ</strong>・<strong>カタカナだけ</strong>・<strong>半角英数字だけ</strong></li>
+        <li><strong>全角文字を見つける</strong>・<strong>前後の空白を見つける</strong></li>
+      </ul>
+
+      <p>下のテスターに文字列を入れると、マッチしたところが色で出ます。パターンとフラグはその場で書き換えられるので、「この会社のドメインだと落ちる」を確かめてから直せます。</p>
+
+      <h2>無料・登録不要。ファイルはどこにも送りません</h2>
+
+      <p>業務で使う道具なので、そこが気になると思います。</p>
+
+      <ul>
+        <li><strong>無料</strong> … 課金も回数制限もありません</li>
+        <li><strong>登録不要</strong> … アカウントもメールアドレスも要りません</li>
+        <li><strong>ブラウザの中だけで動きます</strong> … 生成も判定も、その端末の上で完結します。サーバーには何も送っていません</li>
+        <li><strong>インストール不要</strong> … 会社のPCに何かを入れる稟議は要りません</li>
+      </ul>
+
+      <h2>試すべきなのは、通る入力ではありません</h2>
+
+      <p>使うときのコツをひとつ。<strong>通ってほしい入力を1つ入れて満足しないこと</strong>です。見るべきなのは、次の3種類です。</p>
+
+      <ul>
+        <li><strong>通ってほしいのに落ちるもの</strong> … プラス記号つきのメール、ハイフンなしの電話番号、長いドメイン。ここが実害の出る側です</li>
+        <li><strong>落ちてほしいのに通るもの</strong> … 全角の混ざった数字、前後に空白がついた入力、途中に改行が入ったもの</li>
+        <li><strong>境界</strong> … 桁数の下限と上限、そのひとつ外側</li>
+      </ul>
+
+      <p>とくに<strong>前後の空白</strong>は、コピー＆ペーストで日常的に混ざります。「なぜか登録できない」の問い合わせを追うと、末尾に半角スペースがひとつ付いていた、というのは何度も見ました。空白を見つけるパターンを用意してあるのは、そのためです。</p>
+
+      <h2>正直に書くと、正規表現で完全な検証はできません</h2>
+
+      <p>メールアドレスを厳密に判定する正規表現は、現実には使いものになりません。規格どおりに書くと、とても人が読めない長さになります。実務では「明らかにおかしいものを弾く」までに留めて、本当に届くかどうかは確認メールで確かめる、という切り分けのほうが安全です。</p>
+
+      <p>このツールのパターンも、その方針で書いています。厳密さより、<strong>通ってほしい人を弾かないこと</strong>を優先しています。</p>
+
+      <h2>コピーする前に、1分だけ試す</h2>
+
+      <p>検索して出てきた正規表現をそのまま貼るのは、他人が書いたテストケースを読まずに合格印を押すのに似ています。1分で確かめられる場所があれば、たいていの事故はそこで止まります。</p>
+
+      <p>入力チェックまわりのテスト観点そのものは<a href="/tools/test-patterns/">TESTパターン集</a>に、用語の確認は<a href="/tools/glossary/">QA・バグ用語辞典</a>にまとめてあります。あわせてどうぞ。</p>
+
+    </div>
+
+    <div class="post-cta">
+      <p>無料・登録不要。日本向けのパターン集と、その場でマッチを確かめられるテスターです。</p>
+      <a class="post-cta-btn" href="/tools/regex-tester/">正規表現テスターを使ってみる</a>
+    </div>
+
+    <div class="post-related">
+      <p class="post-related-title">関連記事</p>
+      <ul class="post-related-list">
+        <li><a href="/blog/posts/input-check-frontend.html">入力チェックはフロントだけじゃ足りない</a></li>
+        <li><a href="/blog/posts/csv-leading-zero.html">CSVの先頭ゼロが消える</a></li>
+        <li><a href="/blog/posts/repro-steps.html">バグ報告の書き方 — 「再現しません」で突き返されないために</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>

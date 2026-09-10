@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10MBのPDFを、どこから持ってきますか。テスト用のダミーファイルを作る無料ツール | BEETLE</title>
+<meta name="description" content="アップロード上限のテストで、手元にちょうどいいサイズのファイルがない。実ファイルを使い回すと個人情報が混ざる。PNG・PDF・Excel・動画など19形式を、1KBから10MBまでサイズ指定でその場で作れる無料のダミーファイル生成ツールの話。登録不要、ブラウザの中だけで生成します。">
+<link rel="canonical" href="https://www.beetle-web.jp/blog/posts/dummy-file-generator.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="10MBのPDFを、どこから持ってきますか。テスト用のダミーファイルを作る無料ツール | BEETLE">
+<meta property="og:description" content="アップロード上限のテストで、ちょうどいいサイズのファイルが手元にない。19形式・1KB〜10MBをその場で作れる、無料・登録不要のダミーファイル生成ツールです。">
+<meta property="og:url" content="https://www.beetle-web.jp/blog/posts/dummy-file-generator.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/blog/qa-column-hero.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="675">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="10MBのPDFを、どこから持ってきますか。テスト用のダミーファイルを作る無料ツール | BEETLE合同会社">
+<meta name="twitter:description" content="アップロード上限のテストで、ちょうどいいサイズのファイルが手元にない。19形式・1KB〜10MBをその場で作れる、無料・登録不要のダミーファイル生成ツールです。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/blog/qa-column-hero.jpg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"10MBのPDFを、どこから持ってきますか。テスト用のダミーファイルを作る無料ツール","datePublished":"2026-09-10","dateModified":"2026-09-10","description":"アップロード検証で使うテスト用ファイルを、19形式・1KB〜10MBでその場で生成できる無料ツールの紹介。実ファイルの使い回しをやめるための道具。","image":"https://www.beetle-web.jp/assets/images/blog/qa-column-hero.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/dummy-file-generator.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"10MBのPDFを、どこから持ってきますか。テスト用のダミーファイルを作る無料ツール","item":"https://www.beetle-web.jp/blog/posts/dummy-file-generator.html"}]}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-09-10</span>
+        <span class="post-tag qa">QA</span>
+      </div>
+      <h1 class="post-h1">10MBのPDFを、どこから持ってきますか。テスト用のダミーファイルを作る無料ツール</h1>
+    </div>
+
+    <img class="post-eyecatch" src="/assets/images/blog/qa-column-hero.jpg" width="1200" height="675" alt="BEETLEのQA支援・無料QAテストツールのバナー">
+
+    <div class="post-body">
+      <p class="lead">アップロードの上限が10MBだと仕様書に書いてある。では、それを確かめるための10MBのPDFは、どこから持ってきますか。</p>
+
+      <p>この質問、テストの現場では毎回出ます。そして毎回、誰かのデスクトップにある実ファイルが使われます。去年の請求書。社内報のPDF。前の案件のスクリーンショット。動くことは動くのですが、これは静かに危ない橋です。</p>
+
+      <h2>実ファイルの使い回しは、二重に事故ります</h2>
+
+      <p>ひとつは中身の問題です。テスト環境とはいえ、実在の個人名や取引先名が入ったファイルをアップロードすると、それはもうテストデータではありません。スクリーンショットを不具合票に貼った瞬間に、チケットへ流出します。</p>
+
+      <p>もうひとつは、サイズが目的の値ぴったりにならないことです。上限が10MBなら、確かめたいのは<strong>ちょうど10MB</strong>と<strong>10MBを少し超えたもの</strong>です。手元にあるのは 8.3MB と 12.7MB。境界に立てないまま「まあ通ったからOK」で終わります。境界値でしか出ないバグは、だいたいこうして残ります。</p>
+
+      <p>探す時間も馬鹿になりません。「大きいファイル 何か持ってない？」とチャットで聞いて、返事を待って、共有ドライブから落として。1回5分としても、テストのたびに発生します。</p>
+
+      <h2>サイズと形式を選んで、その場で作る</h2>
+
+      <p>作ったのは<a href="/tools/test-content/">ダミーファイル生成ツール</a>です。形式とサイズを選ぶと、その場でファイルができてダウンロードされます。</p>
+
+      <ul>
+        <li><strong>画像</strong> … PNG・JPEG・SVG・GIF</li>
+        <li><strong>書類</strong> … PDF・Excel（xlsx）・Word（docx）・CSV・テキスト</li>
+        <li><strong>メディアほか</strong> … 動画・音声・ZIP など。あわせて19形式</li>
+        <li><strong>サイズ</strong> … 1KB・10KB・100KB・500KB・1MB・5MB・10MB から選択</li>
+      </ul>
+
+      <p>Excel と Word は、拡張子だけ変えた偽物ではなく、実際に開ける形で作っています。「拡張子は通ったのに開けない」を検証と切り分けたい場面があるからです。</p>
+
+      <h2>無料・登録不要。ファイルはどこにも送りません</h2>
+
+      <p>業務で使う道具なので、そこが気になると思います。</p>
+
+      <ul>
+        <li><strong>無料</strong> … 課金も回数制限もありません</li>
+        <li><strong>登録不要</strong> … アカウントもメールアドレスも要りません</li>
+        <li><strong>ブラウザの中だけで動きます</strong> … 生成も判定も、その端末の上で完結します。サーバーには何も送っていません</li>
+        <li><strong>インストール不要</strong> … 会社のPCに何かを入れる稟議は要りません</li>
+      </ul>
+
+      <h2>どこで効くか</h2>
+
+      <p>いちばん出番があるのはアップロード周りです。</p>
+
+      <ul>
+        <li><strong>上限の境界</strong> … 上限ぴったりと、そのすぐ上。エラーメッセージが正しく出るか</li>
+        <li><strong>許可されていない形式</strong> … 画像だけ受け付ける欄に、PDFやZIPを渡したときの挙動</li>
+        <li><strong>大きいファイルの途中経過</strong> … 進捗表示、タイムアウト、二重送信の防止</li>
+        <li><strong>一覧・詳細での見え方</strong> … 長いファイル名、日本語のファイル名、サムネイルが作れない形式</li>
+      </ul>
+
+      <p>「大きいファイルを入れたらどうなるか」は、仕様書に書かれないまま実装されることが多い場所です。書いていないから確認されず、確認されないから本番で出ます。道具が手元にあると、確認のハードルがぐっと下がります。</p>
+
+      <h2>正直に書くと、中身は意味のないデータです</h2>
+
+      <p>このツールが作るのは、指定したサイズと形式を満たすだけのファイルです。中の文章や画像に意味はありません。文字コードの検証や、業務データの再現には向きません。</p>
+
+      <p>文字化けや機種依存文字を試したいときは<a href="/tools/test-data/">意地悪テストデータ生成器</a>、日付の境界を突きたいときは<a href="/tools/test-dates/">意地悪な日付ジェネレーター</a>のほうが目的に合います。道具は分けたほうが、どちらも短く済みます。</p>
+
+      <h2>探す時間を、確かめる時間に回したい</h2>
+
+      <p>テストで時間を食うのは、たいてい確認そのものではなく準備のほうです。ファイルを探す、アカウントを作る、データを整える。ここを削ると、同じ工数でも見られる範囲が増えます。</p>
+
+      <p>上限の値をテストするのに、誰かの請求書を使わなくて済むようになるだけでも、作ってよかったと思っています。</p>
+
+    </div>
+
+    <div class="post-cta">
+      <p>無料・登録不要。PNG・PDF・Excel・動画など19形式を、サイズを決めてその場で作れます。</p>
+      <a class="post-cta-btn" href="/tools/test-content/">ダミーファイル生成ツールを使ってみる</a>
+    </div>
+
+    <div class="post-related">
+      <p class="post-related-title">関連記事</p>
+      <ul class="post-related-list">
+        <li><a href="/blog/posts/repro-steps.html">バグ報告の書き方 — 「再現しません」で突き返されないために</a></li>
+        <li><a href="/blog/posts/bug-or-not.html">「これ、バグですか？」って聞くの、しんどくないですか。</a></li>
+        <li><a href="/blog/posts/csv-leading-zero.html">CSVの先頭ゼロが消える</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>
