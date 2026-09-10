@@ -77,11 +77,60 @@ const fail = (spec, url, msg) => failures.push(`[${spec}] ${url}\n    ${msg}`);
 // `_` 始まり（_common.md 等の共通ドキュメント）と README.md は画面仕様ではないのでスキップ
 const specFiles = (await readdir(SPECS_DIR)).filter((f) => f.endsWith('.md') && f !== 'README.md' && !f.startsWith('_') && (!only || f.includes(only)));
 
+// sitemap の構造チェック（2026-09-10 追加）
+// <loc> の抜き出しだけでは、閉じタグ欠落で <url> が入れ子になっていても気づけない。
+// 実際に4ブロックが入れ子のまま本番に出て、Search Console に「XMLタグが無効です」が出た。
+// 依存を増やしたくないので、タグの対応だけを自前で走査する。
+function checkSitemapXml(xml) {
+  const errs = [];
+  const body = xml.replace(/<!--[\s\S]*?-->/g, '').replace(/<\?[\s\S]*?\?>/g, '');
+  const stack = [];
+  let urlCount = 0;
+  let locInCurrentUrl = 0;
+
+  for (const m of body.matchAll(/<(\/?)([a-zA-Z][\w:-]*)[^>]*?(\/?)>/g)) {
+    const [, closing, name, selfClosing] = m;
+    if (selfClosing) continue;
+    if (closing) {
+      const open = stack.pop();
+      if (open !== name) {
+        errs.push(`閉じタグが合っていない: </${name}>（開いているのは <${open ?? 'なし'}>）`);
+        return errs; // ここから先の判定は当てにならない
+      }
+      if (name === 'url' && locInCurrentUrl !== 1) {
+        errs.push(`<url> の中の <loc> が ${locInCurrentUrl} 個（1個であること）`);
+      }
+      continue;
+    }
+    if (name === 'url') {
+      const parent = stack[stack.length - 1];
+      if (parent !== 'urlset') {
+        errs.push(`<url> が <urlset> の直下にない（<${parent ?? 'ルート'}> の中にある＝閉じタグ </url> の欠落）`);
+      }
+      urlCount += 1;
+      locInCurrentUrl = 0;
+    }
+    if (name === 'loc' && stack[stack.length - 1] === 'url') locInCurrentUrl += 1;
+    stack.push(name);
+  }
+
+  if (stack.length > 0) errs.push(`閉じられていないタグが残っている: <${stack.join('>, <')}>`);
+  if (urlCount === 0) errs.push('<url> が1件もない');
+  return errs;
+}
+
 // sitemap を先に読む
 const sitemapRes = await fetchPage(`${MAIN_BASE}/sitemap.xml`);
 const sitemapUrls = [...sitemapRes.body.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
 if (sitemapRes.status !== 200 || sitemapUrls.length === 0) {
   failures.push(`[sitemap] ${MAIN_BASE}/sitemap.xml が取得できないか空 (status=${sitemapRes.status})`);
+} else {
+  for (const e of checkSitemapXml(sitemapRes.body)) failures.push(`[sitemap] ${e}`);
+  const dup = sitemapUrls.filter((u, i) => sitemapUrls.indexOf(u) !== i);
+  for (const u of [...new Set(dup)]) failures.push(`[sitemap] 同じURLが2回登録されている: ${u}`);
+  for (const m of sitemapRes.body.matchAll(/<lastmod>([^<]*)<\/lastmod>/g)) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(m[1])) failures.push(`[sitemap] lastmod の書式が YYYY-MM-DD でない: ${m[1]}`);
+  }
 }
 
 for (const file of specFiles) {

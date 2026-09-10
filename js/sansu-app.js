@@ -7,7 +7,7 @@
   const ENDLESS_MAX = 100;     // 全10星ぶんの正解数（コンプリート）
   const app = document.getElementById('app');
 
-  // とことんモードの旅路：スタート=地球。100問ごとに次の天体へ到着していく（全10ステージ）
+  // とことんモードの旅路：スタート=地球。ENDLESS_STAGE（10問）正解ごとに次の天体へ到着していく（全10ステージ＝100問でゴール）
   // icon があれば /assets/images/sansu/route/ の画像、無ければ emoji で表示
   // 地球から近い順に並べる
   const JOURNEY = [
@@ -21,7 +21,7 @@
     { name: 'てんのうせい', emoji: '🔵', icon: 'uranus' },     // 7 天王星
     { name: 'かいおうせい', emoji: '🟣', icon: 'neptune' },    // 8 海王星
     { name: 'ブラックホール', emoji: '🕳️', icon: 'black-hole' }, // 9
-    { name: 'かがやく ほし', emoji: '🌟' }                     // 10 ゴール（1000問）
+    { name: 'かがやく ほし', emoji: '🌟' }                     // 10 ゴール（100問）
   ];
 
   const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -45,7 +45,7 @@
 
   const PLAYSTYLES = [
     { id: 'challenge', name: '10もん チャレンジ', note: 'といて けっかを みる', icon: 'stopwatch' },
-    { id: 'endless', name: 'とことん', note: '100もんずつ すすむ', icon: 'orbit-loop' }
+    { id: 'endless', name: 'とことん', note: '10もんで つぎの ほしへ', icon: 'orbit-loop' }
   ];
 
   // ---- けいさんの しゅるい ----
