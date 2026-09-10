@@ -2701,3 +2701,28 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(4) {
   --nk-opt-pattern:url('/assets/images/ninja/patterns/opt-uroko.png');
 }
+
+/* スマホ縦の正誤表示は、忍者を上・答えを下にして読みやすくする。 */
+@media (max-width:767px) and (orientation:portrait) {
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) {
+    flex-direction:column; flex-wrap:nowrap; gap:14px; text-align:center;
+    overflow-wrap:anywhere;
+  }
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before {
+    width:min(58vw,210px); height:auto; max-height:55%; aspect-ratio:1;
+  }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on {
+    grid-template-columns:minmax(0,1fr); grid-template-rows:auto auto auto;
+    justify-items:center; text-align:center; row-gap:10px;
+  }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before {
+    grid-column:1; grid-row:1; width:clamp(110px,20dvh,160px); height:auto;
+    margin:0; justify-self:center;
+  }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on>.nk-a-body {
+    grid-column:1; grid-row:2; width:100%;
+  }
+  .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on>:is(.kt-next,.rj-next,.pn-a-btns) {
+    grid-column:1; grid-row:3;
+  }
+}
