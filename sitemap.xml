@@ -237,10 +237,15 @@
   <!-- コラム -->
   <url>
     <loc>https://www.beetle-web.jp/blog/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>2026-09-10</lastmod>
     <priority>0.8</priority>
   </url>
 
+  <url>
+    <loc>https://www.beetle-web.jp/blog/posts/tokei-shugyo.html</loc>
+    <lastmod>2026-09-10</lastmod>
+    <priority>0.6</priority>
+  </url>
   <url>
     <loc>https://www.beetle-web.jp/blog/posts/romaji-hebonshiki.html</loc>
     <lastmod>2026-09-04</lastmod>
