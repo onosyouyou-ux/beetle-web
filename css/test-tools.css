@@ -60,6 +60,14 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
   .tool-card.is-open .tool-desc-toggle::before{transform:translateY(2px) rotate(225deg)}
   .tool-card .tool-desc{max-height:0;overflow:hidden;margin-bottom:0;transition:max-height .25s ease,margin-bottom .25s ease}
   .tool-card.is-open .tool-desc{max-height:260px;margin-bottom:14px}
+
+  /* サムネイル付きカードはスマホだと縦に伸びすぎるので、サムネを左に回して横並びにする
+     （1画面に並ぶ件数が増え、一覧として見渡せる。2026-09-12・apps.html と edu-tools.html 共通） */
+  .tool-card:has(.tool-thumb){display:grid;grid-template-columns:104px 1fr;column-gap:12px;align-items:start;padding:12px}
+  .tool-card:has(.tool-thumb) .tool-thumb{grid-column:1;grid-row:1 / span 3;margin:0;border-radius:8px;aspect-ratio:4/3}
+  .tool-card:has(.tool-thumb) .tool-card-top{grid-column:2;grid-row:1;margin-bottom:0;min-height:30px}
+  .tool-card:has(.tool-thumb) .tool-desc{grid-column:2;grid-row:2}
+  .tool-card:has(.tool-thumb) .tool-tag{grid-column:2;grid-row:3;margin-top:6px}
 }
 
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
