@@ -35,12 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ['#services', 'QAサービス'],
         ['#contact', 'お問い合わせ'],
       ],
-      '/apps.html': [
-        ['#kids', 'こども'],
-        ['#teacher', '先生'],
-        ['#qa-apps', '検証ツール'],
-        ['#qa-ref', 'リファレンス'],
-      ],
+      // /apps.html はここに定義しない。ページ内タブ（.apps-tabs / js/apps.js）を
+      // 持っているので、2段目にも同じリンクを出すと同じものが2列に並ぶ（2026-09-12）
       '/edu-tools.html': [
         ['#cando', 'できること'],
         ['#family', 'おうちのかた'],

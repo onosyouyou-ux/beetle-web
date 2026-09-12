@@ -5,7 +5,7 @@ canonical: self
 sitemap: true
 title_contains: "アプリ一覧"
 og_image: "/assets/images/OG.jpg"
-required_selectors: ["#site-header", "#site-footer", ".brand-hero", ".tools-grid", "#kids", "#teacher", "#qa-apps", "#qa-ref"]
+required_selectors: ["#site-header", "#site-footer", ".brand-hero", ".apps-tabs", ".tools-grid", "#kids", "#teacher", "#qa-apps", "#qa-ref"]
 ---
 
 # アプリ一覧（`apps.html`）
@@ -27,5 +27,13 @@ required_selectors: ["#site-header", "#site-footer", ".brand-hero", ".tools-grid
 - **リンク先はランディングがあるものはランディングへ**。アプリ本体へ直リンクするのは
   `test-tools.html` の検証ツールと同じ扱い（bug-checker のみ別タブ）
 - **カード末尾は「詳しく見る →」**（[_common.md](_common.md) のカードルール）。バッジは使わない
+- **ページ内タブ**（`.apps-tabs` ＋ `/js/apps.js`。2026-09-12追加）:
+  ヒーローの下に4セクションへのタブを置き、スクロールに追従して画面上端に貼りつく。
+  いま見ているセクションのタブに `.is-on`（アクセント色＋下線）が付く。
+  **このページだけ `js/common.js` の2段目セクションリンクを定義しない**（同じリンクが2列に並ぶため）
+  - SP（600px以下）は番号を落とし「こども」「先生」に短縮（`.at-trim`）して4つを1行に収める
+  - タブの高さは実測して `--apps-tabs-top` / `--apps-anchor-offset` に入れ、
+    アンカーの着地位置（`scroll-margin-top`）をタブの下に合わせる
 - **手動確認観点**: ヘッダーの「アプリ」に `aria-current="page"` が付くこと／
-  2段目のセクションリンク（こども・先生・検証ツール・リファレンス）が出ること（`js/common.js` が注入）
+  タブが上端に貼りつき、スクロールに合わせて点くタブが変わること／
+  360px でもタブ4つが横スクロールなしで並ぶこと

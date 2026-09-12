@@ -7,3 +7,70 @@
   line-height: 2;
 }
 .apps-foot a { color: var(--color-accent); font-weight: 700; }
+
+/* ページ内タブ（2026-09-12追加）
+   共通ヘッダー（.nav）は fetch で後から差し込まれるため高さが確定しない。
+   sticky の位置とアンカーの着地位置は js/apps.js が実測して CSS 変数に入れる。 */
+.apps-tabs {
+  position: sticky;
+  top: var(--apps-tabs-top, 0px);
+  z-index: 90;
+  background: rgba(249,247,244,.97);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--tp-border);
+}
+.apps-tabs-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.apps-tabs-inner::-webkit-scrollbar { display: none; }
+.apps-tab {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 12px 16px 10px;
+  border-bottom: 3px solid transparent;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #55555f;
+  white-space: nowrap;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.apps-tab:hover { color: var(--color-accent); background: rgba(192,99,76,.06); }
+.apps-tab .at-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--tp-text3);
+  transition: color .15s;
+}
+/* 現在地（js/apps.js が付与）。下線と番号の色で「いまここ」を出す */
+.apps-tab.is-on { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+.apps-tab.is-on .at-num { color: var(--color-accent); }
+
+/* アンカー着地位置はヘッダー＋タブの実測値（js/apps.js）。
+   common.css の [id]{scroll-margin-top:100px} より詳細度を上げて上書きする */
+.section[id] { scroll-margin-top: var(--apps-anchor-offset, 150px); }
+
+@media (max-width: 700px) {
+  /* 画面に入りきらないので横スクロール。現在地のタブは js が中央へ寄せる */
+  .apps-tabs-inner { justify-content: flex-start; padding: 0 12px; }
+  .apps-tab { padding: 11px 12px 9px; font-size: 13px; gap: 5px; }
+}
+
+/* SP（600px以下）は4つを1画面に収める。番号を落とし、ラベルを「こども」「先生」に短縮
+   （共通ヘッダーの .nav-trim と同じ考え方。360px でも横スクロールなしで4つ並ぶ） */
+@media (max-width: 600px) {
+  .apps-tab .at-num { display: none; }
+  .apps-tab .at-trim { display: none; }
+  .apps-tabs-inner { justify-content: center; gap: 2px; }
+  .apps-tab { padding: 11px 10px 9px; }
+}

@@ -28,7 +28,7 @@
 <link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/style/common.css">
 <link rel="stylesheet" href="/css/test-tools.css?v=15">
-<link rel="stylesheet" href="/css/apps.css">
+<link rel="stylesheet" href="/css/apps.css?v=2">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"CollectionPage","name":"アプリ一覧 | BEETLE","description":"BEETLEが作った無料アプリ・ツールを1ページにまとめました。かんじ・カタカナ・とけい・ローマ字・フォニックスの修行アプリ、さんすう、えいご、先生向けの学級通信・席替え・所見メーカー、QAの検証ツールとリファレンスまで29本。すべて無料・登録不要で、ブラウザだけで使えます。","url":"https://www.beetle-web.jp/apps.html","publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"}}
 </script>
@@ -52,8 +52,18 @@
   </div>
 </div>
 
+<!-- ページ内タブ（ヘッダーの直下にはりつく。現在地は js/apps.js が .is-on で点ける） -->
+<nav class="apps-tabs" aria-label="ページ内リンク">
+  <div class="apps-tabs-inner">
+    <a class="apps-tab" href="#kids"><span class="at-num">01</span><span class="at-label">こども<span class="at-trim">・おうち</span></span></a>
+    <a class="apps-tab" href="#teacher"><span class="at-num">02</span><span class="at-label">先生<span class="at-trim">・おうちのかた</span></span></a>
+    <a class="apps-tab" href="#qa-apps"><span class="at-num">03</span><span class="at-label">検証ツール</span></a>
+    <a class="apps-tab" href="#qa-ref"><span class="at-num">04</span><span class="at-label">リファレンス</span></a>
+  </div>
+</nav>
+
 <div class="intro-note">
-  <p><b>探しかた：</b>お子さん向けは<a href="#kids">01</a>、先生・おうちのかた向けは<a href="#teacher">02</a>、テストの仕事で使うものは<a href="#qa-apps">03</a>・<a href="#qa-ref">04</a>です。分野ごとの説明は<a href="/edu-tools.html">教育支援</a>・<a href="/test-tools.html">QA支援</a>のページにあります。</p>
+  <p><b>探しかた：</b>上のタブで、お子さん向け・先生向け・テストの仕事で使うものに切り替えられます。分野ごとの説明は<a href="/edu-tools.html">教育支援</a>・<a href="/test-tools.html">QA支援</a>のページにあります。</p>
 </div>
 
 <div class="section" id="kids">
@@ -259,6 +269,7 @@
 
 <div id="site-footer"></div>
 <script src="/js/common.js"></script>
+<script src="/js/apps.js"></script>
 
 </body>
 </html>
