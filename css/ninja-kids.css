@@ -2893,3 +2893,25 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     padding:8px 12px;
   }
 }
+
+/* けしゴムのアイコン（かんじ・ローマ字の かくしゅぎょう。2026-09-12）。
+   巻物の紙に重ねるので、選択肢と同じ枠の作法にそろえる。
+   --nk-tap の下限は当てない（40px角のアイコンとして置くため）。 */
+.ninja-kids :is(.kj-eraser,.rj-eraser) {
+  min-height:0;
+  color:#5b6b70;
+  border:2px solid color-mix(in srgb,var(--nk-accent) 45%,#fff);
+  border-radius:8px;
+  background:#fff;
+  box-shadow:0 2px 0 #c5a876;
+}
+.ninja-kids :is(.kj-eraser,.rj-eraser):hover {
+  translate:0 -1px;
+  border-color:var(--nk-accent);
+  color:var(--nk-accent-dark,#17272e);
+}
+/* 寝かせた画面は紙そのものが小さいので、けしゴムも小さくする */
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-kids :is(.kj-eraser,.rj-eraser) { width:30px; height:30px; top:4px; right:4px; }
+  .ninja-kids :is(.kj-eraser,.rj-eraser) svg { width:17px; height:17px; }
+}

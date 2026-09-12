@@ -238,12 +238,18 @@
     if (q.type === 'kaku') {
       body =
         '<div class="rj-write">' +
-          '<div class="rj-strip"><canvas class="rj-canvas" role="img" aria-label="ローマ字を かく ところ"></canvas></div>' +
-          '<p class="rj-model" id="rj-model"></p>' +
-          '<div class="rj-write-tools" id="rj-tools">' +
-            '<button type="button" class="rj-tool" id="rj-clear">ぜんぶ けす</button>' +
-            '<button type="button" class="rj-tool rj-judge" id="rj-judge">はんてい</button>' +
+          '<div class="rj-strip">' +
+            '<canvas class="rj-canvas" role="img" aria-label="ローマ字を かく ところ"></canvas>' +
+            // けしゴムは書くところの右上。ボタンを横に並べると「はんてい」が小さくなる
+            '<button type="button" class="rj-eraser" id="rj-clear" title="ぜんぶ けす" aria-label="ぜんぶ けす">' +
+              '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+      '<path d="M8.6 20H20" />' +
+      '<path d="M15.4 4.6 4.6 15.4a2 2 0 0 0 0 2.8l1.2 1.2a2 2 0 0 0 2.8 0L19.4 8.6a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0Z" />' +
+      '<path d="m10 10 4 4" />' +
+      '</svg>' +
+            '</button>' +
           '</div>' +
+          '<p class="rj-model" id="rj-model"></p>' +
         '</div>';
     } else if (q.type === 'utsu') {
       body =
@@ -276,6 +282,11 @@
             : '') +
         '</div>' +
         body +
+        (q.type === 'kaku'
+          ? '<div class="rj-write-tools" id="rj-tools">' +
+              '<button type="button" class="rj-tool rj-judge" id="rj-judge">はんてい</button>' +
+            '</div>'
+          : '') +
         '<div class="rj-answer" id="rj-answer"></div>' +
         '<button type="button" class="rj-back">← もんだいせんたくに もどる</button>' +
       '</div>';
@@ -324,6 +335,8 @@
 
   function revealKaku(q, pen) {
     pen.lock();                 // 書いた字は残す（正解と見くらべるため）
+    var eraser = root.querySelector('.rj-eraser');
+    if (eraser) eraser.remove();
 
     var model = document.getElementById('rj-model');
     model.textContent = q.word; // ヘボン式 / 訓令式 の両方（うつモードと同じ表記）

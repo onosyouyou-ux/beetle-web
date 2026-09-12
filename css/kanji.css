@@ -150,7 +150,7 @@ body{
    自動判定はしないので、はんてい後は正解を並べて自分でまるをつける。
    盤面の大きさは --kj-pad-h の1本で管理する（段ごとに px を直書きしない）。
    ============================================================ */
-.ninja-kids{ --kj-pad-h:calc(var(--nk-qh) - var(--nk-tap) - 14px); }
+.ninja-kids{ --kj-pad-h:calc(var(--nk-qh) - 6px); }
 
 .kj-ask-kaki{gap:8px;align-content:center}
 .kj-kaki-yomi{margin:0;font-size:32px;font-weight:900;letter-spacing:.06em;color:var(--kj-orange-dk)}
@@ -214,7 +214,7 @@ body{
 
 /* --- 1カラムの段：パッドは画面の高さから決める（1画面に収めるルールを優先） --- */
 @media(max-width:767px) and (orientation:portrait){
-  .ninja-kids{ --kj-pad-h:clamp(100px,22dvh,240px); }
+  .ninja-kids{ --kj-pad-h:clamp(110px,24dvh,260px); }
   .ninja-kids .kj-play.is-kaki>.kj-ask{ min-height:clamp(72px,13dvh,150px); }
   .kj-kaki-yomi{font-size:26px}
   .kj-kaki-blank{font-size:18px}
@@ -222,12 +222,12 @@ body{
   .kj-tool{padding:9px 16px;font-size:14px}
 }
 @media(min-width:768px) and (max-width:1179px) and (orientation:portrait){
-  .ninja-kids{ --kj-pad-h:clamp(140px,22dvh,320px); }
+  .ninja-kids{ --kj-pad-h:clamp(150px,25dvh,340px); }
   .ninja-kids .kj-play.is-kaki>.kj-ask{ min-height:clamp(110px,13dvh,200px); }
 }
 /* --- 寝かせた画面：2カラムに戻し、パッドは高さいっぱいまで --- */
 @media(orientation:landscape) and (max-height:500px){
-  .ninja-kids{ --kj-pad-h:clamp(76px,42dvh,158px); }
+  .ninja-kids{ --kj-pad-h:clamp(80px,46dvh,168px); }
   .ninja-kids .kj-play>.kj-write{grid-column:2;grid-row:2;align-self:center;gap:6px;margin:0}
   .kj-tool{padding:6px 12px;font-size:12px;border-radius:8px}
   .kj-mark{padding:8px 6px;font-size:14px;border-radius:9px}
@@ -252,3 +252,30 @@ body{
   .ninja-kids .kj-play.is-kaki .kj-kaki-note{grid-column:2;grid-row:1;align-self:end;text-align:left}
   .ninja-kids .kj-play.is-kaki .kj-kaki-check{grid-column:2;grid-row:2;align-self:start;text-align:left;margin:0}
 }
+
+/* けしゴムは書くところの右上に重ねる（2026-09-12）。
+   「ぜんぶ けす」と「はんてい」を横に並べると、押してほしい「はんてい」が
+   半分の幅になってしまうため、けすほうをアイコンに逃がす。 */
+.kj-eraser{
+  position:absolute;top:6px;right:6px;z-index:2;
+  display:grid;place-items:center;
+  width:40px;height:40px;padding:0;
+  border:2px solid var(--kj-line2);border-radius:10px;
+  background:#fff;color:var(--kj-ink2);cursor:pointer;
+}
+.kj-eraser:hover{border-color:var(--kj-orange);color:var(--kj-orange-dk)}
+.kj-eraser svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.kj-write-tools .kj-tool{width:100%}
+
+/* 「はんてい」は問題と紙の下に全幅で置く（2026-09-12）。
+   右カラムから出したぶん、紙を行の高さいっぱいまで大きくできる。
+   行が1本増えるので、かくモードだけ盤面の固定高さをやめて下へ伸ばす。 */
+@media(min-width:768px){
+  .ninja-kids.ninja-kanji .kj-play.is-kaki{ height:auto; min-height:var(--nk-board-h); }
+}
+@media(min-width:1180px),
+      (min-width:768px) and (max-width:1179px) and (orientation:landscape),
+      (orientation:landscape) and (max-height:500px){
+  .ninja-kids .kj-play.is-kaki>.kj-write-tools{ grid-column:1 / -1; grid-row:3; margin:0; }
+}
+.kj-write-tools{width:100%}

@@ -266,15 +266,26 @@
     pad.appendChild(canvas);
     write.appendChild(pad);
 
-    var tools = el('div', 'kj-write-tools');
-    var clear = el('button', 'kj-tool kj-clear', 'ぜんぶ けす');
+    // けしゴムは書くところの右上に置く（ボタンを横に並べると「はんてい」が小さくなる）
+    var clear = el('button', 'kj-eraser');
     clear.type = 'button';
+    clear.title = 'ぜんぶ けす';
+    clear.setAttribute('aria-label', 'ぜんぶ けす');
+    clear.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+      '<path d="M8.6 20H20" />' +
+      '<path d="M15.4 4.6 4.6 15.4a2 2 0 0 0 0 2.8l1.2 1.2a2 2 0 0 0 2.8 0L19.4 8.6a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0Z" />' +
+      '<path d="m10 10 4 4" />' +
+      '</svg>';
+    pad.appendChild(clear);
+
+    wrap.appendChild(write);
+
+    // はんていは 問題と紙の下に全幅で置く（盤面の行をまたぐので .kj-play の直下に出す）
+    var tools = el('div', 'kj-write-tools');
     var judge = el('button', 'kj-tool kj-judge-btn', 'はんてい');
     judge.type = 'button';
-    tools.appendChild(clear);
     tools.appendChild(judge);
-    write.appendChild(tools);
-    wrap.appendChild(write);
+    wrap.appendChild(tools);
 
     var pen = setupCanvas(canvas);
     clear.addEventListener('click', pen.clear);
@@ -287,6 +298,8 @@
     if (s.locked) return;
     s.locked = true;
     pen.lock();                 // 書いた字はそのまま残す（正解と見くらべるため）
+    var eraser = app.querySelector('.kj-eraser');
+    if (eraser) eraser.remove();
 
     ask.innerHTML = '';
     ask.appendChild(el('p', 'kj-kaki-answer', q.answer));
