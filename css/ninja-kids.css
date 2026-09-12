@@ -2793,7 +2793,6 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   border-left:6px solid var(--nk-accent);
   background:linear-gradient(#fff,color-mix(in srgb,var(--nk-accent) 14%,#fff));
 }
-.ninja-kids .kj-write-tools { width:100%; }
 .ninja-kids .kj-tool { flex:1; }
 .ninja-kids .kj-mark-ok { border-color:#2f7d55; }
 .ninja-kids .kj-mark-ng { border-color:#c0503b; }
