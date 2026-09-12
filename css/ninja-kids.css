@@ -1280,7 +1280,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-ng::before { background-image:var(--nk-feedback-ng); }
 /* パネルが盤面を覆うので、はみ出した選択肢のふちが下から覗かないように隠す */
 .ninja-kids :is(.kt-quiz,.rj-quiz,.pn-quiz):has(:is(.kt-answer,.rj-answer,.pn-answer).is-on)
-  :is(.kt-choices,.rj-choices,.rj-type,.pn-choices) { visibility:hidden; }
+  :is(.kt-choices,.rj-choices,.rj-type,.rj-write,.pn-choices) { visibility:hidden; }
 /* こたえあわせパネル: 盤面いっぱいの横長で、イラスト左・説明右・ボタン下（2026-09-02）。
    文字は説明のエリアの中央にそろえる（2026-09-09）。左詰めだと行の長さがばらつき、
    パネルの中央に置いた「つぎのもんだい」とも軸がずれて落ち着かなかった。 */
@@ -2778,4 +2778,37 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 }
 @media (min-width:768px) and (max-width:1179px) and (orientation:portrait) {
   .ninja-kids .kj-kaki-answer { font-size:clamp(56px,9dvh,110px); }
+}
+
+/* ============================================================
+   かく しゅぎょう（ローマ字修行・2026-09-12）
+   手書きの紙は巻物に見立て、ボタンは選択肢と同じ作法にそろえる。
+   ============================================================ */
+.ninja-kids .rj-strip {
+  border:2px solid #d4bd92;
+  border-radius:7px;
+  background-color:#fffdf6;
+  box-shadow:0 3px 0 #c5a876,0 10px 22px rgba(62,39,20,.14);
+}
+.ninja-kids .rj-model { color:#0f5f4a; font-size:var(--nk-fs-opt); }
+.ninja-kids :is(.rj-tool,.rj-mark) {
+  min-height:var(--nk-tap);
+  color:#17272e;
+  border:2px solid color-mix(in srgb,var(--nk-accent) 45%,#fff);
+  border-radius:7px;
+  background:#fff;
+  box-shadow:0 3px 0 #c5a876;
+}
+.ninja-kids :is(.rj-tool,.rj-mark):hover:not(:disabled) {
+  translate:0 -2px;
+  border-color:var(--nk-accent);
+}
+.ninja-kids .rj-judge {
+  border-left:6px solid var(--nk-accent);
+  background:linear-gradient(#fff,color-mix(in srgb,var(--nk-accent) 14%,#fff));
+}
+.ninja-kids .rj-mark-ok { border-color:#2f7d55; }
+.ninja-kids .rj-mark-ng { border-color:#c0503b; }
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-kids :is(.rj-tool,.rj-mark) { min-height:0; }
 }

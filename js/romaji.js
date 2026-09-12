@@ -176,9 +176,16 @@
     return qs;
   }
 
+  // かくモードは「うつ」と同じ出題（ことば・正解・解説）を そのまま使う。
+  // ちがうのは 答えかた（キーボード か 手書き）だけ。
+  function buildKaku() {
+    return buildUtsu().map(function (q) { q.type = 'kaku'; return q; });
+  }
+
   var MODES = {
     yomu:    { label: 'ローマ字を よむ',   sub: 'ローマ字を みて ことばを あてる', build: buildYomu },
     utsu:    { label: 'キーボードで うつ', sub: 'ひらがなを ローマ字で うつ',  build: buildUtsu },
+    kaku:    { label: 'ローマ字を かく',   sub: 'ひらがなを ローマ字で かいて まるつけ', build: buildKaku },
     futatsu: { label: 'ふたつの かきかた',   sub: 'shi と si、どちらも ただしい',      build: buildFutatsu },
   };
 
@@ -228,7 +235,17 @@
     var q = state.qs[state.i];
 
     var body;
-    if (q.type === 'utsu') {
+    if (q.type === 'kaku') {
+      body =
+        '<div class="rj-write">' +
+          '<div class="rj-strip"><canvas class="rj-canvas" role="img" aria-label="ローマ字を かく ところ"></canvas></div>' +
+          '<p class="rj-model" id="rj-model"></p>' +
+          '<div class="rj-write-tools" id="rj-tools">' +
+            '<button type="button" class="rj-tool" id="rj-clear">ぜんぶ けす</button>' +
+            '<button type="button" class="rj-tool rj-judge" id="rj-judge">はんてい</button>' +
+          '</div>' +
+        '</div>';
+    } else if (q.type === 'utsu') {
       body =
         '<div class="rj-type">' +
           '<input type="text" id="rj-input" class="rj-input" autocomplete="off" autocapitalize="off" ' +
@@ -265,6 +282,13 @@
 
     root.querySelector('.rj-back').addEventListener('click', renderMenu);
 
+    if (q.type === 'kaku') {
+      var pen = setupCanvas(root.querySelector('.rj-canvas'));
+      document.getElementById('rj-clear').addEventListener('click', pen.clear);
+      document.getElementById('rj-judge').addEventListener('click', function () { revealKaku(q, pen); });
+      return;
+    }
+
     if (q.type === 'utsu') {
       var input = document.getElementById('rj-input');
       input.addEventListener('keydown', function (e) {
@@ -290,7 +314,112 @@
   function questionLead(q) {
     if (q.type === 'yomu') return 'なんと よむ？';
     if (q.type === 'utsu') return 'この ことばを ローマ字で うってね';
+    if (q.type === 'kaku') return 'この ことばを ローマ字で かいてね';
     return 'どっち？';
+  }
+
+  /* ---------- かく しゅぎょう ----------
+     筆跡の自動判定はしない。書いたあと正解を出して、子どもが自分でまるをつける。
+     まるをつけたあとは ほかのモードと同じ こたえあわせパネル（なぜ2とおりあるか）に合流する。 */
+
+  function revealKaku(q, pen) {
+    pen.lock();                 // 書いた字は残す（正解と見くらべるため）
+
+    var model = document.getElementById('rj-model');
+    model.textContent = q.word; // ヘボン式 / 訓令式 の両方（うつモードと同じ表記）
+    model.classList.add('is-on');
+
+    // まるつけは「ぜんぶ けす／はんてい」と同じ行に置きかえる（行を足すと盤面からはみ出す）
+    var tools = document.getElementById('rj-tools');
+    tools.innerHTML = '';
+    tools.classList.add('is-marks');
+    [['ok', 'かけた'], ['ng', 'つぎ がんばろう']].forEach(function (m) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'rj-mark rj-mark-' + m[0];
+      b.textContent = m[1];
+      b.addEventListener('click', function () {
+        if (tools.dataset.done === '1') return;
+        tools.dataset.done = '1';
+        finish(m[0] === 'ok', q, q.word);
+      });
+      tools.appendChild(b);
+    });
+  }
+
+  /* canvas に指・ペン・マウスで線を引く。
+     - touch-action:none（CSS）が無いと、タブレットで書こうとするとページがスクロールする
+     - 画面の解像度ぶん引きのばさないと線がぼやける */
+  function setupCanvas(canvas) {
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    var drawing = false, locked = false;
+
+    function fit() {
+      var r = canvas.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      var w = Math.round(r.width * dpr), h = Math.round(r.height * dpr);
+      if (canvas.width === w && canvas.height === h) return;
+      // 向きを変えても書いた線が消えないように、いったん退避してから描きなおす
+      var keep = null;
+      if (canvas.width && canvas.height) {
+        keep = document.createElement('canvas');
+        keep.width = canvas.width;
+        keep.height = canvas.height;
+        keep.getContext('2d').drawImage(canvas, 0, 0);
+      }
+      canvas.width = w;
+      canvas.height = h;
+      if (keep) ctx.drawImage(keep, 0, 0, w, h);
+      // canvas の大きさを変えると描画設定は初期化されるので、毎回入れなおす
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = '#2b2723';
+      ctx.lineWidth = Math.max(2.5, h / 22);   // 線の太さは高さ基準（横長なので幅だと太くなりすぎる）
+    }
+
+    function pos(e) {
+      var r = canvas.getBoundingClientRect();
+      return {
+        x: (e.clientX - r.left) * (canvas.width / r.width),
+        y: (e.clientY - r.top) * (canvas.height / r.height)
+      };
+    }
+
+    canvas.addEventListener('pointerdown', function (e) {
+      if (locked) return;
+      fit();
+      drawing = true;
+      if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+      var p = pos(e);
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(p.x, p.y);   // ちょんと点を打っただけでも見えるように
+      ctx.stroke();
+      e.preventDefault();
+    });
+    canvas.addEventListener('pointermove', function (e) {
+      if (!drawing) return;
+      var p = pos(e);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+      e.preventDefault();
+    });
+    var end = function () { drawing = false; };
+    canvas.addEventListener('pointerup', end);
+    canvas.addEventListener('pointercancel', end);
+
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(canvas);
+    requestAnimationFrame(fit);
+
+    return {
+      clear: function () {
+        if (locked) return;
+        fit();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      },
+      lock: function () { locked = true; drawing = false; canvas.classList.add('is-locked'); }
+    };
   }
 
   function answerChoice(key, btn) {
