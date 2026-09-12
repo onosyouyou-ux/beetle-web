@@ -296,7 +296,7 @@
     // けす・はんていと同じ行に置きかえる（行を足すと盤面の固定高さからはみ出す）
     tools.innerHTML = '';
     tools.classList.add('is-marks');
-    [['ok', 'かけた'], ['ng', 'つぎ がんばろう']].forEach(function (m) {
+    [['ok', 'かけた'], ['ng', 'まちがった']].forEach(function (m) {
       var b = el('button', 'kj-mark kj-mark-' + m[0], m[1]);
       b.type = 'button';
       b.addEventListener('click', function () { markKaki(m[0] === 'ok', q); });

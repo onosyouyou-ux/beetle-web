@@ -2393,11 +2393,40 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     display:flex;
     flex-direction:column;
   }
+  /* 寸法は枚数から決める。1段に並べきることを優先し、枚数が増えたら
+     絵と文字を1段小さくする（2段に折ると札の高さが半分になり、絵が文字を覆う）。 */
   .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes) {
+    --nk-mode-n:3;
+    --nk-mode-img-h:154px;
+    --nk-mode-img-top:16px;
+    --nk-mode-t:26px;
+    --nk-mode-s:15px;
+    --nk-mode-pad:24px;
     flex:1;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(var(--nk-mode-n),1fr);
     align-items:stretch;
     gap:16px;
+  }
+  .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes):has(>:nth-child(4)) {
+    --nk-mode-n:2;
+    --nk-mode-img-h:104px;
+    --nk-mode-t:23px;
+    --nk-mode-s:14px;
+    --nk-mode-pad:18px;
+    gap:14px;
+  }
+  /* 絵は左、文字は右。札が横長になるので中身も横並びにする */
+  .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes):has(>:nth-child(4))>:is(.kt-mode,.rj-mode,.pn-mode) {
+    justify-content:center;
+    align-items:flex-start;
+    gap:4px;
+    text-align:left;
+    padding-left:calc(var(--nk-mode-pad) + var(--nk-mode-img-h) + 14px);
+  }
+  .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes):has(>:nth-child(4))>:is(.kt-mode,.rj-mode,.pn-mode)::before {
+    left:var(--nk-mode-pad);
+    top:50%;
+    translate:0 -50%;
   }
   .ninja-kids :is(.kt-mode,.rj-mode,.pn-mode) {
     height:100%;
@@ -2406,14 +2435,14 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     justify-content:flex-end;
     align-items:center;
     gap:10px;
-    padding:24px 24px 26px;
+    padding:var(--nk-mode-pad) var(--nk-mode-pad) calc(var(--nk-mode-pad) + 2px);
     /* 絵が札の真ん中にあるので、見出しとひとことも中央にそろえる（2026-09-03）。
-       設定の選択肢は左詰めが基本だが、この3枚だけは絵が主役なので例外にする。 */
+       設定の選択肢は左詰めが基本だが、この札だけは絵が主役なので例外にする。 */
     text-align:center;
   }
   /* 広がったぶん、なんのしゅぎょうかが読んで分かるように大きくする */
-  .ninja-kids :is(.kt-mode-t,.rj-mode-t,.pn-mode-t) { font-size:26px; line-height:1.35; }
-  .ninja-kids :is(.kt-mode-s,.rj-mode-s,.pn-mode-s) { font-size:15px; line-height:1.95; }
+  .ninja-kids :is(.kt-mode-t,.rj-mode-t,.pn-mode-t) { font-size:var(--nk-mode-t); line-height:1.35; }
+  .ninja-kids :is(.kt-mode-s,.rj-mode-s,.pn-mode-s) { font-size:var(--nk-mode-s); line-height:1.95; }
   /* 札ごとにモード専用の絵を1つずつ入れる（2026-09-03・チケット#20）。
      以前は items スプライト（忍具4つ並び）の1〜3コマ目を流用していたが、
      モードの中身と対応していなかったので、カタカナ・ローマ字・フォニックスの
@@ -2423,18 +2452,20 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     content:'';
     position:absolute;
     left:50%;
-    top:16px;
-    width:154px;
-    height:154px;
+    top:var(--nk-mode-img-top);
+    width:var(--nk-mode-img-h);
+    height:var(--nk-mode-img-h);
     translate:-50% 0;
     background:var(--nk-mode-img) center/contain no-repeat;
     pointer-events:none;
   }
+
   .ninja-kids.ninja-katakana .kt-mode[data-mode="dotchi"] { --nk-mode-img:url('/assets/images/ninja/modes/katakana-dotchi.png'); }
   .ninja-kids.ninja-katakana .kt-mode[data-mode="naosu"]  { --nk-mode-img:url('/assets/images/ninja/modes/katakana-naosu.png'); }
   .ninja-kids.ninja-katakana .kt-mode[data-mode="nigata"] { --nk-mode-img:url('/assets/images/ninja/modes/katakana-nigata.png'); }
   .ninja-kids.ninja-romaji .rj-mode[data-mode="yomu"]    { --nk-mode-img:url('/assets/images/ninja/modes/romaji-yomu.png'); }
   .ninja-kids.ninja-romaji .rj-mode[data-mode="utsu"]    { --nk-mode-img:url('/assets/images/ninja/modes/romaji-utsu.png'); }
+  .ninja-kids.ninja-romaji .rj-mode[data-mode="kaku"]    { --nk-mode-img:url('/assets/images/ninja/modes/romaji-kaku.png'); }
   .ninja-kids.ninja-romaji .rj-mode[data-mode="futatsu"] { --nk-mode-img:url('/assets/images/ninja/modes/romaji-futatsu.png'); }
   .ninja-kids.ninja-phonics .pn-mode[data-mode="oto"]     { --nk-mode-img:url('/assets/images/ninja/modes/phonics-oto.png'); }
   .ninja-kids.ninja-phonics .pn-mode[data-mode="tsunage"] { --nk-mode-img:url('/assets/images/ninja/modes/phonics-tsunage.png'); }
@@ -2811,4 +2842,54 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 .ninja-kids .rj-mark-ng { border-color:#c0503b; }
 @media (orientation:landscape) and (max-height:500px) {
   .ninja-kids :is(.rj-tool,.rj-mark) { min-height:0; }
+}
+
+/* しゅぎょうが4つのアプリ（ローマ字）のメニューを1画面に収める（2026-09-12 実測）。
+   3つ前提の余白のままだと、スマホ縦で 648px・寝かせた画面で 458px になり はみ出していた。 */
+@media (max-width:767px) and (orientation:portrait) {
+  .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes):has(>:nth-child(4)) { gap:7px; }
+  .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes):has(>:nth-child(4))>:is(.kt-mode,.rj-mode,.pn-mode) {
+    min-height:0;
+    padding:9px 14px;
+  }
+}
+/* 寝かせた画面は縦に積みきれないので2列にする。
+   札が低くなるので、絵も札に収まる大きさまで落とす（padding-left は絵の大きさから決まる）。 */
+@media (orientation:landscape) and (max-height:500px) {
+  /* 札が3つのアプリ（カタカナ・フォニックス）も、この段では札が124pxしかないのに
+     絵が154pxあり はみ出していた（2026-09-12 実測。以前からの不具合）。 */
+  .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes) {
+    --nk-mode-img-h:74px;
+    --nk-mode-img-top:8px;
+    --nk-mode-t:17px;
+    --nk-mode-s:11.5px;
+    --nk-mode-pad:12px;
+  }
+  .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes):has(>:nth-child(4)) {
+    --nk-mode-img-h:38px;
+    --nk-mode-pad:10px;
+    --nk-mode-t:15px;
+    --nk-mode-s:11px;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes):has(>:nth-child(4))>:is(.kt-mode,.rj-mode,.pn-mode) {
+    min-height:0;
+    padding-block:7px;
+    padding-right:12px;
+  }
+}
+
+/* スマホを寝かせた画面（幅767px以下・高さ500px以下）は、札を縦に積むと
+   3つでも386pxになり1画面を割る（2026-09-12 実測。以前からの不具合）。
+   幅が768px以上なら横一列のレイアウトが効くので、ここは狭い画面だけに当てる。 */
+@media (orientation:landscape) and (max-height:500px) and (max-width:767px) {
+  .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes) {
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes)>:is(.kt-mode,.rj-mode,.pn-mode) {
+    min-height:0;
+    padding:8px 12px;
+  }
 }
