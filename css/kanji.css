@@ -143,3 +143,112 @@ body{
   display:grid;grid-template-columns:1fr;justify-items:start;
   text-align:left;gap:1px;padding:10px 16px;
 }
+
+/* ============================================================
+   かく しゅぎょう（2026-09-12）
+   左に「よみ＋○で伏せたことば」、右に手書きパッド。
+   自動判定はしないので、はんてい後は正解を並べて自分でまるをつける。
+   盤面の大きさは --kj-pad-h の1本で管理する（段ごとに px を直書きしない）。
+   ============================================================ */
+.ninja-kids{ --kj-pad-h:calc(var(--nk-qh) - var(--nk-tap) - 14px); }
+
+.kj-ask-kaki{gap:8px;align-content:center}
+.kj-kaki-yomi{margin:0;font-size:32px;font-weight:900;letter-spacing:.06em;color:var(--kj-orange-dk)}
+.kj-kaki-blank{margin:0;font-size:22px;font-weight:800;letter-spacing:.1em;color:var(--kj-ink2)}
+.kj-kaki-answer{margin:0;font-size:76px;font-weight:900;line-height:1.1}
+.kj-kaki-note{margin:0;font-size:15px;font-weight:700;color:var(--kj-ink2)}
+.kj-kaki-check{margin:2px 0 0;font-size:14px;font-weight:800;color:var(--kj-orange-dk)}
+
+.kj-write{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.kj-pad{
+  position:relative;
+  height:var(--kj-pad-h);
+  aspect-ratio:1;
+  max-width:100%;
+  background-color:#fff;
+  border:2px solid var(--kj-line2);
+  border-radius:10px;
+  /* 田の字の目安線（国語ノートと同じ）。canvas は線だけを持たせたいので、
+     マス目は下地のCSSで描いて「ぜんぶ けす」で消えないようにする。 */
+  background-image:
+    repeating-linear-gradient(to bottom,var(--kj-line2) 0 7px,transparent 7px 14px),
+    repeating-linear-gradient(to right,var(--kj-line2) 0 7px,transparent 7px 14px);
+  background-size:2px 100%,100% 2px;
+  background-position:50% 0,0 50%;
+  background-repeat:no-repeat;
+}
+.kj-canvas{
+  display:block;width:100%;height:100%;border-radius:8px;
+  touch-action:none;          /* 無いとタブレットで書こうとするとページがスクロールする */
+  cursor:crosshair;
+}
+.kj-canvas.is-locked{cursor:default}
+
+.kj-write-tools{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.kj-tool{
+  border:2px solid var(--kj-line2);border-radius:10px;background:#fff;color:var(--kj-ink);
+  padding:10px 20px;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer;
+}
+.kj-tool:hover{border-color:var(--kj-orange)}
+.kj-judge-btn{background:var(--kj-orange);border-color:var(--kj-orange-dk);color:#fff;box-shadow:0 3px 0 var(--kj-orange-dk)}
+.kj-judge-btn:hover{background:var(--kj-orange-dk)}
+
+/* まるとばつは同じ大きさ・同じ並びにする（片方を小さくすると押しやすさが偏る） */
+.kj-write-tools.is-marks{display:grid;grid-template-columns:1fr 1fr;width:100%}
+.kj-mark{
+  border:2px solid var(--kj-line2);border-radius:12px;background:#fff;
+  padding:14px 10px;font-size:17px;font-weight:800;font-family:inherit;cursor:pointer;color:var(--kj-ink);
+}
+.kj-mark-ok{border-color:var(--kj-green);color:var(--kj-green);background:var(--kj-green-bg)}
+.kj-mark-ng{border-color:var(--kj-red);color:var(--kj-red);background:var(--kj-red-bg)}
+.kj-mark:disabled{opacity:.5;cursor:default}
+
+/* --- 2カラムの段だけ右カラムに置く（1カラムの段は既定のまま上から順に積む） --- */
+@media(min-width:1180px){
+  .ninja-kids .kj-play>.kj-write{grid-column:2;grid-row:2;align-self:stretch;margin:0}
+}
+@media(min-width:768px) and (max-width:1179px) and (orientation:landscape){
+  .ninja-kids .kj-play>.kj-write{grid-column:2;grid-row:2;align-self:stretch;margin:0}
+}
+/* 高さ不足（ノートPC・iPad横）は --nk-qh が 270px に縮むので自動で追従する */
+
+/* --- 1カラムの段：パッドは画面の高さから決める（1画面に収めるルールを優先） --- */
+@media(max-width:767px) and (orientation:portrait){
+  .ninja-kids{ --kj-pad-h:clamp(100px,22dvh,240px); }
+  .ninja-kids .kj-play.is-kaki>.kj-ask{ min-height:clamp(72px,13dvh,150px); }
+  .kj-kaki-yomi{font-size:26px}
+  .kj-kaki-blank{font-size:18px}
+  .kj-kaki-answer{font-size:56px}
+  .kj-tool{padding:9px 16px;font-size:14px}
+}
+@media(min-width:768px) and (max-width:1179px) and (orientation:portrait){
+  .ninja-kids{ --kj-pad-h:clamp(140px,22dvh,320px); }
+  .ninja-kids .kj-play.is-kaki>.kj-ask{ min-height:clamp(110px,13dvh,200px); }
+}
+/* --- 寝かせた画面：2カラムに戻し、パッドは高さいっぱいまで --- */
+@media(orientation:landscape) and (max-height:500px){
+  .ninja-kids{ --kj-pad-h:clamp(76px,42dvh,158px); }
+  .ninja-kids .kj-play>.kj-write{grid-column:2;grid-row:2;align-self:center;gap:6px;margin:0}
+  .kj-tool{padding:6px 12px;font-size:12px;border-radius:8px}
+  .kj-mark{padding:8px 6px;font-size:14px;border-radius:9px}
+  .kj-kaki-answer{font-size:48px}
+  .kj-kaki-note,.kj-kaki-check{font-size:12px}
+}
+
+/* 縦持ち（1カラムの段）は、はんてい後に「正解の字＋ことば＋かけた?」が縦に3つ積まれて
+   問題パネルが伸び、1画面から はみ出していた（2026-09-12 実測）。
+   大きい字の右にことばを置いて、はんてい前後で高さが変わらないようにする。 */
+@media(orientation:portrait) and (max-width:1179px){
+  .ninja-kids .kj-play.is-kaki>.kj-ask{
+    grid-template-columns:auto minmax(0,auto);
+    justify-content:center;
+    align-content:center;
+    gap:2px 14px;
+    padding:10px 14px;
+  }
+  .ninja-kids .kj-play.is-kaki .kj-kaki-yomi,
+  .ninja-kids .kj-play.is-kaki .kj-kaki-blank{grid-column:1 / -1}
+  .ninja-kids .kj-play.is-kaki .kj-kaki-answer{grid-column:1;grid-row:1 / span 2;align-self:center}
+  .ninja-kids .kj-play.is-kaki .kj-kaki-note{grid-column:2;grid-row:1;align-self:end;text-align:left}
+  .ninja-kids .kj-play.is-kaki .kj-kaki-check{grid-column:2;grid-row:2;align-self:start;text-align:left;margin:0}
+}
