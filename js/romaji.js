@@ -333,7 +333,7 @@
     var tools = document.getElementById('rj-tools');
     tools.innerHTML = '';
     tools.classList.add('is-marks');
-    [['ok', 'かけた'], ['ng', 'つぎ がんばろう']].forEach(function (m) {
+    [['ok', 'かけた'], ['ng', 'まちがった']].forEach(function (m) {
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'rj-mark rj-mark-' + m[0];
@@ -461,7 +461,7 @@
     box.className = 'rj-answer is-on' + (ok ? ' is-ok' : ' is-ng');
     box.innerHTML =
       '<div class="nk-a-body">' +
-      '<p class="rj-a-head">' + (ok ? 'せいかい！' : 'おしい！') + '　<b>' + esc(shownAnswer) + '</b></p>' +
+      '<p class="rj-a-head">' + (ok ? 'せいかい！' : (q.type === 'kaku' ? 'つぎ がんばろう' : 'おしい！')) + '　<b>' + esc(shownAnswer) + '</b></p>' +
       (q.cat ? '<p class="rj-a-cat">' + esc(q.cat) + '</p>' : '') +
       '<p class="rj-a-why">' + esc(q.hint) + '</p>' +
       '</div>' +
