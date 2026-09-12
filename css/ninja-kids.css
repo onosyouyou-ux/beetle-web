@@ -2764,9 +2764,34 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
    大きさは他の修行と同じく --nk-fs-* から取り、px を直書きしない。
    ============================================================ */
 .ninja-kids .kj-ask-kaki { padding:10px 14px; }
-.ninja-kids .kj-kaki-yomi   { font-size:var(--nk-fs-yomi);  color:#fff; text-shadow:0 2px 12px rgba(0,0,0,.22); }
-.ninja-kids .kj-kaki-blank  { font-size:var(--nk-fs-opt);   color:#cddadc; }
-.ninja-kids .kj-kaki-answer { font-size:var(--nk-fs-word);  color:#fff; text-shadow:0 2px 12px rgba(0,0,0,.22); }
+/* かくモードの問題エリアは「よみ＋伏せ字」の2行しかなく、下が大きく空いていた。
+   ほかのモードより大きい係数を当てて、問題エリアいっぱいに使う（2026-09-12）。 */
+/* 字の大きさは「問題エリアの幅 ÷ 字数」で決める（2026-09-12）。
+   よみは1〜7文字とばらつくので、px を決め打ちにすると長いよみが2行に折れ、
+   最後の1文字だけ次の行に残る。字数は js が --kj-n で渡す。
+   1行目は cqw に対応していないブラウザ用の控え。 */
+.ninja-kids .kj-ask-kaki { container-type:inline-size; padding-inline:clamp(14px,3.5%,28px); }
+.ninja-kids .kj-kaki-yomi   { font-size:clamp(22px,calc(var(--nk-qh) * .160),56px); color:#fff; text-shadow:0 2px 12px rgba(0,0,0,.22); }
+.ninja-kids .kj-kaki-yomi   { font-size:min(calc(var(--nk-qh) * .235), calc(92cqw / var(--kj-n,4))); }
+.ninja-kids .kj-kaki-blank  { font-size:clamp(18px,calc(var(--nk-qh) * .120),42px); color:#cddadc; }
+.ninja-kids .kj-kaki-blank  { font-size:min(calc(var(--nk-qh) * .135), calc(58cqw / var(--kj-n,4))); }
+/* ○＝これから書く字。暗い問題パネルの上なので、赤より明るいオレンジのほうが読める（2026-09-12） */
+.ninja-kids .kj-kaki-target {
+  color:#ffb15c;
+  border-bottom:.1em solid currentColor;
+  padding-bottom:.06em;
+}
+/* 正解の字は 教科書体風（Klee One）にする（2026-09-12）。
+   丸ゴシックだと とめ・はね・はらい が分からず、見くらべる意味が薄い。
+   明朝は「ウロコ」が印刷用の飾りで手書きには無いので、教科書体を先に置き、
+   無い環境では OS の明朝に落とす。 */
+.ninja-kids .kj-kaki-answer {
+  font-size:var(--nk-fs-word);
+  color:#fff;
+  text-shadow:0 2px 12px rgba(0,0,0,.22);
+  font-family:'Klee One','Yu Mincho','YuMincho','Hiragino Mincho ProN','Noto Serif JP',serif;
+  font-weight:600;
+}
 .ninja-kids .kj-kaki-note   { font-size:var(--nk-fs-opt);   color:#cddadc; }
 .ninja-kids .kj-kaki-check  { font-size:var(--nk-fs-label); color:#ffd9a0; }
 

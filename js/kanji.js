@@ -63,10 +63,14 @@
     // かくモードは選択肢を作らない。ことばの その字だけを ○ で伏せて見せることで、
     // 「だい」だけでは 大・台・第 のどれか決まらない問題を避ける。
     if (state.modeId === 'kaki') {
+      // ことばが その漢字だけ（耳・山など）のときは、伏せ字が「○」1つになって
+      // 何も伝えないので出さない。よみだけで問いとして成り立つ。
+      var blank = word.split(entry.k).join('○');
+      if (blank.replace(/○/g, '') === '') blank = '';
       return {
         askKind: 'kaki',
         ask: yomi,
-        blank: word.split(entry.k).join('○'),
+        blank: blank,
         word: word,
         answer: entry.k,
         kanji: entry.k
@@ -253,8 +257,19 @@
     wrap.appendChild(el('p', 'kj-ask-label', 'かんじで かこう'));
 
     var ask = el('div', 'kj-ask kj-ask-kaki');
+    // 字の大きさは「問題エリアの幅 ÷ 字数」で決める（CSS側）。字数だけ渡す。
+    // よみは1〜7文字とばらつくので、px を決め打ちにすると
+    // 「しょうがっこう」が2行に折れて最後の1文字だけ next 行に残る。
+    ask.style.setProperty('--kj-n', q.ask.length);
     ask.appendChild(el('p', 'kj-kaki-yomi', q.ask));
-    ask.appendChild(el('p', 'kj-kaki-blank', q.blank));
+    if (q.blank) {
+      // ○（これから書く字）だけ色と下線をつけて、どこを書くのか一目で分かるようにする
+      var blankEl = el('p', 'kj-kaki-blank');
+      q.blank.split('').forEach(function (ch) {
+        blankEl.appendChild(el('span', ch === '○' ? 'kj-kaki-target' : null, ch));
+      });
+      ask.appendChild(blankEl);
+    }
     wrap.appendChild(ask);
 
     var write = el('div', 'kj-write');
