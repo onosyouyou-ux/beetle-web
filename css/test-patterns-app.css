@@ -1,5 +1,9 @@
 body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cream);color:var(--tp-text);line-height:1.6}
 .bc{background:var(--tp-dark);padding:0 2rem;font-size:13px;color:#888;display:flex;gap:10px;align-items:center;height:52px;position:sticky;top:0;z-index:100}
+/* パンくずのロゴと「いま見ているページ」名（2026-09-12にHTMLのインラインstyleから外出し）。
+   .bc span{color:#444} が効いてしまうので、現在ページは専用クラスで上書きする。 */
+.bc-logo{height:28px;vertical-align:middle;border-radius:6px}
+.bc .bc-current{color:#ddd;font-size:13px}
 .bc span{color:#444}
 .bc a{color:#aaa;text-decoration:none;white-space:nowrap}
 .bc span{white-space:nowrap}

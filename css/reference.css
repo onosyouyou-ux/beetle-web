@@ -11,6 +11,10 @@ body{font-family:'M PLUS 1p','Noto Sans JP',sans-serif;font-size:14px;background
 .bc span{color:#444;white-space:nowrap}
 .bc a{color:#aaa;text-decoration:none;white-space:nowrap}
 .bc a:hover{color:#fff}
+/* パンくずのロゴと「いま見ているページ」名（2026-09-12にHTMLのインラインstyleから外出し）。
+   .bc span{color:#444} が効いてしまうので、現在ページは専用クラスで上書きする。 */
+.bc-logo{height:28px;vertical-align:middle;border-radius:6px}
+.bc .bc-current{color:#ddd;font-size:13px}
 
 /* ヒーロー */
 .hero{background:var(--tp-dark);padding:56px max(32px,calc((100% - 860px) / 2)) 48px;text-align:center;position:relative;overflow:hidden}
