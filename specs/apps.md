@@ -27,9 +27,11 @@ required_selectors: ["#site-header", "#site-footer", ".brand-hero", ".apps-tabs"
 - **リンク先はランディングがあるものはランディングへ**。アプリ本体へ直リンクするのは
   `test-tools.html` の検証ツールと同じ扱い（bug-checker のみ別タブ）
 - **カード末尾は「詳しく見る →」**（[_common.md](_common.md) のカードルール）。バッジは使わない
-- **サムネイル**（2026-09-12）: 01・02の教育系12本は `assets/images/edu-thumbs/` の画像を
-  `edu-tools.html` と**同じ画像・同じalt**で使う。**03・04のQA系17本は画像が無いためサムネなし**
-  （用意でき次第入れる。カードの構造は同じなので `.tool-thumb` を足すだけ）
+- **サムネイル**（2026-09-12・29本すべてに入っている）:
+  - 01・02の教育系12本 → `assets/images/edu-thumbs/`。`edu-tools.html` と**同じ画像・同じalt**を使う
+  - 03・04のQA系17本 → `assets/images/qa-thumbs/`。**既存のヒーロー画像から16:9で切り出した**もの
+    （元は `qa-hero-banner.jpg` と `bug-checker-lp/` の7枚。新規生成はしていない）。640x360・JPG
+  - 切り出しは PowerShell の System.Drawing（WSLにPILは無い）。同じ絵を2本で使い回さない
 - **タブ**（`.apps-tabs` ＋ `/js/apps.js`。2026-09-12追加）:
   ヒーローの下に **子供向け・先生向け・検証ツール・検証資料** の4タブ。
   **押した面だけを出す画面切り替え**（ページ内リンクのジャンプではない。2026-09-12決定）
