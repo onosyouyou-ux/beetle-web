@@ -12,6 +12,8 @@
 
   var DATA = window.KANJI_DATA;
   var SET_LENGTH = 10;
+  // 自分で まるつけ したあと、つぎの問題へ進むまで（ミリ秒）。調整はここ1か所。
+  var NEXT_DELAY = 2000;
 
   // データにある学年から選択肢を組み立てる（学年が増えたら自動で増える）
   var GRADES = (function () {
@@ -30,7 +32,8 @@
 
   var MODES = [
     { id: 'yomi', name: 'かんじを よむ しゅぎょう', note: 'かんじの ことば → よみかたを えらぶ' },
-    { id: 'kanji', name: 'かんじに する しゅぎょう', note: 'よみかた → かんじの ことばを えらぶ' }
+    { id: 'kanji', name: 'かんじに する しゅぎょう', note: 'よみかた → かんじの ことばを えらぶ' },
+    { id: 'kaki', name: 'かんじを かく しゅぎょう', note: 'よみかた → かんじを かいて じぶんで まるつけ' }
   ];
 
   var state = { gradeId: GRADES[0].id, modeId: 'yomi', session: null };
@@ -56,6 +59,19 @@
     var entry = pick(pool);
     var wi = randInt(0, entry.w.length - 1);
     var word = entry.w[wi][0], yomi = entry.w[wi][1];
+
+    // かくモードは選択肢を作らない。ことばの その字だけを ○ で伏せて見せることで、
+    // 「だい」だけでは 大・台・第 のどれか決まらない問題を避ける。
+    if (state.modeId === 'kaki') {
+      return {
+        askKind: 'kaki',
+        ask: yomi,
+        blank: word.split(entry.k).join('○'),
+        word: word,
+        answer: entry.k,
+        kanji: entry.k
+      };
+    }
 
     if (state.modeId === 'yomi') {
       var opts = [{ v: yomi, ok: true }];
@@ -159,6 +175,7 @@
     if (s.index >= SET_LENGTH) return renderResult();
     s.q = makeQuestion(s.pool);
     s.locked = false;
+    s.marked = false;
     renderPlay();
   }
 
@@ -178,19 +195,24 @@
     bar.appendChild(fill);
     wrap.appendChild(bar);
 
-    wrap.appendChild(el('p', 'kj-ask-label',
-      q.askKind === 'word' ? 'なんと よむ?' : 'この よみの ことばは どれ?'));
-    wrap.appendChild(el('p', q.askKind === 'word' ? 'kj-ask kj-ask-word' : 'kj-ask kj-ask-yomi', q.ask));
+    if (q.askKind === 'kaki') {
+      wrap.classList.add('is-kaki');   // 盤面の配分がほかのモードと違う
+      buildKaki(wrap, q);
+    } else {
+      wrap.appendChild(el('p', 'kj-ask-label',
+        q.askKind === 'word' ? 'なんと よむ?' : 'この よみの ことばは どれ?'));
+      wrap.appendChild(el('p', q.askKind === 'word' ? 'kj-ask kj-ask-word' : 'kj-ask kj-ask-yomi', q.ask));
 
-    var options = el('div', 'kj-options');
-    q.options.forEach(function (o) {
-      var b = el('button', 'kj-opt');
-      b.appendChild(el('span', 'nk-answer-label', o.v));
-      b.type = 'button';
-      b.addEventListener('click', function () { choose(o, b, options); });
-      options.appendChild(b);
-    });
-    wrap.appendChild(options);
+      var options = el('div', 'kj-options');
+      q.options.forEach(function (o) {
+        var b = el('button', 'kj-opt');
+        b.appendChild(el('span', 'nk-answer-label', o.v));
+        b.type = 'button';
+        b.addEventListener('click', function () { choose(o, b, options); });
+        options.appendChild(b);
+      });
+      wrap.appendChild(options);
+    }
     wrap.appendChild(el('div', 'kj-feedback'));
 
     var back = el('button', 'kj-back', '← もんだいせんたくに もどる');
@@ -221,6 +243,156 @@
       : 'こたえは ' + q.answer + (chosen.why ? '（' + chosen.why + '）' : '');
 
     setTimeout(function () { s.index++; nextQuestion(); }, chosen.ok ? 1000 : 1900);
+  }
+
+  /* ---------- かく しゅぎょう ----------
+     手書きの自動判定はしない。書いたあとに正解を出して、子どもが自分でまるをつける。
+     筆跡の自動判定は「合っているのに ×」が必ず出て、そこで手が止まってしまうため。 */
+
+  function buildKaki(wrap, q) {
+    wrap.appendChild(el('p', 'kj-ask-label', 'かんじで かこう'));
+
+    var ask = el('div', 'kj-ask kj-ask-kaki');
+    ask.appendChild(el('p', 'kj-kaki-yomi', q.ask));
+    ask.appendChild(el('p', 'kj-kaki-blank', q.blank));
+    wrap.appendChild(ask);
+
+    var write = el('div', 'kj-write');
+    var pad = el('div', 'kj-pad');
+    var canvas = document.createElement('canvas');
+    canvas.className = 'kj-canvas';
+    canvas.setAttribute('role', 'img');
+    canvas.setAttribute('aria-label', 'かんじを かく ところ');
+    pad.appendChild(canvas);
+    write.appendChild(pad);
+
+    var tools = el('div', 'kj-write-tools');
+    var clear = el('button', 'kj-tool kj-clear', 'ぜんぶ けす');
+    clear.type = 'button';
+    var judge = el('button', 'kj-tool kj-judge-btn', 'はんてい');
+    judge.type = 'button';
+    tools.appendChild(clear);
+    tools.appendChild(judge);
+    write.appendChild(tools);
+    wrap.appendChild(write);
+
+    var pen = setupCanvas(canvas);
+    clear.addEventListener('click', pen.clear);
+    judge.addEventListener('click', function () { revealKaki(q, ask, tools, pen); });
+  }
+
+  /* 「はんてい」→ 正解を出して、自分でまるをつけてもらう */
+  function revealKaki(q, ask, tools, pen) {
+    var s = state.session;
+    if (s.locked) return;
+    s.locked = true;
+    pen.lock();                 // 書いた字はそのまま残す（正解と見くらべるため）
+
+    ask.innerHTML = '';
+    ask.appendChild(el('p', 'kj-kaki-answer', q.answer));
+    ask.appendChild(el('p', 'kj-kaki-note', q.word + '（' + q.ask + '）'));
+    ask.appendChild(el('p', 'kj-kaki-check', 'おなじ かたちに かけた?'));
+
+    // けす・はんていと同じ行に置きかえる（行を足すと盤面の固定高さからはみ出す）
+    tools.innerHTML = '';
+    tools.classList.add('is-marks');
+    [['ok', 'かけた'], ['ng', 'かけなかった']].forEach(function (m) {
+      var b = el('button', 'kj-mark kj-mark-' + m[0], m[1]);
+      b.type = 'button';
+      b.addEventListener('click', function () { markKaki(m[0] === 'ok', q); });
+      tools.appendChild(b);
+    });
+  }
+
+  function markKaki(ok, q) {
+    var s = state.session;
+    if (s.marked) return;
+    s.marked = true;
+    if (ok) s.correct++;
+    else s.missed.push(q.answer + '（' + q.ask + '）');
+
+    Array.prototype.forEach.call(app.querySelectorAll('.kj-mark'), function (b) { b.disabled = true; });
+
+    var fb = app.querySelector('.kj-feedback');
+    fb.className = 'kj-feedback ' + (ok ? 'is-ok' : 'is-ng');
+    fb.textContent = ok ? 'よく かけました!' : 'こたえは ' + q.answer;
+
+    setTimeout(function () { s.index++; nextQuestion(); }, NEXT_DELAY);
+  }
+
+  /* canvas に指・ペン・マウスで線を引く。
+     - touch-action:none（CSS）が無いと、タブレットで書こうとするとページがスクロールする
+     - 画面の解像度ぶん引きのばさないと線がぼやけて「きたない字」に見える */
+  function setupCanvas(canvas) {
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    var drawing = false, locked = false;
+
+    function fit() {
+      var r = canvas.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      var w = Math.round(r.width * dpr), h = Math.round(r.height * dpr);
+      if (canvas.width === w && canvas.height === h) return;
+      // 向きを変えても書いた線が消えないように、いったん退避してから描きなおす
+      var keep = null;
+      if (canvas.width && canvas.height) {
+        keep = document.createElement('canvas');
+        keep.width = canvas.width;
+        keep.height = canvas.height;
+        keep.getContext('2d').drawImage(canvas, 0, 0);
+      }
+      canvas.width = w;
+      canvas.height = h;
+      if (keep) ctx.drawImage(keep, 0, 0, w, h);
+      // canvas の大きさを変えると描画設定は初期化されるので、毎回入れなおす
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = '#2b2723';
+      ctx.lineWidth = Math.max(3, w / 26);
+    }
+
+    function pos(e) {
+      var r = canvas.getBoundingClientRect();
+      return {
+        x: (e.clientX - r.left) * (canvas.width / r.width),
+        y: (e.clientY - r.top) * (canvas.height / r.height)
+      };
+    }
+
+    canvas.addEventListener('pointerdown', function (e) {
+      if (locked) return;
+      fit();
+      drawing = true;
+      if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+      var p = pos(e);
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(p.x, p.y);   // ちょんと点を打っただけでも見えるように
+      ctx.stroke();
+      e.preventDefault();
+    });
+    canvas.addEventListener('pointermove', function (e) {
+      if (!drawing) return;
+      var p = pos(e);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+      e.preventDefault();
+    });
+    var end = function () { drawing = false; };
+    canvas.addEventListener('pointerup', end);
+    canvas.addEventListener('pointercancel', end);
+
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(canvas);
+    requestAnimationFrame(fit);
+
+    return {
+      clear: function () {
+        if (locked) return;
+        fit();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      },
+      lock: function () { locked = true; drawing = false; canvas.classList.add('is-locked'); }
+    };
   }
 
   function renderResult() {

@@ -2726,3 +2726,56 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     grid-column:1; grid-row:3;
   }
 }
+
+/* ============================================================
+   かく しゅぎょう（かんじ修行・2026-09-12）
+   盤面は忍者スキンの上に載るので、問題エリアの文字は白系にそろえる。
+   大きさは他の修行と同じく --nk-fs-* から取り、px を直書きしない。
+   ============================================================ */
+.ninja-kids .kj-ask-kaki { padding:10px 14px; }
+.ninja-kids .kj-kaki-yomi   { font-size:var(--nk-fs-yomi);  color:#fff; text-shadow:0 2px 12px rgba(0,0,0,.22); }
+.ninja-kids .kj-kaki-blank  { font-size:var(--nk-fs-opt);   color:#cddadc; }
+.ninja-kids .kj-kaki-answer { font-size:var(--nk-fs-word);  color:#fff; text-shadow:0 2px 12px rgba(0,0,0,.22); }
+.ninja-kids .kj-kaki-note   { font-size:var(--nk-fs-opt);   color:#cddadc; }
+.ninja-kids .kj-kaki-check  { font-size:var(--nk-fs-label); color:#ffd9a0; }
+
+/* 手書きパッドは巻物の紙に見立てる（選択肢と同じ枠の作法） */
+.ninja-kids .kj-pad {
+  border:2px solid #d4bd92;
+  border-radius:7px;
+  background-color:#fffdf6;
+  box-shadow:0 3px 0 #c5a876,0 10px 22px rgba(62,39,20,.14);
+}
+.ninja-kids :is(.kj-tool,.kj-mark) {
+  min-height:var(--nk-tap);
+  color:#17272e;
+  border:2px solid color-mix(in srgb,var(--nk-accent) 45%,#fff);
+  border-radius:7px;
+  background:#fff;
+  box-shadow:0 3px 0 #c5a876;
+}
+.ninja-kids :is(.kj-tool,.kj-mark):hover:not(:disabled) {
+  translate:0 -2px;
+  border-color:var(--nk-accent);
+}
+.ninja-kids .kj-judge-btn {
+  border-left:6px solid var(--nk-accent);
+  background:linear-gradient(#fff,color-mix(in srgb,var(--nk-accent) 14%,#fff));
+}
+.ninja-kids .kj-write-tools { width:100%; }
+.ninja-kids .kj-tool { flex:1; }
+.ninja-kids .kj-mark-ok { border-color:#2f7d55; }
+.ninja-kids .kj-mark-ng { border-color:#c0503b; }
+/* 寝かせた画面はタップ領域の下限（--nk-tap 46px）より詰める。
+   パッドを残すことを優先し、ボタンは中身なりの高さにする。 */
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-kids :is(.kj-tool,.kj-mark) { min-height:0; }
+}
+/* 1カラムの段は問題エリアを詰めるぶん、--nk-fs-word では正解の字が小さくなりすぎる。
+   見くらべるのが目的なので、かくモードの正解だけ画面の高さから決める（2026-09-12）。 */
+@media (max-width:767px) and (orientation:portrait) {
+  .ninja-kids .kj-kaki-answer { font-size:clamp(40px,10dvh,76px); }
+}
+@media (min-width:768px) and (max-width:1179px) and (orientation:portrait) {
+  .ninja-kids .kj-kaki-answer { font-size:clamp(56px,9dvh,110px); }
+}
