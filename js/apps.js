@@ -1,78 +1,92 @@
-// apps.html のページ内タブ。
-// やることは2つだけ：
-//   1) 固定ヘッダー（共通パーシャル＝fetchで後から入る）の実測高さに合わせて、
-//      タブの sticky 位置とアンカーの着地位置を決める
-//   2) スクロール位置から「いまどのセクションか」を出して、タブに .is-on を付ける
+// apps.html のタブ。押した面だけを出す（ページ内リンクのジャンプではなく画面の切り替え）。
+//
+// 方針:
+// - HTMLには全4面を書いたままにする。隠すのはJSの仕事。
+//   JSが動かない環境（クローラ含む）では全部が縦に並ぶだけで、内容は失われない
+// - URLのハッシュと同期する。/apps.html#qa-apps を直接開けばその面が出る
+// - タブはリンクのままにしてあるので、新しいタブで開く・リンクをコピーする も普通にできる
 (function () {
   const bar = document.querySelector('.apps-tabs');
   if (!bar) return;
 
   const tabs = Array.from(bar.querySelectorAll('.apps-tab'));
-  const sections = tabs.map((t) => document.querySelector(t.getAttribute('href')));
+  const panels = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls')));
+  if (panels.some((p) => !p)) return;
+
   const inner = bar.querySelector('.apps-tabs-inner');
   const root = document.documentElement;
-  let anchorOffset = 150;
   let current = -1;
 
-  // ヘッダーの高さは注入前後・画面幅で変わるので、その都度測り直す。
-  // なお共通ヘッダー（.nav）は position:sticky を持つが、実際には画面上に残らない。
-  // 包んでいる #site-header が body(flex column) の子で高さがナビと同じため、
-  // sticky が動ける余地がゼロになっているのが原因（本体側の既存の挙動）。
-  // ここでは「ナビが本当に画面に残るときだけ」その高さぶん下げる。
-  // ＝ 包み箱がナビより高ければ効いている、と見て自動で追従させる
+  // 共通ヘッダー（.nav）は position:sticky を持つが、包んでいる #site-header が
+  // body(flex column) の子で高さがナビと同じため、実際には画面に残らない。
+  // 「本当に残るときだけ」その高さぶん下げる（ヘッダー側が直れば自動で追従する）
   const syncOffsets = () => {
     const nav = document.querySelector('.nav');
     const slot = document.getElementById('site-header');
     const navH = nav ? Math.round(nav.getBoundingClientRect().height) : 0;
     const slotH = slot ? Math.round(slot.getBoundingClientRect().height) : 0;
-    const navSticks = nav ? getComputedStyle(nav).position === 'sticky' && slotH > navH : false;
-    const navOffset = navSticks ? navH : 0;
-    const barH = Math.round(bar.getBoundingClientRect().height);
-    anchorOffset = navOffset + barH + 10;
-    root.style.setProperty('--apps-tabs-top', navOffset + 'px');
-    root.style.setProperty('--apps-anchor-offset', anchorOffset + 'px');
+    const sticks = nav ? getComputedStyle(nav).position === 'sticky' && slotH > navH : false;
+    root.style.setProperty('--apps-tabs-top', (sticks ? navH : 0) + 'px');
   };
 
-  const setActive = (i) => {
-    if (i === current) return;
+  const show = (i, opts) => {
+    if (i < 0 || i >= tabs.length) return;
+    const changed = i !== current;
     current = i;
     tabs.forEach((t, n) => {
-      t.classList.toggle('is-on', n === i);
-      if (n === i) t.setAttribute('aria-current', 'true');
-      else t.removeAttribute('aria-current');
+      const on = n === i;
+      t.classList.toggle('is-on', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      // 選ばれていないタブはTabキーの順番から外す（ARIAのタブの作法。←→で移動する）
+      t.tabIndex = on ? 0 : -1;
+      panels[n].hidden = !on;
     });
     // 横スクロールするSPでは、点いたタブが見えるところまで寄せる
-    if (inner.scrollWidth > inner.clientWidth + 1 && tabs[i]) {
+    if (changed && inner.scrollWidth > inner.clientWidth + 1) {
       const t = tabs[i];
-      const left = t.offsetLeft - (inner.clientWidth - t.offsetWidth) / 2;
-      inner.scrollTo({ left: Math.max(0, left), behavior: 'smooth' });
+      inner.scrollTo({ left: Math.max(0, t.offsetLeft - (inner.clientWidth - t.offsetWidth) / 2), behavior: 'smooth' });
+    }
+    // 下の方を見ている最中に切り替えたら、タブが見える位置まで戻す
+    // （切り替え先が短いと、いきなり余白だけの画面になってしまうため）
+    if (changed && opts && opts.scroll && bar.getBoundingClientRect().top < 0) {
+      const y = bar.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: y, behavior: 'auto' });
     }
   };
 
-  const update = () => {
-    // タブのすぐ下を判定ラインにする（そこを過ぎたセクションのうち最後のもの＝いまの場所）
-    const line = anchorOffset + 4;
-    let active = 0;
-    sections.forEach((sec, i) => {
-      if (sec && sec.getBoundingClientRect().top <= line) active = i;
+  const indexOfHash = (hash) => tabs.findIndex((t) => t.getAttribute('href') === hash);
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', (e) => {
+      // 別タブで開く・リンクを保存する といった操作は邪魔しない
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      show(i, { scroll: true });
+      history.replaceState(null, '', tab.getAttribute('href'));
     });
-    // 最下部まで来たら最後のタブを点ける（短いセクションが点かないのを防ぐ）
-    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
-      active = tabs.length - 1;
-    }
-    setActive(active);
-  };
+    // ←→で隣のタブへ（ARIAのタブの作法）
+    tab.addEventListener('keydown', (e) => {
+      const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!step) return;
+      e.preventDefault();
+      const n = (i + step + tabs.length) % tabs.length;
+      show(n, { scroll: true });
+      history.replaceState(null, '', tabs[n].getAttribute('href'));
+      tabs[n].focus();
+    });
+  });
 
-  const refresh = () => { syncOffsets(); update(); };
-
-  refresh();
-  window.addEventListener('scroll', update, { passive: true });
-  window.addEventListener('resize', refresh);
-  window.addEventListener('load', refresh);
+  window.addEventListener('hashchange', () => {
+    const i = indexOfHash(location.hash);
+    if (i >= 0) show(i, { scroll: true });
+  });
+  window.addEventListener('resize', syncOffsets);
+  window.addEventListener('load', syncOffsets);
   // ヘッダーは fetch 後に差し込まれるので、入った時点でもう一度測る
-  const headerSlot = document.getElementById('site-header');
-  if (headerSlot && window.MutationObserver) {
-    const mo = new MutationObserver(refresh);
-    mo.observe(headerSlot, { childList: true, subtree: true });
-  }
+  const slot = document.getElementById('site-header');
+  if (slot && window.MutationObserver) new MutationObserver(syncOffsets).observe(slot, { childList: true, subtree: true });
+
+  syncOffsets();
+  const start = indexOfHash(location.hash);
+  show(start >= 0 ? start : 0, { scroll: false });
 })();

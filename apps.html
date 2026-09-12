@@ -52,21 +52,18 @@
   </div>
 </div>
 
-<!-- ページ内タブ（ヘッダーの直下にはりつく。現在地は js/apps.js が .is-on で点ける） -->
-<nav class="apps-tabs" aria-label="ページ内リンク">
-  <div class="apps-tabs-inner">
-    <a class="apps-tab" href="#kids"><span class="at-num">01</span><span class="at-label">こども<span class="at-trim">・おうち</span></span></a>
-    <a class="apps-tab" href="#teacher"><span class="at-num">02</span><span class="at-label">先生<span class="at-trim">・おうちのかた</span></span></a>
-    <a class="apps-tab" href="#qa-apps"><span class="at-num">03</span><span class="at-label">検証ツール</span></a>
-    <a class="apps-tab" href="#qa-ref"><span class="at-num">04</span><span class="at-label">リファレンス</span></a>
+<!-- タブ（押した面だけを出す。切り替えは js/apps.js。JSが無い環境ではただのアンカーとして全面が出る） -->
+<div class="apps-tabs">
+  <div class="apps-tabs-inner" role="tablist" aria-label="アプリの分野">
+    <a class="apps-tab" role="tab" id="tab-kids" aria-controls="kids" href="#kids"><span class="at-num">01</span><span class="at-label">子供向け</span></a>
+    <a class="apps-tab" role="tab" id="tab-teacher" aria-controls="teacher" href="#teacher"><span class="at-num">02</span><span class="at-label">先生向け</span></a>
+    <a class="apps-tab" role="tab" id="tab-qa-apps" aria-controls="qa-apps" href="#qa-apps"><span class="at-num">03</span><span class="at-label">検証ツール</span></a>
+    <a class="apps-tab" role="tab" id="tab-qa-ref" aria-controls="qa-ref" href="#qa-ref"><span class="at-num">04</span><span class="at-label">検証資料</span></a>
   </div>
-</nav>
-
-<div class="intro-note">
-  <p><b>探しかた：</b>上のタブで、お子さん向け・先生向け・テストの仕事で使うものに切り替えられます。分野ごとの説明は<a href="/edu-tools.html">教育支援</a>・<a href="/test-tools.html">QA支援</a>のページにあります。</p>
 </div>
 
-<div class="section" id="kids">
+
+<div class="section apps-panel" id="kids" role="tabpanel" aria-labelledby="tab-kids">
   <div class="container">
     <div class="section-header">
       <span class="section-num">01</span>
@@ -120,7 +117,7 @@
   </div>
 </div>
 
-<div class="section" id="teacher">
+<div class="section apps-panel" id="teacher" role="tabpanel" aria-labelledby="tab-teacher">
   <div class="container">
     <div class="section-header">
       <span class="section-num">02</span>
@@ -162,7 +159,7 @@
   </div>
 </div>
 
-<div class="section" id="qa-apps">
+<div class="section apps-panel" id="qa-apps" role="tabpanel" aria-labelledby="tab-qa-apps">
   <div class="container">
     <div class="section-header">
       <span class="section-num">03</span>
@@ -229,7 +226,7 @@
   </div>
 </div>
 
-<div class="section" id="qa-ref">
+<div class="section apps-panel" id="qa-ref" role="tabpanel" aria-labelledby="tab-qa-ref">
   <div class="container">
     <div class="section-header">
       <span class="section-num">04</span>
