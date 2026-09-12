@@ -194,7 +194,7 @@ body{
 .kj-judge-btn:hover{background:var(--kj-orange-dk)}
 
 /* まるとばつは同じ大きさ・同じ並びにする（片方を小さくすると押しやすさが偏る） */
-.kj-write-tools.is-marks{display:grid;grid-template-columns:1fr 1fr;width:100%}
+.kj-write-tools.is-marks{display:grid;grid-template-columns:1fr 1fr}
 .kj-mark{
   border:2px solid var(--kj-line2);border-radius:12px;background:#fff;
   padding:14px 10px;font-size:17px;font-weight:800;font-family:inherit;cursor:pointer;color:var(--kj-ink);
@@ -276,6 +276,6 @@ body{
 @media(min-width:1180px),
       (min-width:768px) and (max-width:1179px) and (orientation:landscape),
       (orientation:landscape) and (max-height:500px){
-  .ninja-kids .kj-play.is-kaki>.kj-write-tools{ grid-column:1 / -1; grid-row:3; margin:0; }
+  .ninja-kids .kj-play.is-kaki>.kj-write-tools{ grid-column:1 / -1; grid-row:3; justify-self:center; margin:0; }
 }
-.kj-write-tools{width:100%}
+.kj-write-tools{width:min(100%,460px);margin-inline:auto}
