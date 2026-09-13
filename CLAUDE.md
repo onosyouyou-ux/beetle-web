@@ -493,3 +493,43 @@ QA事業と教育事業の二本立てに合わせ、入口を分ける。**LP�
   ランディングは **`/css/edu-app-landing.css` を共用**（`eal-` クラス。ヒーロー画像が無いときは `.eal-hero-grid` を
   使わず1カラムで組めば崩れない）。仕様書は「アプリ用」「ランディング用」の**2本**を `specs/` に置く。
   データとロジックは分け、**データ側（`js/{名前}-data.js`）を単一のデータ源**にする（app 側はその形しか知らない）。
+
+## 開発環境と git 運用（2026-09-13 決定）
+
+### 作業場所
+- リポジトリは WSL の `~/projects/` に置く。`/mnt/c` 上は Node のビルドとファイル監視が遅い
+- Windows 側から WSL の UNC パス（`\wsl.localhost\...`）で git を触らない。CRLF 混入と worktree 破損の原因になる
+
+### 改行コード
+- `.gitattributes` に `* text=auto eol=lf` を置く
+- これがないと Windows 版 git の `core.autocrlf=true` により、触るたびに 200〜300 ファイルが「変更」扱いになる
+- 偽の差分を疑ったら `git diff --ignore-cr-at-eol --shortstat` を見る。出力が空なら内容の差はゼロ
+
+### worktree
+- `git worktree add` は必ず WSL 側から実行する（`/home/owner/...` で登録される）
+- Windows 側から作ると UNC パスで登録され、WSL からは `prunable` 扱いになる。`git worktree prune` を打つと登録が消えて壊れる
+- 壊れた場合の復旧: ディレクトリを退避 → `git worktree add` で作り直し → `rsync -a --delete --exclude '/.git'` で中身を戻す
+
+### リポジトリの肥大化
+- fetch を繰り返すと pack が統合されずに溜まる
+- 2026-09-13 時点で 78 pack / 938,564 オブジェクト / 5.9 GB まで膨張していた。実際に必要なオブジェクトは 8,095 個（0.9%）だった
+- 定期的に `git gc --prune=now` を実行する。事前に `git bundle create <名前>.bundle --all` で保険を取り、`git bundle verify` で確認する
+- 上記の実行後 175 MB まで縮小した
+
+### Codex の Windows サンドボックス
+- `~/.codex/config.toml`（Windows 側の `C:\Users\owner\.codex\`）の `[windows] sandbox` は `unelevated` にする
+- `elevated` だと WSL の UNC パスに NTFS の ACE を付けられず、`GetSecurityInfo failed ... : 1` から `setup refresh had errors` になって起動しない
+- `unelevated` ではサンドボックス内の通信が `127.0.0.1:9`（discard ポート）に捨てられるため、`gh` や curl は承認付き実行が必要になる
+- 有効値は `elevated` / `unelevated` / `disabled` の3つ
+
+### リポジトリの役割
+| リポジトリ | 役割 |
+| --- | --- |
+| `beetle-web` | サイト本体（PUBLIC） |
+| `beetle-blog` | ブログ記事カード＝Issue 専用の板（PRIVATE）。ファイルは置かない |
+| `beetle-blog-drafts` | 原稿・執筆ルール・ネタストックの実体（PRIVATE） |
+| `flash-kanji` | かんじ道場（PRIVATE）。ローカルクローンは持たない |
+
+### セッション履歴について
+- 会話ログは残さない。結論はこの CLAUDE.md か Issue に書く
+- Codex のセッション履歴は 6 週間で 150 ファイル / 1.1 GB まで膨らみ、最大の 1 ファイルは 95% が埋め込みスクリーンショットだった
