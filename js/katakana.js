@@ -163,10 +163,195 @@
     return qs;
   }
 
+  /* ---------- かく しゅぎょう（2026-09-14） ----------
+     ひらがなを 見せて、カタカナ1字を 書く。
+     筆跡の自動判定はしない。合っているのに × が出ると そこで手が止まるため、
+     はんてい で お手本を出して、子どもが 自分で まるをつける（ローマ字修行と同じ作法）。 */
+
+  /* 説明は 二重に持たない。形の にている字は「にた字みつけ」の 見分けかたを そのまま使う。 */
+  function kakuHint(m) {
+    for (var i = 0; i < D.nigata.length; i++) {
+      var p = D.nigata[i];
+      if (p.a === m.k || p.b === m.k) return p.hint;
+    }
+    if (m.g === 'small') return 'ちいさく 書く字。大きく 書くと ちがう字に なります（コップ → コツプ）。';
+    if (m.g === 'daku') return '右上に 点を 2つ つけます。';
+    if (m.g === 'handaku') return '右上に まるを つけます。';
+    return 'ひらがなの「' + m.h + '」と おなじ おとの 字です。';
+  }
+
+  function buildKaku() {
+    return pick(D.moji, QUESTIONS).map(function (m) {
+      return { type: 'kaku', show: m.h, word: m.k, hint: kakuHint(m), cat: '' };
+    });
+  }
+
+  function renderKaku(q) {
+    root.innerHTML =
+      '<div class="kt-quiz">' +
+        '<div class="kt-bar"><span>' + (state.i + 1) + ' / ' + QUESTIONS + '</span>' +
+          '<span class="kt-score">' + state.ok + 'もん せいかい</span></div>' +
+        '<div class="kt-q">' +
+          '<p class="kt-q-lead">この 字を カタカナで かいてね</p>' +
+          '<p class="kt-q-word is-big">' + esc(q.show) + '</p>' +
+        '</div>' +
+        '<div class="kt-write">' +
+          '<div class="kt-pad">' +
+            '<canvas class="kt-canvas" role="img" aria-label="カタカナを かく ところ"></canvas>' +
+            // けしゴムは書くところの右上に重ねる。横に並べると「はんてい」が小さくなる
+            '<button type="button" class="kt-eraser" id="kt-clear" title="ぜんぶ けす" aria-label="ぜんぶ けす">' +
+              '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+                '<path d="M8.6 20H20" />' +
+                '<path d="M15.4 4.6 4.6 15.4a2 2 0 0 0 0 2.8l1.2 1.2a2 2 0 0 0 2.8 0L19.4 8.6a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0Z" />' +
+                '<path d="m10 10 4 4" />' +
+              '</svg>' +
+            '</button>' +
+          '</div>' +
+          // お手本は はんてい後に出るが、場所は最初から空けておく（盤面が動かないように）
+          '<p class="kt-model" id="kt-model"></p>' +
+        '</div>' +
+        '<div class="kt-write-tools" id="kt-tools">' +
+          '<button type="button" class="kt-tool kt-judge" id="kt-judge">はんてい</button>' +
+        '</div>' +
+        '<div class="kt-answer" id="kt-answer"></div>' +
+        '<button type="button" class="kt-back">← もんだいせんたくに もどる</button>' +
+      '</div>';
+
+    root.querySelector('.kt-back').addEventListener('click', renderMenu);
+    var pen = setupCanvas(root.querySelector('.kt-canvas'));
+    document.getElementById('kt-clear').addEventListener('click', pen.clear);
+    document.getElementById('kt-judge').addEventListener('click', function () { revealKaku(q, pen); });
+  }
+
+  function revealKaku(q, pen) {
+    pen.lock();                 // 書いた字は 残す（お手本と 見くらべるため）
+    var eraser = root.querySelector('.kt-eraser');
+    if (eraser) eraser.remove();
+
+    var model = document.getElementById('kt-model');
+    model.textContent = q.word;
+    model.classList.add('is-on');
+
+    // まるつけは「はんてい」と同じ行に置きかえる（行を足すと盤面からはみ出す）
+    var tools = document.getElementById('kt-tools');
+    tools.innerHTML = '';
+    tools.classList.add('is-marks');
+    [['ok', 'かけた'], ['ng', 'まちがった']].forEach(function (m) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'kt-mark kt-mark-' + m[0];
+      b.textContent = m[1];
+      b.addEventListener('click', function () {
+        if (tools.dataset.done === '1') return;
+        tools.dataset.done = '1';
+        finishKaku(m[0] === 'ok', q);
+      });
+      tools.appendChild(b);
+    });
+  }
+
+  function finishKaku(ok, q) {
+    if (ok) state.ok++;
+    else state.missed.push(q);
+
+    var score = root.querySelector('.kt-score');
+    if (score) score.textContent = state.ok + 'もん せいかい';
+
+    var box = document.getElementById('kt-answer');
+    box.className = 'kt-answer is-on' + (ok ? ' is-ok' : ' is-ng');
+    box.innerHTML =
+      '<div class="nk-a-body">' +
+      '<p class="kt-a-head">' + (ok ? 'よく かけた！' : 'つぎ がんばろう') + '　' +
+        '<b>' + esc(q.show) + ' → ' + esc(q.word) + '</b></p>' +
+      '<p class="kt-a-why">' + esc(q.hint) + '</p>' +
+      '</div>' +
+      '<button type="button" class="kt-next" id="kt-next">' +
+        (state.i + 1 >= QUESTIONS ? 'けっかを 見る' : 'つぎの もんだい') + '</button>';
+
+    document.getElementById('kt-next').addEventListener('click', next);
+    document.getElementById('kt-next').focus();
+  }
+
+  /* canvas に 指・ペン・マウスで 線を引く。
+     - touch-action:none（CSS）が 無いと、タブレットで書こうとすると ページがスクロールする
+     - 画面の解像度ぶん 引きのばさないと 線がぼやける */
+  function setupCanvas(canvas) {
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    var drawing = false, locked = false;
+
+    function fit() {
+      var r = canvas.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      var w = Math.round(r.width * dpr), h = Math.round(r.height * dpr);
+      if (canvas.width === w && canvas.height === h) return;
+      // 向きを変えても 書いた線が 消えないように、いったん退避してから 描きなおす
+      var keep = null;
+      if (canvas.width && canvas.height) {
+        keep = document.createElement('canvas');
+        keep.width = canvas.width;
+        keep.height = canvas.height;
+        keep.getContext('2d').drawImage(canvas, 0, 0);
+      }
+      canvas.width = w;
+      canvas.height = h;
+      if (keep) ctx.drawImage(keep, 0, 0, w, h);
+      // canvas の大きさを変えると 描画設定は 初期化されるので、毎回 入れなおす
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = '#2b2723';
+      ctx.lineWidth = Math.max(3, w / 26);
+    }
+
+    function pos(e) {
+      var r = canvas.getBoundingClientRect();
+      return {
+        x: (e.clientX - r.left) * (canvas.width / r.width),
+        y: (e.clientY - r.top) * (canvas.height / r.height)
+      };
+    }
+
+    canvas.addEventListener('pointerdown', function (e) {
+      if (locked) return;
+      fit();
+      drawing = true;
+      if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+      var p = pos(e);
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(p.x, p.y);   // ちょんと 点を打っただけでも 見えるように
+      ctx.stroke();
+      e.preventDefault();
+    });
+    canvas.addEventListener('pointermove', function (e) {
+      if (!drawing) return;
+      var p = pos(e);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+      e.preventDefault();
+    });
+    var end = function () { drawing = false; };
+    canvas.addEventListener('pointerup', end);
+    canvas.addEventListener('pointercancel', end);
+
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(canvas);
+    requestAnimationFrame(fit);
+
+    return {
+      clear: function () {
+        if (locked) return;
+        fit();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      },
+      lock: function () { locked = true; drawing = false; canvas.classList.add('is-locked'); }
+    };
+  }
+
   var MODES = {
     dotchi: { label: 'どっちで かく？', sub: 'カタカナか ひらがなか を えらぶ', build: buildDotchi },
     naosu:  { label: 'カタカナに なおす', sub: 'ひらがなを カタカナに 書きかえる', build: buildNaosu },
     nigata: { label: 'にた字 みつけ',   sub: 'シとツ、ソとン を 見分ける',     build: buildNigata },
+    kaku:   { label: 'カタカナを かく', sub: 'ひらがなを 見て カタカナを かく',  build: buildKaku },
   };
 
   /* ---------- 画面 ---------- */
@@ -198,6 +383,8 @@
 
   function renderQuestion() {
     var q = state.qs[state.i];
+    // かくモードは 選択肢が なく 画面の作りが ちがうので 別に組む
+    if (q.type === 'kaku') { renderKaku(q); return; }
     var choices;
 
     if (q.type === 'dotchi') {
@@ -304,7 +491,7 @@
         '<p class="kt-result-score">' + QUESTIONS + 'もん ちゅう <b>' + state.ok + 'もん</b> せいかい</p>' +
         (missed.length
           ? '<div class="kt-missed">' +
-              '<h2>まちがえた ' + (state.mode === 'nigata' ? '字' : 'ことば') + '</h2>' +
+              '<h2>まちがえた ' + (state.mode === 'nigata' || state.mode === 'kaku' ? '字' : 'ことば') + '</h2>' +
               missed.map(function (q) {
                 return '<div class="kt-missed-item"><b>' + esc(q.word) + '</b>' +
                   '<span>' + esc(q.hint) + '</span></div>';
