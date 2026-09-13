@@ -154,7 +154,9 @@
           word: useA ? p.ka : p.kb,
           hint: p.hint,
           cat: 'にている字',
-          choices: shuffle([p.ka, p.kb]),
+          // 選択肢は ひらがなだけ にする（2026-09-14）。カタカナを ならべると
+          // 問題の字と 形を 見くらべるだけで 答えが 出てしまい、読めるかの しゅぎょうに ならない。
+          choices: shuffle([{ key: p.ka, label: p.ha }, { key: p.kb, label: p.hb }]),
         });
       });
     }
@@ -203,6 +205,9 @@
         { key: 'kata', label: 'カタカナ' },
         { key: 'hira', label: 'ひらがな' },
       ];
+    } else if (q.type === 'nigata') {
+      // すでに { key: 'ソ（そ）', label: 'そ' } の形。ラベルは ひらがなだけ
+      choices = q.choices;
     } else {
       choices = q.choices.map(function (c) { return { key: c, label: c }; });
     }
