@@ -44,6 +44,12 @@ body.ninja-phonics {
   background-color:#042126;
   background-image:linear-gradient(rgba(2,20,22,.14),rgba(2,20,22,.14)),var(--nk-bg-img);
 }
+/* かけざん修行。色は6アプリと重ならない青（既存は橙33°・赤12°・青緑179°・紫264°・緑113°）。
+   背景の1枚絵（kuku-bg-v1.webp）はまだ無いので、下の cover 指定の仲間には入れない。
+   絵ができたら --nk-bg-img を足して、そのリストにも .ninja-kuku を加える。 */
+body.ninja-kuku {
+  --nk-accent:#2f6ea8; --nk-accent-dark:#1b4670; --nk-hero-a:#e2edf8; --nk-hero-b:#a9c7e4;
+}
 body:is(.ninja-tokei,.ninja-kanji,.ninja-katakana,.ninja-romaji,.ninja-phonics) {
   background-position:center top;
   background-size:cover;
@@ -72,7 +78,7 @@ body.ninja-space {
   opacity:.22;
   background-image:repeating-linear-gradient(0deg,transparent 0 27px,rgba(106,74,40,.07) 28px);
 }
-.ninja-kids .tk-hero,.ninja-kids .kj-hero,.ninja-kids .kt-hero,.ninja-kids .rj-hero,.ninja-kids .pn-hero {
+.ninja-kids .tk-hero,.ninja-kids .kj-hero,.ninja-kids .kt-hero,.ninja-kids .rj-hero,.ninja-kids .pn-hero ,.ninja-kids .kk-hero{
   position:relative;
   isolation:isolate;
   min-height:126px;
@@ -81,7 +87,7 @@ body.ninja-space {
   border-bottom:4px solid var(--nk-accent);
   background:linear-gradient(135deg,var(--nk-hero-a),var(--nk-hero-b));
 }
-.ninja-kids .tk-hero::after,.ninja-kids .kj-hero::after,.ninja-kids .kt-hero::after,.ninja-kids .rj-hero::after,.ninja-kids .pn-hero::after {
+.ninja-kids .tk-hero::after,.ninja-kids .kj-hero::after,.ninja-kids .kt-hero::after,.ninja-kids .rj-hero::after,.ninja-kids .pn-hero::after ,.ninja-kids .kk-hero::after{
   content:'';
   position:absolute;
   inset:0;
@@ -99,27 +105,27 @@ body.ninja-space {
   filter:drop-shadow(0 8px 9px rgba(47,31,17,.24));
   pointer-events:none;
 }
-.ninja-kids .tk-eyebrow,.ninja-kids .kj-eyebrow,.ninja-kids .kt-eyebrow,.ninja-kids .rj-eyebrow,.ninja-kids .pn-eyebrow { color:var(--nk-accent-dark); }
-.ninja-kids .tk-hero h1,.ninja-kids .kj-hero h1,.ninja-kids .kt-hero h1,.ninja-kids .rj-hero h1,.ninja-kids .pn-hero h1 { color:var(--nk-ink); text-shadow:0 1px #fff8; }
-.ninja-kids .tk-scope,.ninja-kids .kj-scope,.ninja-kids .kt-scope,.ninja-kids .rj-scope,.ninja-kids .pn-scope { border-color:color-mix(in srgb,var(--nk-accent) 38%,#fff); color:var(--nk-accent-dark); }
-.ninja-kids .tk-mode:hover,.ninja-kids .kj-mode:hover,.ninja-kids .kt-mode:hover,.ninja-kids .rj-mode:hover,.ninja-kids .pn-mode:hover { border-color:var(--nk-accent); }
-.ninja-kids .tk-next,.ninja-kids .kj-next,.ninja-kids .kt-next,.ninja-kids .rj-next,.ninja-kids .pn-next { background:var(--nk-accent); box-shadow:0 3px 0 var(--nk-accent-dark); }
-.ninja-kids .tk-next:hover,.ninja-kids .kj-next:hover,.ninja-kids .kt-next:hover,.ninja-kids .rj-next:hover,.ninja-kids .pn-next:hover { background:var(--nk-accent-dark); }
+.ninja-kids .tk-eyebrow,.ninja-kids .kj-eyebrow,.ninja-kids .kt-eyebrow,.ninja-kids .rj-eyebrow,.ninja-kids .pn-eyebrow ,.ninja-kids .kk-eyebrow{ color:var(--nk-accent-dark); }
+.ninja-kids .tk-hero h1,.ninja-kids .kj-hero h1,.ninja-kids .kt-hero h1,.ninja-kids .rj-hero h1,.ninja-kids .pn-hero h1 ,.ninja-kids .kk-hero h1{ color:var(--nk-ink); text-shadow:0 1px #fff8; }
+.ninja-kids .tk-scope,.ninja-kids .kj-scope,.ninja-kids .kt-scope,.ninja-kids .rj-scope,.ninja-kids .pn-scope ,.ninja-kids .kk-scope{ border-color:color-mix(in srgb,var(--nk-accent) 38%,#fff); color:var(--nk-accent-dark); }
+.ninja-kids .tk-mode:hover,.ninja-kids .kj-mode:hover,.ninja-kids .kt-mode:hover,.ninja-kids .rj-mode:hover,.ninja-kids .pn-mode:hover ,.ninja-kids .kk-mode:hover{ border-color:var(--nk-accent); }
+.ninja-kids .tk-next,.ninja-kids .kj-next,.ninja-kids .kt-next,.ninja-kids .rj-next,.ninja-kids .pn-next ,.ninja-kids .kk-next{ background:var(--nk-accent); box-shadow:0 3px 0 var(--nk-accent-dark); }
+.ninja-kids .tk-next:hover,.ninja-kids .kj-next:hover,.ninja-kids .kt-next:hover,.ninja-kids .rj-next:hover,.ninja-kids .pn-next:hover ,.ninja-kids .kk-next:hover{ background:var(--nk-accent-dark); }
 .ninja-space .app-paper { border-color:#6846b7; background:linear-gradient(rgba(8,20,48,.9),rgba(11,21,51,.94)); }
 .ninja-space .app-paper::before { opacity:.22; }
 .ninja-space .sa-head-badge { width:96px; height:96px; object-fit:contain; filter:drop-shadow(0 8px 12px rgba(0,0,0,.35)); }
 
 /* Fit the interactive area inside a 720-768px-tall notebook or landscape tablet viewport. */
 @media (min-width:768px) and (max-height:820px) {
-  .ninja-kids .tk-hero,.ninja-kids .kj-hero,.ninja-kids .kt-hero,.ninja-kids .rj-hero,.ninja-kids .pn-hero { min-height:82px; padding:8px 32px 7px; }
+  .ninja-kids .tk-hero,.ninja-kids .kj-hero,.ninja-kids .kt-hero,.ninja-kids .rj-hero,.ninja-kids .pn-hero ,.ninja-kids .kk-hero{ min-height:82px; padding:8px 32px 7px; }
   .ninja-mascot { left:max(16px,calc(50% - 320px)); bottom:-13px; width:100px; height:100px; }
-  .ninja-kids .tk-eyebrow,.ninja-kids .kj-eyebrow,.ninja-kids .kt-eyebrow,.ninja-kids .rj-eyebrow,.ninja-kids .pn-eyebrow { margin-bottom:2px; font-size:10px; }
-  .ninja-kids .tk-hero h1,.ninja-kids .kj-hero h1,.ninja-kids .kt-hero h1,.ninja-kids .rj-hero h1,.ninja-kids .pn-hero h1 { margin-bottom:3px; font-size:24px; }
-  .ninja-kids .tk-lead,.ninja-kids .kj-lead,.ninja-kids .kt-lead,.ninja-kids .rj-lead,.ninja-kids .pn-lead { margin-bottom:3px; font-size:11.5px; line-height:1.45; }
-  .ninja-kids .tk-scope,.ninja-kids .kj-scope,.ninja-kids .kt-scope,.ninja-kids .rj-scope,.ninja-kids .pn-scope { padding:2px 11px; font-size:10.5px; }
-  .ninja-kids #tk-app,.ninja-kids #kj-app,.ninja-kids #kt-app,.ninja-kids #rj-app,.ninja-kids #pn-app { padding-top:12px; }
-  .ninja-kids .tk-menu-lead,.ninja-kids .kj-menu-lead,.ninja-kids .kt-menu-lead,.ninja-kids .rj-menu-lead,.ninja-kids .pn-menu-lead { margin-bottom:8px; }
-  .ninja-kids .tk-mode,.ninja-kids .kj-mode,.ninja-kids .kt-mode,.ninja-kids .rj-mode,.ninja-kids .pn-mode { padding:10px 12px; }
+  .ninja-kids .tk-eyebrow,.ninja-kids .kj-eyebrow,.ninja-kids .kt-eyebrow,.ninja-kids .rj-eyebrow,.ninja-kids .pn-eyebrow ,.ninja-kids .kk-eyebrow{ margin-bottom:2px; font-size:10px; }
+  .ninja-kids .tk-hero h1,.ninja-kids .kj-hero h1,.ninja-kids .kt-hero h1,.ninja-kids .rj-hero h1,.ninja-kids .pn-hero h1 ,.ninja-kids .kk-hero h1{ margin-bottom:3px; font-size:24px; }
+  .ninja-kids .tk-lead,.ninja-kids .kj-lead,.ninja-kids .kt-lead,.ninja-kids .rj-lead,.ninja-kids .pn-lead ,.ninja-kids .kk-lead{ margin-bottom:3px; font-size:11.5px; line-height:1.45; }
+  .ninja-kids .tk-scope,.ninja-kids .kj-scope,.ninja-kids .kt-scope,.ninja-kids .rj-scope,.ninja-kids .pn-scope ,.ninja-kids .kk-scope{ padding:2px 11px; font-size:10.5px; }
+  .ninja-kids #tk-app,.ninja-kids #kj-app,.ninja-kids #kt-app,.ninja-kids #rj-app,.ninja-kids #pn-app ,.ninja-kids #kk-app{ padding-top:12px; }
+  .ninja-kids .tk-menu-lead,.ninja-kids .kj-menu-lead,.ninja-kids .kt-menu-lead,.ninja-kids .rj-menu-lead,.ninja-kids .pn-menu-lead ,.ninja-kids .kk-menu-lead{ margin-bottom:8px; }
+  .ninja-kids .tk-mode,.ninja-kids .kj-mode,.ninja-kids .kt-mode,.ninja-kids .rj-mode,.ninja-kids .pn-mode ,.ninja-kids .kk-mode{ padding:10px 12px; }
   .ninja-kids .tk-rules,.ninja-kids .kt-rules,.ninja-kids .rj-rules,.ninja-kids .pn-rules { margin-top:12px; padding:10px 16px; }
   .ninja-space .app-paper { min-height:0; margin:8px auto; padding-bottom:6px; }
   .ninja-space .sa-app { padding:9px 18px 4px; }
@@ -141,7 +147,7 @@ body.ninja-space {
 }
 @media (max-width:767px) {
   .ninja-mascot { position:relative; left:auto; bottom:auto; width:82px; height:82px; margin:-7px auto -12px; }
-  .ninja-kids .tk-hero,.ninja-kids .kj-hero,.ninja-kids .kt-hero,.ninja-kids .rj-hero,.ninja-kids .pn-hero { padding-inline:16px; }
+  .ninja-kids .tk-hero,.ninja-kids .kj-hero,.ninja-kids .kt-hero,.ninja-kids .rj-hero,.ninja-kids .pn-hero ,.ninja-kids .kk-hero{ padding-inline:16px; }
 }
 
 /* Ninja Village UI v2: landscape-first training board. */
@@ -156,7 +162,7 @@ body.ninja-space {
   width:min(1180px,100%);
   margin-inline:auto;
 }
-.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) {
+.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero){
   display:grid!important;
   grid-template-columns:minmax(0,1fr) 290px!important;
   grid-auto-flow:row;
@@ -169,7 +175,7 @@ body.ninja-space {
     linear-gradient(90deg,rgba(255,250,235,.98) 0 58%,rgba(255,250,235,.2) 74%),
     repeating-linear-gradient(135deg,var(--nk-hero-a) 0 28px,var(--nk-hero-b) 29px 30px,var(--nk-hero-a) 31px 58px);
 }
-.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero)::before {
+.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero)::before ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero)::before{
   content:'忍';
   position:absolute;
   right:316px;
@@ -179,10 +185,10 @@ body.ninja-space {
   font:900 126px/1 serif;
   pointer-events:none;
 }
-.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>:not(.ninja-mascot) {
+.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>:not(.ninja-mascot) ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>:not(.ninja-mascot){
   grid-column:1;
 }
-.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot {
+.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot{
   position:static;
   grid-column:2;
   grid-row:1 / 9;
@@ -232,7 +238,7 @@ body.ninja-space {
   box-shadow:0 4px 0 color-mix(in srgb,var(--nk-accent-dark) 70%,transparent);
 }
 .ninja-kids .app-ref-button.is-sub:hover { background:var(--nk-accent); color:#fff; border-color:var(--nk-accent); }
-.ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) {
+.ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) ,.ninja-kids :is(#tk-app,#kk-app,#kt-app,#rj-app,#pn-app){
   position:relative;
   max-width:1020px;
   min-height:330px;
@@ -248,7 +254,7 @@ body.ninja-space {
    この変数だけを差し替える（各アプリのCSSに数値を直書きしない）。 */
 .ninja-kids { --nk-qh:312px; --nk-board-h:446px; --nk-ask-h:54px; --nk-seam:8px; }
 
-.ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) {
+.ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) ,.ninja-kids :is(.tk-menu,.kk-menu,.kt-menu,.rj-menu,.pn-menu){
   position:relative;
   min-height:var(--nk-board-h);
   padding:16px 20px;
@@ -257,18 +263,18 @@ body.ninja-space {
   background:linear-gradient(105deg,rgba(255,255,255,.96),rgba(255,249,232,.96));
   box-shadow:0 10px 24px rgba(72,45,22,.09);
 }
-.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) {
+.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) ,.ninja-kids :is(.tk-mode,.kk-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice){
   border:2px solid #d8c49d;
   border-radius:6px;
   background:linear-gradient(#fffefa,#f7ebd2);
   box-shadow:0 3px 0 #c8ad7b;
   clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px);
 }
-.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice):hover {
+.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice):hover ,.ninja-kids :is(.tk-mode,.kk-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice):hover{
   translate:0 -2px;
   border-color:var(--nk-accent);
 }
-.ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) {
+.ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) ,.ninja-kids :is(.tk-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz){
   display:grid;
   grid-template-columns:minmax(260px,.92fr) minmax(340px,1.08fr);
   grid-template-rows:auto var(--nk-qh) auto;
@@ -284,7 +290,7 @@ body.ninja-space {
     repeating-linear-gradient(0deg,transparent 0 31px,rgba(100,70,38,.08) 32px);
   box-shadow:0 12px 24px rgba(62,39,20,.12);
 }
-.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar) {
+.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar) ,.ninja-kids :is(.tk-play-head,.kk-play-head,.kt-bar,.rj-bar,.pn-bar){
   grid-column:1 / -1;
   grid-row:1;
   margin:0;
@@ -301,7 +307,7 @@ body.ninja-space {
   border-radius:8px;
   background:linear-gradient(145deg,#fff,#f8ebcd);
 }
-.ninja-kids :is(.tk-ask,.kj-ask) {
+.ninja-kids :is(.tk-ask,.kj-ask) ,.ninja-kids :is(.tk-ask,.kk-ask){
   grid-column:1;
   grid-row:2;
   display:grid;
@@ -315,7 +321,7 @@ body.ninja-space {
 /* 回答エリアは問題エリアと対（つい）の箱にする。天地を揃えて同じ高さまで伸ばし、
    中身だけを縦中央に置く（2026-08-28）。以前は align-self:center で高さが中身なりだったため、
    アプリごとに右カラムの始まる位置がバラバラだった。 */
-.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices) {
+.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices) ,.ninja-kids :is(.tk-options,.kk-options,.kt-choices,.rj-choices,.rj-type,.pn-choices){
   grid-column:2;
   grid-row:2;
   align-self:stretch;
@@ -327,18 +333,18 @@ body.ninja-space {
 .ninja-kids :is(.kt-choices,.rj-choices,.pn-choices).is-two,
 .ninja-kids .tk-options.is-clock,
 .ninja-kids .rj-type { align-content:center; }
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) {
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt){
   min-height:58px;
   border:2px solid #d4bd92;
   border-radius:7px;
   background:#fff;
   box-shadow:0 3px 0 #c5a876;
 }
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):hover {
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):hover ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):hover{
   translate:0 -2px;
   border-color:var(--nk-accent);
 }
-.ninja-kids :is(.tk-feedback,.kj-feedback) {
+.ninja-kids :is(.tk-feedback,.kj-feedback) ,.ninja-kids :is(.tk-feedback,.kk-feedback){
   grid-column:1;
   grid-row:3;
 }
@@ -348,7 +354,7 @@ body.ninja-space {
   margin:0;
 }
 /* 「もどる」は盤面の一番下・中央揃え（2026-08-28）。左下だと見つけにくかった。 */
-.ninja-kids :is(.tk-back,.kj-back,.kt-back,.rj-back,.pn-back) {
+.ninja-kids :is(.tk-back,.kj-back,.kt-back,.rj-back,.pn-back) ,.ninja-kids :is(.tk-back,.kk-back,.kt-back,.rj-back,.pn-back){
   grid-column:1 / -1;
   grid-row:4;
   justify-self:center;
@@ -358,7 +364,7 @@ body.ninja-space {
 .ninja-kids :is(.kt-back,.rj-back,.pn-back) { grid-row:4; }
 /* 各アプリのCSSの margin:16px auto 0 が auto マージンで justify-self に勝ち、
    盤面の中で中途半端に中央寄せになっていた（2026-08-26修正）。 */
-.ninja-kids :is(.tk-play,.kj-play)>:is(.tk-back,.kj-back) { margin:0; }
+.ninja-kids :is(.tk-play,.kj-play)>:is(.tk-back,.kj-back) ,.ninja-kids :is(.tk-play,.kk-play)>:is(.tk-back,.kk-back){ margin:0; }
 .ninja-space .sa-head {
   min-height:118px;
   padding:14px 22px;
@@ -383,7 +389,7 @@ body.ninja-space {
 .ninja-space .sa-card>.sa-problem { grid-column:1; grid-row:2; }
 .ninja-space .sa-card>.sa-options { grid-column:2; grid-row:1 / 3; margin:0; }
 .ninja-space .sa-card>.sa-feedback { grid-column:1 / -1; grid-row:3; }
-.ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) {
+.ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) ,.ninja-kids :is(.tk-doc,.kk-doc,.kt-doc,.rj-doc,.pn-doc){
   position:relative;
   margin-top:0;
   padding:34px clamp(24px,5vw,70px) 54px;
@@ -392,18 +398,18 @@ body.ninja-space {
     linear-gradient(rgba(255,250,237,.96),rgba(248,237,211,.96)),
     repeating-linear-gradient(90deg,transparent 0 38px,rgba(92,53,34,.08) 39px);
 }
-.ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) h2 {
+.ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) h2 ,.ninja-kids :is(.tk-doc,.kk-doc,.kt-doc,.rj-doc,.pn-doc) h2{
   padding:8px 16px;
   border-left:7px solid var(--nk-accent);
   background:linear-gradient(90deg,color-mix(in srgb,var(--nk-accent) 13%,#fff),transparent);
 }
-.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step) {
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step) ,.ninja-kids :is(.tk-step,.kk-step,.kt-step,.rj-step,.pn-step){
   border:1px solid #d7c39d;
   border-radius:4px;
   background:#fffcf4;
   box-shadow:0 4px 0 #cfb78b;
 }
-.ninja-kids :is(.tk-faq,.kj-faq,.kt-faq,.rj-faq,.pn-faq) {
+.ninja-kids :is(.tk-faq,.kj-faq,.kt-faq,.rj-faq,.pn-faq) ,.ninja-kids :is(.tk-faq,.kk-faq,.kt-faq,.rj-faq,.pn-faq){
   border-color:#d0b98d;
   background:#fffdf7;
 }
@@ -512,24 +518,24 @@ body.ninja-space {
 }
 
 @media (min-width:768px) and (max-height:820px) {
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero){
     min-height:154px!important;
     grid-template-columns:minmax(0,1fr) 230px!important;
     padding:10px 28px 10px 34px!important;
   }
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,
   .ninja-kids .app-ref-visual.is-ninja .ninja-mascot {
     width:205px;
     height:146px;
   }
   .ninja-kids .app-ref-hero { grid-template-columns:minmax(0,1fr) 230px!important; }
   .ninja-kids .app-ref-visual.is-ninja { min-height:146px; }
-  .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) {
+  .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) ,.ninja-kids :is(#tk-app,#kk-app,#kt-app,#rj-app,#pn-app){
     min-height:300px;
     padding:12px 26px 15px;
   }
   .ninja-kids { --nk-qh:270px; --nk-board-h:392px; }
-  .ninja-kids :is(.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) {
+  .ninja-kids :is(.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) ,.ninja-kids :is(.kk-play,.kt-quiz,.rj-quiz,.pn-quiz){
     padding:11px 16px;
   }
   .ninja-kids .tk-play { padding:11px 16px; }
@@ -539,33 +545,33 @@ body.ninja-space {
 }
 
 @media (max-width:767px) {
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero),
   .ninja-kids .app-ref-hero {
     grid-template-columns:1fr!important;
     padding:18px!important;
     text-align:center!important;
   }
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,
   .ninja-kids .app-ref-visual.is-ninja .ninja-mascot {
     width:130px;
     height:100px;
   }
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot{
     grid-column:1;
     grid-row:auto;
   }
   .ninja-kids .app-ref-copy { text-align:center; }
   .ninja-kids .app-ref-visual.is-ninja { min-height:104px; }
-  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz),
+  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz),.ninja-kids :is(.tk-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz),
   .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card) {
     grid-template-columns:1fr;
   }
-  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices,.kt-answer,.rj-answer,.pn-answer),
+  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices,.kt-answer,.rj-answer,.pn-answer),.ninja-kids :is(.tk-options,.kk-options,.kt-choices,.rj-choices,.rj-type,.pn-choices,.kt-answer,.rj-answer,.pn-answer),
   .ninja-space .sa-card>.sa-options {
     grid-column:1;
     grid-row:auto;
   }
-  .ninja-kids :is(.tk-ask,.kj-ask,.kt-q,.rj-q,.pn-q) {
+  .ninja-kids :is(.tk-ask,.kj-ask,.kt-q,.rj-q,.pn-q) ,.ninja-kids :is(.tk-ask,.kk-ask,.kt-q,.rj-q,.pn-q){
     grid-column:1;
     grid-row:auto;
     min-height:130px;
@@ -607,7 +613,7 @@ body.ninja-space {
   box-shadow:0 24px 70px rgba(0,0,0,.42);
 }
 .ninja-kids:not(.ninja-space) .app-paper::before { display:none; }
-.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) {
+.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero){
   min-height:196px!important;
   border-bottom:0;
   background:
@@ -615,30 +621,30 @@ body.ninja-space {
     linear-gradient(135deg,var(--nk-hero-a),var(--nk-hero-b))!important;
   box-shadow:inset 0 -5px 0 var(--nk-accent);
 }
-.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero)::after {
+.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero)::after ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero)::after{
   opacity:.2;
   background:
     radial-gradient(circle at 8% 18%,#fff 0 1px,transparent 2px),
     radial-gradient(circle at 25% 72%,#fff 0 1px,transparent 2px);
   background-size:80px 80px,120px 120px;
 }
-.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero)::before {
+.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero)::before ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero)::before{
   right:290px;
   color:rgba(255,255,255,.1);
 }
-.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) h1 {
+.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) h1 ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero) h1{
   color:#fff!important;
   text-shadow:none;
   letter-spacing:.04em;
 }
-.ninja-kids :is(.tk-eyebrow,.kj-eyebrow,.kt-eyebrow,.rj-eyebrow,.pn-eyebrow) {
+.ninja-kids :is(.tk-eyebrow,.kj-eyebrow,.kt-eyebrow,.rj-eyebrow,.pn-eyebrow) ,.ninja-kids :is(.tk-eyebrow,.kk-eyebrow,.kt-eyebrow,.rj-eyebrow,.pn-eyebrow){
   color:color-mix(in srgb,var(--nk-accent) 52%,#fff)!important;
   letter-spacing:.14em;
 }
-.ninja-kids :is(.tk-lead,.kj-lead,.kt-lead,.rj-lead,.pn-lead) {
+.ninja-kids :is(.tk-lead,.kj-lead,.kt-lead,.rj-lead,.pn-lead) ,.ninja-kids :is(.tk-lead,.kk-lead,.kt-lead,.rj-lead,.pn-lead){
   color:#d7e2e4!important;
 }
-.ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope) {
+.ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope) ,.ninja-kids :is(.tk-scope,.kk-scope,.kt-scope,.rj-scope,.pn-scope){
   justify-self:start;
   width:auto;
   max-width:100%;
@@ -678,37 +684,37 @@ body.ninja-space {
   background:radial-gradient(circle at 50% 46%,rgba(255,255,255,.65),transparent 56%);
 }
 .ninja-kids .app-ref-visual.is-ninja .ninja-mascot,
-.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot {
+.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot{
   width:260px;
   height:188px;
   filter:drop-shadow(0 16px 14px rgba(0,0,0,.28));
 }
-.ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) {
+.ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) ,.ninja-kids :is(#tk-app,#kk-app,#kt-app,#rj-app,#pn-app){
   max-width:none;
   padding:24px clamp(28px,5vw,72px) 28px;
   background:
     radial-gradient(circle at 82% 8%,color-mix(in srgb,var(--nk-accent) 18%,transparent),transparent 34%),
     linear-gradient(135deg,var(--nk-deeper),var(--nk-deep));
 }
-.ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz,.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu,.tk-result,.kj-result,.kt-result,.rj-result,.pn-result) {
+.ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz,.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu,.tk-result,.kj-result,.kt-result,.rj-result,.pn-result) ,.ninja-kids :is(.tk-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz,.tk-menu,.kk-menu,.kt-menu,.rj-menu,.pn-menu,.tk-result,.kk-result,.kt-result,.rj-result,.pn-result){
   width:min(100%,1000px);
   margin-inline:auto;
 }
-.ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) {
+.ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) ,.ninja-kids :is(.tk-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz){
   overflow:hidden;
   border:0;
   border-radius:18px;
   background:var(--nk-board);
   box-shadow:0 18px 44px rgba(0,0,0,.28);
 }
-.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar) {
+.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar) ,.ninja-kids :is(.tk-play-head,.kk-play-head,.kt-bar,.rj-bar,.pn-bar){
   color:#59666a;
 }
-.ninja-kids :is(.tk-play>.tk-bar,.kj-play>.kj-bar) { display:none; }
-.ninja-kids :is(.tk-bar,.kj-bar) {
+.ninja-kids :is(.tk-play>.tk-bar,.kj-play>.kj-bar) ,.ninja-kids :is(.tk-play>.tk-bar,.kk-play>.kk-bar){ display:none; }
+.ninja-kids :is(.tk-bar,.kj-bar) ,.ninja-kids :is(.tk-bar,.kk-bar){
   background:#ddd7cb;
 }
-.ninja-kids :is(.tk-bar-fill,.kj-bar-fill) {
+.ninja-kids :is(.tk-bar-fill,.kj-bar-fill) ,.ninja-kids :is(.tk-bar-fill,.kk-bar-fill){
   background:var(--nk-accent);
 }
 /* 問題エリアの枠は忍者札に見立てる（2026-08-28）。
@@ -724,12 +730,12 @@ body.ninja-space {
     inset 0 0 0 9px rgba(255,255,255,.14),
     inset 0 22px 44px rgba(0,0,0,.30);
 }
-.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask,.tk-play>.tk-ask,.tk-play>.tk-stage) {
+.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask,.tk-play>.tk-ask,.tk-play>.tk-stage) ,.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kk-ask,.tk-play>.tk-ask,.tk-play>.tk-stage){
   filter:
     drop-shadow(0 10px 22px rgba(0,0,0,.34))
     drop-shadow(0 0 14px color-mix(in srgb,var(--nk-accent) 42%,transparent));
 }
-.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask) {
+.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask) ,.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kk-ask){
   color:#fff;
   border:0;
   border-radius:0;
@@ -771,7 +777,7 @@ body.ninja-space {
   color:#fff;
   text-shadow:0 2px 12px rgba(0,0,0,.22);
 }
-.ninja-kids .kj-ask-label {
+.ninja-kids .kj-ask-label ,.ninja-kids .kk-ask-label{
   grid-column:1;
   grid-row:2;
   z-index:2;
@@ -780,7 +786,7 @@ body.ninja-space {
   margin:18px 0 0;
   color:#b9cacc;
 }
-.ninja-kids .kj-ask { padding-top:0; }
+.ninja-kids .kj-ask ,.ninja-kids .kk-ask{ padding-top:0; }
 
 /* 問題エリアが312pxになったぶん、といと問題の文字を大きくする（2026-08-28）。
    スマホ・タブレット縦は1画面に収める都合があるので、2カラムの段だけ効かせる。 */
@@ -800,7 +806,7 @@ body.ninja-space {
   --nk-fs-opt:      clamp(16px, calc(var(--nk-qh) * .075), 26px);
   --nk-fs-head:     clamp(12px, calc(var(--nk-qh) * .050), 17px);
 }
-.ninja-kids :is(.kj-ask-label,.kt-q-lead,.rj-q-lead,.pn-q-lead) {
+.ninja-kids :is(.kj-ask-label,.kt-q-lead,.rj-q-lead,.pn-q-lead) ,.ninja-kids :is(.kk-ask-label,.kt-q-lead,.rj-q-lead,.pn-q-lead){
   font-size:var(--nk-fs-label);
   justify-self:center;
   width:fit-content;
@@ -812,18 +818,18 @@ body.ninja-space {
   box-shadow:0 2px 0 color-mix(in srgb,var(--nk-accent-dark) 80%,#000);
   clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px);
 }
-.ninja-kids .kj-ask-word { font-size:var(--nk-fs-word); }
-.ninja-kids .kj-ask-yomi { font-size:var(--nk-fs-yomi); }
+.ninja-kids .kj-ask-word ,.ninja-kids .kk-ask-word{ font-size:var(--nk-fs-word); }
+.ninja-kids .kj-ask-yomi ,.ninja-kids .kk-ask-yomi{ font-size:var(--nk-fs-yomi); }
 .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word) { font-size:var(--nk-fs-kana); }
 .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-sentence { font-size:var(--nk-fs-sentence); }
 .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-big { font-size:var(--nk-fs-big); }
 .ninja-kids .tk-play>.tk-ask { font-size:var(--nk-fs-label); }
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice) { font-size:var(--nk-fs-opt); }
-.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar) { font-size:var(--nk-fs-head); }
-.ninja-kids :is(.tk-back,.kj-back,.kt-back,.rj-back,.pn-back) { font-size:var(--nk-fs-head); }
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice){ font-size:var(--nk-fs-opt); }
+.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar) ,.ninja-kids :is(.tk-play-head,.kk-play-head,.kt-bar,.rj-bar,.pn-bar){ font-size:var(--nk-fs-head); }
+.ninja-kids :is(.tk-back,.kj-back,.kt-back,.rj-back,.pn-back) ,.ninja-kids :is(.tk-back,.kk-back,.kt-back,.rj-back,.pn-back){ font-size:var(--nk-fs-head); }
 /* 選択肢は修行ごとのアクセント色で塗り分ける（2026-08-28）。
    文字は濃い墨のままにして、色は下地・枠・影で出す（子どもが読めることを優先）。 */
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) {
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt){
   min-height:62px;
   color:#17272e;
   border:2px solid color-mix(in srgb,var(--nk-accent) 45%,#fff);
@@ -833,13 +839,13 @@ body.ninja-space {
   box-shadow:0 5px 0 color-mix(in srgb,var(--nk-accent) 32%,#cfc6b4);
   transition:translate .15s,box-shadow .15s,background .15s;
 }
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):hover:not(:disabled) {
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):hover:not(:disabled) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):hover:not(:disabled){
   translate:0 -3px;
   border-color:var(--nk-accent);
   background:color-mix(in srgb,var(--nk-accent) 16%,#fff);
   box-shadow:0 8px 0 color-mix(in srgb,var(--nk-accent) 45%,#c7bca9);
 }
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):focus-visible {
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):focus-visible ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice):focus-visible{
   outline:3px solid color-mix(in srgb,var(--nk-accent) 55%,#fff);
   outline-offset:3px;
 }
@@ -897,18 +903,18 @@ body.ninja-space {
 .ninja-kids .tk-play>.tk-stage .tk-clock {
   filter:drop-shadow(0 10px 12px rgba(0,0,0,.28));
 }
-.ninja-kids :is(.tk-feedback,.kj-feedback) {
+.ninja-kids :is(.tk-feedback,.kj-feedback) ,.ninja-kids :is(.tk-feedback,.kk-feedback){
   min-height:0;
   padding-inline:8px;
   border-radius:99px;
 }
-.ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) {
+.ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) ,.ninja-kids :is(.tk-menu,.kk-menu,.kt-menu,.rj-menu,.pn-menu){
   border:0;
   border-radius:18px;
   background:var(--nk-board);
   box-shadow:0 18px 44px rgba(0,0,0,.28);
 }
-.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) {
+.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) ,.ninja-kids :is(.tk-mode,.kk-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice){
   border:0;
   border-left:5px solid color-mix(in srgb,var(--nk-accent) 72%,#fff);
   border-radius:10px;
@@ -916,7 +922,7 @@ body.ninja-space {
   box-shadow:0 5px 0 #d2c9b8;
   clip-path:none;
 }
-.ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) {
+.ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) ,.ninja-kids :is(.tk-doc,.kk-doc,.kt-doc,.rj-doc,.pn-doc){
   position:relative;
   max-width:960px;
   margin:0 auto;
@@ -924,7 +930,7 @@ body.ninja-space {
   border-top:0;
   background:#f4f0e7;
 }
-.ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc)::before {
+.ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc)::before ,.ninja-kids :is(.tk-doc,.kk-doc,.kt-doc,.rj-doc,.pn-doc)::before{
   content:'';
   position:absolute;
   inset:0;
@@ -934,20 +940,20 @@ body.ninja-space {
   opacity:.05;
   pointer-events:none;
 }
-.ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc)>* { position:relative; z-index:1; }
-.ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) h2 {
+.ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc)>* ,.ninja-kids :is(.tk-doc,.kk-doc,.kt-doc,.rj-doc,.pn-doc)>*{ position:relative; z-index:1; }
+.ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) h2 ,.ninja-kids :is(.tk-doc,.kk-doc,.kt-doc,.rj-doc,.pn-doc) h2{
   padding:0 0 10px;
   border:0;
   border-bottom:3px solid var(--nk-accent);
   background:none;
 }
-.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step) {
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step) ,.ninja-kids :is(.tk-step,.kk-step,.kt-step,.rj-step,.pn-step){
   border:0;
   border-radius:12px;
   background:#fff;
   box-shadow:0 8px 22px rgba(50,39,27,.08);
 }
-.ninja-kids :is(.tk-faq,.kj-faq,.kt-faq,.rj-faq,.pn-faq) {
+.ninja-kids :is(.tk-faq,.kj-faq,.kt-faq,.rj-faq,.pn-faq) ,.ninja-kids :is(.tk-faq,.kk-faq,.kt-faq,.rj-faq,.pn-faq){
   overflow:hidden;
   border:0;
   border-radius:10px;
@@ -955,15 +961,15 @@ body.ninja-space {
   box-shadow:0 4px 14px rgba(50,39,27,.06);
 }
 @media (min-width:768px) and (max-height:820px) {
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero){
     min-height:150px!important;
   }
-  .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) {
+  .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) ,.ninja-kids :is(#tk-app,#kk-app,#kt-app,#rj-app,#pn-app){
     padding-top:14px;
     padding-bottom:16px;
   }
   .ninja-kids .app-ref-visual.is-ninja .ninja-mascot,
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot{
     width:210px;
     height:145px;
   }
@@ -972,15 +978,15 @@ body.ninja-space {
   /* 濃紺と修行カラーの境目は、PCと同じく斜めに切る（2026-09-03）。
      角度なしの linear-gradient は真横の帯になり、ただの2色の帯に見えていた。
      横長・低いヒーローなので、PCの102degではなく170deg（水平から10度）で傾ける。 */
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero){
     background:
       linear-gradient(170deg,var(--nk-deep) 0 62%,transparent 62.3%),
       linear-gradient(135deg,var(--nk-hero-a),var(--nk-hero-b))!important;
   }
-  .ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope) {
+  .ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope) ,.ninja-kids :is(.tk-scope,.kk-scope,.kt-scope,.rj-scope,.pn-scope){
     justify-self:center;
   }
-  .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) {
+  .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) ,.ninja-kids :is(#tk-app,#kk-app,#kt-app,#rj-app,#pn-app){
     padding:16px 12px 20px;
   }
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on {
@@ -997,11 +1003,11 @@ body.ninja-katakana { --nk-items:url('/assets/images/ninja/items/katakana-items.
 body.ninja-romaji { --nk-items:url('/assets/images/ninja/items/romaji-items.webp'); }
 body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.webp'); }
 
-.ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) {
+.ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) ,.ninja-kids :is(.tk-menu,.kk-menu,.kt-menu,.rj-menu,.pn-menu){
   position:relative;
   padding-top:78px;
 }
-.ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu)::before {
+.ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu)::before ,.ninja-kids :is(.tk-menu,.kk-menu,.kt-menu,.rj-menu,.pn-menu)::before{
   content:'';
   position:absolute;
   top:12px;
@@ -1013,10 +1019,10 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   filter:drop-shadow(0 6px 7px rgba(31,27,20,.16));
   animation:ninjaItemsFloat 3.2s ease-in-out infinite;
 }
-.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar) {
+.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar) ,.ninja-kids :is(.tk-play-head,.kk-play-head,.kt-bar,.rj-bar,.pn-bar){
   position:relative;
 }
-.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar)::after {
+.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar)::after ,.ninja-kids :is(.tk-play-head,.kk-play-head,.kt-bar,.rj-bar,.pn-bar)::after{
   content:'';
   position:absolute;
   left:50%;
@@ -1028,14 +1034,14 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   filter:drop-shadow(0 4px 5px rgba(31,27,20,.13));
   pointer-events:none;
 }
-.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask) {
+.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask) ,.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kk-ask){
   position:relative;
   overflow:hidden;
 }
 /* 問題エリアの地紋（七宝つなぎ）。白い線のPNGを薄く重ねるので、
    修行ごとのアクセント色は下地のグラデーションがそのまま出る。1枚で5アプリ共用。 */
 .ninja-kids { --nk-q-pattern:url('/assets/images/ninja/backgrounds/q-shippou.png'); }
-.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask,.tk-play>.tk-stage,.tk-play>.tk-ask)::before {
+.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask,.tk-play>.tk-stage,.tk-play>.tk-ask)::before ,.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kk-ask,.tk-play>.tk-stage,.tk-play>.tk-ask)::before{
   content:'';
   position:absolute;
   inset:0;
@@ -1047,7 +1053,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 .ninja-kids :is(.tk-play>.tk-stage,.tk-play>.tk-ask) { position:relative; overflow:hidden; }
 .ninja-kids :is(.kt-q-lead,.rj-q-lead,.pn-q-lead,.kt-q-word,.rj-q-word,.pn-q-word),
 .ninja-kids .tk-play>.tk-stage .tk-clock { position:relative; z-index:1; }
-.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask)::after {
+.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask)::after ,.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kk-ask)::after{
   content:'';
   position:absolute;
   right:-16px;
@@ -1062,13 +1068,13 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   rotate:-8deg;
   pointer-events:none;
 }
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock) {
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock){
   display:flex;
   align-items:center;
   justify-content:center;
   gap:10px;
 }
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock)::before {
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock)::before ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock)::before{
   content:'';
   flex:0 0 38px;
   width:38px;
@@ -1079,9 +1085,9 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   background-position:0 50%;
   filter:drop-shadow(0 3px 3px rgba(30,25,20,.12));
 }
-.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices)>:nth-child(2)::before { background-position:33.333% 50%!important; }
-.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices)>:nth-child(3)::before { background-position:66.666% 50%!important; }
-.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices)>:nth-child(4)::before { background-position:100% 50%!important; }
+.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices)>:nth-child(2)::before ,.ninja-kids :is(.tk-options,.kk-options,.kt-choices,.rj-choices,.pn-choices)>:nth-child(2)::before{ background-position:33.333% 50%!important; }
+.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices)>:nth-child(3)::before ,.ninja-kids :is(.tk-options,.kk-options,.kt-choices,.rj-choices,.pn-choices)>:nth-child(3)::before{ background-position:66.666% 50%!important; }
+.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices)>:nth-child(4)::before ,.ninja-kids :is(.tk-options,.kk-options,.kt-choices,.rj-choices,.pn-choices)>:nth-child(4)::before{ background-position:100% 50%!important; }
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before {
   content:'';
   display:block;
@@ -1091,7 +1097,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   background:var(--nk-items) center/contain no-repeat;
   filter:drop-shadow(0 7px 8px rgba(0,0,0,.2));
 }
-.ninja-kids :is(.tk-result,.kj-result,.kt-result,.rj-result,.pn-result)::before {
+.ninja-kids :is(.tk-result,.kj-result,.kt-result,.rj-result,.pn-result)::before ,.ninja-kids :is(.tk-result,.kk-result,.kt-result,.rj-result,.pn-result)::before{
   content:'';
   display:block;
   width:240px;
@@ -1103,7 +1109,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 /* 全問正解のごほうび（2026-09-03）。10問ぜんぶ当たったときだけ、
    忍具の並びを6人そろい踏みの「ぜんもんせいかい！」に差し替える。
    絵に文字が入っているので、10/10 以外では絶対に出さないこと。 */
-.ninja-kids :is(.tk-result,.kj-result,.kt-result,.rj-result,.pn-result).is-perfect::before {
+.ninja-kids :is(.tk-result,.kj-result,.kt-result,.rj-result,.pn-result).is-perfect::before ,.ninja-kids :is(.tk-result,.kk-result,.kt-result,.rj-result,.pn-result).is-perfect::before{
   width:min(100%,320px);
   height:auto;
   aspect-ratio:560 / 539;
@@ -1112,9 +1118,9 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   filter:drop-shadow(0 10px 14px rgba(0,0,0,.28));
 }
 /* 絵が「ぜんもんせいかい！」と言っているので、★は出さない（重複するため） */
-.ninja-kids :is(.tk-result,.kj-result).is-perfect :is(.tk-result-stars,.kj-result-stars) { display:none; }
+.ninja-kids :is(.tk-result,.kj-result).is-perfect :is(.tk-result-stars,.kj-result-stars) ,.ninja-kids :is(.tk-result,.kk-result).is-perfect :is(.tk-result-stars,.kk-result-stars){ display:none; }
 @media (max-width:767px) {
-  .ninja-kids :is(.tk-result,.kj-result,.kt-result,.rj-result,.pn-result).is-perfect::before {
+  .ninja-kids :is(.tk-result,.kj-result,.kt-result,.rj-result,.pn-result).is-perfect::before ,.ninja-kids :is(.tk-result,.kk-result,.kt-result,.rj-result,.pn-result).is-perfect::before{
     width:min(100%,240px);
   }
 }
@@ -1198,15 +1204,15 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   50% { translate:-50% -4px; }
 }
 @media (prefers-reduced-motion:reduce) {
-  .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu)::before,
+  .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu)::before,.ninja-kids :is(.tk-menu,.kk-menu,.kt-menu,.rj-menu,.pn-menu)::before,
   .ninja-space .sa-play-head::after { animation:none; }
 }
 @media (max-width:767px) {
-  .ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar)::after {
+  .ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar)::after ,.ninja-kids :is(.tk-play-head,.kk-play-head,.kt-bar,.rj-bar,.pn-bar)::after{
     width:94px;
     height:30px;
   }
-  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock)::before {
+  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock)::before ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock)::before{
     flex-basis:30px;
     width:30px;
     height:30px;
@@ -1218,17 +1224,17 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   --nk-feedback-ok:url('/assets/images/ninja/feedback/ninja-maru.webp');
   --nk-feedback-ng:url('/assets/images/ninja/feedback/ninja-batsu.webp');
 }
-.ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) { position:relative; }
-.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar)::after { content:none; }
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock) {
+.ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) ,.ninja-kids :is(.tk-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz){ position:relative; }
+.ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar)::after ,.ninja-kids :is(.tk-play-head,.kk-play-head,.kt-bar,.rj-bar,.pn-bar)::after{ content:none; }
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock){
   gap:0;
   min-height:var(--nk-tap);
 }
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock)::before {
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock)::before ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock)::before{
   content:none;
   display:none;
 }
-.ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) {
+.ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) ,.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng){
   position:absolute;
   grid-column:1 / -1;
   grid-row:1 / -1;
@@ -1255,7 +1261,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   pointer-events:none;
   animation:ninjaFeedbackVeil .22s ease-out both;
 }
-.ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before {
+.ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before ,.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng)::before{
   content:'';
   display:block;
   flex:none;
@@ -1266,8 +1272,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   filter:drop-shadow(0 12px 18px rgba(0,0,0,.28));
   animation:ninjaFeedbackPop .38s cubic-bezier(.2,1.28,.42,1) both;
 }
-.ninja-kids :is(.tk-feedback,.kj-feedback).is-ok::before { background-image:var(--nk-feedback-ok); }
-.ninja-kids :is(.tk-feedback,.kj-feedback).is-ng::before { background-image:var(--nk-feedback-ng); }
+.ninja-kids :is(.tk-feedback,.kj-feedback).is-ok::before ,.ninja-kids :is(.tk-feedback,.kk-feedback).is-ok::before{ background-image:var(--nk-feedback-ok); }
+.ninja-kids :is(.tk-feedback,.kj-feedback).is-ng::before ,.ninja-kids :is(.tk-feedback,.kk-feedback).is-ng::before{ background-image:var(--nk-feedback-ng); }
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before {
   width:clamp(88px,10vw,116px);
   height:auto;
@@ -1338,8 +1344,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   to { opacity:1;transform:translateY(0) scale(1) rotate(0); }
 }
 @media (prefers-reduced-motion:reduce) {
-  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng),
-  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before,
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng),.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng),
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before,.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng)::before,
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before { animation:none; }
 }
 
@@ -1402,7 +1408,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 }
 /* Kanji board: fixed play frame. */
 @media (min-width:768px) {
-  .ninja-kids.ninja-kanji .kj-play {
+  .ninja-kids.ninja-kanji .kj-play ,.ninja-kids.ninja-kanji .kk-play{
     height:var(--nk-board-h);
     min-height:var(--nk-board-h);
     box-sizing:border-box;
@@ -1418,21 +1424,21 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
    タップ領域は --nk-tap で段ごとに一括指定する。
    ============================================================ */
 .ninja-kids { --nk-tap:68px; }
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) { min-height:var(--nk-tap); }
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt){ min-height:var(--nk-tap); }
 
 /* ---------- スマホ（~767px） ---------- */
 @media (max-width:767px) {
   /* 1カラムに積む段は盤面・回答エリアの固定高さを外す（1画面に収めるルールが優先） */
   .ninja-kids { --nk-tap:60px; --nk-board-h:0px; --nk-q-notch:12px; --nk-seam:10px; }
-  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),
+  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),.ninja-kids :is(.tk-options,.kk-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),
   .ninja-kids .tk-play>.tk-options { align-self:auto; min-height:0; }
-  .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) { min-height:56px; }
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) {
+  .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) ,.ninja-kids :is(.tk-mode,.kk-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice){ min-height:56px; }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero){
     min-height:0!important;
     padding:16px 16px 18px!important;
   }
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero)::before { content:none; }
-  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero)::before ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero)::before{ content:none; }
+  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) ,.ninja-kids :is(.tk-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz){
     grid-template-rows:auto;
     gap:10px;
     min-height:0;
@@ -1440,62 +1446,62 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     border-radius:14px;
   }
   /* 盤面の子要素は行の明示指定をやめ、上から順に積む */
-  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz)>*,
+  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz)>*,.ninja-kids :is(.tk-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz)>*,
   .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>* {
     grid-column:1;
     grid-row:auto;
   }
   /* ○×の全面フィードバックは盤面全体に重ねたまま保つ */
-  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) {
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) ,.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng){
     grid-column:1 / -1;
     grid-row:1 / -1;
   }
-  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices) { gap:8px; }
-  .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) {
+  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices) ,.ninja-kids :is(.tk-options,.kk-options,.kt-choices,.rj-choices,.pn-choices){ gap:8px; }
+  .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) ,.ninja-kids :is(.tk-menu,.kk-menu,.kt-menu,.rj-menu,.pn-menu){
     padding:14px;
     padding-top:66px;
     border-radius:14px;
   }
-  .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu)::before { width:180px; height:48px; }
-  .ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) { padding:32px 16px 44px; }
+  .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu)::before ,.ninja-kids :is(.tk-menu,.kk-menu,.kt-menu,.rj-menu,.pn-menu)::before{ width:180px; height:48px; }
+  .ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) ,.ninja-kids :is(.tk-doc,.kk-doc,.kt-doc,.rj-doc,.pn-doc){ padding:32px 16px 44px; }
 }
 
 /* ---------- タブレット共通（768~1179px） ---------- */
 @media (min-width:768px) and (max-width:1179px) {
   .ninja-kids { --nk-tap:76px; }
-  .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) { min-height:72px; }
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),
+  .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) ,.ninja-kids :is(.tk-mode,.kk-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice){ min-height:72px; }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero),
   .ninja-kids .app-ref-hero {
     grid-template-columns:minmax(0,1fr) 210px!important;
     padding:16px 22px 16px 26px!important;
   }
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero)::before {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero)::before ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero)::before{
     right:224px;
     font-size:98px;
   }
   .ninja-kids .app-ref-visual.is-ninja .ninja-mascot,
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot{
     width:196px;
     height:148px;
   }
   .ninja-kids .app-ref-visual.is-ninja { min-height:148px; }
-  .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) {
+  .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) ,.ninja-kids :is(#tk-app,#kk-app,#kt-app,#rj-app,#pn-app){
     padding:20px clamp(16px,3vw,34px) 24px;
   }
-  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) { font-size:20px; }
-  .ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) { padding:40px 28px 52px; }
+  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt){ font-size:20px; }
+  .ninja-kids :is(.tk-doc,.kj-doc,.kt-doc,.rj-doc,.pn-doc) ,.ninja-kids :is(.tk-doc,.kk-doc,.kt-doc,.rj-doc,.pn-doc){ padding:40px 28px 52px; }
 }
 
 /* ---------- タブレット縦（768~1179px・縦持ち） ---------- */
 @media (min-width:768px) and (max-width:1179px) and (orientation:portrait) {
   /* 1カラムに積む段は盤面・回答エリアの固定高さを外す（1画面に収めるルールが優先） */
   .ninja-kids { --nk-board-h:0px; --nk-seam:14px; }
-  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),
+  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),.ninja-kids :is(.tk-options,.kk-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),
   .ninja-kids .tk-play>.tk-options { align-self:auto; min-height:0; }
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) { min-height:170px!important; }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero){ min-height:170px!important; }
 
   /* 盤面を1カラムに積む：もんだい → こたえ */
-  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz),
+  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz),.ninja-kids :is(.tk-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz),
   .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card) {
     grid-template-columns:1fr;
     grid-template-rows:auto;
@@ -1503,19 +1509,19 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     min-height:0;
     padding:18px 18px 20px;
   }
-  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz)>*,
+  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz)>*,.ninja-kids :is(.tk-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz)>*,
   .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>* {
     grid-column:1;
     grid-row:auto;
   }
   /* ○×の全面フィードバックは盤面全体に重ねたまま保つ */
-  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) {
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) ,.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng){
     grid-column:1 / -1;
     grid-row:1 / -1;
   }
   .ninja-kids { --nk-qh:220px; }
-  .ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask,.tk-ask) { min-height:var(--nk-qh); }
-  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices) { gap:12px; }
+  .ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask,.tk-ask) ,.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kk-ask,.tk-ask){ min-height:var(--nk-qh); }
+  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices) ,.ninja-kids :is(.tk-options,.kk-options,.kt-choices,.rj-choices,.rj-type,.pn-choices){ gap:12px; }
 
   /* こたえあわせパネルは選択肢の位置に重ねず、下に出す */
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on {
@@ -1542,7 +1548,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids .tk-play>.tk-options.is-clock .tk-clock { width:min(150px,100%); }
 
   /* かんじ修行：横持ち用の固定高さを解除 */
-  .ninja-kids.ninja-kanji .kj-play { height:auto; min-height:0; }
+  .ninja-kids.ninja-kanji .kj-play ,.ninja-kids.ninja-kanji .kk-play{ height:auto; min-height:0; }
 
   /* さんすう：式は折り返してよい（1行固定は横持ちだけ） */
   .ninja-space .app-paper { width:min(760px,100%); max-width:760px; }
@@ -1557,7 +1563,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 
 /* ---------- タブレット横（768~1179px・横持ち） ---------- */
 @media (min-width:768px) and (max-width:1179px) and (orientation:landscape) {
-  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) {
+  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) ,.ninja-kids :is(.tk-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz){
     grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
     gap:12px 18px;
     padding:14px 16px 16px;
@@ -1574,8 +1580,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 
 /* 1カラムに積むとき（スマホ・タブレット縦）は、といのラベルを重ねず上に置く */
 @media (max-width:767px), (min-width:768px) and (max-width:1179px) and (orientation:portrait) {
-  .ninja-kids .kj-ask-label { justify-self:stretch; margin:0 0 6px; }
-  .ninja-kids .kj-ask { padding-top:0; }
+  .ninja-kids .kj-ask-label ,.ninja-kids .kk-ask-label{ justify-self:stretch; margin:0 0 6px; }
+  .ninja-kids .kj-ask ,.ninja-kids .kk-ask{ padding-top:0; }
 }
 
 /* ============================================================
@@ -1588,7 +1594,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 
 /* ---------- スマホ縦：ヒーローを1行に畳んで盤面に高さを渡す ---------- */
 @media (max-width:767px) and (orientation:portrait) {
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero),
   .ninja-kids .app-ref-hero {
     grid-template-columns:minmax(0,1fr) clamp(104px,32vw,148px)!important;
     align-items:center!important;
@@ -1597,7 +1603,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     padding:8px 14px!important;
     text-align:left!important;
   }
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot{
     grid-column:2;
     grid-row:1 / 9;
     justify-self:center;
@@ -1605,7 +1611,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   /* 注釈バッジを消したぶん、忍者を大きく見せる（2026-09-03）。
      枠は正方形にして、絵が枠の幅そのままの大きさで出るようにする
      （object-fit:contain なので、横長の枠だと高さぶんまでしか大きくならない）。 */
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,
   .ninja-kids .app-ref-visual.is-ninja .ninja-mascot {
     width:100%;
     height:auto;
@@ -1613,26 +1619,26 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   }
   .ninja-kids .app-ref-visual.is-ninja { min-height:0; }
   .ninja-kids .app-ref-copy { text-align:left; }
-  .ninja-kids :is(.tk-eyebrow,.kj-eyebrow,.kt-eyebrow,.rj-eyebrow,.pn-eyebrow) { margin-bottom:1px; font-size:9.5px; }
+  .ninja-kids :is(.tk-eyebrow,.kj-eyebrow,.kt-eyebrow,.rj-eyebrow,.pn-eyebrow) ,.ninja-kids :is(.tk-eyebrow,.kk-eyebrow,.kt-eyebrow,.rj-eyebrow,.pn-eyebrow){ margin-bottom:1px; font-size:9.5px; }
   /* いちばん長い「フォニックスしゅぎょう」対策（2026-09-03）。
      幅に合わせて縮めたうえで、折り返すときは word-break:auto-phrase で
      文節の切れ目（フォニックス／しゅぎょう）に寄せる。 */
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) h1 {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) h1 ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero) h1{
     margin-bottom:2px;
     font-size:clamp(16px,5vw,22px);
     word-break:auto-phrase;
   }
-  .ninja-kids :is(.tk-lead,.kj-lead,.kt-lead,.rj-lead,.pn-lead) { display:none; }
+  .ninja-kids :is(.tk-lead,.kj-lead,.kt-lead,.rj-lead,.pn-lead) ,.ninja-kids :is(.tk-lead,.kk-lead,.kt-lead,.rj-lead,.pn-lead){ display:none; }
   /* 注釈バッジはスマホでは出さない（2026-09-03）。2行に折り返って
      ヒーローでいちばん大きい塊になり、アプリ名とボタンの邪魔をしていた。
      同じ内容はランディングの「おうちのかたへ」に書いてある。 */
-  .ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope) { display:none; }
+  .ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope) ,.ninja-kids :is(.tk-scope,.kk-scope,.kt-scope,.rj-scope,.pn-scope){ display:none; }
   .ninja-kids .app-ref-button { margin-top:5px; padding:4px 10px; font-size:11px; }
 
   /* 盤面：問題パネルの高さを画面の高さから決める */
-  .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) { padding:10px 10px 14px; }
+  .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) ,.ninja-kids :is(#tk-app,#kk-app,#kt-app,#rj-app,#pn-app){ padding:10px 10px 14px; }
   .ninja-kids { --nk-seam:8px; }
-  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) { gap:8px; padding:10px 10px 12px; }
+  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) ,.ninja-kids :is(.tk-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz){ gap:8px; padding:10px 10px 12px; }
   .ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-big { font-size:clamp(34px,9dvh,64px); }
   .ninja-kids .tk-play>.tk-stage { min-height:clamp(120px,24dvh,230px); }
   .ninja-kids .tk-play>.tk-stage .tk-clock { width:auto; height:clamp(104px,21dvh,200px); }
@@ -1646,7 +1652,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids { --nk-tap:46px; --nk-seam:6px; }
 
   /* ヒーローは見出しだけ残して1行に */
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero),
   .ninja-kids .app-ref-hero {
     grid-template-columns:minmax(0,1fr) 86px!important;
     align-items:center!important;
@@ -1655,25 +1661,25 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     padding:5px 14px!important;
     text-align:left!important;
   }
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero)::before { content:none; }
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero)::before ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero)::before{ content:none; }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot{
     grid-column:2;
     grid-row:1 / 9;
     justify-self:center;
   }
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,
   .ninja-kids .app-ref-visual.is-ninja .ninja-mascot { width:86px; height:46px; }
   .ninja-kids .app-ref-visual.is-ninja { min-height:46px; }
   .ninja-kids .app-ref-copy { text-align:left; }
-  .ninja-kids :is(.tk-eyebrow,.kj-eyebrow,.kt-eyebrow,.rj-eyebrow,.pn-eyebrow),
-  .ninja-kids :is(.tk-lead,.kj-lead,.kt-lead,.rj-lead,.pn-lead),
-  .ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope) { display:none; }
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) h1 { margin:0 0 2px; font-size:18px; }
+  .ninja-kids :is(.tk-eyebrow,.kj-eyebrow,.kt-eyebrow,.rj-eyebrow,.pn-eyebrow),.ninja-kids :is(.tk-eyebrow,.kk-eyebrow,.kt-eyebrow,.rj-eyebrow,.pn-eyebrow),
+  .ninja-kids :is(.tk-lead,.kj-lead,.kt-lead,.rj-lead,.pn-lead),.ninja-kids :is(.tk-lead,.kk-lead,.kt-lead,.rj-lead,.pn-lead),
+  .ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope) ,.ninja-kids :is(.tk-scope,.kk-scope,.kt-scope,.rj-scope,.pn-scope){ display:none; }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero) h1 ,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero) h1{ margin:0 0 2px; font-size:18px; }
   .ninja-kids .app-ref-button { margin-top:5px; padding:4px 10px; font-size:11px; }
 
   /* 盤面は左右2カラム（縦積みだと1画面に入らないため） */
-  .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) { padding:8px 10px 12px; }
-  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz),
+  .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) ,.ninja-kids :is(#tk-app,#kk-app,#kt-app,#rj-app,#pn-app){ padding:8px 10px 12px; }
+  .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz),.ninja-kids :is(.tk-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz),
   .ninja-space .sa-card:not(.sa-result):not(.sa-ref-card) {
     grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);
     grid-template-rows:auto auto auto auto;
@@ -1681,15 +1687,15 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     min-height:0;
     padding:8px 10px 10px;
   }
-  .ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar) { grid-column:1 / -1; grid-row:1; }
-  .ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask) {
+  .ninja-kids :is(.tk-play-head,.kj-play-head,.kt-bar,.rj-bar,.pn-bar) ,.ninja-kids :is(.tk-play-head,.kk-play-head,.kt-bar,.rj-bar,.pn-bar){ grid-column:1 / -1; grid-row:1; }
+  .ninja-kids :is(.kt-q,.rj-q,.pn-q,.kj-ask) ,.ninja-kids :is(.kt-q,.rj-q,.pn-q,.kk-ask){
     grid-column:1;
     grid-row:2;
     min-height:clamp(84px,30dvh,170px);
   }
-  .ninja-kids .kj-ask { padding-top:8px; }
-  .ninja-kids .kj-ask-label { grid-column:1; grid-row:2; justify-self:center; margin:6px 10px; }
-  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),
+  .ninja-kids .kj-ask ,.ninja-kids .kk-ask{ padding-top:8px; }
+  .ninja-kids .kj-ask-label ,.ninja-kids .kk-ask-label{ grid-column:1; grid-row:2; justify-self:center; margin:6px 10px; }
+  .ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),.ninja-kids :is(.tk-options,.kk-options,.kt-choices,.rj-choices,.rj-type,.pn-choices),
   .ninja-kids .tk-play>.tk-options {
     grid-column:2;
     grid-row:2;
@@ -1700,9 +1706,9 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     align-content:center;
   }
   .ninja-kids .tk-play>.tk-options { grid-row:3 / 5; }
-  .ninja-kids :is(.tk-feedback,.kj-feedback) { grid-column:1; grid-row:3; }
-  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) { grid-column:1 / -1; grid-row:1 / -1; }
-  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before { width:clamp(84px,26dvh,130px); }
+  .ninja-kids :is(.tk-feedback,.kj-feedback) ,.ninja-kids :is(.tk-feedback,.kk-feedback){ grid-column:1; grid-row:3; }
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) ,.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng){ grid-column:1 / -1; grid-row:1 / -1; }
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before ,.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng)::before{ width:clamp(84px,26dvh,130px); }
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer) { grid-column:2; grid-row:3; }
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on {
     grid-column:2;
@@ -1711,7 +1717,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     padding:10px 14px;
   }
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before { width:clamp(46px,12dvh,80px); }
-  .ninja-kids :is(.tk-back,.kj-back,.kt-back,.rj-back,.pn-back) { grid-column:1 / -1; grid-row:4; justify-self:center; }
+  .ninja-kids :is(.tk-back,.kj-back,.kt-back,.rj-back,.pn-back) ,.ninja-kids :is(.tk-back,.kk-back,.kt-back,.rj-back,.pn-back){ grid-column:1 / -1; grid-row:4; justify-self:center; }
 
   /* とけい修行：時計を1画面ぶんの高さに合わせる */
   .ninja-kids .tk-play { grid-template-rows:auto 6px auto 1fr auto auto auto; }
@@ -1756,24 +1762,24 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 /* 寝かせた画面の詰め：行割りの取りこぼしと、選択肢の高さを整理する */
 @media (orientation:landscape) and (max-height:500px) {
   /* 選択肢は指で押せる下限（46px）まで詰める */
-  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):not(.tk-opt-clock) {
+  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):not(.tk-opt-clock) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):not(.tk-opt-clock){
     padding-block:5px;
     font-size:15px;
     line-height:1.25;
   }
-  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) { min-height:var(--nk-tap); }
+  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt){ min-height:var(--nk-tap); }
 
   /* かんじ修行：しんちょくバーが余った行に落ちるので行を明示する */
-  .ninja-kids.ninja-kanji .kj-play { height:auto; min-height:0; grid-template-rows:auto 6px 1fr auto; }
-  .ninja-kids .kj-play>.kj-play-head { grid-column:1 / -1; grid-row:1; }
-  .ninja-kids .kj-play>.kj-bar { grid-column:1 / -1; grid-row:2; }
-  .ninja-kids .kj-play>:is(.kj-ask,.kj-ask-label) { grid-column:1; grid-row:3; }
-  .ninja-kids .kj-play>.kj-options { grid-column:2; grid-row:3; align-self:center; }
-  .ninja-kids .kj-play>.kj-feedback { grid-column:1; grid-row:4; }
-  .ninja-kids .kj-play>.kj-back { grid-column:1 / -1; grid-row:4; justify-self:center; margin:0; }
+  .ninja-kids.ninja-kanji .kj-play ,.ninja-kids.ninja-kanji .kk-play{ height:auto; min-height:0; grid-template-rows:auto 6px 1fr auto; }
+  .ninja-kids .kj-play>.kj-play-head ,.ninja-kids .kk-play>.kk-play-head{ grid-column:1 / -1; grid-row:1; }
+  .ninja-kids .kj-play>.kj-bar ,.ninja-kids .kk-play>.kk-bar{ grid-column:1 / -1; grid-row:2; }
+  .ninja-kids .kj-play>:is(.kj-ask,.kj-ask-label) ,.ninja-kids .kk-play>:is(.kk-ask,.kk-ask-label){ grid-column:1; grid-row:3; }
+  .ninja-kids .kj-play>.kj-options ,.ninja-kids .kk-play>.kk-options{ grid-column:2; grid-row:3; align-self:center; }
+  .ninja-kids .kj-play>.kj-feedback ,.ninja-kids .kk-play>.kk-feedback{ grid-column:1; grid-row:4; }
+  .ninja-kids .kj-play>.kj-back ,.ninja-kids .kk-play>.kk-back{ grid-column:1 / -1; grid-row:4; justify-self:center; margin:0; }
 
   /* こたえ／もどるは1行にまとめて縦を稼ぐ */
-  .ninja-kids :is(.tk-back,.kj-back,.kt-back,.rj-back,.pn-back) { grid-row:4; justify-self:center; }
+  .ninja-kids :is(.tk-back,.kj-back,.kt-back,.rj-back,.pn-back) ,.ninja-kids :is(.tk-back,.kk-back,.kt-back,.rj-back,.pn-back){ grid-row:4; justify-self:center; }
 
   /* 共通ヘッダーも寝かせたときだけ薄くする */
   /* （ナビの詰めは後段の .nav-inner で行う） */
@@ -1782,7 +1788,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 
 /* ○×のアクション画像は「盤面の高さ」に合わせる。
    px固定だと、盤面が低いスマホ（とくに横持ち）で上下が見切れる。 */
-.ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before {
+.ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before ,.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng)::before{
   width:auto;
   height:min(52%,190px);
   aspect-ratio:1;
@@ -1794,8 +1800,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 }
 
 @media (max-width:767px) and (orientation:portrait) {
-  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) { font-size:clamp(19px,5.2vw,28px); padding:12px; }
-  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before { height:min(48%,150px); }
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) ,.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng){ font-size:clamp(19px,5.2vw,28px); padding:12px; }
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before ,.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng)::before{ height:min(48%,150px); }
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before { height:min(30%,84px); }
 }
 
@@ -1804,8 +1810,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids .nav-inner { padding:6px 14px; }
   .ninja-kids .nav-logo { font-size:1rem; }
 
-  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) { font-size:clamp(18px,4vw,26px); padding:8px; }
-  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before { height:min(46%,120px); }
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) ,.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng){ font-size:clamp(18px,4vw,26px); padding:8px; }
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before ,.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng)::before{ height:min(46%,120px); }
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before { height:min(28%,64px); }
 
   /* とけい修行：とい・ヒントボタン・時計を1画面ぶんまで詰める */
@@ -1824,12 +1830,12 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   .ninja-kids .app-ref-button { margin:0; }
 
   .ninja-kids { --nk-qh:clamp(84px,19dvh,190px); }
-  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):not(.tk-opt-clock) {
+  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):not(.tk-opt-clock) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):not(.tk-opt-clock){
     padding-block:8px;
     font-size:16px;
     line-height:1.3;
   }
-  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) { min-height:var(--nk-tap); }
+  .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt){ min-height:var(--nk-tap); }
 
   /* とけい修行：時計まわりを画面の高さに追従させる */
   .ninja-kids .tk-play>.tk-ask { padding:6px 12px 2px; font-size:14px; }
@@ -1906,7 +1912,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
    1カラムに積む段では明示行が1本しかなく、1 / -1 だと帯が1行ぶん（約24px）に潰れて
    アクション画像が見切れていた。行・列を auto にして、包含ブロックを
    盤面のパディングボックスに固定する（段によらず盤面いっぱいに重なる）。 */
-.ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) {
+.ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) ,.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng){
   grid-column:auto;
   grid-row:auto;
 }
@@ -1996,17 +2002,17 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 /* メニューで「いま選んでいるもの」をはっきり出す。
    v3のスキンが border を0（左の5pxだけ）にしたため、各アプリのCSSが持つ
    .is-on（枠の色替え）が効かず、初期選択がどれか分からなくなっていた。 */
-.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) {
+.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) ,.ninja-kids :is(.tk-mode,.kk-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice){
   position:relative;
 }
-.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice).is-on {
+.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice).is-on ,.ninja-kids :is(.tk-mode,.kk-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice).is-on{
   border-left-color:var(--nk-accent);
   background:color-mix(in srgb,var(--nk-accent) 11%,#fff);
   box-shadow:
     inset 0 0 0 2px var(--nk-accent),
     0 5px 0 color-mix(in srgb,var(--nk-accent) 42%,#d2c9b8);
 }
-.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice).is-on::after {
+.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice).is-on::after ,.ninja-kids :is(.tk-mode,.kk-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice).is-on::after{
   content:'✓';
   position:absolute;
   top:5px;
@@ -2017,7 +2023,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   line-height:1;
   pointer-events:none;
 }
-.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice).is-on :is(.tk-choice-label,.kj-choice-label,.kt-choice-label) {
+.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice).is-on :is(.tk-choice-label,.kj-choice-label,.kt-choice-label) ,.ninja-kids :is(.tk-mode,.kk-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice).is-on :is(.tk-choice-label,.kk-choice-label,.kt-choice-label){
   color:var(--nk-accent-dark);
 }
 
@@ -2084,25 +2090,25 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 /* 寝かせた画面ではタブレット段のタップ領域(72px)が効いてメニューが伸びる。
    横持ちは高さが足りないので、メニューの選択肢だけ下限を下げる。 */
 @media (orientation:landscape) and (max-height:500px) {
-  .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) { min-height:44px; }
+  .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice) ,.ninja-kids :is(.tk-mode,.kk-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice){ min-height:44px; }
 }
 
 /* 寝かせた画面ではメニューも詰める（とけい以外の修行アプリにも同じ扱いを広げる）。
    アイテム絵の余白・行の内側余白・スタートの高さが積み上がって1画面を超えていた。 */
 @media (orientation:landscape) and (max-height:500px) {
-  .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) { padding-top:12px; }
-  .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu)::before { content:none; }
-  .ninja-kids :is(.tk-group,.kj-group) { margin-bottom:8px; }
-  .ninja-kids :is(.tk-group-title,.kj-group-title) { margin-bottom:4px; }
-  .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode) { padding-block:6px; }
-  .ninja-kids :is(.tk-start,.kj-start) { padding-block:8px; font-size:18px; }
+  .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) ,.ninja-kids :is(.tk-menu,.kk-menu,.kt-menu,.rj-menu,.pn-menu){ padding-top:12px; }
+  .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu)::before ,.ninja-kids :is(.tk-menu,.kk-menu,.kt-menu,.rj-menu,.pn-menu)::before{ content:none; }
+  .ninja-kids :is(.tk-group,.kj-group) ,.ninja-kids :is(.tk-group,.kk-group){ margin-bottom:8px; }
+  .ninja-kids :is(.tk-group-title,.kj-group-title) ,.ninja-kids :is(.tk-group-title,.kk-group-title){ margin-bottom:4px; }
+  .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode) ,.ninja-kids :is(.tk-mode,.kk-choice,.kt-mode,.rj-mode,.pn-mode){ padding-block:6px; }
+  .ninja-kids :is(.tk-start,.kj-start) ,.ninja-kids :is(.tk-start,.kk-start){ padding-block:8px; font-size:18px; }
 }
 
 @media (max-width:767px) and (orientation:portrait) and (max-height:699px) {
   .ninja-kids.ninja-tokei .tk-menu { padding-bottom:4px; }
   /* 縦が短い端末（360x640 など）は忍者を一段小さくしてヒーローを詰める。
      ここを詰めないと、とけいのスタートが画面の外に出る（実測）。 */
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero),.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero),
   .ninja-kids .app-ref-hero {
     grid-template-columns:minmax(0,1fr) clamp(72px,22vw,92px)!important;
     padding-block:6px!important;
@@ -2111,7 +2117,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 
 /* アプリ内「おうちのかたへ」3ステップの番号も、ランディングと同じ忍者道具アイコンにする。
    数字テキストは読み上げのために残し、font-size:0 で見た目だけ消す。 */
-.ninja-kids :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) {
+.ninja-kids :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) ,.ninja-kids :is(.tk-step-n,.kk-step-n,.kt-step-n,.rj-step-n,.pn-step-n){
   width:46px;
   height:46px;
   margin-bottom:8px;
@@ -2121,17 +2127,17 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   font-size:0;
   filter:drop-shadow(0 3px 4px rgba(40,28,16,.18));
 }
-.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step):nth-child(1) :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) { background-image:url('/assets/images/ninja/steps/step-1.png'); }
-.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step):nth-child(2) :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) { background-image:url('/assets/images/ninja/steps/step-2.png'); }
-.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step):nth-child(3) :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) { background-image:url('/assets/images/ninja/steps/step-3.png'); }
-.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step):nth-child(4) :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) { background-image:url('/assets/images/ninja/steps/step-4.png'); }
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step):nth-child(1) :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) ,.ninja-kids :is(.tk-step,.kk-step,.kt-step,.rj-step,.pn-step):nth-child(1) :is(.tk-step-n,.kk-step-n,.kt-step-n,.rj-step-n,.pn-step-n){ background-image:url('/assets/images/ninja/steps/step-1.png'); }
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step):nth-child(2) :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) ,.ninja-kids :is(.tk-step,.kk-step,.kt-step,.rj-step,.pn-step):nth-child(2) :is(.tk-step-n,.kk-step-n,.kt-step-n,.rj-step-n,.pn-step-n){ background-image:url('/assets/images/ninja/steps/step-2.png'); }
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step):nth-child(3) :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) ,.ninja-kids :is(.tk-step,.kk-step,.kt-step,.rj-step,.pn-step):nth-child(3) :is(.tk-step-n,.kk-step-n,.kt-step-n,.rj-step-n,.pn-step-n){ background-image:url('/assets/images/ninja/steps/step-3.png'); }
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step):nth-child(4) :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) ,.ninja-kids :is(.tk-step,.kk-step,.kt-step,.rj-step,.pn-step):nth-child(4) :is(.tk-step-n,.kk-step-n,.kt-step-n,.rj-step-n,.pn-step-n){ background-image:url('/assets/images/ninja/steps/step-4.png'); }
 
 
 /* かんじも とけい と同じ2カラムメニューにする。
    といかた（左）・がくねん（右）を1段目に並べ、スタートは両方の下＝2段目に中央で置く。
    DOM順は がくねん→といかた なので nth-of-type(1) が がくねん。 */
 @media (min-width:768px), (orientation:landscape) and (max-height:500px) {
-  .ninja-kids.ninja-kanji .kj-menu {
+  .ninja-kids.ninja-kanji .kj-menu ,.ninja-kids.ninja-kanji .kk-menu{
     width:min(100%,1000px);
     padding-inline:max(20px,calc((100% - 640px) / 2));
     display:grid;
@@ -2140,9 +2146,9 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     column-gap:22px;
     align-items:start;
   }
-  .ninja-kids.ninja-kanji .kj-menu>.kj-group:nth-of-type(1) { grid-column:2; grid-row:1; margin-bottom:0; }
-  .ninja-kids.ninja-kanji .kj-menu>.kj-group:nth-of-type(2) { grid-column:1; grid-row:1; margin-bottom:0; }
-  .ninja-kids.ninja-kanji .kj-menu>.kj-start {
+  .ninja-kids.ninja-kanji .kj-menu>.kj-group:nth-of-type(1) ,.ninja-kids.ninja-kanji .kk-menu>.kk-group:nth-of-type(1){ grid-column:2; grid-row:1; margin-bottom:0; }
+  .ninja-kids.ninja-kanji .kj-menu>.kj-group:nth-of-type(2) ,.ninja-kids.ninja-kanji .kk-menu>.kk-group:nth-of-type(2){ grid-column:1; grid-row:1; margin-bottom:0; }
+  .ninja-kids.ninja-kanji .kj-menu>.kj-start ,.ninja-kids.ninja-kanji .kk-menu>.kk-start{
     grid-column:1 / -1; grid-row:2;
     width:min(100%,320px); margin:18px auto 0; justify-self:center;
   }
@@ -2151,24 +2157,24 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 /* 寝かせた画面は高さが足りないので、スタートまわりの余白を詰める。
    スタートを最下段に移した分（1行増）を、ここで吸収する。 */
 @media (orientation:landscape) and (max-height:500px) {
-  .ninja-kids.ninja-kanji .kj-menu { padding-bottom:6px; }
-  .ninja-kids.ninja-kanji .kj-menu>.kj-start { margin-top:6px; padding-block:6px; font-size:17px; }
+  .ninja-kids.ninja-kanji .kj-menu ,.ninja-kids.ninja-kanji .kk-menu{ padding-bottom:6px; }
+  .ninja-kids.ninja-kanji .kj-menu>.kj-start ,.ninja-kids.ninja-kanji .kk-menu>.kk-start{ margin-top:6px; padding-block:6px; font-size:17px; }
 }
 
 /* かんじのスマホ縦：がくねんを縦1列にしたぶんを詰めて1画面に収める */
 @media (max-width:767px) and (orientation:portrait) {
-  .ninja-kids.ninja-kanji .kj-menu { padding-top:34px; padding-bottom:8px; }
-  .ninja-kids.ninja-kanji .kj-menu::before { width:120px; height:30px; top:6px; }
-  .ninja-kids.ninja-kanji .kj-group { margin-bottom:8px; }
-  .ninja-kids.ninja-kanji .kj-group-title { margin-bottom:5px; font-size:11.5px; }
-  .ninja-kids.ninja-kanji .kj-choices { gap:7px; }
-  .ninja-kids.ninja-kanji .kj-choices-column .kj-choice { padding:6px 12px; }
-  .ninja-kids.ninja-kanji .kj-start { padding-block:11px; font-size:19px; }
+  .ninja-kids.ninja-kanji .kj-menu ,.ninja-kids.ninja-kanji .kk-menu{ padding-top:34px; padding-bottom:8px; }
+  .ninja-kids.ninja-kanji .kj-menu::before ,.ninja-kids.ninja-kanji .kk-menu::before{ width:120px; height:30px; top:6px; }
+  .ninja-kids.ninja-kanji .kj-group ,.ninja-kids.ninja-kanji .kk-group{ margin-bottom:8px; }
+  .ninja-kids.ninja-kanji .kj-group-title ,.ninja-kids.ninja-kanji .kk-group-title{ margin-bottom:5px; font-size:11.5px; }
+  .ninja-kids.ninja-kanji .kj-choices ,.ninja-kids.ninja-kanji .kk-choices{ gap:7px; }
+  .ninja-kids.ninja-kanji .kj-choices-column .kj-choice ,.ninja-kids.ninja-kanji .kk-choices-column .kk-choice{ padding:6px 12px; }
+  .ninja-kids.ninja-kanji .kj-start ,.ninja-kids.ninja-kanji .kk-start{ padding-block:11px; font-size:19px; }
 }
 
 /* 番号アイコンと見出しは同じ行に置く（アイコンだけで1行使わない）。
    本文はその下に、カードの左端から始める。 */
-.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step) {
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step) ,.ninja-kids :is(.tk-step,.kk-step,.kt-step,.rj-step,.pn-step){
   display:grid;
   grid-template-columns:auto 1fr;
   grid-template-rows:auto auto;
@@ -2179,23 +2185,23 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   align-items:center;
   column-gap:12px;
 }
-.ninja-kids :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) {
+.ninja-kids :is(.tk-step-n,.kj-step-n,.kt-step-n,.rj-step-n,.pn-step-n) ,.ninja-kids :is(.tk-step-n,.kk-step-n,.kt-step-n,.rj-step-n,.pn-step-n){
   grid-column:1;
   grid-row:1;
   margin-bottom:0;
 }
-.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step)>h3 {
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step)>h3 ,.ninja-kids :is(.tk-step,.kk-step,.kt-step,.rj-step,.pn-step)>h3{
   grid-column:2;
   grid-row:1;
   margin:0;
 }
-.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step)>p {
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step)>p ,.ninja-kids :is(.tk-step,.kk-step,.kt-step,.rj-step,.pn-step)>p{
   grid-column:1 / -1;
   grid-row:2;
   margin-top:10px;
 }
 
-.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step)>h3 { font-size:15.5px; line-height:1.5; }
+.ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step)>h3 ,.ninja-kids :is(.tk-step,.kk-step,.kt-step,.rj-step,.pn-step)>h3{ font-size:15.5px; line-height:1.5; }
 
 /* アプリ画面から「おうちのかたへ・よくある しつもん」への導線（2026-08-26）。
    読み物はランディング側に集約し、アプリ画面には あそびかた だけを残す。 */
@@ -2288,36 +2294,36 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 }
 
 /* 全修行アプリの文字回答：忍具＋左揃え（2026-09-09）。 */
-.ninja-kids :is(.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kj-opt,.kt-choice,.rj-choice,.pn-choice) {
+.ninja-kids :is(.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kj-opt,.kt-choice,.rj-choice,.pn-choice) ,.ninja-kids :is(.kk-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kk-opt,.kt-choice,.rj-choice,.pn-choice){
   display:flex; align-items:center; justify-content:flex-start;
   padding:12px 20px; gap:12px; text-align:left;
 }
-.ninja-kids :is(.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kj-opt,.kt-choice,.rj-choice,.pn-choice)::before {
+.ninja-kids :is(.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kj-opt,.kt-choice,.rj-choice,.pn-choice)::before ,.ninja-kids :is(.kk-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kk-opt,.kt-choice,.rj-choice,.pn-choice)::before{
   content:''; display:block; position:static; width:48px; height:48px; flex:0 0 48px;
   border-radius:0; box-shadow:none;
   background:transparent var(--nk-answer-icon) center/contain no-repeat;
 }
-.ninja-kids :is(.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(1) { --nk-answer-icon:url('/assets/images/ninja/tokei-ui/kunai.webp'); }
-.ninja-kids :is(.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(2) { --nk-answer-icon:url('/assets/images/ninja/tokei-ui/shuriken.webp'); }
-.ninja-kids :is(.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(2)::before { rotate:45deg; }
-.ninja-kids :is(.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(3) { --nk-answer-icon:url('/assets/images/ninja/tokei-ui/scroll.webp'); }
-.ninja-kids :is(.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(4) { --nk-answer-icon:url('/assets/images/ninja/tokei-ui/smoke.webp'); }
+.ninja-kids :is(.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(1) ,.ninja-kids :is(.kk-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(1){ --nk-answer-icon:url('/assets/images/ninja/tokei-ui/kunai.webp'); }
+.ninja-kids :is(.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(2) ,.ninja-kids :is(.kk-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(2){ --nk-answer-icon:url('/assets/images/ninja/tokei-ui/shuriken.webp'); }
+.ninja-kids :is(.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(2)::before ,.ninja-kids :is(.kk-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(2)::before{ rotate:45deg; }
+.ninja-kids :is(.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(3) ,.ninja-kids :is(.kk-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(3){ --nk-answer-icon:url('/assets/images/ninja/tokei-ui/scroll.webp'); }
+.ninja-kids :is(.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(4) ,.ninja-kids :is(.kk-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(4){ --nk-answer-icon:url('/assets/images/ninja/tokei-ui/smoke.webp'); }
 .ninja-kids .nk-answer-label { min-width:0; overflow-wrap:anywhere; }
 @media (max-width:767px), (orientation:landscape) and (max-height:500px) {
-  .ninja-kids :is(.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kj-opt,.kt-choice,.rj-choice,.pn-choice) { padding:8px 12px; gap:8px; }
-  .ninja-kids :is(.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kj-opt,.kt-choice,.rj-choice,.pn-choice)::before { width:36px; height:36px; flex-basis:36px; }
+  .ninja-kids :is(.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kj-opt,.kt-choice,.rj-choice,.pn-choice) ,.ninja-kids :is(.kk-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kk-opt,.kt-choice,.rj-choice,.pn-choice){ padding:8px 12px; gap:8px; }
+  .ninja-kids :is(.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kj-opt,.kt-choice,.rj-choice,.pn-choice)::before ,.ninja-kids :is(.kk-options,.kt-choices,.rj-choices,.pn-choices)>:is(.kk-opt,.kt-choice,.rj-choice,.pn-choice)::before{ width:36px; height:36px; flex-basis:36px; }
 }
 
 /* 選択肢の通し番号（2026-08-26）。
    「2ばんめの やつ」と口で言えるように、1問ごとに 1 から振り直して左上に出す。
    文字は中央ぞろえのままにしたいので、番号は絶対配置にしてレイアウトに影響させない。 */
-.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices) {
+.ninja-kids :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices) ,.ninja-kids :is(.tk-options,.kk-options,.kt-choices,.rj-choices,.pn-choices){
   counter-reset:nk-opt;
 }
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice) {
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice){
   position:relative;
 }
-:where(.ninja-kids) :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice)::before {
+:where(.ninja-kids) :is(.tk-options,.kj-options,.kt-choices,.rj-choices,.pn-choices)>:is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice)::before ,:where(.ninja-kids) :is(.tk-options,.kk-options,.kt-choices,.rj-choices,.pn-choices)>:is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice)::before{
   counter-increment:nk-opt;
   content:counter(nk-opt);
   display:grid;
@@ -2532,7 +2538,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 /* ヒーローの忍者は 320x320 の正方形。箱が 238x178 だと横60pxが余り、実寸178pxまでしか出ていなかった。
    箱を正方形にして大きくするが、縦に余裕のある画面だけ（1画面に収めるルールを優先） */
 @media (min-width:1000px) and (min-height:821px) {
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,.ninja-kids :is(.tk-hero,.kk-hero,.kt-hero,.rj-hero,.pn-hero):not(.app-ref-hero)>.ninja-mascot,
   .ninja-kids .app-ref-visual.is-ninja .ninja-mascot {
     width:230px;
     height:230px;
@@ -2719,27 +2725,27 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
    ::before は忍具のアイコン、::after は選択中の印で埋まっているので、
    擬似要素ではなく背景のレイヤーとして敷く（中身より下に来るのもこちらが確実）。
    ============================================================ */
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice) {
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice){
   --nk-opt-pattern:url('/assets/images/ninja/patterns/opt-shippou.png');
   background:var(--nk-opt-pattern) center/56px 56px repeat, #fff;
 }
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(2) {
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(2) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(2){
   --nk-opt-pattern:url('/assets/images/ninja/patterns/opt-seigaiha.png');
 }
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(3) {
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(3) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(3){
   --nk-opt-pattern:url('/assets/images/ninja/patterns/opt-asanoha.png');
 }
-.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(4) {
+.ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(4) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice):nth-child(4){
   --nk-opt-pattern:url('/assets/images/ninja/patterns/opt-uroko.png');
 }
 
 /* スマホ縦の正誤表示は、忍者を上・答えを下にして読みやすくする。 */
 @media (max-width:767px) and (orientation:portrait) {
-  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) {
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng) ,.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng){
     flex-direction:column; flex-wrap:nowrap; gap:14px; text-align:center;
     overflow-wrap:anywhere;
   }
-  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before {
+  .ninja-kids :is(.tk-feedback,.kj-feedback):is(.is-ok,.is-ng)::before ,.ninja-kids :is(.tk-feedback,.kk-feedback):is(.is-ok,.is-ng)::before{
     width:min(58vw,210px); height:auto; max-height:55%; aspect-ratio:1;
   }
   .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on {
@@ -2763,20 +2769,20 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
    盤面は忍者スキンの上に載るので、問題エリアの文字は白系にそろえる。
    大きさは他の修行と同じく --nk-fs-* から取り、px を直書きしない。
    ============================================================ */
-.ninja-kids .kj-ask-kaki { padding:10px 14px; }
+.ninja-kids .kj-ask-kaki ,.ninja-kids .kk-ask-kaki{ padding:10px 14px; }
 /* かくモードの問題エリアは「よみ＋伏せ字」の2行しかなく、下が大きく空いていた。
    ほかのモードより大きい係数を当てて、問題エリアいっぱいに使う（2026-09-12）。 */
 /* 字の大きさは「問題エリアの幅 ÷ 字数」で決める（2026-09-12）。
    よみは1〜7文字とばらつくので、px を決め打ちにすると長いよみが2行に折れ、
    最後の1文字だけ次の行に残る。字数は js が --kj-n で渡す。
    1行目は cqw に対応していないブラウザ用の控え。 */
-.ninja-kids .kj-ask-kaki { container-type:inline-size; padding-inline:clamp(14px,3.5%,28px); }
-.ninja-kids .kj-kaki-yomi   { font-size:clamp(22px,calc(var(--nk-qh) * .160),56px); color:#fff; text-shadow:0 2px 12px rgba(0,0,0,.22); }
-.ninja-kids .kj-kaki-yomi   { font-size:min(calc(var(--nk-qh) * .235), calc(92cqw / var(--kj-n,4))); }
-.ninja-kids .kj-kaki-blank  { font-size:clamp(18px,calc(var(--nk-qh) * .120),42px); color:#cddadc; }
-.ninja-kids .kj-kaki-blank  { font-size:min(calc(var(--nk-qh) * .135), calc(58cqw / var(--kj-n,4))); }
+.ninja-kids .kj-ask-kaki ,.ninja-kids .kk-ask-kaki{ container-type:inline-size; padding-inline:clamp(14px,3.5%,28px); }
+.ninja-kids .kj-kaki-yomi   ,.ninja-kids .kk-kaki-yomi{ font-size:clamp(22px,calc(var(--nk-qh) * .160),56px); color:#fff; text-shadow:0 2px 12px rgba(0,0,0,.22); }
+.ninja-kids .kj-kaki-yomi   ,.ninja-kids .kk-kaki-yomi{ font-size:min(calc(var(--nk-qh) * .235), calc(92cqw / var(--kj-n,4))); }
+.ninja-kids .kj-kaki-blank  ,.ninja-kids .kk-kaki-blank{ font-size:clamp(18px,calc(var(--nk-qh) * .120),42px); color:#cddadc; }
+.ninja-kids .kj-kaki-blank  ,.ninja-kids .kk-kaki-blank{ font-size:min(calc(var(--nk-qh) * .135), calc(58cqw / var(--kj-n,4))); }
 /* ○＝これから書く字。暗い問題パネルの上なので、赤より明るいオレンジのほうが読める（2026-09-12） */
-.ninja-kids .kj-kaki-target {
+.ninja-kids .kj-kaki-target ,.ninja-kids .kk-kaki-target{
   color:#ffb15c;
   border-bottom:.1em solid currentColor;
   padding-bottom:.06em;
@@ -2785,24 +2791,24 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
    丸ゴシックだと とめ・はね・はらい が分からず、見くらべる意味が薄い。
    明朝は「ウロコ」が印刷用の飾りで手書きには無いので、教科書体を先に置き、
    無い環境では OS の明朝に落とす。 */
-.ninja-kids .kj-kaki-answer {
+.ninja-kids .kj-kaki-answer ,.ninja-kids .kk-kaki-answer{
   font-size:var(--nk-fs-word);
   color:#fff;
   text-shadow:0 2px 12px rgba(0,0,0,.22);
   font-family:'Klee One','Yu Mincho','YuMincho','Hiragino Mincho ProN','Noto Serif JP',serif;
   font-weight:600;
 }
-.ninja-kids .kj-kaki-note   { font-size:var(--nk-fs-opt);   color:#cddadc; }
-.ninja-kids .kj-kaki-check  { font-size:var(--nk-fs-label); color:#ffd9a0; }
+.ninja-kids .kj-kaki-note   ,.ninja-kids .kk-kaki-note{ font-size:var(--nk-fs-opt);   color:#cddadc; }
+.ninja-kids .kj-kaki-check  ,.ninja-kids .kk-kaki-check{ font-size:var(--nk-fs-label); color:#ffd9a0; }
 
 /* 手書きパッドは巻物の紙に見立てる（選択肢と同じ枠の作法） */
-.ninja-kids .kj-pad {
+.ninja-kids .kj-pad ,.ninja-kids .kk-pad{
   border:2px solid #d4bd92;
   border-radius:7px;
   background-color:#fffdf6;
   box-shadow:0 3px 0 #c5a876,0 10px 22px rgba(62,39,20,.14);
 }
-.ninja-kids :is(.kj-tool,.kj-mark) {
+.ninja-kids :is(.kj-tool,.kj-mark) ,.ninja-kids :is(.kk-tool,.kk-mark){
   min-height:var(--nk-tap);
   color:#17272e;
   border:2px solid color-mix(in srgb,var(--nk-accent) 45%,#fff);
@@ -2810,29 +2816,29 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   background:#fff;
   box-shadow:0 3px 0 #c5a876;
 }
-.ninja-kids :is(.kj-tool,.kj-mark):hover:not(:disabled) {
+.ninja-kids :is(.kj-tool,.kj-mark):hover:not(:disabled) ,.ninja-kids :is(.kk-tool,.kk-mark):hover:not(:disabled){
   translate:0 -2px;
   border-color:var(--nk-accent);
 }
-.ninja-kids .kj-judge-btn {
+.ninja-kids .kj-judge-btn ,.ninja-kids .kk-judge-btn{
   border-left:6px solid var(--nk-accent);
   background:linear-gradient(#fff,color-mix(in srgb,var(--nk-accent) 14%,#fff));
 }
-.ninja-kids .kj-tool { flex:1; }
-.ninja-kids .kj-mark-ok { border-color:#2f7d55; }
-.ninja-kids .kj-mark-ng { border-color:#c0503b; }
+.ninja-kids .kj-tool ,.ninja-kids .kk-tool{ flex:1; }
+.ninja-kids .kj-mark-ok ,.ninja-kids .kk-mark-ok{ border-color:#2f7d55; }
+.ninja-kids .kj-mark-ng ,.ninja-kids .kk-mark-ng{ border-color:#c0503b; }
 /* 寝かせた画面はタップ領域の下限（--nk-tap 46px）より詰める。
    パッドを残すことを優先し、ボタンは中身なりの高さにする。 */
 @media (orientation:landscape) and (max-height:500px) {
-  .ninja-kids :is(.kj-tool,.kj-mark) { min-height:0; }
+  .ninja-kids :is(.kj-tool,.kj-mark) ,.ninja-kids :is(.kk-tool,.kk-mark){ min-height:0; }
 }
 /* 1カラムの段は問題エリアを詰めるぶん、--nk-fs-word では正解の字が小さくなりすぎる。
    見くらべるのが目的なので、かくモードの正解だけ画面の高さから決める（2026-09-12）。 */
 @media (max-width:767px) and (orientation:portrait) {
-  .ninja-kids .kj-kaki-answer { font-size:clamp(40px,10dvh,76px); }
+  .ninja-kids .kj-kaki-answer ,.ninja-kids .kk-kaki-answer{ font-size:clamp(40px,10dvh,76px); }
 }
 @media (min-width:768px) and (max-width:1179px) and (orientation:portrait) {
-  .ninja-kids .kj-kaki-answer { font-size:clamp(56px,9dvh,110px); }
+  .ninja-kids .kj-kaki-answer ,.ninja-kids .kk-kaki-answer{ font-size:clamp(56px,9dvh,110px); }
 }
 
 /* ============================================================
@@ -2921,7 +2927,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 /* けしゴムのアイコン（かんじ・ローマ字の かくしゅぎょう。2026-09-12）。
    巻物の紙に重ねるので、選択肢と同じ枠の作法にそろえる。
    --nk-tap の下限は当てない（40px角のアイコンとして置くため）。 */
-.ninja-kids :is(.kj-eraser,.rj-eraser) {
+.ninja-kids :is(.kj-eraser,.rj-eraser) ,.ninja-kids :is(.kk-eraser,.rj-eraser){
   min-height:0;
   color:#5b6b70;
   border:2px solid color-mix(in srgb,var(--nk-accent) 45%,#fff);
@@ -2929,13 +2935,13 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
   background:#fff;
   box-shadow:0 2px 0 #c5a876;
 }
-.ninja-kids :is(.kj-eraser,.rj-eraser):hover {
+.ninja-kids :is(.kj-eraser,.rj-eraser):hover ,.ninja-kids :is(.kk-eraser,.rj-eraser):hover{
   translate:0 -1px;
   border-color:var(--nk-accent);
   color:var(--nk-accent-dark,#17272e);
 }
 /* 寝かせた画面は紙そのものが小さいので、けしゴムも小さくする */
 @media (orientation:landscape) and (max-height:500px) {
-  .ninja-kids :is(.kj-eraser,.rj-eraser) { width:30px; height:30px; top:4px; right:4px; }
-  .ninja-kids :is(.kj-eraser,.rj-eraser) svg { width:17px; height:17px; }
+  .ninja-kids :is(.kj-eraser,.rj-eraser) ,.ninja-kids :is(.kk-eraser,.rj-eraser){ width:30px; height:30px; top:4px; right:4px; }
+  .ninja-kids :is(.kj-eraser,.rj-eraser) svg ,.ninja-kids :is(.kk-eraser,.rj-eraser) svg{ width:17px; height:17px; }
 }
