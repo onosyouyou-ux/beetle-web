@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&display=swap');
+/* ============================================================
+   kuku.css — かけざん修行（九九・子ども向け・本体ドメイン配信の静的アプリ）
+   紙面固定（.app-paper 1180px）。盤面の型と色は css/ninja-kids.css が持つので、
+   ここにはこのアプリ固有のもの（だんの選びかた・●のアレイ図）だけを書く。
+   ============================================================ */
+
+:root{
+  --kk-ink:#3a3630;
+  --kk-ink2:#7b756a;
+  --kk-ink3:#a9a296;
+  --kk-line:#e6dfd0;
+  --kk-line2:#d3c8b2;
+  --kk-cream:#fdf8ef;
+  --kk-cream2:#f5ecdb;
+  --kk-blue:#2f6ea8;
+  --kk-blue-dk:#1b4670;
+  --kk-green:#2f7d55;
+  --kk-green-bg:#e9f5ee;
+  --kk-red:#c0503b;
+  --kk-red-bg:#fbeeea;
+}
+
+body{margin:0;color:var(--kk-ink)}
+
+.app-paper{
+  width:100%;
+  max-width:1180px;   /* アプリ紙面の固定幅（全アプリ共通） */
+  margin:0 auto;
+  background:var(--kk-cream);
+  box-shadow:0 0 32px rgba(28,28,46,.16);
+  padding-bottom:36px;
+}
+
+/* ====== ヒーロー ====== */
+.kk-hero{
+  background:linear-gradient(135deg,#e6eff8 0%,#cfe0f0 100%);
+  border-bottom:1px solid var(--kk-line);
+  padding:32px 40px 28px;
+  text-align:center;
+}
+.kk-eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--kk-blue);margin:0 0 8px}
+.kk-hero h1{font-size:32px;font-weight:900;margin:0 0 12px;letter-spacing:.06em}
+.kk-lead{font-size:14px;line-height:2;color:var(--kk-ink2);margin:0 0 12px}
+.kk-scope{
+  display:inline-block;font-size:11.5px;font-weight:700;color:var(--kk-blue-dk);
+  background:#fff;border:1px solid var(--kk-line2);border-radius:99px;padding:5px 16px;margin:0;
+}
+
+/* ====== メニュー ====== */
+#kk-app{max-width:700px;margin:0 auto;padding:26px 20px 0}
+.kk-group{margin-bottom:22px}
+.kk-group-title{font-size:13px;font-weight:800;color:var(--kk-ink2);margin:0 0 10px;text-align:left;letter-spacing:.1em}
+.kk-choices{display:grid;gap:10px}
+.kk-choice{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  background:#fff;border:2px solid var(--kk-line2);border-radius:14px;
+  padding:14px 10px;cursor:pointer;font-family:inherit;color:var(--kk-ink);
+}
+.kk-choice:hover{border-color:var(--kk-blue)}
+.kk-choice.is-on{border-color:var(--kk-blue);background:#eef5fc;box-shadow:0 2px 0 var(--kk-blue-dk)}
+.kk-choice-label{font-size:16px;font-weight:800}
+.kk-choice-note{font-size:11px;color:var(--kk-ink3)}
+
+/* だんは10個（1〜9＋ばらばら）。5列2行でちょうど埋まる。 */
+.kk-choices-dan{grid-template-columns:repeat(5,1fr)}
+.kk-choices-dan .kk-choice{padding:10px 4px}
+.kk-choices-dan .kk-choice-label{font-size:15px}
+.kk-choices-dan .kk-choice-note{font-size:10px;letter-spacing:-.02em}
+
+/* といかたはラベルが長いので縦1列（かんじ修行と同じ） */
+.kk-choices-column{grid-template-columns:1fr}
+.kk-choices-column .kk-choice{
+  display:grid;grid-template-columns:1fr;justify-items:start;
+  text-align:left;gap:1px;padding:10px 16px;
+}
+
+.kk-start{
+  display:block;width:100%;background:var(--kk-blue);color:#fff;border:none;border-radius:14px;
+  padding:16px;font-size:20px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:.1em;
+  box-shadow:0 3px 0 var(--kk-blue-dk);
+}
+.kk-start:hover{background:var(--kk-blue-dk);box-shadow:0 3px 0 #12314f}
+.kk-back{
+  display:block;margin:16px auto 0;background:none;border:none;font-size:13px;font-weight:700;
+  color:var(--kk-ink3);cursor:pointer;font-family:inherit;
+}
+.kk-back:hover{color:var(--kk-blue)}
+
+/* ====== プレイ ====== */
+.kk-play{text-align:center}
+.kk-play-head{display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:var(--kk-ink2);margin-bottom:6px}
+.kk-bar{height:8px;background:var(--kk-cream2);border-radius:99px;overflow:hidden;margin-bottom:22px}
+.kk-bar-fill{height:100%;background:var(--kk-blue);border-radius:99px;transition:width .3s}
+.kk-ask-label{font-size:13px;font-weight:700;color:var(--kk-ink2);margin:0 0 10px}
+
+/* といの箱。ヒントの●を出しても箱の高さは変わらない（盤面が動かないように）。
+   地は ninja-kids.css が暗い盤にするので、中の字は白。字の大きさは盤面の高さ
+   （--nk-qh）から決めて、3段のどこでも入りきるようにする（px を直書きしない）。 */
+.kk-ask{
+  margin:0 0 22px;padding:20px;font-weight:900;line-height:1.4;
+  align-content:center;gap:12px;
+}
+.kk-ask-main{margin:0;color:#fff}
+.kk-ask-tonae .kk-ask-main{font-size:clamp(26px,calc(var(--nk-qh) * .17),56px);letter-spacing:.06em}
+.kk-ask-shiki .kk-ask-main{font-size:clamp(28px,calc(var(--nk-qh) * .18),60px);letter-spacing:.08em}
+.kk-ask-gyaku .kk-ask-main{font-size:clamp(32px,calc(var(--nk-qh) * .21),68px);letter-spacing:.04em}
+/* ●が出たら、といの字は小さくして場所をゆずる */
+.kk-ask.is-hint .kk-ask-main{font-size:clamp(18px,calc(var(--nk-qh) * .11),34px)}
+
+.kk-hint-btn{
+  justify-self:center;border:2px solid rgba(255,255,255,.5);border-radius:99px;
+  background:rgba(255,255,255,.12);color:#fff;
+  padding:7px 18px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;
+}
+.kk-hint-btn:hover{border-color:#fff;background:rgba(255,255,255,.24)}
+
+/* ====== ●のアレイ図 ======
+   1行の●の数＝「1つ分の数」、行の数＝「いくつ分」。3×2 は ●●● が2行。
+   ●の大きさは、横と縦のどちらかに入りきる小さいほうで決める（9×9でもはみ出さない）。 */
+.kk-dots{display:grid;justify-items:center;gap:8px;--kk-dots-w:300px;--kk-dots-h:130px;--kk-dot-max:26px}
+.kk-dots-grid{
+  /* 上限を付けないと 3×1 のような小さい九九で●が巨大になる（実際になった）。
+     1.22 は●と●のすきま（gap は●の .22 倍）のぶん。これを割り算に入れておかないと
+     並べた実寸が --kk-dots-h を超え、9×9 のときに といの箱からはみ出す（実際に出た）。 */
+  --kk-dot:min(
+    calc(var(--kk-dots-w) / (var(--kk-cols) * 1.22)),
+    calc(var(--kk-dots-h) / (var(--kk-rows) * 1.22)),
+    var(--kk-dot-max));
+  display:grid;
+  grid-template-columns:repeat(var(--kk-cols),var(--kk-dot));
+  gap:calc(var(--kk-dot) * .22);
+  justify-content:center;
+  max-width:100%;
+}
+/* ●は暗い盤の上に置くので明るい色。数えるものなので輪郭をはっきりさせる。 */
+.kk-dot{
+  width:var(--kk-dot);height:var(--kk-dot);border-radius:50%;
+  background:#eaf3fb;box-shadow:0 0 0 1px rgba(20,44,70,.35);
+}
+.kk-dots-note{margin:0;font-size:14px;font-weight:800;color:#cfe0f2}
+
+.kk-options{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.kk-opt{
+  background:#fff;border:2px solid var(--kk-line2);border-radius:14px;padding:18px 10px;
+  font-size:28px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--kk-ink);
+}
+.kk-opt:hover:not(:disabled){border-color:var(--kk-blue)}
+.kk-opt:disabled{cursor:default;opacity:.75}
+.kk-opt.is-correct{border-color:var(--kk-green);background:var(--kk-green-bg);opacity:1}
+.kk-opt.is-wrong{border-color:var(--kk-red);background:var(--kk-red-bg);opacity:1}
+
+.kk-feedback{min-height:28px;margin-top:14px;font-size:15px;font-weight:800}
+.kk-feedback.is-ok{color:var(--kk-green)}
+.kk-feedback.is-ng{color:var(--kk-red)}
+
+/* ====== けっか ====== */
+.kk-result{text-align:center;padding:20px 0}
+.kk-result-stars{font-size:44px;letter-spacing:.1em;margin:0 0 10px;color:var(--kk-blue)}
+.kk-result-score{font-size:22px;font-weight:900;margin:0 0 8px}
+.kk-result-msg{font-size:14px;color:var(--kk-ink2);margin:0 0 12px}
+.kk-missed{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:22px}
+.kk-missed-item{font-size:14px;font-weight:700;background:var(--kk-red-bg);color:var(--kk-red);border-radius:99px;padding:6px 14px}
+
+/* ====== おうちのかたへ ====== */
+.kk-doc{max-width:900px;margin:34px auto 0;padding:0 20px}
+.kk-doc h2{font-size:18px;font-weight:900;margin:28px 0 14px;padding-left:12px;border-left:4px solid var(--kk-blue)}
+.kk-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.kk-step{background:#fff;border:1px solid var(--kk-line);border-radius:12px;padding:18px 20px}
+.kk-step-n{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--kk-blue);color:#fff;font-size:13px;font-weight:900;margin-bottom:10px}
+.kk-step h3{font-size:14px;font-weight:800;margin:0 0 7px}
+.kk-step p{font-size:12.5px;line-height:1.9;color:var(--kk-ink2);margin:0}
+
+/* ====== 3段レスポンシブ（幅の分岐は ninja-kids.css の3段に合わせる） ====== */
+@media(max-width:767px){
+  .kk-hero{padding:26px 20px 22px}
+  .kk-hero h1{font-size:26px}
+  .kk-choices-dan{grid-template-columns:repeat(3,1fr)}
+  .kk-dots{--kk-dots-w:230px;--kk-dots-h:clamp(78px,16dvh,130px);--kk-dot-max:22px}
+  /* ●を出したときだけ、といの箱は中身なりに伸ばす。1カラムの段は盤面の下に
+     余白が残る（実測で140px前後）ので、●を小さくするより伸ばすほうがよい。
+     ●は数えるものなので、これ以上小さくすると用をなさない。 */
+  .ninja-kids .kk-play>.kk-ask.is-hint{height:auto;min-height:0}
+  .kk-dots-note{font-size:12.5px}
+  .kk-opt{font-size:24px;padding:14px 8px}
+  .kk-steps{grid-template-columns:1fr}
+}
+@media(min-width:768px) and (max-width:1179px) and (orientation:portrait){
+  .kk-dots{--kk-dots-w:320px;--kk-dots-h:clamp(110px,16dvh,170px)}
+  .ninja-kids .kk-play>.kk-ask.is-hint{height:auto;min-height:0}
+}
+/* 寝かせた画面は盤面が2カラムに戻り、といの箱が低くなる */
+@media(orientation:landscape) and (max-height:500px){
+  .kk-dots{--kk-dots-w:200px;--kk-dots-h:clamp(56px,26dvh,104px);gap:4px;--kk-dot-max:17px}
+  .kk-dots-note{font-size:11.5px}
+  .kk-hint-btn{padding:4px 12px;font-size:11.5px}
+}
+/* ノートPC・iPad横の高さ不足（幅の3段とは別軸） */
+@media(min-width:768px) and (max-height:820px){
+  .kk-dots{--kk-dots-h:112px;--kk-dot-max:22px}
+}
