@@ -53,6 +53,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {`window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
+// ローカル確認（localhost・LAN内のIP）はGA4に計上しない
+if (['localhost','127.0.0.1','0.0.0.0','::1','[::1]'].indexOf(location.hostname) >= 0 || location.hostname.indexOf('192.168.') === 0 || location.protocol === 'file:') { window['ga-disable-${GA_ID}'] = true; }
 gtag('config', '${GA_ID}');`}
         </Script>
       </body>
