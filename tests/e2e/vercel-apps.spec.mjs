@@ -1,6 +1,6 @@
 // Vercelアプリ3つの紙面ルール・起動スモーク。対応する仕様書: specs/apps-*.md
 // AI処理（判定・生成）はコストがかかるためE2Eでは実行しない（仕様書に明記）。
-import { test, expect } from '@playwright/test';
+import { test, expect } from './ga-off.mjs';
 
 const apps = [
   { name: 'bug-checker', url: 'https://bug-checker.vercel.app', heroes: true },

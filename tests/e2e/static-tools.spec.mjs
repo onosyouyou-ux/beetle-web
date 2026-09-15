@@ -1,5 +1,5 @@
 // 本体配信の静的ツールのE2E。対応する仕様書: specs/tools-regex-tester.md, specs/tools-eigo-app.md
-import { test, expect } from '@playwright/test';
+import { test, expect } from './ga-off.mjs';
 
 const BASE = 'https://www.beetle-web.jp';
 
