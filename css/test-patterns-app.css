@@ -83,3 +83,11 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 
 /* スマホではパンくずバー非表示（2026-07-13決定：ヘッダー2段化で混雑するため） */
 @media(max-width:600px){.bc{display:none}}
+
+/* 参照系から操作系への導線（2026-09-15追加）。
+   TESTパターン集は8ページから被リンクを受けているのに出口が無かったので、
+   読んだ流れでそのまま試せるツールへ送る。 */
+.site-description { max-width: 820px; margin: 0 auto; padding: 8px 32px 40px; font-size: 13px; line-height: 1.9; color: var(--tp-text2, #555); text-align: center; }
+.site-description p { margin: 0 0 8px; }
+.site-description a { color: var(--tp-orange, #C0634C); font-weight: 700; }
+.site-description a:hover { text-decoration: underline; }

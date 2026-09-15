@@ -34,7 +34,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"ダミーファイル生成ツール","item":"https://www.beetle-web.jp/tools/test-content/"}]}
 </script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"どのファイル形式に対応していますか？","acceptedAnswer":{"@type":"Answer","text":"PNG・JPEG・SVG・GIF・Excel（xlsx）・Word（docx）・PDF・BIN・ZIP・TXT・CSV・WebM（動画・音声）・MP4・MOV・AVI・WMV・MP3・WAV・AACの19形式に対応しています。"}},{"@type":"Question","name":"無料で使えますか？","acceptedAnswer":{"@type":"Answer","text":"完全無料です。会員登録やログインは不要で、ブラウザ上ですぐ使えます。"}},{"@type":"Question","name":"サーバーにファイルはアップロードされますか？","acceptedAnswer":{"@type":"Answer","text":"ファイルはサーバーに送信されません。すべてブラウザ上で生成されます。"}},{"@type":"Question","name":"指定したサイズ通りに生成されますか？","acceptedAnswer":{"@type":"Answer","text":"WebM形式の音声・動画はブラウザの録音・録画エンジンに依存するためサイズが前後しますが、その他の形式は指定サイズ通りに生成されます。"}}]}
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"どのファイル形式に対応していますか？","acceptedAnswer":{"@type":"Answer","text":"PNG・JPEG・SVG・GIF・Excel（xlsx）・Word（docx）・PDF・BIN・ZIP・TXT・CSV・WebM（動画・音声）・MP4・MOV・AVI・WMV・MP3・WAV・AACの19形式に対応しています。複数を選ぶと、ZIPにまとめてダウンロードされます。"}},{"@type":"Question","name":"生成したファイルは再生・表示できますか？","acceptedAnswer":{"@type":"Answer","text":"画像・PDF・Office・テキストは中身のあるファイルとして開けます。動画・音声は WebM だけが再生可能で、MP4・MOV・AVI・WMV・MP3・WAV・AAC はサイズ確認用のダミー（再生不可）です。アップロードの上限や拡張子チェックを確かめる用途には使えますが、再生まで確かめたいときは WebM を選んでください。"}},{"@type":"Question","name":"指定したサイズ通りに生成されますか？","acceptedAnswer":{"@type":"Answer","text":"WebM形式の音声・動画はブラウザの録音・録画エンジンに依存するためサイズが前後しますが、その他の形式は指定サイズ通りに生成されます。「以上」「未満」を切り替えられるので、上限10MBのような境界値のテストは、10MB以上と10MB未満の2つを作って確かめられます。"}},{"@type":"Question","name":"1GBのような大きいファイルも作れますか？","acceptedAnswer":{"@type":"Answer","text":"単位でGBを選べば作れます。ただし生成はすべてブラウザのメモリ上で行うため、実際に作れる大きさは端末とブラウザの空きメモリ次第です。大きいサイズは時間もかかるので、まず小さいサイズで動作を確かめてから上げていくのが確実です。"}},{"@type":"Question","name":"サーバーにファイルはアップロードされますか？","acceptedAnswer":{"@type":"Answer","text":"送信されません。生成はすべてブラウザ内（あなたの端末上）で行っていて、サーバーには何も送っていません。入力したファイル名も同じです。"}},{"@type":"Question","name":"無料で使えますか？","acceptedAnswer":{"@type":"Answer","text":"完全無料です。会員登録やログインは不要で、ブラウザ上ですぐ使えます。生成回数の制限もありません。"}}]}
 </script>
 <title>ダミーファイル生成ツール 無料｜テストデータ・サンプルPDF/CSV/Excel作成｜BEETLE</title>
 <link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
@@ -199,21 +199,55 @@
   </div>
 
   <div class="how">
-    <div class="how-title">✦ 使い方</div>
+    <h2 class="how-title">✦ 使い方</h2>
     <div class="how-step"><div class="how-num">1</div><div><div class="how-step-title">🖊 ファイル名とサイズを指定する</div><div class="how-step-desc">ファイルに表示したいテキストと、目標サイズを設定します。</div></div></div>
     <div class="how-step"><div class="how-num">2</div><div><div class="how-step-title">📄 ファイル形式を選ぶ</div><div class="how-step-desc">複数選択可。複数選択した場合はZIPにまとめてダウンロードされます。</div></div></div>
     <div class="how-step"><div class="how-num">3</div><div><div class="how-step-title">⬇ 生成してダウンロード</div><div class="how-step-desc">ブラウザ上で即生成。サーバーへのアップロードは一切ありません。</div></div></div>
   </div>
 
-  <div class="card" style="padding:14px 16px;">
-    <p class="section-title" style="margin-bottom:10px;">こんな用途に</p>
+  <div class="card">
+    <h2 class="section-title">こんな用途に</h2>
     <div class="use-cases">
       <div class="uc"><div class="uc-title">アップロード機能の動作確認</div><div class="uc-desc">ファイルアップロード機能が正しく動くかテスト用ファイルで確認</div></div>
-      <div class="uc"><div class="uc-title">サイズ上限・下限のテスト</div><div class="uc-desc">バリデーションが正しく機能するか、サイズを変えて検証</div></div>
+      <div class="uc"><div class="uc-title">サイズ上限・下限のテスト</div><div class="uc-desc">「10MBまで」の境界を、以上・未満の両方で作って確認</div></div>
       <div class="uc"><div class="uc-title">対応形式の確認</div><div class="uc-desc">許可・拒否すべき形式の挙動を素早く確認</div></div>
+      <div class="uc"><div class="uc-title">拡張子と中身が違うファイル</div><div class="uc-desc">中身で判定しているか、拡張子だけ見ているかを確かめる</div></div>
+      <div class="uc"><div class="uc-title">長いファイル名・記号入りの名前</div><div class="uc-desc">ファイル名の文字数制限や、記号の扱いを確認</div></div>
       <div class="uc"><div class="uc-title">開発環境へのデータ投入</div><div class="uc-desc">ダミーデータが必要な開発・テスト環境へ手軽に投入</div></div>
     </div>
   </div>
+
+  <div class="card">
+    <h2 class="section-title">よくある質問</h2>
+    <details class="faq-item">
+      <summary class="faq-q"><span>どのファイル形式に対応していますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">PNG・JPEG・SVG・GIF・Excel（xlsx）・Word（docx）・PDF・BIN・ZIP・TXT・CSV・WebM（動画・音声）・MP4・MOV・AVI・WMV・MP3・WAV・AACの19形式に対応しています。複数を選ぶと、ZIPにまとめてダウンロードされます。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>生成したファイルは再生・表示できますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">画像・PDF・Office・テキストは中身のあるファイルとして開けます。動画・音声は WebM だけが再生可能で、MP4・MOV・AVI・WMV・MP3・WAV・AAC は<b>サイズ確認用のダミー（再生不可）</b>です。アップロードの上限や拡張子チェックを確かめる用途には使えますが、再生まで確かめたいときは WebM を選んでください。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>指定したサイズ通りに生成されますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">WebM形式の音声・動画はブラウザの録音・録画エンジンに依存するためサイズが前後しますが、その他の形式は指定サイズ通りに生成されます。「以上」「未満」を切り替えられるので、上限10MBのような境界値のテストは、10MB以上と10MB未満の2つを作って確かめられます。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>1GBのような大きいファイルも作れますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">単位でGBを選べば作れます。ただし生成はすべてブラウザのメモリ上で行うため、実際に作れる大きさは端末とブラウザの空きメモリ次第です。大きいサイズは時間もかかるので、まず小さいサイズで動作を確かめてから上げていくのが確実です。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>サーバーにファイルはアップロードされますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">送信されません。生成はすべてブラウザ内（あなたの端末上）で行っていて、サーバーには何も送っていません。入力したファイル名も同じです。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>無料で使えますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">完全無料です。会員登録やログインは不要で、ブラウザ上ですぐ使えます。生成回数の制限もありません。</div>
+    </details>
+  </div>
+</div>
+
+<div class="site-description">
+  <p>アップロード欄に入れる<strong>データのほう</strong>が欲しいときは <a href="/tools/test-data/">意地悪なテストデータ集</a>、日付の境界値は <a href="/tools/test-dates/">意地悪な日付ジェネレーター</a>、ファイル名やCSVが化けたときの原因調べは <a href="/tools/mojibake/">文字化け再現ビューア</a>、入力欄まわりの観点は <a href="/tools/test-patterns/">TESTパターン集</a>、リリース前の抜け漏れ確認は <a href="/tools/release-checklist/">リリース前チェックリスト集</a> をどうぞ。</p>
 </div>
 
 <!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一）。テスト検証用ツールなのでヒーローズバナー付き -->

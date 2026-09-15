@@ -112,3 +112,17 @@ body { background: var(--color-bg); font-family: sans-serif; color: var(--color-
 @media (max-width: 600px) {
   .input-grid { grid-template-columns: 1fr; }
 }
+
+/* よくある質問・関連ツール（2026-09-15追加）。
+   JSON-LDのFAQPageだけ持っていて画面にFAQが無い状態だったので、同内容を出す。
+   見出しをh2にしたぶん、ブラウザ既定の上マージンだけ打ち消す。 */
+h2.section-title, h2.how-title { margin-top: 0; }
+.faq-item { border-bottom: 1px solid var(--color-border); }
+.faq-q { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 2px; cursor: pointer; font-weight: 700; font-size: 13px; color: var(--color-text); list-style: none; }
+.faq-q::-webkit-details-marker { display: none; }
+.faq-icon { color: var(--color-accent); font-weight: 700; transition: transform .15s; }
+details[open] .faq-icon { transform: rotate(45deg); }
+.faq-a { padding: 0 2px 14px; font-size: 13px; line-height: 1.8; color: var(--color-text-sec); }
+.site-description { max-width: 780px; margin: 8px auto 0; padding: 8px 32px 32px; font-size: 13px; color: var(--color-text-sec); line-height: 1.9; text-align: center; }
+.site-description a { color: var(--color-accent); font-weight: 700; }
+.site-description a:hover { text-decoration: underline; }
