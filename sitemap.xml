@@ -218,7 +218,13 @@
   </url>
   <url>
     <loc>https://www.beetle-web.jp/tools/katakana/landing.html</loc>
-    <lastmod>2026-09-10</lastmod>
+    <lastmod>2026-09-15</lastmod>
+    <priority>0.8</priority>
+
+  </url>
+  <url>
+    <loc>https://www.beetle-web.jp/tools/kuku/landing.html</loc>
+    <lastmod>2026-09-15</lastmod>
     <priority>0.8</priority>
 
   </url>
