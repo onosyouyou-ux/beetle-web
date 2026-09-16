@@ -177,9 +177,16 @@ body{margin:0;color:var(--kk-ink)}
   background:#fff;border:2px solid var(--kk-line2);border-radius:14px;padding:18px 10px;
   font-size:28px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--kk-ink);
 }
-/* こたえは2けたまでの数なので、左の といの字（となえかた）と同じ大きさまで上げる（2026-09-16）。
-   ことばの修行の --nk-fs-opt のままだと、盤面の中で数字だけ小さく見えた。 */
-.ninja-kids.ninja-kuku .kk-play .kk-opt{font-size:clamp(26px,calc(var(--nk-qh) * .17),56px)}  /* スマホの16px指定（0,3,0）にも勝たせる */
+/* こたえは2けたまでの数なので、ことばの修行の --nk-fs-opt より大きくする（2026-09-16）。
+   そのままだと盤面の中で数字だけ小さく見えた。 */
+/* 数字の大きさは1か所（--kk-opt-fs）で決め、字とアイコンの両方に使う。
+   といの字（.17）と同じだと大きすぎたので、少し下げて .14（PC 44px）にする。 */
+.ninja-kids.ninja-kuku .kk-play{--kk-opt-fs:clamp(24px,calc(var(--nk-qh) * .14),44px)}
+.ninja-kids.ninja-kuku .kk-play .kk-opt{font-size:var(--kk-opt-fs)}  /* スマホの16px指定（0,3,0）にも勝たせる */
+/* 数字を大きくしたぶん、忍具アイコンも字の大きさ（--kk-opt-fs）に合わせる。48px固定のままだと数字より小さく、
+   上にずれて見えた。数字は行の高さを1にして、アイコンと天地の中心をそろえる。 */
+.ninja-kids.ninja-kuku .kk-play .kk-opt::before{width:var(--kk-opt-fs);height:var(--kk-opt-fs);flex:0 0 var(--kk-opt-fs)}
+.ninja-kids.ninja-kuku .kk-play .kk-opt .nk-answer-label{line-height:1}
 .kk-opt:hover:not(:disabled){border-color:var(--kk-blue)}
 .kk-opt:disabled{cursor:default;opacity:.75}
 .kk-opt.is-correct{border-color:var(--kk-green);background:var(--kk-green-bg);opacity:1}
