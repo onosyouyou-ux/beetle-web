@@ -28,7 +28,7 @@
     var list = ns.map(function (n) {
       return { id: 'd' + n, name: n + 'の だん', note: n + '×1〜' + n + '×9', dans: [n] };
     });
-    list.push({ id: 'all', name: 'ばらばら', note: DATA.length + 'もん ぜんぶ', dans: ns });
+    list.push({ id: 'all', name: 'ランダム', note: DATA.length + 'もん ぜんぶ', dans: ns });
     return list;
   })();
 

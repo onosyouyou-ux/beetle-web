@@ -62,11 +62,11 @@ body{margin:0;color:var(--kk-ink)}
 .kk-choice-label{font-size:16px;font-weight:800}
 .kk-choice-note{font-size:11px;color:var(--kk-ink3)}
 
-/* だんは10個（1〜9＋ばらばら）。1 2 3／4 5 6／7 8 9 の3列に並べ、
-   ばらばらは最後の行を1本で使う。 */
+/* だんは10個（1〜9＋ランダム）。1 2 3／4 5 6／7 8 9 の3列に並べ、
+   ランダムは4行目のまん中に、ほかの だん と同じ大きさで置く（横いっぱいだと間延びした）。 */
 .kk-choices-dan{grid-template-columns:repeat(3,1fr)}
 .kk-choices-dan .kk-choice{padding:10px 4px}
-.kk-choices-dan .kk-choice:last-child{grid-column:1 / -1}
+.kk-choices-dan .kk-choice:last-child{grid-column:2}
 .kk-choices-dan .kk-choice-label{font-size:15px}
 .kk-choices-dan .kk-choice-note{font-size:10px;letter-spacing:-.02em}
 
@@ -88,7 +88,8 @@ body{margin:0;color:var(--kk-ink)}
     align-content:start;
   }
   .ninja-kids.ninja-kuku .kk-menu>.kk-group{margin-bottom:0}
-  .ninja-kids.ninja-kuku .kk-menu>.kk-start{grid-column:1 / -1;margin-top:18px}
+  /* スタートは横いっぱいにせず、かんじ修行と同じ幅で中央に置く */
+  .ninja-kids.ninja-kuku .kk-menu>.kk-start{grid-column:1 / -1;justify-self:center;width:min(100%,320px);margin-top:18px}
 }
 /* 寝かせたスマホは高さが足りないので、だんのボタンを薄くしてスタートまで1画面に入れる。
    だんの小さい注記（1×1〜1×9）はボタン名と同じことなので、ここでは出さない。 */
