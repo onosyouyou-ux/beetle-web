@@ -394,6 +394,9 @@ body.ninja-lp-phonics .eal-card-num { display:none; }
   display:grid;
   grid-template-columns:auto 1fr;
   align-items:center;
+  /* 3枚は同じ高さに伸びる。既定の stretch だと余った高さが行に配られ、
+     文の短いカードだけ見出しが下がって揃わなかった（2026-09-16）。 */
+  align-content:start;
   gap:0 12px;
 }
 .ninja-landing .eal-grid-3 .eal-card::before {
