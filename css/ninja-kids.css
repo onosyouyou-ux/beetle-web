@@ -2285,8 +2285,10 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   display:flex; justify-content:flex-start; align-items:center;
   text-align:left; padding:12px 20px; gap:12px;
 }
+/* 選択肢の ::before は上の古いルール（display:none）が消しているので、display を明示して戻す。
+   ほかの修行は「全修行アプリの文字回答」で戻しているが、とけいだけ抜けていた（2026-09-16）。 */
 .ninja-kids.ninja-tokei .tk-options.is-text>.tk-opt::before {
-  position:static; width:48px; height:48px; flex:0 0 48px;
+  display:block; position:static; width:48px; height:48px; flex:0 0 48px;
 }
 .ninja-kids.ninja-tokei .tk-answer-label { min-width:0; overflow-wrap:anywhere; }
 @media (max-width:767px), (orientation:landscape) and (max-height:500px) {

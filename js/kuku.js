@@ -177,7 +177,8 @@
     grid.style.setProperty('--kk-rows', e.b);
     for (var i = 0; i < e.a * e.b; i++) grid.appendChild(el('span', 'kk-dot'));
     box.appendChild(grid);
-    box.appendChild(el('p', 'kk-dots-note', e.a + 'が ' + e.b + 'つぶん で ' + e.ans));
+    // こたえは書かない。まとまりを数えるところまでを見せ、答えは子どもに出させる（2026-09-16）
+    box.appendChild(el('p', 'kk-dots-note', e.a + 'の まとまりが ' + e.b + 'こ あるから…'));
     return box;
   }
 
@@ -203,7 +204,12 @@
     var ask = el('div', 'kk-ask kk-ask-' + q.askKind);
     ask.appendChild(el('p', 'kk-ask-main', q.ask));
     // ヒントは押しても減点しない。押さずに済むならそれが一番いい、という作りにはしない。
-    var hint = el('button', 'kk-hint-btn', '● で みる');
+    var hint = el('button', 'kk-hint-btn');
+    var hintIc = el('img', 'kk-ic');
+    hintIc.src = '/assets/images/ninja/shuriken-on.webp';
+    hintIc.width = 56; hintIc.height = 56; hintIc.alt = 'しゅりけん';
+    hint.appendChild(hintIc);
+    hint.appendChild(document.createTextNode(' で みる'));
     hint.type = 'button';
     hint.addEventListener('click', function () { showDots(ask, q.entry); });
     ask.appendChild(hint);

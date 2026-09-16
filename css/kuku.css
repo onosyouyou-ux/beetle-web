@@ -140,6 +140,10 @@ body{margin:0;color:var(--kk-ink)}
   padding:7px 18px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;
 }
 .kk-hint-btn:hover{border-color:#fff;background:rgba(255,255,255,.24)}
+/* 文中の「●」は手裏剣のアイコンにする（アレイ図と同じ絵・同じ向き）。字の大きさに合わせる */
+.kk-ic{display:inline-block;width:1.15em;height:1.15em;vertical-align:-.2em;rotate:45deg;margin:0 .05em}
+.kk-ic-row{display:inline-flex;gap:.05em;vertical-align:-.2em}
+.kk-ic-row .kk-ic{vertical-align:0}
 
 /* ====== ●のアレイ図 ======
    1行の●の数＝「1つ分の数」、行の数＝「いくつ分」。3×2 は ●●● が2行。
@@ -173,6 +177,9 @@ body{margin:0;color:var(--kk-ink)}
   background:#fff;border:2px solid var(--kk-line2);border-radius:14px;padding:18px 10px;
   font-size:28px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--kk-ink);
 }
+/* こたえは2けたまでの数なので、左の といの字（となえかた）と同じ大きさまで上げる（2026-09-16）。
+   ことばの修行の --nk-fs-opt のままだと、盤面の中で数字だけ小さく見えた。 */
+.ninja-kids.ninja-kuku .kk-play .kk-opt{font-size:clamp(26px,calc(var(--nk-qh) * .17),56px)}  /* スマホの16px指定（0,3,0）にも勝たせる */
 .kk-opt:hover:not(:disabled){border-color:var(--kk-blue)}
 .kk-opt:disabled{cursor:default;opacity:.75}
 .kk-opt.is-correct{border-color:var(--kk-green);background:var(--kk-green-bg);opacity:1}
@@ -226,4 +233,13 @@ body{margin:0;color:var(--kk-ink)}
 /* ノートPC・iPad横の高さ不足（幅の3段とは別軸） */
 @media(min-width:768px) and (max-height:820px){
   .kk-dots{--kk-dots-h:112px;--kk-dot-max:22px}
+}
+/* 2カラムの段は「こたえは?」の札が といの箱の上に重なって置かれる。
+   手裏剣を出すと中身が上に伸びて、といの字が札の下にかくれた（2026-09-16）。
+   ヒントを出しているあいだだけ、札の高さぶん中身を下から始める。 */
+@media (min-width:1180px), (min-width:768px) and (max-width:1179px) and (orientation:landscape){
+  .ninja-kids .kk-play>.kk-ask.is-hint{padding-top:calc(18px + var(--nk-fs-label) * 2 + 6px)}
+}
+@media (orientation:landscape) and (max-height:500px){
+  .ninja-kids .kk-play>.kk-ask.is-hint{padding-top:calc(6px + var(--nk-fs-label) * 2 + 4px)}
 }

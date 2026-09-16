@@ -7,7 +7,8 @@ var data={
 '/tools/tokei/':{hero:'.tk-hero',img:'/assets/images/tokei-hero-people.jpg',alt:'親子でアナログ時計を学ぶイラスト',landing:'/tools/tokei/landing.html'},
 '/tools/katakana/':{hero:'.kt-hero',landing:'/tools/katakana/landing.html'},
 '/tools/romaji/':{hero:'.rj-hero',landing:'/tools/romaji/landing.html'},
-'/tools/phonics/':{hero:'.pn-hero',landing:'/tools/phonics/landing.html'}
+'/tools/phonics/':{hero:'.pn-hero',landing:'/tools/phonics/landing.html'},
+'/tools/kuku/':{hero:'.kk-hero',landing:'/tools/kuku/landing.html'}
 };
 var c=data[path];if(!c)return;
 var hero=document.querySelector(c.hero);

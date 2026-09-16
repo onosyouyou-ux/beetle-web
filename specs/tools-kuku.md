@@ -46,6 +46,12 @@ required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#kk-app"
 - **OGP画像**: `kuku-lp-hero-og.jpg`（ランディングと共用）
 - **忍者の絵（2026-09-16）**: ヒーローのキャラは `assets/images/ninja/kuku-groups.webp`（`<img class="ninja-mascot">` と `--nk-mascot`。ランディングの `--nl-art` と共用）。
   問題エリアの隅の道具絵は `assets/images/ninja/items/kuku-items.webp`（`--nk-items`）
+- **ヒーローのボタン**: ほかの修行と同じく `js/app-reference.js` で「アプリ一覧」「紹介ページ」を差し込む（2026-09-16）
+- **画面の文中の「●」は手裏剣アイコン**（`.kk-ic`。アレイ図と同じ `shuriken-on.webp` を45度）。ヒントのボタンも「（手裏剣） で みる」。
+  meta・JSON-LD の説明文は画像を置けないので ● のまま
+- **ヒントの下の一文は こたえを書かない**:「9の まとまりが 8こ あるから…」。答えは子どもに出させる
+- **選択肢の数字は といの字（となえかた）と同じ大きさ**（`clamp(26px, --nk-qh × .17, 56px)`）。ことばの修行の `--nk-fs-opt` だと数字だけ小さく見えた
+- **2カラムの段でヒントを出したら**、「こたえは?」の札の高さぶん中身を下げる（札の下に といの字がかくれた）
 - **寝かせたスマホ（`max-height:500px`）のメニュー**: だんの注記（1×1〜1×9）を隠し、すき間を詰めてスタートまで1画面に入れる
 - **未了**: 背景の1枚絵（`kuku-bg-v1.webp`）がまだ無い。絵ができたら `ninja-kids.css` に `--nk-bg-img` を足す
 - **手動確認観点**: となえかたの「が」が正しく出ること（こたえが1けたのときだけ）／
