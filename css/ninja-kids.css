@@ -49,6 +49,7 @@ body.ninja-phonics {
    絵ができたら --nk-bg-img を足して、そのリストにも .ninja-kuku を加える。 */
 body.ninja-kuku {
   --nk-accent:#2f6ea8; --nk-accent-dark:#1b4670; --nk-hero-a:#e2edf8; --nk-hero-b:#a9c7e4;
+  --nk-mascot:url('/assets/images/ninja/kuku-groups.webp');
 }
 body:is(.ninja-tokei,.ninja-kanji,.ninja-katakana,.ninja-romaji,.ninja-phonics) {
   background-position:center top;
@@ -1002,6 +1003,7 @@ body.ninja-kanji { --nk-items:url('/assets/images/ninja/items/kanji-items.webp')
 body.ninja-katakana { --nk-items:url('/assets/images/ninja/items/katakana-items.webp'); }
 body.ninja-romaji { --nk-items:url('/assets/images/ninja/items/romaji-items.webp'); }
 body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.webp'); }
+body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); }
 
 .ninja-kids :is(.tk-menu,.kj-menu,.kt-menu,.rj-menu,.pn-menu) ,.ninja-kids :is(.tk-menu,.kk-menu,.kt-menu,.rj-menu,.pn-menu){
   position:relative;

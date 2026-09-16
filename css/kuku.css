@@ -90,10 +90,12 @@ body{margin:0;color:var(--kk-ink)}
   .ninja-kids.ninja-kuku .kk-menu>.kk-group{margin-bottom:0}
   .ninja-kids.ninja-kuku .kk-menu>.kk-start{grid-column:1 / -1;margin-top:18px}
 }
-/* 寝かせたスマホは高さが足りないので、だんのボタンを薄くしてスタートまで1画面に入れる */
+/* 寝かせたスマホは高さが足りないので、だんのボタンを薄くしてスタートまで1画面に入れる。
+   だんの小さい注記（1×1〜1×9）はボタン名と同じことなので、ここでは出さない。 */
 @media (orientation:landscape) and (max-height:500px){
-  .ninja-kids.ninja-kuku .kk-choices{gap:6px}
+  .ninja-kids.ninja-kuku .kk-choices{gap:4px}
   .ninja-kids.ninja-kuku .kk-choices-dan .kk-choice{padding-block:4px}
+  .ninja-kids.ninja-kuku .kk-choices-dan .kk-choice-note{display:none}
   .ninja-kids.ninja-kuku .kk-choices-column .kk-choice{padding-block:6px}
   .ninja-kids.ninja-kuku .kk-menu>.kk-start{margin-top:8px}
 }
@@ -156,10 +158,12 @@ body{margin:0;color:var(--kk-ink)}
   justify-content:center;
   max-width:100%;
 }
-/* ●は暗い盤の上に置くので明るい色。数えるものなので輪郭をはっきりさせる。 */
+/* ●のかわりに手裏剣を置く。十字の手裏剣を45度かたむけて「×」の形にし、かけ算の記号に見立てる。
+   青い手裏剣（tokei-ui/shuriken.webp）は暗い盤に沈んで数えにくかったので、橙の手裏剣を使う。 */
 .kk-dot{
-  width:var(--kk-dot);height:var(--kk-dot);border-radius:50%;
-  background:#eaf3fb;box-shadow:0 0 0 1px rgba(20,44,70,.35);
+  width:var(--kk-dot);height:var(--kk-dot);
+  background:url('/assets/images/ninja/shuriken-on.webp') center/contain no-repeat;
+  rotate:45deg;
 }
 .kk-dots-note{margin:0;font-size:14px;font-weight:800;color:#cfe0f2}
 

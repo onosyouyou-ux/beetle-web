@@ -16,9 +16,7 @@ required_selectors: ["#site-header", ".eal-hero", "#howto", "#for-family", "#faq
 - **構成**: ヒーロー → 3つの といかた → ●のアレイ図（WHY）→ 使い方3ステップ → おうちのかたへ → FAQ → CTA
 - **訴求の軸**: 「九九は計算ではなく音で覚える」。速算ドリルとして売らない。
   ほかの九九アプリとの違いは**唱え方をそのまま出すこと**と**まちがえたら●の図が自動で出ること**の2点
-- **ヒーロー画像**は `assets/images/kuku-lp-hero.jpg`（1080x720・お母さんと女の子の水彩。2026-09-16）。
-  ほかの修行は透過の忍者キャラを置くが、これは背景つきの絵なので `ninja-landing.css` 末尾で
-  **3:2の額（白い縁＋角丸）に切って右の列に置く**。`--nl-art` にこの絵を入れている
+- **ヒーローキャラクター**は `assets/images/ninja/kuku-groups.webp`（透過WebP・青い忍装束とオレンジのマフラー・2個の丸×3組を扱う、かけざん修行専用忍者。2026-09-16）。
 - **OGP画像**は `assets/images/kuku-lp-hero-og.jpg`（1200x630。ヒーローから切り出し）。アプリ本体 `tools/kuku/index.html` と共用
 - **SEO**: SoftwareApplication・HowTo・FAQPage、canonical self。アプリ本体の canonical もこのURLへ向ける
 - **FAQはアプリ画面には置かない**（アプリは あそびかた3ステップだけ）。ここが1か所。
