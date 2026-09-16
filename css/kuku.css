@@ -62,11 +62,9 @@ body{margin:0;color:var(--kk-ink)}
 .kk-choice-label{font-size:16px;font-weight:800}
 .kk-choice-note{font-size:11px;color:var(--kk-ink3)}
 
-/* だんは10個（1〜9＋ランダム）。1 2 3／4 5 6／7 8 9 の3列に並べ、
-   ランダムは4行目のまん中に、ほかの だん と同じ大きさで置く（横いっぱいだと間延びした）。 */
+/* だんは9個。1 2 3／4 5 6／7 8 9 の3列に並べる */
 .kk-choices-dan{grid-template-columns:repeat(3,1fr)}
 .kk-choices-dan .kk-choice{padding:10px 4px}
-.kk-choices-dan .kk-choice:last-child{grid-column:2}
 .kk-choices-dan .kk-choice-label{font-size:15px}
 .kk-choices-dan .kk-choice-note{font-size:10px;letter-spacing:-.02em}
 

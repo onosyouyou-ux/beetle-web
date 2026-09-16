@@ -20,9 +20,10 @@
   if (!app || !window.KUKU_DATA) return;
 
   var DATA = window.KUKU_DATA;
-  var SET_LENGTH = 10;  // おとだけ・ランダムの問題数。じゅんばんは ×1〜×9 の9もん
+  var SET_LENGTH = 10;  // おとだけの問題数。じゅんばん・ランダムは その だんの ×1〜×9 の9もん
 
-  /* データにある段から選択肢を組み立てる（データが増えれば自動で増える） */
+  /* データにある段から選択肢を組み立てる（データが増えれば自動で増える）。
+     ぜんぶ混ぜる「ランダム」の だんは置かない。ばらばらに出すのは もんだい側の「ランダムに こたえる」が受け持つ（2026-09-17） */
   var DANS = (function () {
     var ns = [];
     DATA.forEach(function (e) { if (ns.indexOf(e.a) < 0) ns.push(e.a); });
@@ -30,7 +31,6 @@
     var list = ns.map(function (n) {
       return { id: 'd' + n, name: n + 'の だん', note: n + '×1〜' + n + '×9', dans: [n] };
     });
-    list.push({ id: 'all', name: 'ランダム', note: DATA.length + 'もん ぜんぶ', dans: ns });
     return list;
   })();
 
@@ -98,15 +98,12 @@
   }
 
   /* 1セットで出す九九を、はじめに まとめて決める。
-     - じゅんばんに とく：1つの だんを ×1 から ×9 まで順に。ランダム（ぜんぶ）を選んでいたら、だんを1つ くじ引きする
-     - ランダムに こたえる：えらんだ範囲を まぜて、同じ九九が2回 出ないように先頭から取る
+     - じゅんばんに とく：えらんだ だんを ×1 から ×9 まで順に
+     - ランダムに こたえる：えらんだ だんを まぜて、同じ九九が2回 出ないように出す
      - おとだけ：いままでどおり、範囲から毎回くじ引き */
   function buildList(pool) {
     if (state.modeId === 'junban') {
-      var dans = pool.map(function (e) { return e.a; }).filter(function (v, i, a) { return a.indexOf(v) === i; });
-      var dan = pick(dans);
-      return pool.filter(function (e) { return e.a === dan; })
-        .sort(function (x, y) { return x.b - y.b; });
+      return pool.slice().sort(function (x, y) { return x.b - y.b; });
     }
     if (state.modeId === 'random') {
       return shuffle(pool.slice()).slice(0, SET_LENGTH);
