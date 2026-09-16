@@ -33,9 +33,9 @@
   })();
 
   var MODES = [
-    { id: 'tonae', name: 'となえかた', note: '「にしが」→ こたえを えらぶ' },
-    { id: 'shiki', name: 'しき', note: '「2 × 4」→ こたえを えらぶ' },
-    { id: 'gyaku', name: 'ぎゃくびき', note: '「8 は なん × なん?」' }
+    { id: 'tonae', name: 'おとだけ', note: '「にしが」→ こたえを えらぶ' },
+    { id: 'shiki', name: 'つづけて こたえる', note: '「2 × 4」→ こたえを えらぶ' },
+    { id: 'gyaku', name: 'もんだいを かんがえる', note: '「8 は なん × なん?」' }
   ];
 
   var state = { danId: DANS[0].id, modeId: 'tonae', session: null };
@@ -128,7 +128,7 @@
     app.innerHTML = '';
     var wrap = el('div', 'kk-menu');
     wrap.appendChild(group('だん', DANS, 'danId', 'kk-choices-dan'));
-    wrap.appendChild(group('といかた', MODES, 'modeId', 'kk-choices-column'));
+    wrap.appendChild(group('もんだい', MODES, 'modeId', 'kk-choices-column'));
 
     var start = el('button', 'kk-start', 'スタート');
     start.type = 'button';

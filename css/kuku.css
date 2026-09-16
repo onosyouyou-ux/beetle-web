@@ -62,17 +62,40 @@ body{margin:0;color:var(--kk-ink)}
 .kk-choice-label{font-size:16px;font-weight:800}
 .kk-choice-note{font-size:11px;color:var(--kk-ink3)}
 
-/* だんは10個（1〜9＋ばらばら）。5列2行でちょうど埋まる。 */
-.kk-choices-dan{grid-template-columns:repeat(5,1fr)}
+/* だんは10個（1〜9＋ばらばら）。1 2 3／4 5 6／7 8 9 の3列に並べ、
+   ばらばらは最後の行を1本で使う。 */
+.kk-choices-dan{grid-template-columns:repeat(3,1fr)}
 .kk-choices-dan .kk-choice{padding:10px 4px}
+.kk-choices-dan .kk-choice:last-child{grid-column:1 / -1}
 .kk-choices-dan .kk-choice-label{font-size:15px}
 .kk-choices-dan .kk-choice-note{font-size:10px;letter-spacing:-.02em}
 
-/* といかたはラベルが長いので縦1列（かんじ修行と同じ） */
+/* もんだい（出しかた）はラベルが長いので縦1列（かんじ修行と同じ） */
 .kk-choices-column{grid-template-columns:1fr}
 .kk-choices-column .kk-choice{
   display:grid;grid-template-columns:1fr;justify-items:start;
   text-align:left;gap:1px;padding:10px 16px;
+}
+
+/* 幅のある画面と寝かせた画面は、だん（左）・もんだい（右）を横に並べ、
+   スタートは両方の下に置く。ninja-kids.css の .kk-menu（0,2,0）より強くする。 */
+@media (min-width:768px), (orientation:landscape) and (max-height:500px){
+  .ninja-kids.ninja-kuku .kk-menu{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    column-gap:22px;
+    align-items:start;
+    align-content:start;
+  }
+  .ninja-kids.ninja-kuku .kk-menu>.kk-group{margin-bottom:0}
+  .ninja-kids.ninja-kuku .kk-menu>.kk-start{grid-column:1 / -1;margin-top:18px}
+}
+/* 寝かせたスマホは高さが足りないので、だんのボタンを薄くしてスタートまで1画面に入れる */
+@media (orientation:landscape) and (max-height:500px){
+  .ninja-kids.ninja-kuku .kk-choices{gap:6px}
+  .ninja-kids.ninja-kuku .kk-choices-dan .kk-choice{padding-block:4px}
+  .ninja-kids.ninja-kuku .kk-choices-column .kk-choice{padding-block:6px}
+  .ninja-kids.ninja-kuku .kk-menu>.kk-start{margin-top:8px}
 }
 
 .kk-start{
@@ -175,7 +198,7 @@ body{margin:0;color:var(--kk-ink)}
 @media(max-width:767px){
   .kk-hero{padding:26px 20px 22px}
   .kk-hero h1{font-size:26px}
-  .kk-choices-dan{grid-template-columns:repeat(3,1fr)}
+
   .kk-dots{--kk-dots-w:230px;--kk-dots-h:clamp(78px,16dvh,130px);--kk-dot-max:22px}
   /* ●を出したときだけ、といの箱は中身なりに伸ばす。1カラムの段は盤面の下に
      余白が残る（実測で140px前後）ので、●を小さくするより伸ばすほうがよい。
