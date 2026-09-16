@@ -4,8 +4,10 @@
    出題も採点もブラウザ内で完結し、サーバーには何も送らない。
 
    設計のねらい：
-   - 九九は「計算」ではなく「音」で覚える。だから といかたの本命は
-     となえかた（「にしが」→ こたえ）で、しきは その次に置く。
+   - 九九は「計算」ではなく「音」で覚える。だから もんだいの本命は
+     おとだけ（「にしが」→ こたえ）で、式（「2 × 4」）は その次に置く。
+   - 式のもんだいは「じゅんばんに とく」（×1 から ×9 まで順に）と
+     「ランダムに こたえる」（同じ範囲を ばらばらの順に、重ならずに）の2つ。
    - 音だけの丸暗記は、忘れたときに戻れない。まちがえたら●のアレイ図を
      かならず出して、「3が2つぶん」と数えなおせるようにする。
    - 読み上げ（音声合成）は入れない。九九は子どもが声に出すもので、
@@ -18,7 +20,7 @@
   if (!app || !window.KUKU_DATA) return;
 
   var DATA = window.KUKU_DATA;
-  var SET_LENGTH = 10;
+  var SET_LENGTH = 10;  // おとだけ・ランダムの問題数。じゅんばんは ×1〜×9 の9もん
 
   /* データにある段から選択肢を組み立てる（データが増えれば自動で増える） */
   var DANS = (function () {
@@ -34,8 +36,8 @@
 
   var MODES = [
     { id: 'tonae', name: 'おとだけ', note: '「にしが」→ こたえを えらぶ' },
-    { id: 'shiki', name: 'じゅんばんに とく', note: '「2 × 4」→ こたえを えらぶ' },
-    { id: 'gyaku', name: 'ランダムに こたえる', note: '「8 は なん × なん?」' }
+    { id: 'junban', name: 'じゅんばんに とく', note: '「2 × 1」「2 × 2」… と じゅんばんに' },
+    { id: 'random', name: 'ランダムに こたえる', note: '「2 × 7」「2 × 3」… と ばらばらに' }
   ];
 
   var state = { danId: DANS[0].id, modeId: 'tonae', session: null };
@@ -85,34 +87,33 @@
     return shuffle(opts.map(function (v) { return { v: String(v), ok: v === e.ans }; }));
   }
 
-  /* ぎゃくびき：こたえが同じ式（3×2 と 2×3）を選択肢に混ぜると正解が2つになる。
-     積がちがう式だけを集める。 */
-  function shikiOptions(e, pool) {
-    var opts = [{ v: shiki(e), ok: true }];
-    var seen = {}; seen[shiki(e)] = true;
-    var cand = pool.filter(function (x) { return x.ans !== e.ans && !seen[shiki(x)]; });
-    // 近い答えの式ほど迷う。差の小さい順に並べてから、その中でシャッフルする
-    cand.sort(function (x, y) { return Math.abs(x.ans - e.ans) - Math.abs(y.ans - e.ans); });
-    shuffle(cand.slice(0, 10)).forEach(function (x) {
-      if (opts.length >= 4 || seen[shiki(x)]) return;
-      seen[shiki(x)] = true;
-      opts.push({ v: shiki(x), ok: false });
-    });
-    return shuffle(opts);
-  }
-
-  function makeQuestion(pool) {
-    var e = pick(pool);
-    if (state.modeId === 'gyaku') {
-      return { entry: e, askKind: 'gyaku', ask: String(e.ans), options: shikiOptions(e, pool), answer: shiki(e) };
-    }
+  function makeQuestion(e) {
     return {
       entry: e,
-      askKind: state.modeId,
+      askKind: state.modeId === 'tonae' ? 'tonae' : 'shiki',
       ask: state.modeId === 'tonae' ? e.q : shiki(e),
       options: numberOptions(e),
       answer: String(e.ans)
     };
+  }
+
+  /* 1セットで出す九九を、はじめに まとめて決める。
+     - じゅんばんに とく：1つの だんを ×1 から ×9 まで順に。ランダム（ぜんぶ）を選んでいたら、だんを1つ くじ引きする
+     - ランダムに こたえる：えらんだ範囲を まぜて、同じ九九が2回 出ないように先頭から取る
+     - おとだけ：いままでどおり、範囲から毎回くじ引き */
+  function buildList(pool) {
+    if (state.modeId === 'junban') {
+      var dans = pool.map(function (e) { return e.a; }).filter(function (v, i, a) { return a.indexOf(v) === i; });
+      var dan = pick(dans);
+      return pool.filter(function (e) { return e.a === dan; })
+        .sort(function (x, y) { return x.b - y.b; });
+    }
+    if (state.modeId === 'random') {
+      return shuffle(pool.slice()).slice(0, SET_LENGTH);
+    }
+    var list = [];
+    for (var i = 0; i < SET_LENGTH; i++) list.push(pick(pool));
+    return list;
   }
 
   /* ---------- 画面 ---------- */
@@ -156,14 +157,15 @@
   }
 
   function startSession() {
-    state.session = { pool: poolOf(state.danId), index: 0, correct: 0, locked: false, q: null, missed: [] };
+    var list = buildList(poolOf(state.danId));
+    state.session = { list: list, total: list.length, index: 0, correct: 0, locked: false, q: null, missed: [] };
     nextQuestion();
   }
 
   function nextQuestion() {
     var s = state.session;
-    if (s.index >= SET_LENGTH) return renderResult();
-    s.q = makeQuestion(s.pool);
+    if (s.index >= s.total) return renderResult();
+    s.q = makeQuestion(s.list[s.index]);
     s.locked = false;
     renderPlay();
   }
@@ -188,18 +190,17 @@
     var wrap = el('div', 'kk-play');
 
     var head = el('div', 'kk-play-head');
-    head.appendChild(el('span', null, (s.index + 1) + ' / ' + SET_LENGTH));
+    head.appendChild(el('span', null, (s.index + 1) + ' / ' + s.total));
     head.appendChild(el('span', null, 'せいかい ' + s.correct));
     wrap.appendChild(head);
 
     var bar = el('div', 'kk-bar');
     var fill = el('div', 'kk-bar-fill');
-    fill.style.width = (s.index / SET_LENGTH * 100) + '%';
+    fill.style.width = (s.index / s.total * 100) + '%';
     bar.appendChild(fill);
     wrap.appendChild(bar);
 
-    wrap.appendChild(el('p', 'kk-ask-label',
-      q.askKind === 'gyaku' ? 'なん × なん?' : 'こたえは?'));
+    wrap.appendChild(el('p', 'kk-ask-label', 'こたえは?'));
 
     var ask = el('div', 'kk-ask kk-ask-' + q.askKind);
     ask.appendChild(el('p', 'kk-ask-main', q.ask));
@@ -275,10 +276,11 @@
     var s = state.session;
     app.innerHTML = '';
     var wrap = el('div', 'kk-result');
-    if (s.correct === SET_LENGTH) wrap.classList.add('is-perfect');
-    var stars = s.correct >= 10 ? 3 : s.correct >= 8 ? 2 : s.correct >= 5 ? 1 : 0;
+    if (s.correct === s.total) wrap.classList.add('is-perfect');
+    var rate = s.correct / s.total;  // じゅんばんは9もんなので、数ではなく割合で星を決める
+    var stars = rate >= 1 ? 3 : rate >= .8 ? 2 : rate >= .5 ? 1 : 0;
     wrap.appendChild(el('p', 'kk-result-stars', '★★★☆☆☆'.slice(3 - stars, 6 - stars)));
-    wrap.appendChild(el('p', 'kk-result-score', SET_LENGTH + 'もんちゅう ' + s.correct + 'もん せいかい!'));
+    wrap.appendChild(el('p', 'kk-result-score', s.total + 'もんちゅう ' + s.correct + 'もん せいかい!'));
     if (s.missed.length) {
       wrap.appendChild(el('p', 'kk-result-msg', 'まちがえた かけざん'));
       var list = el('div', 'kk-missed');

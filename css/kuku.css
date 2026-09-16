@@ -130,7 +130,6 @@ body{margin:0;color:var(--kk-ink)}
 .kk-ask-main{margin:0;color:#fff}
 .kk-ask-tonae .kk-ask-main{font-size:clamp(26px,calc(var(--nk-qh) * .17),56px);letter-spacing:.06em}
 .kk-ask-shiki .kk-ask-main{font-size:clamp(28px,calc(var(--nk-qh) * .18),60px);letter-spacing:.08em}
-.kk-ask-gyaku .kk-ask-main{font-size:clamp(32px,calc(var(--nk-qh) * .21),68px);letter-spacing:.04em}
 /* ●が出たら、といの字は小さくして場所をゆずる */
 .kk-ask.is-hint .kk-ask-main{font-size:clamp(18px,calc(var(--nk-qh) * .11),34px)}
 
