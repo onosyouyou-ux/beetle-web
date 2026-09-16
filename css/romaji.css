@@ -204,6 +204,7 @@ body{
 .rj-input{
   flex:1;min-width:200px;padding:15px 16px;border:2px solid var(--rj-line2);border-radius:12px;
   background:#fff;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:22px;letter-spacing:.06em;
+  text-align:center;  /* 「ローマ字で うってね」も うった字も、問題の真下（中央）に出す */
 }
 .rj-input:focus{border-color:var(--rj-orange);outline:none}
 .rj-input.is-correct{border-color:var(--rj-green);background:var(--rj-green-bg);color:var(--rj-green)}
