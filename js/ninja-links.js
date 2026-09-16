@@ -14,11 +14,12 @@
     romaji:   { name: 'ローマ字修行',     note: 'ローマ字を おぼえる', img: 'nk-link-romaji.webp',   href: '/tools/romaji/' },
     phonics:  { name: 'フォニックス修行', note: 'えいごの おと',       img: 'nk-link-phonics.webp',  href: '/tools/phonics/' },
     tokei:    { name: 'とけい修行',       note: 'とけいを よむ',       img: 'nk-link-tokei.webp',    href: '/tools/tokei/' },
-    sansu:    { name: 'さんすう',         note: 'けいさんを する',     img: 'nk-link-sansu.webp',    href: '/tools/sansu-app/' }
+    sansu:    { name: 'さんすう',         note: 'けいさんを する',     img: 'nk-link-sansu.webp',    href: '/tools/sansu-app/' },
+    kuku:     { name: 'かけざん修行',     note: 'くくを となえる',     img: 'nk-link-kuku.webp',     href: '/tools/kuku/' }
   };
 
-  /* 6つ全部を、いつも同じ順で出す（2026-09-03改定）。
-     2列に並べたときに3行ちょうどで埋まるよう、いま開いている修行も外さない。
+  /* 全部を、いつも同じ順で出す（2026-09-03改定）。
+     いま開いている修行も外さない。
      いま開いているものは aria-current="page" を付けて「ここにいる」と分かるようにする。
 
      並び順は3列×2行に置いたときの絵の色で決める（2026-09-09改定）。
@@ -29,8 +30,12 @@
        とけい(橙)    フォニックス(緑)  ローマ字(紫)
 
      となり合う色の差は最小71°、ななめでも89°。旧順は ローマ字 の真下が さんすう で
-     紫が縦に並んでいた。 */
-  var ORDER = ['sansu', 'katakana', 'kanji', 'tokei', 'phonics', 'romaji'];
+     紫が縦に並んでいた。
+
+     7本目の かけざん(青210°) は3段目の中央に置く（2026-09-16）。真上が フォニックス(緑)で差96°、
+     ななめ上が とけい・ローマ字。同じ青系の カタカナ(185°) とは離れる。
+     既存6本の並びは変えない（3段目の中央寄せは ninja-kids.css の .nk-link:last-child 側）。 */
+  var ORDER = ['sansu', 'katakana', 'kanji', 'tokei', 'phonics', 'romaji', 'kuku'];
 
   var TITLE = 'しゅぎょう いちらん';
   var IMG_BASE = '/assets/images/ninja/';

@@ -4,7 +4,7 @@ urls: ["/tools/kuku/"]
 canonical: "https://www.beetle-web.jp/tools/kuku/landing.html"
 sitemap: false
 title_contains: "かけざん修行"
-og_image: "none"
+og_image: "/assets/images/kuku-lp-hero-og.jpg"
 required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#kk-app", "#howto"]
 ---
 
@@ -38,7 +38,9 @@ required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#kk-app"
 - **レスポンシブ**: [_common.md](_common.md) の「レスポンシブ共通ルール」に従う（幅は3段固定・タブレットは向きで出し分け）。
   **縦持ち・横持ちのどちらでも、ナビ＋ヒーロー＋盤面が1画面に収まる**こと。9サイズ×3モード＝27パターンで実測ずみ（2026-09-15）
 - **色**: `body.ninja-kuku` の `--nk-accent` は青 `#2f6ea8`。既存6アプリ（橙33°・赤12°・青緑179°・紫264°・緑113°）と重ならない色
-- **未了**: 背景の1枚絵（`kuku-bg-v1.webp`）・しゅぎょういちらんの札（`nk-link-kuku.webp`）・OGP画像がまだ無い。
-  絵ができたら `--nk-bg-img` を足し、`js/ninja-links.js` に kuku を登録する（7本になるので並び順を組み直す）
+- **しゅぎょう いちらん**: `nk-link-kuku.webp` を `js/ninja-links.js` に7本目として登録済み（2026-09-16）。
+  幅のある画面では3段目の中央に来る（`ninja-kids.css` の `.nk-link:last-child:nth-child(3n+1)`）
+- **OGP画像**: `kuku-lp-hero-og.jpg`（ランディングと共用）
+- **未了**: 背景の1枚絵（`kuku-bg-v1.webp`）がまだ無い。絵ができたら `ninja-kids.css` に `--nk-bg-img` を足す
 - **手動確認観点**: となえかたの「が」が正しく出ること（こたえが1けたのときだけ）／
   まちがえたときに●が自動で出ること／ぎゃくびきで同じ積の式が2つ出ていないこと

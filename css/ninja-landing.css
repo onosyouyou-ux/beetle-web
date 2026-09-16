@@ -12,7 +12,7 @@ body.ninja-lp-kanji { --nl-accent:#b64632;--nl-dark:#72271d;--nl-soft:#efc9a5;--
 body.ninja-lp-katakana { --nl-accent:#168c8b;--nl-dark:#0c5960;--nl-soft:#b9dfd3;--nl-art:url('/assets/images/ninja/katakana-infiltration.webp'); }
 body.ninja-lp-romaji { --nl-accent:#7652b8;--nl-dark:#452b79;--nl-soft:#d3c0ee;--nl-art:url('/assets/images/ninja/romaji-cipher.webp'); }
 body.ninja-lp-phonics { --nl-accent:#4b8e42;--nl-dark:#285d25;--nl-soft:#c5dba2;--nl-art:url('/assets/images/ninja/phonics-listen.webp'); }
-body.ninja-lp-kuku { --nl-accent:#2f6ea8;--nl-dark:#1b4670;--nl-soft:#bcd8ef;--nl-art:none; }
+body.ninja-lp-kuku { --nl-accent:#2f6ea8;--nl-dark:#1b4670;--nl-soft:#bcd8ef;--nl-art:url('/assets/images/kuku-lp-hero.jpg'); }
 .ninja-landing main {
   overflow:hidden;
   background:#fffaf0;
@@ -457,9 +457,18 @@ body.ninja-lp-phonics .eal-card-num { display:none; }
 .ninja-landing .eal-grid-3 .eal-card h3 { font-size:17.5px; line-height:1.5; }
 .ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step)>h3 { font-size:15.5px; line-height:1.5; }
 
-/* かけざん修行はキーアート待ち（2026-09-15）。ヒーローを1カラムに落とし、
-   絵が入るはずの明るい帯も出さない。ヒーローまわりの指定はこのファイルの後ろほど強いので、
-   打ち消しはかならず末尾に置く。絵ができたら --nl-art を足して、この節ごと消す。 */
-.ninja-lp-kuku .eal-hero { background:linear-gradient(120deg,var(--nl-deeper),var(--nl-deep)); }
-.ninja-lp-kuku .eal-hero .eal-container { grid-template-columns:minmax(0,1fr)!important; min-height:300px; }
-.ninja-lp-kuku .eal-hero .eal-container::after { display:none!important; }
+/* かけざん修行のヒーローは、ほかの修行のような透過のキャラではなく背景つきの水彩（2026-09-16）。
+   contain のままだと四角い絵が浮くので、3:2の額に切って白い縁と角丸をつける。
+   ヒーローまわりの指定はこのファイルの後ろほど強いので、かならず末尾に置く。 */
+.ninja-lp-kuku .eal-hero .eal-container::after {
+  align-self:center;
+  min-height:0;
+  aspect-ratio:3/2;
+  background:var(--nl-art) center/cover no-repeat;
+  border-radius:16px;
+  box-shadow:0 0 0 6px #fff,0 22px 40px rgba(0,0,0,.3);
+  filter:none;
+}
+@media (max-width:767px) {
+  .ninja-lp-kuku .eal-hero .eal-container::after { width:min(100%,420px); justify-self:center; min-height:0; }
+}

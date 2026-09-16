@@ -2626,7 +2626,7 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
 }
 /* さんすうは紙面が濃紺。見出しだけ紙面に合う明るさに振る */
 .ninja-space .nk-links-title { color:#9fb3d9; }
-/* 幅のある画面は3列×2行。6つ全部並べても絵の比率のまま250px前後に収まる。
+/* 幅のある画面は3列。全部並べても絵の比率のまま250px前後に収まる。
    スマホは3列にすると絵の中の文字が読めなくなるので1列のまま（そのぶん縦に伸びる）。 */
 .nk-links-list {
   display:grid;
@@ -2641,6 +2641,8 @@ body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.we
     gap:12px 14px;
     width:100%;
   }
+  /* 3列で割り切れず1枚だけ余ったら、左端ではなく真ん中の列に置く（7本になった 2026-09-16） */
+  .nk-link:last-child:nth-child(3n+1) { grid-column:2; }
 }
 .nk-link {
   display:block;
