@@ -34,8 +34,8 @@
 
   var MODES = [
     { id: 'tonae', name: 'おとだけ', note: '「にしが」→ こたえを えらぶ' },
-    { id: 'shiki', name: 'つづけて こたえる', note: '「2 × 4」→ こたえを えらぶ' },
-    { id: 'gyaku', name: 'もんだいを かんがえる', note: '「8 は なん × なん?」' }
+    { id: 'shiki', name: 'じゅんばんに とく', note: '「2 × 4」→ こたえを えらぶ' },
+    { id: 'gyaku', name: 'ランダムに こたえる', note: '「8 は なん × なん?」' }
   ];
 
   var state = { danId: DANS[0].id, modeId: 'tonae', session: null };
