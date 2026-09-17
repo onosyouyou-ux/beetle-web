@@ -15,7 +15,7 @@
 
   <url>
     <loc>https://www.beetle-web.jp/test-tools.html</loc>
-    <lastmod>2026-08-25</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <priority>0.7</priority>
   </url>
 
@@ -141,6 +141,11 @@
   <url>
     <loc>https://www.beetle-web.jp/tools/test-dates/</loc>
     <lastmod>2026-08-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.beetle-web.jp/tools/env-info/</loc>
+    <lastmod>2026-09-17</lastmod>
     <priority>0.8</priority>
   </url>
 
