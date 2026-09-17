@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>「10MB以上」を作ったら11MBだった。アップロード制限の境界値テストを作り直した話 | BEETLE</title>
+<meta name="description" content="自作のダミーファイル生成ツールの「10MB以上」は、実は11MBを作っていた。境界値テストは1つ少ない・ちょうど・1つ多いの3点で見る。1KBは1000か1024か、ちょうど10MBは送ると10MBを超える話、画像のpx・dpi、ファイル名の文字数まで、アップロード制限の境界値セットを無料で作れるようにした話。">
+<link rel="canonical" href="https://www.beetle-web.jp/blog/posts/upload-boundary-test.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="「10MB以上」を作ったら11MBだった。アップロード制限の境界値テストを作り直した話 | BEETLE">
+<meta property="og:description" content="境界値テストは1つ少ない・ちょうど・1つ多いの3点で見る。容量・画像の大きさ・ファイル名・件数の境界値セットを、無料・登録不要で作れるようにしました。">
+<meta property="og:url" content="https://www.beetle-web.jp/blog/posts/upload-boundary-test.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/blog/qa-column-hero.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="675">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="「10MB以上」を作ったら11MBだった。アップロード制限の境界値テストを作り直した話 | BEETLE合同会社">
+<meta name="twitter:description" content="境界値テストは1つ少ない・ちょうど・1つ多いの3点で見る。容量・画像の大きさ・ファイル名・件数の境界値セットを、無料・登録不要で作れるようにしました。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/blog/qa-column-hero.jpg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"「10MB以上」を作ったら11MBだった。アップロード制限の境界値テストを作り直した話","datePublished":"2026-09-17","dateModified":"2026-09-17","description":"アップロード制限の境界値テストを、1つ少ない・ちょうど・1つ多いの3点で作れるようにした話。容量の数え方、multipartのぶん、画像のpx・dpi、ファイル名の文字数とバイト数。","image":"https://www.beetle-web.jp/assets/images/blog/qa-column-hero.jpg","author":{"@type":"Person","name":"小野礁洋"},"publisher":{"@type":"Organization","name":"BEETLE合同会社","url":"https://www.beetle-web.jp"},"url":"https://www.beetle-web.jp/blog/posts/upload-boundary-test.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"コラム","item":"https://www.beetle-web.jp/blog/"},{"@type":"ListItem","position":3,"name":"「10MB以上」を作ったら11MBだった。アップロード制限の境界値テストを作り直した話","item":"https://www.beetle-web.jp/blog/posts/upload-boundary-test.html"}]}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/blog.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  // ローカル確認（localhost・LAN内のIP・file://）はGA4に計上しない
+  if (['localhost','127.0.0.1','0.0.0.0','::1','[::1]'].indexOf(location.hostname) >= 0 || location.hostname.indexOf('192.168.') === 0 || location.hostname.indexOf('10.') === 0 || location.protocol === 'file:') { window['ga-disable-G-N6JXJGQ1Q6'] = true; }
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="post-page">
+  <div class="container">
+
+    <a class="post-back" href="/blog/">← コラム一覧</a>
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="post-date">2026-09-17</span>
+        <span class="post-tag qa">QA</span>
+      </div>
+      <h1 class="post-h1">「10MB以上」を作ったら11MBだった。アップロード制限の境界値テストを作り直した話</h1>
+    </div>
+
+    <img class="post-eyecatch" src="/assets/images/blog/qa-column-hero.jpg" width="1200" height="675" alt="BEETLEのQA支援・無料QAテストツールのバナー">
+
+    <div class="post-body">
+      <p class="lead">自分で作ったダミーファイル生成ツールに、「以上」と「未満」のボタンがありました。10MBを入れて「以上」を押すと、できあがるのは11MBのファイルでした。</p>
+
+      <p>気づいたのは、容量以外のアップロード制限も試せるようにしようと、コードを開き直した日です。サイズを決める関数に、指定値に1.1を掛ける行と、0.9を掛ける行がありました。「未満」なら9MB。FAQには「10MB以上と10MB未満の2つを作って確かめられます」と書いていました。QA支援を名乗っている会社のツールで、これはさすがに恥ずかしかったです。</p>
+
+      <h2>11MBと9MBでは、境界値テストにならない</h2>
+
+      <p>11MBのファイルが弾かれて、9MBのファイルが通る。これを確かめても、分かるのは「だいたい上限のあたりで止めている」ことまでです。境界値テストで本当に見たいのは、上限ちょうどのファイルが通るのか弾かれるのか、のほうでした。</p>
+
+      <p>実装で起きやすいのは、<code>&lt;=</code> と書くべきところを <code>&lt;</code> と書いてしまうミスです。そうすると、10MBちょうどだけが弾かれます。9MBと11MBのファイルは、どちらの実装でも同じ結果になるので、このミスは見つかりません。1MBも離れた場所から境目を眺めていたわけです。</p>
+
+      <p>いまは、指定したバイト数ぴったりにファイルを作るように直しています。そのうえで、制限の値を1つ入れると「1つ少ない・ちょうど・1つ多い」の3つをまとめて作る<strong>境界値セット</strong>を足しました。</p>
+
+      <h2>「10MB」が何バイトなのか、仕様書は教えてくれない</h2>
+
+      <p>ぴったり作るように直そうとして、最初に手が止まったのがここです。10MBは10,000,000バイトなのか、10,485,760バイトなのか。差は485,760バイト、だいたい474KBあります。10,200,000バイトのファイルは、片方の数え方では上限を超え、もう片方では余裕で通ります。</p>
+
+      <p>困るのは、1つのシステムの中でも数え方が混ざることです。PHPの <code>upload_max_filesize = 10M</code> や nginx の <code>client_max_body_size 10m</code> は1024で数えます。一方で、仕様書を書いた人やエラーメッセージの「10MBまで」を読む人は、たぶん1000で考えています。画面側のJavaScriptで <code>10 * 1000 * 1000</code> と書かれていたら、画面では弾かれるのにサーバーなら通るファイルが生まれます。なのでツールには「1KBを1024バイトと数えるか、1000バイトと数えるか」の切り替えを付けました。</p>
+
+      <h3>ちょうど10MBのファイルは、送ると10MBを超える</h3>
+
+      <p>もうひとつ、作りながら気になったことがあります。ブラウザがファイルを送るとき、中身の前後には区切りの行や <code>Content-Disposition</code> のヘッダーが付きます。数百バイトですが、ファイルそのものより確実に大きくなります。</p>
+
+      <p>nginx の <code>client_max_body_size</code> は、ファイルの大きさではなく、この送られてくる本文全体で数えます。つまりアプリ側が「10MBちょうどはOK」と正しく作っていても、手前のnginxが同じ10MBで設定されていると、ちょうど10MBのファイルは413で先に弾かれることがあります。返ってくるのはアプリのエラーメッセージではなく、nginxのエラーなので、画面の文言も用意したものとは違ってきます。</p>
+
+      <p>この手のずれは、ちょうどのファイルを実際に投げてみるまで分かりません。上限ちょうどのファイルが大事なのは、実装の <code>&lt;</code> と <code>&lt;=</code> のためだけではなかった、と思っています。</p>
+
+      <h2>アップロード制限は、容量だけではなかった</h2>
+
+      <p>最初に「容量以外の制限も試したい」と思ったのは、アップロード欄の注意書きを思い浮かべたからです。「4000×4000pxまで」「350dpi以上」「ファイル名は100文字まで」「一度に30枚まで」。どれも境目があって、どれも容量と同じ「1つ少ない・ちょうど・1つ多い」で試せます。</p>
+
+      <h3>画像の大きさとdpi</h3>
+
+      <p>幅・高さ・dpiのうち、入れた値だけを1つずつずらした画像を作ります。幅4000px・高さ3000pxなら、3999×3000、4000×3000、4001×3000と、高さ側の2枚です。画像の中に大きさとdpiを書き込むので、開けばどれか分かります。</p>
+
+      <p>dpiは、検算していて少し驚きました。PNGはdpiを「1メートルあたりのピクセル数」で持つので、350dpiは13,780で保存されます。読み取る道具によっては、これが350.01dpiとして返ってきます。サーバー側で <code>dpi == 350</code> と比べていたら、ちょうど350dpiで作ったはずの画像が弾かれます。<code>&gt;= 350</code> なら通ります。どちらに作られているかは、ちょうどの画像を投げれば分かります。</p>
+
+      <h3>ファイル名は、文字数かバイト数か</h3>
+
+      <p>ここも容量と同じで、数え方が割れます。「100文字まで」が、文字の数なのか、UTF-8のバイト数なのか。ひらがなは1文字3バイト、絵文字は4バイトです。JavaScriptの <code>name.length</code> だと、絵文字は1つで2と数えられます。半角英数・ひらがな・絵文字のどれで埋めるかと、拡張子を数に含めるかどうかを選べるようにしました。</p>
+
+      <p>あわせて、意地悪な名前もまとめて入れています。<code>test.php.png</code> のような二重拡張子、大文字の <code>.PNG</code>、拡張子なし、PNGの中身なのに拡張子が <code>.jpg</code> のファイル、中身がHTMLの <code>.png</code>。それから、濁点が分かれた「が」です。Macで付けたファイル名は「か」と濁点の2文字で保存されることがあり、文字数チェックや検索で、Windowsで付けた名前とずれます。</p>
+
+      <h3>枚数・ページ数・行数・音声の長さ</h3>
+
+      <p>同時にアップロードする枚数は、29枚・30枚・31枚のようにフォルダを分けて入れます。PDFはページごとに「Page 3 / 10」と番号を書き、CSVとExcelは見出しの行を数に含めるかどうかを選べます。音声は、1秒ごとに「ピッ」と鳴る本当に再生できるWAVを作ります。</p>
+
+      <h2>使い方は、制限の値を入れるだけ</h2>
+
+      <p><a href="/tools/test-content/">ダミーファイル生成ツール</a>の「境界値セットを作る」で、容量・画像の大きさ・ファイル名と拡張子・長さと件数の4つから試したい制限を選びます。上限の値を入れると、作られるファイルの一覧が下に出るので、確かめてからボタンを押します。</p>
+
+      <p>できるのは1つのZIPです。ファイル名の頭に「1_1つ少ない」「2_ちょうど」「3_1つ多い」と付けているので、展開して上から順に投げていけば、そのままテストの手順になります。容量の合計が512MBを超えるときだけは、ZIPにまとめるとブラウザのメモリが足りなくなるので、1つずつ保存します。</p>
+
+      <p>無料で、登録も要りません。ファイルはすべてブラウザの中で作っていて、サーバーには何も送っていません。</p>
+
+      <h2>作っていて、決めきれなかったこと</h2>
+
+      <p>ファイル名のセットには、Windowsで使えない記号（<code>\ / : * ? " &lt; &gt; |</code>）を入れていません。<code>&lt;script&gt;.png</code> のような名前は、画面にファイル名を出すところのエスケープ確認にちょうどいいのですが、1つでも入っているとWindowsでZIPごと展開できなくなります。MacやLinuxで試す人には物足りないはずで、ここはまだ迷っています。</p>
+
+      <p>動画の再生時間も、今回は見送りました。このツールの作り方だと、動画は実際の時間どおりに録画するしかなく、60秒の上限を試すのに3分近く待つことになります。そのうえ、できた動画の長さは録画のタイミングで少しずれます。「ちょうど」を名乗れないものを境界値セットに入れるのは違うと思ったので、いまは音声のWAVだけです。</p>
+
+      <p>画像は、1辺16,384pxを超えるとブラウザでは作れません。Safariやスマホではもっと手前で失敗することがあり、そのときは画面に出るようにしています。</p>
+
+      <h2>境界値は「値」より先に「数え方」を決める作業だった</h2>
+
+      <p>作り直してみて思ったのは、境界値テストの準備でいちばん時間がかかるのは、ファイルを作ることではなかった、ということです。10MBは何バイトか。100文字は何を数えるのか。350dpiはどちら向きに丸められるのか。ここを決めないまま作ったファイルは、1バイト単位で正確でも、どこの境目にも立っていません。</p>
+
+      <p>11MBのファイルを作っていた頃の自分は、「境界の近く」を「境界」だと思い込んでいました。ツールが雑だったというより、数え方を決めずに作り始めたのが原因だったと思います。</p>
+
+      <p>あなたのチームの仕様書に書いてある「10MBまで」は、何バイトのことでしょうか。</p>
+
+    </div>
+
+    <div class="post-cta">
+      <p>無料・登録不要。制限の値を入れると、1つ少ない・ちょうど・1つ多いのファイルをまとめて作れます。</p>
+      <a class="post-cta-btn" href="/tools/test-content/#bdBoundary">境界値セットを作ってみる</a>
+    </div>
+
+    <div class="post-related">
+      <p class="post-related-title">関連記事</p>
+      <ul class="post-related-list">
+        <li><a href="/blog/posts/dummy-file-generator.html">10MBのPDFを、どこから持ってきますか。テスト用のダミーファイルを作る無料ツール</a></li>
+        <li><a href="/blog/posts/repro-steps.html">バグ報告の書き方 — 「再現しません」で突き返されないために</a></li>
+        <li><a href="/blog/posts/csv-leading-zero.html">CSVの先頭ゼロが消える</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer"></div>
+<script src="/js/common.js"></script>
+
+</body>
+</html>

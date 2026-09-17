@@ -249,13 +249,18 @@
   <!-- コラム -->
   <url>
     <loc>https://www.beetle-web.jp/blog/</loc>
-    <lastmod>2026-09-12</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
+    <loc>https://www.beetle-web.jp/blog/posts/upload-boundary-test.html</loc>
+    <lastmod>2026-09-17</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.beetle-web.jp/blog/posts/dummy-file-generator.html</loc>
-    <lastmod>2026-09-10</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
