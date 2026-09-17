@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  // ローカル確認（localhost・LAN内のIP・file://）はGA4に計上しない
+  if (['localhost','127.0.0.1','0.0.0.0','::1','[::1]'].indexOf(location.hostname) >= 0 || location.hostname.indexOf('192.168.') === 0 || location.hostname.indexOf('10.') === 0 || location.protocol === 'file:') { window['ga-disable-G-N6JXJGQ1Q6'] = true; }
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>境界値テスト表メーカー｜境界値分析・同値分割のテストケースを「以上・未満」から自動作成【無料】｜BEETLE</title>
+<meta name="description" content="「18以上65以下」「8〜20文字」のような条件を入れると、境界値分析（2値・3値）と同値分割のテストケース表を自動で作ります。整数・小数・文字数・日付に対応。全角数字や絵文字など仕様で決まっていないことが多い値は「要確認」で出します。Markdown・CSV・TSVで書き出し。完全無料・登録不要・ブラウザ内で完結。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="境界値テスト表メーカー | BEETLE">
+<meta property="og:description" content="「以上・未満」の条件から、境界値分析と同値分割のテストケース表を自動作成。整数・小数・文字数・日付対応。Markdown・CSV・TSV出力。完全無料。">
+<meta property="og:url" content="https://www.beetle-web.jp/tools/boundary-table/">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="境界値テスト表メーカー | BEETLE">
+<meta name="twitter:description" content="「以上・未満」の条件から、境界値分析と同値分割のテストケース表を自動作成。整数・小数・文字数・日付対応。Markdown・CSV・TSV出力。完全無料。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<link rel="canonical" href="https://www.beetle-web.jp/tools/boundary-table/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "境界値テスト表メーカー",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "url": "https://www.beetle-web.jp/tools/boundary-table/",
+  "description": "下限・上限と「以上・より大きい・以下・未満」の条件から、境界値分析（2値・3値）と同値分割のテストケース表を作るツール。整数・小数・文字数・日付に対応し、Markdown・CSV・TSVで書き出せる。"
+}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"ツール一覧","item":"https://www.beetle-web.jp/test-tools.html"},{"@type":"ListItem","position":3,"name":"境界値テスト表メーカー","item":"https://www.beetle-web.jp/tools/boundary-table/"}]}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "境界値の「2値」と「3値」はどう違いますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "2値は、有効と無効が入れかわる境目をはさむ2点だけを試します（18以上なら17と18）。3値は、境界そのものと、その両どなりの3点を試します（17・18・19）。3値のほうが件数は増えますが、「18以上」を「19以上」とまちがえて実装したようなずれも見つけられます。" }
+    },
+    {
+      "@type": "Question",
+      "name": "「以上」と「より大きい」で、テストする値は変わりますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "変わります。「18以上」なら18が有効、「18より大きい」なら18は無効です。境界ちょうどの値の期待結果が入れかわるので、仕様書の言葉をそのまま選んでください。実装では <= と < の取りちがえがよく起きる場所で、このツールの数直線では有効と無効の切れ目に線を引いています。" }
+    },
+    {
+      "@type": "Question",
+      "name": "「要確認」はどういう意味ですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "全角数字、前後の空白、刻みより細かい小数、絵文字の文字数など、仕様書に書かれていないことが多く、有効か無効かを決めつけられない値です。テストの前に、仕様としてどう扱うかを決めておくための問いとして使ってください。" }
+    },
+    {
+      "@type": "Question",
+      "name": "文字数のテストで、絵文字が入っているのはなぜですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "文字数の数え方が実装によって違うためです。JavaScript の length では絵文字1つが2と数えられ、UTF-8 のバイト数では4バイトになります。画面では20文字で通るのに、サーバーやデータベースで弾かれる、というずれがここで見つかります。" }
+    },
+    {
+      "@type": "Question",
+      "name": "作った表をExcelで開けますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "開けます。「CSVをダウンロード」は Excel で文字化けしないよう UTF-8 の BOM を付けています。そのまま貼り付けたいときは、TSV を選んでコピーし、Excel のセルに貼ると列が分かれます。" }
+    },
+    {
+      "@type": "Question",
+      "name": "入力した条件はサーバーに送られますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "送られません。テストケースの計算はすべてブラウザ内（あなたの端末上）で行っていて、サーバーには何も送信していません。" }
+    }
+  ]
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/style/common.css">
+<link rel="stylesheet" href="/css/reference.css">
+<link rel="stylesheet" href="/css/boundary-table.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" class="bc-logo"></a>
+  <span>›</span>
+  <a href="/test-tools.html">ツール一覧</a>
+  <span>›</span>
+  <span class="bc-current">境界値テスト表メーカー</span>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">TOOL</div>
+  <h1>境界値の<em>テスト表</em></h1>
+  <p>「18以上」と「18より大きい」で、テストする値は変わる。<br>条件を入れるだけで、境界値と同値クラスの表になります。</p>
+</div>
+
+<div class="ref-nav">
+  <a href="#tool">テスト表を作る</a>
+  <a href="#why">境目でまちがえる理由</a>
+  <a href="#faq">よくある質問</a>
+</div>
+
+<p class="ref-lead">入力チェックのテストで見るべき値は、だいたい決まっています。下限と上限のちょうど、その1つ手前と1つ先、範囲の中と外の代表値。それでも毎回手で書くと、「以上」と「より大きい」を取りちがえたり、全角数字の扱いを決めないままテストが始まったりします。このツールは条件から<strong>境界値分析（2値・3値）と同値分割</strong>のテストケースを作り、数直線で有効と無効の切れ目を見せます。すべてブラウザ内で計算しています。</p>
+
+<div class="sw">
+
+  <section id="tool" class="ref-section">
+    <div class="ref-sec-hd"><h2>テスト表を作る</h2><span class="d">項目はいくつでも足せます。例から始めても大丈夫です</span></div>
+    <div class="bt-panel">
+      <div class="bt-toolbar">
+        <span class="bt-label">例から足す</span>
+        <div class="bt-presets" id="bt-presets"></div>
+        <button type="button" class="bt-btn-ghost" id="bt-clear">最初からやり直す</button>
+      </div>
+
+      <div id="bt-items" class="bt-items"></div>
+      <button type="button" class="bt-btn-ghost bt-add" id="bt-add">＋ 項目を足す</button>
+
+      <div class="bt-options">
+        <span class="bt-label">境界値</span>
+        <label class="bt-radio"><input type="radio" name="bt-mode" value="3" checked> 3値（1つ手前・ちょうど・1つ先）</label>
+        <label class="bt-radio"><input type="radio" name="bt-mode" value="2"> 2値（境目をはさむ2点）</label>
+        <label class="bt-check"><input type="checkbox" id="bt-odd" checked> 型ちがいの値も入れる（全角数字・空白・絵文字など）</label>
+      </div>
+
+      <div id="bt-lines" class="bt-lines" aria-label="有効と無効の範囲"></div>
+
+      <div class="bt-table-wrap">
+        <table class="bt-table">
+          <thead><tr><th>No</th><th>項目</th><th>分類</th><th>値</th><th>観点</th><th>期待結果</th></tr></thead>
+          <tbody id="bt-rows"></tbody>
+        </table>
+      </div>
+
+      <div class="bt-out-block">
+        <div class="bt-out-hd">
+          <label for="bt-format" class="bt-label">書き出す形</label>
+          <select id="bt-format">
+            <option value="md" selected>Markdown</option>
+            <option value="tsv">TSV（Excelに貼る）</option>
+            <option value="csv">CSV</option>
+          </select>
+        </div>
+        <textarea id="bt-out" class="bt-out" rows="8" readonly></textarea>
+        <div class="bt-out-foot">
+          <span id="bt-info" class="bt-info">—</span>
+          <button type="button" class="bt-btn-ghost" id="bt-dl">CSVをダウンロード</button>
+          <button type="button" class="bt-copy" id="bt-copy">コピー</button>
+        </div>
+      </div>
+    </div>
+
+    <template id="bt-item-tpl">
+      <div class="bt-item">
+        <div class="bt-item-row">
+          <label class="bt-field bt-f-name"><span>項目名</span><input type="text" class="bt-name"></label>
+          <label class="bt-field"><span>型</span>
+            <select class="bt-type">
+              <option value="int">整数</option>
+              <option value="dec">小数</option>
+              <option value="len">文字数</option>
+              <option value="date">日付</option>
+            </select>
+          </label>
+          <label class="bt-field bt-step-field" hidden><span>刻み</span><input type="text" class="bt-step" inputmode="decimal"></label>
+          <button type="button" class="bt-remove" aria-label="この項目を消す">×</button>
+        </div>
+        <div class="bt-item-row">
+          <label class="bt-field bt-f-bound"><span>下限</span><span class="bt-inline"><input type="text" class="bt-lo"><span class="bt-unit-lo"></span>
+            <select class="bt-lo-inc"><option value="inc">以上</option><option value="exc">より大きい</option></select></span></label>
+          <label class="bt-field bt-f-bound"><span>上限</span><span class="bt-inline"><input type="text" class="bt-hi"><span class="bt-unit-hi"></span>
+            <select class="bt-hi-inc"><option value="inc">以下</option><option value="exc">未満</option></select></span></label>
+        </div>
+        <p class="bt-item-err" hidden></p>
+      </div>
+    </template>
+  </section>
+
+  <section id="why" class="ref-section">
+    <div class="ref-sec-hd"><h2>境目でまちがえる理由</h2></div>
+    <div class="bt-why">
+      <p>仕様書の「18歳以上」は、実装では <code>age &gt;= 18</code> になります。ここを <code>age &gt; 18</code> と書いてしまうと、18歳ちょうどの人だけが登録できません。17歳と30歳で試しても、どちらの実装でも同じ結果になるので、このミスは見つかりません。<strong>境界値のテストは、境目ちょうどの値を入れて初めて意味を持ちます</strong>。</p>
+      <p>もうひとつ多いのが、仕様で決めていない値です。全角の「１８」を入れたら受け付けるのか。「 18 」のように空白が付いていたら。0.05 刻みの欄に 0.051 を入れたら丸めるのか弾くのか。これは実装のバグというより、決めていないことが画面に出ているだけです。このツールはそういう値の期待結果を「要確認」として出し、<strong>テストの前に決めるべきことの一覧</strong>として使えるようにしています。</p>
+      <p>考え方の整理は <a href="/tools/test-techniques/">テスト技法カタログ</a>、練習問題は <a href="/tools/technique-drill/">テスト技法ドリル</a> にあります。日付の境界は <a href="/tools/test-dates/">意地悪な日付ジェネレーター</a>、ファイルの容量や画像サイズの境界は <a href="/tools/test-content/#bdBoundary">ダミーファイル生成ツールの境界値セット</a> で、実際のデータを作れます。</p>
+    </div>
+  </section>
+
+  <section id="faq" class="ref-section">
+    <div class="ref-sec-hd"><h2>よくある質問</h2></div>
+    <details class="faq-item">
+      <summary class="faq-q"><span>境界値の「2値」と「3値」はどう違いますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">2値は、有効と無効が入れかわる境目をはさむ2点だけを試します（18以上なら17と18）。3値は、境界そのものと、その両どなりの3点を試します（17・18・19）。3値のほうが件数は増えますが、「18以上」を「19以上」とまちがえて実装したようなずれも見つけられます。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>「以上」と「より大きい」で、テストする値は変わりますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">変わります。「18以上」なら18が有効、「18より大きい」なら18は無効です。境界ちょうどの値の期待結果が入れかわるので、仕様書の言葉をそのまま選んでください。実装では &lt;= と &lt; の取りちがえがよく起きる場所で、このツールの数直線では有効と無効の切れ目に線を引いています。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>「要確認」はどういう意味ですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">全角数字、前後の空白、刻みより細かい小数、絵文字の文字数など、仕様書に書かれていないことが多く、有効か無効かを決めつけられない値です。テストの前に、仕様としてどう扱うかを決めておくための問いとして使ってください。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>文字数のテストで、絵文字が入っているのはなぜですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">文字数の数え方が実装によって違うためです。JavaScript の length では絵文字1つが2と数えられ、UTF-8 のバイト数では4バイトになります。画面では20文字で通るのに、サーバーやデータベースで弾かれる、というずれがここで見つかります。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>作った表をExcelで開けますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">開けます。「CSVをダウンロード」は Excel で文字化けしないよう UTF-8 の BOM を付けています。そのまま貼り付けたいときは、TSV を選んでコピーし、Excel のセルに貼ると列が分かれます。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>入力した条件はサーバーに送られますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">送られません。テストケースの計算はすべてブラウザ内（あなたの端末上）で行っていて、サーバーには何も送信していません。</div>
+    </details>
+  </section>
+
+</div>
+
+<div class="site-description">
+  <p>技法の考え方は <a href="/tools/test-techniques/">テスト技法カタログ</a>、組み合わせのテストは <a href="/tools/pairwise/">ペアワイズ生成器</a>、入力欄を壊しにいく値は <a href="/tools/test-data/">意地悪テストデータ生成器</a>、日付の境界は <a href="/tools/test-dates/">意地悪な日付ジェネレーター</a> をどうぞ。</p>
+</div>
+
+<!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一）。テスト検証用ツールなのでヒーローズバナー付き -->
+<div class="footer-heroes"><img src="/assets/images/footer-heroes.jpg" alt="" aria-hidden="true" width="2172" height="264" loading="lazy"></div>
+<footer class="site-footer-app">
+  <div class="sfa-row">
+    <a href="/" class="sfa-logo">BEET<span>LE</span></a>
+    <nav class="sfa-nav">
+      <a href="/">トップ</a>
+      <a href="/test-tools.html">QA支援</a>
+      <a href="/edu-tools.html">教育支援</a>
+      <a href="/blog/">コラム</a>
+      <a href="/#contact">お問い合わせ</a>
+    </nav>
+  </div>
+  <div class="sfa-copy">
+    <a href="/privacy">プライバシーポリシー</a>
+    <span>© 2026 BEETLE Co., LLC</span>
+  </div>
+</footer>
+<button type="button" class="scroll-top-float" id="scrollTopBtn" aria-label="ページ上部へ戻る">↑</button>
+<script src="/js/common.js"></script>
+<script src="/js/contact-track.js"></script>
+<script src="/js/boundary-table.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+/* ============================================================
+   boundary-table.css — 境界値テスト表メーカー 固有スタイル
+   共通変数は /style/common.css の --tp-* を流用（test-dates.css と同じ組み方）
+   ============================================================ */
+
+[hidden]{display:none!important}
+
+/* ====== 操作パネル ====== */
+.bt-panel{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px 22px}
+.bt-label{font-size:12px;font-weight:700;color:var(--tp-text2)}
+.bt-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding-bottom:14px;border-bottom:1px solid var(--tp-border)}
+.bt-presets{display:flex;flex-wrap:wrap;gap:6px;flex:1}
+.bt-preset{font-size:12px;font-weight:700;color:var(--tp-text2);background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:2px;padding:5px 12px;cursor:pointer;font-family:inherit}
+.bt-preset:hover{border-color:var(--tp-orange);color:var(--tp-orange)}
+.bt-btn-ghost{background:none;border:1px solid var(--tp-border2);border-radius:2px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--tp-text2);cursor:pointer;font-family:inherit}
+.bt-btn-ghost:hover{border-color:var(--tp-orange);color:var(--tp-orange)}
+.bt-copy{font-size:13px;font-weight:700;color:#fff;background:var(--tp-orange);border:none;border-radius:2px;padding:8px 22px;cursor:pointer;font-family:inherit}
+.bt-copy:hover{background:#c94a12}
+.bt-copy.is-done{background:var(--tp-green)}
+
+/* ====== 項目 ====== */
+.bt-items{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.bt-item{background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:10px;padding:14px 16px}
+.bt-item-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 14px}
+.bt-item-row + .bt-item-row{margin-top:10px}
+.bt-field{display:flex;flex-direction:column;gap:4px;font-size:11px;font-weight:700;color:var(--tp-text3)}
+.bt-field input,.bt-field select{border:1px solid var(--tp-border2);border-radius:6px;padding:7px 9px;font-size:13px;font-family:inherit;color:var(--tp-text);background:#fff}
+.bt-f-name input{width:160px}
+.bt-step-field input{width:80px}
+.bt-inline{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--tp-text2);font-weight:400}
+.bt-f-bound input{width:130px}
+.bt-remove{margin-left:auto;align-self:flex-start;background:none;border:none;font-size:18px;line-height:1;color:var(--tp-text3);cursor:pointer;padding:2px 6px}
+.bt-remove:hover{color:var(--tp-red)}
+.bt-item-err{margin:10px 0 0;font-size:12px;color:var(--tp-red);font-weight:700}
+.bt-add{margin-top:10px}
+
+.bt-options{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-top:18px;padding-top:14px;border-top:1px solid var(--tp-border)}
+.bt-radio,.bt-check{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--tp-text);cursor:pointer}
+.bt-radio input,.bt-check input{accent-color:var(--tp-orange)}
+
+/* ====== 数直線 ====== */
+.bt-lines{display:flex;flex-direction:column;gap:14px;margin-top:18px}
+.bt-line-hd{font-size:13px;font-weight:800;color:var(--tp-text);margin:0 0 8px}
+.bt-line{display:flex;align-items:stretch;gap:4px;overflow-x:auto;padding:4px 0 8px;position:relative}
+.bt-pt{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:64px;padding:8px 10px;border-radius:6px;border:1px solid;font-size:11px}
+.bt-pt b{font-family:'SFMono-Regular','Consolas',monospace;font-size:13px;white-space:nowrap}
+.bt-pt.is-ok{background:var(--tp-green-bg);border-color:var(--tp-green);color:var(--tp-green)}
+.bt-pt.is-ng{background:var(--tp-red-bg);border-color:var(--tp-red);color:var(--tp-red)}
+.bt-pt:not(.is-bd){border-style:dashed;opacity:.8}
+.bt-edge{flex:0 0 auto;width:3px;margin:0 4px;border-radius:2px;background:var(--tp-orange)}
+
+/* ====== 表 ====== */
+.bt-table-wrap{overflow-x:auto;margin-top:18px;border:1px solid var(--tp-border);border-radius:8px}
+.bt-table{width:100%;border-collapse:collapse;font-size:13px}
+.bt-table th{text-align:left;font-size:11px;font-weight:700;color:var(--tp-text3);background:var(--tp-cream);padding:9px 10px;border-bottom:1px solid var(--tp-border);white-space:nowrap}
+.bt-table td{padding:8px 10px;border-bottom:1px solid var(--tp-border);vertical-align:top;color:var(--tp-text)}
+.bt-table tr:last-child td{border-bottom:none}
+.bt-c-val{font-family:'SFMono-Regular','Consolas',monospace;word-break:break-all}
+.bt-c-exp{font-weight:800;white-space:nowrap}
+.bt-c-exp.is-ok{color:var(--tp-green)}
+.bt-c-exp.is-ng{color:var(--tp-red)}
+.bt-c-exp.is-tbd{color:var(--tp-amber)}
+
+/* ====== 出力 ====== */
+.bt-out-block{margin-top:20px}
+.bt-out-hd{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bt-out-hd select{border:1px solid var(--tp-border2);border-radius:6px;padding:7px 9px;font-size:13px;font-family:inherit;background:#fff}
+.bt-out{width:100%;border:1px solid var(--tp-border2);border-radius:8px;padding:11px 12px;font-family:'SFMono-Regular','Consolas',monospace;font-size:12px;line-height:1.7;resize:vertical;box-sizing:border-box;background:var(--tp-cream);color:var(--tp-text);white-space:pre;overflow-x:auto}
+.bt-out-foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px}
+.bt-info{font-size:12px;color:var(--tp-text3);flex:1;min-width:150px}
+
+/* ====== 解説 ====== */
+.bt-why{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:22px 24px}
+.bt-why p{font-size:13px;line-height:2;color:var(--tp-text2);margin:0 0 14px}
+.bt-why p:last-child{margin-bottom:0}
+.bt-why strong{color:var(--tp-text)}
+.bt-why a{color:var(--tp-orange);font-weight:700}
+.bt-why code{font-size:12px;background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:4px;padding:1px 5px}
+
+/* ====== FAQ（details/summaryベース。test-dates.css と同スタイル） ====== */
+.faq-item{border-bottom:1px solid var(--tp-border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 2px;cursor:pointer;font-weight:700;font-size:14px;color:var(--tp-text);list-style:none}
+.faq-q::-webkit-details-marker{display:none}
+.faq-icon{color:var(--tp-orange);font-weight:700}
+details[open] .faq-icon{transform:rotate(45deg)}
+.faq-a{padding:0 2px 14px;font-size:13px;line-height:1.8;color:var(--tp-text2)}
+
+@media(max-width:600px){
+  .bt-panel{padding:16px}
+  .bt-why{padding:18px}
+  .bt-item{padding:12px}
+  .bt-f-name,.bt-f-bound{width:100%}
+  .bt-f-name input{width:100%}
+  .bt-f-bound input{flex:1;min-width:0;width:auto}
+}
