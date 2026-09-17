@@ -1,0 +1,97 @@
+/* ============================================================
+   csv-excel.css — CSV Excel崩れチェッカー 固有スタイル
+   共通変数は /style/common.css の --tp-* を流用（test-dates.css と同じ組み方）
+   ============================================================ */
+
+[hidden]{display:none!important}
+/* body が flex なので、表の最小幅で .sw が押し広げられないようにする */
+.sw{min-width:0;width:100%}
+
+/* ====== 入力 ====== */
+.cx-panel{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px 22px}
+.cx-form-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.cx-form-row label{font-size:12px;font-weight:700;color:var(--tp-text2)}
+.cx-file-btn{display:inline-flex;align-items:center;font-size:13px!important;font-weight:700;color:#fff!important;background:var(--tp-orange);border-radius:2px;padding:8px 18px;cursor:pointer}
+.cx-file-btn:hover{background:#c94a12}
+.cx-file-btn input{display:none}
+.cx-file-info{font-size:12px;color:var(--tp-text2);flex:1;min-width:0;word-break:break-all}
+.cx-btn-ghost{background:none;border:1px solid var(--tp-border2);border-radius:2px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--tp-text2);cursor:pointer;font-family:inherit}
+.cx-btn-ghost:hover{border-color:var(--tp-orange);color:var(--tp-orange)}
+.cx-input{width:100%;box-sizing:border-box;margin-top:12px;border:1px solid var(--tp-border2);border-radius:8px;padding:11px 12px;font-family:'SFMono-Regular','Consolas',monospace;font-size:12px;line-height:1.7;background:var(--tp-cream);color:var(--tp-text);resize:vertical;white-space:pre;overflow-x:auto}
+.cx-opts{margin-top:10px}
+.cx-opts select,.cx-year{border:1px solid var(--tp-border2);border-radius:6px;padding:7px 9px;font-size:13px;font-family:inherit;background:#fff;color:var(--tp-text)}
+.cx-year{width:90px}
+
+/* ====== 結果 ====== */
+.cx-result{margin-top:20px;padding-top:18px;border-top:1px solid var(--tp-border)}
+.cx-enc{border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px;line-height:1.8;color:var(--tp-text2)}
+.cx-enc p{margin:0 0 6px}
+.cx-enc p:last-child{margin-bottom:0}
+.cx-enc.is-ng{background:var(--tp-red-bg);border:1px solid var(--tp-red)}
+.cx-enc.is-ok{background:var(--tp-green-bg);border:1px solid var(--tp-green)}
+.cx-enc-hd{font-weight:800;color:var(--tp-text)}
+.cx-enc.is-ng .cx-enc-hd{color:var(--tp-red)}
+.cx-pre{background:#fff;border:1px solid var(--tp-border);border-radius:6px;padding:8px 10px;font-size:12px;line-height:1.6;overflow-x:auto;margin:6px 0}
+
+.cx-summary{margin-bottom:18px}
+.cx-sum-hd{font-size:15px;color:var(--tp-text);margin:0 0 10px}
+.cx-chips{display:flex;flex-wrap:wrap;gap:6px}
+.cx-chip{font-size:12px;font-weight:700;border-radius:999px;padding:5px 12px;border:1px solid}
+.cx-chip b{margin-left:4px}
+.cx-chip.is-zero{opacity:.45}
+.cx-note{font-size:12px;color:var(--tp-text3);line-height:1.8;margin:8px 0 0}
+.cx-sub{font-size:13px;font-weight:800;color:var(--tp-text);margin:18px 0 8px}
+.cx-grid-hd{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+.cx-grid-hd .cx-sub{margin:0}
+.cx-check{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--tp-text2);cursor:pointer}
+.cx-check input{accent-color:var(--tp-orange)}
+
+/* 分類ごとの色（表のセル・点・チップで共通） */
+.c-zero{background:#fde8e4;border-color:#e0664f;color:#a8371f}
+.c-date{background:#e5eefb;border-color:#4f7ec9;color:#27549a}
+.c-digits{background:#f3e6f9;border-color:#9a5cc0;color:#6d3591}
+.c-formula{background:#fff1d6;border-color:#d99a1e;color:#8a5c00}
+.c-number{background:#eef0f2;border-color:#8a939c;color:#4c555d}
+
+.cx-grid-wrap{overflow:auto;max-height:480px;margin-top:8px;border:1px solid var(--tp-border);border-radius:8px}
+.cx-grid{border-collapse:collapse;font-size:12px;font-family:'SFMono-Regular','Consolas',monospace}
+.cx-grid th{position:sticky;top:0;background:var(--tp-cream);color:var(--tp-text3);font-weight:700;padding:5px 8px;border:1px solid var(--tp-border);text-align:center}
+.cx-grid tbody th{position:sticky;left:0;top:auto}
+.cx-grid td{padding:5px 8px;border:1px solid var(--tp-border);white-space:nowrap;color:var(--tp-text);vertical-align:top}
+.cx-grid td s{display:block;font-size:10px;color:var(--tp-text3);text-decoration:line-through}
+.cx-grid td span{font-weight:700}
+.cx-grid td[class^="c-"]{cursor:help}
+
+.cx-list-wrap{overflow-x:auto;border:1px solid var(--tp-border);border-radius:8px}
+.cx-list{width:100%;border-collapse:collapse;font-size:12px}
+.cx-list th{text-align:left;font-size:11px;color:var(--tp-text3);background:var(--tp-cream);padding:8px 10px;border-bottom:1px solid var(--tp-border);white-space:nowrap}
+.cx-list td{padding:8px 10px;border-bottom:1px solid var(--tp-border);vertical-align:top;color:var(--tp-text);line-height:1.7}
+.cx-list tr:last-child td{border-bottom:none}
+.cx-mono{font-family:'SFMono-Regular','Consolas',monospace;word-break:break-all;min-width:90px}
+.cx-ref{white-space:nowrap;font-weight:700}
+.cx-ref small{display:block;font-weight:400;color:var(--tp-text3);font-size:11px}
+.cx-dot{display:inline-block;width:10px;height:10px;border-radius:50%;border:1px solid;margin-right:6px;vertical-align:-1px}
+
+/* ====== 解説 ====== */
+.cx-why{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:22px 24px}
+.cx-why h3{font-size:14px;font-weight:800;color:var(--tp-text);margin:18px 0 6px}
+.cx-why h3:first-child{margin-top:0}
+.cx-why p{font-size:13px;line-height:2;color:var(--tp-text2);margin:0 0 14px}
+.cx-why p:last-child{margin-bottom:0}
+.cx-why strong{color:var(--tp-text)}
+.cx-why a{color:var(--tp-orange);font-weight:700}
+.cx-why code{font-size:12px;background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:4px;padding:1px 5px}
+
+/* ====== FAQ（details/summaryベース。test-dates.css と同スタイル） ====== */
+.faq-item{border-bottom:1px solid var(--tp-border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 2px;cursor:pointer;font-weight:700;font-size:14px;color:var(--tp-text);list-style:none}
+.faq-q::-webkit-details-marker{display:none}
+.faq-icon{color:var(--tp-orange);font-weight:700}
+details[open] .faq-icon{transform:rotate(45deg)}
+.faq-a{padding:0 2px 14px;font-size:13px;line-height:1.8;color:var(--tp-text2)}
+
+@media(max-width:600px){
+  .cx-panel{padding:16px}
+  .cx-why{padding:18px}
+  .cx-opts select{flex:1;min-width:0}
+}

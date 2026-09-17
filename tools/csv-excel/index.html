@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  // ローカル確認（localhost・LAN内のIP・file://）はGA4に計上しない
+  if (['localhost','127.0.0.1','0.0.0.0','::1','[::1]'].indexOf(location.hostname) >= 0 || location.hostname.indexOf('192.168.') === 0 || location.hostname.indexOf('10.') === 0 || location.protocol === 'file:') { window['ga-disable-G-N6JXJGQ1Q6'] = true; }
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSVをExcelで開くと先頭の0が消える・日付になる・文字化けするかを確認｜CSV Excel崩れチェッカー【無料】｜BEETLE</title>
+<meta name="description" content="CSVを貼るか選ぶだけで、Excelでダブルクリックして開いたときに変わるセルを洗い出します。先頭の0が消える、1-2が1月2日になる、16桁の番号が丸まる、12桁以上が指数表記のまま保存される、=で始まる値が数式として動く、BOMなしUTF-8が文字化けする。日本語版Excelで実測した規則で判定。完全無料・登録不要・送信なし。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="CSV Excel崩れチェッカー | BEETLE">
+<meta property="og:description" content="CSVをExcelで開くと、先頭の0が消える・日付になる・桁が丸まる・文字化けする。そのセルを開く前に洗い出します。日本語版Excelで実測した規則で判定。完全無料。">
+<meta property="og:url" content="https://www.beetle-web.jp/tools/csv-excel/">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CSV Excel崩れチェッカー | BEETLE">
+<meta name="twitter:description" content="CSVをExcelで開くと、先頭の0が消える・日付になる・桁が丸まる・文字化けする。そのセルを開く前に洗い出します。日本語版Excelで実測した規則で判定。完全無料。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<link rel="canonical" href="https://www.beetle-web.jp/tools/csv-excel/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "CSV Excel崩れチェッカー",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "url": "https://www.beetle-web.jp/tools/csv-excel/",
+  "description": "CSVをExcelでダブルクリックして開いたときに、先頭の0が消える・日付になる・桁が丸まる・指数表記で保存される・数式として動く・文字化けするセルを洗い出すツール。日本語版Excelで実測した規則で判定する。"
+}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"ツール一覧","item":"https://www.beetle-web.jp/test-tools.html"},{"@type":"ListItem","position":3,"name":"CSV Excel崩れチェッカー","item":"https://www.beetle-web.jp/tools/csv-excel/"}]}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "\"00123\" のようにダブルクォートで囲めば、先頭の0は残りますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "残りません。日本語版Excelで実測したところ、\"00123\" と囲んでも 123 になりました。クォートは「カンマや改行を含む値をひとまとまりにする」ための書き方で、文字として扱わせる効果はありません。CSVのままで0を残したいときは =\"00123\" と書く方法がありますが、Excel以外のシステムで読むとそのまま =\"00123\" という文字になるので、受け取る側と相談してから使ってください。" }
+    },
+    {
+      "@type": "Question",
+      "name": "12桁以上の番号が 1.23457E+11 になりました。列の幅を広げれば戻りますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "表示は戻りません。9〜11桁の数字は列の幅が狭いあいだだけ指数表記に見えますが、12桁以上は幅を広げても指数表記のままです。しかもそのまま上書き保存すると、CSVには 1.23457E+11 という文字で書き戻され、元の数字は失われます。16桁以上の番号（カード番号など）は、開いた時点で16桁目から先が0になります。" }
+    },
+    {
+      "@type": "Question",
+      "name": "先頭に ' （アポストロフィ）を付ければ文字として扱われますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "CSVでは効きません。Excelのセルに手で入力するときの ' は文字扱いの合図になりますが、CSVの中に '00123 と書くと、' ごと「'00123」という文字として表示されました。" }
+    },
+    {
+      "@type": "Question",
+      "name": "どのExcelで確かめた結果ですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "2026年9月に、日本語版のExcel（バージョン16、Windowsの地域設定は日本）でCSVを開き、162通りの値について見え方と上書き保存したときの結果を実測しました。そのうち161通りがこのツールの判定と一致しています。Mac版や英語版のExcel、地域設定がちがう環境では日付の読み方などが変わることがあります。" }
+    },
+    {
+      "@type": "Question",
+      "name": "文字化けはなぜ起きるのですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "日本語版のExcelは、先頭にBOM（UTF-8の目印）がないCSVをShift_JISとして読むためです。「名前」が「蜷榊燕」のように化け、化けた部分でカンマが飲み込まれて列がずれることもあります。UTF-8で書き出すときはBOMを付けるか、Shift_JISで書き出してください。" }
+    },
+    {
+      "@type": "Question",
+      "name": "CSVの中身はサーバーに送られますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "送られません。ファイルの読み込みも判定もブラウザ内（あなたの端末上）で行っていて、サーバーには何も送信していません。顧客データのCSVでもそのまま確認できます。" }
+    }
+  ]
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/style/common.css">
+<link rel="stylesheet" href="/css/reference.css">
+<link rel="stylesheet" href="/css/csv-excel.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" class="bc-logo"></a>
+  <span>›</span>
+  <a href="/test-tools.html">ツール一覧</a>
+  <span>›</span>
+  <span class="bc-current">CSV Excel崩れチェッカー</span>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">TOOL</div>
+  <h1>Excelで<em>CSV</em>が壊れる</h1>
+  <p>先頭の0が消える、1-2 が1月2日になる、16桁の番号が丸まる。<br>ダブルクリックする前に、変わるセルを洗い出します。</p>
+</div>
+
+<div class="ref-nav">
+  <a href="#tool">CSVを確かめる</a>
+  <a href="#fix">壊さない渡し方</a>
+  <a href="#why">なぜ壊れるのか</a>
+  <a href="#faq">よくある質問</a>
+</div>
+
+<p class="ref-lead">CSVをExcelでダブルクリックして開くと、Excelは「数字に見えるもの」を数値に、「日付に見えるもの」を日付に変えてしまいます。会員番号の先頭の0、郵便番号、型番の「SEPT2」、16桁のカード番号。しかもそのまま上書き保存すると、変わったあとの値でCSVが書き戻されます。このツールは、<strong>日本語版のExcelで実測した規則</strong>でセルを1つずつ判定し、開いたときの見え方と、保存したときに書き戻される文字を並べます。ファイルの中身はどこにも送りません。</p>
+
+<div class="sw">
+
+  <section id="tool" class="ref-section">
+    <div class="ref-sec-hd"><h2>CSVを確かめる</h2><span class="d">貼り付けるか、ファイルを選んでください</span></div>
+    <div class="cx-panel">
+      <div class="cx-form-row">
+        <label class="cx-file-btn"><input type="file" id="cx-file" accept=".csv,.txt,text/csv"> ファイルを選ぶ</label>
+        <span id="cx-file-info" class="cx-file-info"></span>
+        <button type="button" class="cx-btn-ghost" id="cx-sample">サンプルを入れる</button>
+      </div>
+      <textarea id="cx-input" class="cx-input" rows="8" spellcheck="false" placeholder="会員番号,郵便番号,登録日&#10;00123,0600001,1-2"></textarea>
+      <div class="cx-form-row cx-opts">
+        <label for="cx-paste-enc">貼り付けた内容を保存するときの文字コード</label>
+        <select id="cx-paste-enc">
+          <option value="utf8" selected>UTF-8（BOMなし）</option>
+          <option value="utf8bom">UTF-8（BOMあり）</option>
+          <option value="sjis">Shift_JIS</option>
+        </select>
+        <label for="cx-year">年のない日付（1-2 など）を読む年</label>
+        <input type="number" id="cx-year" min="1900" max="2999" class="cx-year">
+      </div>
+
+      <div id="cx-result" class="cx-result" hidden>
+        <div id="cx-enc" class="cx-enc"></div>
+        <div id="cx-summary" class="cx-summary"></div>
+        <div class="cx-grid-hd">
+          <p class="cx-sub">Excelで開いたときの見え方</p>
+          <label class="cx-check"><input type="checkbox" id="cx-show-raw" checked> 元の値も並べる</label>
+        </div>
+        <div id="cx-grid" class="cx-grid-wrap"></div>
+        <p id="cx-grid-note" class="cx-note"></p>
+        <div id="cx-list-wrap">
+          <p class="cx-sub">変わるセルの一覧</p>
+          <div class="cx-list-wrap">
+            <table class="cx-list">
+              <thead><tr><th>セル</th><th>元の値</th><th>Excelで開くと</th><th>上書き保存すると</th><th>なぜ</th></tr></thead>
+              <tbody id="cx-list"></tbody>
+            </table>
+          </div>
+          <p id="cx-list-note" class="cx-note"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="fix" class="ref-section">
+    <div class="ref-sec-hd"><h2>壊さない渡し方</h2><span class="d">作る側と、受け取って開く側でできること</span></div>
+    <div class="cx-why">
+      <h3>受け取って開く側：ダブルクリックしない</h3>
+      <p>Excelの「データ」タブ →「テキストまたはCSVから」で読み込み、「データの変換」で番号や郵便番号の列の型を<strong>テキスト</strong>にしてから読み込みます。これなら先頭の0も16桁の番号も残ります。文字コードもこの画面で選べます。</p>
+      <h3>作る側：UTF-8ならBOMを付ける</h3>
+      <p>日本語を含むCSVをUTF-8で書き出すときは、先頭にBOMを付けます。付けないと、日本語版のExcelはShift_JISとして読んで文字化けします。</p>
+      <h3>作る側：=&quot;00123&quot; は受け取る相手しだい</h3>
+      <p><code>="00123"</code> と書くとExcelでは0が残りますが、Excel以外のシステムで読むとそのまま <code>="00123"</code> という文字になります。<code>"00123"</code> とクォートで囲むだけでは残りません。<code>'00123</code> も CSVでは効かず、<code>'</code> ごと表示されます。</p>
+      <h3>作る側：=・+・-・@ で始まる値に気をつける</h3>
+      <p>利用者が入力した文字をそのままCSVに書き出すと、<code>=</code> で始まる値が数式として実行されます（CSVインジェクション）。書き出すときに先頭へ <code>'</code> を付ける、または該当する値を弾くなど、仕様で決めておきます。</p>
+    </div>
+  </section>
+
+  <section id="why" class="ref-section">
+    <div class="ref-sec-hd"><h2>なぜ壊れるのか</h2></div>
+    <div class="cx-why">
+      <p>CSVには「この列は文字」という情報がありません。だからExcelは、セルごとに中身を見て、数値や日付に読めるものを親切に変換します。人が手で入力するときには便利なこの動きが、システムから書き出した番号やコードには裏目に出ます。</p>
+      <p>厄介なのは、<strong>壊れたことに気づきにくい</strong>ことです。0が消えた会員番号も、1月2日になったサイズ表記も、見た目はそれらしく並んでいます。そして「開いて、少し直して、上書き保存」をした瞬間に、CSVそのものが壊れた値で書き換わります。12桁以上の番号は <code>1.23457E+11</code> という文字で保存され、元には戻せません。</p>
+      <p>このツールの判定は、日本語版Excelで162通りの値を実際に開き、見え方・列の幅そのままの見え方・上書き保存で書き戻される文字を記録して作りました。161通りで一致しています。規則にない形の値は「文字のまま」と推定しています。文字化けそのものの原因調べは <a href="/tools/mojibake/">文字化け再現ビューア</a>、実例は <a href="/blog/posts/csv-leading-zero.html">CSVの先頭ゼロが消える</a> に書いています。</p>
+    </div>
+  </section>
+
+  <section id="faq" class="ref-section">
+    <div class="ref-sec-hd"><h2>よくある質問</h2></div>
+    <details class="faq-item">
+      <summary class="faq-q"><span>"00123" のようにダブルクォートで囲めば、先頭の0は残りますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">残りません。日本語版Excelで実測したところ、"00123" と囲んでも 123 になりました。クォートは「カンマや改行を含む値をひとまとまりにする」ための書き方で、文字として扱わせる効果はありません。CSVのままで0を残したいときは ="00123" と書く方法がありますが、Excel以外のシステムで読むとそのまま ="00123" という文字になるので、受け取る側と相談してから使ってください。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>12桁以上の番号が 1.23457E+11 になりました。列の幅を広げれば戻りますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">表示は戻りません。9〜11桁の数字は列の幅が狭いあいだだけ指数表記に見えますが、12桁以上は幅を広げても指数表記のままです。しかもそのまま上書き保存すると、CSVには 1.23457E+11 という文字で書き戻され、元の数字は失われます。16桁以上の番号（カード番号など）は、開いた時点で16桁目から先が0になります。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>先頭に ' （アポストロフィ）を付ければ文字として扱われますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">CSVでは効きません。Excelのセルに手で入力するときの ' は文字扱いの合図になりますが、CSVの中に '00123 と書くと、' ごと「'00123」という文字として表示されました。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>どのExcelで確かめた結果ですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">2026年9月に、日本語版のExcel（バージョン16、Windowsの地域設定は日本）でCSVを開き、162通りの値について見え方と上書き保存したときの結果を実測しました。そのうち161通りがこのツールの判定と一致しています。Mac版や英語版のExcel、地域設定がちがう環境では日付の読み方などが変わることがあります。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>文字化けはなぜ起きるのですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">日本語版のExcelは、先頭にBOM（UTF-8の目印）がないCSVをShift_JISとして読むためです。「名前」が「蜷榊燕」のように化け、化けた部分でカンマが飲み込まれて列がずれることもあります。UTF-8で書き出すときはBOMを付けるか、Shift_JISで書き出してください。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>CSVの中身はサーバーに送られますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">送られません。ファイルの読み込みも判定もブラウザ内（あなたの端末上）で行っていて、サーバーには何も送信していません。顧客データのCSVでもそのまま確認できます。</div>
+    </details>
+  </section>
+
+</div>
+
+<div class="site-description">
+  <p>文字化けの原因調べは <a href="/tools/mojibake/">文字化け再現ビューア</a>、CSVに入れる意地悪なテストデータは <a href="/tools/test-data/">意地悪テストデータ生成器</a>、指定サイズのCSVファイルが欲しいときは <a href="/tools/test-content/">ダミーファイル生成ツール</a> をどうぞ。</p>
+</div>
+
+<!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一）。テスト検証用ツールなのでヒーローズバナー付き -->
+<div class="footer-heroes"><img src="/assets/images/footer-heroes.jpg" alt="" aria-hidden="true" width="2172" height="264" loading="lazy"></div>
+<footer class="site-footer-app">
+  <div class="sfa-row">
+    <a href="/" class="sfa-logo">BEET<span>LE</span></a>
+    <nav class="sfa-nav">
+      <a href="/">トップ</a>
+      <a href="/test-tools.html">QA支援</a>
+      <a href="/edu-tools.html">教育支援</a>
+      <a href="/blog/">コラム</a>
+      <a href="/#contact">お問い合わせ</a>
+    </nav>
+  </div>
+  <div class="sfa-copy">
+    <a href="/privacy">プライバシーポリシー</a>
+    <span>© 2026 BEETLE Co., LLC</span>
+  </div>
+</footer>
+<button type="button" class="scroll-top-float" id="scrollTopBtn" aria-label="ページ上部へ戻る">↑</button>
+<script src="/js/common.js"></script>
+<script src="/js/contact-track.js"></script>
+<script src="/js/csv-excel-rules.js"></script>
+<script src="/js/csv-excel.js"></script>
+</body>
+</html>
