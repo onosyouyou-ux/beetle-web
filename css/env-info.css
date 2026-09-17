@@ -1,0 +1,61 @@
+/* ============================================================
+   env-info.css — バグ報告の環境情報コピー 固有スタイル
+   共通変数は /style/common.css の --tp-* を流用（test-dates.css と同じ組み方）
+   ============================================================ */
+
+/* ====== 操作パネル ====== */
+.ei-panel{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px 22px}
+.ei-form-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:12px}
+.ei-form-row label{font-size:12px;font-weight:700;color:var(--tp-text2)}
+.ei-form-row select,.ei-form-row input[type=url]{border:1px solid var(--tp-border2);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;color:var(--tp-text);background:#fff}
+.ei-form-row input[type=url]{flex:1;min-width:220px}
+.ei-check{display:flex;align-items:center;gap:6px;cursor:pointer}
+.ei-check input{accent-color:var(--tp-orange)}
+.ei-btn-ghost{background:none;border:1px solid var(--tp-border2);border-radius:2px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--tp-text2);cursor:pointer;font-family:inherit}
+.ei-btn-ghost:hover{border-color:var(--tp-orange);color:var(--tp-orange)}
+.ei-btn-ghost.is-done,.ei-copy.is-done{background:var(--tp-green);border-color:var(--tp-green);color:#fff}
+.ei-copy{font-size:13px;font-weight:700;color:#fff;background:var(--tp-orange);border:none;border-radius:2px;padding:8px 22px;cursor:pointer;font-family:inherit;transition:background .12s}
+.ei-copy:hover{background:#c94a12}
+
+/* ====== 項目の表 ====== */
+.ei-table-wrap{overflow-x:auto;border-top:1px solid var(--tp-border);margin-top:4px}
+.ei-table{width:100%;border-collapse:collapse;font-size:13px}
+.ei-table th{text-align:left;font-size:11px;font-weight:700;color:var(--tp-text3);padding:10px 8px;border-bottom:1px solid var(--tp-border)}
+.ei-table td{padding:10px 8px;border-bottom:1px solid var(--tp-border);vertical-align:top}
+.ei-c-on{width:44px;text-align:center}
+.ei-c-on input{accent-color:var(--tp-orange);width:16px;height:16px;cursor:pointer}
+.ei-c-label{width:190px;font-weight:700;color:var(--tp-text)}
+.ei-val{display:block;font-family:'SFMono-Regular','Consolas',monospace;color:var(--tp-text);word-break:break-all;line-height:1.6}
+.ei-note{display:block;font-size:11px;line-height:1.7;color:var(--tp-text3);margin-top:3px}
+.ei-table tr.is-off .ei-c-label,.ei-table tr.is-off .ei-val{color:var(--tp-text3);text-decoration:line-through}
+
+/* ====== 出力 ====== */
+.ei-out-block{margin-top:20px}
+.ei-out{width:100%;border:1px solid var(--tp-border2);border-radius:8px;padding:11px 12px;font-family:'SFMono-Regular','Consolas',monospace;font-size:12px;line-height:1.7;resize:vertical;box-sizing:border-box;background:var(--tp-cream);color:var(--tp-text);white-space:pre;overflow-x:auto}
+.ei-out-foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px}
+.ei-info{font-size:12px;color:var(--tp-text3);flex:1;min-width:150px}
+
+/* ====== 解説 ====== */
+.ei-why{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:22px 24px}
+.ei-why p{font-size:13px;line-height:2;color:var(--tp-text2);margin:0 0 14px}
+.ei-why p:last-child{margin-bottom:0}
+.ei-why strong{color:var(--tp-text)}
+.ei-why a{color:var(--tp-orange);font-weight:700}
+.ei-share{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:6px;padding:12px 14px;background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:8px}
+.ei-share code{flex:1;min-width:0;font-size:13px;word-break:break-all;color:var(--tp-text)}
+
+/* ====== FAQ（details/summaryベース。test-dates.css と同スタイル） ====== */
+.faq-item{border-bottom:1px solid var(--tp-border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 2px;cursor:pointer;font-weight:700;font-size:14px;color:var(--tp-text);list-style:none}
+.faq-q::-webkit-details-marker{display:none}
+.faq-icon{color:var(--tp-orange);font-weight:700}
+details[open] .faq-icon{transform:rotate(45deg)}
+.faq-a{padding:0 2px 14px;font-size:13px;line-height:1.8;color:var(--tp-text2)}
+
+@media(max-width:600px){
+  .ei-panel{padding:16px}
+  .ei-why{padding:18px}
+  .ei-c-label{width:auto;min-width:96px}
+  .ei-form-row select{flex:1;min-width:0}
+  .ei-form-row input[type=url]{min-width:0;width:100%}
+}

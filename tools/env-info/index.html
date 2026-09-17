@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  // ローカル確認（localhost・LAN内のIP・file://）はGA4に計上しない
+  if (['localhost','127.0.0.1','0.0.0.0','::1','[::1]'].indexOf(location.hostname) >= 0 || location.hostname.indexOf('192.168.') === 0 || location.hostname.indexOf('10.') === 0 || location.protocol === 'file:') { window['ga-disable-G-N6JXJGQ1Q6'] = true; }
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>バグ報告の環境情報コピー｜ブラウザ・OS・画面サイズをワンクリックで取得【無料】｜BEETLE</title>
+<meta name="description" content="ページを開くだけで、ブラウザとバージョン・OS・画面サイズ・拡大率・言語・タイムゾーンを取得し、バグ報告に貼れる形でコピーできます。Markdown・Backlog・Jira・Redmine の記法と、再現手順のひな形つき。問い合わせてきたお客さまに開いてもらう使い方もできます。完全無料・登録不要・送信なし。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="バグ報告の環境情報コピー | BEETLE">
+<meta property="og:description" content="ブラウザ・OS・画面サイズ・拡大率・タイムゾーンを、バグ票に貼れる形でワンクリックコピー。Markdown・Backlog・Jira・Redmine対応。完全無料。">
+<meta property="og:url" content="https://www.beetle-web.jp/tools/env-info/">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="バグ報告の環境情報コピー | BEETLE">
+<meta name="twitter:description" content="ブラウザ・OS・画面サイズ・拡大率・タイムゾーンを、バグ票に貼れる形でワンクリックコピー。Markdown・Backlog・Jira・Redmine対応。完全無料。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<link rel="canonical" href="https://www.beetle-web.jp/tools/env-info/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "バグ報告の環境情報コピー",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "url": "https://www.beetle-web.jp/tools/env-info/",
+  "description": "ブラウザとバージョン・OS・画面サイズ・拡大率・言語・タイムゾーンなど、バグ報告に必要な環境情報をページを開くだけで取得し、Markdown・Backlog・Jira・Redmineの記法でコピーできるツール。"
+}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"ツール一覧","item":"https://www.beetle-web.jp/test-tools.html"},{"@type":"ListItem","position":3,"name":"バグ報告の環境情報コピー","item":"https://www.beetle-web.jp/tools/env-info/"}]}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Windows 11 なのに「Windows 10 または 11」と出るのはなぜですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "User-Agent という文字列には、Windows 10 と 11 のどちらでも「Windows NT 10.0」と書かれていて、見分けがつかないためです。Chrome と Edge はそれとは別に OS のバージョンを教えてくれるので、Windows 11 と判定できます。Firefox では見分けられません。" }
+    },
+    {
+      "@type": "Question",
+      "name": "iPad なのに Mac と出るのはなぜですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "iPadOS の Safari は、パソコン向けのページを表示するために既定で Mac を名乗ります。このツールでは、Mac を名乗っているのにタッチ操作ができる場合に「iPadOS（Macと名乗っています）」と表示しています。" }
+    },
+    {
+      "@type": "Question",
+      "name": "macOS のバージョンが 10.15.7 と出るのはなぜですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "Safari・Firefox・Chrome は、User-Agent に書く macOS のバージョンを 10.15.7 に固定しています。実際のバージョンではないので、このツールでは「ブラウザが隠しています」と表示します。Chrome と Edge では、別の方法で実際のバージョンを取得できます。" }
+    },
+    {
+      "@type": "Question",
+      "name": "拡大率（devicePixelRatio）とは何ですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "画面の1ピクセルに、実際の液晶の点がいくつ使われているかを表す値です。高解像度のスマホやノートPCでは 2 や 3 になります。Windows の表示スケール（125%など）や、ブラウザのズームでも変わるので、「表示が崩れる」系の不具合ではこの値があると原因を絞りやすくなります。" }
+    },
+    {
+      "@type": "Question",
+      "name": "問い合わせてきたお客さまに使ってもらえますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "使えます。このページのURLを送り、「開いてコピーボタンを押し、返信に貼ってください」とお願いすれば、ブラウザやOSを口頭で聞き出す必要がなくなります。貼る前に、送りたくない項目のチェックを外すこともできます。" }
+    },
+    {
+      "@type": "Question",
+      "name": "取得した情報はどこかに送られますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "送られません。情報の取得も整形もブラウザ内（あなたの端末上）で行っていて、サーバーには何も送信していません。コピーした内容をどこに貼るかは、あなたが決めます。" }
+    }
+  ]
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/style/common.css">
+<link rel="stylesheet" href="/css/reference.css">
+<link rel="stylesheet" href="/css/env-info.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="bc">
+  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" class="bc-logo"></a>
+  <span>›</span>
+  <a href="/test-tools.html">ツール一覧</a>
+  <span>›</span>
+  <span class="bc-current">バグ報告の環境情報コピー</span>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">TOOL</div>
+  <h1>バグ報告の<em>環境情報</em></h1>
+  <p>「ブラウザは何ですか？」と聞き返す往復を、なくす。<br>開いてコピーするだけで、バグ票に貼れる形になります。</p>
+</div>
+
+<div class="ref-nav">
+  <a href="#tool">環境情報をコピー</a>
+  <a href="#share">お客さまに開いてもらう</a>
+  <a href="#why">分からないこともある</a>
+  <a href="#faq">よくある質問</a>
+</div>
+
+<p class="ref-lead">バグ報告に「Chromeです」とだけ書いてあると、開発する側はバージョンを聞き返し、画面の大きさを聞き返し、ようやく再現を試せます。このページは、開いた端末のブラウザ・OS・画面サイズ・拡大率・言語・タイムゾーンを読み取り、<strong>Markdown・Backlog・Jira・Redmine</strong> のどれかの記法でまとめてコピーします。再現手順のひな形も一緒に付けられます。読み取りも整形もブラウザ内だけで行い、どこにも送りません。</p>
+
+<div class="sw">
+
+  <section id="tool" class="ref-section">
+    <div class="ref-sec-hd"><h2>環境情報をコピー</h2><span class="d">いま開いている端末の情報です。貼りたくない項目はチェックを外してください</span></div>
+    <div class="ei-panel">
+      <div class="ei-form-row">
+        <label for="ei-format">記法</label>
+        <select id="ei-format">
+          <option value="md" selected>Markdown（GitHub・Slack など）</option>
+          <option value="backlog">Backlog</option>
+          <option value="jira">Jira</option>
+          <option value="redmine">Redmine</option>
+          <option value="text">テキスト</option>
+        </select>
+        <label class="ei-check"><input type="checkbox" id="ei-template" checked> 再現手順のひな形も付ける</label>
+      </div>
+      <div class="ei-form-row">
+        <label for="ei-url">不具合が出たページのURL</label>
+        <input type="url" id="ei-url" placeholder="https://example.com/…（任意）">
+      </div>
+      <div class="ei-table-wrap">
+        <table class="ei-table" id="ei-table">
+          <thead><tr><th class="ei-c-on">貼る</th><th>項目</th><th>この端末の値</th></tr></thead>
+          <tbody id="ei-rows"></tbody>
+        </table>
+      </div>
+      <div class="ei-out-block">
+        <textarea id="ei-out" class="ei-out" rows="14" readonly></textarea>
+        <div class="ei-out-foot">
+          <span id="ei-info" class="ei-info">読み取り中…</span>
+          <button type="button" class="ei-btn-ghost" id="ei-refresh">読み取り直す</button>
+          <button type="button" class="ei-copy" id="ei-copy">コピー</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="share" class="ref-section">
+    <div class="ref-sec-hd"><h2>お客さまに開いてもらう</h2><span class="d">問い合わせ対応で、環境を口頭で聞き出さなくて済む</span></div>
+    <div class="ei-why">
+      <p>「表示がおかしい」という問い合わせで、相手にブラウザのバージョンを確認してもらうのは大変です。設定画面の場所を説明し、スクリーンショットをお願いし、それでも Windows 10 か 11 かは分からないまま、ということがよくあります。</p>
+      <p>このページのURLを送って、<strong>「開いて『コピー』を押し、そのまま返信に貼ってください」</strong>とお願いすれば1往復で済みます。貼る前にチェックを外せば、送りたくない項目は相手の側で消せます。</p>
+      <div class="ei-share">
+        <code id="ei-share-url">https://www.beetle-web.jp/tools/env-info/</code>
+        <button type="button" class="ei-btn-ghost" id="ei-share-copy">URLをコピー</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="why" class="ref-section">
+    <div class="ref-sec-hd"><h2>ブラウザから分からないこともある</h2></div>
+    <div class="ei-why">
+      <p>ブラウザは、自分がどの端末で動いているかを全部は教えてくれません。個人の特定に使われないよう、<strong>User-Agent（ブラウザが名乗る文字列）はわざと大ざっぱに</strong>されてきました。Windows 10 と 11 はどちらも「Windows NT 10.0」、macOS は何年たっても「10.15.7」、Android は機種名が消えて「Android 10; K」です。</p>
+      <p>Chrome と Edge には、それとは別に正確な OS のバージョンや機種名を問い合わせる仕組みがあり、このツールは使えるときはそちらを優先します。使えないときは、推測で埋めずに「見分けられません」「ブラウザが隠しています」と書きます。<strong>分からないものを分かったことにしない</strong>ほうが、報告を受け取る側は判断を誤りません。</p>
+      <p>iPhone と iPad のブラウザは、Chrome でも Firefox でも中身は Safari と同じ WebKit で動いています。「iPhone の Chrome だけで出る」と報告があったら、Safari でも出るかを先に確かめると早く絞れます。再現手順の書き方は <a href="/blog/posts/repro-steps.html">バグ報告の書き方</a>、スクリーンショットから起票内容を作るなら <a href="https://bug-checker.vercel.app/" target="_blank" rel="noopener">これってバグなの？</a> をどうぞ。</p>
+    </div>
+  </section>
+
+  <section id="faq" class="ref-section">
+    <div class="ref-sec-hd"><h2>よくある質問</h2></div>
+    <details class="faq-item">
+      <summary class="faq-q"><span>Windows 11 なのに「Windows 10 または 11」と出るのはなぜですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">User-Agent という文字列には、Windows 10 と 11 のどちらでも「Windows NT 10.0」と書かれていて、見分けがつかないためです。Chrome と Edge はそれとは別に OS のバージョンを教えてくれるので、Windows 11 と判定できます。Firefox では見分けられません。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>iPad なのに Mac と出るのはなぜですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">iPadOS の Safari は、パソコン向けのページを表示するために既定で Mac を名乗ります。このツールでは、Mac を名乗っているのにタッチ操作ができる場合に「iPadOS（Macと名乗っています）」と表示しています。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>macOS のバージョンが 10.15.7 と出るのはなぜですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">Safari・Firefox・Chrome は、User-Agent に書く macOS のバージョンを 10.15.7 に固定しています。実際のバージョンではないので、このツールでは「ブラウザが隠しています」と表示します。Chrome と Edge では、別の方法で実際のバージョンを取得できます。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>拡大率（devicePixelRatio）とは何ですか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">画面の1ピクセルに、実際の液晶の点がいくつ使われているかを表す値です。高解像度のスマホやノートPCでは 2 や 3 になります。Windows の表示スケール（125%など）や、ブラウザのズームでも変わるので、「表示が崩れる」系の不具合ではこの値があると原因を絞りやすくなります。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>問い合わせてきたお客さまに使ってもらえますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">使えます。このページのURLを送り、「開いてコピーボタンを押し、返信に貼ってください」とお願いすれば、ブラウザやOSを口頭で聞き出す必要がなくなります。貼る前に、送りたくない項目のチェックを外すこともできます。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>取得した情報はどこかに送られますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">送られません。情報の取得も整形もブラウザ内（あなたの端末上）で行っていて、サーバーには何も送信していません。コピーした内容をどこに貼るかは、あなたが決めます。</div>
+    </details>
+  </section>
+
+</div>
+
+<div class="site-description">
+  <p>不具合の画面から起票内容を作るなら <a href="https://bug-checker.vercel.app/" target="_blank" rel="noopener">これってバグなの？</a>、再現に使う意地悪な入力値は <a href="/tools/test-data/">意地悪テストデータ生成器</a>、リリース前の抜け漏れ確認は <a href="/tools/release-checklist/">リリース前チェックリスト集</a> をどうぞ。</p>
+</div>
+
+<!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一）。テスト検証用ツールなのでヒーローズバナー付き -->
+<div class="footer-heroes"><img src="/assets/images/footer-heroes.jpg" alt="" aria-hidden="true" width="2172" height="264" loading="lazy"></div>
+<footer class="site-footer-app">
+  <div class="sfa-row">
+    <a href="/" class="sfa-logo">BEET<span>LE</span></a>
+    <nav class="sfa-nav">
+      <a href="/">トップ</a>
+      <a href="/test-tools.html">QA支援</a>
+      <a href="/edu-tools.html">教育支援</a>
+      <a href="/blog/">コラム</a>
+      <a href="/#contact">お問い合わせ</a>
+    </nav>
+  </div>
+  <div class="sfa-copy">
+    <a href="/privacy">プライバシーポリシー</a>
+    <span>© 2026 BEETLE Co., LLC</span>
+  </div>
+</footer>
+<button type="button" class="scroll-top-float" id="scrollTopBtn" aria-label="ページ上部へ戻る">↑</button>
+<script src="/js/common.js"></script>
+<script src="/js/contact-track.js"></script>
+<script src="/js/env-info.js"></script>
+</body>
+</html>
