@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="ダミーのPNG・PDF・CSV・Excel・動画など19形式のテストファイルをワンクリック生成。容量・ファイル名を指定して一括作成。アップロード検証やテストデータ作りに。登録不要・完全無料。">
+<meta name="description" content="ダミーのPNG・PDF・CSV・Excel・動画など19形式のテストファイルをワンクリック生成。容量・ファイル名を指定して一括作成。容量・画像サイズ・dpi・ファイル名の長さなど、アップロード制限の境界値セットも作れます。登録不要・完全無料。">
 <link rel="canonical" href="https://www.beetle-web.jp/tools/test-content/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="BEETLE">
@@ -34,7 +34,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"ダミーファイル生成ツール","item":"https://www.beetle-web.jp/tools/test-content/"}]}
 </script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"どのファイル形式に対応していますか？","acceptedAnswer":{"@type":"Answer","text":"PNG・JPEG・SVG・GIF・Excel（xlsx）・Word（docx）・PDF・BIN・ZIP・TXT・CSV・WebM（動画・音声）・MP4・MOV・AVI・WMV・MP3・WAV・AACの19形式に対応しています。複数を選ぶと、ZIPにまとめてダウンロードされます。"}},{"@type":"Question","name":"生成したファイルは再生・表示できますか？","acceptedAnswer":{"@type":"Answer","text":"画像・PDF・Office・テキストは中身のあるファイルとして開けます。動画・音声は WebM だけが再生可能で、MP4・MOV・AVI・WMV・MP3・WAV・AAC はサイズ確認用のダミー（再生不可）です。アップロードの上限や拡張子チェックを確かめる用途には使えますが、再生まで確かめたいときは WebM を選んでください。"}},{"@type":"Question","name":"指定したサイズ通りに生成されますか？","acceptedAnswer":{"@type":"Answer","text":"WebM形式の音声・動画はブラウザの録音・録画エンジンに依存するためサイズが前後しますが、その他の形式は指定サイズ通りに生成されます。「以上」「未満」を切り替えられるので、上限10MBのような境界値のテストは、10MB以上と10MB未満の2つを作って確かめられます。"}},{"@type":"Question","name":"1GBのような大きいファイルも作れますか？","acceptedAnswer":{"@type":"Answer","text":"単位でGBを選べば作れます。ただし生成はすべてブラウザのメモリ上で行うため、実際に作れる大きさは端末とブラウザの空きメモリ次第です。大きいサイズは時間もかかるので、まず小さいサイズで動作を確かめてから上げていくのが確実です。"}},{"@type":"Question","name":"サーバーにファイルはアップロードされますか？","acceptedAnswer":{"@type":"Answer","text":"送信されません。生成はすべてブラウザ内（あなたの端末上）で行っていて、サーバーには何も送っていません。入力したファイル名も同じです。"}},{"@type":"Question","name":"無料で使えますか？","acceptedAnswer":{"@type":"Answer","text":"完全無料です。会員登録やログインは不要で、ブラウザ上ですぐ使えます。生成回数の制限もありません。"}}]}
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"どのファイル形式に対応していますか？","acceptedAnswer":{"@type":"Answer","text":"PNG・JPEG・SVG・GIF・Excel（xlsx）・Word（docx）・PDF・BIN・ZIP・TXT・CSV・WebM（動画・音声）・MP4・MOV・AVI・WMV・MP3・WAV・AACの19形式に対応しています。複数を選ぶと、ZIPにまとめてダウンロードされます。"}},{"@type":"Question","name":"生成したファイルは再生・表示できますか？","acceptedAnswer":{"@type":"Answer","text":"画像・PDF・Office・テキストは中身のあるファイルとして開けます。動画・音声は WebM だけが再生可能で、MP4・MOV・AVI・WMV・MP3・WAV・AAC はサイズ確認用のダミー（再生不可）です。アップロードの上限や拡張子チェックを確かめる用途には使えますが、再生まで確かめたいときは WebM を選んでください。"}},{"@type":"Question","name":"指定したサイズ通りに生成されますか？","acceptedAnswer":{"@type":"Answer","text":"WebM形式の音声・動画はブラウザの録音・録画エンジンに依存するためサイズが前後しますが、その他の形式はバイト単位で指定サイズ通りに生成されます。1KBを1024バイトと数えるか1000バイトと数えるかも切り替えられます。ただし Excel・Word は形式として必要な最小サイズ（数KB）より小さくは作れません。"}},{"@type":"Question","name":"アップロード制限の境界値テストに使えますか？","acceptedAnswer":{"@type":"Answer","text":"「境界値セットを作る」で、制限の値を入れると「1つ少ない・ちょうど・1つ多い」のファイルをまとめてZIPで作れます。容量（バイト単位）、画像の幅・高さ・dpi、ファイル名の文字数・バイト数と意地悪な名前や拡張子（二重拡張子・中身と拡張子が違うファイルなど）、同時にアップロードする枚数、PDFのページ数、CSV・Excelの行数、音声（WAV）の長さに対応しています。"}},{"@type":"Question","name":"1GBのような大きいファイルも作れますか？","acceptedAnswer":{"@type":"Answer","text":"単位でGBを選べば作れます。ただし生成はすべてブラウザのメモリ上で行うため、実際に作れる大きさは端末とブラウザの空きメモリ次第です。大きいサイズは時間もかかるので、まず小さいサイズで動作を確かめてから上げていくのが確実です。"}},{"@type":"Question","name":"サーバーにファイルはアップロードされますか？","acceptedAnswer":{"@type":"Answer","text":"送信されません。生成はすべてブラウザ内（あなたの端末上）で行っていて、サーバーには何も送っていません。入力したファイル名も同じです。"}},{"@type":"Question","name":"無料で使えますか？","acceptedAnswer":{"@type":"Answer","text":"完全無料です。会員登録やログインは不要で、ブラウザ上ですぐ使えます。生成回数の制限もありません。"}}]}
 </script>
 <title>ダミーファイル生成ツール 無料｜テストデータ・サンプルPDF/CSV/Excel作成｜BEETLE</title>
 <link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
@@ -89,9 +89,9 @@
             <button class="ubtn" data-u="MB" onclick="setUnit(this)">MB</button>
             <button class="ubtn" data-u="GB" onclick="setUnit(this)">GB</button>
           </div>
-          <div class="range-group">
-            <button class="rbtn on" data-r="above" onclick="setRange(this)">以上</button>
-            <button class="rbtn" data-r="below" onclick="setRange(this)">未満</button>
+          <div class="range-group" title="1KBを何バイトとして数えるか">
+            <button class="rbtn on" data-b="1024" onclick="setBase(this)">1KB=1024B</button>
+            <button class="rbtn" data-b="1000" onclick="setBase(this)">1KB=1000B</button>
           </div>
         </div>
       </div>
@@ -143,7 +143,7 @@
       </div>
     </div>
 
-    <p class="size-note">※ 音声・動画（WebM）はブラウザの録音録画エンジン依存のためサイズが前後します。その他の形式は指定サイズ通りに生成されます。</p>
+    <p class="size-note">※ 音声・動画（WebM）はブラウザの録音録画エンジン依存のためサイズが前後します。その他の形式はバイト単位で指定サイズ通りに生成されます。制限の境目を試すときは、下の「境界値セットを作る」が便利です。</p>
 
     <div class="mnote" id="mnote"></div>
 
@@ -151,6 +151,79 @@
     <div class="status" id="status"></div>
   </div>
 
+  <div class="card bd-card" id="bdBoundary">
+    <h2 class="section-title">境界値セットを作る</h2>
+    <p class="sample-note">アップロード制限の値を入れると、<b>1つ少ない・ちょうど・1つ多い</b>のファイルをまとめてZIPで作ります。「10MBまで」「4000pxまで」「100文字まで」のような制限の境目を、そのまま試せます。</p>
+    <div class="tab-bar">
+      <button type="button" class="tab bd-tab on" data-bd="size">容量</button>
+      <button type="button" class="tab bd-tab" data-bd="image">画像の大きさ</button>
+      <button type="button" class="tab bd-tab" data-bd="name">ファイル名・拡張子</button>
+      <button type="button" class="tab bd-tab" data-bd="length">長さ・件数</button>
+    </div>
+    <div class="panel-body">
+      <div class="panel bd-panel on" id="bd-size">
+        <div class="bd-row">
+          <label class="bd-field"><span class="field-label">上限の値</span><input class="size-num bd-num" type="number" id="bdSizeVal" value="10" min="0" step="any"></label>
+          <div class="bd-field"><span class="field-label">単位</span><div class="range-group bd-group" id="bdSizeUnit"><button type="button" class="rbtn" data-f="B">B</button><button type="button" class="rbtn" data-f="KB">KB</button><button type="button" class="rbtn on" data-f="MB">MB</button><button type="button" class="rbtn" data-f="GB">GB</button></div></div>
+          <div class="bd-field"><span class="field-label">1KBの数え方</span><div class="range-group bd-group" id="bdSizeBase"><button type="button" class="rbtn on" data-f="1024">1024バイト</button><button type="button" class="rbtn" data-f="1000">1000バイト</button></div></div>
+        </div>
+        <div class="bd-field bd-block"><span class="field-label">形式（複数選べます）</span><div class="btn-group bd-group" id="bdSizeFmt" data-multi><button type="button" class="tog on" data-f="png">PNG</button><button type="button" class="tog" data-f="jpeg">JPEG</button><button type="button" class="tog" data-f="gif">GIF</button><button type="button" class="tog" data-f="svg">SVG</button><button type="button" class="tog" data-f="pdf_d">PDF</button><button type="button" class="tog" data-f="xlsx">Excel</button><button type="button" class="tog" data-f="docx">Word</button><button type="button" class="tog" data-f="txt">TXT</button><button type="button" class="tog" data-f="csv">CSV</button><button type="button" class="tog" data-f="zip_d">ZIP</button><button type="button" class="tog" data-f="bin">BIN</button><button type="button" class="tog" data-f="mp4">MP4</button><button type="button" class="tog" data-f="mov">MOV</button><button type="button" class="tog" data-f="mp3">MP3</button><button type="button" class="tog" data-f="wav">WAV</button></div></div>
+        <label class="bd-check"><input type="checkbox" id="bdSizeZero"> 0バイトのファイルも入れる</label>
+        <p class="bd-note">バイト単位でぴったり作ります。「10MB」を 10,485,760バイトとみなすか 10,000,000バイトとみなすかはシステムによって違うので、仕様に合わせて「1KBの数え方」を選んでください。MP4・MOV・MP3・WAV はサイズ確認用のダミー（再生不可）です。</p>
+      </div>
+      <div class="panel bd-panel" id="bd-image">
+        <div class="bd-row">
+          <label class="bd-field"><span class="field-label">幅（px）</span><input class="size-num bd-num" type="number" id="bdImgW" value="4000" min="1" placeholder="空欄可"></label>
+          <label class="bd-field"><span class="field-label">高さ（px）</span><input class="size-num bd-num" type="number" id="bdImgH" value="3000" min="1" placeholder="空欄可"></label>
+          <label class="bd-field"><span class="field-label">dpi</span><input class="size-num bd-num" type="number" id="bdImgDpi" min="1" placeholder="空欄可"></label>
+          <div class="bd-field"><span class="field-label">形式</span><div class="btn-group bd-group" id="bdImgFmt" data-multi><button type="button" class="tog on" data-f="png">PNG</button><button type="button" class="tog" data-f="jpeg">JPEG</button></div></div>
+        </div>
+        <div class="bd-field bd-block"><span class="field-label">よく使う大きさ</span>
+          <div class="btn-group">
+            <button type="button" class="tog bd-preset" data-w="1920" data-h="1080">1920×1080</button>
+            <button type="button" class="tog bd-preset" data-w="3840" data-h="2160">4K 3840×2160</button>
+            <button type="button" class="tog bd-preset" data-w="4096" data-h="4096">4096×4096</button>
+            <button type="button" class="tog bd-preset" data-w="1080" data-h="1920">スマホ縦 1080×1920</button>
+            <button type="button" class="tog bd-preset" data-w="1080" data-h="1080">正方形 1080×1080</button>
+            <button type="button" class="tog bd-preset" data-w="200" data-h="200">小さい 200×200</button>
+          </div>
+        </div>
+        <p class="bd-note">入れた値ごとに、その値だけを1つ少ない・ちょうど・1つ多いに変えた画像を作ります（ほかの値はそのまま）。幅の上限だけ試したいときは高さを空欄に、印刷の入稿のように解像度を見るときは dpi に 350 などを入れます。画像の中に大きさと dpi を書き込むので、開けばどれか分かります。</p>
+      </div>
+      <div class="panel bd-panel" id="bd-name">
+        <div class="bd-row">
+          <label class="bd-field"><span class="field-label">名前の長さの上限</span><input class="size-num bd-num" type="number" id="bdNameLen" value="100" min="1" placeholder="空欄可"></label>
+          <div class="bd-field"><span class="field-label">数え方</span><div class="range-group bd-group" id="bdNameUnit"><button type="button" class="rbtn on" data-f="chars">文字数</button><button type="button" class="rbtn" data-f="bytes">UTF-8のバイト数</button></div></div>
+          <div class="bd-field"><span class="field-label">拡張子を</span><div class="range-group bd-group" id="bdNameExt"><button type="button" class="rbtn on" data-f="in">含めて数える</button><button type="button" class="rbtn" data-f="out">含めない</button></div></div>
+        </div>
+        <div class="bd-row">
+          <div class="bd-field"><span class="field-label">使う文字</span><div class="range-group bd-group" id="bdNameKind"><button type="button" class="rbtn on" data-f="ascii">半角英数</button><button type="button" class="rbtn" data-f="kana">ひらがな</button><button type="button" class="rbtn" data-f="emoji">絵文字</button></div></div>
+          <div class="bd-field"><span class="field-label">形式</span><div class="btn-group bd-group" id="bdNameFmt"><button type="button" class="tog on" data-f="png">PNG</button><button type="button" class="tog" data-f="jpeg">JPEG</button><button type="button" class="tog" data-f="pdf_d">PDF</button><button type="button" class="tog" data-f="txt">TXT</button></div></div>
+        </div>
+        <label class="bd-check"><input type="checkbox" id="bdNameTricky" checked> 意地悪な名前・拡張子も入れる（二重拡張子・大文字の拡張子・拡張子なし・記号や絵文字入り・濁点が分かれた文字・中身と拡張子が違うファイル・壊れた画像 など）</label>
+        <p class="bd-note">ZIPの中の「一覧.txt」に、どのファイルが何を試すものかを書いています。Windowsで使えない記号（\ / : * ? " &lt; &gt; |）を含む名前は、展開できなくなるので入れていません。</p>
+      </div>
+      <div class="panel bd-panel" id="bd-length">
+        <div class="bd-row">
+          <div class="bd-field"><span class="field-label">何の上限？</span><div class="range-group bd-group" id="bdLenKind"><button type="button" class="rbtn on" data-f="count">同時にアップロードする枚数</button><button type="button" class="rbtn" data-f="pages">PDFのページ数</button><button type="button" class="rbtn" data-f="rows">CSV・Excelの行数</button><button type="button" class="rbtn" data-f="secs">音声の長さ</button></div></div>
+        </div>
+        <div class="bd-row">
+          <label class="bd-field"><span class="field-label">上限の値</span><span class="bd-inline"><input class="size-num bd-num" type="number" id="bdLenVal" value="10" min="0" step="any"><span id="bdLenUnit">枚</span></span></label>
+          <div class="bd-field" data-len-only="rows" hidden><span class="field-label">形式</span><div class="btn-group bd-group" id="bdRowFmt" data-multi><button type="button" class="tog on" data-f="csv">CSV</button><button type="button" class="tog" data-f="xlsx">Excel</button></div></div>
+          <div class="bd-field" data-len-only="rows" hidden><span class="field-label">見出しの行を</span><div class="range-group bd-group" id="bdRowHeader"><button type="button" class="rbtn on" data-f="out">行数に含めない</button><button type="button" class="rbtn" data-f="in">含める</button></div></div>
+          <div class="bd-field" data-len-only="secs" hidden><span class="field-label">刻み</span><div class="range-group bd-group" id="bdSecStep"><button type="button" class="rbtn on" data-f="1">1秒</button><button type="button" class="rbtn" data-f="0.1">0.1秒</button></div></div>
+        </div>
+        <p class="bd-note" data-len-only="count">枚数ごとにフォルダを分けて、番号入りの小さいPNGを入れます。フォルダの中身をまとめて選んでアップロードしてください。</p>
+        <p class="bd-note" data-len-only="pages" hidden>各ページに「Page 3 / 10」のように番号を書いたPDFを作ります。</p>
+        <p class="bd-note" data-len-only="rows" hidden>1行目は見出し（id,name,value）です。「見出しの行を含める」にすると、見出しも1行として数えます。</p>
+        <p class="bd-note" data-len-only="secs" hidden>本当に再生できるWAVを作ります（1秒ごとに「ピッ」と鳴ります）。MP4やWebMの再生時間はブラウザだけでは正確に作れないため、今は音声のWAVだけです。</p>
+      </div>
+      <p class="bd-preview" id="bdPreview"></p>
+      <p class="mnote bd-warn" id="bdWarn" hidden></p>
+      <button type="button" class="gen-btn" id="bdGen">境界値セットを作ってダウンロード</button>
+      <div class="status" id="bdStatus"></div>
+    </div>
+  </div>
   <div class="card" style="padding:0;">
     <div style="padding:14px 16px 0;">
       <p class="section-title">サンプルをダウンロード</p>
@@ -209,7 +282,8 @@
     <h2 class="section-title">こんな用途に</h2>
     <div class="use-cases">
       <div class="uc"><div class="uc-title">アップロード機能の動作確認</div><div class="uc-desc">ファイルアップロード機能が正しく動くかテスト用ファイルで確認</div></div>
-      <div class="uc"><div class="uc-title">サイズ上限・下限のテスト</div><div class="uc-desc">「10MBまで」の境界を、以上・未満の両方で作って確認</div></div>
+      <div class="uc"><div class="uc-title">サイズ上限・下限のテスト</div><div class="uc-desc">「10MBまで」の境界を、1バイト少ない・ちょうど・1バイト多いで確認</div></div>
+      <div class="uc"><div class="uc-title">画像の大きさ・解像度の制限</div><div class="uc-desc">「4000pxまで」「350dpi以上」のような px と dpi の境目を確認</div></div>
       <div class="uc"><div class="uc-title">対応形式の確認</div><div class="uc-desc">許可・拒否すべき形式の挙動を素早く確認</div></div>
       <div class="uc"><div class="uc-title">拡張子と中身が違うファイル</div><div class="uc-desc">中身で判定しているか、拡張子だけ見ているかを確かめる</div></div>
       <div class="uc"><div class="uc-title">長いファイル名・記号入りの名前</div><div class="uc-desc">ファイル名の文字数制限や、記号の扱いを確認</div></div>
@@ -229,7 +303,11 @@
     </details>
     <details class="faq-item">
       <summary class="faq-q"><span>指定したサイズ通りに生成されますか？</span><span class="faq-icon">+</span></summary>
-      <div class="faq-a">WebM形式の音声・動画はブラウザの録音・録画エンジンに依存するためサイズが前後しますが、その他の形式は指定サイズ通りに生成されます。「以上」「未満」を切り替えられるので、上限10MBのような境界値のテストは、10MB以上と10MB未満の2つを作って確かめられます。</div>
+      <div class="faq-a">WebM形式の音声・動画はブラウザの録音・録画エンジンに依存するためサイズが前後しますが、その他の形式はバイト単位で指定サイズ通りに生成されます。1KBを1024バイトと数えるか1000バイトと数えるかも切り替えられます。ただし Excel・Word は形式として必要な最小サイズ（数KB）より小さくは作れません。</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q"><span>アップロード制限の境界値テストに使えますか？</span><span class="faq-icon">+</span></summary>
+      <div class="faq-a">「境界値セットを作る」で、制限の値を入れると「1つ少ない・ちょうど・1つ多い」のファイルをまとめてZIPで作れます。容量（バイト単位）、画像の幅・高さ・dpi、ファイル名の文字数・バイト数と意地悪な名前や拡張子（二重拡張子・中身と拡張子が違うファイルなど）、同時にアップロードする枚数、PDFのページ数、CSV・Excelの行数、音声（WAV）の長さに対応しています。</div>
     </details>
     <details class="faq-item">
       <summary class="faq-q"><span>1GBのような大きいファイルも作れますか？</span><span class="faq-icon">+</span></summary>
@@ -271,5 +349,6 @@
 <button type="button" class="scroll-top-float" id="scrollTopBtn" aria-label="ページ上部へ戻る">↑</button>
 <script src="/js/common.js"></script>
 <script src="/js/test-content.js"></script>
+<script src="/js/test-content-boundary.js"></script>
 </body>
 </html>

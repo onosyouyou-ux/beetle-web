@@ -1,7 +1,8 @@
-let curUnit = 'KB', curRange = 'above';
+let curUnit = 'KB', curBase = 1024;
 const sel = new Set(['png']);
 
-document.querySelectorAll('.tog').forEach(b => {
+// 境界値セット側のチップ（data-f）は拾わない
+document.querySelectorAll('.tog[data-v]').forEach(b => {
   b.addEventListener('click', () => {
     const v = b.dataset.v;
     if (sel.has(v)) { if (sel.size > 1) { sel.delete(v); b.classList.remove('on'); } }
@@ -11,7 +12,7 @@ document.querySelectorAll('.tog').forEach(b => {
 });
 
 function setUnit(el) { document.querySelectorAll('.ubtn').forEach(x => x.classList.remove('on')); el.classList.add('on'); curUnit = el.dataset.u; }
-function setRange(el) { document.querySelectorAll('.rbtn').forEach(x => x.classList.remove('on')); el.classList.add('on'); curRange = el.dataset.r; }
+function setBase(el) { el.parentNode.querySelectorAll('.rbtn').forEach(x => x.classList.remove('on')); el.classList.add('on'); curBase = +el.dataset.b; }
 function chkMedia() {
   const n = document.getElementById('mnote');
   const ha = sel.has('audio'), hv = sel.has('video');
@@ -21,9 +22,9 @@ function chkMedia() {
   n.style.display = (ha || hv) ? 'block' : 'none';
 }
 function swTab(el) {
-  document.querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
+  document.querySelectorAll('#tabBar .tab').forEach(x => x.classList.remove('on'));
   el.classList.add('on');
-  document.querySelectorAll('.panel').forEach(x => x.classList.remove('on'));
+  document.querySelectorAll('.panel[id^="panel-"]').forEach(x => x.classList.remove('on'));
   document.getElementById('panel-' + el.dataset.tab).classList.add('on');
 }
 
@@ -83,13 +84,13 @@ dummyAudioFmts.forEach(fmt => {
   });
 });
 
+// 単位をバイト数に直す。1KB を 1024 とみなすか 1000 とみなすかはシステムで違うので切り替えられるようにする
+function unitBytes(unit, base) { return { B: 1, KB: base, MB: base ** 2, GB: base ** 3 }[unit]; }
 function getBytes() {
   const v = parseFloat(document.getElementById('sVal').value) || 1;
-  const m = curUnit === 'GB' ? 1073741824 : curUnit === 'MB' ? 1048576 : 1024;
-  const base = Math.round(v * m);
-  return curRange === 'above' ? Math.round(base * 1.1) : Math.round(base * 0.9);
+  return Math.max(1, Math.round(v * unitBytes(curUnit, curBase)));
 }
-function getSzLabel() { const v = document.getElementById('sVal').value || '?'; return `${v}${curUnit}${curRange === 'above' ? '以上' : '未満'}`; }
+function getSzLabel() { const v = document.getElementById('sVal').value || '?'; return `${v}${curUnit}`; }
 function getFT() { return (document.getElementById('fileText').value || 'testdata').replace(/[\\/:*?"<>|]/g, '_'); }
 function mkName(ext) { return `${getFT()}_${getSzLabel()}.${ext}`; }
 function dl(blob, name) { const u = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = u; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(u), 5000); }
@@ -99,6 +100,17 @@ const gBtn = document.getElementById('genBtn');
 function setSt(m, e = false) { stEl.textContent = m; stEl.className = 'status' + (e ? ' err' : ''); }
 const tsS = () => new Date().toISOString().slice(0, 19).replace(/[T:]/g, '-');
 const lbl = t => t || 'TEST DATA';
+const xe = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+// Office形式（中身はZIP）を指定バイト数ぴったりにする。
+// 本文を少し少なめに作っておき、足りないぶんをZIP末尾のコメント欄（最大65535バイト）で埋める
+async function fitZip(zip, b, type) {
+  const z = await zip.generateAsync({ type: 'blob', compression: 'STORE' });
+  const diff = b - z.size;
+  if (diff <= 0 || diff > 65535) return new Blob([z], { type });
+  const z2 = await zip.generateAsync({ type: 'blob', compression: 'STORE', comment: 'x'.repeat(diff) });
+  return new Blob([z2], { type });
+}
 
 // crypto.getRandomValues の上限 65536 bytes/call を超えないよう分割する
 function fillRandom(arr) { for (let i = 0; i < arr.length; i += 65536) crypto.getRandomValues(arr.subarray(i, Math.min(i + 65536, arr.length))); }
@@ -136,14 +148,14 @@ async function mXlsx(b, t) {
   const st = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="${X}"><fonts><font><sz val="11"/><name val="Calibri"/></font></fonts><fills><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs></styleSheet>`;
   const shHdr = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="${X}"><sheetData>`;
   const shFtr = '</sheetData></worksheet>';
-  const lb = lbl(t);
+  const lb = xe(lbl(t));
   const h0 = `<row r="1"><c r="A1" t="inlineStr"><is><t>id</t></is></c><c r="B1" t="inlineStr"><is><t>${lb}</t></is></c><c r="C1" t="inlineStr"><is><t>value</t></is></c><c r="D1" t="inlineStr"><is><t>timestamp</t></is></c></row>`;
   const fixed = [ct,rl,wb,wbr,st,shHdr,h0,shFtr].reduce((s,x)=>s+enc.encode(x).length,0)+700;
-  const rows = [h0]; let rb = enc.encode(h0).length; const tgt = b-fixed+rb;
+  const rows = [h0]; let rb = enc.encode(h0).length; const tgt = b-fixed+rb-1024;
   for (let i=2; rb<tgt; i++) { const r=`<row r="${i}"><c r="A${i}"><v>${i-1}</v></c><c r="B${i}" t="inlineStr"><is><t>${lb}</t></is></c><c r="C${i}"><v>${(Math.random()*10000).toFixed(2)}</v></c><c r="D${i}" t="inlineStr"><is><t>${new Date().toISOString()}</t></is></c></row>`; rows.push(r); rb+=enc.encode(r).length; }
   const zip=new JSZip();
   zip.file('[Content_Types].xml',ct,{compression:'STORE'}); zip.file('_rels/.rels',rl,{compression:'STORE'}); zip.file('xl/workbook.xml',wb,{compression:'STORE'}); zip.file('xl/_rels/workbook.xml.rels',wbr,{compression:'STORE'}); zip.file('xl/styles.xml',st,{compression:'STORE'}); zip.file('xl/worksheets/sheet1.xml',shHdr+rows.join('')+shFtr,{compression:'STORE'});
-  return zip.generateAsync({type:'blob',compression:'STORE'});
+  return fitZip(zip, b, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 }
 async function mDocx(b, t) {
   const enc = new TextEncoder(); const P = 'http://schemas.openxmlformats.org/package/2006'; const O = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'; const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
@@ -153,14 +165,14 @@ async function mDocx(b, t) {
   const st = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="${W}"><w:style w:type="paragraph" w:styleId="Normal"><w:name w:val="Normal"/></w:style></w:styles>`;
   const dHdr = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="${W}"><w:body>`;
   const dFtr = '<w:sectPr/></w:body></w:document>';
-  const lb = lbl(t);
+  const lb = xe(lbl(t));
   const p0 = `<w:p><w:r><w:rPr><w:b/></w:rPr><w:t>${lb} - BEETLE QA Tool</w:t></w:r></w:p>`;
   const fixed = [ct,rl,wdrl,st,dHdr,p0,dFtr].reduce((s,x)=>s+enc.encode(x).length,0)+600;
-  const paras = [p0]; let pb = enc.encode(p0).length; const tgt = b-fixed+pb;
+  const paras = [p0]; let pb = enc.encode(p0).length; const tgt = b-fixed+pb-1024;
   for (let i=1; pb<tgt; i++) { const p=`<w:p><w:r><w:t>${lb} ${i}: ${Math.random().toFixed(8)}</w:t></w:r></w:p>`; paras.push(p); pb+=enc.encode(p).length; }
   const zip=new JSZip();
   zip.file('[Content_Types].xml',ct,{compression:'STORE'}); zip.file('_rels/.rels',rl,{compression:'STORE'}); zip.file('word/document.xml',dHdr+paras.join('')+dFtr,{compression:'STORE'}); zip.file('word/_rels/document.xml.rels',wdrl,{compression:'STORE'}); zip.file('word/styles.xml',st,{compression:'STORE'});
-  return zip.generateAsync({type:'blob',compression:'STORE'});
+  return fitZip(zip, b, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 }
 function mTxt(b, t) {
   const enc = new TextEncoder();
@@ -236,7 +248,8 @@ function mPng(b, t) {
       const src = new Uint8Array(await blob.arrayBuffer());
       if (src.length >= b) { r(new Blob([src], { type: 'image/png' })); return; }
       const needed = b - src.length;
-      if (needed < 12) { r(new Blob([src], { type: 'image/png' })); return; }
+      // 12バイト未満の端数はチャンクにできないので、IEND の後ろに足す（主要なデコーダーは読み飛ばす）
+      if (needed < 12) { r(new Blob([src, new Uint8Array(needed)], { type: 'image/png' })); return; }
       const dLen = needed - 12;
       const body = src.slice(0, src.length - 12);
       const iend = src.slice(src.length - 12);
@@ -263,15 +276,20 @@ function mJpeg(b, t) {
       let needed = b - src.length;
       if (needed <= 0) { r(new Blob([src], { type: 'image/jpeg' })); return; }
       const coms = [];
-      while (needed >= 4) {
-        const dLen = Math.min(needed - 4, 65533);
+      // COMマーカーは最低4バイト。1〜3バイトの端数が残らないように区切る
+      let tail = 0;
+      if (needed < 4) { tail = needed; needed = 0; }
+      while (needed > 0) {
+        let seg = Math.min(needed, 65537);
+        if (needed - seg > 0 && needed - seg < 4) seg -= 4;
+        const dLen = seg - 4;
         const com = new Uint8Array(4 + dLen);
         com[0] = 0xFF; com[1] = 0xFE;
         const ln = dLen + 2; com[2] = (ln >> 8) & 0xFF; com[3] = ln & 0xFF;
         if (dLen > 0) fillRandom(new Uint8Array(com.buffer, 4, dLen));
         coms.push(com); needed -= (4 + dLen);
       }
-      const parts = [src.slice(0, 2), ...coms, src.slice(2)];
+      const parts = [src.slice(0, 2), ...coms, src.slice(2), new Uint8Array(tail)];
       const out = new Uint8Array(parts.reduce((s, p) => s + p.length, 0));
       let off = 0; for (const p of parts) { out.set(p, off); off += p.length; }
       r(new Blob([out], { type: 'image/jpeg' }));
