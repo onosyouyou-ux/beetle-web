@@ -4,6 +4,8 @@
    ============================================================ */
 
 [hidden]{display:none!important}
+/* body が flex なので、表や数直線の最小幅で .sw が押し広げられないようにする（はみ出しは各ブロックの横スクロールに閉じ込める） */
+.sw{min-width:0;width:100%}
 
 /* ====== 操作パネル ====== */
 .bt-panel{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px 22px}

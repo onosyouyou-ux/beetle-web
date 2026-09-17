@@ -3,6 +3,9 @@
    共通変数は /style/common.css の --tp-* を流用（test-dates.css と同じ組み方）
    ============================================================ */
 
+/* body が flex なので、表や出力欄の最小幅で .sw が押し広げられないようにする */
+.sw{min-width:0;width:100%}
+
 /* ====== 操作パネル ====== */
 .ei-panel{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:20px 22px}
 .ei-form-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:12px}
