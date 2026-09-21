@@ -17,4 +17,4 @@ required_selectors: ["#site-header", ".eal-hero", "#howto", "#for-family", "#faq
 - **構成**: ヒーロー → 特徴3つ → 学習範囲 → 使い方3ステップ → FAQ → CTA
 - **おうちのかたへ（`#for-family`）**: アプリ画面から移した大人向けの説明3つ。FAQもアプリ側の設問を取り込み済み（2026-08-26）
 - **SEO**: SoftwareApplication・HowTo・FAQPage、canonical self。アプリ本体のcanonicalもこのURLへ向ける
-- **手動確認観点**: 収録範囲が小1・小2の240字と明記され、アプリCTAが `/tools/kanji/` へ向いていること
+- **手動確認観点**: 収録範囲が小1〜小6の1026字と明記され、じゅけんとっくん の中身（配当外の字は入れない）がFAQにあり、アプリCTAが `/tools/kanji/` へ向いていること

@@ -15,17 +15,25 @@
   // 自分で まるつけ したあと、つぎの問題へ進むまで（ミリ秒）。調整はここ1か所。
   var NEXT_DELAY = 2000;
 
-  // データにある学年から選択肢を組み立てる（学年が増えたら自動で増える）
+  // データにある学年から選択肢を組み立てる（学年が増えたら自動で増える）。
+  // g: 1〜6 は「小○コース」、g: 7 は「じゅけん とっくん」。
+  // ぜんぶ まとめて は小1〜小6だけ（とっくんは中身の性質がちがうので混ぜない）。
+  var JUKKEN = 7;
   var GRADES = (function () {
     var gs = [];
     DATA.forEach(function (e) { if (gs.indexOf(e.g) < 0) gs.push(e.g); });
     gs.sort(function (a, b) { return a - b; });
-    var list = gs.map(function (g) {
-      var n = DATA.filter(function (e) { return e.g === g; }).length;
-      return { id: 'g' + g, name: '小' + g + 'で ならう かんじ', note: n + 'じ', grades: [g] };
+    var count = function (g) { return DATA.filter(function (e) { return e.g === g; }).length; };
+    var school = gs.filter(function (g) { return g < JUKKEN; });
+    var list = school.map(function (g) {
+      return { id: 'g' + g, name: '小' + g + 'コース', note: count(g) + 'じ', grades: [g] };
     });
-    if (gs.length > 1) {
-      list.push({ id: 'all', name: 'ぜんぶ まとめて', note: DATA.length + 'じ', grades: gs });
+    if (gs.indexOf(JUKKEN) >= 0) {
+      list.push({ id: 'jukken', name: 'じゅけんとっくん', note: 'よみ・四字熟語', grades: [JUKKEN] });
+    }
+    if (school.length > 1) {
+      var n = DATA.filter(function (e) { return e.g < JUKKEN; }).length;
+      list.push({ id: 'all', name: 'ぜんぶ まとめて', note: '小1〜小' + school[school.length - 1] + '・' + n + 'じ', grades: school });
     }
     return list;
   })();
@@ -141,8 +149,9 @@
   function renderMenu() {
     app.innerHTML = '';
     var wrap = el('div', 'kj-menu');
-    wrap.appendChild(group('がくねん', GRADES, 'gradeId', true));
-    wrap.appendChild(group('といかた', MODES, 'modeId', true));
+    // がくねんは8つあるので2列の小さいボタンにする（縦1列だと1画面に収まらない。2026-09-21）
+    wrap.appendChild(group('がくねん', GRADES, 'gradeId', 'kj-choices-grade'));
+    wrap.appendChild(group('といかた', MODES, 'modeId', 'kj-choices-column'));
 
     var start = el('button', 'kj-start', 'スタート');
     start.type = 'button';
@@ -152,10 +161,10 @@
     app.appendChild(NinjaLinks.el('kanji'));
   }
 
-  function group(title, items, key, column) {
+  function group(title, items, key, gridCls) {
     var sec = el('section', 'kj-group');
     sec.appendChild(el('h2', 'kj-group-title', title));
-    var grid = el('div', column ? 'kj-choices kj-choices-column' : 'kj-choices');
+    var grid = el('div', 'kj-choices ' + gridCls);
     items.forEach(function (item) {
       var btn = el('button', 'kj-choice');
       btn.type = 'button';
@@ -210,6 +219,8 @@
       var options = el('div', 'kj-options');
       q.options.forEach(function (o) {
         var b = el('button', 'kj-opt');
+        // 四字熟語のよみ（ちょうれい ぼかい）など長いものは字を小さくして、ことばの途中で折らない
+        if (o.v.length >= 7) b.classList.add(o.v.length >= 10 ? 'is-xlong' : 'is-long');
         b.appendChild(el('span', 'nk-answer-label', o.v));
         b.type = 'button';
         b.addEventListener('click', function () { choose(o, b, options); });

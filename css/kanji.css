@@ -97,6 +97,10 @@ body{
   background:#fff;border:2px solid var(--kj-line2);border-radius:14px;padding:18px 10px;
   font-size:24px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--kj-ink);
 }
+/* 四字熟語の よみ（じゅうにん といろ）は空白の位置で折る。空白の無い長いよみは どこで折ってもよい */
+.kj-opt .nk-answer-label{word-break:keep-all;overflow-wrap:anywhere}
+body.ninja-kids .kj-opt.is-long .nk-answer-label{font-size:.8em}
+body.ninja-kids .kj-opt.is-xlong .nk-answer-label{font-size:.7em}
 .kj-opt:hover:not(:disabled){border-color:var(--kj-orange)}
 .kj-opt:disabled{cursor:default;opacity:.75}
 .kj-opt.is-correct{border-color:var(--kj-green);background:var(--kj-green-bg);opacity:1}
@@ -143,6 +147,29 @@ body{
 .kj-choices-column .kj-choice{
   display:grid;grid-template-columns:1fr;justify-items:start;
   text-align:left;gap:1px;padding:10px 16px;
+}
+/* がくねんは 小1〜小6＋じゅけん とっくん＋ぜんぶ の8つ。縦1列だと1画面に収まらないので
+   2列（小1・小2／小3・小4／小5・小6／とっくん・ぜんぶ）の小さいボタンにする（2026-09-21） */
+.kj-choices-grade{grid-template-columns:repeat(2,minmax(0,1fr))}
+.kj-choices-grade .kj-choice{padding:8px 10px;gap:0}
+.kj-choices-grade .kj-choice-label{font-size:14px;white-space:nowrap}
+.kj-choices-grade .kj-choice-note{white-space:nowrap}
+/* 学年が4段になったぶん、スマホ縦と寝かせた画面では1画面に収まらなくなる。
+   学年ボタンの字数の注記（80じ など）は選ぶのに要らないので隠して薄くする（かけざんの だん と同じ）。
+   ninja-kids.css はこのファイルより後に読まれるので、body を付けて詳細度で勝たせる */
+@media (max-width:767px) and (orientation:portrait){
+  body.ninja-kids.ninja-kanji .kj-menu{padding-top:12px}
+  body.ninja-kids.ninja-kanji .kj-menu::before{content:none}
+  body.ninja-kids.ninja-kanji .kj-choices-grade{gap:5px}
+  body.ninja-kids.ninja-kanji .kj-group{margin-bottom:4px}
+  body.ninja-kids.ninja-kanji .kj-choices-grade .kj-choice{min-height:42px;padding-block:4px}
+  body.ninja-kids.ninja-kanji .kj-choices-grade .kj-choice-note{display:none}
+  body.ninja-kids.ninja-kanji .kj-choices-column .kj-choice{min-height:42px;padding-block:5px}
+}
+@media (orientation:landscape) and (max-height:500px){
+  body.ninja-kids.ninja-kanji .kj-choices-grade{gap:4px}
+  body.ninja-kids.ninja-kanji .kj-choices-grade .kj-choice{min-height:36px;padding-block:3px}
+  body.ninja-kids.ninja-kanji .kj-choices-grade .kj-choice-note{display:none}
 }
 
 /* ============================================================
