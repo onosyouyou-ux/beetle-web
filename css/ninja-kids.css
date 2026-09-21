@@ -2141,9 +2141,11 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
 @media (min-width:768px), (orientation:landscape) and (max-height:500px) {
   .ninja-kids.ninja-kanji .kj-menu ,.ninja-kids.ninja-kanji .kk-menu{
     width:min(100%,1000px);
-    padding-inline:max(20px,calc((100% - 640px) / 2));
+    /* がくねん（右）は といかた（左）の1.2倍の幅（2026-09-21）。
+       といかたの列幅は変えずに、がくねんのぶんだけ中身を広げる：309 + 22 + 309×1.2 ≒ 702px */
+    padding-inline:max(20px,calc((100% - 702px) / 2));
     display:grid;
-    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);
     grid-template-rows:auto auto;
     column-gap:22px;
     align-items:start;
@@ -2160,6 +2162,11 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
    スタートを最下段に移した分（1行増）を、ここで吸収する。 */
 @media (orientation:landscape) and (max-height:500px) {
   .ninja-kids.ninja-kanji .kj-menu ,.ninja-kids.ninja-kanji .kk-menu{ padding-bottom:6px; }
+  /* 幅の狭い寝かせたスマホ（667px級）は、がくねんを1.2倍にすると といかた が折り返して
+     1画面からはみ出す。ここだけ半々に戻す */
+  @media (max-width:760px){
+    .ninja-kids.ninja-kanji .kj-menu{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+  }
   .ninja-kids.ninja-kanji .kj-menu>.kj-start ,.ninja-kids.ninja-kanji .kk-menu>.kk-start{ margin-top:6px; padding-block:6px; font-size:17px; }
 }
 
