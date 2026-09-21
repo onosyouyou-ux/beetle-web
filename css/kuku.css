@@ -75,8 +75,9 @@ body{margin:0;color:var(--kk-ink)}
   text-align:left;gap:1px;padding:10px 16px;
 }
 
-/* 幅のある画面と寝かせた画面は、だん（左）・もんだい（右）を横に並べ、
-   スタートは両方の下に置く。ninja-kids.css の .kk-menu（0,2,0）より強くする。 */
+/* 幅のある画面と寝かせた画面は、もんだい（左）・だん（右）を横に並べ、
+   スタートは両方の下に置く（かんじ修行の「といかた（左）・がくねん（右）」と揃える。2026-09-21）。
+   DOM順は だん→もんだい のままなので、列を明示して入れかえる。ninja-kids.css の .kk-menu（0,2,0）より強くする。 */
 @media (min-width:768px), (orientation:landscape) and (max-height:500px){
   .ninja-kids.ninja-kuku .kk-menu{
     display:grid;
@@ -86,8 +87,10 @@ body{margin:0;color:var(--kk-ink)}
     align-content:start;
   }
   .ninja-kids.ninja-kuku .kk-menu>.kk-group{margin-bottom:0}
+  .ninja-kids.ninja-kuku .kk-menu>.kk-group:nth-of-type(1){grid-column:2;grid-row:1}
+  .ninja-kids.ninja-kuku .kk-menu>.kk-group:nth-of-type(2){grid-column:1;grid-row:1}
   /* スタートは横いっぱいにせず、かんじ修行と同じ幅で中央に置く */
-  .ninja-kids.ninja-kuku .kk-menu>.kk-start{grid-column:1 / -1;justify-self:center;width:min(100%,320px);margin-top:18px}
+  .ninja-kids.ninja-kuku .kk-menu>.kk-start{grid-column:1 / -1;grid-row:2;justify-self:center;width:min(100%,320px);margin-top:18px}
 }
 /* 寝かせたスマホは高さが足りないので、だんのボタンを薄くしてスタートまで1画面に入れる。
    だんの小さい注記（1×1〜1×9）はボタン名と同じことなので、ここでは出さない。 */
