@@ -122,7 +122,7 @@
     return e;
   }
 
-  // メニューは2段階（2026-09-22。かんじ修行と同じ型）。1枚目で もんだい を選んで「つぎへ」、
+  // メニューは2段階（2026-09-22。かんじ修行と同じ型）。1枚目は もんだい を押したら そのまま次へ、
   // 2枚目で だん を選んで「スタート」。スタートの位置は2枚で そろえる。
   function renderMenu() { renderMenuStep(1); }
 
@@ -132,8 +132,10 @@
     var btn;
     if (step === 1) {
       wrap.appendChild(group('もんだい', MODES, 'modeId', 'kk-choices-column kk-choices-mode', 1));
-      btn = el('button', 'kk-start', 'つぎへ →');
-      btn.addEventListener('click', function () { renderMenuStep(2); });
+      // スタートの場所だけ見えない形で取っておく
+      btn = el('button', 'kk-start is-placeholder', 'スタート');
+      btn.tabIndex = -1;
+      btn.setAttribute('aria-hidden', 'true');
     } else {
       var mode = MODES.filter(function (m) { return m.id === state.modeId; })[0];
       wrap.appendChild(el('p', 'kk-menu-picked', mode.name));
@@ -170,7 +172,8 @@
       btn.appendChild(el('span', 'kk-choice-label', item.name));
       btn.appendChild(el('span', 'kk-choice-note', item.note));
       if (state[key] === item.id) btn.classList.add('is-on');
-      btn.addEventListener('click', function () { state[key] = item.id; renderMenuStep(step); });
+      // もんだい を押したら そのまま だん の画面へ。だん は選ぶだけ
+      btn.addEventListener('click', function () { state[key] = item.id; renderMenuStep(2); });
       grid.appendChild(btn);
     });
     sec.appendChild(grid);

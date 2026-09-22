@@ -306,7 +306,7 @@
     return e;
   }
 
-  // メニューは2段階（2026-09-22。かんじ修行と同じ型）。1枚目で といかた を選んで「つぎへ」、
+  // メニューは2段階（2026-09-22。かんじ修行と同じ型）。1枚目は といかた を押したら そのまま次へ、
   // 2枚目で なんいど を選んで「スタート」。スタートの位置は2枚で そろえる。
   function renderMenu() { renderMenuStep(1); }
 
@@ -316,8 +316,10 @@
     var btn;
     if (step === 1) {
       wrap.appendChild(modeGroup('といかた'));
-      btn = el('button', 'tk-start', 'つぎへ →');
-      btn.addEventListener('click', function () { renderMenuStep(2); });
+      // スタートの場所だけ見えない形で取っておく
+      btn = el('button', 'tk-start is-placeholder', 'スタート');
+      btn.tabIndex = -1;
+      btn.setAttribute('aria-hidden', 'true');
     } else {
       var mode = MODES.filter(function (m) { return m.id === state.modeId; })[0];
       wrap.appendChild(el('p', 'tk-menu-picked', mode.name));
@@ -412,8 +414,8 @@
     btn.appendChild(el('span', 'tk-choice-label', item.name));
     btn.appendChild(el('span', 'tk-choice-note', item.note));
     if (state[stateKey] === item.id) btn.classList.add('is-on');
-    // 選び直しても いまの画面のまま（1枚目＝といかた、2枚目＝なんいど）
-    btn.addEventListener('click', function () { state[stateKey] = item.id; renderMenuStep(stateKey === 'modeId' ? 1 : 2); });
+    // といかた を押したら そのまま なんいど の画面へ。なんいど は選ぶだけ
+    btn.addEventListener('click', function () { state[stateKey] = item.id; renderMenuStep(2); });
     return btn;
   }
 

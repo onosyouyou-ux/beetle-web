@@ -51,10 +51,10 @@
   })();
 
   var MODES = [
-    // img はカードの絵（2026-09-22〜。ほかの2つは絵が届きしだい足す）
+    // img はカードの絵（2026-09-22）
     { id: 'yomi', name: 'かんじを よむ しゅぎょう', note: 'かんじの ことば → よみかたを えらぶ', img: '/assets/images/ninja/modes/kanji-yomu.webp' },
-    { id: 'kanji', name: 'かんじに する しゅぎょう', note: 'よみかた → かんじの ことばを えらぶ' },
-    { id: 'kaki', name: 'かんじを かく しゅぎょう', note: 'よみかた → かんじを かいて じぶんで まるつけ' }
+    { id: 'kanji', name: 'かんじに する しゅぎょう', note: 'よみかた → かんじの ことばを えらぶ', img: '/assets/images/ninja/modes/kanji-kanji.webp' },
+    { id: 'kaki', name: 'かんじを かく しゅぎょう', note: 'よみかた → かんじを かいて じぶんで まるつけ', img: '/assets/images/ninja/modes/kanji-kaki.webp' }
   ];
 
   var state = { gradeId: GRADES[0].id, modeId: 'yomi', termId: 'all', session: null };
@@ -178,8 +178,8 @@
     return e;
   }
 
-  // メニューは2段階（2026-09-22）。1枚目で といかた を選んで「つぎへ」、
-  // 2枚目で がくねん を選んで「スタート」。いっぺんに並べると選ぶものが多すぎるため。
+  // メニューは段階式（2026-09-22）。といかた → コース →（学期のある学年だけ）がっき。
+  // カードを押したら そのまま次の画面へ進む。スタートを押すのは最後の画面だけ。
   function renderMenu() { renderMenuStep(1); }
 
   function renderMenuStep(step) {
@@ -188,16 +188,14 @@
     var btn;
     if (step === 1) {
       wrap.appendChild(group('といかた', MODES, 'modeId', 'kj-choices-column kj-choices-mode', 1));
-      btn = el('button', 'kj-start', 'つぎへ →');
-      btn.addEventListener('click', function () { renderMenuStep(2); });
+      btn = startPlaceholder('kj-start');
     } else if (step === 2) {
       wrap.appendChild(el('p', 'kj-menu-picked', modeName()));
       // 見出しは出さない（縦が足りないため。2026-09-22）。並びは 小1〜3／小4〜6／ぜんぶ・とっくん の3段
       wrap.appendChild(group(null, GRADES, 'gradeId', 'kj-choices-grade', 2));
-      // 学期の区切りがある学年は、もう1枚（がっき）をはさむ
+      // 学期の区切りがある学年は、押すと がっき の画面へ進むのでスタートは出さない
       if (gradeOf(state.gradeId).terms) {
-        btn = el('button', 'kj-start', 'つぎへ →');
-        btn.addEventListener('click', function () { renderMenuStep(3); });
+        btn = startPlaceholder('kj-start');
       } else {
         btn = el('button', 'kj-start', 'スタート');
         btn.addEventListener('click', startSession);
@@ -227,6 +225,14 @@
     app.appendChild(NinjaLinks.el('kanji'));
   }
 
+  // スタートの場所だけ取っておく見えないボタン（画面を行き来しても中身がずれないように）
+  function startPlaceholder(cls) {
+    var b = el('button', cls + ' is-placeholder', 'スタート');
+    b.tabIndex = -1;
+    b.setAttribute('aria-hidden', 'true');
+    return b;
+  }
+
   function modeName() {
     return MODES.filter(function (m) { return m.id === state.modeId; })[0].name;
   }
@@ -253,6 +259,9 @@
         // 学年を変えたら、学期は「ぜんぶ まとめて」に戻す
         if (key === 'gradeId' && state.gradeId !== item.id) state.termId = 'all';
         state[key] = item.id;
+        // 押したら次の画面へ。1枚目は必ず、2枚目は学期の画面がある学年だけ進む
+        if (step === 1) return renderMenuStep(2);
+        if (step === 2 && gradeOf(item.id).terms) return renderMenuStep(3);
         renderMenuStep(step);
       });
       grid.appendChild(btn);

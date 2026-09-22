@@ -3216,3 +3216,17 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
 .ninja-kids :is(.kj-menu,.tk-menu,.kk-menu).is-step :is(.kj-choices-mode,.tk-choices-mode,.kk-choices-mode) :is(.kj-choice-label,.kj-choice-note,.tk-choice-label,.tk-choice-note,.kk-choice-label,.kk-choice-note){
   text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 6px #fff;
 }
+/* 絵の大きさは3枚でそろえる（説明文の行数で絵が縮まないよう、カードの高さに対する割合で決める） */
+.ninja-kids.ninja-kanji .kj-choice-img{ flex:none; height:clamp(40px,46%,150px); max-height:none; }
+/* せまいスマホは文字が何行にも折り返すので、絵の割合を下げる */
+@media (max-width:400px) {
+  .ninja-kids.ninja-kanji .kj-choice-img{ height:clamp(40px,30%,150px); }
+}
+/* 押したら次へ進む画面では、スタートは場所だけ取って見せない（2026-09-22） */
+.ninja-kids :is(.kj-start,.tk-start,.kk-start).is-placeholder{ visibility:hidden; }
+/* 360px級のスマホは といかたカードが縦に長い文字で埋まるので、絵をさらに小さく */
+@media (max-width:380px) {
+  .ninja-kids.ninja-kanji .kj-choice-img{ height:clamp(36px,22%,150px); }
+}
+/* スタートの無い画面は場所も取らない。箱の高さは同じなので、カードが箱の真ん中に来る */
+.ninja-kids :is(.kj-start,.tk-start,.kk-start,.kj-back,.tk-back,.kk-back).is-placeholder{ display:none; }
