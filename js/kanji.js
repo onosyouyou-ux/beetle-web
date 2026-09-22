@@ -186,7 +186,7 @@
     var wrap = el('div', 'kj-menu is-step');
     var btn;
     if (step === 1) {
-      wrap.appendChild(group('といかた', MODES, 'modeId', 'kj-choices-column', 1));
+      wrap.appendChild(group('といかた', MODES, 'modeId', 'kj-choices-column kj-choices-mode', 1));
       btn = el('button', 'kj-start', 'つぎへ →');
       btn.addEventListener('click', function () { renderMenuStep(2); });
     } else if (step === 2) {
@@ -211,12 +211,17 @@
     }
     btn.type = 'button';
     wrap.appendChild(btn);
-    if (step > 1) {
-      var back = el('button', 'kj-back', step === 2 ? '← といかたに もどる' : '← コースに もどる');
-      back.type = 'button';
+    // 1枚目にも もどるボタンの場所だけ取っておく（スタートの位置を3枚で そろえるため）
+    var back = el('button', 'kj-back', step === 1 ? '←' : step === 2 ? '← といかたに もどる' : '← コースに もどる');
+    back.type = 'button';
+    if (step === 1) {
+      back.classList.add('is-placeholder');
+      back.tabIndex = -1;
+      back.setAttribute('aria-hidden', 'true');
+    } else {
       back.addEventListener('click', function () { renderMenuStep(step - 1); });
-      wrap.appendChild(back);
     }
+    wrap.appendChild(back);
     app.appendChild(wrap);
     app.appendChild(NinjaLinks.el('kanji'));
   }

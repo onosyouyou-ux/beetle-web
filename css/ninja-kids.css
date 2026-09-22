@@ -3027,3 +3027,28 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
 @media (orientation:landscape) and (max-height:500px) {
   .ninja-kids :is(.kt-tool,.kt-mark) { min-height:0; }
 }
+
+/* かんじの3枚メニュー：スタートの位置を固定し、選択肢のボタンを縦にのばす（2026-09-22）。
+   箱の高さを3枚とも同じにして、スタートと もどるを下に置き、残りを選択肢で埋める。
+   高さは「画面の高さ − 箱より上の高さ」で決め、1画面に収まるようにする */
+.ninja-kids.ninja-kanji .kj-menu.is-step{
+  display:flex; flex-direction:column;
+  height:clamp(360px, calc(100dvh - 270px), 520px);
+}
+.ninja-kids.ninja-kanji .kj-menu.is-step>.kj-group{ flex:1 1 0; min-height:0; display:flex; flex-direction:column; margin-bottom:0; }
+.ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices{ flex:1 1 0; min-height:0; grid-auto-rows:1fr; align-content:stretch; }
+.ninja-kids.ninja-kanji .kj-menu.is-step .kj-choice{ min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; }
+.ninja-kids.ninja-kanji .kj-menu.is-step>.kj-start{ flex:none; }
+.ninja-kids.ninja-kanji .kj-menu.is-step>.kj-back{ flex:none; }
+.ninja-kids.ninja-kanji .kj-menu.is-step>.kj-back.is-placeholder{ visibility:hidden; }
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-kids.ninja-kanji .kj-menu.is-step{ height:max(236px, calc(100dvh - 124px)); }
+  /* 寝かせた画面は がっきの注記を出すと入らないので隠す */
+  .ninja-kids.ninja-kanji .kj-menu.is-step .kj-menu-note{ display:none; }
+}
+
+/* といかたの3つは どの画面でも横に並べる（2026-09-22）。せまい画面では文字を折り返す */
+.ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-mode{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+.ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-mode .kj-choice{ padding-inline:8px; text-align:center; }
+.ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-mode .kj-choice-label,
+.ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-mode .kj-choice-note{ white-space:normal; text-align:center; word-break:keep-all; overflow-wrap:anywhere; }
