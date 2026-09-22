@@ -64,6 +64,7 @@
   <div class="page-header-inner">
     <h1 class="page-header-title">ダミーファイル生成ツール</h1>
     <div class="page-header-desc">PDF・画像・動画・ZIPなどのテスト用ダミーファイルを、指定したサイズで無料生成・ダウンロードできるツールです。1KB〜大容量ファイルまでブラウザ上で作成できます。サーバーへのアップロードはありません。</div>
+    <button type="button" class="help-open" data-help="top">？ 使い方を見る</button>
     <div class="page-header-metrics">
       <div class="phm-item"><div class="phm-num">20</div><div class="phm-label">対応形式</div></div>
       <div class="phm-item"><div class="phm-num">0</div><div class="phm-label">サーバー通信</div></div>
@@ -75,6 +76,7 @@
 
 <div class="main">
   <div class="card">
+    <div class="card-head"><h2 class="section-title">サイズと形式を指定して作る</h2><button type="button" class="help-q" data-help="free" aria-label="使い方を見る">？</button></div>
     <div class="input-grid">
       <div>
         <div class="field-label">ファイル名</div>
@@ -152,7 +154,7 @@
   </div>
 
   <div class="card bd-card" id="bdBoundary">
-    <h2 class="section-title">境界値セットを作る</h2>
+    <div class="card-head"><h2 class="section-title">境界値セットを作る</h2><button type="button" class="help-q" data-help="boundary" aria-label="使い方を見る">？</button></div>
     <p class="sample-note">アップロード制限の値を入れると、<b>1つ少ない・ちょうど・1つ多い</b>のファイルをまとめてZIPで作ります。「10MBまで」「4000pxまで」「100文字まで」のような制限の境目を、そのまま試せます。</p>
     <div class="tab-bar">
       <button type="button" class="tab bd-tab on" data-bd="size">容量</button>
@@ -226,7 +228,7 @@
   </div>
   <div class="card" style="padding:0;">
     <div style="padding:14px 16px 0;">
-      <p class="section-title">サンプルをダウンロード</p>
+      <div class="card-head"><p class="section-title">サンプルをダウンロード</p><button type="button" class="help-q" data-help="sample" aria-label="使い方を見る">？</button></div>
       <p class="sample-note">クリックするとその場でファイルを生成してダウンロードします。音声・動画（WebM）は約5秒かかります。</p>
     </div>
     <div class="tab-bar" id="tabBar">
@@ -347,8 +349,74 @@
   </div>
 </footer>
 <button type="button" class="scroll-top-float" id="scrollTopBtn" aria-label="ページ上部へ戻る">↑</button>
+<dialog class="help-modal" id="helpModal" aria-labelledby="helpTitle">
+  <div class="help-head">
+    <h2 class="help-title" id="helpTitle">使い方</h2>
+    <button type="button" class="help-close" aria-label="閉じる">×</button>
+  </div>
+  <div class="help-body">
+    <nav class="help-toc">
+      <a href="#help-free">サイズと形式を指定</a>
+      <a href="#help-boundary">境界値セット</a>
+      <a href="#help-sample">サンプル</a>
+      <a href="#help-notes">注意</a>
+    </nav>
+
+    <section class="help-sec" id="help-top">
+      <p>アップロード機能のテストに使うダミーファイルを、ブラウザの中で作ってダウンロードするツールです。作ったファイルはどこにも送信されません。やりたいことに合わせて、下の3つから選んでください。</p>
+      <ul>
+        <li><b>決まった大きさのファイルが欲しい</b> → サイズと形式を指定して作る</li>
+        <li><b>「10MBまで」のような上限の境目を試したい</b> → 境界値セットを作る</li>
+        <li><b>とりあえず1つ欲しい</b> → サンプルをダウンロード</li>
+      </ul>
+    </section>
+
+    <section class="help-sec" id="help-free">
+      <h3>サイズと形式を指定して作る</h3>
+      <ol>
+        <li><b>ファイル名</b>を入れます（空欄なら自動で付きます）。</li>
+        <li><b>サイズ</b>に数値を入れ、KB・MB・GBを選びます。</li>
+        <li><b>1KBの数え方</b>を選びます。多くのシステムは1024バイトですが、仕様書が「1MB＝1,000,000バイト」なら1000を選びます。</li>
+        <li><b>形式</b>を選びます。複数選ぶとZIPにまとめてダウンロードします。</li>
+        <li>「生成してダウンロード」を押します。</li>
+      </ol>
+      <p class="help-tip">WebM（音声・動画）以外は、指定したサイズどおりバイト単位でぴったり作ります。</p>
+    </section>
+
+    <section class="help-sec" id="help-boundary">
+      <h3>境界値セットを作る</h3>
+      <p>制限の値を入れると、<b>1つ少ない・ちょうど・1つ多い</b>の3つをまとめてZIPで作ります。「ちょうど」は通り、「1つ多い」ははじかれるかを確かめます。何の制限を試すかをタブで選びます。</p>
+      <dl class="help-dl">
+        <dt>容量</dt>
+        <dd>「10MBまで」のようなファイルサイズの上限。上限・単位・1KBの数え方・形式を選びます。0バイトのファイルも一緒に作れます。</dd>
+        <dt>画像の大きさ</dt>
+        <dd>「4000pxまで」のような幅・高さの上限や、dpi。試したい値だけ入れ、ほかは空欄にします。「よく使う大きさ」を押すと値が入ります。</dd>
+        <dt>ファイル名・拡張子</dt>
+        <dd>「100文字まで」のような名前の長さ。文字数で数えるかUTF-8のバイト数で数えるかを選びます。「意地悪な名前」をオンにすると、二重拡張子や中身と拡張子が違うファイルなども入ります。何を試すファイルかはZIPの中の「一覧.txt」に書いてあります。</dd>
+        <dt>長さ・件数</dt>
+        <dd>同時にアップロードする枚数、PDFのページ数、CSV・Excelの行数、音声（WAV）の長さの上限。</dd>
+      </dl>
+      <p class="help-tip">ボタンの上に、作られるファイルの一覧が出ます。押す前にそこで数と大きさを確かめてください。</p>
+    </section>
+
+    <section class="help-sec" id="help-sample">
+      <h3>サンプルをダウンロード</h3>
+      <p>画像系・Office系・動画系・音声系のタブから、よく使うサイズのボタンを押すだけでその場で作ってダウンロードします。音声・動画のWebMは作るのに5秒ほどかかります。</p>
+    </section>
+
+    <section class="help-sec" id="help-notes">
+      <h3>注意</h3>
+      <ul>
+        <li>MP4・MOV・AVI・WMV・MP3・WAV・AACは<b>サイズ確認用のダミーで再生できません</b>（境界値セットの「音声の長さ」で作るWAVは再生できます）。再生まで試したいときはWebMを選んでください。</li>
+        <li>Excel・Wordは形式として必要な最小サイズ（数KB）より小さくは作れません。</li>
+        <li>生成はブラウザのメモリで行います。GB単位のような大きいファイルは、まず小さいサイズで試してから上げてください。</li>
+      </ul>
+    </section>
+  </div>
+</dialog>
 <script src="/js/common.js"></script>
 <script src="/js/test-content.js"></script>
 <script src="/js/test-content-boundary.js"></script>
+<script src="/js/test-content-help.js"></script>
 </body>
 </html>
