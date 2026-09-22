@@ -11,6 +11,7 @@
   if (!app || !window.KANJI_DATA) return;
 
   var DATA = window.KANJI_DATA;
+  var TERMS = window.KANJI_TERMS || {};
   var SET_LENGTH = 10;
   // 自分で まるつけ したあと、つぎの問題へ進むまで（ミリ秒）。調整はここ1か所。
   var NEXT_DELAY = 2000;
@@ -19,6 +20,17 @@
   // g: 1〜6 は「小○コース」、g: 7 は「じゅけん とっくん」。
   // ぜんぶ まとめて は小1〜小6だけ（とっくんは中身の性質がちがうので混ぜない）。
   var JUKKEN = 7;
+  // 学期の選択肢。KANJI_TERMS にある学年だけ作る（無ければ null で、学期の画面を出さない）
+  function termsOf(g) {
+    var t = TERMS[g];
+    if (!t) return null;
+    var list = Object.keys(t).sort().map(function (n) {
+      return { id: 't' + n, name: n + 'がっきに ならう かんじ', note: Array.from(t[n]).length + 'じ', term: +n };
+    });
+    list.push({ id: 'all', name: 'ぜんぶ まとめて', note: DATA.filter(function (e) { return e.g === g; }).length + 'じ', term: 0 });
+    return list;
+  }
+
   var GRADES = (function () {
     var gs = [];
     DATA.forEach(function (e) { if (gs.indexOf(e.g) < 0) gs.push(e.g); });
@@ -26,7 +38,7 @@
     var count = function (g) { return DATA.filter(function (e) { return e.g === g; }).length; };
     var school = gs.filter(function (g) { return g < JUKKEN; });
     var list = school.map(function (g) {
-      return { id: 'g' + g, name: '小' + g + 'コース', note: count(g) + 'じ', grades: [g] };
+      return { id: 'g' + g, name: '小' + g + 'コース', note: count(g) + 'じ', grades: [g], terms: termsOf(g) };
     });
     if (gs.indexOf(JUKKEN) >= 0) {
       list.push({ id: 'jukken', name: 'じゅけんとっくん', note: 'よみ・四字熟語', grades: [JUKKEN] });
@@ -44,7 +56,7 @@
     { id: 'kaki', name: 'かんじを かく しゅぎょう', note: 'よみかた → かんじを かいて じぶんで まるつけ' }
   ];
 
-  var state = { gradeId: GRADES[0].id, modeId: 'yomi', session: null };
+  var state = { gradeId: GRADES[0].id, modeId: 'yomi', termId: 'all', session: null };
 
   var randInt = function (a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; };
   function shuffle(a) {
@@ -56,9 +68,28 @@
   }
   var pick = function (a) { return a[randInt(0, a.length - 1)]; };
 
-  function poolOf(gradeId) {
-    var g = GRADES.filter(function (x) { return x.id === gradeId; })[0] || GRADES[0];
-    return DATA.filter(function (e) { return g.grades.indexOf(e.g) >= 0; });
+  function gradeOf(gradeId) {
+    return GRADES.filter(function (x) { return x.id === gradeId; })[0] || GRADES[0];
+  }
+
+  function poolOf(gradeId, termId) {
+    var g = gradeOf(gradeId);
+    var pool = DATA.filter(function (e) { return g.grades.indexOf(e.g) >= 0; });
+    var term = g.terms && g.terms.filter(function (t) { return t.id === termId; })[0];
+    if (!term || !term.term) return pool;
+    // 学期をしぼるときは、その学期までに習う字だけで書いたことばを使う
+    // （2学期の「一」で「一年」を出すと、3学期に習う「年」がまじってしまう）
+    var t = TERMS[g.grades[0]], mine = '', later = '';
+    Object.keys(t).forEach(function (n) {
+      if (+n === term.term) mine += t[n];
+      else if (+n > term.term) later += t[n];
+    });
+    return pool.filter(function (e) { return mine.indexOf(e.k) >= 0; }).map(function (e) {
+      var w = e.w.filter(function (pair) {
+        return !Array.from(pair[0]).some(function (c) { return later.indexOf(c) >= 0; });
+      });
+      return { g: e.g, k: e.k, w: w.length ? w : e.w };
+    });
   }
 
   /* ---------- 出題 ---------- */
@@ -158,23 +189,39 @@
       wrap.appendChild(group('といかた', MODES, 'modeId', 'kj-choices-column', 1));
       btn = el('button', 'kj-start', 'つぎへ →');
       btn.addEventListener('click', function () { renderMenuStep(2); });
-    } else {
-      var mode = MODES.filter(function (m) { return m.id === state.modeId; })[0];
-      wrap.appendChild(el('p', 'kj-menu-picked', mode.name));
+    } else if (step === 2) {
+      wrap.appendChild(el('p', 'kj-menu-picked', modeName()));
       wrap.appendChild(group('がくねん', GRADES, 'gradeId', 'kj-choices-grade', 2));
+      // 学期の区切りがある学年は、もう1枚（がっき）をはさむ
+      if (gradeOf(state.gradeId).terms) {
+        btn = el('button', 'kj-start', 'つぎへ →');
+        btn.addEventListener('click', function () { renderMenuStep(3); });
+      } else {
+        btn = el('button', 'kj-start', 'スタート');
+        btn.addEventListener('click', startSession);
+      }
+    } else {
+      var grade = gradeOf(state.gradeId);
+      wrap.appendChild(el('p', 'kj-menu-picked', modeName() + '・' + grade.name));
+      wrap.appendChild(group('がっき', grade.terms, 'termId', 'kj-choices-column kj-choices-term', 3));
+      wrap.appendChild(el('p', 'kj-menu-note', '※ がっきの くぎりは 光村図書の きょうかしょに あわせています'));
       btn = el('button', 'kj-start', 'スタート');
       btn.addEventListener('click', startSession);
     }
     btn.type = 'button';
     wrap.appendChild(btn);
-    if (step === 2) {
-      var back = el('button', 'kj-back', '← といかたに もどる');
+    if (step > 1) {
+      var back = el('button', 'kj-back', step === 2 ? '← といかたに もどる' : '← がくねんに もどる');
       back.type = 'button';
-      back.addEventListener('click', function () { renderMenuStep(1); });
+      back.addEventListener('click', function () { renderMenuStep(step - 1); });
       wrap.appendChild(back);
     }
     app.appendChild(wrap);
     app.appendChild(NinjaLinks.el('kanji'));
+  }
+
+  function modeName() {
+    return MODES.filter(function (m) { return m.id === state.modeId; })[0].name;
   }
 
   function group(title, items, key, gridCls, step) {
@@ -187,7 +234,12 @@
       btn.appendChild(el('span', 'kj-choice-label', item.name));
       btn.appendChild(el('span', 'kj-choice-note', item.note));
       if (state[key] === item.id) btn.classList.add('is-on');
-      btn.addEventListener('click', function () { state[key] = item.id; renderMenuStep(step); });
+      btn.addEventListener('click', function () {
+        // 学年を変えたら、学期は「ぜんぶ まとめて」に戻す
+        if (key === 'gradeId' && state.gradeId !== item.id) state.termId = 'all';
+        state[key] = item.id;
+        renderMenuStep(step);
+      });
       grid.appendChild(btn);
     });
     sec.appendChild(grid);
@@ -195,7 +247,7 @@
   }
 
   function startSession() {
-    state.session = { pool: poolOf(state.gradeId), index: 0, correct: 0, locked: false, q: null, missed: [] };
+    state.session = { pool: poolOf(state.gradeId, state.termId), index: 0, correct: 0, locked: false, q: null, missed: [] };
     nextQuestion();
   }
 
