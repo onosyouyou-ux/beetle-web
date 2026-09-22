@@ -2158,6 +2158,30 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   }
 }
 
+/* 2段階メニュー（2026-09-22）。1枚に1グループしか出さないので2カラムをやめて1列に積む。
+   上の2カラム指定（0,3,0）に勝つよう .is-step を足して詳細度を上げる */
+@media (min-width:768px), (orientation:landscape) and (max-height:500px) {
+  .ninja-kids.ninja-kanji .kj-menu.is-step{
+    display:block;
+    padding-inline:max(20px,calc((100% - 560px) / 2));
+  }
+  .ninja-kids.ninja-kanji .kj-menu.is-step>.kj-group{ margin-bottom:0; }
+  .ninja-kids.ninja-kanji .kj-menu.is-step>.kj-start{ width:min(100%,320px); margin:18px auto 0; }
+  /* がくねんは横に余裕ができたので4つ並べて2段にする（2列4段だと寝かせた画面に収まらない） */
+  .ninja-kids.ninja-kanji .kj-menu.is-step:has(.kj-choices-grade){ padding-inline:max(20px,calc((100% - 760px) / 2)); }
+  .ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-grade{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+}
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-kids.ninja-kanji .kj-menu.is-step>.kj-start{ margin-top:8px; }
+  .ninja-kids.ninja-kanji .kj-menu.is-step>.kj-back{ margin-top:4px; }
+  .ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-column{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+.ninja-kids.ninja-kanji .kj-menu-picked{
+  margin:0 0 12px; padding:6px 12px; border-radius:8px; text-align:center;
+  font-size:13px; font-weight:800; color:var(--nk-accent,#c96a1e); background:rgba(255,255,255,.75);
+}
+.ninja-kids.ninja-kanji .kj-menu.is-step>.kj-back{ margin:12px auto 0; }
+
 /* 寝かせた画面は高さが足りないので、スタートまわりの余白を詰める。
    スタートを最下段に移した分（1行増）を、ここで吸収する。 */
 @media (orientation:landscape) and (max-height:500px) {

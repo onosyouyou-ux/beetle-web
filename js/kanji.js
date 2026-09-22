@@ -146,22 +146,38 @@
     return e;
   }
 
-  function renderMenu() {
-    app.innerHTML = '';
-    var wrap = el('div', 'kj-menu');
-    // がくねんは8つあるので2列の小さいボタンにする（縦1列だと1画面に収まらない。2026-09-21）
-    wrap.appendChild(group('がくねん', GRADES, 'gradeId', 'kj-choices-grade'));
-    wrap.appendChild(group('といかた', MODES, 'modeId', 'kj-choices-column'));
+  // メニューは2段階（2026-09-22）。1枚目で といかた を選んで「つぎへ」、
+  // 2枚目で がくねん を選んで「スタート」。いっぺんに並べると選ぶものが多すぎるため。
+  function renderMenu() { renderMenuStep(1); }
 
-    var start = el('button', 'kj-start', 'スタート');
-    start.type = 'button';
-    start.addEventListener('click', startSession);
-    wrap.appendChild(start);
+  function renderMenuStep(step) {
+    app.innerHTML = '';
+    var wrap = el('div', 'kj-menu is-step');
+    var btn;
+    if (step === 1) {
+      wrap.appendChild(group('といかた', MODES, 'modeId', 'kj-choices-column', 1));
+      btn = el('button', 'kj-start', 'つぎへ →');
+      btn.addEventListener('click', function () { renderMenuStep(2); });
+    } else {
+      var mode = MODES.filter(function (m) { return m.id === state.modeId; })[0];
+      wrap.appendChild(el('p', 'kj-menu-picked', mode.name));
+      wrap.appendChild(group('がくねん', GRADES, 'gradeId', 'kj-choices-grade', 2));
+      btn = el('button', 'kj-start', 'スタート');
+      btn.addEventListener('click', startSession);
+    }
+    btn.type = 'button';
+    wrap.appendChild(btn);
+    if (step === 2) {
+      var back = el('button', 'kj-back', '← といかたに もどる');
+      back.type = 'button';
+      back.addEventListener('click', function () { renderMenuStep(1); });
+      wrap.appendChild(back);
+    }
     app.appendChild(wrap);
     app.appendChild(NinjaLinks.el('kanji'));
   }
 
-  function group(title, items, key, gridCls) {
+  function group(title, items, key, gridCls, step) {
     var sec = el('section', 'kj-group');
     sec.appendChild(el('h2', 'kj-group-title', title));
     var grid = el('div', 'kj-choices ' + gridCls);
@@ -171,7 +187,7 @@
       btn.appendChild(el('span', 'kj-choice-label', item.name));
       btn.appendChild(el('span', 'kj-choice-note', item.note));
       if (state[key] === item.id) btn.classList.add('is-on');
-      btn.addEventListener('click', function () { state[key] = item.id; renderMenu(); });
+      btn.addEventListener('click', function () { state[key] = item.id; renderMenuStep(step); });
       grid.appendChild(btn);
     });
     sec.appendChild(grid);
