@@ -306,36 +306,63 @@
     return e;
   }
 
-  function renderMenu() {
+  // メニューは2段階（2026-09-22。かんじ修行と同じ型）。1枚目で といかた を選んで「つぎへ」、
+  // 2枚目で なんいど を選んで「スタート」。スタートの位置は2枚で そろえる。
+  function renderMenu() { renderMenuStep(1); }
+
+  function renderMenuStep(step) {
     app.innerHTML = '';
-    var wrap = el('div', 'tk-menu');
+    var wrap = el('div', 'tk-menu is-step');
+    var btn;
+    if (step === 1) {
+      wrap.appendChild(modeGroup('といかた'));
+      btn = el('button', 'tk-start', 'つぎへ →');
+      btn.addEventListener('click', function () { renderMenuStep(2); });
+    } else {
+      var mode = MODES.filter(function (m) { return m.id === state.modeId; })[0];
+      wrap.appendChild(el('p', 'tk-menu-picked', mode.name));
+      var body = el('div', 'tk-step-body');
+      body.appendChild(levelGroup(null));
 
-    wrap.appendChild(modeGroup('といかた'));
-    wrap.appendChild(levelGroup('なんいど'));
+      var side = el('div', 'tk-step-side');
+      var opt = el('label', 'tk-toggle');
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = state.showMinutes;
+      cb.addEventListener('change', function () { state.showMinutes = cb.checked; });
+      opt.appendChild(cb);
+      opt.appendChild(el('span', null, 'とけいに ふんを ひょうじする'));
+      side.appendChild(opt);
 
-    var opt = el('label', 'tk-toggle');
-    var cb = document.createElement('input');
-    cb.type = 'checkbox';
-    cb.checked = state.showMinutes;
-    cb.addEventListener('change', function () { state.showMinutes = cb.checked; });
-    opt.appendChild(cb);
-    opt.appendChild(el('span', null, 'とけいに ふんを ひょうじする'));
-    wrap.appendChild(opt);
+      // 見本の時計は、いま選んでいる なんいど と同じ本数のはりで描く
+      var preview = el('div', 'tk-preview');
+      var drawPreview = function () {
+        var hands = stepOf(state.stepId).hands;
+        preview.innerHTML = clockSvg(3, state.showMinutes ? 50 : 0, 150, state.showMinutes, hands);
+      };
+      drawPreview();
+      cb.addEventListener('change', drawPreview);
+      side.appendChild(preview);
+      body.appendChild(side);
+      wrap.appendChild(body);
 
-    // 見本の時計は、いま選んでいる なんいど と同じ本数のはりで描く
-    var preview = el('div', 'tk-preview');
-    var drawPreview = function () {
-      var hands = stepOf(state.stepId).hands;
-      preview.innerHTML = clockSvg(3, state.showMinutes ? 50 : 0, 150, state.showMinutes, hands);
-    };
-    drawPreview();
-    cb.addEventListener('change', drawPreview);
-    wrap.appendChild(preview);
+      btn = el('button', 'tk-start', 'スタート');
+      btn.addEventListener('click', startSession);
+    }
+    btn.type = 'button';
+    wrap.appendChild(btn);
 
-    var start = el('button', 'tk-start', 'スタート');
-    start.type = 'button';
-    start.addEventListener('click', startSession);
-    wrap.appendChild(start);
+    // 1枚目にも もどるボタンの場所だけ取っておく（スタートの位置を そろえるため）
+    var back = el('button', 'tk-back', step === 1 ? '←' : '← といかたに もどる');
+    back.type = 'button';
+    if (step === 1) {
+      back.classList.add('is-placeholder');
+      back.tabIndex = -1;
+      back.setAttribute('aria-hidden', 'true');
+    } else {
+      back.addEventListener('click', function () { renderMenuStep(1); });
+    }
+    wrap.appendChild(back);
 
     app.appendChild(wrap);
     app.appendChild(NinjaLinks.el('tokei'));
@@ -385,14 +412,15 @@
     btn.appendChild(el('span', 'tk-choice-label', item.name));
     btn.appendChild(el('span', 'tk-choice-note', item.note));
     if (state[stateKey] === item.id) btn.classList.add('is-on');
-    btn.addEventListener('click', function () { state[stateKey] = item.id; renderMenu(); });
+    // 選び直しても いまの画面のまま（1枚目＝といかた、2枚目＝なんいど）
+    btn.addEventListener('click', function () { state[stateKey] = item.id; renderMenuStep(stateKey === 'modeId' ? 1 : 2); });
     return btn;
   }
 
   function modeGroup(title) {
     var sec = el('section', 'tk-group');
     sec.appendChild(el('h2', 'tk-group-title', title));
-    var grid = el('div', 'tk-choices');
+    var grid = el('div', 'tk-choices tk-choices-mode');
     MODES.forEach(function (item) { grid.appendChild(choiceBtn(item, 'modeId', 0)); });
     sec.appendChild(grid);
     return sec;
@@ -403,7 +431,7 @@
      .tk-pair を display:contents にして全体を2列に折り返しても段が読める。 */
   function levelGroup(title) {
     var sec = el('section', 'tk-group');
-    sec.appendChild(el('h2', 'tk-group-title', title));
+    if (title) sec.appendChild(el('h2', 'tk-group-title', title));
     var grid = el('div', 'tk-choices tk-choices-level');
     var pairs = {};
     STEPS.forEach(function (item) {

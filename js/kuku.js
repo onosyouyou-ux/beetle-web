@@ -122,23 +122,47 @@
     return e;
   }
 
-  function renderMenu() {
-    app.innerHTML = '';
-    var wrap = el('div', 'kk-menu');
-    wrap.appendChild(group('だん', DANS, 'danId', 'kk-choices-dan'));
-    wrap.appendChild(group('もんだい', MODES, 'modeId', 'kk-choices-column'));
+  // メニューは2段階（2026-09-22。かんじ修行と同じ型）。1枚目で もんだい を選んで「つぎへ」、
+  // 2枚目で だん を選んで「スタート」。スタートの位置は2枚で そろえる。
+  function renderMenu() { renderMenuStep(1); }
 
-    var start = el('button', 'kk-start', 'スタート');
-    start.type = 'button';
-    start.addEventListener('click', startSession);
-    wrap.appendChild(start);
+  function renderMenuStep(step) {
+    app.innerHTML = '';
+    var wrap = el('div', 'kk-menu is-step');
+    var btn;
+    if (step === 1) {
+      wrap.appendChild(group('もんだい', MODES, 'modeId', 'kk-choices-column kk-choices-mode', 1));
+      btn = el('button', 'kk-start', 'つぎへ →');
+      btn.addEventListener('click', function () { renderMenuStep(2); });
+    } else {
+      var mode = MODES.filter(function (m) { return m.id === state.modeId; })[0];
+      wrap.appendChild(el('p', 'kk-menu-picked', mode.name));
+      wrap.appendChild(group(null, DANS, 'danId', 'kk-choices-dan', 2));
+      btn = el('button', 'kk-start', 'スタート');
+      btn.addEventListener('click', startSession);
+    }
+    btn.type = 'button';
+    wrap.appendChild(btn);
+
+    // 1枚目にも もどるボタンの場所だけ取っておく（スタートの位置を そろえるため）
+    var back = el('button', 'kk-back', step === 1 ? '←' : '← もんだいに もどる');
+    back.type = 'button';
+    if (step === 1) {
+      back.classList.add('is-placeholder');
+      back.tabIndex = -1;
+      back.setAttribute('aria-hidden', 'true');
+    } else {
+      back.addEventListener('click', function () { renderMenuStep(1); });
+    }
+    wrap.appendChild(back);
+
     app.appendChild(wrap);
     if (window.NinjaLinks) app.appendChild(NinjaLinks.el('kuku'));
   }
 
-  function group(title, items, key, gridCls) {
+  function group(title, items, key, gridCls, step) {
     var sec = el('section', 'kk-group');
-    sec.appendChild(el('h2', 'kk-group-title', title));
+    if (title) sec.appendChild(el('h2', 'kk-group-title', title));
     var grid = el('div', 'kk-choices ' + gridCls);
     items.forEach(function (item) {
       var btn = el('button', 'kk-choice');
@@ -146,7 +170,7 @@
       btn.appendChild(el('span', 'kk-choice-label', item.name));
       btn.appendChild(el('span', 'kk-choice-note', item.note));
       if (state[key] === item.id) btn.classList.add('is-on');
-      btn.addEventListener('click', function () { state[key] = item.id; renderMenu(); });
+      btn.addEventListener('click', function () { state[key] = item.id; renderMenuStep(step); });
       grid.appendChild(btn);
     });
     sec.appendChild(grid);
