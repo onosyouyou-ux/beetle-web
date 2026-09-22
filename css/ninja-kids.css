@@ -3159,33 +3159,6 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   .ninja-kids.ninja-kuku .kk-menu.is-step{ height:clamp(360px, calc(100dvh - 300px), 520px); }
 }
 
-/* ============================================================
-   といかた（1枚目）のカードに地紋と色をしく（2026-09-22）
-   地紋は こたえの選択肢と同じタイル（opt-*.png）を流用。カードごとに柄を変え、
-   下にいくほど修行の色がうっすら濃くなる。選んだときも地紋は残す
-   ============================================================ */
-.ninja-kids :is(.kj-menu,.tk-menu,.kk-menu).is-step :is(.kj-choices-mode,.tk-choices-mode,.kk-choices-mode)>:is(.kj-choice,.tk-choice,.kk-choice){
-  --nk-card-pattern:url('/assets/images/ninja/patterns/opt-shippou.png');
-  --nk-card-tint:color-mix(in srgb,var(--nk-accent) 16%,transparent);
-  background:
-    linear-gradient(180deg,transparent 35%,var(--nk-card-tint)),
-    var(--nk-card-pattern) center/64px 64px repeat,
-    #fff;
-}
-.ninja-kids :is(.kj-menu,.tk-menu,.kk-menu).is-step :is(.kj-choices-mode,.tk-choices-mode,.kk-choices-mode)>:is(.kj-choice,.tk-choice,.kk-choice):nth-child(2){
-  --nk-card-pattern:url('/assets/images/ninja/patterns/opt-seigaiha.png');
-}
-.ninja-kids :is(.kj-menu,.tk-menu,.kk-menu).is-step :is(.kj-choices-mode,.tk-choices-mode,.kk-choices-mode)>:is(.kj-choice,.tk-choice,.kk-choice):nth-child(3){
-  --nk-card-pattern:url('/assets/images/ninja/patterns/opt-asanoha.png');
-}
-.ninja-kids :is(.kj-menu,.tk-menu,.kk-menu).is-step :is(.kj-choices-mode,.tk-choices-mode,.kk-choices-mode)>:is(.kj-choice,.tk-choice,.kk-choice).is-on{
-  --nk-card-tint:color-mix(in srgb,var(--nk-accent) 30%,transparent);
-  background:
-    linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 8%,transparent),var(--nk-card-tint)),
-    var(--nk-card-pattern) center/64px 64px repeat,
-    #fff;
-}
-
 /* かんじの といかたカードの絵。絵のあるカードは そのぶん高さの上限を上げる */
 .ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-mode:has(.kj-choice-img){ max-height:300px; }
 .ninja-kids.ninja-kanji .kj-choice-img{
@@ -3195,26 +3168,6 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
 /* 寝かせたスマホは高さが足りず絵が30pxほどに潰れるので出さない */
 @media (orientation:landscape) and (max-height:380px) {
   .ninja-kids.ninja-kanji .kj-choice-img{ display:none; }
-}
-/* 地紋が薄くて見えないと言われたので濃くする（2026-09-22）。
-   地紋は2枚重ねて線を倍の濃さに、地は修行の色でうっすら塗って下へ濃く */
-.ninja-kids :is(.kj-menu,.tk-menu,.kk-menu).is-step :is(.kj-choices-mode,.tk-choices-mode,.kk-choices-mode)>:is(.kj-choice,.tk-choice,.kk-choice){
-  background:
-    linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 7%,transparent) 0%,color-mix(in srgb,var(--nk-accent) 26%,transparent) 100%),
-    var(--nk-card-pattern) center/64px 64px repeat,
-    var(--nk-card-pattern) center/64px 64px repeat,
-    #fffdf8;
-}
-.ninja-kids :is(.kj-menu,.tk-menu,.kk-menu).is-step :is(.kj-choices-mode,.tk-choices-mode,.kk-choices-mode)>:is(.kj-choice,.tk-choice,.kk-choice).is-on{
-  background:
-    linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 16%,transparent) 0%,color-mix(in srgb,var(--nk-accent) 40%,transparent) 100%),
-    var(--nk-card-pattern) center/64px 64px repeat,
-    var(--nk-card-pattern) center/64px 64px repeat,
-    #fff;
-}
-/* 地紋の上でも読めるよう、カードの文字に白いふちをつける */
-.ninja-kids :is(.kj-menu,.tk-menu,.kk-menu).is-step :is(.kj-choices-mode,.tk-choices-mode,.kk-choices-mode) :is(.kj-choice-label,.kj-choice-note,.tk-choice-label,.tk-choice-note,.kk-choice-label,.kk-choice-note){
-  text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 6px #fff;
 }
 /* 絵の大きさは3枚でそろえる（説明文の行数で絵が縮まないよう、カードの高さに対する割合で決める） */
 .ninja-kids.ninja-kanji .kj-choice-img{ flex:none; height:clamp(40px,46%,150px); max-height:none; }
@@ -3230,3 +3183,37 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
 }
 /* スタートの無い画面は場所も取らない。箱の高さは同じなので、カードが箱の真ん中に来る */
 .ninja-kids :is(.kj-start,.tk-start,.kk-start,.kj-back,.tk-back,.kk-back).is-placeholder{ display:none; }
+
+/* ============================================================
+   修行アプリの「選ぶカード」に地紋と色をしく（2026-09-22）
+   対象：かんじ・とけい・かけざんのメニューのカード全部、カタカナ・ローマ字・フォニックスのモード札。
+   地紋は こたえの選択肢と同じタイル（opt-*.png）を2枚重ねて濃くし、七宝→青海波→麻の葉 を1枚ずつくり返す。
+   地は修行の色でうっすら塗り、下へ濃く。選んだカードはもう一段濃く。
+   じゅけんとっくん（紺地に金）と さんすう（宇宙の板の画像）は対象外
+   ============================================================ */
+.ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode){
+  --nk-card-pattern:url('/assets/images/ninja/patterns/opt-shippou.png');
+  background:
+    linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 7%,transparent) 0%,color-mix(in srgb,var(--nk-accent) 26%,transparent) 100%),
+    var(--nk-card-pattern) center/64px 64px repeat,
+    var(--nk-card-pattern) center/64px 64px repeat,
+    #fffdf8;
+}
+.ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode):nth-child(3n+2){
+  --nk-card-pattern:url('/assets/images/ninja/patterns/opt-seigaiha.png');
+}
+.ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode):nth-child(3n){
+  --nk-card-pattern:url('/assets/images/ninja/patterns/opt-asanoha.png');
+}
+.ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice).is-on{
+  background:
+    linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 16%,transparent) 0%,color-mix(in srgb,var(--nk-accent) 40%,transparent) 100%),
+    var(--nk-card-pattern) center/64px 64px repeat,
+    var(--nk-card-pattern) center/64px 64px repeat,
+    #fff;
+}
+/* 地紋の上でも読めるよう、カードの文字に白いふちをつける */
+.ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode) :is(.kj-choice-label,.kj-choice-note,.tk-choice-label,.tk-choice-note,.kk-choice-label,.kk-choice-note,.kt-mode-t,.kt-mode-s,.rj-mode-t,.rj-mode-s,.pn-mode-t,.pn-mode-s){
+  text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 6px #fff;
+}
+.ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode) :is(.kj-choice-note,.tk-choice-note,.kk-choice-note,.kt-mode-s,.rj-mode-s,.pn-mode-s){ color:#5f5044; }
