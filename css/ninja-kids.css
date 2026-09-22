@@ -3158,3 +3158,61 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
 @media (min-width:768px) and (min-height:501px) {
   .ninja-kids.ninja-kuku .kk-menu.is-step{ height:clamp(360px, calc(100dvh - 300px), 520px); }
 }
+
+/* ============================================================
+   といかた（1枚目）のカードに地紋と色をしく（2026-09-22）
+   地紋は こたえの選択肢と同じタイル（opt-*.png）を流用。カードごとに柄を変え、
+   下にいくほど修行の色がうっすら濃くなる。選んだときも地紋は残す
+   ============================================================ */
+.ninja-kids :is(.kj-menu,.tk-menu,.kk-menu).is-step :is(.kj-choices-mode,.tk-choices-mode,.kk-choices-mode)>:is(.kj-choice,.tk-choice,.kk-choice){
+  --nk-card-pattern:url('/assets/images/ninja/patterns/opt-shippou.png');
+  --nk-card-tint:color-mix(in srgb,var(--nk-accent) 16%,transparent);
+  background:
+    linear-gradient(180deg,transparent 35%,var(--nk-card-tint)),
+    var(--nk-card-pattern) center/64px 64px repeat,
+    #fff;
+}
+.ninja-kids :is(.kj-menu,.tk-menu,.kk-menu).is-step :is(.kj-choices-mode,.tk-choices-mode,.kk-choices-mode)>:is(.kj-choice,.tk-choice,.kk-choice):nth-child(2){
+  --nk-card-pattern:url('/assets/images/ninja/patterns/opt-seigaiha.png');
+}
+.ninja-kids :is(.kj-menu,.tk-menu,.kk-menu).is-step :is(.kj-choices-mode,.tk-choices-mode,.kk-choices-mode)>:is(.kj-choice,.tk-choice,.kk-choice):nth-child(3){
+  --nk-card-pattern:url('/assets/images/ninja/patterns/opt-asanoha.png');
+}
+.ninja-kids :is(.kj-menu,.tk-menu,.kk-menu).is-step :is(.kj-choices-mode,.tk-choices-mode,.kk-choices-mode)>:is(.kj-choice,.tk-choice,.kk-choice).is-on{
+  --nk-card-tint:color-mix(in srgb,var(--nk-accent) 30%,transparent);
+  background:
+    linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 8%,transparent),var(--nk-card-tint)),
+    var(--nk-card-pattern) center/64px 64px repeat,
+    #fff;
+}
+
+/* かんじの といかたカードの絵。絵のあるカードは そのぶん高さの上限を上げる */
+.ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-mode:has(.kj-choice-img){ max-height:300px; }
+.ninja-kids.ninja-kanji .kj-choice-img{
+  display:block; flex:1 1 0; min-height:0; width:100%; max-height:150px;
+  object-fit:contain; filter:drop-shadow(0 4px 6px rgba(0,0,0,.18));
+}
+/* 寝かせたスマホは高さが足りず絵が30pxほどに潰れるので出さない */
+@media (orientation:landscape) and (max-height:380px) {
+  .ninja-kids.ninja-kanji .kj-choice-img{ display:none; }
+}
+/* 地紋が薄くて見えないと言われたので濃くする（2026-09-22）。
+   地紋は2枚重ねて線を倍の濃さに、地は修行の色でうっすら塗って下へ濃く */
+.ninja-kids :is(.kj-menu,.tk-menu,.kk-menu).is-step :is(.kj-choices-mode,.tk-choices-mode,.kk-choices-mode)>:is(.kj-choice,.tk-choice,.kk-choice){
+  background:
+    linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 7%,transparent) 0%,color-mix(in srgb,var(--nk-accent) 26%,transparent) 100%),
+    var(--nk-card-pattern) center/64px 64px repeat,
+    var(--nk-card-pattern) center/64px 64px repeat,
+    #fffdf8;
+}
+.ninja-kids :is(.kj-menu,.tk-menu,.kk-menu).is-step :is(.kj-choices-mode,.tk-choices-mode,.kk-choices-mode)>:is(.kj-choice,.tk-choice,.kk-choice).is-on{
+  background:
+    linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 16%,transparent) 0%,color-mix(in srgb,var(--nk-accent) 40%,transparent) 100%),
+    var(--nk-card-pattern) center/64px 64px repeat,
+    var(--nk-card-pattern) center/64px 64px repeat,
+    #fff;
+}
+/* 地紋の上でも読めるよう、カードの文字に白いふちをつける */
+.ninja-kids :is(.kj-menu,.tk-menu,.kk-menu).is-step :is(.kj-choices-mode,.tk-choices-mode,.kk-choices-mode) :is(.kj-choice-label,.kj-choice-note,.tk-choice-label,.tk-choice-note,.kk-choice-label,.kk-choice-note){
+  text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 6px #fff;
+}

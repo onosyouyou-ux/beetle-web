@@ -51,7 +51,8 @@
   })();
 
   var MODES = [
-    { id: 'yomi', name: 'かんじを よむ しゅぎょう', note: 'かんじの ことば → よみかたを えらぶ' },
+    // img はカードの絵（2026-09-22〜。ほかの2つは絵が届きしだい足す）
+    { id: 'yomi', name: 'かんじを よむ しゅぎょう', note: 'かんじの ことば → よみかたを えらぶ', img: '/assets/images/ninja/modes/kanji-yomu.webp' },
     { id: 'kanji', name: 'かんじに する しゅぎょう', note: 'よみかた → かんじの ことばを えらぶ' },
     { id: 'kaki', name: 'かんじを かく しゅぎょう', note: 'よみかた → かんじを かいて じぶんで まるつけ' }
   ];
@@ -237,6 +238,14 @@
     items.forEach(function (item) {
       var btn = el('button', 'kj-choice' + (item.cls ? ' ' + item.cls : ''));
       btn.type = 'button';
+      if (item.img) {
+        var img = el('img', 'kj-choice-img');
+        img.src = item.img;
+        img.alt = '';
+        img.width = 160;
+        img.height = 160;
+        btn.appendChild(img);
+      }
       btn.appendChild(el('span', 'kj-choice-label', item.name));
       btn.appendChild(el('span', 'kj-choice-note', item.note));
       if (state[key] === item.id) btn.classList.add('is-on');
