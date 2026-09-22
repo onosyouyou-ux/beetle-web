@@ -40,12 +40,12 @@
     var list = school.map(function (g) {
       return { id: 'g' + g, name: '小' + g + 'コース', note: count(g) + 'じ', grades: [g], terms: termsOf(g) };
     });
-    if (gs.indexOf(JUKKEN) >= 0) {
-      list.push({ id: 'jukken', name: 'じゅけんとっくん', note: 'よみ・四字熟語', grades: [JUKKEN] });
-    }
     if (school.length > 1) {
       var n = DATA.filter(function (e) { return e.g < JUKKEN; }).length;
       list.push({ id: 'all', name: 'ぜんぶ まとめて', note: '小1〜小' + school[school.length - 1] + '・' + n + 'じ', grades: school });
+    }
+    if (gs.indexOf(JUKKEN) >= 0) {
+      list.push({ id: 'jukken', name: 'じゅけんとっくん', note: 'よみ・四字熟語', grades: [JUKKEN] });
     }
     return list;
   })();
@@ -191,7 +191,8 @@
       btn.addEventListener('click', function () { renderMenuStep(2); });
     } else if (step === 2) {
       wrap.appendChild(el('p', 'kj-menu-picked', modeName()));
-      wrap.appendChild(group('がくねん', GRADES, 'gradeId', 'kj-choices-grade', 2));
+      // 見出しは出さない（縦が足りないため。2026-09-22）。並びは 小1〜3／小4〜6／ぜんぶ・とっくん の3段
+      wrap.appendChild(group(null, GRADES, 'gradeId', 'kj-choices-grade', 2));
       // 学期の区切りがある学年は、もう1枚（がっき）をはさむ
       if (gradeOf(state.gradeId).terms) {
         btn = el('button', 'kj-start', 'つぎへ →');
@@ -211,7 +212,7 @@
     btn.type = 'button';
     wrap.appendChild(btn);
     if (step > 1) {
-      var back = el('button', 'kj-back', step === 2 ? '← といかたに もどる' : '← がくねんに もどる');
+      var back = el('button', 'kj-back', step === 2 ? '← といかたに もどる' : '← コースに もどる');
       back.type = 'button';
       back.addEventListener('click', function () { renderMenuStep(step - 1); });
       wrap.appendChild(back);
@@ -226,7 +227,7 @@
 
   function group(title, items, key, gridCls, step) {
     var sec = el('section', 'kj-group');
-    sec.appendChild(el('h2', 'kj-group-title', title));
+    if (title) sec.appendChild(el('h2', 'kj-group-title', title));
     var grid = el('div', 'kj-choices ' + gridCls);
     items.forEach(function (item) {
       var btn = el('button', 'kj-choice');

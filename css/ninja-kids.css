@@ -2167,9 +2167,8 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   }
   .ninja-kids.ninja-kanji .kj-menu.is-step>.kj-group{ margin-bottom:0; }
   .ninja-kids.ninja-kanji .kj-menu.is-step>.kj-start{ width:min(100%,320px); margin:18px auto 0; }
-  /* がくねんは横に余裕ができたので4つ並べて2段にする（2列4段だと寝かせた画面に収まらない） */
+  /* コースと がっきは横に広げる（ならびは kanji.css の3段） */
   .ninja-kids.ninja-kanji .kj-menu.is-step:has(.kj-choices-grade, .kj-choices-term){ padding-inline:max(20px,calc((100% - 760px) / 2)); }
-  .ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-grade{ grid-template-columns:repeat(4,minmax(0,1fr)); }
   /* がっきも横に並べる（縦に3つ積むと 1024x768 で1画面をこえる） */
   .ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-term{ grid-template-columns:repeat(3,minmax(0,1fr)); }
 }
