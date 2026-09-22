@@ -2182,6 +2182,15 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   font-size:13px; font-weight:800; color:var(--nk-accent,#c96a1e); background:rgba(255,255,255,.75);
 }
 .ninja-kids.ninja-kanji .kj-menu.is-step>.kj-back{ margin:12px auto 0; }
+/* じゅけんとっくんだけ色を変える（小学校のコースとは別物だと一目でわかるように。2026-09-22）。
+   紺地に金。選んだときの枠と✓も金にして、暗い地でも見えるようにする */
+.ninja-kids.ninja-kanji .kj-choice.is-jukken{ background:#2d3350; border-left-color:#e0b64a; box-shadow:0 5px 0 #171a2b; }
+.ninja-kids.ninja-kanji .kj-choice.is-jukken .kj-choice-label{ color:#ffd878; }
+.ninja-kids.ninja-kanji .kj-choice.is-jukken .kj-choice-note{ color:rgba(255,255,255,.72); }
+.ninja-kids.ninja-kanji .kj-choice.is-jukken:hover{ background:#373e61; }
+.ninja-kids.ninja-kanji .kj-choice.is-jukken.is-on{ background:#3b4266; border-left-color:#ffd878; box-shadow:inset 0 0 0 2px #ffd878, 0 5px 0 #171a2b; }
+.ninja-kids.ninja-kanji .kj-choice.is-jukken.is-on::after{ color:#ffd878; }
+.ninja-kids.ninja-kanji .kj-choice.is-jukken.is-on .kj-choice-label{ color:#ffd878; }
 .ninja-kids.ninja-kanji .kj-menu-note{ margin:8px 0 0; font-size:11px; color:rgba(40,30,20,.6); text-align:center; }
 
 /* 寝かせた画面は高さが足りないので、スタートまわりの余白を詰める。

@@ -45,7 +45,7 @@
       list.push({ id: 'all', name: 'ぜんぶ まとめて', note: '小1〜小' + school[school.length - 1] + '・' + n + 'じ', grades: school });
     }
     if (gs.indexOf(JUKKEN) >= 0) {
-      list.push({ id: 'jukken', name: 'じゅけんとっくん', note: 'よみ・四字熟語', grades: [JUKKEN] });
+      list.push({ id: 'jukken', name: 'じゅけんとっくん', note: 'よみ・四字熟語', grades: [JUKKEN], cls: 'is-jukken' });
     }
     return list;
   })();
@@ -230,7 +230,7 @@
     if (title) sec.appendChild(el('h2', 'kj-group-title', title));
     var grid = el('div', 'kj-choices ' + gridCls);
     items.forEach(function (item) {
-      var btn = el('button', 'kj-choice');
+      var btn = el('button', 'kj-choice' + (item.cls ? ' ' + item.cls : ''));
       btn.type = 'button';
       btn.appendChild(el('span', 'kj-choice-label', item.name));
       btn.appendChild(el('span', 'kj-choice-note', item.note));
