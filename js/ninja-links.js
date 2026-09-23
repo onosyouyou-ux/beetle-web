@@ -82,7 +82,9 @@
     for (var i = 0; i < total; i++) {
       marks += '<i class="' + (i < index ? 'is-done' : i === index ? 'is-current' : '') + '"></i>';
     }
+    // えらんだ しゅぎょう は別の帯にし、その下に 第○問・できた！・目盛り の箱を置く
     return (label ? '<span class="nk-head-picked">' + esc(label) + '</span>' : '') +
+      '<span class="nk-head-bar">' +
       '<span class="nk-head-count">' +
         '<img class="nk-head-icon" src="' + HEAD_ICON + 'scroll.webp" width="28" height="28" alt="">' +
         '<span>第' + (index + 1) + '問 / 全' + total + '問</span>' +
@@ -91,7 +93,8 @@
         '<img class="nk-head-icon is-shuriken" src="' + HEAD_ICON + 'shuriken.webp" width="28" height="28" alt="">' +
         '<span class="nk-score-text">できた！ ' + ok + '問</span>' +
       '</span>' +
-      '<span class="nk-progress-marks" aria-hidden="true">' + marks + '</span>';
+      '<span class="nk-progress-marks" aria-hidden="true">' + marks + '</span>' +
+      '</span>';
   }
   function headScore(root, ok) {
     var t = root.querySelector('.nk-score-text');

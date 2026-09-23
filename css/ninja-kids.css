@@ -3565,3 +3565,36 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
 .ninja-kids.ninja-tokei .tk-progress-marks i{ background:color-mix(in srgb,var(--nk-accent) 22%,#ddd); }
 .ninja-kids.ninja-tokei .tk-progress-marks .is-done{ background:var(--nk-accent-dark); }
 .ninja-kids.ninja-tokei .tk-progress-marks .is-current{ background:var(--nk-accent); }
+
+/* ============================================================
+   見出しを2段に分ける（2026-09-23）：
+   上＝えらんだ しゅぎょう の帯（修行の色で塗る）、下＝第○問・できた！・目盛り の箱
+   ============================================================ */
+.ninja-kids .nk-head,
+.ninja-kids.ninja-tokei .tk-play>.tk-play-head.nk-head{
+  display:flex; flex-direction:column; align-items:stretch; gap:8px;
+  padding:0; border:0; border-radius:0; background:none;
+}
+.ninja-kids .nk-head .nk-head-bar{
+  display:flex; flex-wrap:wrap; gap:5px 12px; align-items:center;
+  padding:5px 12px; border-inline:4px solid color-mix(in srgb,var(--nk-accent) 70%,#fff); border-radius:8px;
+  background:color-mix(in srgb,var(--nk-accent) 14%,#fff); color:var(--nk-accent-dark);
+  font-weight:800;
+}
+.ninja-kids .nk-head .nk-head-bar :is(.nk-head-score,.tk-play-score){ margin-left:auto; }
+.ninja-kids .nk-head .nk-head-bar :is(.tk-play-count,.tk-play-score){ display:flex; align-items:center; gap:6px; white-space:nowrap; }
+/* えらんだ しゅぎょう の帯：修行の色で塗り、白い字（メニューの表示も同じにする） */
+.ninja-kids :is(.nk-head,.tk-play-head) .nk-head-picked,
+.ninja-kids :is(.kj-menu-picked,.tk-menu-picked,.kk-menu-picked){
+  flex-basis:auto; order:0;
+  margin:0; padding:6px 12px; border-radius:8px; text-align:center;
+  font-size:13px; font-weight:800; line-height:1.4;
+  color:#fff; background:var(--nk-accent);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);
+}
+.ninja-kids :is(.kj-menu-picked,.tk-menu-picked,.kk-menu-picked){ margin-bottom:12px; }
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-kids .nk-head{ gap:4px; }
+  .ninja-kids .nk-head .nk-head-bar{ padding:3px 10px; gap:2px 10px; }
+}
+.ninja-kids.ninja-kanji .kj-menu-picked{ color:#fff; background:var(--nk-accent); box-shadow:inset 0 0 0 2px rgba(255,255,255,.35); }

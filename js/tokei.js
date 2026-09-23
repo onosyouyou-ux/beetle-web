@@ -521,24 +521,26 @@
     app.innerHTML = '';
     var wrap = el('div', 'tk-play');
 
-    var head = el('div', 'tk-play-head');
-    // いちばん上に えらんだ しゅぎょう（ほかの修行アプリと同じ。2026-09-23）
+    var head = el('div', 'tk-play-head nk-head');
+    // いちばん上に えらんだ しゅぎょう の帯、その下に 第○問・できた！ の箱（ほかの修行アプリと同じ。2026-09-23）
     var picked = MODES.filter(function (m) { return m.id === state.modeId; })[0];
     head.appendChild(el('span', 'nk-head-picked', picked.name + '・' + stepOf(state.stepId).name));
+    var headBar = el('span', 'nk-head-bar');
+    head.appendChild(headBar);
     var count = el('span', 'tk-play-count');
     count.appendChild(toolIcon('scroll'));
     count.appendChild(el('span', null, '第' + (s.index + 1) + '問 / 全' + SET_LENGTH + '問'));
-    head.appendChild(count);
+    headBar.appendChild(count);
     var score = el('span', 'tk-play-score');
     score.appendChild(toolIcon('shuriken'));
     score.appendChild(el('span', 'tk-score-text', 'できた！ ' + s.correct + '問'));
-    head.appendChild(score);
+    headBar.appendChild(score);
     var trail = el('span', 'tk-progress-marks');
     trail.setAttribute('aria-hidden', 'true');
     for (var mark = 0; mark < SET_LENGTH; mark++) {
       trail.appendChild(el('i', mark < s.index ? 'is-done' : mark === s.index ? 'is-current' : ''));
     }
-    head.appendChild(trail);
+    headBar.appendChild(trail);
     wrap.appendChild(head);
 
     var bar = el('div', 'tk-bar');
