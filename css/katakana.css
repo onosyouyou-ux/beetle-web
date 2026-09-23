@@ -290,3 +290,16 @@ body{
       (orientation:landscape) and (max-height:500px){
   .ninja-kids .kt-quiz>.kt-write-tools{ grid-column:1 / -1; grid-row:3; justify-self:center; margin:0; }
 }
+
+/* 2カラムの段は、かくところを もんだいの枠と同じ大きさにする（2026-09-23）。
+   右カラムいっぱいに紙を広げ、はんてい後の お手本 は紙の左上に重ねる（下に場所を取らない） */
+@media(min-width:1180px),
+      (min-width:768px) and (max-width:1179px) and (orientation:landscape),
+      (orientation:landscape) and (max-height:500px){
+  .ninja-kids .kt-quiz>.kt-write{align-self:stretch;position:relative;gap:0}
+  .ninja-kids .kt-quiz>.kt-write .kt-pad{flex:1 1 auto;width:100%;height:auto;min-height:0}
+  .ninja-kids .kt-quiz>.kt-write .kt-model{
+    position:absolute;top:8px;left:14px;z-index:1;
+    min-height:0;font-size:40px;line-height:1.1;pointer-events:none;
+  }
+}
