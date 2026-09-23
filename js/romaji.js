@@ -269,7 +269,7 @@
 
     root.innerHTML =
       '<div class="rj-quiz">' +
-        '<div class="rj-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok) + '</div>' +
+        '<div class="rj-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok, MODES[state.mode].label) + '</div>' +
         '<div class="rj-q">' +
           '<p class="rj-q-lead">' + esc(q.lead || questionLead(q)) + '</p>' +
           '<p class="rj-q-word' + (q.type === 'futatsu' ? ' is-big' : '') + '">' + esc(q.show) + '</p>' +

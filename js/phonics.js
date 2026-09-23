@@ -167,7 +167,7 @@
 
     root.innerHTML =
       '<div class="pn-quiz">' +
-        '<div class="pn-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok) + '</div>' +
+        '<div class="pn-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok, MODES[state.mode].label) + '</div>' +
         '<div class="pn-q">' +
           '<p class="pn-q-lead">' + esc(questionLead(q)) + '</p>' +
           '<p class="pn-q-word">' + esc(q.show) + '</p>' +

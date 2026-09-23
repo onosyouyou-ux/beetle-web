@@ -260,6 +260,15 @@
     return b;
   }
 
+  // プレイ中の見出しに出す「えらんだ しゅぎょう」
+  function playLabel() {
+    var grade = gradeOf(state.gradeId);
+    var label = modeName() + '・' + grade.name;
+    var term = grade.terms && grade.terms.filter(function (t) { return t.id === state.termId; })[0];
+    if (term && term.term) label += '・' + term.term + 'がっき';
+    return label;
+  }
+
   function modeName() {
     return MODES.filter(function (m) { return m.id === state.modeId; })[0].name;
   }
@@ -319,7 +328,7 @@
     var wrap = el('div', 'kj-play');
 
     var head = el('div', 'kj-play-head nk-head');
-    head.innerHTML = NinjaHead.inner(s.index, SET_LENGTH, s.correct);
+    head.innerHTML = NinjaHead.inner(s.index, SET_LENGTH, s.correct, playLabel());
     wrap.appendChild(head);
 
     var bar = el('div', 'kj-bar');

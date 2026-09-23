@@ -76,12 +76,14 @@
      とけい修行の形を 全修行アプリで そろえる（2026-09-23）。
      外側の箱（.kj-play-head / .kt-bar など）は各アプリが持ち、中身だけを返す */
   var HEAD_ICON = '/assets/images/ninja/tokei-ui/';
-  function headInner(index, total, ok) {
+  // label：えらんだ しゅぎょう（例「かんじを よむ しゅぎょう・小1コース」）。いちばん上に出す
+  function headInner(index, total, ok, label) {
     var marks = '';
     for (var i = 0; i < total; i++) {
       marks += '<i class="' + (i < index ? 'is-done' : i === index ? 'is-current' : '') + '"></i>';
     }
-    return '<span class="nk-head-count">' +
+    return (label ? '<span class="nk-head-picked">' + esc(label) + '</span>' : '') +
+      '<span class="nk-head-count">' +
         '<img class="nk-head-icon" src="' + HEAD_ICON + 'scroll.webp" width="28" height="28" alt="">' +
         '<span>第' + (index + 1) + '問 / 全' + total + '問</span>' +
       '</span>' +

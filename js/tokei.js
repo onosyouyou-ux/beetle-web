@@ -522,6 +522,9 @@
     var wrap = el('div', 'tk-play');
 
     var head = el('div', 'tk-play-head');
+    // いちばん上に えらんだ しゅぎょう（ほかの修行アプリと同じ。2026-09-23）
+    var picked = MODES.filter(function (m) { return m.id === state.modeId; })[0];
+    head.appendChild(el('span', 'nk-head-picked', picked.name + '・' + stepOf(state.stepId).name));
     var count = el('span', 'tk-play-count');
     count.appendChild(toolIcon('scroll'));
     count.appendChild(el('span', null, '第' + (s.index + 1) + '問 / 全' + SET_LENGTH + '問'));

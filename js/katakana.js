@@ -189,7 +189,7 @@
   function renderKaku(q) {
     root.innerHTML =
       '<div class="kt-quiz">' +
-        '<div class="kt-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok) + '</div>' +
+        '<div class="kt-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok, MODES[state.mode].label) + '</div>' +
         '<div class="kt-q">' +
           '<p class="kt-q-lead">この 字を カタカナで かいてね</p>' +
           '<p class="kt-q-word is-big">' + esc(q.show) + '</p>' +
@@ -399,7 +399,7 @@
 
     root.innerHTML =
       '<div class="kt-quiz">' +
-        '<div class="kt-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok) + '</div>' +
+        '<div class="kt-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok, MODES[state.mode].label) + '</div>' +
         '<div class="kt-q">' +
           '<p class="kt-q-lead">' + esc(questionLead(q)) + '</p>' +
           '<p class="kt-q-word' + (q.type === 'nigata' ? ' is-big' : '') + (q.ex ? ' is-sentence' : '') + '">' +

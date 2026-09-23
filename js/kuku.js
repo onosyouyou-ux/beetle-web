@@ -257,7 +257,9 @@
     var wrap = el('div', 'kk-play');
 
     var head = el('div', 'kk-play-head nk-head');
-    head.innerHTML = NinjaHead.inner(s.index, s.total, s.correct);
+    var mode = MODES.filter(function (m) { return m.id === state.modeId; })[0];
+    var dan = DANS.filter(function (d) { return d.id === state.danId; })[0];
+    head.innerHTML = NinjaHead.inner(s.index, s.total, s.correct, mode.name + (dan ? '・' + dan.name : ''));
     wrap.appendChild(head);
 
     var bar = el('div', 'kk-bar');
