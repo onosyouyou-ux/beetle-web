@@ -187,7 +187,7 @@
     var wrap = el('div', 'kj-menu is-step');
     var btn;
     if (step === 1) {
-      wrap.appendChild(group('といかた', MODES, 'modeId', 'kj-choices-column kj-choices-mode', 1));
+      wrap.appendChild(group('しゅぎょうを えらぶ', MODES, 'modeId', 'kj-choices-column kj-choices-mode', 1));
       btn = startPlaceholder('kj-start');
     } else if (step === 2) {
       wrap.appendChild(el('p', 'kj-menu-picked', modeName()));

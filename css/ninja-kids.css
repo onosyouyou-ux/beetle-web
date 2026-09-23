@@ -3217,3 +3217,73 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 6px #fff;
 }
 .ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode) :is(.kj-choice-note,.tk-choice-note,.kk-choice-note,.kt-mode-s,.rj-mode-s,.pn-mode-s){ color:#5f5044; }
+
+/* ============================================================
+   選ぶカードの柄と枠を控えめにする（2026-09-23）
+   柄が強すぎると言われたので、ふだんは「薄い地紋＋赤茶の細線と淡い金線の二重枠」だけにし、
+   ホバーで金線を少し濃く、選んだときだけ左端に修行の色の太線を出す（全面を囲う太い赤枠はやめる）。
+   地紋は1枚にし、上に地の色を重ねて薄める。じゅけんとっくんは対象外のまま
+   ============================================================ */
+.ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode){
+  --nk-card-line:color-mix(in srgb,#8b4a36 45%,#fff);
+  --nk-card-gold:rgba(208,170,92,.45);
+  border:1px solid var(--nk-card-line);
+  background:
+    linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 3%,transparent) 0%,color-mix(in srgb,var(--nk-accent) 10%,transparent) 100%),
+    linear-gradient(rgba(255,253,248,.72),rgba(255,253,248,.72)),
+    var(--nk-card-pattern) center/64px 64px repeat,
+    #fffdf8;
+  box-shadow:
+    inset 0 0 0 3px #fffdf8,
+    inset 0 0 0 4px var(--nk-card-gold),
+    0 3px 0 #ddd2bf;
+  transition:box-shadow .15s, translate .15s;
+}
+.ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode):hover{
+  --nk-card-gold:rgba(200,156,64,.8);
+  border-color:color-mix(in srgb,#8b4a36 70%,#fff);
+  translate:0 -1px;
+}
+.ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode).is-on{
+  --nk-card-gold:rgba(200,156,64,.85);
+  border-color:color-mix(in srgb,#8b4a36 80%,#fff);
+  background:
+    linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 6%,transparent) 0%,color-mix(in srgb,var(--nk-accent) 16%,transparent) 100%),
+    linear-gradient(rgba(255,253,248,.68),rgba(255,253,248,.68)),
+    var(--nk-card-pattern) center/64px 64px repeat,
+    #fffdf8;
+  box-shadow:
+    inset 6px 0 0 var(--nk-accent),
+    inset 0 0 0 3px #fffdf8,
+    inset 0 0 0 4px var(--nk-card-gold),
+    0 3px 0 color-mix(in srgb,var(--nk-accent) 30%,#ddd2bf);
+}
+@media (prefers-reduced-motion:reduce) {
+  .ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode):hover{ translate:none; }
+}
+
+/* スマホ（縦）は といかたカードを横に3枚ならべず、1枚1行で縦に積む（2026-09-23）。
+   せまい幅に3枚だと文字が1〜2字ずつ折り返して読みにくいため。
+   カードの中は「絵を左・文字を右」の横並びにし、文字は左寄せ */
+@media (max-width:767px) and (orientation:portrait) {
+  .ninja-kids:is(.ninja-kanji,.ninja-tokei,.ninja-kuku) :is(.kj-menu.is-step .kj-choices-mode,.tk-menu.is-step .tk-choices-mode,.kk-menu.is-step .kk-choices-mode){
+    grid-template-columns:1fr; grid-auto-rows:auto; align-content:center; height:auto; max-height:none;
+  }
+  .ninja-kids:is(.ninja-kanji,.ninja-tokei,.ninja-kuku) :is(.kj-menu.is-step .kj-choices-mode .kj-choice,.tk-menu.is-step .tk-choices-mode .tk-choice,.kk-menu.is-step .kk-choices-mode .kk-choice){
+    flex-direction:column; align-items:flex-start; justify-content:center; gap:2px;
+    padding:8px 30px 8px 16px; text-align:left;
+  }
+  .ninja-kids:is(.ninja-kanji,.ninja-tokei,.ninja-kuku) :is(.kj-menu.is-step .kj-choices-mode,.tk-menu.is-step .tk-choices-mode,.kk-menu.is-step .kk-choices-mode) :is(.kj-choice-label,.kj-choice-note,.tk-choice-label,.tk-choice-note,.kk-choice-label,.kk-choice-note){
+    text-align:left;
+  }
+  /* 絵と文字を横に並べるため、文字は右側で縦に積む */
+  .ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-mode .kj-choice:has(.kj-choice-img){
+    display:grid; grid-template-columns:auto 1fr; grid-template-rows:auto auto;
+    align-content:center; column-gap:12px; row-gap:2px;
+  }
+  .ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-mode .kj-choice-img{
+    grid-row:1 / 3; width:auto; height:clamp(52px,11dvh,84px); aspect-ratio:1; align-self:center;
+  }
+  .ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-mode .kj-choice-label{ align-self:end; }
+  .ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-mode .kj-choice-note{ align-self:start; }
+}
