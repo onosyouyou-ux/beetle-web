@@ -313,9 +313,13 @@
   // 2段で選ぶ（2026-09-23）：1段目で けいさんの しゅるい（下に あそびかた）、
   // しゅるいを押したら 2段目の むずかしさ＋スタートへ進む
   let menuStep = 1;
+  // むずかしさを この画面で押したか。画面に来たときは何も選んでいない状態から始め、
+  // 押すまでスタートは押せない（2026-09-23。修行アプリと同じ）
+  let diffPicked = false;
 
-  function renderMenu(step) {
+  function renderMenu(step, keep) {
     session = null;
+    if (!keep) diffPicked = false;
     // 引数なし＝いまの段のまま描きなおす。ボタンから呼ばれた（イベントが来た）ときは1段目へ
     if (step === 2) menuStep = 2;
     else if (step !== undefined) menuStep = 1;
@@ -372,13 +376,14 @@
     app.appendChild(group('むずかしさ', DIFFS, 'diffId', (d) => ({
       label: d.name,
       note: chosenMode.diffNote(d)
-    })));
+    }), null, () => { diffPicked = true; renderMenu(2, true); }));
 
     const start = el('button', 'sa-start');
     start.type = 'button';
     start.appendChild(icon('rocket-simple', 'sa-start-icon'));
     start.appendChild(el('span', null, 'スタート'));
     start.addEventListener('click', startSession);
+    if (!diffPicked) start.disabled = true;
     app.appendChild(start);
 
     const back = el('button', 'sa-step-back', '← けいさんの しゅるいに もどる');
@@ -412,7 +417,9 @@
         btn.classList.add('is-disabled');
         btn.disabled = true;
       } else {
-        if (selection[key] === item.id) {
+        // しゅるいは押したら次へ進むので選択ずみを出さない。むずかしさは この画面で押したものだけ
+        const shown = key === 'modeId' ? false : key === 'diffId' ? diffPicked : true;
+        if (shown && selection[key] === item.id) {
           btn.classList.add('is-on');
           btn.appendChild(icon('check-badge', 'sa-choice-check'));
         }

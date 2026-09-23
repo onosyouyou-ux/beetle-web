@@ -126,7 +126,12 @@
   // 2枚目で だん を選んで「スタート」。スタートの位置は2枚で そろえる。
   function renderMenu() { renderMenuStep(1); }
 
-  function renderMenuStep(step) {
+  // その画面で押したカード。画面に来たときは何も選んでいない状態から始め、
+  // だん を押すまでスタートは押せない（2026-09-23。かんじ修行と同じ）
+  var picked = null;
+
+  function renderMenuStep(step, keep) {
+    if (!keep) picked = null;
     app.innerHTML = '';
     var wrap = el('div', 'kk-menu is-step');
     var btn;
@@ -142,6 +147,7 @@
       wrap.appendChild(group(null, DANS, 'danId', 'kk-choices-dan', 2));
       btn = el('button', 'kk-start', 'スタート');
       btn.addEventListener('click', startSession);
+      if (!picked) btn.disabled = true;
     }
     btn.type = 'button';
     wrap.appendChild(btn);
@@ -179,9 +185,14 @@
       }
       btn.appendChild(el('span', 'kk-choice-label', item.name));
       btn.appendChild(el('span', 'kk-choice-note', item.note));
-      if (state[key] === item.id) btn.classList.add('is-on');
+      if (picked && picked.key === key && picked.id === item.id) btn.classList.add('is-on');
       // もんだい を押したら そのまま だん の画面へ。だん は選ぶだけ
-      btn.addEventListener('click', function () { state[key] = item.id; renderMenuStep(2); });
+      btn.addEventListener('click', function () {
+        state[key] = item.id;
+        if (step === 1) return renderMenuStep(2);
+        picked = { key: key, id: item.id };
+        renderMenuStep(2, true);
+      });
       grid.appendChild(btn);
     });
     sec.appendChild(grid);

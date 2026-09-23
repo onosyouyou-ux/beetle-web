@@ -182,7 +182,13 @@
   // カードを押したら そのまま次の画面へ進む。スタートを押すのは最後の画面だけ。
   function renderMenu() { renderMenuStep(1); }
 
-  function renderMenuStep(step) {
+  // その画面で押したカード。画面に来たときは何も選んでいない状態から始める（2026-09-23）。
+  // 前の選択や初期値が「選択ずみ」で出ていると、押していないのに選ばれて見えるため。
+  // スタートのある画面は、カードを押すまでスタートを押せない
+  var picked = null;
+
+  function renderMenuStep(step, keep) {
+    if (!keep) picked = null;
     app.innerHTML = '';
     var wrap = el('div', 'kj-menu is-step');
     var btn;
@@ -193,13 +199,10 @@
       wrap.appendChild(el('p', 'kj-menu-picked', modeName()));
       // 見出しは出さない（縦が足りないため。2026-09-22）。並びは 小1〜3／小4〜6／ぜんぶ・とっくん の3段
       wrap.appendChild(group(null, GRADES, 'gradeId', 'kj-choices-grade', 2));
-      // 学期の区切りがある学年は、押すと がっき の画面へ進むのでスタートは出さない
-      if (gradeOf(state.gradeId).terms) {
-        btn = startPlaceholder('kj-start');
-      } else {
-        btn = el('button', 'kj-start', 'スタート');
-        btn.addEventListener('click', startSession);
-      }
+      // 学期の区切りがある学年は、押すと がっき の画面へ進むのでスタートは押せない
+      btn = el('button', 'kj-start', 'スタート');
+      btn.addEventListener('click', startSession);
+      if (!picked) btn.disabled = true;
     } else {
       var grade = gradeOf(state.gradeId);
       wrap.appendChild(el('p', 'kj-menu-picked', modeName() + '・' + grade.name));
@@ -207,6 +210,7 @@
       wrap.appendChild(el('p', 'kj-menu-note', '※ がっきの くぎりは 光村図書の きょうかしょに あわせています'));
       btn = el('button', 'kj-start', 'スタート');
       btn.addEventListener('click', startSession);
+      if (!picked) btn.disabled = true;
     }
     btn.type = 'button';
     wrap.appendChild(btn);
@@ -254,7 +258,7 @@
       }
       btn.appendChild(el('span', 'kj-choice-label', item.name));
       btn.appendChild(el('span', 'kj-choice-note', item.note));
-      if (state[key] === item.id) btn.classList.add('is-on');
+      if (picked && picked.key === key && picked.id === item.id) btn.classList.add('is-on');
       btn.addEventListener('click', function () {
         // 学年を変えたら、学期は「ぜんぶ まとめて」に戻す
         if (key === 'gradeId' && state.gradeId !== item.id) state.termId = 'all';
@@ -262,7 +266,8 @@
         // 押したら次の画面へ。1枚目は必ず、2枚目は学期の画面がある学年だけ進む
         if (step === 1) return renderMenuStep(2);
         if (step === 2 && gradeOf(item.id).terms) return renderMenuStep(3);
-        renderMenuStep(step);
+        picked = { key: key, id: item.id };
+        renderMenuStep(step, true);
       });
       grid.appendChild(btn);
     });

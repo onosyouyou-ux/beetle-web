@@ -848,3 +848,7 @@ body::after {
   .sa-cherry-ball { width: 42px; height: 42px; font-size: 20px; }
   .sa-cherry-cap { font-size: 10px; }
 }
+
+/* むずかしさを押すまでスタートは押せない（2026-09-23） */
+.sa-start:disabled { opacity: .45; filter: grayscale(.5); cursor: not-allowed; }
+.sa-start:disabled:active { transform: none; }

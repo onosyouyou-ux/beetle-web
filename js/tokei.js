@@ -310,7 +310,12 @@
   // 2枚目で なんいど を選んで「スタート」。スタートの位置は2枚で そろえる。
   function renderMenu() { renderMenuStep(1); }
 
-  function renderMenuStep(step) {
+  // その画面で押したカード。画面に来たときは何も選んでいない状態から始め、
+  // なんいど を押すまでスタートは押せない（2026-09-23。かんじ修行と同じ）
+  var picked = null;
+
+  function renderMenuStep(step, keep) {
+    if (!keep) picked = null;
     app.innerHTML = '';
     var wrap = el('div', 'tk-menu is-step');
     var btn;
@@ -350,6 +355,7 @@
 
       btn = el('button', 'tk-start', 'スタート');
       btn.addEventListener('click', startSession);
+      if (!picked) btn.disabled = true;
     }
     btn.type = 'button';
     wrap.appendChild(btn);
@@ -413,9 +419,14 @@
     }
     btn.appendChild(el('span', 'tk-choice-label', item.name));
     btn.appendChild(el('span', 'tk-choice-note', item.note));
-    if (state[stateKey] === item.id) btn.classList.add('is-on');
+    if (picked && picked.key === stateKey && picked.id === item.id) btn.classList.add('is-on');
     // といかた を押したら そのまま なんいど の画面へ。なんいど は選ぶだけ
-    btn.addEventListener('click', function () { state[stateKey] = item.id; renderMenuStep(2); });
+    btn.addEventListener('click', function () {
+      state[stateKey] = item.id;
+      if (stateKey === 'modeId') return renderMenuStep(2);
+      picked = { key: stateKey, id: item.id };
+      renderMenuStep(2, true);
+    });
     return btn;
   }
 

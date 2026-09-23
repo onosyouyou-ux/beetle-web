@@ -3321,3 +3321,8 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   .ninja-kids.ninja-kuku .kk-menu.is-step .kk-choices-mode .kk-choice-label{ align-self:end; }
   .ninja-kids.ninja-kuku .kk-menu.is-step .kk-choices-mode .kk-choice-note{ align-self:start; }
 }
+
+/* スタートのある画面は、カードを押すまでスタートを押せない（2026-09-23） */
+.ninja-kids :is(.kj-start,.tk-start,.kk-start):disabled{
+  opacity:.45; filter:grayscale(.5); cursor:not-allowed; translate:none; box-shadow:none;
+}
