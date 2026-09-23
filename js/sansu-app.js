@@ -870,7 +870,6 @@
     mascot.width = 240; mascot.height = 240;
     badge.appendChild(mascot);
     badge.appendChild(el('strong', 'sa-answer-title', ok ? 'せいかい!' : 'おしい!'));
-    badge.appendChild(el('span', 'sa-answer-note', ok ? 'そのちょうし!' : 'こたえを みてみよう'));
     effect.appendChild(burst); effect.appendChild(badge); document.body.appendChild(effect);
     setTimeout(() => effect.classList.add('is-leaving'), 850);
     setTimeout(() => effect.remove(), 1150);
