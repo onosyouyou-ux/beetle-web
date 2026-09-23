@@ -234,7 +234,6 @@
   }
 
   const starsFor = (correct) => (correct >= CHALLENGE_LENGTH ? 3 : correct >= 8 ? 2 : correct >= 6 ? 1 : 0);
-  const starText = (n) => '⭐'.repeat(n) + '☆'.repeat(3 - n);
 
   // ---- おと（Web Audio）----
   let audioCtx = null;
@@ -327,9 +326,11 @@
     renderReference();
   }
   // プレイも履歴に1つ積む。プレイ・けっか から戻るときは直前の画面へ
+  // 「メニューに もどる」は、むずかしさ・やりかた の画面をとばして メニューの1段目へ（2026-09-23）。
+  // 履歴は [1段目, 2段目 か やりかた, プレイ] と積んであるので2つ戻る
   function backFromPlay() {
-    if (history.state && history.state.nkStep === 'play') history.back();
-    else renderMenu();
+    if (history.state && history.state.nkStep === 'play') history.go(-2);
+    else renderMenu(1);
   }
   window.addEventListener('popstate', () => {
     // ページ内リンク（#faq など）の履歴は state を持たないので、画面はそのままにする
@@ -389,10 +390,13 @@
     const chosenStyle = findStyle(selection.styleId);
     app.appendChild(el('p', 'sa-step-chosen', chosenMode.name + '・' + chosenStyle.name));
 
-    app.appendChild(group('むずかしさ', DIFFS, 'diffId', (d) => ({
+    // むずかしさは やさしい順に縦1列で並べ、上から下へ むずかしくなるのが分かるようにする（2026-09-23）
+    const diffs = group('むずかしさ', DIFFS, 'diffId', (d) => ({
       label: d.name,
       note: chosenMode.diffNote(d)
-    }), null, () => renderMenu(2, true)));
+    }), null, () => renderMenu(2, true));
+    diffs.classList.add('sa-group-diff');
+    app.appendChild(diffs);
 
     const start = el('button', 'sa-start');
     start.type = 'button';
@@ -550,6 +554,7 @@
     session = {
       mode: mode, diff: diff, style: style,
       index: 0, correct: 0, locked: false, current: null,
+      marks: [],   // 1もんごとの せいかい（true）／まちがい（false）。けっかの ★☆ に使う
       recent: [],   // 直近の問題文。連続で同じ問題を出さないため
       combo: 0, bestCombo: 0,   // 連続正解（COMBO）
       arrivedStage: null   // 直前に到着した天体のステージ番号（アイコン上に「到着!」を出す）
@@ -787,6 +792,7 @@
     buttons.forEach((b) => { b.disabled = true; });
 
     const ok = val === q.answer;
+    s.marks.push(ok);
     showAnswerEffect(ok);
     if (ok) {
       btn.classList.add('is-correct');
@@ -896,11 +902,19 @@
       saveProgress();
 
       const stars = starsFor(s.correct);
-      card.appendChild(el('div', 'sa-result-emoji', stars === 3 ? '🏆' : stars >= 1 ? '🚀' : '🌱'));
       const score = el('p', 'sa-result-score');
       score.innerHTML = CHALLENGE_LENGTH + 'もん ちゅう <strong>' + s.correct + '</strong> もん せいかい!';
       card.appendChild(score);
-      card.appendChild(el('div', 'sa-result-stars', starText(stars)));
+      // 1もんずつ、せいかいは ★・まちがいは ☆ で10こ ならべる（2026-09-23。3段階の星から変更）
+      const row = el('div', 'sa-result-marks');
+      row.setAttribute('aria-label', CHALLENGE_LENGTH + 'もん ちゅう ' + s.correct + 'もん せいかい');
+      for (let i = 0; i < CHALLENGE_LENGTH; i++) {
+        const ok = s.marks[i] === true;
+        const mark = el('span', 'sa-result-mark' + (ok ? ' is-ok' : ''), ok ? '★' : '☆');
+        mark.setAttribute('aria-hidden', 'true');
+        row.appendChild(mark);
+      }
+      card.appendChild(row);
       card.appendChild(el('p', 'sa-result-msg',
         stars === 3 ? 'ぜんもん せいかい! すごい!'
           : stars === 2 ? 'すごい! もうすこしで ぜんもん せいかい!'

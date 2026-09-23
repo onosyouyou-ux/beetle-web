@@ -870,3 +870,21 @@ body::after {
 /* むずかしさを押すまでスタートは押せない（2026-09-23） */
 .sa-start:disabled { opacity: .45; filter: grayscale(.5); cursor: not-allowed; }
 .sa-start:disabled:active { transform: none; }
+
+/* けっか：1もんずつの ★（せいかい）☆（まちがい）を10こ ならべる（2026-09-23） */
+.sa-result-marks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px 4px;
+  margin: 10px 0 12px;
+  font-size: 30px;
+  line-height: 1;
+}
+.sa-result-mark { color: #c9c2e6; }
+.sa-result-mark.is-ok { color: #f5b400; text-shadow: 0 2px 0 rgba(160, 110, 0, .25); }
+@media (max-width: 400px) { .sa-result-marks { font-size: 24px; } }
+
+/* むずかしさは縦1列（上ほど やさしい）。4まい積むので1まいの高さは少しつめる（2026-09-23） */
+.sa-group-diff .sa-choices { grid-template-columns: 1fr; gap: 8px; }
+.sa-group-diff .sa-choice { min-height: 62px; padding-block: 10px 12px; }
