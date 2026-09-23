@@ -308,7 +308,29 @@
 
   // メニューは2段階（2026-09-22。かんじ修行と同じ型）。1枚目は といかた を押したら そのまま次へ、
   // 2枚目で なんいど を選んで「スタート」。スタートの位置は2枚で そろえる。
-  function renderMenu() { renderMenuStep(1); }
+  // ブラウザの「戻る」と画面の「← もどる」で1つ前のメニュー画面へ戻れるようにする（2026-09-23）。
+  // メニューの画面ごとに履歴を1つ積み、戻る操作は history.back() にそろえる
+  function goStep(step) {
+    history.pushState({ nkStep: step }, '');
+    renderMenuStep(step);
+  }
+  function currentStep() {
+    var st = history.state && history.state.nkStep;
+    return typeof st === 'number' ? st : 1;
+  }
+  window.addEventListener('popstate', function () {
+    // ページ内リンク（#faq など）の履歴は state を持たないので、メニューはそのままにする
+    if (!history.state || typeof history.state.nkStep !== 'number') return;
+    renderMenuStep(history.state.nkStep);
+  });
+  // プレイも履歴に1つ積む。プレイ・けっか から メニューへ戻るときは、直前のメニュー画面へ
+  function pushPlay() {
+    if (!(history.state && history.state.nkStep === 'play')) history.pushState({ nkStep: 'play' }, '');
+  }
+  function renderMenu() {
+    if (history.state && history.state.nkStep === 'play') history.back();
+    else renderMenuStep(currentStep());
+  }
 
   // その画面で押したカード。画面に来たときは何も選んでいない状態から始め、
   // なんいど を押すまでスタートは押せない（2026-09-23。かんじ修行と同じ）
@@ -316,6 +338,7 @@
 
   function renderMenuStep(step, keep) {
     if (!keep) picked = null;
+    state.session = null;
     app.innerHTML = '';
     var wrap = el('div', 'tk-menu is-step');
     var btn;
@@ -368,7 +391,7 @@
       back.tabIndex = -1;
       back.setAttribute('aria-hidden', 'true');
     } else {
-      back.addEventListener('click', function () { renderMenuStep(1); });
+      back.addEventListener('click', function () { history.back(); });
     }
     wrap.appendChild(back);
 
@@ -423,7 +446,7 @@
     // といかた を押したら そのまま なんいど の画面へ。なんいど は選ぶだけ
     btn.addEventListener('click', function () {
       state[stateKey] = item.id;
-      if (stateKey === 'modeId') return renderMenuStep(2);
+      if (stateKey === 'modeId') return goStep(2);
       picked = { key: stateKey, id: item.id };
       renderMenuStep(2, true);
     });
@@ -465,6 +488,7 @@
   }
 
   function startSession() {
+    pushPlay();
     var step = stepOf(state.stepId);
     state.session = {
       step: step.step,
@@ -595,6 +619,7 @@
       : 'こたえは ' + answerText(q.answer, hands) + (chosen.why ? '（' + chosen.why + '）' : '');
 
     setTimeout(function () {
+      if (state.session !== s) return;
       s.index++;
       nextQuestion();
     }, ok ? 1100 : 2000);
@@ -628,5 +653,6 @@
     app.appendChild(wrap);
   }
 
-  renderMenu();
+  history.replaceState({ nkStep: 1 }, '');
+  renderMenuStep(1);
 })();

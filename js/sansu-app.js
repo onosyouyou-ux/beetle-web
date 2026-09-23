@@ -317,6 +317,28 @@
   // 押すまでスタートは押せない（2026-09-23。修行アプリと同じ）
   let diffPicked = false;
 
+  // ブラウザの「戻る」と画面の「← もどる」で1つ前の画面へ戻れるようにする（2026-09-23）。
+  // 2段目と やりかた の画面で履歴を1つ積み、戻る操作は history.back() にそろえる
+  function goMenu2() {
+    history.pushState({ nkStep: 2 }, '');
+    renderMenu(2);
+  }
+  function openReference() {
+    history.pushState({ nkStep: 'ref' }, '');
+    renderReference();
+  }
+  // プレイも履歴に1つ積む。プレイ・けっか から戻るときは直前の画面へ
+  function backFromPlay() {
+    if (history.state && history.state.nkStep === 'play') history.back();
+    else renderMenu();
+  }
+  window.addEventListener('popstate', () => {
+    // ページ内リンク（#faq など）の履歴は state を持たないので、画面はそのままにする
+    const st = history.state && history.state.nkStep;
+    if (st === 'ref') renderReference();
+    else if (st === 1 || st === 2) renderMenu(st);
+  });
+
   function renderMenu(step, keep) {
     session = null;
     if (!keep) diffPicked = false;
@@ -341,14 +363,14 @@
     refBody.appendChild(el('span', 'sa-choice-label', 'やりかた'));
     refBody.appendChild(el('span', 'sa-choice-note', 'さくらんぼざん って?'));
     refBtn.appendChild(refBody);
-    refBtn.addEventListener('click', renderReference);
+    refBtn.addEventListener('click', openReference);
 
     // しゅるいは押したら次の画面へ進む
     app.appendChild(group('けいさんの しゅるい', MODES, 'modeId', (m) => ({
       label: m.name,
       note: m.ready ? null : 'じゅんびちゅう',
       disabled: !m.ready
-    }), refBtn, () => renderMenu(2)));
+    }), refBtn, goMenu2));
 
     app.appendChild(group('あそびかた', PLAYSTYLES, 'styleId', (s) => ({
       label: s.name,
@@ -388,7 +410,7 @@
 
     const back = el('button', 'sa-step-back', '← けいさんの しゅるいに もどる');
     back.type = 'button';
-    back.addEventListener('click', () => renderMenu(1));
+    back.addEventListener('click', () => history.back());
     app.appendChild(back);
   }
 
@@ -443,7 +465,7 @@
     const head = el('div', 'sa-play-head');
     const back = el('button', 'sa-back', '← もどる');
     back.type = 'button';
-    back.addEventListener('click', renderMenu);
+    back.addEventListener('click', () => history.back());
     head.appendChild(back);
     head.appendChild(el('span', 'sa-play-mode', '🍒 さくらんぼざん の やりかた'));
     app.appendChild(head);
@@ -494,7 +516,7 @@
     actions.appendChild(tryBtn);
     const backBtn = el('a', 'sa-btn', 'メニューに もどる');
     backBtn.href = 'javascript:void(0)';
-    backBtn.addEventListener('click', renderMenu);
+    backBtn.addEventListener('click', () => history.back());
     actions.appendChild(backBtn);
     card.appendChild(actions);
 
@@ -528,6 +550,7 @@
 
   // ---- プレイ ----
   function startSession() {
+    if (!(history.state && history.state.nkStep === 'play')) history.pushState({ nkStep: 'play' }, '');
     const mode = findMode(selection.modeId);
     const diff = findDiff(selection.diffId);
     const style = findStyle(selection.styleId);
@@ -607,7 +630,7 @@
     back.type = 'button';
     back.addEventListener('click', () => {
       session = null;
-      renderMenu();
+      backFromPlay();
     });
     backWrap.appendChild(back);
     app.appendChild(backWrap);
@@ -902,12 +925,13 @@
 
     const menu = el('button', 'sa-btn', 'メニューに もどる');
     menu.type = 'button';
-    menu.addEventListener('click', () => { session = null; renderMenu(); });
+    menu.addEventListener('click', () => { session = null; backFromPlay(); });
     actions.appendChild(menu);
 
     card.appendChild(actions);
     app.appendChild(card);
   }
 
-  renderMenu();
+  history.replaceState({ nkStep: 1 }, '');
+  renderMenu(1);
 })();

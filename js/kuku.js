@@ -124,7 +124,29 @@
 
   // メニューは2段階（2026-09-22。かんじ修行と同じ型）。1枚目は もんだい を押したら そのまま次へ、
   // 2枚目で だん を選んで「スタート」。スタートの位置は2枚で そろえる。
-  function renderMenu() { renderMenuStep(1); }
+  // ブラウザの「戻る」と画面の「← もどる」で1つ前のメニュー画面へ戻れるようにする（2026-09-23）。
+  // メニューの画面ごとに履歴を1つ積み、戻る操作は history.back() にそろえる
+  function goStep(step) {
+    history.pushState({ nkStep: step }, '');
+    renderMenuStep(step);
+  }
+  function currentStep() {
+    var st = history.state && history.state.nkStep;
+    return typeof st === 'number' ? st : 1;
+  }
+  window.addEventListener('popstate', function () {
+    // ページ内リンク（#faq など）の履歴は state を持たないので、メニューはそのままにする
+    if (!history.state || typeof history.state.nkStep !== 'number') return;
+    renderMenuStep(history.state.nkStep);
+  });
+  // プレイも履歴に1つ積む。プレイ・けっか から メニューへ戻るときは、直前のメニュー画面へ
+  function pushPlay() {
+    if (!(history.state && history.state.nkStep === 'play')) history.pushState({ nkStep: 'play' }, '');
+  }
+  function renderMenu() {
+    if (history.state && history.state.nkStep === 'play') history.back();
+    else renderMenuStep(currentStep());
+  }
 
   // その画面で押したカード。画面に来たときは何も選んでいない状態から始め、
   // だん を押すまでスタートは押せない（2026-09-23。かんじ修行と同じ）
@@ -132,6 +154,7 @@
 
   function renderMenuStep(step, keep) {
     if (!keep) picked = null;
+    state.session = null;
     app.innerHTML = '';
     var wrap = el('div', 'kk-menu is-step');
     var btn;
@@ -160,7 +183,7 @@
       back.tabIndex = -1;
       back.setAttribute('aria-hidden', 'true');
     } else {
-      back.addEventListener('click', function () { renderMenuStep(1); });
+      back.addEventListener('click', function () { history.back(); });
     }
     wrap.appendChild(back);
 
@@ -189,7 +212,7 @@
       // もんだい を押したら そのまま だん の画面へ。だん は選ぶだけ
       btn.addEventListener('click', function () {
         state[key] = item.id;
-        if (step === 1) return renderMenuStep(2);
+        if (step === 1) return goStep(2);
         picked = { key: key, id: item.id };
         renderMenuStep(2, true);
       });
@@ -200,6 +223,7 @@
   }
 
   function startSession() {
+    pushPlay();
     var list = buildList(poolOf(state.danId));
     state.session = { list: list, total: list.length, index: 0, correct: 0, locked: false, q: null, missed: [] };
     nextQuestion();
@@ -312,7 +336,7 @@
     fb.className = 'kk-feedback ' + (chosen.ok ? 'is-ok' : 'is-ng');
     fb.textContent = (chosen.ok ? 'せいかい! ' : 'こたえは ') + e.q + ' ' + e.y + '（' + shiki(e) + ' = ' + e.ans + '）';
 
-    setTimeout(function () { s.index++; nextQuestion(); }, chosen.ok ? 1400 : 2600);
+    setTimeout(function () { if (state.session !== s) return; s.index++; nextQuestion(); }, chosen.ok ? 1400 : 2600);
   }
 
   function renderResult() {
@@ -345,5 +369,6 @@
     app.appendChild(wrap);
   }
 
-  renderMenu();
+  history.replaceState({ nkStep: 1 }, '');
+  renderMenuStep(1);
 })();

@@ -180,7 +180,29 @@
 
   // メニューは段階式（2026-09-22）。といかた → コース →（学期のある学年だけ）がっき。
   // カードを押したら そのまま次の画面へ進む。スタートを押すのは最後の画面だけ。
-  function renderMenu() { renderMenuStep(1); }
+  // ブラウザの「戻る」と画面の「← もどる」で1つ前のメニュー画面へ戻れるようにする（2026-09-23）。
+  // メニューの画面ごとに履歴を1つ積み、戻る操作は history.back() にそろえる
+  function goStep(step) {
+    history.pushState({ nkStep: step }, '');
+    renderMenuStep(step);
+  }
+  function currentStep() {
+    var st = history.state && history.state.nkStep;
+    return typeof st === 'number' ? st : 1;
+  }
+  window.addEventListener('popstate', function () {
+    // ページ内リンク（#faq など）の履歴は state を持たないので、メニューはそのままにする
+    if (!history.state || typeof history.state.nkStep !== 'number') return;
+    renderMenuStep(history.state.nkStep);
+  });
+  // プレイも履歴に1つ積む。プレイ・けっか から メニューへ戻るときは、直前のメニュー画面へ
+  function pushPlay() {
+    if (!(history.state && history.state.nkStep === 'play')) history.pushState({ nkStep: 'play' }, '');
+  }
+  function renderMenu() {
+    if (history.state && history.state.nkStep === 'play') history.back();
+    else renderMenuStep(currentStep());
+  }
 
   // その画面で押したカード。画面に来たときは何も選んでいない状態から始める（2026-09-23）。
   // 前の選択や初期値が「選択ずみ」で出ていると、押していないのに選ばれて見えるため。
@@ -189,6 +211,7 @@
 
   function renderMenuStep(step, keep) {
     if (!keep) picked = null;
+    state.session = null;
     app.innerHTML = '';
     var wrap = el('div', 'kj-menu is-step');
     var btn;
@@ -222,7 +245,7 @@
       back.tabIndex = -1;
       back.setAttribute('aria-hidden', 'true');
     } else {
-      back.addEventListener('click', function () { renderMenuStep(step - 1); });
+      back.addEventListener('click', function () { history.back(); });
     }
     wrap.appendChild(back);
     app.appendChild(wrap);
@@ -264,8 +287,8 @@
         if (key === 'gradeId' && state.gradeId !== item.id) state.termId = 'all';
         state[key] = item.id;
         // 押したら次の画面へ。1枚目は必ず、2枚目は学期の画面がある学年だけ進む
-        if (step === 1) return renderMenuStep(2);
-        if (step === 2 && gradeOf(item.id).terms) return renderMenuStep(3);
+        if (step === 1) return goStep(2);
+        if (step === 2 && gradeOf(item.id).terms) return goStep(3);
         picked = { key: key, id: item.id };
         renderMenuStep(step, true);
       });
@@ -276,6 +299,7 @@
   }
 
   function startSession() {
+    pushPlay();
     state.session = { pool: poolOf(state.gradeId, state.termId), index: 0, correct: 0, locked: false, q: null, missed: [] };
     nextQuestion();
   }
@@ -354,7 +378,7 @@
       ? 'せいかい! ' + (q.askKind === 'word' ? q.ask + ' → ' + q.answer : q.answer)
       : 'こたえは ' + q.answer + (chosen.why ? '（' + chosen.why + '）' : '');
 
-    setTimeout(function () { s.index++; nextQuestion(); }, chosen.ok ? 1000 : 1900);
+    setTimeout(function () { if (state.session !== s) return; s.index++; nextQuestion(); }, chosen.ok ? 1000 : 1900);
   }
 
   /* ---------- かく しゅぎょう ----------
@@ -453,7 +477,7 @@
     fb.className = 'kj-feedback ' + (ok ? 'is-ok' : 'is-ng');
     fb.textContent = ok ? 'よく かけました!' : 'つぎ がんばろう!';
 
-    setTimeout(function () { s.index++; nextQuestion(); }, NEXT_DELAY);
+    setTimeout(function () { if (state.session !== s) return; s.index++; nextQuestion(); }, NEXT_DELAY);
   }
 
   /* canvas に指・ペン・マウスで線を引く。
@@ -561,5 +585,6 @@
     app.appendChild(wrap);
   }
 
-  renderMenu();
+  history.replaceState({ nkStep: 1 }, '');
+  renderMenuStep(1);
 })();
