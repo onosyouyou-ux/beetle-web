@@ -888,3 +888,9 @@ body::after {
 /* むずかしさは縦1列（上ほど やさしい）。4まい積むので1まいの高さは少しつめる（2026-09-23） */
 .sa-group-diff .sa-choices { grid-template-columns: 1fr; gap: 8px; }
 .sa-group-diff .sa-choice { min-height: 62px; padding-block: 10px 12px; }
+
+/* むずかしさの画面：カードは紙面の6割、スタートは7割の幅で中央に置く（2026-09-23）。
+   せまいスマホで細くなりすぎないよう、下限の幅を持たせる */
+.sa-group-diff .sa-choices { width: min(100%, max(60%, 320px)); margin-inline: auto; }
+.sa-group-diff .sa-group-title { width: min(100%, max(60%, 320px)); margin-inline: auto; }
+.sa-group-diff ~ .sa-start { width: min(100%, max(70%, 340px)); margin-inline: auto; }
