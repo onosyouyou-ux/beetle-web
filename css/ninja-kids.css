@@ -3221,7 +3221,7 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
 /* ============================================================
    選ぶカードの柄と枠を控えめにする（2026-09-23）
    柄が強すぎると言われたので、ふだんは「薄い地紋＋赤茶の細線と淡い金線の二重枠」だけにし、
-   ホバーで金線を少し濃く、選んだときだけ左端に修行の色の太線を出す（全面を囲う太い赤枠はやめる）。
+   ホバーで金線を少し濃く、選んだときは枠全体を修行の色にする（2026-09-23 左端だけの太線から変更）。
    地紋は1枚にし、上に地の色を重ねて薄める。じゅけんとっくんは対象外のまま
    ============================================================ */
 .ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode){
@@ -3246,16 +3246,16 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
 }
 .ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode).is-on{
   --nk-card-gold:rgba(200,156,64,.85);
-  border-color:color-mix(in srgb,#8b4a36 80%,#fff);
+  border-color:var(--nk-accent);
   background:
     linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 6%,transparent) 0%,color-mix(in srgb,var(--nk-accent) 16%,transparent) 100%),
     linear-gradient(rgba(255,253,248,.68),rgba(255,253,248,.68)),
     var(--nk-card-pattern) center/64px 64px repeat,
     #fffdf8;
   box-shadow:
-    inset 6px 0 0 var(--nk-accent),
-    inset 0 0 0 3px #fffdf8,
-    inset 0 0 0 4px var(--nk-card-gold),
+    inset 0 0 0 2px var(--nk-accent),
+    inset 0 0 0 4px #fffdf8,
+    inset 0 0 0 5px var(--nk-card-gold),
     0 3px 0 color-mix(in srgb,var(--nk-accent) 30%,#ddd2bf);
 }
 @media (prefers-reduced-motion:reduce) {
