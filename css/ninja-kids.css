@@ -3333,3 +3333,47 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
     box-shadow:inset 0 0 0 3px var(--nk-accent), 0 6px 0 color-mix(in srgb,var(--nk-accent) 45%,#c7bca9);
   }
 }
+
+/* ============================================================
+   さんすう うちゅうたんけん：もんだい盤（2026-09-23）
+   ・選択肢の前の天体アイコンはけす
+   ・選択肢は左だけ太い線をやめ、細線＋内側の淡い線の二重枠にする
+   ・もんだいの枠は太めの二重枠＋うすい光で目立たせる
+   ・2カラムの段では、もんだいの枠と こたえの枠の高さをそろえる
+   ============================================================ */
+body.ninja-space .sa-options .sa-opt::before{ content:none; display:none; }
+body.ninja-space .sa-options .sa-opt:not(.is-correct):not(.is-wrong){
+  border:2px solid #b7a3f2;
+  border-image:none;
+  border-radius:12px;
+  background:linear-gradient(180deg,#fbfaff,#f1edff);
+  box-shadow:inset 0 0 0 3px #fff, inset 0 0 0 4px #dcd2ff, 0 3px 0 #c4b3f3;
+}
+@media (hover:hover) {
+  body.ninja-space .sa-options .sa-opt:not(:disabled):hover{
+    translate:0 -2px;
+    border-color:var(--sa-purple,#7b5cf0);
+    background:linear-gradient(180deg,#f6f2ff,#e6ddff);
+    box-shadow:inset 0 0 0 3px #fff, inset 0 0 0 5px #b9a4ff, 0 5px 0 #a992f0;
+  }
+}
+body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem{
+  border:3px solid #8a6cf0;
+  border-radius:18px;
+  background:linear-gradient(145deg,#fff,#f1ecff);
+  box-shadow:
+    inset 0 0 0 4px #fff,
+    inset 0 0 0 6px #cbbcff,
+    0 0 0 4px rgba(138,108,240,.18),
+    0 10px 24px rgba(64,42,125,.18);
+}
+/* 2カラムの段（PC・タブレット横・寝かせたスマホ）：もんだいの枠と こたえの枠を同じ行に置いて高さをそろえる */
+@media (min-width:1180px), (min-width:768px) and (orientation:landscape), (orientation:landscape) and (max-height:500px) {
+  body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{ grid-column:1; grid-row:1; align-self:end; }
+  body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem{ grid-column:1; grid-row:2; align-self:stretch; margin:0; }
+  body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-options{
+    grid-column:2; grid-row:2; align-self:stretch; margin:0;
+    grid-auto-rows:1fr; align-content:stretch;
+  }
+  body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-options .sa-opt{ min-height:0; padding-block:8px; }
+}
