@@ -598,9 +598,12 @@
     app.appendChild(progressBar());
 
     const card = el('div', 'sa-card');
-    card.appendChild(el('p', 'sa-question-text', s.current.prompt));
+    // 上には「だい○もん」、問いかけ（こたえは どれ? など）は もんだいの枠の中に書く（2026-09-23）
+    card.appendChild(el('p', 'sa-question-text', 'だい' + (s.index + 1) + 'もん'));
 
     const built = s.current.layout === 'cherry' ? cherryProblem(s.current) : plainProblem(s.current);
+    built.node.classList.add('has-prompt');
+    built.node.appendChild(el('span', 'sa-problem-prompt', s.current.prompt));
     card.appendChild(built.node);
 
     const options = el('div', 'sa-options');

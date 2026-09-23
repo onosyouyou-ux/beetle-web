@@ -3377,3 +3377,28 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem{
   }
   body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-options .sa-opt{ min-height:0; padding-block:8px; }
 }
+/* 問いかけ（こたえは どれ? など）は もんだいの枠の中の上に置く（2026-09-23）。
+   枠の中は式の並び（flex）なので、じゃましないよう絶対配置にし、そのぶん上をあける */
+body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem.has-prompt{
+  position:relative;
+  padding-top:40px;
+}
+body.ninja-space .sa-problem-prompt{
+  position:absolute;
+  top:12px; left:0; right:0;
+  text-align:center;
+  font-size:15px;
+  font-weight:800;
+  line-height:1.4;
+  color:#6f58c9;
+  white-space:normal;
+  pointer-events:none;
+}
+body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
+  color:#4c3d8f;
+  font-size:16px;
+}
+@media (orientation:landscape) and (max-height:500px) {
+  body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem.has-prompt{ padding-top:30px; }
+  body.ninja-space .sa-problem-prompt{ top:6px; font-size:12px; }
+}
