@@ -335,7 +335,8 @@
 
     var fb = app.querySelector('.kk-feedback');
     fb.className = 'kk-feedback ' + (chosen.ok ? 'is-ok' : 'is-ng');
-    fb.textContent = (chosen.ok ? 'せいかい! ' : 'こたえは ') + e.q + ' ' + e.y + '（' + shiki(e) + ' = ' + e.ans + '）';
+    fb.textContent = (chosen.ok ? 'せいかい! ' : 'こたえは ') + e.q + ' ' + e.y + '
+（' + shiki(e) + ' = ' + e.ans + '）';
 
     setTimeout(function () { if (state.session !== s) return; s.index++; nextQuestion(); }, chosen.ok ? 1400 : 2600);
   }
