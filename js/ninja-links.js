@@ -71,4 +71,29 @@
   }
 
   global.NinjaLinks = { html: html, el: el, APPS: APPS, ORDER: ORDER };
+
+  /* プレイ中の見出し：「第○問 / 全○問」「できた！ ○問」と 進みぐあいの目盛り。
+     とけい修行の形を 全修行アプリで そろえる（2026-09-23）。
+     外側の箱（.kj-play-head / .kt-bar など）は各アプリが持ち、中身だけを返す */
+  var HEAD_ICON = '/assets/images/ninja/tokei-ui/';
+  function headInner(index, total, ok) {
+    var marks = '';
+    for (var i = 0; i < total; i++) {
+      marks += '<i class="' + (i < index ? 'is-done' : i === index ? 'is-current' : '') + '"></i>';
+    }
+    return '<span class="nk-head-count">' +
+        '<img class="nk-head-icon" src="' + HEAD_ICON + 'scroll.webp" width="28" height="28" alt="">' +
+        '<span>第' + (index + 1) + '問 / 全' + total + '問</span>' +
+      '</span>' +
+      '<span class="nk-head-score">' +
+        '<img class="nk-head-icon is-shuriken" src="' + HEAD_ICON + 'shuriken.webp" width="28" height="28" alt="">' +
+        '<span class="nk-score-text">できた！ ' + ok + '問</span>' +
+      '</span>' +
+      '<span class="nk-progress-marks" aria-hidden="true">' + marks + '</span>';
+  }
+  function headScore(root, ok) {
+    var t = root.querySelector('.nk-score-text');
+    if (t) t.textContent = 'できた！ ' + ok + '問';
+  }
+  global.NinjaHead = { inner: headInner, score: headScore };
 })(window);

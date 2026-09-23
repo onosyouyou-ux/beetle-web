@@ -3471,3 +3471,48 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
 @media (min-width:768px) and (min-height:501px) {
   .ninja-kids.ninja-tokei .tk-menu::before{ width:240px !important; height:62px !important; }
 }
+
+/* ============================================================
+   プレイ中の見出し（NinjaHead）：とけい修行の形を全修行アプリにそろえる（2026-09-23）
+   「第○問 / 全○問」「できた！ ○問」と、10こ の進みぐあいの目盛り
+   ============================================================ */
+.ninja-kids .nk-head{
+  display:flex; flex-wrap:wrap; gap:5px 12px; align-items:center; justify-content:flex-start;
+  padding:5px 12px; border-inline:4px solid #bda278; border-radius:8px;
+  background:#eee3ce; color:#173f5f; font-weight:800;
+}
+.ninja-kids .nk-head::after{ content:none; }
+.ninja-kids .nk-head :is(.nk-head-count,.nk-head-score){ display:flex; align-items:center; gap:6px; white-space:nowrap; }
+.ninja-kids .nk-head .nk-head-score{ margin-left:auto; }
+.ninja-kids .nk-head-icon{ width:28px; height:28px; object-fit:contain; flex:none; }
+.ninja-kids .nk-head-icon.is-shuriken{ rotate:45deg; }
+.ninja-kids .nk-progress-marks{ display:flex; justify-content:center; flex-basis:100%; gap:6px; }
+.ninja-kids .nk-progress-marks i{ width:8px; height:5px; border-radius:3px; background:#cbbfa9; }
+.ninja-kids .nk-progress-marks .is-done{ background:#173f5f; }
+.ninja-kids .nk-progress-marks .is-current{ background:var(--nk-accent); }
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-kids .nk-head{ padding:3px 10px; gap:2px 10px; }
+  .ninja-kids .nk-head-icon{ width:20px; height:20px; }
+}
+
+/* ============================================================
+   修行アプリの ボタン・選択肢は「左だけ太い線」をやめ、ぐるりと同じ太さの二重枠にする（2026-09-23）。
+   外は今の枠色（せいかい・まちがい の色替えもそのまま効く）、内側に白と淡い線を重ねる
+   ============================================================ */
+.ninja-kids :is(.tk-opt,.kj-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice,
+  .kj-judge-btn,.kk-judge-btn,.kt-judge,.rj-judge,.pn-judge,
+  .kj-tool,.kk-tool,.kt-tool,.rj-tool,.pn-tool,.kj-mark,.kk-mark,.kt-mark,.rj-mark,.pn-mark){
+  border-left-width:2px !important;
+  border-left-style:solid;
+  box-shadow:
+    inset 0 0 0 3px rgba(255,255,255,.85),
+    inset 0 0 0 4px color-mix(in srgb,var(--nk-accent) 28%,#fff),
+    0 4px 0 color-mix(in srgb,var(--nk-accent) 32%,#cfc6b4);
+}
+/* 左だけ修行の色だった線を、ほかの3辺と同じ色にそろえる（せいかい・まちがい の色替えは そのまま） */
+.ninja-kids :is(.tk-opt,.kj-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice):not(.is-correct):not(.is-wrong):not(:hover){
+  border-left-color:color-mix(in srgb,var(--nk-accent) 45%,#fff);
+}
+.ninja-kids :is(.kj-judge-btn,.kk-judge-btn,.kt-judge,.rj-judge,.pn-judge){
+  border-color:color-mix(in srgb,var(--nk-accent) 55%,#fff);
+}

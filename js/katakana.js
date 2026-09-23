@@ -189,8 +189,7 @@
   function renderKaku(q) {
     root.innerHTML =
       '<div class="kt-quiz">' +
-        '<div class="kt-bar"><span>' + (state.i + 1) + ' / ' + QUESTIONS + '</span>' +
-          '<span class="kt-score">' + state.ok + 'もん せいかい</span></div>' +
+        '<div class="kt-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok) + '</div>' +
         '<div class="kt-q">' +
           '<p class="kt-q-lead">この 字を カタカナで かいてね</p>' +
           '<p class="kt-q-word is-big">' + esc(q.show) + '</p>' +
@@ -254,8 +253,7 @@
     if (ok) state.ok++;
     else state.missed.push(q);
 
-    var score = root.querySelector('.kt-score');
-    if (score) score.textContent = state.ok + 'もん せいかい';
+    NinjaHead.score(root, state.ok);
 
     var box = document.getElementById('kt-answer');
     box.className = 'kt-answer is-on' + (ok ? ' is-ok' : ' is-ng');
@@ -401,8 +399,7 @@
 
     root.innerHTML =
       '<div class="kt-quiz">' +
-        '<div class="kt-bar"><span>' + (state.i + 1) + ' / ' + QUESTIONS + '</span>' +
-          '<span class="kt-score">' + state.ok + 'もん せいかい</span></div>' +
+        '<div class="kt-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok) + '</div>' +
         '<div class="kt-q">' +
           '<p class="kt-q-lead">' + esc(questionLead(q)) + '</p>' +
           '<p class="kt-q-word' + (q.type === 'nigata' ? ' is-big' : '') + (q.ex ? ' is-sentence' : '') + '">' +
@@ -458,8 +455,7 @@
     }
 
     // せいかい数は その場で 出しなおす（つぎの もんだいまで 待たせない）
-    var score = root.querySelector('.kt-score');
-    if (score) score.textContent = state.ok + 'もん せいかい';
+    NinjaHead.score(root, state.ok);
 
     // 正解でも まちがいでも「なぜ そう書くのか」を かならず出す
     var box = document.getElementById('kt-answer');

@@ -167,8 +167,7 @@
 
     root.innerHTML =
       '<div class="pn-quiz">' +
-        '<div class="pn-bar"><span>' + (state.i + 1) + ' / ' + QUESTIONS + '</span>' +
-          '<span class="pn-score">' + state.ok + 'もん せいかい</span></div>' +
+        '<div class="pn-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok) + '</div>' +
         '<div class="pn-q">' +
           '<p class="pn-q-lead">' + esc(questionLead(q)) + '</p>' +
           '<p class="pn-q-word">' + esc(q.show) + '</p>' +
@@ -210,8 +209,7 @@
       state.ok++;
     }
 
-    var score = root.querySelector('.pn-score');
-    if (score) score.textContent = state.ok + 'もん せいかい';
+    NinjaHead.score(root, state.ok);
 
     // 正解でも まちがいでも「なぜ そう読むのか」を かならず出す＋その場で 音を きける
     var box = document.getElementById('pn-answer');

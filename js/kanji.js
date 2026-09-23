@@ -318,9 +318,8 @@
     app.innerHTML = '';
     var wrap = el('div', 'kj-play');
 
-    var head = el('div', 'kj-play-head');
-    head.appendChild(el('span', null, (s.index + 1) + ' / ' + SET_LENGTH));
-    head.appendChild(el('span', null, 'せいかい ' + s.correct));
+    var head = el('div', 'kj-play-head nk-head');
+    head.innerHTML = NinjaHead.inner(s.index, SET_LENGTH, s.correct);
     wrap.appendChild(head);
 
     var bar = el('div', 'kj-bar');

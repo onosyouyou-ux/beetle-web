@@ -269,8 +269,7 @@
 
     root.innerHTML =
       '<div class="rj-quiz">' +
-        '<div class="rj-bar"><span>' + (state.i + 1) + ' / ' + QUESTIONS + '</span>' +
-          '<span class="rj-score">' + state.ok + 'もん せいかい</span></div>' +
+        '<div class="rj-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok) + '</div>' +
         '<div class="rj-q">' +
           '<p class="rj-q-lead">' + esc(q.lead || questionLead(q)) + '</p>' +
           '<p class="rj-q-word' + (q.type === 'futatsu' ? ' is-big' : '') + '">' + esc(q.show) + '</p>' +
@@ -467,8 +466,7 @@
     if (ok) state.ok++;
     else state.missed.push(q);
 
-    var score = root.querySelector('.rj-score');
-    if (score) score.textContent = state.ok + 'もん せいかい';
+    NinjaHead.score(root, state.ok);
 
     var box = document.getElementById('rj-answer');
     box.className = 'rj-answer is-on' + (ok ? ' is-ok' : ' is-ng');
