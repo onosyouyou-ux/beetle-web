@@ -3296,3 +3296,28 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
 .ninja-kids :is(.tk-options,.kj-options,.kk-options,.kt-choices,.rj-choices,.pn-choices)>:is(.tk-opt,.kj-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice){
   justify-content:center!important; text-align:center!important;
 }
+
+/* かけざんの もんだいカードにも絵を入れる（2026-09-23。かんじの といかたカードと同じ型） */
+.ninja-kids.ninja-kuku .kk-menu.is-step .kk-choices-mode:has(.kk-choice-img){ max-height:300px; }
+.ninja-kids.ninja-kuku .kk-choice-img{
+  display:block; flex:none; min-height:0; width:100%; height:clamp(40px,46%,150px);
+  object-fit:contain; filter:drop-shadow(0 4px 6px rgba(0,0,0,.18));
+}
+@media (max-width:400px) {
+  .ninja-kids.ninja-kuku .kk-choice-img{ height:clamp(40px,30%,150px); }
+}
+@media (orientation:landscape) and (max-height:380px) {
+  .ninja-kids.ninja-kuku .kk-choice-img{ display:none; }
+}
+/* スマホ縦は1枚1行。絵を左・文字を右に置く */
+@media (max-width:767px) and (orientation:portrait) {
+  .ninja-kids.ninja-kuku .kk-menu.is-step .kk-choices-mode .kk-choice:has(.kk-choice-img){
+    display:grid; grid-template-columns:auto 1fr; grid-template-rows:auto auto;
+    align-content:center; column-gap:12px; row-gap:2px;
+  }
+  .ninja-kids.ninja-kuku .kk-menu.is-step .kk-choices-mode .kk-choice-img{
+    grid-row:1 / 3; width:auto; height:clamp(52px,11dvh,84px); aspect-ratio:1; align-self:center;
+  }
+  .ninja-kids.ninja-kuku .kk-menu.is-step .kk-choices-mode .kk-choice-label{ align-self:end; }
+  .ninja-kids.ninja-kuku .kk-menu.is-step .kk-choices-mode .kk-choice-note{ align-self:start; }
+}

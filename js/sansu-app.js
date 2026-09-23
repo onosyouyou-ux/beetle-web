@@ -310,10 +310,21 @@
   const findStyle = (id) => PLAYSTYLES.find((s) => s.id === id);
 
   // ---- メニュー ----
-  function renderMenu() {
-    session = null;
-    app.innerHTML = '';
+  // 2段で選ぶ（2026-09-23）：1段目で けいさんの しゅるい（下に あそびかた）、
+  // しゅるいを押したら 2段目の むずかしさ＋スタートへ進む
+  let menuStep = 1;
 
+  function renderMenu(step) {
+    session = null;
+    // 引数なし＝いまの段のまま描きなおす。ボタンから呼ばれた（イベントが来た）ときは1段目へ
+    if (step === 2) menuStep = 2;
+    else if (step !== undefined) menuStep = 1;
+    app.innerHTML = '';
+    if (menuStep === 2) renderMenuStep2(); else renderMenuStep1();
+    app.appendChild(NinjaLinks.el('sansu'));
+  }
+
+  function renderMenuStep1() {
     const total = el('p', 'sa-total');
     total.innerHTML = 'いままで <strong>' + progress.totals.correct + '</strong> もん せいかい!';
     app.appendChild(total);
@@ -328,29 +339,17 @@
     refBtn.appendChild(refBody);
     refBtn.addEventListener('click', renderReference);
 
+    // しゅるいは押したら次の画面へ進む
     app.appendChild(group('けいさんの しゅるい', MODES, 'modeId', (m) => ({
       label: m.name,
       note: m.ready ? null : 'じゅんびちゅう',
       disabled: !m.ready
-    }), refBtn));
-
-    const chosenMode = findMode(selection.modeId);
-    app.appendChild(group('むずかしさ', DIFFS, 'diffId', (d) => ({
-      label: d.name,
-      note: chosenMode.diffNote(d)
-    })));
+    }), refBtn, () => renderMenu(2)));
 
     app.appendChild(group('あそびかた', PLAYSTYLES, 'styleId', (s) => ({
       label: s.name,
       note: s.note
     })));
-
-    const start = el('button', 'sa-start');
-    start.type = 'button';
-    start.appendChild(icon('rocket-simple', 'sa-start-icon'));
-    start.appendChild(el('span', null, 'スタート'));
-    start.addEventListener('click', startSession);
-    app.appendChild(start);
 
     const reset = el('button', 'sa-reset');
     reset.type = 'button';
@@ -360,11 +359,32 @@
       if (!window.confirm('いままでの せいせきを ぜんぶ けしますか?')) return;
       progress = emptyProgress();
       saveProgress();
-      renderMenu();
+      renderMenu(1);
     });
     app.appendChild(reset);
+  }
 
-    app.appendChild(NinjaLinks.el('sansu'));
+  function renderMenuStep2() {
+    const chosenMode = findMode(selection.modeId);
+    const chosenStyle = findStyle(selection.styleId);
+    app.appendChild(el('p', 'sa-step-chosen', chosenMode.name + '・' + chosenStyle.name));
+
+    app.appendChild(group('むずかしさ', DIFFS, 'diffId', (d) => ({
+      label: d.name,
+      note: chosenMode.diffNote(d)
+    })));
+
+    const start = el('button', 'sa-start');
+    start.type = 'button';
+    start.appendChild(icon('rocket-simple', 'sa-start-icon'));
+    start.appendChild(el('span', null, 'スタート'));
+    start.addEventListener('click', startSession);
+    app.appendChild(start);
+
+    const back = el('button', 'sa-step-back', '← けいさんの しゅるいに もどる');
+    back.type = 'button';
+    back.addEventListener('click', () => renderMenu(1));
+    app.appendChild(back);
   }
 
   function icon(name, cls) {
@@ -375,7 +395,7 @@
     return img;
   }
 
-  function group(title, items, key, describe, extra) {
+  function group(title, items, key, describe, extra, onPick) {
     const wrap = el('section', 'sa-group');
     wrap.appendChild(el('h3', 'sa-group-title', title));
     const grid = el('div', 'sa-choices');
@@ -398,7 +418,7 @@
         }
         btn.addEventListener('click', () => {
           selection[key] = item.id;
-          renderMenu();
+          if (onPick) onPick(item); else renderMenu();
         });
       }
       grid.appendChild(btn);

@@ -35,9 +35,9 @@
   })();
 
   var MODES = [
-    { id: 'tonae', name: 'おとだけ', note: '「にしが」→ こたえを えらぶ' },
-    { id: 'junban', name: 'じゅんばんに とく', note: '「2 × 1」「2 × 2」… と じゅんばんに' },
-    { id: 'random', name: 'ランダムに こたえる', note: '「2 × 7」「2 × 3」… と ばらばらに' }
+    { id: 'tonae', name: 'おとだけ', note: '「にしが」→ こたえを えらぶ', img: '/assets/images/ninja/modes/kuku-oto.webp' },
+    { id: 'junban', name: 'じゅんばんに とく', note: '「2 × 1」「2 × 2」… と じゅんばんに', img: '/assets/images/ninja/modes/kuku-junban.webp' },
+    { id: 'random', name: 'ランダムに こたえる', note: '「2 × 7」「2 × 3」… と ばらばらに', img: '/assets/images/ninja/modes/kuku-random.webp' }
   ];
 
   var state = { danId: DANS[0].id, modeId: 'tonae', session: null };
@@ -169,6 +169,14 @@
     items.forEach(function (item) {
       var btn = el('button', 'kk-choice');
       btn.type = 'button';
+      if (item.img) {
+        var img = el('img', 'kk-choice-img');
+        img.src = item.img;
+        img.alt = '';
+        img.width = 160;
+        img.height = 160;
+        btn.appendChild(img);
+      }
       btn.appendChild(el('span', 'kk-choice-label', item.name));
       btn.appendChild(el('span', 'kk-choice-note', item.note));
       if (state[key] === item.id) btn.classList.add('is-on');
