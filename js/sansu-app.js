@@ -355,22 +355,18 @@
     total.innerHTML = 'いままで <strong>' + progress.totals.correct + '</strong> もん せいかい!';
     app.appendChild(total);
 
-    // さくらんぼざんの となりに、やりかた解説へのリファレンスボタンを置く
-    const refBtn = el('button', 'sa-ref');
-    refBtn.type = 'button';
-    refBtn.appendChild(icon('cherry', 'sa-ref-icon'));
-    const refBody = el('span', 'sa-choice-body');
-    refBody.appendChild(el('span', 'sa-choice-label', 'やりかた'));
-    refBody.appendChild(el('span', 'sa-choice-note', 'さくらんぼざん って?'));
-    refBtn.appendChild(refBody);
-    refBtn.addEventListener('click', openReference);
-
     // しゅるいは押したら次の画面へ進む
-    app.appendChild(group('けいさんの しゅるい', MODES, 'modeId', (m) => ({
+    const kinds = group('けいさんの しゅるい', MODES, 'modeId', (m) => ({
       label: m.name,
       note: m.ready ? null : 'じゅんびちゅう',
       disabled: !m.ready
-    }), refBtn, goMenu2));
+    }), null, goMenu2);
+    // さくらんぼざんの やりかた（リファレンス）は、しゅるいの下にテキストリンクで置く（2026-09-23 ボタンから変更）
+    const refLink = el('button', 'sa-ref-link', 'さくらんぼざんの やりかた →');
+    refLink.type = 'button';
+    refLink.addEventListener('click', openReference);
+    kinds.appendChild(refLink);
+    app.appendChild(kinds);
 
     app.appendChild(group('あそびかた', PLAYSTYLES, 'styleId', (s) => ({
       label: s.name,
