@@ -3465,6 +3465,9 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
     padding-bottom:64px !important;
   }
   .ninja-kids :is(.tk-menu,.kj-menu,.kk-menu,.kt-menu,.rj-menu,.pn-menu)::before{ bottom:8px; }
-  /* とけい・かんじは絵が小さい（高さ30px）ぶん詰める */
-  .ninja-kids:is(.ninja-tokei,.ninja-kanji) :is(.tk-menu,.kj-menu){ padding-bottom:46px !important; }
+  /* 忍具の絵の大きさは全アプリでそろえる（とけい・かんじだけ小さかった。2026-09-23） */
+  .ninja-kids:is(.ninja-tokei,.ninja-kanji) :is(.tk-menu,.kj-menu)::before{ width:180px !important; height:48px !important; }
+}
+@media (min-width:768px) and (min-height:501px) {
+  .ninja-kids.ninja-tokei .tk-menu::before{ width:240px !important; height:62px !important; }
 }
