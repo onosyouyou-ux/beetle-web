@@ -3437,3 +3437,8 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
     inset 0 0 0 6px rgba(208,170,92,.75),
     0 18px 44px rgba(0,0,0,.28);
 }
+/* とけいの絵は時計ごと描いてあって人物が小さく見えるので、かんじ・かけざんより一回り大きく出す（2026-09-23） */
+.ninja-kids.ninja-tokei .tk-choice-img{ height:clamp(40px,54%,170px); }
+@media (max-width:400px) {
+  .ninja-kids.ninja-tokei .tk-choice-img{ height:clamp(40px,34%,170px); }
+}
