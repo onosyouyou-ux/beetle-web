@@ -3229,8 +3229,8 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   --nk-card-gold:rgba(208,170,92,.45);
   border:1px solid var(--nk-card-line);
   background:
-    linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 3%,transparent) 0%,color-mix(in srgb,var(--nk-accent) 10%,transparent) 100%),
-    linear-gradient(rgba(255,253,248,.72),rgba(255,253,248,.72)),
+    linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 10%,transparent) 0%,color-mix(in srgb,var(--nk-accent) 22%,transparent) 100%),
+    linear-gradient(rgba(255,253,248,.62),rgba(255,253,248,.62)),
     var(--nk-card-pattern) center/64px 64px repeat,
     #fffdf8;
   box-shadow:
@@ -3248,8 +3248,8 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   --nk-card-gold:rgba(200,156,64,.85);
   border-color:var(--nk-accent);
   background:
-    linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 6%,transparent) 0%,color-mix(in srgb,var(--nk-accent) 16%,transparent) 100%),
-    linear-gradient(rgba(255,253,248,.68),rgba(255,253,248,.68)),
+    linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 18%,transparent) 0%,color-mix(in srgb,var(--nk-accent) 34%,transparent) 100%),
+    linear-gradient(rgba(255,253,248,.55),rgba(255,253,248,.55)),
     var(--nk-card-pattern) center/64px 64px repeat,
     #fffdf8;
   box-shadow:
@@ -3286,4 +3286,13 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   }
   .ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-mode .kj-choice-label{ align-self:end; }
   .ninja-kids.ninja-kanji .kj-menu.is-step .kj-choices-mode .kj-choice-note{ align-self:start; }
+}
+
+/* こたえの選択肢の前の忍具アイコンは全部けし、文字は中央にそろえる（2026-09-23）。
+   古いルールがあちこちで ::before を戻しているので、ここは !important で止める */
+.ninja-kids :is(.tk-options,.kj-options,.kk-options,.kt-choices,.rj-choices,.pn-choices)>:is(.tk-opt,.kj-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice)::before{
+  content:none!important; display:none!important;
+}
+.ninja-kids :is(.tk-options,.kj-options,.kk-options,.kt-choices,.rj-choices,.pn-choices)>:is(.tk-opt,.kj-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice){
+  justify-content:center!important; text-align:center!important;
 }
