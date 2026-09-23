@@ -28,8 +28,8 @@
   // ラベルは「なにを聞かれるか」を そのまま問いの形で書く（2026-09-12）。
   // 「とけいを よむ／さがす」では、どちらも時計の話に見えて違いが伝わらなかった。
   var MODES = [
-    { id: 'read', name: 'いま なんじ？', note: 'とけいを みて じこくを こたえる' },
-    { id: 'find', name: 'とけいは どれ？', note: 'じこくを みて とけいを えらぶ' }
+    { id: 'read', name: 'いま なんじ？', note: 'とけいを みて じこくを こたえる', img: '/assets/images/ninja/modes/tokei-read.webp' },
+    { id: 'find', name: 'とけいは どれ？', note: 'じこくを みて とけいを えらぶ', img: '/assets/images/ninja/modes/tokei-find.webp' }
   ];
 
   var state = {
@@ -439,6 +439,14 @@
     if (level) {
       btn.appendChild(levelBadge(level, LEVEL_MAX));
       btn.setAttribute('aria-label', item.name + '（なんいど ' + level + ' / ' + LEVEL_MAX + '）');
+    }
+    if (item.img) {
+      var img = el('img', 'tk-choice-img');
+      img.src = item.img;
+      img.alt = '';
+      img.width = 160;
+      img.height = 160;
+      btn.appendChild(img);
     }
     btn.appendChild(el('span', 'tk-choice-label', item.name));
     btn.appendChild(el('span', 'tk-choice-note', item.note));
