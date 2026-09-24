@@ -298,15 +298,15 @@ body{
 }
 /* --- 1カラムの段・寝かせた画面：紙の高さは画面の高さから決める --- */
 @media(max-width:767px) and (orientation:portrait){
-  .ninja-kids{ --rj-strip-h:clamp(84px,15dvh,150px); }
+  .ninja-kids{ --rj-strip-h:clamp(84px,15svh,150px); }
   .rj-model{font-size:18px}
   .rj-tool,.rj-mark{padding:10px 12px;font-size:14px}
 }
 @media(min-width:768px) and (max-width:1179px) and (orientation:portrait){
-  .ninja-kids{ --rj-strip-h:clamp(110px,15dvh,190px); }
+  .ninja-kids{ --rj-strip-h:clamp(110px,15svh,190px); }
 }
 @media(orientation:landscape) and (max-height:500px){
-  .ninja-kids{ --rj-strip-h:clamp(64px,24dvh,110px); }
+  .ninja-kids{ --rj-strip-h:clamp(64px,24svh,110px); }
   .ninja-kids .rj-quiz>.rj-write{grid-column:2;grid-row:2;align-self:center;gap:6px;margin:0}
   .rj-model{font-size:15px;min-height:1.3em}
   .rj-tool,.rj-mark{padding:6px 10px;font-size:12px;border-radius:8px}

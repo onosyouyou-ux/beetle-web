@@ -270,15 +270,15 @@ body{
   .ninja-kids{ --kt-pad-h:min(calc(var(--nk-qh) - 48px),170px); }
 }
 @media(max-width:767px) and (orientation:portrait){
-  .ninja-kids{ --kt-pad-h:clamp(96px,17dvh,170px); }
+  .ninja-kids{ --kt-pad-h:clamp(96px,17svh,170px); }
   .kt-model{font-size:32px}
   .kt-tool,.kt-mark{padding:10px 12px;font-size:14px}
 }
 @media(min-width:768px) and (max-width:1179px) and (orientation:portrait){
-  .ninja-kids{ --kt-pad-h:clamp(120px,18dvh,210px); }
+  .ninja-kids{ --kt-pad-h:clamp(120px,18svh,210px); }
 }
 @media(orientation:landscape) and (max-height:500px){
-  .ninja-kids{ --kt-pad-h:clamp(64px,26dvh,120px); }
+  .ninja-kids{ --kt-pad-h:clamp(64px,26svh,120px); }
   .ninja-kids .kt-quiz>.kt-write{grid-column:2;grid-row:2;align-self:center;gap:6px;margin:0}
   .kt-model{font-size:26px;min-height:1.3em}
   .kt-tool,.kt-mark{padding:6px 10px;font-size:12px;border-radius:8px}

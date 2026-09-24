@@ -218,7 +218,7 @@ body{margin:0;color:var(--kk-ink)}
   .kk-hero{padding:26px 20px 22px}
   .kk-hero h1{font-size:26px}
 
-  .kk-dots{--kk-dots-w:230px;--kk-dots-h:clamp(78px,16dvh,130px);--kk-dot-max:22px}
+  .kk-dots{--kk-dots-w:230px;--kk-dots-h:clamp(78px,16svh,130px);--kk-dot-max:22px}
   /* ●を出したときだけ、といの箱は中身なりに伸ばす。1カラムの段は盤面の下に
      余白が残る（実測で140px前後）ので、●を小さくするより伸ばすほうがよい。
      ●は数えるものなので、これ以上小さくすると用をなさない。 */
@@ -228,12 +228,12 @@ body{margin:0;color:var(--kk-ink)}
   .kk-steps{grid-template-columns:1fr}
 }
 @media(min-width:768px) and (max-width:1179px) and (orientation:portrait){
-  .kk-dots{--kk-dots-w:320px;--kk-dots-h:clamp(110px,16dvh,170px)}
+  .kk-dots{--kk-dots-w:320px;--kk-dots-h:clamp(110px,16svh,170px)}
   .ninja-kids .kk-play>.kk-ask.is-hint{height:auto;min-height:0}
 }
 /* 寝かせた画面は盤面が2カラムに戻り、といの箱が低くなる */
 @media(orientation:landscape) and (max-height:500px){
-  .kk-dots{--kk-dots-w:200px;--kk-dots-h:clamp(56px,26dvh,104px);gap:4px;--kk-dot-max:17px}
+  .kk-dots{--kk-dots-w:200px;--kk-dots-h:clamp(56px,26svh,104px);gap:4px;--kk-dot-max:17px}
   .kk-dots-note{font-size:11.5px}
   .kk-hint-btn{padding:4px 12px;font-size:11.5px}
 }
