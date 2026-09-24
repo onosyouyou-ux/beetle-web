@@ -97,6 +97,17 @@
 
   /* ---------- 出題 ---------- */
 
+  // ことばの前後にある かな（おくりがな など）を よみから けずり、漢字の ぶんの よみだけを返す。
+  // 高い/たかい → たか。けずれない（まん中に かなが ある・よみと合わない）ときは よみを そのまま返す
+  function kanjiYomi(word, yomi) {
+    var w = Array.from(word), y = yomi;
+    var isKana = function (c) { return /[぀-ゟ゠-ヿー]/.test(c); };
+    while (w.length && isKana(w[w.length - 1]) && y.length > 1 && y.slice(-1) === w[w.length - 1]) { y = y.slice(0, -1); w.pop(); }
+    while (w.length && isKana(w[0]) && y.length > 1 && y.charAt(0) === w[0]) { y = y.slice(1); w.shift(); }
+    if (w.some(isKana)) return yomi; // まん中に かなが残る（受け取る）
+    return y;
+  }
+
   function makeQuestion(pool) {
     var entry = pick(pool);
     var wi = randInt(0, entry.w.length - 1);
@@ -120,21 +131,27 @@
     }
 
     if (state.modeId === 'yomi') {
-      var opts = [{ v: yomi, ok: true }];
+      // 選択肢は オレンジの漢字の ぶんの よみだけにする（2026-09-24。高い → たか）。
+      // 前後の おくりがな を よみから けずる。まん中に かなが はさまる ことば（受け取る）は けずれないので、
+      // ことば全体の よみのまま。まちがいの選択肢も おなじ けずり方で そろえる
+      var yomiPart = kanjiYomi(word, yomi);
+      var opts = [{ v: yomiPart, ok: true }];
       var seen = {};
-      seen[yomi] = true;
+      seen[yomiPart] = true;
       // ① 同じ漢字の別のことばの よみ（音と訓の取りちがえ）
       entry.w.forEach(function (pair, i) {
-        if (i === wi || seen[pair[1]] || opts.length >= 4) return;
-        seen[pair[1]] = true;
-        opts.push({ v: pair[1], ok: false, why: 'おなじ かんじの べつの よみ' });
+        var v = kanjiYomi(pair[0], pair[1]);
+        if (i === wi || seen[v] || opts.length >= 4) return;
+        seen[v] = true;
+        opts.push({ v: v, ok: false, why: 'おなじ かんじの べつの よみ' });
       });
       // ② おなじ長さの よみ（あてずっぽうで消せないようにする）
       var others = [];
       pool.forEach(function (e) {
         if (e.k === entry.k) return;
         e.w.forEach(function (pair) {
-          if (!seen[pair[1]] && Math.abs(pair[1].length - yomi.length) <= 1) others.push(pair[1]);
+          var v = kanjiYomi(pair[0], pair[1]);
+          if (!seen[v] && Math.abs(v.length - yomiPart.length) <= 1) others.push(v);
         });
       });
       shuffle(others).forEach(function (v) {
@@ -142,7 +159,7 @@
         seen[v] = true;
         opts.push({ v: v, ok: false });
       });
-      return { ask: word, askKind: 'word', options: shuffle(opts), answer: yomi, kanji: entry.k };
+      return { ask: word, askKind: 'word', options: shuffle(opts), answer: yomiPart, kanji: entry.k };
     }
 
     // よみ → ことば（かんじ）
