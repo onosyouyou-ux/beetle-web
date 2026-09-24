@@ -3930,3 +3930,28 @@ body.ninja-kids .kt-answer.is-ok .kt-a-target{ color:#23714a; }
 
 /* かんじを よむ：ことばの中の いま練習している漢字をオレンジにする（2026-09-24。カタカナ修行の .kt-target と同じ色） */
 body.ninja-kids .kj-ask-word .kj-target{ color:#ffb347; }
+
+/* スマホ縦の問題の枠を6アプリでそろえる（2026-09-24）。
+   枠 150〜203px・札 13〜14px・札と問題の間 -2〜29px・問題の字 18〜34px と ばらばらだった */
+@media (max-width:767px) and (orientation:portrait) {
+  body.ninja-kids :is(.kj-ask,.kk-ask,.kt-q,.rj-q,.pn-q) { min-height:176px; }
+  body.ninja-kids :is(.tk-play>.tk-ask,.kj-ask-label,.kk-ask-label,.kt-q-lead,.rj-q-lead,.pn-q-lead) { font-size:14px; }
+  /* 札を枠の中に持つアプリ（カタカナ・ローマ字・フォニックス）は 札と問題の間を 18px */
+  body.ninja-kids :is(.kt-q-lead,.rj-q-lead,.pn-q-lead) { margin-bottom:18px; }
+  /* 札を枠に重ねているアプリ（かんじ・かけざん）は 枠の上の内側で間をとる */
+  body.ninja-kids :is(.kj-play,.kk-play):not(.is-kaki)>:is(.kj-ask,.kk-ask) { min-height:176px; padding-top:58px; }
+  /* 問題の字 */
+  body.ninja-kids :is(.kj-ask-word,.kk-ask-main) { font-size:34px; }
+  body.ninja-kids .kj-ask-yomi { font-size:30px; }
+  body.ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word):not(.is-sentence):not(.is-big) { font-size:34px; }
+  body.ninja-kids :is(.kt-q-word,.rj-q-word,.pn-q-word).is-sentence { font-size:26px; line-height:1.5; }
+  /* とけい：札の下から時計を始める */
+  body.ninja-kids .tk-play>.tk-stage { padding-top:62px; }
+}
+@media (max-width:767px) and (orientation:portrait) {
+  /* 札の位置を6アプリで そろえる：枠の上から22px に固定し、問題の字は のこりの高さの まん中 */
+  body.ninja-kids :is(.kt-q,.rj-q,.pn-q) { padding-top:58px; align-content:center; }
+  body.ninja-kids :is(.kt-q,.rj-q,.pn-q)>:is(.kt-q-lead,.rj-q-lead,.pn-q-lead) {
+    position:absolute; top:22px; left:50%; translate:-50% 0; margin:0; white-space:nowrap;
+  }
+}
