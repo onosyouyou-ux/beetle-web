@@ -3927,3 +3927,6 @@ body.ninja-kids :is(.kt-target,.kt-a-target){
 /* こたえあわせの欄は赤・緑の地なので、色の字だと沈む。白い札に載せて濃い字にする */
 body.ninja-kids .kt-answer .kt-a-target{ color:#b8431f; background:#fff; padding:0 .35em; border-radius:6px; box-shadow:0 2px 0 rgba(0,0,0,.18); }
 body.ninja-kids .kt-answer.is-ok .kt-a-target{ color:#23714a; }
+
+/* かんじを よむ：ことばの中の いま練習している漢字をオレンジにする（2026-09-24。カタカナ修行の .kt-target と同じ色） */
+body.ninja-kids .kj-ask-word .kj-target{ color:#ffb347; }

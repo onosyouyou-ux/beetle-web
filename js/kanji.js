@@ -345,7 +345,20 @@
     } else {
       wrap.appendChild(el('p', 'kj-ask-label',
         q.askKind === 'word' ? 'なんと よむ?' : 'この よみの ことばは どれ?'));
-      wrap.appendChild(el('p', q.askKind === 'word' ? 'kj-ask kj-ask-word' : 'kj-ask kj-ask-yomi', q.ask));
+      var askEl = el('p', q.askKind === 'word' ? 'kj-ask kj-ask-word' : 'kj-ask kj-ask-yomi');
+      if (q.askKind === 'word') {
+        // よむ ことばの中の漢字を オレンジにする（2026-09-24。カタカナ修行と同じ見せ方）。
+        // 熟語は どの字も読むので全部。おくりがな などの かなは白のまま
+        // 枠は grid なので、字ごとに並べると別の行に割れる。ことば全体を1つの span にまとめる
+        var wordEl = el('span', 'kj-ask-text');
+        Array.from(q.ask).forEach(function (ch) {
+          wordEl.appendChild(/[一-鿿々]/.test(ch) ? el('span', 'kj-target', ch) : document.createTextNode(ch));
+        });
+        askEl.appendChild(wordEl);
+      } else {
+        askEl.textContent = q.ask;
+      }
+      wrap.appendChild(askEl);
 
       var options = el('div', 'kj-options');
       q.options.forEach(function (o) {
