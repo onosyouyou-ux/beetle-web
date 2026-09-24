@@ -384,8 +384,7 @@
     fb.className = 'kj-feedback ' + (chosen.ok ? 'is-ok' : 'is-ng');
     fb.textContent = chosen.ok
       ? 'せいかい! ' + (q.askKind === 'word' ? q.ask + ' → ' + q.answer : q.answer)
-      : 'こたえは ' + q.answer + (chosen.why ? '
-（' + chosen.why + '）' : '');
+      : 'こたえは ' + q.answer + (chosen.why ? '\n（' + chosen.why + '）' : '');
 
     setTimeout(function () { if (state.session !== s) return; s.index++; nextQuestion(); }, chosen.ok ? 1000 : 1900);
   }

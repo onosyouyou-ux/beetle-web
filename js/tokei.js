@@ -629,8 +629,7 @@
     fb.className = 'tk-feedback ' + (ok ? 'is-ok' : 'is-ng');
     fb.textContent = ok
       ? 'せいかい! ' + answerText(q.answer, hands)
-      : 'こたえは ' + answerText(q.answer, hands) + (chosen.why ? '
-（' + chosen.why + '）' : '');
+      : 'こたえは ' + answerText(q.answer, hands) + (chosen.why ? '\n（' + chosen.why + '）' : '');
 
     setTimeout(function () {
       if (state.session !== s) return;
