@@ -3840,3 +3840,6 @@ body.ninja-kids .nk-acc.is-box>[class$="-rules"]{
 body.ninja-kids .nk-acc.is-box>[class$="-rules"]::before,
 body.ninja-kids .nk-acc.is-box>[class$="-rules"]::after{ content:none; }
 body.ninja-kids .nk-acc.is-box[open]>.nk-acc-sum{ margin-bottom:14px; }
+/* 「ポイント」の中の見出し（カタカナで かく ことば は…など）には下線を引かない。下線は「ポイント」だけ */
+body.ninja-kids .nk-acc.is-box>[class$="-rules"]>:is(h2,h3){ border-bottom:0; box-shadow:none; background-image:none; text-decoration:none; }
+body.ninja-kids .nk-acc.is-box>[class$="-rules"]>:is(h2,h3)::after{ content:none; }
