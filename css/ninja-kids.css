@@ -271,9 +271,11 @@ body.ninja-space {
   box-shadow:0 3px 0 #c8ad7b;
   clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px);
 }
-.ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice):hover ,.ninja-kids :is(.tk-mode,.kk-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice):hover{
-  translate:0 -2px;
-  border-color:var(--nk-accent);
+@media (hover:hover) {
+  .ninja-kids :is(.tk-mode,.kj-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice):hover ,.ninja-kids :is(.tk-mode,.kk-choice,.kt-mode,.rj-mode,.pn-mode,.tk-choice):hover{
+    translate:0 -2px;
+    border-color:var(--nk-accent);
+  }
 }
 .ninja-kids :is(.tk-play,.kj-play,.kt-quiz,.rj-quiz,.pn-quiz) ,.ninja-kids :is(.tk-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz){
   display:grid;
@@ -999,7 +1001,7 @@ body.ninja-space {
 
 /* Theme collectibles and choice icons. */
 body.ninja-tokei { --nk-items:url('/assets/images/ninja/items/tokei-items.webp'); }
-body.ninja-kanji { --nk-items:url('/assets/images/ninja/items/kanji-items.webp'); }
+body.ninja-kanji { --nk-items:url('/assets/images/ninja/items/kanji-items.webp?v=20260924'); }
 body.ninja-katakana { --nk-items:url('/assets/images/ninja/items/katakana-items.webp'); }
 body.ninja-romaji { --nk-items:url('/assets/images/ninja/items/romaji-items.webp'); }
 body.ninja-phonics { --nk-items:url('/assets/images/ninja/items/phonics-items.webp'); }
@@ -2187,7 +2189,7 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
 .ninja-kids.ninja-kanji .kj-choice.is-jukken{ background:#2d3350; border-left-color:#e0b64a; box-shadow:0 5px 0 #171a2b; }
 .ninja-kids.ninja-kanji .kj-choice.is-jukken .kj-choice-label{ color:#ffd878; }
 .ninja-kids.ninja-kanji .kj-choice.is-jukken .kj-choice-note{ color:rgba(255,255,255,.72); }
-.ninja-kids.ninja-kanji .kj-choice.is-jukken:hover{ background:#373e61; }
+@media (hover:hover) { .ninja-kids.ninja-kanji .kj-choice.is-jukken:hover{ background:#373e61; } }
 .ninja-kids.ninja-kanji .kj-choice.is-jukken.is-on{ background:#3b4266; border-left-color:#ffd878; box-shadow:inset 0 0 0 2px #ffd878, 0 5px 0 #171a2b; }
 .ninja-kids.ninja-kanji .kj-choice.is-jukken.is-on::after{ color:#ffd878; }
 .ninja-kids.ninja-kanji .kj-choice.is-jukken.is-on .kj-choice-label{ color:#ffd878; }
@@ -3241,8 +3243,10 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
     0 3px 0 #ddd2bf;
   transition:box-shadow .15s, translate .15s;
 }
-/* マウスをのせたときも、選んだときと同じ見た目にする（2026-09-23）。✓は選んだときだけ */
-.ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode):is(.is-on,:hover){
+/* マウスをのせたときも、選んだときと同じ見た目にする（2026-09-23）。✓は選んだときだけ。
+   :hover はマウスのある端末だけ（2026-09-24）。スマホはタップ後も :hover が残るため、
+   押していないカードが選ばれて見え、スタートが押せない理由が分からなくなっていた */
+.ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode).is-on{
   --nk-card-gold:rgba(200,156,64,.85);
   border-color:var(--nk-accent);
   background:
@@ -3255,6 +3259,22 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
     inset 0 0 0 4px #fffdf8,
     inset 0 0 0 5px var(--nk-card-gold),
     0 3px 0 color-mix(in srgb,var(--nk-accent) 30%,#ddd2bf);
+}
+@media (hover:hover) {
+  .ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode):hover{
+    --nk-card-gold:rgba(200,156,64,.85);
+    border-color:var(--nk-accent);
+    background:
+      linear-gradient(180deg,color-mix(in srgb,var(--nk-accent) 18%,transparent) 0%,color-mix(in srgb,var(--nk-accent) 34%,transparent) 100%),
+      linear-gradient(rgba(255,253,248,.55),rgba(255,253,248,.55)),
+      var(--nk-card-pattern) center/64px 64px repeat,
+      #fffdf8;
+    box-shadow:
+      inset 0 0 0 2px var(--nk-accent),
+      inset 0 0 0 4px #fffdf8,
+      inset 0 0 0 5px var(--nk-card-gold),
+      0 3px 0 color-mix(in srgb,var(--nk-accent) 30%,#ddd2bf);
+  }
 }
 @media (prefers-reduced-motion:reduce) {
   .ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode):hover{ translate:none; }
@@ -3325,8 +3345,10 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   opacity:.45; filter:grayscale(.5); cursor:not-allowed; translate:none; box-shadow:none;
 }
 /* マウスをのせたときの文字色も、選んだときと同じにする（2026-09-23） */
-.ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode):hover :is(.kj-choice-label,.tk-choice-label,.kk-choice-label,.kt-choice-label){
-  color:var(--nk-accent-dark);
+@media (hover:hover) {
+  .ninja-kids :is(.kj-menu .kj-choice:not(.is-jukken),.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode):hover :is(.kj-choice-label,.tk-choice-label,.kk-choice-label,.kt-choice-label){
+    color:var(--nk-accent-dark);
+  }
 }
 /* こたえの選択肢も、マウスをのせたら枠全体を修行の色にする（2026-09-23） */
 @media (hover:hover) {

@@ -57,7 +57,7 @@ body{margin:0;color:var(--kk-ink)}
   background:#fff;border:2px solid var(--kk-line2);border-radius:14px;
   padding:14px 10px;cursor:pointer;font-family:inherit;color:var(--kk-ink);
 }
-.kk-choice:hover{border-color:var(--kk-blue)}
+@media (hover:hover){.kk-choice:hover{border-color:var(--kk-blue)}}
 .kk-choice.is-on{border-color:var(--kk-blue);background:#eef5fc;box-shadow:0 2px 0 var(--kk-blue-dk)}
 .kk-choice-label{font-size:16px;font-weight:800}
 .kk-choice-note{font-size:11px;color:var(--kk-ink3)}

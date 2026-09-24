@@ -63,7 +63,7 @@ body{
   padding:14px 18px;border:2px solid var(--pn-line2);border-radius:14px;
   background:#fff;cursor:pointer;font-family:inherit;transition:border-color .15s,transform .15s;
 }
-.pn-mode:hover{border-color:var(--pn-orange);transform:translateY(-2px)}
+@media (hover:hover){.pn-mode:hover{border-color:var(--pn-orange);transform:translateY(-2px)}}
 .pn-mode-t{font-size:19px;font-weight:900;letter-spacing:.06em}
 .pn-mode-s{font-size:12.5px;color:var(--pn-ink2)}
 

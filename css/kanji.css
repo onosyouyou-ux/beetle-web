@@ -62,7 +62,7 @@ body{
   background:#fff;border:2px solid var(--kj-line2);border-radius:14px;
   padding:14px 10px;cursor:pointer;font-family:inherit;color:var(--kj-ink);
 }
-.kj-choice:hover{border-color:var(--kj-orange)}
+@media (hover:hover){.kj-choice:hover{border-color:var(--kj-orange)}}
 .kj-choice.is-on{border-color:var(--kj-orange);background:#fff6e9;box-shadow:0 2px 0 var(--kj-orange-dk)}
 .kj-choice-label{font-size:16px;font-weight:800}
 .kj-choice-note{font-size:11px;color:var(--kj-ink3)}
@@ -160,9 +160,13 @@ body.ninja-kids .kj-opt.is-xlong .nk-answer-label{font-size:.7em}
 /* 学年が4段になったぶん、スマホ縦と寝かせた画面では1画面に収まらなくなる。
    学年ボタンの字数の注記（80じ など）は選ぶのに要らないので隠して薄くする（かけざんの だん と同じ）。
    ninja-kids.css はこのファイルより後に読まれるので、body を付けて詳細度で勝たせる */
-@media (max-width:767px) and (orientation:portrait){
+/* 上の忍具アイコンは、高さの低いスマホ（680px以下）だけ隠す（2026-09-24）。
+   メニューが段階式になって縦に余裕ができたので、ふつうの高さなら出しても1画面に収まる */
+@media (max-width:767px) and (orientation:portrait) and (max-height:680px){
   body.ninja-kids.ninja-kanji .kj-menu{padding-top:12px}
   body.ninja-kids.ninja-kanji .kj-menu::before{content:none}
+}
+@media (max-width:767px) and (orientation:portrait){
   body.ninja-kids.ninja-kanji .kj-choices-grade{gap:5px}
   body.ninja-kids.ninja-kanji .kj-group{margin-bottom:4px}
   body.ninja-kids.ninja-kanji .kj-choices-grade .kj-choice{min-height:42px;padding-block:4px}

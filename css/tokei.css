@@ -68,7 +68,7 @@ body{
   background:#fff;border:2px solid var(--tk-line2);border-radius:14px;
   padding:14px 12px;cursor:pointer;font-family:inherit;color:var(--tk-ink);
 }
-.tk-choice:hover{border-color:var(--tk-orange)}
+@media (hover:hover){.tk-choice:hover{border-color:var(--tk-orange)}}
 .tk-choice.is-on{border-color:var(--tk-orange);background:#fff6e9;box-shadow:0 2px 0 var(--tk-orange-dk)}
 .tk-choice-label{font-size:16px;font-weight:800}
 .tk-choice-note{font-size:11px;color:var(--tk-ink3)}

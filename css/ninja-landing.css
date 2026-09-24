@@ -323,7 +323,7 @@ body.ninja-lp-space {
 
 /* Collectible item art for themed landing cards. */
 body.ninja-lp-tokei { --nl-items:url('/assets/images/ninja/items/tokei-items.webp'); }
-body.ninja-lp-kanji { --nl-items:url('/assets/images/ninja/items/kanji-items.webp'); }
+body.ninja-lp-kanji { --nl-items:url('/assets/images/ninja/items/kanji-items.webp?v=20260924'); }
 body.ninja-lp-katakana { --nl-items:url('/assets/images/ninja/items/katakana-items.webp'); }
 body.ninja-lp-romaji { --nl-items:url('/assets/images/ninja/items/romaji-items.webp'); }
 body.ninja-lp-phonics { --nl-items:url('/assets/images/ninja/items/phonics-items.webp'); }
