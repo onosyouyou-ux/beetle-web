@@ -3797,3 +3797,29 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
     display:none !important;
   }
 }
+
+/* 盤面の下の読み物のアコーディオン（2026-09-24。js/ninja-links.js が #howto を <details class="nk-acc"> に包む） */
+.ninja-kids .nk-acc>.nk-acc-sum{
+  display:flex; align-items:center; gap:10px; cursor:pointer; list-style:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.ninja-kids .nk-acc>.nk-acc-sum::-webkit-details-marker{ display:none; }
+.ninja-kids .nk-acc>.nk-acc-sum>:is(h2,h3){ flex:1; margin-block:0; }
+.ninja-kids .nk-acc>.nk-acc-sum::after{
+  content:'＋'; flex:none; display:grid; place-items:center; width:30px; height:30px; border-radius:50%;
+  font-size:16px; font-weight:700; color:#fff; background:var(--nk-accent,#c0634c);
+}
+.ninja-kids .nk-acc[open]>.nk-acc-sum::after{ content:'－'; }
+.ninja-kids .nk-acc.is-howto{ margin-top:14px; }
+.ninja-kids .nk-acc.is-howto[open]>.nk-acc-sum{ margin-bottom:14px; }
+.ninja-kids .nk-acc.is-box[open]>.nk-acc-sum{ margin-bottom:10px; }
+@media (hover:hover){
+  .ninja-kids .nk-acc>.nk-acc-sum:hover::after{ filter:brightness(1.08); }
+}
+
+/* スマホの問題画面は、ヒーローを外したぶん盤面がヘッダーに くっつくので上に余白をとる（2026-09-24） */
+@media (max-width:767px) {
+  body.ninja-kids:has(:is(.tk-play,.kj-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz)):not(:has(:is(.tk-result,.kj-result,.kk-result,.kt-result,.rj-result,.pn-result))) :is(#tk-app,#kj-app,#kk-app,#kt-app,#rj-app,#pn-app) {
+    padding-top:14px;
+  }
+}

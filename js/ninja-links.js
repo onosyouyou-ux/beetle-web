@@ -102,3 +102,48 @@
   }
   global.NinjaHead = { inner: headInner, score: headScore };
 })(window);
+
+/* 盤面の下の読み物（#howto）をアコーディオンにする（2026-09-24）。
+   「あそびかた」と、カタカナ・ローマ字・フォニックスの解説の箱を、見出しを押すと開く <details> にする。
+   HTML はそのまま（検索にも本文が残る）にして、読み込み時に包み直す。
+   おうちのかたへ の案内（.nk-doc-ref）は包まずに出したままにする */
+(function () {
+  'use strict';
+  var doc = document.getElementById('howto');
+  if (!doc || doc.querySelector('.nk-acc')) return;
+
+  function wrap(summaryEl, bodyEls, cls) {
+    var d = document.createElement('details');
+    d.className = 'nk-acc' + (cls ? ' ' + cls : '');
+    var s = document.createElement('summary');
+    s.className = 'nk-acc-sum';
+    summaryEl.parentNode.insertBefore(d, summaryEl);
+    s.appendChild(summaryEl);
+    d.appendChild(s);
+    bodyEls.forEach(function (el) { d.appendChild(el); });
+  }
+
+  // 解説の箱（.kt-rules など）：箱の見出しを押すと中身が開く。箱ごと details にする
+  Array.prototype.forEach.call(doc.querySelectorAll(':scope > [class$="-rules"]'), function (box) {
+    var head = box.querySelector('h2, h3');
+    if (!head) return;
+    var d = document.createElement('details');
+    d.className = box.className + ' nk-acc is-box';
+    var s = document.createElement('summary');
+    s.className = 'nk-acc-sum';
+    box.parentNode.insertBefore(d, box);
+    s.appendChild(head);
+    d.appendChild(s);
+    while (box.firstChild) d.appendChild(box.firstChild);
+    box.remove();
+  });
+
+  // あそびかた：見出し（h2）と、その後ろの手順（[class$="-steps"]）
+  var h2 = doc.querySelector(':scope > h2');
+  if (h2) {
+    var body = [];
+    var n = h2.nextElementSibling;
+    while (n && !n.classList.contains('nk-doc-ref')) { body.push(n); n = n.nextElementSibling; }
+    wrap(h2, body, 'is-howto');
+  }
+})();
