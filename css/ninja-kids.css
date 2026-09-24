@@ -3955,3 +3955,49 @@ body.ninja-kids .kj-ask-word .kj-target{ color:#ffb347; }
     position:absolute; top:22px; left:50%; translate:-50% 0; margin:0; white-space:nowrap;
   }
 }
+
+/* 解答欄の字と「ヒントを 見る」を6アプリでそろえる（2026-09-24）。
+   選択肢は 16px（かけざんだけ24px）、ヒントは とけい12px・かけざん14px と ばらばらだった */
+@media (max-width:767px) {
+  body.ninja-kids :is(.tk-options,.kj-options,.kk-options,.kt-choices,.rj-choices,.pn-choices)>:is(.tk-opt,.kj-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock),
+  body.ninja-kids :is(.tk-options,.kj-options,.kk-options,.kt-choices,.rj-choices,.pn-choices)>:is(.tk-opt,.kj-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock) :is(span,b) {
+    font-size:20px;
+  }
+}
+/* 「ヒントを 見る」は とけい・かけざん共通の見た目 */
+body.ninja-kids :is(.tk-play>.tk-hint-btn,.kk-play>.kk-hint-btn){
+  display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  background:#fff; border:2px solid var(--nk-accent); border-radius:99px;
+  padding:8px 18px; font-size:14px; line-height:1.4; font-weight:800; font-family:inherit;
+  color:var(--nk-accent-dark); cursor:pointer;
+}
+body.ninja-kids :is(.tk-play>.tk-hint-btn,.kk-play>.kk-hint-btn)::before{ content:"💡"; font-size:15px; }
+
+/* 選択肢と しゅぎょう選択のカードは、影と二重枠をやめ、修行の色の太い枠で囲む（2026-09-24） */
+body.ninja-kids :is(.tk-options,.kj-options,.kk-options,.kt-choices,.rj-choices,.pn-choices)>:is(.tk-opt,.kj-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice),
+body.ninja-kids :is(.kj-menu .kj-choice,.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode){
+  box-shadow:none;
+  border:3px solid color-mix(in srgb,var(--nk-accent) 55%,#fff);
+  translate:none;
+}
+body.ninja-kids :is(.kj-menu .kj-choice,.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode).is-on{
+  border-color:var(--nk-accent-dark,var(--nk-accent));
+}
+@media (hover:hover){
+  body.ninja-kids :is(.tk-options,.kj-options,.kk-options,.kt-choices,.rj-choices,.pn-choices)>:is(.tk-opt,.kj-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice):hover:not(:disabled),
+  body.ninja-kids :is(.kj-menu .kj-choice,.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode):hover{
+    box-shadow:none; border-color:var(--nk-accent); translate:none;
+  }
+}
+/* しゅぎょう選択のカードは既存の指定（詳細度 0,4,0・:not(.is-jukken) 付き）に負けるので、クラスを重ねて勝たせる */
+body.ninja-kids.ninja-kids :is(.kj-menu .kj-choice,.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode){
+  box-shadow:none; border:3px solid color-mix(in srgb,var(--nk-accent) 55%,#fff); translate:none;
+}
+body.ninja-kids.ninja-kids :is(.kj-menu .kj-choice,.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode).is-on{
+  border-color:var(--nk-accent-dark,var(--nk-accent));
+}
+@media (hover:hover){
+  body.ninja-kids.ninja-kids :is(.kj-menu .kj-choice,.tk-menu .tk-choice,.kk-menu .kk-choice,.kt-mode,.rj-mode,.pn-mode):hover{
+    box-shadow:none; border-color:var(--nk-accent);
+  }
+}
