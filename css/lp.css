@@ -449,6 +449,17 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-accent); 
   .service-peek { display: none; }
 }
 
+/* SP（600px以下）はロゴ／グローバルメニュー／ページ内リンクの3段に積む（2026-09-24決定。共通ヘッダーの .nav-inner と同じ縦積み）。
+   1段目にロゴと5リンクを並べると端から端まで詰まって窮屈だったため。ページ内リンクは一段小さくして主従をつける */
+@media (max-width: 600px) {
+  section[id], div[id] { scroll-margin-top: 118px; }
+  .header-top { flex-direction: column; gap: 6px; padding: 10px 14px 7px; }
+  .header-entries { justify-content: center; gap: 16px; }
+  .header-nav { padding: 5px 8px 6px; }
+  .header-nav a { font-size: 0.7rem; padding: 2px 6px; }
+  .hero { padding-top: 140px; }
+}
+
 /* SP（480px以下）はグローバルメニューをQA・教育に短縮表示（2026-07-19決定。common.cssの.nav-trimと同期） */
 @media (max-width: 480px) {
   .header-entry .nav-trim { display: none; }

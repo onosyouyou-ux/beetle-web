@@ -44,8 +44,8 @@ a{text-decoration:none;}
   .nav-links { gap: 4px 16px; }
   .nav-links a { font-size: 13px; }
   .nav-links .nav-trim { display: none; }
-  .nav-sections { gap: 8px 16px; }
-  .nav-sections a { font-size: 12px; }
+  .nav-sections { gap: 6px 14px; padding: 5px 12px 6px; }
+  .nav-sections a { font-size: 11px; }
 }
 
 /* 極小画面（〜360px）でもリンク5本が1行に収まるよう追加圧縮 */
