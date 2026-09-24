@@ -3664,3 +3664,22 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
     --nk-mode-img-h:44px;
   }
 }
+
+/* スマホ縦の しゅぎょう選択は、見出しとカードを上詰めにする（2026-09-24。フォニックスと同じ形）。
+   盤面を画面の高さに合わせて広げたぶん、上下中央に浮いてアイコンとの間に余白が目立っていた。
+   余った高さは盤面の下に回す。中央寄せの指定（:has 付き・詳細度 0,6,0 あり）に勝つよう body から書く */
+@media (max-width:767px) and (orientation:portrait) {
+  body.ninja-kids:is(.ninja-tokei,.ninja-kanji,.ninja-kuku) :is(.tk-menu,.kj-menu,.kk-menu).is-step {
+    justify-content:flex-start;
+  }
+  body.ninja-kids:is(.ninja-tokei,.ninja-kanji,.ninja-kuku) :is(.tk-menu,.kj-menu,.kk-menu).is-step>:is(.tk-group,.kj-group,.kk-group):has(>:is(.tk-choices-mode,.kj-choices-mode,.kk-choices-mode)) {
+    flex:0 0 auto; height:auto; display:block;
+  }
+  body.ninja-kids:is(.ninja-tokei,.ninja-kanji,.ninja-kuku) :is(.tk-menu,.kj-menu,.kk-menu).is-step :is(.tk-choices-mode,.kj-choices-mode,.kk-choices-mode):is(div,section) {
+    align-content:start; height:auto; max-height:none;
+  }
+  /* スタートのある画面は、スタートと もどる を盤面の下にそろえる（カードは上詰めのまま） */
+  body.ninja-kids:is(.ninja-tokei,.ninja-kanji,.ninja-kuku) :is(.tk-menu,.kj-menu,.kk-menu).is-step>:is(.tk-start,.kj-start,.kk-start):not(.is-placeholder) {
+    margin-top:auto;
+  }
+}
