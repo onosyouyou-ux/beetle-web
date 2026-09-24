@@ -3788,3 +3788,12 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
   /* とけいの「なんじ なんぷん?」の帯と時計は一続きの見た目なので、行の間隔を打ち消してくっつける */
   body.ninja-kids .tk-play>.tk-ask { margin-bottom:-6px; }
 }
+
+/* スマホの問題画面ではヒーロー（アプリ名とキャラの帯）を出さない（2026-09-24）。
+   盤面の見出しに えらんだ しゅぎょう が出ているので、問題に集中できるよう盤面を上に寄せる。
+   選択画面と けっか画面では出す（アプリ名と「紹介ページ」への入口は そこに残る） */
+@media (max-width:767px) {
+  body.ninja-kids:has(:is(.tk-play,.kj-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz)):not(:has(:is(.tk-result,.kj-result,.kk-result,.kt-result,.rj-result,.pn-result))) .app-ref-hero {
+    display:none !important;
+  }
+}
