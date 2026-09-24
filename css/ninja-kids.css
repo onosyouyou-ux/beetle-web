@@ -3746,3 +3746,7 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
     padding-bottom:16px;
   }
 }
+@media (max-width:767px) and (orientation:portrait) {
+  /* とけいの「とけいに ふんを ひょうじする」の上下に余白をとる（2026-09-24） */
+  body.ninja-kids.ninja-tokei .tk-menu.is-step>.tk-step-body>.tk-step-side { padding-block:16px; }
+}
