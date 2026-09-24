@@ -15,6 +15,7 @@
      はりを1本ずつ見る2つ（みじかい／ながい）を同じ段に横並びで置くため（2026-09-08）。
      pair が同じものは1行にまとめて描く。 */
   var LEVEL_MAX = 5;
+  var SHOW_LEVEL_BADGE = false; // 手裏剣の なんいど表示（2026-09-24に非表示。戻すときは true）
 
   var STEPS = [
     { id: 'hand-h', level: 1, pair: 'hand', name: 'みじかい はりだけ', note: 'なんじ？', step: 60, hands: 'hour' },
@@ -436,7 +437,9 @@
   function choiceBtn(item, stateKey, level) {
     var btn = el('button', 'tk-choice');
     btn.type = 'button';
-    if (level) {
+    // 手裏剣の なんいど表示はやめた（2026-09-24）。段の名前と並び順で むずかしさの順が分かり、
+    // カードも詰まっていたため。level は並び（同じ段を1行にまとめる）にだけ使う
+    if (level && SHOW_LEVEL_BADGE) {
       btn.appendChild(levelBadge(level, LEVEL_MAX));
       btn.setAttribute('aria-label', item.name + '（なんいど ' + level + ' / ' + LEVEL_MAX + '）');
     }
