@@ -181,7 +181,7 @@
       back = el('a', 'kk-back nk-applist', '← アプリいちらんに もどる');
       back.href = '/edu-tools.html#kids';
     } else {
-      back = el('button', 'kk-back', '← もんだいに もどる');
+      back = el('button', 'kk-back', '← しゅぎょうを えらびなおす');
       back.type = 'button';
       back.addEventListener('click', function () { history.back(); });
     }

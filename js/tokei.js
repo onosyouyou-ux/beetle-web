@@ -389,7 +389,7 @@
       back = el('a', 'tk-back nk-applist', '← アプリいちらんに もどる');
       back.href = '/edu-tools.html#kids';
     } else {
-      back = el('button', 'tk-back', '← といかたに もどる');
+      back = el('button', 'tk-back', '← しゅぎょうを えらびなおす');
       back.type = 'button';
       back.addEventListener('click', function () { history.back(); });
     }

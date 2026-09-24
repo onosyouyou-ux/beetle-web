@@ -17,7 +17,7 @@
   var NEXT_DELAY = 2000;
 
   // データにある学年から選択肢を組み立てる（学年が増えたら自動で増える）。
-  // g: 1〜6 は「小○コース」、g: 7 は「じゅけん とっくん」。
+  // g: 1〜6 は「小○で ならう」（2026-09-24。旧「小○コース」）、g: 7 は「じゅけん とっくん」。
   // ぜんぶ まとめて は小1〜小6だけ（とっくんは中身の性質がちがうので混ぜない）。
   var JUKKEN = 7;
   // 学期の選択肢。KANJI_TERMS にある学年だけ作る（無ければ null で、学期の画面を出さない）
@@ -39,14 +39,14 @@
     var count = function (g) { return DATA.filter(function (e) { return e.g === g; }).length; };
     var school = gs.filter(function (g) { return g < JUKKEN; });
     var list = school.map(function (g) {
-      return { id: 'g' + g, name: '小' + g + 'コース', note: count(g) + 'じ', grades: [g], terms: termsOf(g) };
+      return { id: 'g' + g, name: '小' + g + 'で ならう', note: count(g) + 'じ', grades: [g], terms: termsOf(g) };
     });
     if (school.length > 1) {
       var n = DATA.filter(function (e) { return e.g < JUKKEN; }).length;
       list.push({ id: 'all', name: 'ぜんぶ まとめて', note: '小1〜小' + school[school.length - 1] + '・' + n + 'じ', grades: school });
     }
     if (gs.indexOf(JUKKEN) >= 0) {
-      // じゅけんとっくんも ほかのコースと同じ見た目にする（2026-09-24。以前は紺地に金文字の is-jukken）
+      // じゅけんとっくんも ほかの学年と同じ見た目にする（2026-09-24。以前は紺地に金文字の is-jukken）
       list.push({ id: 'jukken', name: 'じゅけんとっくん', note: 'よみ・四字熟語', grades: [JUKKEN] });
     }
     return list;
@@ -180,7 +180,7 @@
     return e;
   }
 
-  // メニューは段階式（2026-09-22）。といかた → コース →（学期のある学年だけ）がっき。
+  // メニューは段階式（2026-09-22）。といかた → 学年 →（学期のある学年だけ）がっき。
   // カードを押したら そのまま次の画面へ進む。スタートを押すのは最後の画面だけ。
   // ブラウザの「戻る」と画面の「← もどる」で1つ前のメニュー画面へ戻れるようにする（2026-09-23）。
   // メニューの画面ごとに履歴を1つ積み、戻る操作は history.back() にそろえる
@@ -245,7 +245,7 @@
       back = el('a', 'kj-back nk-applist', '← アプリいちらんに もどる');
       back.href = '/edu-tools.html#kids';
     } else {
-      back = el('button', 'kj-back', step === 2 ? '← といかたに もどる' : '← コースに もどる');
+      back = el('button', 'kj-back', '← しゅぎょうを えらびなおす');
       back.type = 'button';
       back.addEventListener('click', function () { history.back(); });
     }
