@@ -3775,3 +3775,16 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
     min-height:116px;
   }
 }
+
+/* スマホ縦の問題画面をゆったりさせる（2026-09-24）。行の間隔8px・問題130px・選択肢60pxで ぎゅうぎゅうだった。
+   ヘッダーが ☰ の1段になって縦に余裕ができたので、行の間隔・問題エリア・選択肢を一段ずつ広げる */
+@media (max-width:767px) and (orientation:portrait) {
+  body.ninja-kids :is(.tk-play,.kj-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz) { row-gap:14px; --nk-qh:150px; }
+  body.ninja-kids :is(.kj-ask,.kk-ask,.kt-q,.rj-q,.pn-q) { min-height:150px; }
+  body.ninja-kids :is(.tk-options,.kj-options,.kk-options,.kt-choices,.rj-choices,.pn-choices) { gap:12px; }
+  body.ninja-kids :is(.tk-options,.kj-options,.kk-options,.kt-choices,.rj-choices,.pn-choices)>:is(.tk-opt,.kj-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice):not(.tk-opt-clock) { min-height:68px; }
+}
+@media (max-width:767px) and (orientation:portrait) {
+  /* とけいの「なんじ なんぷん?」の帯と時計は一続きの見た目なので、行の間隔を打ち消してくっつける */
+  body.ninja-kids .tk-play>.tk-ask { margin-bottom:-6px; }
+}
