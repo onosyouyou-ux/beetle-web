@@ -21,7 +21,7 @@ required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#kk-app"
   SEOは `landing.html` に集約し、アプリ本体の canonical もランディングへ向ける
 - **アプリ画面に置くのは あそびかた3ステップだけ**。おうちのかたへ・よくある しつもんはランディング
   （`landing.html` の `#for-family` と `#faq`）に集約し、紙面下部の `.nk-doc-ref` から行く。
-  いちばん下に `.nk-back-tools`（`/edu-tools.html#kids` へ戻る）を置く
+  アプリ一覧へは1枚目の画面の盤面の下「← アプリいちらんに もどる」から戻る（2026-09-24に紙面下の `.nk-back-tools` を廃止。行き先が同じで重複していたため）
 - **画面のH1は「かけざんしゅぎょう」（かな表記）**。`title`・OGP・JSON-LD は検索向けに「かけざん修行（九九）」とし、
   `title` の後半に「九九の練習」「暗記」など実際に検索される語を残す
 - **データ**: `js/kuku-data.js`（`window.KUKU_DATA`）が単一のデータ源。
