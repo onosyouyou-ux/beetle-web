@@ -366,6 +366,8 @@
             '</button>';
           }).join('') +
         '</div>' +
+        // アプリ一覧へ もどるリンク（2026-09-24。ヒーローの「アプリ一覧」ボタンから移した）
+        '<a class="kt-back nk-applist" href="/edu-tools.html#kids">← アプリいちらんに もどる</a>' +
       '</div>' +
       NinjaLinks.html('katakana');
 

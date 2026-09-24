@@ -3683,3 +3683,25 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
     margin-top:auto;
   }
 }
+
+/* 1枚目の画面の いちばん下に「← アプリいちらんに もどる」（2026-09-24。ヒーローの「アプリ一覧」ボタンから移した）。
+   盤面の最後に置いて、そこで しまった感じにする。PC は盤面の下端に寄せる */
+.ninja-kids .nk-applist{
+  display:block; width:max-content; max-width:100%;
+  margin:auto auto 0; padding:14px 8px 0;
+  font-size:14px; font-weight:700; color:#7a6a58; text-decoration:none;
+  grid-column:1 / -1;
+}
+.ninja-kids :is(.tk-menu,.kj-menu,.kk-menu).is-step>.nk-applist{ margin:auto auto 0; }
+@media (hover:hover) {
+  .ninja-kids .nk-applist:hover{ color:var(--nk-accent-dark); text-decoration:underline; text-underline-offset:4px; }
+}
+/* スマホ縦の1枚目は、盤面の高さを中身に合わせる（とけいは縮み、フォニックスなどは リンクのぶん少し伸びる） */
+@media (max-width:767px) and (orientation:portrait) {
+  body.ninja-kids :is(.tk-menu,.kj-menu,.kk-menu).is-step:has(:is(.tk-choices-mode,.kj-choices-mode,.kk-choices-mode)),
+  body.ninja-kids :is(.kt-menu,.rj-menu,.pn-menu) {
+    height:auto; min-height:0;
+  }
+  .ninja-kids :is(.tk-menu,.kj-menu,.kk-menu).is-step>.nk-applist{ margin:4px auto 0; }
+  .ninja-kids .nk-applist{ margin-top:4px; }
+}

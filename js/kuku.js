@@ -175,14 +175,14 @@
     btn.type = 'button';
     wrap.appendChild(btn);
 
-    // 1枚目にも もどるボタンの場所だけ取っておく（スタートの位置を そろえるため）
-    var back = el('button', 'kk-back', step === 1 ? '←' : '← もんだいに もどる');
-    back.type = 'button';
+    // 1枚目は アプリ一覧へ もどるリンク（2026-09-24。ヒーローの「アプリ一覧」ボタンから移した）
+    var back;
     if (step === 1) {
-      back.classList.add('is-placeholder');
-      back.tabIndex = -1;
-      back.setAttribute('aria-hidden', 'true');
+      back = el('a', 'kk-back nk-applist', '← アプリいちらんに もどる');
+      back.href = '/edu-tools.html#kids';
     } else {
+      back = el('button', 'kk-back', '← もんだいに もどる');
+      back.type = 'button';
       back.addEventListener('click', function () { history.back(); });
     }
     wrap.appendChild(back);

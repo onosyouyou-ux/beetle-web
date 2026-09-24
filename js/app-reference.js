@@ -18,11 +18,16 @@ if(hero){
   var copy=document.createElement('div');copy.className='app-ref-copy';
   while(hero.firstChild)copy.appendChild(hero.firstChild);
   var actions=document.createElement('div');actions.className='app-ref-actions';
-  var list=document.createElement('a');list.className='app-ref-button is-sub';
-  list.href=c.list||'/edu-tools.html#kids';list.textContent='アプリ一覧';
+  // 「アプリ一覧」ボタンは list を持つページ（席替え）だけ。修行アプリは盤面の下の
+  // 「← アプリいちらんに もどる」に移した（2026-09-24）
+  if(c.list){
+    var list=document.createElement('a');list.className='app-ref-button is-sub';
+    list.href=c.list;list.textContent='アプリ一覧';
+    actions.appendChild(list);
+  }
   var link=document.createElement('a');link.className='app-ref-button';link.href=c.landing;
   link.textContent=c.label||'紹介ページ';
-  actions.appendChild(list);actions.appendChild(link);
+  actions.appendChild(link);
   copy.appendChild(actions);hero.appendChild(copy);
   var visual=document.createElement('div');visual.className='app-ref-visual';
   if(mascot){
