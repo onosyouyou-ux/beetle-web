@@ -124,19 +124,16 @@ document.addEventListener('DOMContentLoaded', function () {
     bodyEls.forEach(function (el) { d.appendChild(el); });
   }
 
-  // 解説の箱（.kt-rules など）：箱の見出しを押すと中身が開く。
-  // 箱そのものは残し（id で探して書き込むアプリがある）、中身だけを details で包む
+  // 解説の箱（.kt-rules など）：「ポイント」という見出しのアコーディオンにし、開くと箱の中身が出る。
+  // 箱そのものは残す（id で探して書き込むアプリがある）。アコーディオンなので箱の枠は CSS で消す（2026-09-24）
   Array.prototype.forEach.call(doc.querySelectorAll(':scope > [class$="-rules"]'), function (box) {
-    var head = box.querySelector(':scope > h2, :scope > h3');
-    if (!head) return;
-    var d = document.createElement('details');
-    d.className = 'nk-acc is-box';
-    var s = document.createElement('summary');
-    s.className = 'nk-acc-sum';
-    box.insertBefore(d, head);
-    s.appendChild(head);
-    d.appendChild(s);
-    while (d.nextSibling) d.appendChild(d.nextSibling);
+    if (!box.firstElementChild) return;
+    var h = document.createElement('h2');
+    h.textContent = 'ポイント';
+    wrap(box, [], 'is-box');
+    var d = box.parentNode.parentNode; // details（wrap で box は summary の中に入る）
+    d.querySelector('summary').replaceChild(h, box);
+    d.appendChild(box);
   });
 
   // あそびかた：見出し（h2）と、その後ろの手順（[class$="-steps"]）
