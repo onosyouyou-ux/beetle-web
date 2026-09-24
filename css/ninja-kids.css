@@ -2511,19 +2511,20 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
     background:var(--nk-mode-img) center/contain no-repeat;
     pointer-events:none;
   }
-
-  .ninja-kids.ninja-katakana .kt-mode[data-mode="dotchi"] { --nk-mode-img:url('/assets/images/ninja/modes/katakana-dotchi.png'); }
-  .ninja-kids.ninja-katakana .kt-mode[data-mode="naosu"]  { --nk-mode-img:url('/assets/images/ninja/modes/katakana-naosu.png'); }
-  .ninja-kids.ninja-katakana .kt-mode[data-mode="nigata"] { --nk-mode-img:url('/assets/images/ninja/modes/katakana-nigata.png'); }
-  .ninja-kids.ninja-katakana .kt-mode[data-mode="kaku"]   { --nk-mode-img:url('/assets/images/ninja/modes/katakana-kaku.webp'); }
-  .ninja-kids.ninja-romaji .rj-mode[data-mode="yomu"]    { --nk-mode-img:url('/assets/images/ninja/modes/romaji-yomu.png'); }
-  .ninja-kids.ninja-romaji .rj-mode[data-mode="utsu"]    { --nk-mode-img:url('/assets/images/ninja/modes/romaji-utsu.png'); }
-  .ninja-kids.ninja-romaji .rj-mode[data-mode="kaku"]    { --nk-mode-img:url('/assets/images/ninja/modes/romaji-kaku.png'); }
-  .ninja-kids.ninja-romaji .rj-mode[data-mode="futatsu"] { --nk-mode-img:url('/assets/images/ninja/modes/romaji-futatsu.png'); }
-  .ninja-kids.ninja-phonics .pn-mode[data-mode="oto"]     { --nk-mode-img:url('/assets/images/ninja/modes/phonics-oto.png'); }
-  .ninja-kids.ninja-phonics .pn-mode[data-mode="tsunage"] { --nk-mode-img:url('/assets/images/ninja/modes/phonics-tsunage.png'); }
-  .ninja-kids.ninja-phonics .pn-mode[data-mode="mahou"]   { --nk-mode-img:url('/assets/images/ninja/modes/phonics-mahou.png'); }
 }
+
+/* 札の絵の割り当て。スマホでも使うので media の外に置く（2026-09-24） */
+.ninja-kids.ninja-katakana .kt-mode[data-mode="dotchi"] { --nk-mode-img:url('/assets/images/ninja/modes/katakana-dotchi.png'); }
+.ninja-kids.ninja-katakana .kt-mode[data-mode="naosu"]  { --nk-mode-img:url('/assets/images/ninja/modes/katakana-naosu.png'); }
+.ninja-kids.ninja-katakana .kt-mode[data-mode="nigata"] { --nk-mode-img:url('/assets/images/ninja/modes/katakana-nigata.png'); }
+.ninja-kids.ninja-katakana .kt-mode[data-mode="kaku"]   { --nk-mode-img:url('/assets/images/ninja/modes/katakana-kaku.webp'); }
+.ninja-kids.ninja-romaji .rj-mode[data-mode="yomu"]    { --nk-mode-img:url('/assets/images/ninja/modes/romaji-yomu.png'); }
+.ninja-kids.ninja-romaji .rj-mode[data-mode="utsu"]    { --nk-mode-img:url('/assets/images/ninja/modes/romaji-utsu.png'); }
+.ninja-kids.ninja-romaji .rj-mode[data-mode="kaku"]    { --nk-mode-img:url('/assets/images/ninja/modes/romaji-kaku.png'); }
+.ninja-kids.ninja-romaji .rj-mode[data-mode="futatsu"] { --nk-mode-img:url('/assets/images/ninja/modes/romaji-futatsu.png'); }
+.ninja-kids.ninja-phonics .pn-mode[data-mode="oto"]     { --nk-mode-img:url('/assets/images/ninja/modes/phonics-oto.png'); }
+.ninja-kids.ninja-phonics .pn-mode[data-mode="tsunage"] { --nk-mode-img:url('/assets/images/ninja/modes/phonics-tsunage.png'); }
+.ninja-kids.ninja-phonics .pn-mode[data-mode="mahou"]   { --nk-mode-img:url('/assets/images/ninja/modes/phonics-mahou.png'); }
 
 /* こたえあわせパネルの○×：1カラムの段は幅が狭いので、絵が紙面を食わないよう小さめに。
    （幅の % は auto 列だと循環参照になり 0 になるので vw で決める） */
@@ -3600,3 +3601,28 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
 .ninja-kids.ninja-kanji .kj-menu-picked{ color:#fff; background:var(--nk-accent); box-shadow:inset 0 0 0 2px rgba(255,255,255,.35); }
 /* ○×の全面フィードバック：（）の説明は次の行に出す（JS側で \n を入れている。2026-09-23） */
 .ninja-kids :is(.tk-feedback,.kj-feedback,.kk-feedback){ white-space:pre-line; }
+
+/* スマホでも しゅぎょうの札に絵を出す（2026-09-24。カタカナ・ローマ字・フォニックス）。
+   かんじ・とけい・かけざんのスマホ表示と同じく「絵を左・文字を右」。
+   絵の大きさは画面の高さに合わせ、1画面に収まるよう dvh で決める。
+   4枚のときの :has() 付きの指定（詳細度 0,4,0）に負けないよう、同じ詳細度で末尾に置く */
+@media (max-width:767px) {
+  .ninja-kids:is(.ninja-katakana,.ninja-romaji,.ninja-phonics) :is(.kt-modes,.rj-modes,.pn-modes)>:is(.kt-mode,.rj-mode,.pn-mode) {
+    --nk-mode-img-h:clamp(48px,9dvh,72px);
+    position:relative;
+    min-height:calc(var(--nk-mode-img-h) + 12px);
+    padding-left:calc(14px + var(--nk-mode-img-h) + 12px);
+    text-align:left;
+  }
+  .ninja-kids:is(.ninja-katakana,.ninja-romaji,.ninja-phonics) :is(.kt-modes,.rj-modes,.pn-modes)>:is(.kt-mode,.rj-mode,.pn-mode)::before {
+    content:'';
+    position:absolute;
+    left:12px;
+    top:50%;
+    width:var(--nk-mode-img-h);
+    height:var(--nk-mode-img-h);
+    translate:0 -50%;
+    background:var(--nk-mode-img) center/contain no-repeat;
+    pointer-events:none;
+  }
+}

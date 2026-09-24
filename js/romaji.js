@@ -209,7 +209,7 @@
   function renderMenu() {
     root.innerHTML =
       '<div class="rj-menu">' +
-        '<p class="rj-menu-lead">やりたい しゅぎょうを えらんでね（1かい 10もん）</p>' +
+        '<p class="rj-menu-lead">やりたい しゅぎょうを えらんでね！</p>' +
         '<div class="rj-modes">' +
           Object.keys(MODES).map(function (id) {
             return '<button type="button" class="rj-mode" data-mode="' + id + '">' +

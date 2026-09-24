@@ -357,7 +357,7 @@
   function renderMenu() {
     root.innerHTML =
       '<div class="kt-menu">' +
-        '<p class="kt-menu-lead">やりたい しゅぎょうを えらんでね（1かい 10もん）</p>' +
+        '<p class="kt-menu-lead">やりたい しゅぎょうを えらんでね！</p>' +
         '<div class="kt-modes">' +
           Object.keys(MODES).map(function (id) {
             return '<button type="button" class="kt-mode" data-mode="' + id + '">' +

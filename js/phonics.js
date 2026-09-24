@@ -138,7 +138,7 @@
   function renderMenu() {
     root.innerHTML =
       '<div class="pn-menu">' +
-        '<p class="pn-menu-lead">やりたい しゅぎょうを えらんでね（1かい 10もん）</p>' +
+        '<p class="pn-menu-lead">やりたい しゅぎょうを えらんでね！</p>' +
         '<div class="pn-modes">' +
           Object.keys(MODES).map(function (id) {
             return '<button type="button" class="pn-mode" data-mode="' + id + '">' +

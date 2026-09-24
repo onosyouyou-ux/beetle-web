@@ -343,7 +343,7 @@
     var wrap = el('div', 'tk-menu is-step');
     var btn;
     if (step === 1) {
-      wrap.appendChild(modeGroup('しゅぎょうを えらぶ'));
+      wrap.appendChild(modeGroup('やりたい しゅぎょうを えらんでね！'));
       // スタートの場所だけ見えない形で取っておく
       btn = el('button', 'tk-start is-placeholder', 'スタート');
       btn.tabIndex = -1;

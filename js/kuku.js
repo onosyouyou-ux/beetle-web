@@ -159,7 +159,7 @@
     var wrap = el('div', 'kk-menu is-step');
     var btn;
     if (step === 1) {
-      wrap.appendChild(group('もんだい', MODES, 'modeId', 'kk-choices-column kk-choices-mode', 1));
+      wrap.appendChild(group('やりたい しゅぎょうを えらんでね！', MODES, 'modeId', 'kk-choices-column kk-choices-mode', 1));
       // スタートの場所だけ見えない形で取っておく
       btn = el('button', 'kk-start is-placeholder', 'スタート');
       btn.tabIndex = -1;
