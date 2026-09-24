@@ -23,6 +23,38 @@ document.addEventListener('DOMContentLoaded', () => {
       if (link) link.setAttribute('aria-current', 'page');
     }
 
+    // アプリ画面（.app-paper のあるページ）は、スマホでグローバルメニューを☰にたたむ（2026-09-24）。
+    // ヘッダーを「ロゴ＋☰」の1段にして盤面を上に寄せる。メニューには お問い合わせ も足す。
+    // PC（600px超）は今までどおりテキストリンクを並べる（切り替えは common.css の .nav--app）
+    const appNav = document.querySelector('.app-paper') && document.querySelector('.nav');
+    if (appNav) {
+      const inner = appNav.querySelector('.nav-inner');
+      const links = appNav.querySelector('.nav-links');
+      appNav.classList.add('nav--app');
+      const contact = document.createElement('a');
+      contact.href = '/#contact';
+      contact.className = 'nav-contact';
+      contact.textContent = 'お問い合わせ';
+      links.appendChild(contact);
+      links.id = 'nav-links';
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'nav-toggle';
+      toggle.setAttribute('aria-controls', 'nav-links');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'メニュー');
+      toggle.innerHTML = '<span></span><span></span><span></span>';
+      inner.appendChild(toggle);
+      const setOpen = (open) => {
+        appNav.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+      };
+      toggle.addEventListener('click', () => setOpen(!appNav.classList.contains('is-open')));
+      links.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+      document.addEventListener('click', (e) => { if (!appNav.contains(e.target)) setOpen(false); });
+    }
+
     // リファレンスボタンのヘッダー注入は廃止（2026-07-15。各アプリのタイトル・注釈の下に移設）
 
     // 2段目：ページ内セクションリンク（定義があるページだけ表示）

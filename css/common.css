@@ -55,6 +55,38 @@ a{text-decoration:none;}
   .nav-links a { font-size: 12.5px; }
 }
 
+/* アプリ画面のスマホは ☰ にたたむ（2026-09-24。common.js が .app-paper のあるページの .nav に .nav--app を付ける）。
+   ロゴ＋☰の1段で、高さは2段のときの7割ほど。BEETLE のロゴは売りなので中央に大きめに残す。
+   お問い合わせ（.nav-contact）は ☰ の中だけに出し、PC には出さない */
+.nav-toggle { display: none; }
+.nav--app .nav-contact { display: none; }
+@media (max-width: 600px) {
+  .nav--app .nav-inner { position: relative; flex-direction: row; justify-content: center; padding: 11px 56px; }
+  .nav--app .nav-logo { font-size: 1.3rem; }
+  .nav--app .nav-toggle {
+    display: flex; flex-direction: column; justify-content: center; gap: 5px;
+    position: absolute; right: 6px; top: 50%; translate: 0 -50%;
+    width: 44px; height: 44px; padding: 0 11px; background: none; border: 0; cursor: pointer;
+  }
+  .nav--app .nav-toggle span { display: block; height: 2px; border-radius: 2px; background: #1c1c2e; transition: transform .2s, opacity .2s; }
+  .nav--app.is-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav--app.is-open .nav-toggle span:nth-child(2) { opacity: 0; }
+  .nav--app.is-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .nav--app .nav-links {
+    display: none; position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: #fff; border-bottom: 1px solid #ebebeb; box-shadow: 0 10px 18px rgba(28,28,46,.1);
+  }
+  .nav--app.is-open .nav-links { display: flex; }
+  .nav--app .nav-links a { font-size: 15px; padding: 14px 24px; border-top: 1px solid #f0efeb; text-decoration: none; }
+  .nav--app .nav-links a[aria-current="page"] { text-decoration: none; }
+  .nav--app .nav-links .nav-trim { display: inline; }
+  .nav--app .nav-contact { display: block; }
+}
+@media (max-width: 600px) and (prefers-reduced-motion: reduce) {
+  .nav--app .nav-toggle span { transition: none; }
+}
+
 /* Footer（2026-07-13統一）：浮世絵バナー（ロゴ焼き込み済み）→ナビリンク＋プライバシー・会社名を1行中央揃え。
    バナーがロゴを兼ねるためBEETLEテキストロゴは出さない。狭い画面では自然に折り返す */
 .site-footer { background: #1a1a1a; padding: 1.1rem 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.6rem 2rem; flex-wrap: wrap; text-align: center; }
