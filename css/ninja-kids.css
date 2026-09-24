@@ -3786,7 +3786,7 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
 }
 @media (max-width:767px) and (orientation:portrait) {
   /* とけいの「なんじ なんぷん?」の帯と時計は一続きの見た目なので、行の間隔を打ち消してくっつける */
-  body.ninja-kids .tk-play>.tk-ask { margin-bottom:-6px; }
+  /* （2026-09-24 後半に札の形へ変えたので不要。下の「問いの札」を参照） */
 }
 
 /* スマホの問題画面ではヒーロー（アプリ名とキャラの帯）を出さない（2026-09-24）。
@@ -3843,3 +3843,87 @@ body.ninja-kids .nk-acc.is-box[open]>.nk-acc-sum{ margin-bottom:14px; }
 /* 「ポイント」の中の見出し（カタカナで かく ことば は…など）には下線を引かない。下線は「ポイント」だけ */
 body.ninja-kids .nk-acc.is-box>[class$="-rules"]>:is(h2,h3){ border-bottom:0; box-shadow:none; background-image:none; text-decoration:none; }
 body.ninja-kids .nk-acc.is-box>[class$="-rules"]>:is(h2,h3)::after{ content:none; }
+
+/* 問いの札（なんと よむ?・こたえは?・なんじ なんぷん?）を、カタカナ・ローマ字と同じく
+   問題の枠の中の上に置く（2026-09-24。スマホ縦の1列の段）。
+   札と枠を同じ行に重ね、枠の上の内側を札のぶん あける */
+@media (max-width:767px) and (orientation:portrait) {
+  body.ninja-kids :is(.kj-play,.kk-play):not(.is-kaki)>:is(.kj-play-head,.kk-play-head) { grid-row:1; }
+  body.ninja-kids :is(.kj-play,.kk-play):not(.is-kaki)>:is(.kj-ask-label,.kk-ask-label,.kj-ask,.kk-ask) { grid-row:2; }
+  body.ninja-kids :is(.kj-play,.kk-play):not(.is-kaki)>:is(.kj-options,.kk-options) { grid-row:3; }
+  body.ninja-kids :is(.kj-play,.kk-play):not(.is-kaki)>:is(.kj-feedback,.kk-feedback):not(.is-ok):not(.is-ng) { grid-row:4; }
+  body.ninja-kids :is(.kj-play,.kk-play):not(.is-kaki)>:is(.kj-back,.kk-back) { grid-row:5; }
+  body.ninja-kids :is(.kj-play,.kk-play):not(.is-kaki)>:is(.kj-ask-label,.kk-ask-label) {
+    align-self:start; justify-self:center; margin:22px 0 0; z-index:2;
+  }
+  body.ninja-kids :is(.kj-play,.kk-play):not(.is-kaki)>:is(.kj-ask,.kk-ask) { padding-top:46px; }
+
+  body.ninja-kids .tk-play>.tk-play-head { grid-row:1; }
+  body.ninja-kids .tk-play>:is(.tk-ask,.tk-stage) { grid-row:2; }
+  body.ninja-kids .tk-play>.tk-hint-btn { grid-row:3; }
+  body.ninja-kids .tk-play>.tk-hint { grid-row:4; }
+  body.ninja-kids .tk-play>.tk-options { grid-row:5; }
+  body.ninja-kids .tk-play>.tk-feedback:not(.is-ok):not(.is-ng) { grid-row:6; }
+  body.ninja-kids .tk-play>.tk-back { grid-row:7; }
+  body.ninja-kids .tk-play>.tk-ask {
+    align-self:start; justify-self:center; width:fit-content; margin:14px 0 0; z-index:2;
+    padding:.28em 1.1em; color:#fff; font-weight:800; letter-spacing:.08em;
+    background:linear-gradient(var(--nk-accent),color-mix(in srgb,var(--nk-accent) 72%,#000));
+    box-shadow:0 2px 0 color-mix(in srgb,var(--nk-accent-dark) 80%,#000);
+    clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px);
+    border:0; border-radius:0;
+  }
+  body.ninja-kids .tk-play>.tk-stage { padding-top:48px; }
+}
+
+/* 問題画面の見出し：「第○問／できた！」の段を えらんだ しゅぎょう の帯の上に出し、段の枠と進み具合の点はやめる（2026-09-24） */
+body.ninja-kids .nk-head>.nk-head-bar{
+  order:-1; background:none; border:0; box-shadow:none; padding:0 4px; min-height:0;
+}
+body.ninja-kids .nk-head>.nk-head-bar::before,
+body.ninja-kids .nk-head>.nk-head-bar::after{ content:none; }
+body.ninja-kids .nk-head .nk-progress-marks{ display:none; }
+@media (max-width:767px) {
+  body.ninja-kids :is(.tk-play,.kj-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz) .nk-head-bar { padding:0 4px; }
+}
+/* 段と帯をまとめている外側の箱（.nk-head）の地と枠も消す。とけいの点は別クラス */
+body.ninja-kids :is(.tk-play,.kj-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz)>.nk-head{
+  background:none; border:0; box-shadow:none; padding:0;
+}
+body.ninja-kids :is(.tk-play,.kj-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz)>.nk-head::before,
+body.ninja-kids :is(.tk-play,.kj-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz)>.nk-head::after{ content:none; }
+body.ninja-kids .tk-progress-marks{ display:none !important; }
+@media (max-width:767px) and (orientation:portrait) {
+  /* かんじ・かけざんは札のぶん枠を高くして、札と問題の文字が くっつかないようにする */
+  body.ninja-kids :is(.kj-play,.kk-play):not(.is-kaki)>:is(.kj-ask,.kk-ask) { min-height:176px; padding-top:52px; }
+}
+
+/* かけざんの「ヒントを 見る」（2026-09-24。とけい修行と同じ白い丸ボタン。問題の枠の外＝盤面の行に置く） */
+.ninja-kids .kk-play>.kk-hint-btn{
+  grid-column:1; grid-row:2; align-self:end; justify-self:center; z-index:2; margin:0 0 14px;
+  display:inline-flex; align-items:center; gap:6px;
+  background:#fff; border:2px solid var(--nk-accent); border-radius:99px;
+  padding:8px 18px; font-size:14px; font-weight:800; font-family:inherit;
+  color:var(--nk-accent-dark); cursor:pointer;
+}
+.ninja-kids .kk-play>.kk-hint-btn::before{ content:"💡"; font-size:15px; }
+@media (hover:hover){ .ninja-kids .kk-play>.kk-hint-btn:hover{ background:color-mix(in srgb,var(--nk-accent) 10%,#fff); } }
+@media (orientation:landscape) and (max-height:500px) {
+  .ninja-kids .kk-play>.kk-hint-btn{ grid-row:3; padding:4px 12px; font-size:12px; margin-bottom:8px; }
+}
+/* スマホ縦：枠の下の行に置く（とけいと同じ並び） */
+@media (max-width:767px) and (orientation:portrait) {
+  body.ninja-kids .kk-play:not(.is-kaki)>.kk-hint-btn { grid-column:1; grid-row:3; align-self:center; margin:0; }
+  body.ninja-kids .kk-play:not(.is-kaki)>.kk-options { grid-row:4; }
+  body.ninja-kids .kk-play:not(.is-kaki)>.kk-feedback:not(.is-ok):not(.is-ng) { grid-row:5; }
+  body.ninja-kids .kk-play:not(.is-kaki)>.kk-back { grid-row:6; }
+  body.ninja-kids .kk-play:not(.is-kaki)>.kk-ask { min-height:150px; }
+}
+
+/* カタカナ「どっちで かく？」：あてはめる ことばは下線ではなくオレンジの字にする（2026-09-24） */
+body.ninja-kids :is(.kt-target,.kt-a-target){
+  text-decoration:none; color:#ffb347; font-weight:900;
+}
+/* こたえあわせの欄は赤・緑の地なので、色の字だと沈む。白い札に載せて濃い字にする */
+body.ninja-kids .kt-answer .kt-a-target{ color:#b8431f; background:#fff; padding:0 .35em; border-radius:6px; box-shadow:0 2px 0 rgba(0,0,0,.18); }
+body.ninja-kids .kt-answer.is-ok .kt-a-target{ color:#23714a; }

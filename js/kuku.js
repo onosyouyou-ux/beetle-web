@@ -273,16 +273,12 @@
     var ask = el('div', 'kk-ask kk-ask-' + q.askKind);
     ask.appendChild(el('p', 'kk-ask-main', q.ask));
     // ヒントは押しても減点しない。押さずに済むならそれが一番いい、という作りにはしない。
-    var hint = el('button', 'kk-hint-btn');
-    var hintIc = el('img', 'kk-ic');
-    hintIc.src = '/assets/images/ninja/shuriken-on.webp';
-    hintIc.width = 56; hintIc.height = 56; hintIc.alt = 'しゅりけん';
-    hint.appendChild(hintIc);
-    hint.appendChild(document.createTextNode(' で みる'));
+    // ヒントのボタンは とけい修行と同じ「ヒントを 見る」にし、問題の枠の下に置く（2026-09-24）
+    var hint = el('button', 'kk-hint-btn', 'ヒントを 見る');
     hint.type = 'button';
     hint.addEventListener('click', function () { showDots(ask, q.entry); });
-    ask.appendChild(hint);
     wrap.appendChild(ask);
+    wrap.appendChild(hint);
 
     var options = el('div', 'kk-options');
     q.options.forEach(function (o) {
@@ -305,7 +301,7 @@
 
   function showDots(ask, entry) {
     if (ask.querySelector('.kk-dots')) return;
-    var btn = ask.querySelector('.kk-hint-btn');
+    var btn = ask.parentNode && ask.parentNode.querySelector(':scope > .kk-hint-btn');
     if (btn) btn.remove();
     ask.classList.add('is-hint');
     ask.appendChild(dotsEl(entry));

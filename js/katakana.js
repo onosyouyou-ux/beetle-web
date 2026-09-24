@@ -424,14 +424,14 @@
   }
 
   // ことば1つだけ見せても どちらで書くか 決められない（「かぜ」だけでは 分からない）。
-  // 例文の中に置いて、あてはめる ことばに 下線を引く。
+  // 例文の中に置いて、あてはめる ことばを オレンジの字にする（2026-09-24に下線から変更）。
   function sentence(ex, word, cls) {
     var parts = String(ex).split('{}');
     return esc(parts[0]) + '<u class="' + cls + '">' + esc(word) + '</u>' + esc(parts[1] || '');
   }
 
   function questionLead(q) {
-    if (q.type === 'dotchi') return 'したせんの ことばは どっちで 書く？';
+    if (q.type === 'dotchi') return 'オレンジの ことばは どっちで 書く？';
     if (q.type === 'naosu') return 'カタカナで 書くと どれ？';
     return 'この 字は どっち？';
   }
