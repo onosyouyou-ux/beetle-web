@@ -3705,3 +3705,44 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
   .ninja-kids :is(.tk-menu,.kj-menu,.kk-menu).is-step>.nk-applist{ margin:4px auto 0; }
   .ninja-kids .nk-applist{ margin-top:4px; }
 }
+
+/* スマホ縦の2枚目以降（とけいの なんいど・かんじの コース／がっき・かけざんの だん）に余白をとる（2026-09-24）。
+   盤面の高さが固定で、カードが詰め込まれて ぎゅうぎゅうだった。
+   高さは中身に合わせ、カードの間隔と高さを広げる。kanji.css の詰める指定（詳細度 0,4,1）に勝つよう body から書く */
+@media (max-width:767px) and (orientation:portrait) {
+  body.ninja-kids :is(.tk-menu,.kj-menu,.kk-menu).is-step:not(:has(:is(.tk-choices-mode,.kj-choices-mode,.kk-choices-mode))) {
+    height:auto; min-height:0;
+  }
+  body.ninja-kids :is(.tk-menu,.kj-menu,.kk-menu).is-step:not(:has(:is(.tk-choices-mode,.kj-choices-mode,.kk-choices-mode)))>:is(.tk-group,.kj-group,.kk-group) {
+    flex:none; margin-bottom:0;
+  }
+  body.ninja-kids :is(.tk-menu,.kj-menu,.kk-menu).is-step:not(:has(:is(.tk-choices-mode,.kj-choices-mode,.kk-choices-mode))) :is(.tk-choices,.kj-choices,.kk-choices) {
+    height:auto; max-height:none; flex:none; grid-auto-rows:auto; align-content:start; gap:10px;
+  }
+  body.ninja-kids :is(.tk-menu,.kj-menu,.kk-menu).is-step:not(:has(:is(.tk-choices-mode,.kj-choices-mode,.kk-choices-mode))) :is(.tk-choice,.kj-choice,.kk-choice) {
+    min-height:64px; padding-block:10px;
+  }
+  body.ninja-kids :is(.tk-menu,.kj-menu,.kk-menu).is-step:not(:has(:is(.tk-choices-mode,.kj-choices-mode,.kk-choices-mode)))>:is(.kj-menu-picked,.tk-menu-picked,.kk-menu-picked) {
+    margin-bottom:14px;
+  }
+  body.ninja-kids :is(.tk-menu,.kj-menu,.kk-menu).is-step:not(:has(:is(.tk-choices-mode,.kj-choices-mode,.kk-choices-mode)))>:is(.tk-start,.kj-start,.kk-start) {
+    margin-top:18px;
+  }
+}
+@media (max-width:767px) and (orientation:portrait) {
+  /* とけいは なんいどを .tk-step-body で包んでいる。flex:1 1 0 のままだと高さ0に潰れる */
+  body.ninja-kids .tk-menu.is-step:not(:has(.tk-choices-mode))>.tk-step-body,
+  body.ninja-kids .tk-menu.is-step:not(:has(.tk-choices-mode))>.tk-step-body>.tk-group {
+    flex:none; height:auto; min-height:0;
+  }
+  /* 行の高さを決め打ちしている並び（かけざんの だん など）も中身の高さにする */
+  body.ninja-kids :is(.tk-menu,.kj-menu,.kk-menu).is-step:not(:has(:is(.tk-choices-mode,.kj-choices-mode,.kk-choices-mode))) :is(.tk-choices,.kj-choices,.kk-choices) {
+    grid-template-rows:none;
+  }
+}
+@media (max-width:767px) and (orientation:portrait) {
+  /* スタートの margin-top は各アプリの指定に負けるので、カードの塊の下に内側の余白をとる */
+  body.ninja-kids :is(.kj-menu,.kk-menu).is-step:not(:has(:is(.kj-choices-mode,.kk-choices-mode)))>:is(.kj-group,.kk-group):last-of-type {
+    padding-bottom:16px;
+  }
+}
