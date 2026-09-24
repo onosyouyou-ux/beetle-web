@@ -107,7 +107,8 @@
    「あそびかた」と、カタカナ・ローマ字・フォニックスの解説の箱を、見出しを押すと開く <details> にする。
    HTML はそのまま（検索にも本文が残る）にして、読み込み時に包み直す。
    おうちのかたへ の案内（.nk-doc-ref）は包まずに出したままにする */
-(function () {
+// 解説の箱は各アプリの JS が中身を書き込む（ローマ字など）ので、ページのスクリプトが全部終わってから包む
+document.addEventListener('DOMContentLoaded', function () {
   'use strict';
   var doc = document.getElementById('howto');
   if (!doc || doc.querySelector('.nk-acc')) return;
@@ -123,19 +124,19 @@
     bodyEls.forEach(function (el) { d.appendChild(el); });
   }
 
-  // 解説の箱（.kt-rules など）：箱の見出しを押すと中身が開く。箱ごと details にする
+  // 解説の箱（.kt-rules など）：箱の見出しを押すと中身が開く。
+  // 箱そのものは残し（id で探して書き込むアプリがある）、中身だけを details で包む
   Array.prototype.forEach.call(doc.querySelectorAll(':scope > [class$="-rules"]'), function (box) {
-    var head = box.querySelector('h2, h3');
+    var head = box.querySelector(':scope > h2, :scope > h3');
     if (!head) return;
     var d = document.createElement('details');
-    d.className = box.className + ' nk-acc is-box';
+    d.className = 'nk-acc is-box';
     var s = document.createElement('summary');
     s.className = 'nk-acc-sum';
-    box.parentNode.insertBefore(d, box);
+    box.insertBefore(d, head);
     s.appendChild(head);
     d.appendChild(s);
-    while (box.firstChild) d.appendChild(box.firstChild);
-    box.remove();
+    while (d.nextSibling) d.appendChild(d.nextSibling);
   });
 
   // あそびかた：見出し（h2）と、その後ろの手順（[class$="-steps"]）
@@ -146,4 +147,4 @@
     while (n && !n.classList.contains('nk-doc-ref')) { body.push(n); n = n.nextElementSibling; }
     wrap(h2, body, 'is-howto');
   }
-})();
+});

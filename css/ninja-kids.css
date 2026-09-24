@@ -3823,3 +3823,12 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
     padding-top:14px;
   }
 }
+
+/* スマホの問題画面：盤面の上部（えらんだ しゅぎょう の帯・第○問／できた！の段）に余白をとる（2026-09-24）。
+   盤面の上の内側10px・帯30px・帯と段の間8px・段の上下5px で ぎゅうぎゅうだった */
+@media (max-width:767px) {
+  body.ninja-kids :is(.tk-play,.kj-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz) { padding-top:18px; }
+  body.ninja-kids :is(.tk-play,.kj-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz) .nk-head { gap:12px; }
+  body.ninja-kids :is(.tk-play,.kj-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz) .nk-head-picked { padding:9px 14px; }
+  body.ninja-kids :is(.tk-play,.kj-play,.kk-play,.kt-quiz,.rj-quiz,.pn-quiz) .nk-head-bar { padding:10px 14px 12px; row-gap:8px; }
+}
