@@ -24,10 +24,11 @@
   function termsOf(g) {
     var t = TERMS[g];
     if (!t) return null;
+    // 字数は名前のうしろに（）で付けて1行にする（2026-09-24）。2行だと低いスマホで札からはみ出した
     var list = Object.keys(t).sort().map(function (n) {
-      return { id: 't' + n, name: n + 'がっきに ならう かんじ', note: Array.from(t[n]).length + 'じ', term: +n };
+      return { id: 't' + n, name: n + 'がっきに ならう かんじ（' + Array.from(t[n]).length + 'じ）', term: +n };
     });
-    list.push({ id: 'all', name: 'ぜんぶ まとめて', note: DATA.filter(function (e) { return e.g === g; }).length + 'じ', term: 0 });
+    list.push({ id: 'all', name: 'ぜんぶ まとめて（' + DATA.filter(function (e) { return e.g === g; }).length + 'じ）', term: 0 });
     return list;
   }
 
@@ -45,7 +46,8 @@
       list.push({ id: 'all', name: 'ぜんぶ まとめて', note: '小1〜小' + school[school.length - 1] + '・' + n + 'じ', grades: school });
     }
     if (gs.indexOf(JUKKEN) >= 0) {
-      list.push({ id: 'jukken', name: 'じゅけんとっくん', note: 'よみ・四字熟語', grades: [JUKKEN], cls: 'is-jukken' });
+      // じゅけんとっくんも ほかのコースと同じ見た目にする（2026-09-24。以前は紺地に金文字の is-jukken）
+      list.push({ id: 'jukken', name: 'じゅけんとっくん', note: 'よみ・四字熟語', grades: [JUKKEN] });
     }
     return list;
   })();
@@ -289,7 +291,7 @@
         btn.appendChild(img);
       }
       btn.appendChild(el('span', 'kj-choice-label', item.name));
-      btn.appendChild(el('span', 'kj-choice-note', item.note));
+      if (item.note) btn.appendChild(el('span', 'kj-choice-note', item.note));
       if (picked && picked.key === key && picked.id === item.id) btn.classList.add('is-on');
       btn.addEventListener('click', function () {
         // 学年を変えたら、学期は「ぜんぶ まとめて」に戻す
