@@ -17,7 +17,7 @@
   var NEXT_DELAY = 2000;
 
   // データにある学年から選択肢を組み立てる（学年が増えたら自動で増える）。
-  // g: 1〜6 は「小○で ならう」（2026-09-24。旧「小○コース」）、g: 7 は「じゅけん とっくん」。
+  // g: 1〜6 は「小○」（2026-09-24。旧「小○コース」）、g: 7 は「じゅけん とっくん」。
   // ぜんぶ まとめて は小1〜小6だけ（とっくんは中身の性質がちがうので混ぜない）。
   var JUKKEN = 7;
   // 学期の選択肢。KANJI_TERMS にある学年だけ作る（無ければ null で、学期の画面を出さない）
@@ -39,7 +39,7 @@
     var count = function (g) { return DATA.filter(function (e) { return e.g === g; }).length; };
     var school = gs.filter(function (g) { return g < JUKKEN; });
     var list = school.map(function (g) {
-      return { id: 'g' + g, name: '小' + g + 'で ならう', note: count(g) + 'じ', grades: [g], terms: termsOf(g) };
+      return { id: 'g' + g, name: '小' + g, note: count(g) + 'じ', grades: [g], terms: termsOf(g) };
     });
     if (school.length > 1) {
       var n = DATA.filter(function (e) { return e.g < JUKKEN; }).length;

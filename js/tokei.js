@@ -17,8 +17,8 @@
   var LEVEL_MAX = 5;
 
   var STEPS = [
-    { id: 'hand-h', level: 1, pair: 'hand', name: 'みじかい はり', note: 'なんじ？', step: 60, hands: 'hour' },
-    { id: 'hand-m', level: 1, pair: 'hand', name: 'ながい はり', note: 'なんぷん？', step: 5, hands: 'minute' },
+    { id: 'hand-h', level: 1, pair: 'hand', name: 'みじかい はりだけ', note: 'なんじ？', step: 60, hands: 'hour' },
+    { id: 'hand-m', level: 1, pair: 'hand', name: 'ながい はりだけ', note: 'なんぷん？', step: 5, hands: 'minute' },
     { id: 'hour', level: 2, name: 'ちょうどの じかん', note: '3じ・8じ など', step: 60, hands: 'both' },
     { id: 'half', level: 3, name: '30ぷんきざみ', note: '〇じはん も', step: 30, hands: 'both' },
     { id: 'five', level: 4, name: '5ふんきざみ', note: '5・10・15…', step: 5, hands: 'both' },
