@@ -3648,3 +3648,19 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
     pointer-events:none;
   }
 }
+
+/* スマホ縦の しゅぎょう選択の盤面は、390x740 の見え方を基準にする（2026-09-24）。
+   盤面の下に「しゅぎょう いちらん」の見出しだけが見えていればよく、その下のカードは画面外でよい。
+   低いスマホでは盤面が縮められて中身がぎゅうぎゅうだったので、画面の高さから逆算して広げる。
+   上限 470px（基準の盤面の高さ）で止め、大きい端末では枠だけが間延びしないようにする */
+@media (max-width:767px) and (orientation:portrait) {
+  .ninja-kids :is(.tk-menu,.kj-menu,.kk-menu,.kt-menu,.rj-menu,.pn-menu) {
+    min-height:min(470px,calc(100dvh - 224px));
+  }
+}
+/* 札が4枚あるカタカナ・ローマ字は、低いスマホ（高さ660px以下）だけ札の絵を小さくして見出しまで収める */
+@media (max-width:767px) and (orientation:portrait) and (max-height:660px) {
+  .ninja-kids:is(.ninja-katakana,.ninja-romaji,.ninja-phonics) :is(.kt-modes,.rj-modes,.pn-modes)>:is(.kt-mode,.rj-mode,.pn-mode) {
+    --nk-mode-img-h:44px;
+  }
+}

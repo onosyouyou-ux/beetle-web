@@ -160,12 +160,6 @@ body.ninja-kids .kj-opt.is-xlong .nk-answer-label{font-size:.7em}
 /* 学年が4段になったぶん、スマホ縦と寝かせた画面では1画面に収まらなくなる。
    学年ボタンの字数の注記（80じ など）は選ぶのに要らないので隠して薄くする（かけざんの だん と同じ）。
    ninja-kids.css はこのファイルより後に読まれるので、body を付けて詳細度で勝たせる */
-/* 上の忍具アイコンは、高さの低いスマホ（680px以下）だけ隠す（2026-09-24）。
-   メニューが段階式になって縦に余裕ができたので、ふつうの高さなら出しても1画面に収まる */
-@media (max-width:767px) and (orientation:portrait) and (max-height:680px){
-  body.ninja-kids.ninja-kanji .kj-menu{padding-top:12px}
-  body.ninja-kids.ninja-kanji .kj-menu::before{content:none}
-}
 @media (max-width:767px) and (orientation:portrait){
   body.ninja-kids.ninja-kanji .kj-choices-grade{gap:5px}
   body.ninja-kids.ninja-kanji .kj-group{margin-bottom:4px}
