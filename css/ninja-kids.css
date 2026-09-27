@@ -4084,3 +4084,73 @@ body .nk-modal-body>[id] { flex:1 0 auto; box-sizing:border-box; width:100%; max
   .nk-modal-bar { padding-block:2px; }
   .nk-modal-close { min-height:36px; }
 }
+
+/* スマホ縦のこたえあわせパネル：絵を左・「正解は！／こたえ」の2段を右に並べ、その下に説明とボタン（2026-09-27）。
+   絵を上に積むと縦が足りず、ボタンが画面の外に押し出されていた。
+   説明の箱（.nk-a-body）は display:contents にして、見出し・分類・説明をパネルのグリッドに直接並べる */
+@media (max-width:767px) and (orientation:portrait) {
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on {
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    grid-template-rows:none;
+    grid-auto-rows:auto;
+    column-gap:12px; row-gap:8px;
+  }
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before {
+    grid-column:1; grid-row:1;
+    width:clamp(84px,15svh,120px);
+    justify-self:end; align-self:center;
+  }
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on>.nk-a-body { display:contents; }
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-head,.rj-a-head,.pn-a-head) {
+    grid-column:2; grid-row:1;
+    justify-self:start; align-self:center;
+    margin:0; text-align:left;
+  }
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-head,.rj-a-head,.pn-a-head) b { display:block; }
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-cat,.rj-a-cat,.pn-a-cat) {
+    grid-column:1 / -1; justify-self:center; margin:0;
+  }
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-why,.rj-a-why,.pn-a-why) {
+    grid-column:1 / -1; margin:0;
+  }
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on>:is(.kt-next,.rj-next,.pn-a-btns) {
+    grid-column:1 / -1; grid-row:auto;
+  }
+}
+
+/* かく しゅぎょう の正解（カタカナ・ローマ字）：緑の地に白の大きな字で、「正解は」の札を付けて ぽんと出す（2026-09-27）。
+   緑の字が紙の上に出るだけで、どれが正解か分かりにくかった */
+body.ninja-kids :is(.rj-model,.kt-model).is-on {
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  width:fit-content; max-width:100%;
+  margin-inline:auto;
+  padding:4px 16px 4px 8px;
+  border-radius:12px;
+  background:linear-gradient(150deg,#15a077,#0b7a5c);
+  color:#fff;
+  font-size:clamp(24px,6.4vw,34px);
+  line-height:1.25;
+  box-shadow:0 0 0 3px #fff,0 6px 16px rgba(11,122,92,.35);
+  animation:nkModelPop .5s cubic-bezier(.2,1.4,.4,1) both, nkModelGlow 1.4s ease-in-out .5s 2;
+}
+body.ninja-kids :is(.rj-model,.kt-model).is-on::before {
+  content:'正解は';
+  flex:none;
+  padding:3px 8px;
+  border-radius:8px;
+  background:#fff;
+  color:#0b7a5c;
+  font-size:14px; letter-spacing:0; line-height:1.3;
+}
+@keyframes nkModelPop {
+  from { opacity:0; transform:scale(.4) rotate(-6deg); }
+  70%  { opacity:1; transform:scale(1.12) rotate(1deg); }
+  to   { opacity:1; transform:scale(1) rotate(0); }
+}
+@keyframes nkModelGlow {
+  0%,100% { box-shadow:0 0 0 3px #fff,0 6px 16px rgba(11,122,92,.35); }
+  50%     { box-shadow:0 0 0 3px #fff,0 0 0 9px rgba(21,160,119,.35),0 6px 16px rgba(11,122,92,.35); }
+}
+@media (prefers-reduced-motion:reduce) {
+  body.ninja-kids :is(.rj-model,.kt-model).is-on { animation:none; }
+}

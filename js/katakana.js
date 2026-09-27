@@ -484,7 +484,7 @@
     box.className = 'kt-answer is-on' + (ok ? ' is-ok' : ' is-ng');
     box.innerHTML =
       '<div class="nk-a-body">' +
-      '<p class="kt-a-head">' + (ok ? 'せいかい！' : 'おしい！') + '　' +
+      '<p class="kt-a-head">' + (ok ? 'せいかい！' : '正解は！') + '　' +
         (q.ex ? '<b>' + sentence(q.ex, q.word, 'kt-a-target') + '</b>' : '<b>' + esc(q.word) + '</b>') + '</p>' +
       (q.cat ? '<p class="kt-a-cat">' + esc(q.cat) + '</p>' : '') +
       '<p class="kt-a-why">' + esc(q.hint) + '</p>' +
