@@ -157,7 +157,24 @@
     });
   }
 
+  // ブラウザ・スマホの「戻る」でメニューへ戻れるようにする（2026-09-27）。
+  // プレイに入るとき履歴を1つ積む。積んでいないと「戻る」でページごと離れ、
+  // 直前に開いていた別の修行アプリへ飛んでしまう
+  function pushPlay() {
+    if (!(history.state && history.state.nkStep === 'play')) history.pushState({ nkStep: 'play' }, '');
+  }
+  // 画面の「← もどる」「べつの しゅぎょう」も history.back() にそろえ、ブラウザの戻ると同じ動きにする
+  function backToMenu() {
+    if (history.state && history.state.nkStep === 'play') history.back();
+    else renderMenu();
+  }
+  window.addEventListener('popstate', function () {
+    // ページ内リンク（#faq など）の履歴は state を持たないので、画面はそのままにする
+    if (history.state && history.state.nkStep === 'menu') renderMenu();
+  });
+
   function start(mode) {
+    pushPlay();
     // 音声合成は 1回 使っておかないと 声の 一覧が 読み込まれない ブラウザがある
     if (window.speechSynthesis) window.speechSynthesis.getVoices();
     state = { mode: mode, qs: MODES[mode].build(), i: 0, ok: 0, missed: [] };
@@ -183,7 +200,7 @@
         '<button type="button" class="pn-back">← もんだいせんたくに もどる</button>' +
       '</div>';
 
-    root.querySelector('.pn-back').addEventListener('click', renderMenu);
+    root.querySelector('.pn-back').addEventListener('click', backToMenu);
 
     Array.prototype.forEach.call(root.querySelectorAll('.pn-choice'), function (btn) {
       btn.addEventListener('click', function () { answer(btn.getAttribute('data-key'), btn); });
@@ -262,8 +279,9 @@
       '</div>';
 
     document.getElementById('pn-again').addEventListener('click', function () { start(state.mode); });
-    document.getElementById('pn-menu').addEventListener('click', renderMenu);
+    document.getElementById('pn-menu').addEventListener('click', backToMenu);
   }
 
+  history.replaceState({ nkStep: 'menu' }, '');
   renderMenu();
 })();

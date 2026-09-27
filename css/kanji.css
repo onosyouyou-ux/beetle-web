@@ -101,7 +101,7 @@ body{
 .kj-opt .nk-answer-label{word-break:keep-all;overflow-wrap:anywhere}
 body.ninja-kids .kj-opt.is-long .nk-answer-label{font-size:.8em}
 body.ninja-kids .kj-opt.is-xlong .nk-answer-label{font-size:.7em}
-.kj-opt:hover:not(:disabled){border-color:var(--kj-orange)}
+@media (hover:hover){.kj-opt:hover:not(:disabled){border-color:var(--kj-orange)}}
 .kj-opt:disabled{cursor:default;opacity:.75}
 .kj-opt.is-correct{border-color:var(--kj-green);background:var(--kj-green-bg);opacity:1}
 .kj-opt.is-wrong{border-color:var(--kj-red);background:var(--kj-red-bg);opacity:1}

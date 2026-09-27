@@ -187,7 +187,7 @@ body{margin:0;color:var(--kk-ink)}
    上にずれて見えた。数字は行の高さを1にして、アイコンと天地の中心をそろえる。 */
 .ninja-kids.ninja-kuku .kk-play .kk-opt::before{width:var(--kk-opt-fs);height:var(--kk-opt-fs);flex:0 0 var(--kk-opt-fs)}
 .ninja-kids.ninja-kuku .kk-play .kk-opt .nk-answer-label{line-height:1}
-.kk-opt:hover:not(:disabled){border-color:var(--kk-blue)}
+@media (hover:hover){.kk-opt:hover:not(:disabled){border-color:var(--kk-blue)}}
 .kk-opt:disabled{cursor:default;opacity:.75}
 .kk-opt.is-correct{border-color:var(--kk-green);background:var(--kk-green-bg);opacity:1}
 .kk-opt.is-wrong{border-color:var(--kk-red);background:var(--kk-red-bg);opacity:1}

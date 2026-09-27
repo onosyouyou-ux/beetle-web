@@ -109,7 +109,8 @@ body.ninja-space {
 .ninja-kids .tk-eyebrow,.ninja-kids .kj-eyebrow,.ninja-kids .kt-eyebrow,.ninja-kids .rj-eyebrow,.ninja-kids .pn-eyebrow ,.ninja-kids .kk-eyebrow{ color:var(--nk-accent-dark); }
 .ninja-kids .tk-hero h1,.ninja-kids .kj-hero h1,.ninja-kids .kt-hero h1,.ninja-kids .rj-hero h1,.ninja-kids .pn-hero h1 ,.ninja-kids .kk-hero h1{ color:var(--nk-ink); text-shadow:0 1px #fff8; }
 .ninja-kids .tk-scope,.ninja-kids .kj-scope,.ninja-kids .kt-scope,.ninja-kids .rj-scope,.ninja-kids .pn-scope ,.ninja-kids .kk-scope{ border-color:color-mix(in srgb,var(--nk-accent) 38%,#fff); color:var(--nk-accent-dark); }
-.ninja-kids .tk-mode:hover,.ninja-kids .kj-mode:hover,.ninja-kids .kt-mode:hover,.ninja-kids .rj-mode:hover,.ninja-kids .pn-mode:hover ,.ninja-kids .kk-mode:hover{ border-color:var(--nk-accent); }
+/* スマホはタップした所に :hover が残り、次の画面の同じ位置のボタンが選ばれて見える。マウスのときだけ効かせる（2026-09-27） */
+@media (hover:hover) { .ninja-kids .tk-mode:hover,.ninja-kids .kj-mode:hover,.ninja-kids .kt-mode:hover,.ninja-kids .rj-mode:hover,.ninja-kids .pn-mode:hover ,.ninja-kids .kk-mode:hover{ border-color:var(--nk-accent); } }
 .ninja-kids .tk-next,.ninja-kids .kj-next,.ninja-kids .kt-next,.ninja-kids .rj-next,.ninja-kids .pn-next ,.ninja-kids .kk-next{ background:var(--nk-accent); box-shadow:0 3px 0 var(--nk-accent-dark); }
 .ninja-kids .tk-next:hover,.ninja-kids .kj-next:hover,.ninja-kids .kt-next:hover,.ninja-kids .rj-next:hover,.ninja-kids .pn-next:hover ,.ninja-kids .kk-next:hover{ background:var(--nk-accent-dark); }
 .ninja-space .app-paper { border-color:#6846b7; background:linear-gradient(rgba(8,20,48,.9),rgba(11,21,51,.94)); }
@@ -343,9 +344,12 @@ body.ninja-space {
   background:#fff;
   box-shadow:0 3px 0 #c5a876;
 }
+/* スマホはタップした所に :hover が残り、次の画面の同じ位置のボタンが選ばれて見える。マウスのときだけ効かせる（2026-09-27） */
+@media (hover:hover) {
 .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):hover ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):hover{
   translate:0 -2px;
   border-color:var(--nk-accent);
+}
 }
 .ninja-kids :is(.tk-feedback,.kj-feedback) ,.ninja-kids :is(.tk-feedback,.kk-feedback){
   grid-column:1;
@@ -842,11 +846,14 @@ body.ninja-space {
   box-shadow:0 5px 0 color-mix(in srgb,var(--nk-accent) 32%,#cfc6b4);
   transition:translate .15s,box-shadow .15s,background .15s;
 }
+/* スマホはタップした所に :hover が残り、次の画面の同じ位置のボタンが選ばれて見える。マウスのときだけ効かせる（2026-09-27） */
+@media (hover:hover) {
 .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):hover:not(:disabled) ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice,.sa-opt):hover:not(:disabled){
   translate:0 -3px;
   border-color:var(--nk-accent);
   background:color-mix(in srgb,var(--nk-accent) 16%,#fff);
   box-shadow:0 8px 0 color-mix(in srgb,var(--nk-accent) 45%,#c7bca9);
+}
 }
 .ninja-kids :is(.tk-opt,.kj-opt,.kt-choice,.rj-choice,.pn-choice):focus-visible ,.ninja-kids :is(.tk-opt,.kk-opt,.kt-choice,.rj-choice,.pn-choice):focus-visible{
   outline:3px solid color-mix(in srgb,var(--nk-accent) 55%,#fff);

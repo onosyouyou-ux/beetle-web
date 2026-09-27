@@ -115,7 +115,7 @@ body{
   font-family:inherit;font-size:20px;font-weight:800;letter-spacing:.08em;cursor:pointer;
   transition:border-color .15s,background .15s;
 }
-.kt-choice:hover:not(:disabled){border-color:var(--kt-orange)}
+@media (hover:hover){.kt-choice:hover:not(:disabled){border-color:var(--kt-orange)}}
 .kt-choice:disabled{cursor:default;opacity:.75}
 .kt-choice.is-correct{border-color:var(--kt-green);background:var(--kt-green-bg);color:var(--kt-green);opacity:1}
 .kt-choice.is-wrong{border-color:var(--kt-red);background:var(--kt-red-bg);color:var(--kt-red);opacity:1}

@@ -216,7 +216,7 @@
         '<button type="button" class="kt-back">← もんだいせんたくに もどる</button>' +
       '</div>';
 
-    root.querySelector('.kt-back').addEventListener('click', renderMenu);
+    root.querySelector('.kt-back').addEventListener('click', backToMenu);
     var pen = setupCanvas(root.querySelector('.kt-canvas'));
     document.getElementById('kt-clear').addEventListener('click', pen.clear);
     document.getElementById('kt-judge').addEventListener('click', function () { revealKaku(q, pen); });
@@ -376,7 +376,24 @@
     });
   }
 
+  // ブラウザ・スマホの「戻る」でメニューへ戻れるようにする（2026-09-27）。
+  // プレイに入るとき履歴を1つ積む。積んでいないと「戻る」でページごと離れ、
+  // 直前に開いていた別の修行アプリへ飛んでしまう
+  function pushPlay() {
+    if (!(history.state && history.state.nkStep === 'play')) history.pushState({ nkStep: 'play' }, '');
+  }
+  // 画面の「← もどる」「べつの しゅぎょう」も history.back() にそろえ、ブラウザの戻ると同じ動きにする
+  function backToMenu() {
+    if (history.state && history.state.nkStep === 'play') history.back();
+    else renderMenu();
+  }
+  window.addEventListener('popstate', function () {
+    // ページ内リンク（#faq など）の履歴は state を持たないので、画面はそのままにする
+    if (history.state && history.state.nkStep === 'menu') renderMenu();
+  });
+
   function start(mode) {
+    pushPlay();
     state = { mode: mode, qs: MODES[mode].build(), i: 0, ok: 0, missed: [] };
     renderQuestion();
   }
@@ -416,7 +433,7 @@
         '<button type="button" class="kt-back">← もんだいせんたくに もどる</button>' +
       '</div>';
 
-    root.querySelector('.kt-back').addEventListener('click', renderMenu);
+    root.querySelector('.kt-back').addEventListener('click', backToMenu);
 
     Array.prototype.forEach.call(root.querySelectorAll('.kt-choice'), function (btn) {
       btn.addEventListener('click', function () { answer(btn.getAttribute('data-key'), btn); });
@@ -504,8 +521,9 @@
       '</div>';
 
     document.getElementById('kt-again').addEventListener('click', function () { start(state.mode); });
-    document.getElementById('kt-menu').addEventListener('click', renderMenu);
+    document.getElementById('kt-menu').addEventListener('click', backToMenu);
   }
 
+  history.replaceState({ nkStep: 'menu' }, '');
   renderMenu();
 })();

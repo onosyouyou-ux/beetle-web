@@ -316,8 +316,6 @@
   // ブラウザの「戻る」と画面の「← もどる」で1つ前の画面へ戻れるようにする（2026-09-23）。
   // 2段目と やりかた の画面で履歴を1つ積み、戻る操作は history.back() にそろえる
   function goMenu2() {
-    // むずかしさの画面に来たときは「かんたん」を選んだ状態にし、すぐスタートできるようにする（2026-09-23）
-    selection.diffId = 's';
     history.pushState({ nkStep: 2 }, '');
     renderMenu(2);
   }
@@ -344,6 +342,9 @@
     // 引数なし＝いまの段のまま描きなおす。ボタンから呼ばれた（イベントが来た）ときは1段目へ
     if (step === 2) menuStep = 2;
     else if (step !== undefined) menuStep = 1;
+    // むずかしさの画面に来たときは何も選んでいない状態から始める（2026-09-27。かんじ修行などと同じ）。
+    // 前の選択や初期値が「選択ずみ」で出ていると、押していないのに選ばれて見えるため
+    if (step === 2 && !keep) selection.diffId = null;
     app.innerHTML = '';
     if (menuStep === 2) renderMenuStep2(); else renderMenuStep1();
     app.appendChild(NinjaLinks.el('sansu'));
@@ -403,6 +404,8 @@
     start.appendChild(icon('rocket-simple', 'sa-start-icon'));
     start.appendChild(el('span', null, 'スタート'));
     start.addEventListener('click', startSession);
+    // むずかしさを押すまでスタートは押せない
+    if (!selection.diffId) start.disabled = true;
     app.appendChild(start);
 
     const back = el('button', 'sa-step-back', '← けいさんの しゅるいに もどる');

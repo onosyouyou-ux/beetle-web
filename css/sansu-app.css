@@ -214,13 +214,19 @@ body::after {
   border-image: url('/assets/images/sansu/buttons/choice-default.png') 40 44 50 44 fill / 20px 22px 25px 22px / 0 stretch;
   transition: transform .12s;
 }
-.sa-choice:hover { transform: translateY(-2px); }
 .sa-choice:active { transform: translateY(2px); }
-/* マウスをのせたときも、選んだときと同じ板にする（2026-09-23） */
-.sa-choice.is-on,
-.sa-choice:not(.is-disabled):hover {
+.sa-choice.is-on {
   color: #4a3d1a;
   border-image: url('/assets/images/sansu/buttons/choice-selected.png') 40 44 54 44 fill / 20px 22px 27px 22px / 0 stretch;
+}
+/* マウスをのせたときも、選んだときと同じ板にする（2026-09-23）。
+   スマホはタップした所に :hover が残り、次の画面の同じ位置のカードが選ばれて見えるので、マウスのときだけ（2026-09-27） */
+@media (hover:hover) {
+  .sa-choice:hover { transform: translateY(-2px); }
+  .sa-choice:not(.is-disabled):hover {
+    color: #4a3d1a;
+    border-image: url('/assets/images/sansu/buttons/choice-selected.png') 40 44 54 44 fill / 20px 22px 27px 22px / 0 stretch;
+  }
 }
 .sa-choice.is-disabled {
   border-image: none;
