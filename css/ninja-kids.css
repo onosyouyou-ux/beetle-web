@@ -4201,3 +4201,76 @@ body.ninja-space .nk-modal-body>#app { padding:18px 22px 14px!important; }
   body.ninja-space .sa-problem-cherry { margin-bottom:8px; }
   body.ninja-space .sa-problem-cherry .sa-cherry-pair { padding-top:12px; }
 }
+
+/* ===== 学校のノートPC（高さの低い横長の画面）（2026-09-27）=====
+   授業で使われている。1366x768 をブラウザで開くと見えるのは約 1366x657、
+   表示を125%にしていると約 1093x520。浮かぶ窓の余白・帯・盤面の最小高さで 24〜137px はみ出していた。
+   高さ640px以下では窓を全面にし、帯と余白を詰める（寝かせたスマホ max-height:500px とは別の段） */
+@media (min-width:768px) and (min-height:501px) and (max-height:640px) {
+  .nk-modal { width:100vw; height:100dvh; max-height:none; border:0; border-radius:0; box-shadow:none; }
+  .nk-modal-bar { padding-block:3px; }
+  .nk-modal-close { min-height:38px; }
+  body.ninja-kids .nk-modal-body>[id] { padding-top:8px!important; padding-bottom:8px!important; }
+  body.ninja-space .nk-modal-body>#app { padding:8px 18px 8px!important; }
+  /* とけい：問題と時計の選択肢の段（約262px）が高すぎた。画面の高さに合わせて縮める（時計の絵は段に合わせて小さくなる） */
+  body.ninja-kids.ninja-tokei { --nk-qh:clamp(130px,calc(100dvh - 385px),198px); }
+  /* さんすう：問題の箱の最低の高さ（約232px）を外し、中身なりにする */
+  body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem { min-height:0; }
+  body.ninja-space .sa-track-card { padding-block:6px; margin-bottom:6px; }
+  body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card) { padding-block:10px; row-gap:8px; }
+  body.ninja-space .sa-problem-cherry { margin-bottom:8px; }
+  body.ninja-space .sa-problem-cherry .sa-cherry-pair { padding-top:12px; }
+  /* とけい「とけいは どれ？」：選択肢の時計の絵は段とは別に大きさが決まっているので、ここで小さくする */
+  body.ninja-kids .tk-play>.tk-options.is-clock .tk-clock { width:clamp(72px,calc((100dvh - 370px) / 2),130px); }
+}
+/* 学校のノートPC（高さ640px以下）：メニューでも しゅぎょうの カードと スタート が下に はみ出していた
+   （1280x600 で 15〜35px、1093x520 で 45〜113px）。寝かせたスマホと同じく ヒーローを1行に畳む */
+@media (min-width:768px) and (min-height:501px) and (max-height:640px) {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero,.kk-hero) {
+    grid-template-columns:minmax(0,1fr) 120px!important;
+    align-items:center!important;
+    min-height:0!important;
+    padding:8px 34px!important;
+  }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero,.kk-hero)::before { content:none; }
+  /* マスコットは読み込み後に .app-ref-visual へ移される（寝かせたスマホの指定と同じ相手） */
+  body.ninja-kids .app-ref-visual.is-ninja { min-height:64px; }
+  body.ninja-kids .app-ref-visual.is-ninja .ninja-mascot { width:120px; height:64px; }
+  body.ninja-kids .app-ref-hero { min-height:0!important; padding-block:8px!important; }
+  .ninja-kids :is(.tk-eyebrow,.kj-eyebrow,.kt-eyebrow,.rj-eyebrow,.pn-eyebrow,.kk-eyebrow),
+  .ninja-kids :is(.tk-lead,.kj-lead,.kt-lead,.rj-lead,.pn-lead,.kk-lead),
+  .ninja-kids :is(.tk-scope,.kj-scope,.kt-scope,.rj-scope,.pn-scope,.kk-scope) { display:none; }
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero,.kk-hero) h1 { margin:0 0 2px; font-size:24px; }
+  .ninja-kids .app-ref-button { margin-top:4px; padding:4px 12px; font-size:12px; }
+  /* さんすう：見出しの帯を薄くする */
+  .ninja-space .sa-app { padding-top:10px; }
+  .ninja-space .sa-head { min-height:0; margin-bottom:6px; padding:6px 14px; }
+  .ninja-space .sa-head-badge { width:52px; height:52px; }
+}
+/* 3枚並びの しゅぎょうカード（フォニックスなど）：絵を 154px 四方で上に置き、文字を下に寄せているので、
+   カードが低い（PCで約240px）と絵の下が しゅぎょう名に かぶっていた。
+   絵の高さは「カードの高さ − 文字のぶん（約124px）」を上限にする。カードが高ければ今までどおり154px */
+@media (min-width:768px) {
+  .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes):not(:has(>:nth-child(4)))>:is(.kt-mode,.rj-mode,.pn-mode)::before {
+    height:min(var(--nk-mode-img-h),calc(100% - var(--nk-mode-img-top) - 124px));
+    width:auto;
+    aspect-ratio:1;
+  }
+}
+/* タブレット縦は3枚を横に並べると札が細く、しゅぎょう名が2行に折れて絵と かぶる。
+   4枚のアプリ（カタカナ）と同じ「絵は左・文字は右」の横長の札を縦に積む */
+@media (min-width:768px) and (max-width:1179px) and (orientation:portrait) {
+  .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes):not(:has(>:nth-child(4))) {
+    --nk-mode-img-h:96px; --nk-mode-t:23px; --nk-mode-s:14px; --nk-mode-pad:18px;
+    grid-template-columns:1fr; gap:12px;
+  }
+  .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes):not(:has(>:nth-child(4)))>:is(.kt-mode,.rj-mode,.pn-mode) {
+    justify-content:center; align-items:flex-start; gap:4px; text-align:left;
+    min-height:calc(var(--nk-mode-img-h) + 24px);
+    padding-left:calc(var(--nk-mode-pad) + var(--nk-mode-img-h) + 14px);
+  }
+  .ninja-kids :is(.kt-modes,.rj-modes,.pn-modes):not(:has(>:nth-child(4)))>:is(.kt-mode,.rj-mode,.pn-mode)::before {
+    left:var(--nk-mode-pad); top:50%; translate:0 -50%;
+    width:var(--nk-mode-img-h); height:var(--nk-mode-img-h);
+  }
+}
