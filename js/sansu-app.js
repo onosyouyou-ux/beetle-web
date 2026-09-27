@@ -338,6 +338,7 @@
   });
 
   function renderMenu(step, keep) {
+    NkModal.close();
     session = null;
     // 引数なし＝いまの段のまま描きなおす。ボタンから呼ばれた（イベントが来た）ときは1段目へ
     if (step === 2) menuStep = 2;
@@ -459,6 +460,7 @@
 
   // ---- さくらんぼざんの やりかた（リファレンス）----
   function renderReference() {
+    NkModal.close();
     session = null;
     app.innerHTML = '';
 
@@ -551,6 +553,8 @@
   // ---- プレイ ----
   function startSession() {
     if (!(history.state && history.state.nkStep === 'play')) history.pushState({ nkStep: 'play' }, '');
+    // 問題と けっか は窓（ポップアップ）の中に出す。「とじる」はメニューへもどると同じ（2026-09-27）
+    NkModal.open(app, { onClose: backFromPlay });
     const mode = findMode(selection.modeId);
     const diff = findDiff(selection.diffId);
     const style = findStyle(selection.styleId);
