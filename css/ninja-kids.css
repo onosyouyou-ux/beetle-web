@@ -4311,3 +4311,10 @@ body.ninja-space .nk-modal-body>#app { padding:18px 22px 14px!important; }
   body.ninja-space .sa-problem-cherry .sa-cherry-stem { height:10px; margin-top:3px; }
   body.ninja-space .sa-problem-cherry .sa-cherry-ball { width:34px; height:34px; font-size:18px; }
 }
+/* 全問正解のけっか画面：「ぜんもんせいかい！」の絵（約308px）で、高さの低い横長の画面（寝かせたスマホ・学校のノートPC）では
+   「もういちど」が窓の外に押し出されていた。絵の高さを画面の高さから決める */
+@media (orientation:landscape) and (max-height:640px) {
+  .ninja-kids :is(.tk-result,.kj-result,.kk-result,.kt-result,.rj-result,.pn-result).is-perfect::before {
+    width:auto; max-width:100%; height:clamp(80px,calc(100dvh - 340px),300px);
+  }
+}
