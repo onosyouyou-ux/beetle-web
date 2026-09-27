@@ -4274,3 +4274,47 @@ body.ninja-space .nk-modal-body>#app { padding:18px 22px 14px!important; }
     width:var(--nk-mode-img-h); height:var(--nk-mode-img-h);
   }
 }
+
+/* ===== 本番の全量点検で見つかった崩れ（2026-09-28）===== */
+/* けっか画面：まちがえた ことば が多いと一覧が長くなり、「もういちど」「べつの しゅぎょう」が窓の下に押し出されていた
+   （スマホ縦・ノートPC、かんじ・カタカナ・ローマ字・フォニックス）。窓の中では一覧だけを縮めてスクロールさせ、ボタンは常に見せる */
+.nk-modal-body>[id]:has(>:is(.tk-result,.kj-result,.kk-result,.kt-result,.rj-result,.pn-result)) {
+  display:flex; flex-direction:column; flex:1 1 auto; min-height:0;
+}
+.nk-modal-body :is(.tk-result,.kj-result,.kk-result,.kt-result,.rj-result,.pn-result) {
+  display:flex; flex-direction:column; flex:1 1 auto; min-height:0;
+}
+.nk-modal-body :is(.tk-result,.kj-result,.kk-result,.kt-result,.rj-result,.pn-result)>* { flex:none; }
+.nk-modal-body :is(.tk-result,.kj-result,.kk-result,.kt-result,.rj-result,.pn-result)>:is(.kj-missed,.kk-missed,.tk-missed,.kt-missed,.rj-missed,.pn-missed) {
+  flex:0 1 auto; min-height:72px; overflow:auto; overscroll-behavior:contain;
+}
+/* 学校のノートPC（高さ640px以下）：とけいの段を縮めたのに時計の絵が180pxのままで、上の問いの札「なんじ なんぷん?」に
+   目盛りの数字が重なっていた（1093x520）。時計の絵も段の高さに合わせる */
+@media (min-width:768px) and (min-height:501px) and (max-height:640px) {
+  body.ninja-kids .tk-play>.tk-stage .tk-clock { width:clamp(72px,calc(100dvh - 436px),148px); }
+}
+/* さんすう（スマホ）：進み具合の帯は16pxなのに 🚀 が24pxで上に はみ出し、9問目あたりで右上の「9 / 10 もん」に かかっていた。
+   帯に合わせて小さくする（ゴールの 🪐 に重なるのは「着いた」演出なので そのまま） */
+@media (max-width:767px) {
+  .ninja-space .sa-rocket { font-size:18px; }
+}
+/* さんすう（寝かせたスマホ）：「むずかしさ」の4枚が縦1列（約240px）で、スタートが画面の下に出ていた。
+   2列×2段に並べ、スタートを低くする。並び順（左上→右上→左下→右下）で やさしい順は保つ */
+@media (orientation:landscape) and (max-height:500px) {
+  body.ninja-space .sa-group-diff .sa-choices { grid-template-columns:1fr 1fr; width:min(100%,560px); }
+  body.ninja-space .sa-group-diff .sa-group-title { width:min(100%,560px); }
+  body.ninja-space .sa-group-diff .sa-choice { min-height:0; padding-block:6px 8px; }
+  body.ninja-space .sa-group-diff ~ .sa-start { width:min(100%,360px); padding-block:6px; font-size:18px; }
+  body.ninja-space .sa-group-diff ~ .sa-start .sa-start-icon { width:28px; height:28px; }
+  /* さくらんぼざん：窓から11〜16px はみ出していたので、式と さくらんぼ を一回り小さくする */
+  body.ninja-space .sa-problem-cherry { font-size:32px; }
+  body.ninja-space .sa-problem-cherry .sa-cherry-stem { height:10px; margin-top:3px; }
+  body.ninja-space .sa-problem-cherry .sa-cherry-ball { width:34px; height:34px; font-size:18px; }
+}
+/* 全問正解のけっか画面：「ぜんもんせいかい！」の絵（約308px）で、高さの低い横長の画面（寝かせたスマホ・学校のノートPC）では
+   「もういちど」が窓の外に押し出されていた。絵の高さを画面の高さから決める */
+@media (orientation:landscape) and (max-height:640px) {
+  .ninja-kids :is(.tk-result,.kj-result,.kk-result,.kt-result,.rj-result,.pn-result).is-perfect::before {
+    width:auto; max-width:100%; height:clamp(80px,calc(100dvh - 340px),300px);
+  }
+}
