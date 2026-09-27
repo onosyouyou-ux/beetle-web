@@ -295,12 +295,8 @@
         '<div class="rj-q">' +
           '<p class="rj-q-lead">' + esc(q.lead || questionLead(q)) + '</p>' +
           '<p class="rj-q-word' + (q.type === 'futatsu' ? ' is-big' : '') + '">' + esc(q.show) + '</p>' +
-          // ヒントは「うつ ローマ字」をそのまま見せる。打ちながら覚えるタイピングの練習を兼ねる。
-          // 問題（ひらがな）のすぐ下に置き、見ながら打てるようにする。
-          (q.type === 'utsu'
-            ? '<button type="button" class="rj-hint-btn" id="rj-hint-btn">ヒントを 見る</button>' +
-              '<p class="rj-hint" id="rj-hint" hidden></p>'
-            : '') +
+          // 「キーボードで うつ」のヒントは置かない（2026-09-27）。押すと答えがそのまま出るだけで、
+          // 問題の欄も縦に伸びて見出しと ことば が重なっていた
         '</div>' +
         body +
         (q.type === 'kaku'
@@ -327,14 +323,6 @@
         if (e.key === 'Enter') { e.preventDefault(); answerTyped(); }
       });
       document.getElementById('rj-send').addEventListener('click', answerTyped);
-      var hintBtn = document.getElementById('rj-hint-btn');
-      hintBtn.addEventListener('click', function () {
-        var hint = document.getElementById('rj-hint');
-        hint.textContent = 'こう うつよ： ' + q.word;
-        hint.hidden = false;
-        hintBtn.hidden = true;
-        input.focus();
-      });
       input.focus();
     } else {
       Array.prototype.forEach.call(root.querySelectorAll('.rj-choice'), function (btn) {
