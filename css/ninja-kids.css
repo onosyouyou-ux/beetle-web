@@ -3543,8 +3543,10 @@ body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-question-text{
   .ninja-kids :is(.nk-head,.tk-play-head) .nk-head-picked{ padding:2px 10px; font-size:11px; }
 }
 /* かんじは盤面の高さを固定しているので、見出しに えらんだ しゅぎょう を足したぶん（約58px）高くする。
-   足さないと「← もんだいせんたくに もどる」が盤面の外に押し出されて見えなくなる */
-@media (min-width:768px) {
+   足さないと「← もんだいせんたくに もどる」が盤面の外に押し出されて見えなくなる。
+   1カラムに積む段（タブレット縦・寝かせたスマホ）は --nk-board-h が 0 なので当てない。
+   当てると盤面が 58px に つぶれ、問題も選択肢も見えなくなっていた（2026-09-27 修正） */
+@media (min-width:1180px), (min-width:768px) and (max-width:1179px) and (orientation:landscape) and (min-height:501px) {
   .ninja-kids.ninja-kanji .kj-play{
     height:calc(var(--nk-board-h) + 58px);
     min-height:calc(var(--nk-board-h) + 58px);
@@ -4153,4 +4155,49 @@ body.ninja-kids :is(.rj-model,.kt-model).is-on::before {
 }
 @media (prefers-reduced-motion:reduce) {
   body.ninja-kids :is(.rj-model,.kt-model).is-on { animation:none; }
+}
+
+/* ===== 点検で見つかった崩れの修正（2026-09-27）===== */
+@media (max-width:767px) and (orientation:portrait) {
+  /* ローマ字「キーボードで うつ」：うつ用の padding-block:22px・min-height:0 が上の「札の下58px」より強く、
+     札（この ことばを ローマ字で うってね）と ことば が重なっていた */
+  body.ninja-kids .rj-quiz:has(.rj-type)>.rj-q { min-height:150px; padding-top:58px; padding-bottom:18px; }
+  /* 札は1行に収まらないとき折り返す。ローマ字「ふたつの かきかた」の
+     「まえの きょうかしょの かきかた（くんれいしき）は どっち？」が左右で切れていた */
+  body.ninja-kids :is(.kt-q,.rj-q,.pn-q)>:is(.kt-q-lead,.rj-q-lead,.pn-q-lead) {
+    white-space:normal; width:max-content; max-width:calc(100% - 24px); text-align:center; line-height:1.35;
+  }
+  /* 折り返した2行の札のぶん、「ふたつの かきかた」（字が大きい1字）は問題の字を下げる */
+  body.ninja-kids .rj-q:has(.rj-q-word.is-big) { min-height:150px; padding-top:72px; padding-bottom:6px; }
+  body.ninja-kids .rj-q-word.is-big { font-size:50px; line-height:1.05; }
+}
+/* かく しゅぎょう（カタカナ・ローマ字）：スマホ縦の書き枠を大きくする。
+   カタカナは 17svh（iPhoneで約110px四方）しかなく、周りが空いているのに小さかった */
+@media (max-width:767px) and (orientation:portrait) {
+  body.ninja-kids.ninja-kids { --kt-pad-h:clamp(150px,25svh,200px); --rj-strip-h:clamp(110px,19svh,150px); }
+  /* 書く問題の問題の欄は ひらがな1字〜1語だけなので低くし、そのぶん書き枠にまわす（出題欄を短くする） */
+  body.ninja-kids :is(.kt-quiz,.rj-quiz):has(>:is(.kt-write,.rj-write))>:is(.kt-q,.rj-q) { min-height:120px; padding-bottom:10px; }
+}
+/* 1カラムの段（スマホ縦・タブレット縦）は、こたえあわせが出たら書き枠と はんてい の行を畳む。
+   見えなくしても場所を取ったままで、その下にパネルが足されて窓からはみ出していた */
+@media (max-width:767px) and (orientation:portrait), (min-width:768px) and (max-width:1179px) and (orientation:portrait) {
+  body.ninja-kids :is(.kt-quiz,.rj-quiz):has(>:is(.kt-answer,.rj-answer).is-on)>:is(.kt-write,.rj-write,.kt-write-tools,.rj-write-tools) { display:none; }
+}
+/* さんすう：問題の箱は もともと .sa-app の余白の内側にあった。窓へ移すと余白が外れ、
+   見出しや 🚀 が窓の端に はりついていたので、窓の中でも同じだけ空ける */
+body.ninja-space .nk-modal-body>#app { padding:18px 22px 14px!important; }
+@media (max-width:767px), (orientation:landscape) and (max-height:500px) {
+  body.ninja-space .nk-modal-body>#app { padding:10px 12px 10px!important; }
+}
+/* 寝かせたスマホ：かんじ「かく」は問題の段（--nk-qh 約118px）より書き枠（最大168px）が高く、
+   はみ出した分が見出しの上や はんてい の後ろに こぼれていた。段の高さを中身に合わせる。
+   これまでは盤面が 58px に つぶれていて見えていなかった（同じ日に修正） */
+@media (orientation:landscape) and (max-height:500px) {
+  body.ninja-kids.ninja-kanji .kj-play.is-kaki { grid-template-rows:auto auto auto; }
+  body.ninja-kids.ninja-kanji .kj-play.is-kaki>:is(.kj-ask-label,.kj-ask) { grid-column:1; grid-row:2; }
+  body.ninja-kids.ninja-kanji .kj-play.is-kaki>.kj-ask { align-self:stretch; }
+  body.ninja-kids.ninja-kanji .kj-play.is-kaki>.kj-write { grid-column:2; grid-row:2; }
+  /* さんすう「さくらんぼざん」：図のぶん窓から少し はみ出していたので上下を詰める */
+  body.ninja-space .sa-problem-cherry { margin-bottom:8px; }
+  body.ninja-space .sa-problem-cherry .sa-cherry-pair { padding-top:12px; }
 }

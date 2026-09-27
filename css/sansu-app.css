@@ -667,8 +667,10 @@ body::after {
 
 /* ── さくらんぼ算：分ける数の真下にぶら下げる ── */
 .sa-problem-cherry { align-items: flex-start; }
-/* こたえるまで「= ?」を伏せる（場所は確保して跳ねさせない） */
-.sa-eq-late { visibility: hidden; }
+/* こたえるまで「= ?」を伏せる。場所も取らない（2026-09-27）。
+   場所だけ確保していたので、見えている「9 + 3」と さくらんぼ が箱の左に寄って見えていた。
+   こたえたときに「= 12」が右に付き、式ぜんたいが まん中に寄りなおす */
+.sa-eq-late { display: none; }
 .sa-cherry-col {
   display: flex;
   flex-direction: column;

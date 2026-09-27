@@ -145,13 +145,19 @@
       // 「やさい」のように shi/chi/tsu を ふくまない ことばは 2つの 書き方が 同じになる。
       // その ときに 'yasai / yasai' と 並べると、ちがいが あるように 見えて まぎらわしい。
       var same = kunrei === hepburn;
+      // 「ほんや」のように「ん」の あとが あ行・や行 だと hon'ya / honnya の 2とおりが せいかい。
+      // 訓令式と ヘボン式が 同じでも「ひとつだけ」とは言えないので、2つとも 見せる（2026-09-27）
+      var nMark = hepburn.indexOf("n'") >= 0;
+      var word = !same ? hepburn + ' / ' + kunrei
+        : nMark ? hepburn + ' / ' + hepburn.replace(/n'/g, 'nn')
+          : hepburn;
       return {
         type: 'utsu',
         show: x.k,
-        word: same ? hepburn : hepburn + ' / ' + kunrei,
+        word: word,
         answers: romanizations(x.k),
         hint: x.hint,
-        cat: same ? 'かきかたは ひとつだけ' : 'どちらの かきかたでも せいかい',
+        cat: same && !nMark ? 'かきかたは ひとつだけ' : 'どちらの かきかたでも せいかい',
       };
     });
   }
@@ -295,12 +301,8 @@
         '<div class="rj-q">' +
           '<p class="rj-q-lead">' + esc(q.lead || questionLead(q)) + '</p>' +
           '<p class="rj-q-word' + (q.type === 'futatsu' ? ' is-big' : '') + '">' + esc(q.show) + '</p>' +
-          // ヒントは「うつ ローマ字」をそのまま見せる。打ちながら覚えるタイピングの練習を兼ねる。
-          // 問題（ひらがな）のすぐ下に置き、見ながら打てるようにする。
-          (q.type === 'utsu'
-            ? '<button type="button" class="rj-hint-btn" id="rj-hint-btn">ヒントを 見る</button>' +
-              '<p class="rj-hint" id="rj-hint" hidden></p>'
-            : '') +
+          // 「キーボードで うつ」のヒントは置かない（2026-09-27）。押すと答えがそのまま出るだけで、
+          // 問題の欄も縦に伸びて見出しと ことば が重なっていた
         '</div>' +
         body +
         (q.type === 'kaku'
@@ -327,14 +329,6 @@
         if (e.key === 'Enter') { e.preventDefault(); answerTyped(); }
       });
       document.getElementById('rj-send').addEventListener('click', answerTyped);
-      var hintBtn = document.getElementById('rj-hint-btn');
-      hintBtn.addEventListener('click', function () {
-        var hint = document.getElementById('rj-hint');
-        hint.textContent = 'こう うつよ： ' + q.word;
-        hint.hidden = false;
-        hintBtn.hidden = true;
-        input.focus();
-      });
       input.focus();
     } else {
       Array.prototype.forEach.call(root.querySelectorAll('.rj-choice'), function (btn) {
