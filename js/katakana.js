@@ -355,6 +355,7 @@
   /* ---------- 画面 ---------- */
 
   function renderMenu() {
+    NkModal.close();
     root.innerHTML =
       '<div class="kt-menu">' +
         '<p class="kt-menu-lead">やりたい しゅぎょうを えらんでね！</p>' +
@@ -381,6 +382,8 @@
   // 直前に開いていた別の修行アプリへ飛んでしまう
   function pushPlay() {
     if (!(history.state && history.state.nkStep === 'play')) history.pushState({ nkStep: 'play' }, '');
+    // 問題と けっか は窓（ポップアップ）の中に出す。「とじる」はメニューへもどると同じ（2026-09-27）
+    NkModal.open(root, { onClose: backToMenu });
   }
   // 画面の「← もどる」「べつの しゅぎょう」も history.back() にそろえ、ブラウザの戻ると同じ動きにする
   function backToMenu() {

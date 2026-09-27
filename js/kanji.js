@@ -217,6 +217,8 @@
   // プレイも履歴に1つ積む。プレイ・けっか から メニューへ戻るときは、直前のメニュー画面へ
   function pushPlay() {
     if (!(history.state && history.state.nkStep === 'play')) history.pushState({ nkStep: 'play' }, '');
+    // 問題と けっか は窓（ポップアップ）の中に出す。「とじる」はメニューへもどると同じ（2026-09-27）
+    NkModal.open(app, { onClose: renderMenu });
   }
   function renderMenu() {
     if (history.state && history.state.nkStep === 'play') history.back();
@@ -229,6 +231,7 @@
   var picked = null;
 
   function renderMenuStep(step, keep) {
+    NkModal.close();
     if (!keep) picked = null;
     state.session = null;
     app.innerHTML = '';
