@@ -105,7 +105,7 @@ body{
   font-family:inherit;font-size:20px;font-weight:800;letter-spacing:.08em;cursor:pointer;
   transition:border-color .15s,background .15s;
 }
-.rj-choice:hover:not(:disabled){border-color:var(--rj-orange)}
+@media (hover:hover){.rj-choice:hover:not(:disabled){border-color:var(--rj-orange)}}
 .rj-choice:disabled{cursor:default;opacity:.75}
 .rj-choice.is-correct{border-color:var(--rj-green);background:var(--rj-green-bg);color:var(--rj-green);opacity:1}
 .rj-choice.is-wrong{border-color:var(--rj-red);background:var(--rj-red-bg);color:var(--rj-red);opacity:1}

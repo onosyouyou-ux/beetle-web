@@ -105,7 +105,7 @@ body{
   font-family:inherit;font-size:20px;font-weight:800;letter-spacing:.08em;cursor:pointer;
   transition:border-color .15s,background .15s;
 }
-.pn-choice:hover:not(:disabled){border-color:var(--pn-orange)}
+@media (hover:hover){.pn-choice:hover:not(:disabled){border-color:var(--pn-orange)}}
 .pn-choice:disabled{cursor:default;opacity:.75}
 .pn-choice.is-correct{border-color:var(--pn-green);background:var(--pn-green-bg);color:var(--pn-green);opacity:1}
 .pn-choice.is-wrong{border-color:var(--pn-red);background:var(--pn-red-bg);color:var(--pn-red);opacity:1}

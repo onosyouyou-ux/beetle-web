@@ -125,7 +125,7 @@ body{
   background:#fff;border:2px solid var(--tk-line2);border-radius:14px;padding:16px 10px;
   font-size:20px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--tk-ink);
 }
-.tk-opt:hover:not(:disabled){border-color:var(--tk-orange)}
+@media (hover:hover){.tk-opt:hover:not(:disabled){border-color:var(--tk-orange)}}
 .tk-opt-clock{padding:8px;display:flex;justify-content:center}
 .tk-opt:disabled{cursor:default;opacity:.75}
 .tk-opt.is-correct{border-color:var(--tk-green);background:var(--tk-green-bg);opacity:1}
