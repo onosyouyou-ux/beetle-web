@@ -145,13 +145,19 @@
       // 「やさい」のように shi/chi/tsu を ふくまない ことばは 2つの 書き方が 同じになる。
       // その ときに 'yasai / yasai' と 並べると、ちがいが あるように 見えて まぎらわしい。
       var same = kunrei === hepburn;
+      // 「ほんや」のように「ん」の あとが あ行・や行 だと hon'ya / honnya の 2とおりが せいかい。
+      // 訓令式と ヘボン式が 同じでも「ひとつだけ」とは言えないので、2つとも 見せる（2026-09-27）
+      var nMark = hepburn.indexOf("n'") >= 0;
+      var word = !same ? hepburn + ' / ' + kunrei
+        : nMark ? hepburn + ' / ' + hepburn.replace(/n'/g, 'nn')
+          : hepburn;
       return {
         type: 'utsu',
         show: x.k,
-        word: same ? hepburn : hepburn + ' / ' + kunrei,
+        word: word,
         answers: romanizations(x.k),
         hint: x.hint,
-        cat: same ? 'かきかたは ひとつだけ' : 'どちらの かきかたでも せいかい',
+        cat: same && !nMark ? 'かきかたは ひとつだけ' : 'どちらの かきかたでも せいかい',
       };
     });
   }
