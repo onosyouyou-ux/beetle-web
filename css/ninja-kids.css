@@ -4084,3 +4084,36 @@ body .nk-modal-body>[id] { flex:1 0 auto; box-sizing:border-box; width:100%; max
   .nk-modal-bar { padding-block:2px; }
   .nk-modal-close { min-height:36px; }
 }
+
+/* スマホ縦のこたえあわせパネル：絵を左・「正解は！／こたえ」の2段を右に並べ、その下に説明とボタン（2026-09-27）。
+   絵を上に積むと縦が足りず、ボタンが画面の外に押し出されていた。
+   説明の箱（.nk-a-body）は display:contents にして、見出し・分類・説明をパネルのグリッドに直接並べる */
+@media (max-width:767px) and (orientation:portrait) {
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on {
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    grid-template-rows:none;
+    grid-auto-rows:auto;
+    column-gap:12px; row-gap:8px;
+  }
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on::before {
+    grid-column:1; grid-row:1;
+    width:clamp(84px,15svh,120px);
+    justify-self:end; align-self:center;
+  }
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on>.nk-a-body { display:contents; }
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-head,.rj-a-head,.pn-a-head) {
+    grid-column:2; grid-row:1;
+    justify-self:start; align-self:center;
+    margin:0; text-align:left;
+  }
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-head,.rj-a-head,.pn-a-head) b { display:block; }
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-cat,.rj-a-cat,.pn-a-cat) {
+    grid-column:1 / -1; justify-self:center; margin:0;
+  }
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-a-why,.rj-a-why,.pn-a-why) {
+    grid-column:1 / -1; margin:0;
+  }
+  body.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on>:is(.kt-next,.rj-next,.pn-a-btns) {
+    grid-column:1 / -1; grid-row:auto;
+  }
+}

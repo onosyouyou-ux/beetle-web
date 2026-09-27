@@ -238,8 +238,8 @@
     box.className = 'pn-answer is-on' + (ok ? ' is-ok' : ' is-ng');
     box.innerHTML =
       '<div class="nk-a-body">' +
-      '<p class="pn-a-head">' + (ok ? 'せいかい！' : 'おしい！') + '　<b>' + esc(q.word) + '</b></p>' +
-      '<p class="pn-a-cat">' + esc(q.cat) + '</p>' +
+      '<p class="pn-a-head">' + (ok ? 'せいかい！' : '正解は！') + '　<b>' + esc(q.word) + '</b></p>' +
+      // しゅぎょう名の札は出さない。盤面の見出しと同じ文字で、説明を下に押し出すだけだったため（2026-09-27）
       '<p class="pn-a-why">' + esc(q.hint) + '</p>' +
       '</div>' +
       '<div class="pn-a-btns">' +
