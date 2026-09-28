@@ -190,6 +190,12 @@
   </url>
 
   <url>
+    <loc>https://www.beetle-web.jp/tools/sakuranbo/landing.html</loc>
+    <lastmod>2026-09-28</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://www.beetle-web.jp/tools/test-content/</loc>
     <lastmod>2026-09-17</lastmod>
     <priority>0.8</priority>

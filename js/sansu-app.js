@@ -441,7 +441,7 @@
     app.appendChild(el('p', 'sa-step-chosen', chosenMode.name + '・' + chosenStyle.name));
 
     // むずかしさは やさしい順に縦1列で並べ、上から下へ むずかしくなるのが分かるようにする（2026-09-23）
-    const diffs = group('むずかしさ', DIFFS, 'diffId', (d) => ({
+    const diffs = group(SAKURANBO ? 'かず' : 'むずかしさ', DIFFS, 'diffId', (d) => ({
       label: d.name,
       note: chosenMode.diffNote(d)
     }), null, () => renderMenu(2, true));
@@ -554,6 +554,25 @@
     card.appendChild(step3);
 
     card.appendChild(el('p', 'sa-ref-answer', 'だから 8 + 5 = 13!'));
+
+    // さくらんぼざん専用アプリでは「まえを わける」形も見せる（2026-09-28）
+    if (SAKURANBO) {
+      card.appendChild(el('p', 'sa-ref-example-title', 'まえを わける とき：4 + 8'));
+      const f1 = el('div', 'sa-ref-step');
+      f1.appendChild(el('span', 'sa-ref-step-no', '1'));
+      const f1body = el('div', 'sa-ref-step-body');
+      f1body.appendChild(el('p', 'sa-ref-step-text', 'うしろの 8 を 10に するには あと 2。まえの 4 を 2 と 2 に わける'));
+      f1.appendChild(f1body);
+      card.appendChild(f1);
+      const f2 = el('div', 'sa-ref-step');
+      f2.appendChild(el('span', 'sa-ref-step-no', '2'));
+      const f2body = el('div', 'sa-ref-step-body');
+      f2body.appendChild(el('p', 'sa-ref-step-text', '2 と 8 で 10、10 に のこりの 2 を たす'));
+      f2body.appendChild(refFormula('2 + 8 = 10　10 + 2 = 12'));
+      f2.appendChild(f2body);
+      card.appendChild(f2);
+      card.appendChild(el('p', 'sa-ref-answer', 'だから 4 + 8 = 12!'));
+    }
     card.appendChild(el('p', 'sa-ref-tip', 'このゲームでは ①の「わける かず」を えらぶよ。'));
 
     const actions = el('div', 'sa-actions');
