@@ -1,7 +1,10 @@
 (function () {
   'use strict';
 
-  const STORAGE_KEY = 'sansuProgress';
+  // 別ページから指定すると、同じ作りで さくらんぼざん専用のアプリになる（tools/sakuranbo/。2026-09-28）
+  // ページの <body data-sansu-mode="sakuranbo"> で切り替える（HTMLにscriptを書かないため）
+  const SAKURANBO = document.body.dataset.sansuMode === 'sakuranbo';
+  const STORAGE_KEY = SAKURANBO ? 'sakuranboProgress' : 'sansuProgress';
   const CHALLENGE_LENGTH = 10;
   const ENDLESS_STAGE = 10;    // 次の星に到着するのに必要な「正解」数
   const ENDLESS_MAX = 100;     // 全10星ぶんの正解数（コンプリート）
@@ -36,7 +39,11 @@
 
   // ---- むずかしさ（数の大きさで決める。学年は持たない）----
   // note はモードによって意味が変わるので、選択中のモードに合わせて出し分ける
-  const DIFFS = [
+  const DIFFS = SAKURANBO ? [
+    // さくらんぼざん専用：かず の大きさ。1けた どうし（8 + 3・4 + 8）と 2けたも でる（28 + 5・5 + 28）
+    { id: 'one', name: '1けた どうし', max: 20, two: false, icon: 'ringed-planet' },
+    { id: 'two', name: '2けたも でる', max: 100, two: true, icon: 'black-hole' }
+  ] : [
     { id: 'vs', name: 'ちょうかんたん', max: 5, icon: 'moon' },
     { id: 's', name: 'かんたん', max: 10, icon: 'ringed-planet' },
     { id: 'm', name: 'ふつう', max: 20, icon: 'meteor' },
@@ -169,13 +176,54 @@
       // 動作（分ける）だけを書き、何のために分けるかは さくらんぼの下の説明に任せる
       prompt: b + ' を 2つに わけよう',
       text: a + ' + ' + b,
+      side: 'back',
       a: a, b: b, target: target, need: need, rest: b - need, total: a + b,
       answer: need,
       options: buildOptions(need, 1, 9)
     };
   }
 
-  const MODES = [
+  // さくらんぼざん専用アプリ：4パターン（2026-09-28）。
+  // 「わけかた」＝うしろ／まえ、「かず」＝1けた どうし／2けたも でる。
+  // 10の かたまりを つくるのは いつも大きいほう（big）。分けるのは小さいほう（small）。
+  //   うしろ：8 + 3 → 3 を 2 と 1 ／ 28 + 5 → 5 を 2 と 3
+  //   まえ　：4 + 8 → 4 を 2 と 2 ／ 5 + 28 → 5 を 3 と 2（ならった形：市販プリントの「まえの かずを わけて」）
+  // 答えさせるのは「big と あわせて キリのいい数になる ぶん」（need）だけ
+  function makeCherryPattern(two, side) {
+    let big;
+    if (two) {
+      do { big = randInt(11, 89); } while (big % 10 < 2);   // 1の位が0・1だと くり上がりが作れない
+    } else {
+      big = randInt(6, 9);
+    }
+    const target = (Math.floor(big / 10) + 1) * 10;
+    const need = target - big;
+    const small = randInt(need + 1, two ? 9 : Math.min(9, big));
+    const front = side === 'front';
+    const a = front ? small : big;
+    const b = front ? big : small;
+    return {
+      layout: 'cherry',
+      prompt: small + ' を 2つに わけよう',
+      text: a + ' + ' + b,
+      side: front ? 'front' : 'back',
+      a: a, b: b, target: target, need: need, rest: small - need, total: a + b,
+      answer: need,
+      options: buildOptions(need, 1, 9)
+    };
+  }
+
+  const MODES = SAKURANBO ? [
+    { id: 'ushiro', name: 'うしろを わける', ready: true, icon: 'cherry',
+      make: (d) => makeCherryPattern(d.two, 'back'),
+      diffNote: (d) => (d.two ? '28 + 5 の かたち' : '8 + 3 の かたち') },
+    { id: 'mae', name: 'まえを わける', ready: true, icon: 'cherry',
+      make: (d) => makeCherryPattern(d.two, 'front'),
+      diffNote: (d) => (d.two ? '5 + 28 の かたち' : '4 + 8 の かたち') },
+    { id: 'mazeru', name: 'まぜて とく', ready: true, icon: 'cherry',
+      make: (d) => makeCherryPattern(d.two, Math.random() < 0.5 ? 'front' : 'back'),
+      diffNote: (d) => (d.two ? '2けたも でる・まえ と うしろ' : '1けた どうし・まえ と うしろ') }
+  ] : [
     { id: 'tashizan', name: 'たしざん', emoji: '➕', ready: true, make: makeAdd,
       icon: 'addition', diffNote: (d) => d.max + 'までの たしざん' },
     { id: 'hikizan', name: 'ひきざん', emoji: '➖', ready: true, make: makeSub,
@@ -294,7 +342,7 @@
   }
 
   // ---- 画面 ----
-  let selection = { modeId: 'tashizan', diffId: 's', styleId: 'challenge' };
+  let selection = { modeId: SAKURANBO ? 'ushiro' : 'tashizan', diffId: SAKURANBO ? 'one' : 's', styleId: 'challenge' };
   let session = null;
 
   function el(tag, className, text) {
@@ -348,7 +396,7 @@
     if (step === 2 && !keep) selection.diffId = null;
     app.innerHTML = '';
     if (menuStep === 2) renderMenuStep2(); else renderMenuStep1();
-    app.appendChild(NinjaLinks.el('sansu'));
+    app.appendChild(NinjaLinks.el(SAKURANBO ? 'sakuranbo' : 'sansu'));
   }
 
   function renderMenuStep1() {
@@ -357,7 +405,7 @@
     app.appendChild(total);
 
     // しゅるいは押したら次の画面へ進む
-    const kinds = group('けいさんの しゅるい', MODES, 'modeId', (m) => ({
+    const kinds = group(SAKURANBO ? 'わけかた' : 'けいさんの しゅるい', MODES, 'modeId', (m) => ({
       label: m.name,
       note: m.ready ? null : 'じゅんびちゅう',
       disabled: !m.ready
@@ -409,7 +457,7 @@
     if (!selection.diffId) start.disabled = true;
     app.appendChild(start);
 
-    const back = el('button', 'sa-step-back', '← けいさんの しゅるいに もどる');
+    const back = el('button', 'sa-step-back', SAKURANBO ? '← わけかたに もどる' : '← けいさんの しゅるいに もどる');
     back.type = 'button';
     back.addEventListener('click', () => history.back());
     app.appendChild(back);
@@ -512,7 +560,9 @@
     const tryBtn = el('button', 'sa-btn sa-btn-primary', '🍒 やってみる');
     tryBtn.type = 'button';
     tryBtn.addEventListener('click', () => {
-      selection.modeId = 'sakuranbo';
+      selection.modeId = SAKURANBO ? 'ushiro' : 'sakuranbo';
+      // むずかしさ を選ぶ前に来ると diffId が空なので、いちばん やさしい段で始める
+      if (!findDiff(selection.diffId)) selection.diffId = SAKURANBO ? 'one' : 's';
       startSession();
     });
     actions.appendChild(tryBtn);
@@ -657,32 +707,42 @@
     };
   }
 
-  // さくらんぼ算：分ける数の真下にさくらんぼをぶら下げる（こたえは答えるまで伏せる）
+  // さくらんぼ算：分ける数の真下にさくらんぼをぶら下げる（こたえは答えるまで伏せる）。
+  // うしろを わける ときは うしろの数の下、まえを わける ときは まえの数の下。
+  // 答えさせる玉（is-target）は、もう一方の数の がわ（となりあう がわ）に置く
   function cherryProblem(q) {
-    const node = el('div', 'sa-problem sa-problem-cherry');
-    node.appendChild(el('span', 'sa-term', String(q.a)));
-    node.appendChild(el('span', 'sa-op', '+'));
+    const front = q.side === 'front';
+    const split = front ? q.a : q.b;
+    const other = front ? q.b : q.a;
+    const node = el('div', 'sa-problem sa-problem-cherry' + (front ? ' is-front' : ''));
 
     const col = el('div', 'sa-cherry-col');
-    col.appendChild(el('span', 'sa-term sa-cherry-top', String(q.b)));
+    col.appendChild(el('span', 'sa-term sa-cherry-top', String(split)));
     col.appendChild(el('div', 'sa-cherry-stem'));
-
     const pair = el('div', 'sa-cherry-pair');
-    const leftSlot = el('div', 'sa-cherry-slot');
-    const left = el('span', 'sa-cherry-ball is-target', '?');
-    leftSlot.appendChild(left);
-    leftSlot.appendChild(el('span', 'sa-cherry-cap', q.a + ' と あわせて ' + q.target));
-    const rightSlot = el('div', 'sa-cherry-slot');
-    const right = el('span', 'sa-cherry-ball', '?');
-    rightSlot.appendChild(right);
-    pair.appendChild(leftSlot);
-    pair.appendChild(rightSlot);
+    const targetSlot = el('div', 'sa-cherry-slot');
+    const target = el('span', 'sa-cherry-ball is-target', '?');
+    targetSlot.appendChild(target);
+    targetSlot.appendChild(el('span', 'sa-cherry-cap', other + ' と あわせて ' + q.target));
+    const restSlot = el('div', 'sa-cherry-slot');
+    const rest = el('span', 'sa-cherry-ball', '?');
+    restSlot.appendChild(rest);
+    if (front) { pair.appendChild(restSlot); pair.appendChild(targetSlot); }
+    else { pair.appendChild(targetSlot); pair.appendChild(restSlot); }
     col.appendChild(pair);
-    node.appendChild(col);
+
+    if (front) {
+      node.appendChild(col);
+      node.appendChild(el('span', 'sa-op', '+'));
+      node.appendChild(el('span', 'sa-term', String(q.b)));
+    } else {
+      node.appendChild(el('span', 'sa-term', String(q.a)));
+      node.appendChild(el('span', 'sa-op', '+'));
+      node.appendChild(col);
+    }
 
     // 「= ?」を先に出すと式の答え（16は?）を聞いているように見え、
-    // 選択肢（分ける数）と噛み合わないため、答えるまで隠しておく。
-    // visibility なら場所は確保されるのでレイアウトが跳ねない
+    // 選択肢（分ける数）と噛み合わないため、答えるまで隠しておく
     const eq = el('span', 'sa-op sa-eq-late', '=');
     const total = el('span', 'sa-qmark sa-eq-late', '?');
     node.appendChild(eq);
@@ -691,10 +751,10 @@
     return {
       node: node,
       reveal: () => {
-        left.textContent = String(q.need);
-        right.textContent = String(q.rest);
-        left.classList.add('is-filled');
-        right.classList.add('is-filled');
+        target.textContent = String(q.need);
+        rest.textContent = String(q.rest);
+        target.classList.add('is-filled');
+        rest.classList.add('is-filled');
         total.textContent = String(q.total);
         eq.classList.remove('sa-eq-late');
         total.classList.remove('sa-eq-late');
