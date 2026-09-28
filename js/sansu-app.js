@@ -1045,7 +1045,10 @@
     mascot.width = 240; mascot.height = 240;
     badge.appendChild(mascot);
     badge.appendChild(el('strong', 'sa-answer-title', ok ? 'せいかい!' : 'おしい!'));
-    effect.appendChild(burst); effect.appendChild(badge); document.body.appendChild(effect);
+    // 問題は窓（dialog）で開くので、ページ本体に付けると窓の後ろに隠れて見えなかった（2026-09-28 修正）。
+    // 窓が開いていれば窓の中に出す
+    effect.appendChild(burst); effect.appendChild(badge);
+    (document.querySelector('dialog.nk-modal[open]') || document.body).appendChild(effect);
     setTimeout(() => effect.classList.add('is-leaving'), 850);
     setTimeout(() => effect.remove(), 1150);
   }
