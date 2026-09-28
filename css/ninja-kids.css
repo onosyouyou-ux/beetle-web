@@ -4360,3 +4360,45 @@ body.ninja-space .sa-options-label {
 @media (orientation:landscape) and (max-height:500px) {
   body.ninja-space .sa-options-label { font-size:12px; }
 }
+
+/* ===== さんすう・さくらんぼざん：こたえのボタンを「？」の四角と同じ見た目にする（2026-09-28 ユーザー指示）=====
+   答えたあと 正解・まちがい のボタンが宇宙の見た目の指定から外れ、子ども向け共通の「左だけ太い線」になって
+   ガタガタに見えていた（緑・赤の塗りも読み込み順で負けていた）。答える前も後も、ここで決めきる */
+body.ninja-space .sa-options .sa-opt,
+body.ninja-space .sa-options .sa-opt:not(.is-correct):not(.is-wrong) {
+  border:2px solid #ddd4fb;
+  border-image:none;
+  border-radius:18px;
+  background:#f0eefc;
+  color:#3b2a8f;
+  box-shadow:0 3px 0 #d3c8f7;
+  translate:none;
+}
+@media (hover:hover) {
+  body.ninja-space .sa-options .sa-opt:not(:disabled):hover {
+    translate:0 -2px;
+    border-color:#b9a4ff;
+    background:#e6e0fb;
+    box-shadow:0 5px 0 #c4b6f4;
+  }
+}
+body.ninja-space .sa-options .sa-opt.is-correct {
+  border-color:#2f9a6b;
+  background:#3fb380;
+  color:#fff;
+  box-shadow:0 3px 0 #2a8a60;
+}
+body.ninja-space .sa-options .sa-opt.is-wrong {
+  border-color:#e0485a;
+  background:#ff5c6c;
+  color:#fff;
+  box-shadow:0 3px 0 #d8404f;
+}
+/* 答えたあとのボタンは押せない状態になり薄く見えるが、正解・まちがい の2つは はっきり出す */
+body.ninja-space .sa-options .sa-opt:is(.is-correct,.is-wrong):disabled { opacity:1; filter:none; }
+/* さくらんぼの図の列は玉2つぶんの幅があり、分ける数と「＋」の間が広く空いて式がガタガタに見えた。
+   列を左右に詰めて、式の数字と記号の間隔をそろえる（玉は数字の下に はみ出してよい） */
+body.ninja-space .sa-problem-cherry>.sa-cherry-col { margin-inline:-22px; }
+@media (max-width:767px) {
+  body.ninja-space .sa-problem-cherry>.sa-cherry-col { margin-inline:-18px; }
+}
