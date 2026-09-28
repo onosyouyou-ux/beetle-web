@@ -189,6 +189,59 @@
   //   うしろ：8 + 3 → 3 を 2 と 1 ／ 28 + 5 → 5 を 2 と 3
   //   まえ　：4 + 8 → 4 を 2 と 2 ／ 5 + 28 → 5 を 3 と 2（ならった形：市販プリントの「まえの かずを わけて」）
   // 答えさせるのは「big と あわせて キリのいい数になる ぶん」（need）だけ
+  // さくらんぼざん専用アプリは「分ける2つの数」をそのまま答えさせる（「2 と 1」。2026-09-28 ユーザー指示）。
+  // 並びは さくらんぼの玉の並び（図の左から）と同じ：うしろを わける＝[10をつくる数, のこり]、まえを わける＝[のこり, 10をつくる数]。
+  // まちがいの選択肢は、ほかの分け方（1 と 2 など）と、足しても元の数にならない組み合わせ（2 と 2 など）から作る
+  function toPairQuestion(q) {
+    if (!SAKURANBO) return q;
+    const front = q.side === 'front';
+    const split = front ? q.a : q.b;
+    const pair = (x) => (front ? (split - x) + ' と ' + x : x + ' と ' + (split - x));
+    const correct = pair(q.need);
+    const pool = [];
+    for (let x = 1; x < split; x++) if (x !== q.need) pool.push(pair(x));   // ほかの分け方
+    const off = [[q.need, q.rest + 1], [q.need, q.rest - 1], [q.need + 1, q.rest], [q.need - 1, q.rest]]
+      .filter(([n, r]) => n >= 1 && r >= 1)
+      .map(([n, r]) => (front ? r + ' と ' + n : n + ' と ' + r));      // 足しても元の数にならない
+    // 近い分け方を優先して2つ、足りないぶんを ずれた組み合わせで埋める
+    const near = shuffle(pool.filter((t) => Math.abs(parseInt(front ? t.split(' と ')[1] : t, 10) - q.need) <= 2)).slice(0, 2);
+    const opts = [correct];
+    near.concat(shuffle(off), shuffle(pool)).forEach((t) => { if (opts.length < 4 && opts.indexOf(t) < 0) opts.push(t); });
+    // 2 を 1 と 1 に分ける（9 + 2 など）ときは候補が3つしかないので、少し大きくずらした組み合わせで埋める
+    [[q.need + 1, q.rest + 1], [q.need, q.rest + 2], [q.need + 2, q.rest]].forEach(([n, r]) => {
+      const t = front ? r + ' と ' + n : n + ' と ' + r;
+      if (opts.length < 4 && opts.indexOf(t) < 0) opts.push(t);
+    });
+    q.answer = correct;
+    q.options = shuffle(opts);
+    return q;
+  }
+
+  // ちょうなんもん：2けた ＋ 2けた（38 + 25 → 25 を 2 と 23 に分けて、38 と 2 で 40）。
+  // くり上がりが起きる組み合わせ（1の位の和が10以上）で、こたえは99まで。分けるのは うしろ
+  function makeCherryTwoTwo() {
+    for (let guard = 0; guard < 200; guard++) {
+      let a;
+      do { a = randInt(12, 79); } while (a % 10 < 2);
+      const target = (Math.floor(a / 10) + 1) * 10;
+      const need = target - a;
+      const cands = [];
+      for (let v = 11; v <= 99 - a; v++) if (v % 10 >= need && v % 10 !== 0) cands.push(v);
+      if (!cands.length) continue;
+      const b = cands[randInt(0, cands.length - 1)];
+      return toPairQuestion({
+        layout: 'cherry',
+        prompt: b + ' を 2つに わけよう',
+        text: a + ' + ' + b,
+        side: 'back',
+        a: a, b: b, target: target, need: need, rest: b - need, total: a + b,
+        answer: need,
+        options: buildOptions(need, 1, 9)
+      });
+    }
+    return makeCherryPattern(true, 'back');
+  }
+
   function makeCherryPattern(two, side) {
     let big;
     if (two) {
@@ -202,7 +255,7 @@
     const front = side === 'front';
     const a = front ? small : big;
     const b = front ? big : small;
-    return {
+    return toPairQuestion({
       layout: 'cherry',
       prompt: small + ' を 2つに わけよう',
       text: a + ' + ' + b,
@@ -210,19 +263,23 @@
       a: a, b: b, target: target, need: need, rest: small - need, total: a + b,
       answer: need,
       options: buildOptions(need, 1, 9)
-    };
+    });
   }
 
+  // さくらんぼざん専用：問題の形を1画面に全部並べ、押したらすぐ始める（2026-09-28 ユーザー指示。2段目の「かず」はやめた）
   const MODES = SAKURANBO ? [
-    { id: 'ushiro', name: 'うしろを わける', ready: true, icon: 'cherry',
-      make: (d) => makeCherryPattern(d.two, 'back'),
-      diffNote: (d) => (d.two ? '28 + 5 の かたち' : '8 + 3 の かたち') },
-    { id: 'mae', name: 'まえを わける', ready: true, icon: 'cherry',
-      make: (d) => makeCherryPattern(d.two, 'front'),
-      diffNote: (d) => (d.two ? '5 + 28 の かたち' : '4 + 8 の かたち') },
-    { id: 'mazeru', name: 'まぜて とく', ready: true, icon: 'cherry',
-      make: (d) => makeCherryPattern(d.two, Math.random() < 0.5 ? 'front' : 'back'),
-      diffNote: (d) => (d.two ? '2けたも でる・まえ と うしろ' : '1けた どうし・まえ と うしろ') }
+    { id: 'one-ushiro', name: '1けたの たしざん', note: 'うしろの すうじを わける（8 + 3）', ready: true, icon: 'cherry',
+      make: () => makeCherryPattern(false, 'back') },
+    { id: 'one-mae', name: '1けたの たしざん', note: 'まえの すうじを わける（4 + 8）', ready: true, icon: 'cherry',
+      make: () => makeCherryPattern(false, 'front') },
+    { id: 'two-ushiro', name: '2けたの たしざん', note: 'うしろの すうじを わける（28 + 5）', ready: true, icon: 'cherry',
+      make: () => makeCherryPattern(true, 'back') },
+    { id: 'two-mae', name: '2けたの たしざん', note: 'まえの すうじを わける（5 + 28）', ready: true, icon: 'cherry',
+      make: () => makeCherryPattern(true, 'front') },
+    { id: 'hard', name: 'ちょうなんもん', note: '2けた ＋ 2けた（38 + 25）', ready: true, icon: 'cherry',
+      make: () => makeCherryTwoTwo() },
+    { id: 'mix', name: 'ぜんぶ まぜる', note: '1けた・2けた、まえ・うしろ を まぜて', ready: true, icon: 'cherry',
+      make: () => makeCherryPattern(Math.random() < 0.5, Math.random() < 0.5 ? 'front' : 'back') }
   ] : [
     { id: 'tashizan', name: 'たしざん', emoji: '➕', ready: true, make: makeAdd,
       icon: 'addition', diffNote: (d) => d.max + 'までの たしざん' },
@@ -342,7 +399,7 @@
   }
 
   // ---- 画面 ----
-  let selection = { modeId: SAKURANBO ? 'ushiro' : 'tashizan', diffId: SAKURANBO ? 'one' : 's', styleId: 'challenge' };
+  let selection = { modeId: SAKURANBO ? 'one-ushiro' : 'tashizan', diffId: SAKURANBO ? 'one' : 's', styleId: 'challenge' };
   let session = null;
 
   function el(tag, className, text) {
@@ -374,8 +431,11 @@
   // プレイも履歴に1つ積む。プレイ・けっか から戻るときは直前の画面へ
   // 「メニューに もどる」は、むずかしさ・やりかた の画面をとばして メニューの1段目へ（2026-09-23）。
   // 履歴は [1段目, 2段目 か やりかた, プレイ] と積んであるので2つ戻る
+  // さくらんぼざん専用アプリは2段目が無く、履歴は [1段目, プレイ] なので1つ戻る。
+  // どこから始めたかを覚えておき、戻る数を合わせる（2つ戻るとページの外へ出てしまう。2026-09-28）
+  let playFrom = null;
   function backFromPlay() {
-    if (history.state && history.state.nkStep === 'play') history.go(-2);
+    if (history.state && history.state.nkStep === 'play') history.go(playFrom === 2 || playFrom === 'ref' ? -2 : -1);
     else renderMenu(1);
   }
   window.addEventListener('popstate', () => {
@@ -405,11 +465,12 @@
     app.appendChild(total);
 
     // しゅるいは押したら次の画面へ進む
-    const kinds = group(SAKURANBO ? 'わけかた' : 'けいさんの しゅるい', MODES, 'modeId', (m) => ({
+    // さくらんぼざん専用：もんだい を押したら そのまま始める（2段目は無い）
+    const kinds = group(SAKURANBO ? 'もんだいを えらぼう' : 'けいさんの しゅるい', MODES, 'modeId', (m) => ({
       label: m.name,
-      note: m.ready ? null : 'じゅんびちゅう',
+      note: SAKURANBO ? m.note : (m.ready ? null : 'じゅんびちゅう'),
       disabled: !m.ready
-    }), null, goMenu2);
+    }), null, SAKURANBO ? () => { selection.diffId = 'one'; startSession(); } : goMenu2);
     // さくらんぼざんの やりかた（リファレンス）は、しゅるいの下にテキストリンクで置く（2026-09-23 ボタンから変更）
     const refLink = el('button', 'sa-ref-link', 'さくらんぼざんの やりかた →');
     refLink.type = 'button';
@@ -562,6 +623,7 @@
       f1.appendChild(el('span', 'sa-ref-step-no', '1'));
       const f1body = el('div', 'sa-ref-step-body');
       f1body.appendChild(el('p', 'sa-ref-step-text', 'うしろの 8 を 10に するには あと 2。まえの 4 を 2 と 2 に わける'));
+      f1body.appendChild(refCherry(4, 8, 2, 2, 10, true));
       f1.appendChild(f1body);
       card.appendChild(f1);
       const f2 = el('div', 'sa-ref-step');
@@ -579,7 +641,7 @@
     const tryBtn = el('button', 'sa-btn sa-btn-primary', '🍒 やってみる');
     tryBtn.type = 'button';
     tryBtn.addEventListener('click', () => {
-      selection.modeId = SAKURANBO ? 'ushiro' : 'sakuranbo';
+      selection.modeId = SAKURANBO ? 'one-ushiro' : 'sakuranbo';
       // むずかしさ を選ぶ前に来ると diffId が空なので、いちばん やさしい段で始める
       if (!findDiff(selection.diffId)) selection.diffId = SAKURANBO ? 'one' : 's';
       startSession();
@@ -594,24 +656,32 @@
     app.appendChild(card);
   }
 
-  // リファレンス用：中身の入ったさくらんぼの図
-  function refCherry(a, b, need, rest, target) {
-    const node = el('div', 'sa-problem sa-problem-cherry sa-ref-cherry');
-    node.appendChild(el('span', 'sa-term', String(a)));
-    node.appendChild(el('span', 'sa-op', '+'));
+  // リファレンス用：中身の入ったさくらんぼの図。front=true なら まえの数（a）を分ける
+  function refCherry(a, b, need, rest, target, front) {
+    const node = el('div', 'sa-problem sa-problem-cherry sa-ref-cherry' + (front ? ' is-front' : ''));
+    const split = front ? a : b;
+    const other = front ? b : a;
     const col = el('div', 'sa-cherry-col');
-    col.appendChild(el('span', 'sa-term sa-cherry-top', String(b)));
+    col.appendChild(el('span', 'sa-term sa-cherry-top', String(split)));
     col.appendChild(el('div', 'sa-cherry-stem'));
     const pair = el('div', 'sa-cherry-pair');
-    const leftSlot = el('div', 'sa-cherry-slot');
-    leftSlot.appendChild(el('span', 'sa-cherry-ball is-target is-filled', String(need)));
-    leftSlot.appendChild(el('span', 'sa-cherry-cap', a + ' と あわせて ' + target));
-    const rightSlot = el('div', 'sa-cherry-slot');
-    rightSlot.appendChild(el('span', 'sa-cherry-ball is-filled', String(rest)));
-    pair.appendChild(leftSlot);
-    pair.appendChild(rightSlot);
+    const targetSlot = el('div', 'sa-cherry-slot');
+    targetSlot.appendChild(el('span', 'sa-cherry-ball is-target is-filled', String(need)));
+    targetSlot.appendChild(el('span', 'sa-cherry-cap', other + ' と あわせて ' + target));
+    const restSlot = el('div', 'sa-cherry-slot');
+    restSlot.appendChild(el('span', 'sa-cherry-ball is-filled', String(rest)));
+    if (front) { pair.appendChild(restSlot); pair.appendChild(targetSlot); }
+    else { pair.appendChild(targetSlot); pair.appendChild(restSlot); }
     col.appendChild(pair);
-    node.appendChild(col);
+    if (front) {
+      node.appendChild(col);
+      node.appendChild(el('span', 'sa-op', '+'));
+      node.appendChild(el('span', 'sa-term', String(b)));
+    } else {
+      node.appendChild(el('span', 'sa-term', String(a)));
+      node.appendChild(el('span', 'sa-op', '+'));
+      node.appendChild(col);
+    }
     return node;
   }
 
@@ -621,7 +691,10 @@
 
   // ---- プレイ ----
   function startSession() {
-    if (!(history.state && history.state.nkStep === 'play')) history.pushState({ nkStep: 'play' }, '');
+    if (!(history.state && history.state.nkStep === 'play')) {
+      playFrom = history.state && history.state.nkStep;
+      history.pushState({ nkStep: 'play' }, '');
+    }
     // 問題と けっか は窓（ポップアップ）の中に出す。「とじる」はメニューへもどると同じ（2026-09-27）
     NkModal.open(app, { onClose: backFromPlay });
     const mode = findMode(selection.modeId);
@@ -666,8 +739,10 @@
 
     // 選択中のモード表示（もどるは一番下に配置）＋COMBOバッジ
     const head = el('div', 'sa-play-head');
-    head.appendChild(el('span', 'sa-play-mode',
-      s.mode.name + '・' + s.diff.name + '・' + s.style.name));
+    // さくらんぼざん専用アプリには むずかしさ が無いので、もんだいの形（うしろの すうじを わける 等）を出す
+    head.appendChild(el('span', 'sa-play-mode', SAKURANBO
+      ? s.mode.name + '（' + s.mode.note.replace(/（.*$/, '') + '）・' + s.style.name
+      : s.mode.name + '・' + s.diff.name + '・' + s.style.name));
     const combo = el('span', 'sa-combo');
     if (s.combo >= 2) {
       combo.classList.add('is-show');
@@ -687,12 +762,15 @@
     built.node.appendChild(el('span', 'sa-problem-prompt', s.current.prompt));
     card.appendChild(built.node);
 
+    // 選択肢の上に「こたえを えらぼう」を出す（2026-09-28 ユーザー指示）。問題の枠と こたえの枠の役目を分けて見せる
+    card.appendChild(el('p', 'sa-options-label', 'こたえを えらぼう'));
     const options = el('div', 'sa-options');
     const feedback = el('div', 'sa-feedback');
     feedback.innerHTML = '&nbsp;';
 
     s.current.options.forEach((val) => {
       const btn = el('button', 'sa-opt', String(val));
+      btn.dataset.v = String(val);
       btn.type = 'button';
       btn.addEventListener('click', () => answer(val, btn, options, feedback, built.reveal));
       options.appendChild(btn);
@@ -884,19 +962,24 @@
       btn.classList.add('is-correct');
       s.correct += 1;
       playCorrect();
-      // さくらんぼ算は「分けたあと」の流れまで見せるのが学びどころ
+      // さくらんぼ算は「分けたあと」の流れまで見せるのが学びどころ。
+      // まえを わける ときは 10をつくる数が前に来る（4 + 8 → 2 + 8 = 10）。2026-09-28 修正
       feedback.textContent = q.layout === 'cherry'
-        ? q.a + ' + ' + q.answer + ' = ' + q.target + '、' + q.target + ' + ' + q.rest + ' = ' + q.total + '!'
+        ? (q.side === 'front' ? q.need + ' + ' + q.b : q.a + ' + ' + q.need)
+          + ' = ' + q.target + '、' + q.target + ' + ' + q.rest + ' = ' + q.total + '!'
         : pick(PRAISE_OK);
       feedback.classList.add('is-ok');
     } else {
       btn.classList.add('is-wrong');
       buttons.forEach((b) => {
-        if (Number(b.textContent) === q.answer) b.classList.add('is-correct');
+        if (b.dataset.v === String(q.answer)) b.classList.add('is-correct');
       });
       playWrong();
+      // 分けるのは まえを わける なら前の数。玉の並び（図の左から）と同じ順に言う
       feedback.textContent = q.layout === 'cherry'
-        ? q.b + ' は ' + q.answer + ' と ' + q.rest + ' に わけるよ'
+        ? (q.side === 'front'
+          ? q.a + ' は ' + q.rest + ' と ' + q.need + ' に わけるよ'
+          : q.b + ' は ' + q.need + ' と ' + q.rest + ' に わけるよ')
         : pick(PRAISE_NG) + ' こたえは ' + q.answer;
       feedback.classList.add('is-ng');
     }

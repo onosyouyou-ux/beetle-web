@@ -4318,3 +4318,45 @@ body.ninja-space .nk-modal-body>#app { padding:18px 22px 14px!important; }
     width:auto; max-width:100%; height:clamp(80px,calc(100dvh - 340px),300px);
   }
 }
+
+/* ===== さんすう・さくらんぼざん：問題の欄と こたえの欄を見分けやすくする（2026-09-28 ユーザー指示）===== */
+/* 問題の欄は一段濃い紫にし、白っぽい こたえのボタンと区別する */
+body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem {
+  border-color:#7a58ee;
+  background:linear-gradient(145deg,#e7ddff,#d3c3ff);
+  box-shadow:
+    inset 0 0 0 4px rgba(255,255,255,.55),
+    inset 0 0 0 6px #b9a4ff,
+    0 0 0 4px rgba(138,108,240,.18),
+    0 10px 24px rgba(64,42,125,.18);
+}
+/* 地が濃くなったぶん、まだ答えていない さくらんぼの玉は白で浮かせる */
+body.ninja-space .sa-problem-cherry .sa-cherry-ball:not(.is-target):not(.is-filled) { background:#fff; }
+/* 「＋」が数字より下がって見えていた（行の高さが数字 1.1 と違った） */
+body.ninja-space .sa-problem-cherry>.sa-op { line-height:1.1; }
+/* 選択肢の上の「こたえを えらぼう」 */
+body.ninja-space .sa-options-label {
+  margin:0;
+  color:#4c3d8f;
+  font-size:16px;
+  font-weight:800;
+  text-align:center;
+}
+@media (min-width:1180px), (min-width:768px) and (orientation:landscape), (orientation:landscape) and (max-height:500px) {
+  body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-options-label { grid-column:2; grid-row:1; align-self:end; }
+}
+/* スマホ：見出しは小さめにし、選択肢との間を詰めて1画面に収める */
+@media (max-width:767px) {
+  body.ninja-space .sa-options-label { font-size:14px; margin-bottom:-6px; }
+  body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem { min-height:124px; }
+  body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card) { row-gap:10px; }
+  /* さくらんぼの図とこたえ合わせの文の間を詰めて、スマホ縦（390x660）で窓に収める */
+  body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-feedback { margin-top:0; }
+  body.ninja-space .sa-problem-cherry .sa-cherry-stem { height:10px; margin-top:3px; }
+  body.ninja-space .sa-problem-cherry .sa-cherry-pair { padding-top:12px; }
+  /* 窓のタイトル「さんすう うちゅうたんけん さくらんぼざん」が切れないよう、スマホでは字を小さくする */
+  .nk-modal-title { font-size:13px; }
+}
+@media (orientation:landscape) and (max-height:500px) {
+  body.ninja-space .sa-options-label { font-size:12px; }
+}
