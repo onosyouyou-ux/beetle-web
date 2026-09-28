@@ -562,6 +562,7 @@
       f1.appendChild(el('span', 'sa-ref-step-no', '1'));
       const f1body = el('div', 'sa-ref-step-body');
       f1body.appendChild(el('p', 'sa-ref-step-text', 'うしろの 8 を 10に するには あと 2。まえの 4 を 2 と 2 に わける'));
+      f1body.appendChild(refCherry(4, 8, 2, 2, 10, true));
       f1.appendChild(f1body);
       card.appendChild(f1);
       const f2 = el('div', 'sa-ref-step');
@@ -594,24 +595,32 @@
     app.appendChild(card);
   }
 
-  // リファレンス用：中身の入ったさくらんぼの図
-  function refCherry(a, b, need, rest, target) {
-    const node = el('div', 'sa-problem sa-problem-cherry sa-ref-cherry');
-    node.appendChild(el('span', 'sa-term', String(a)));
-    node.appendChild(el('span', 'sa-op', '+'));
+  // リファレンス用：中身の入ったさくらんぼの図。front=true なら まえの数（a）を分ける
+  function refCherry(a, b, need, rest, target, front) {
+    const node = el('div', 'sa-problem sa-problem-cherry sa-ref-cherry' + (front ? ' is-front' : ''));
+    const split = front ? a : b;
+    const other = front ? b : a;
     const col = el('div', 'sa-cherry-col');
-    col.appendChild(el('span', 'sa-term sa-cherry-top', String(b)));
+    col.appendChild(el('span', 'sa-term sa-cherry-top', String(split)));
     col.appendChild(el('div', 'sa-cherry-stem'));
     const pair = el('div', 'sa-cherry-pair');
-    const leftSlot = el('div', 'sa-cherry-slot');
-    leftSlot.appendChild(el('span', 'sa-cherry-ball is-target is-filled', String(need)));
-    leftSlot.appendChild(el('span', 'sa-cherry-cap', a + ' と あわせて ' + target));
-    const rightSlot = el('div', 'sa-cherry-slot');
-    rightSlot.appendChild(el('span', 'sa-cherry-ball is-filled', String(rest)));
-    pair.appendChild(leftSlot);
-    pair.appendChild(rightSlot);
+    const targetSlot = el('div', 'sa-cherry-slot');
+    targetSlot.appendChild(el('span', 'sa-cherry-ball is-target is-filled', String(need)));
+    targetSlot.appendChild(el('span', 'sa-cherry-cap', other + ' と あわせて ' + target));
+    const restSlot = el('div', 'sa-cherry-slot');
+    restSlot.appendChild(el('span', 'sa-cherry-ball is-filled', String(rest)));
+    if (front) { pair.appendChild(restSlot); pair.appendChild(targetSlot); }
+    else { pair.appendChild(targetSlot); pair.appendChild(restSlot); }
     col.appendChild(pair);
-    node.appendChild(col);
+    if (front) {
+      node.appendChild(col);
+      node.appendChild(el('span', 'sa-op', '+'));
+      node.appendChild(el('span', 'sa-term', String(b)));
+    } else {
+      node.appendChild(el('span', 'sa-term', String(a)));
+      node.appendChild(el('span', 'sa-op', '+'));
+      node.appendChild(col);
+    }
     return node;
   }
 
@@ -884,9 +893,11 @@
       btn.classList.add('is-correct');
       s.correct += 1;
       playCorrect();
-      // さくらんぼ算は「分けたあと」の流れまで見せるのが学びどころ
+      // さくらんぼ算は「分けたあと」の流れまで見せるのが学びどころ。
+      // まえを わける ときは 10をつくる数が前に来る（4 + 8 → 2 + 8 = 10）。2026-09-28 修正
       feedback.textContent = q.layout === 'cherry'
-        ? q.a + ' + ' + q.answer + ' = ' + q.target + '、' + q.target + ' + ' + q.rest + ' = ' + q.total + '!'
+        ? (q.side === 'front' ? q.answer + ' + ' + q.b : q.a + ' + ' + q.answer)
+          + ' = ' + q.target + '、' + q.target + ' + ' + q.rest + ' = ' + q.total + '!'
         : pick(PRAISE_OK);
       feedback.classList.add('is-ok');
     } else {
@@ -895,8 +906,11 @@
         if (Number(b.textContent) === q.answer) b.classList.add('is-correct');
       });
       playWrong();
+      // 分けるのは まえを わける なら前の数。玉の並び（図の左から）と同じ順に言う
       feedback.textContent = q.layout === 'cherry'
-        ? q.b + ' は ' + q.answer + ' と ' + q.rest + ' に わけるよ'
+        ? (q.side === 'front'
+          ? q.a + ' は ' + q.rest + ' と ' + q.answer + ' に わけるよ'
+          : q.b + ' は ' + q.answer + ' と ' + q.rest + ' に わけるよ')
         : pick(PRAISE_NG) + ' こたえは ' + q.answer;
       feedback.classList.add('is-ng');
     }

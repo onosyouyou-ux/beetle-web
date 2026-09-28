@@ -4,7 +4,7 @@ urls: ["/tools/sakuranbo/"]
 canonical: https://www.beetle-web.jp/tools/sakuranbo/landing.html
 sitemap: false
 title_contains: "さくらんぼ"
-og_image: "none"
+og_image: "/assets/images/sansu/lp/og-sansu.jpg"
 required_selectors: ["#site-header", "#app", ".app-paper"]
 e2e: false
 ---
