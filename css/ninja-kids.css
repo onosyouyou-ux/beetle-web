@@ -4320,18 +4320,16 @@ body.ninja-space .nk-modal-body>#app { padding:18px 22px 14px!important; }
 }
 
 /* ===== さんすう・さくらんぼざん：問題の欄と こたえの欄を見分けやすくする（2026-09-28 ユーザー指示）===== */
-/* 問題の欄は一段濃い紫にし、白っぽい こたえのボタンと区別する */
+/* 問題の欄は白に近い地にし、一段濃い紫の こたえのボタンと区別する（2026-09-28 ユーザー指示で濃さを逆にした） */
 body.ninja-space .sa-card:not(.sa-result):not(.sa-ref-card)>.sa-problem {
   border-color:#7a58ee;
-  background:linear-gradient(145deg,#e7ddff,#d3c3ff);
+  background:linear-gradient(145deg,#ffffff,#f6f3ff);
   box-shadow:
     inset 0 0 0 4px rgba(255,255,255,.55),
     inset 0 0 0 6px #b9a4ff,
     0 0 0 4px rgba(138,108,240,.18),
     0 10px 24px rgba(64,42,125,.18);
 }
-/* 地が濃くなったぶん、まだ答えていない さくらんぼの玉は白で浮かせる */
-body.ninja-space .sa-problem-cherry .sa-cherry-ball:not(.is-target):not(.is-filled) { background:#fff; }
 /* 「＋」が数字より下がって見えていた（行の高さが数字 1.1 と違った） */
 body.ninja-space .sa-problem-cherry>.sa-op { line-height:1.1; }
 /* 選択肢の上の「こたえを えらぼう」 */
@@ -4366,39 +4364,51 @@ body.ninja-space .sa-options-label {
    ガタガタに見えていた（緑・赤の塗りも読み込み順で負けていた）。答える前も後も、ここで決めきる */
 body.ninja-space .sa-options .sa-opt,
 body.ninja-space .sa-options .sa-opt:not(.is-correct):not(.is-wrong) {
-  border:2px solid #ddd4fb;
+  border:2px solid #b9a4ff;
   border-image:none;
   border-radius:18px;
-  background:#f0eefc;
-  color:#3b2a8f;
-  box-shadow:0 3px 0 #d3c8f7;
+  background:linear-gradient(180deg,#e2d8ff,#d3c3ff);
+  color:#2e1f7a;
+  box-shadow:0 3px 0 #a992f0;
   translate:none;
 }
 @media (hover:hover) {
   body.ninja-space .sa-options .sa-opt:not(:disabled):hover {
     translate:0 -2px;
-    border-color:#b9a4ff;
-    background:#e6e0fb;
-    box-shadow:0 5px 0 #c4b6f4;
+    border-color:#8a6cf0;
+    background:linear-gradient(180deg,#d6caff,#c5b2ff);
+    box-shadow:0 5px 0 #9a80ec;
   }
 }
-body.ninja-space .sa-options .sa-opt.is-correct {
-  border-color:#2f9a6b;
-  background:#3fb380;
-  color:#fff;
-  box-shadow:0 3px 0 #2a8a60;
+/* 答えたあとも ボタンの色は変えない（2026-09-28 ユーザー指示）。正誤は下の文と、さくらんぼの玉・式のこたえで伝える。
+   正解・まちがい のクラスが付いても、ここで答える前と同じ見た目に戻す */
+body.ninja-space .sa-options .sa-opt:is(.is-correct,.is-wrong),
+body.ninja-space .sa-options .sa-opt:is(.is-correct,.is-wrong):disabled {
+  border:2px solid #b9a4ff;
+  border-image:none;
+  border-radius:18px;
+  background:linear-gradient(180deg,#e2d8ff,#d3c3ff);
+  color:#2e1f7a;
+  box-shadow:0 3px 0 #a992f0;
+  opacity:1;
+  filter:none;
+  translate:none;
 }
-body.ninja-space .sa-options .sa-opt.is-wrong {
-  border-color:#e0485a;
-  background:#ff5c6c;
-  color:#fff;
-  box-shadow:0 3px 0 #d8404f;
-}
-/* 答えたあとのボタンは押せない状態になり薄く見えるが、正解・まちがい の2つは はっきり出す */
-body.ninja-space .sa-options .sa-opt:is(.is-correct,.is-wrong):disabled { opacity:1; filter:none; }
 /* さくらんぼの図の列は玉2つぶんの幅があり、分ける数と「＋」の間が広く空いて式がガタガタに見えた。
    列を左右に詰めて、式の数字と記号の間隔をそろえる（玉は数字の下に はみ出してよい） */
 body.ninja-space .sa-problem-cherry>.sa-cherry-col { margin-inline:-22px; }
 @media (max-width:767px) {
   body.ninja-space .sa-problem-cherry>.sa-cherry-col { margin-inline:-18px; }
+}
+
+/* 問題の式の「= ?」「= 13」は四角の地を付けない（2026-09-28 ユーザー指示）。
+   答えたあと白っぽい四角だけが浮いて、式の並びがガタガタに見えていた */
+body.ninja-space .sa-problem .sa-qmark {
+  min-width:0;
+  height:auto;
+  padding:0;
+  border-radius:0;
+  background:none;
+  box-shadow:none;
+  line-height:1.1;
 }
