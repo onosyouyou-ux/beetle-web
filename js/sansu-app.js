@@ -743,12 +743,6 @@
     head.appendChild(el('span', 'sa-play-mode', SAKURANBO
       ? s.mode.name + '（' + s.mode.note.replace(/（.*$/, '') + '）・' + s.style.name
       : s.mode.name + '・' + s.diff.name + '・' + s.style.name));
-    const combo = el('span', 'sa-combo');
-    if (s.combo >= 2) {
-      combo.classList.add('is-show');
-      combo.textContent = '🔥 COMBO ×' + s.combo;
-    }
-    head.appendChild(combo);
     app.appendChild(head);
 
     app.appendChild(progressBar());
@@ -797,6 +791,9 @@
     node.appendChild(el('span', null, q.text));
     node.appendChild(el('span', 'sa-op', '='));
     const total = el('span', 'sa-qmark', '?');
+    // 「?」がこたえ（12 など）に変わると幅が広がり、式ぜんたいが左へずれてガタガタに見えた。
+    // はじめから こたえの桁数ぶんの幅を取っておく（2026-09-28）
+    total.style.minWidth = String(q.answer).length + 'ch';
     node.appendChild(total);
     return {
       node: node,
@@ -828,22 +825,29 @@
     else { pair.appendChild(targetSlot); pair.appendChild(restSlot); }
     col.appendChild(pair);
 
+    // 式は「数 + 数」のかたまり（sa-cherry-expr）にして枠のまん中に置き、
+    // 答えたあとに出す「= 13」は そのかたまりの右に場所を取らずに付ける（sa-cherry-tail）。
+    // 場所を取ると、答えた瞬間に式ぜんたいが左へ動いてガタガタに見えた（2026-09-28）
+    const expr = el('span', 'sa-cherry-expr');
     if (front) {
-      node.appendChild(col);
-      node.appendChild(el('span', 'sa-op', '+'));
-      node.appendChild(el('span', 'sa-term', String(q.b)));
+      expr.appendChild(col);
+      expr.appendChild(el('span', 'sa-op', '+'));
+      expr.appendChild(el('span', 'sa-term', String(q.b)));
     } else {
-      node.appendChild(el('span', 'sa-term', String(q.a)));
-      node.appendChild(el('span', 'sa-op', '+'));
-      node.appendChild(col);
+      expr.appendChild(el('span', 'sa-term', String(q.a)));
+      expr.appendChild(el('span', 'sa-op', '+'));
+      expr.appendChild(col);
     }
 
     // 「= ?」を先に出すと式の答え（16は?）を聞いているように見え、
     // 選択肢（分ける数）と噛み合わないため、答えるまで隠しておく
+    const tail = el('span', 'sa-cherry-tail');
     const eq = el('span', 'sa-op sa-eq-late', '=');
     const total = el('span', 'sa-qmark sa-eq-late', '?');
-    node.appendChild(eq);
-    node.appendChild(total);
+    tail.appendChild(eq);
+    tail.appendChild(total);
+    expr.appendChild(tail);
+    node.appendChild(expr);
 
     return {
       node: node,
@@ -877,6 +881,18 @@
     return span;
   }
 
+  // COMBO の札は すすみぐあいの帯の まん中に置く（2026-09-28）。
+  // 見出しの行に置いていたら、札が出た瞬間に見出しが2行に折れて画面ぜんたいが19px下がっていた。
+  // 帯の文字は左右の端に固定なので、まん中の札の中身が変わっても何も動かない
+  function comboBadge() {
+    const combo = el('span', 'sa-combo');
+    if (session.combo >= 2) {
+      combo.classList.add('is-show');
+      combo.textContent = '🔥 COMBO ×' + session.combo;
+    }
+    return combo;
+  }
+
   function progressBar() {
     const s = session;
     const wrap = el('div', 'sa-track-card');
@@ -885,6 +901,7 @@
     if (s.style.id === 'challenge') {
       const done = s.index, goal = CHALLENGE_LENGTH;
       label.appendChild(el('span', null, 'うちゅうへ すすもう'));
+      label.appendChild(comboBadge());
       label.appendChild(el('span', null, done + ' / ' + goal + ' もん'));
       wrap.appendChild(label);
 
@@ -910,6 +927,7 @@
     const head = el('span', null);
     head.textContent = 'ステージ ' + (stage + 1) + ' / 10 ・ ' + next.name + ' へ';
     label.appendChild(head);
+    label.appendChild(comboBadge());
     label.appendChild(el('span', null, done + ' / ' + goal + ' せいかい'));
     wrap.appendChild(label);
 
