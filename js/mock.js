@@ -1,3 +1,7 @@
+// このページは修行アプリの全量点検の入口（同じオリジンの iframe で各アプリを開く）。
+// 開いた時点で内部の印を付け、点検で開くページを GA4 に計上しない（自動点検は毎回まっさらなブラウザで起動するため）
+try { localStorage.setItem('beetle-internal', '1'); } catch (e) {}
+
 let uploaded = false;
 let scanning = false;
 
