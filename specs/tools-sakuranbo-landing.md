@@ -4,7 +4,7 @@ urls: ["/tools/sakuranbo/landing.html"]
 canonical: self
 sitemap: true
 title_contains: "さくらんぼ算"
-og_image: "/assets/images/sansu/lp/og-sansu.jpg"
+og_image: "/assets/images/sakuranbo/lp/og-sakuranbo.jpg"
 required_selectors: ["#site-header", ".footer-skyline-bar", ".footer-link-bar"]
 ---
 

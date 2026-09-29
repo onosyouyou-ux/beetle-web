@@ -15,7 +15,8 @@
     phonics:  { name: 'フォニックス修行', note: 'えいごの おと',       img: 'nk-link-phonics.webp',  href: '/tools/phonics/' },
     tokei:    { name: 'とけい修行',       note: 'とけいを よむ',       img: 'nk-link-tokei.webp',    href: '/tools/tokei/' },
     sansu:    { name: 'さんすう',         note: 'けいさんを する',     img: 'nk-link-sansu.webp',    href: '/tools/sansu-app/' },
-    kuku:     { name: 'かけざん修行',     note: 'くくを となえる',     img: 'nk-link-kuku.webp',     href: '/tools/kuku/' }
+    kuku:     { name: 'かけざん修行',     note: 'くくを となえる',     img: 'nk-link-kuku.webp',     href: '/tools/kuku/' },
+    sakuranbo:{ name: 'さくらんぼざん',   note: 'さくらんぼで 10を つくる', img: 'nk-link-sakuranbo.webp', href: '/tools/sakuranbo/' }
   };
 
   /* 全部を、いつも同じ順で出す（2026-09-03改定）。
@@ -34,8 +35,12 @@
 
      7本目の かけざん(青210°) は3段目の中央に置く（2026-09-16）。真上が フォニックス(緑)で差96°、
      ななめ上が とけい・ローマ字。同じ青系の カタカナ(185°) とは離れる。
-     既存6本の並びは変えない（3段目の中央寄せは ninja-kids.css の .nk-link:last-child 側）。 */
-  var ORDER = ['sansu', 'katakana', 'kanji', 'tokei', 'phonics', 'romaji', 'kuku'];
+     既存6本の並びは変えない（3段目の中央寄せは ninja-kids.css の .nk-link:last-child 側）。
+
+     8本目の さくらんぼざん(紫) を足して3段目は2本に（2026-09-29）。2本は段の中央に寄せ、
+     さくらんぼざん を左・かけざん を右に置く。逆にすると さくらんぼざん が ローマ字(紫) の
+     ななめ下に来て紫が並ぶ。左なら上は とけい(橙)・フォニックス(緑)。 */
+  var ORDER = ['sansu', 'katakana', 'kanji', 'tokei', 'phonics', 'romaji', 'sakuranbo', 'kuku'];
 
   var TITLE = 'しゅぎょう いちらん';
   var IMG_BASE = '/assets/images/ninja/';

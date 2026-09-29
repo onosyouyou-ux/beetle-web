@@ -2694,12 +2694,16 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
 }
 @media (min-width:768px) {
   .nk-links-list {
-    grid-template-columns:repeat(3,minmax(0,1fr));
+    /* 見た目は3列。半列ずらせるよう6本の線で割り、1枚に2本ずつ使う（2026-09-29） */
+    grid-template-columns:repeat(6,minmax(0,1fr));
     gap:12px 14px;
     width:100%;
   }
-  /* 3列で割り切れず1枚だけ余ったら、左端ではなく真ん中の列に置く（7本になった 2026-09-16） */
-  .nk-link:last-child:nth-child(3n+1) { grid-column:2; }
+  .nk-link { grid-column:span 2; }
+  /* 3列で割り切れず余ったら、左詰めではなく段の中央に寄せる。
+     1枚だけ余ったら真ん中の列（7本になった 2026-09-16）、2枚余ったら半列ずつ内側へ（8本になった 2026-09-29） */
+  .nk-link:last-child:nth-child(3n+1) { grid-column:3 / span 2; }
+  .nk-link:nth-last-child(2):nth-child(3n+1) { grid-column:2 / span 2; }
 }
 .nk-link {
   display:block;
