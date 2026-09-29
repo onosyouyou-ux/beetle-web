@@ -4429,3 +4429,23 @@ body.ninja-space .sa-cherry-tail .sa-eq-late { display:inline; visibility:hidden
 /* COMBO の札は すすみぐあいの帯の まん中（2026-09-28）。帯の行の高さを変えないよう小さく */
 body.ninja-space .sa-track-label { align-items:center; min-height:18px; }
 body.ninja-space .sa-track-label .sa-combo { margin:0; padding:0 8px; font-size:10px; line-height:16px; box-shadow:0 0 8px rgba(255,138,46,.55); }
+
+/* ============================================================
+   かく しゅぎょう の「おおきく かく」ボタン（2026-09-29。かんじ・カタカナ共通）
+   けしゴム（右上・約40px）の左どなりに重ねる。押したときの並べかえは各アプリの CSS 側
+   （kanji.css・katakana.css の末尾。はんていの行の指定と詳細度が同じなので、後に読むアプリ側に置く）
+   ============================================================ */
+.ninja-kids .nk-zoom{
+  position:absolute;top:6px;right:52px;z-index:2;
+  display:grid;place-items:center;
+  width:40px;height:40px;padding:0;
+  border:2px solid #d3c8b2;border-radius:10px;
+  background:#fff;color:#6b5d4a;cursor:pointer;
+}
+.ninja-kids .nk-zoom svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ninja-kids .nk-zoom[aria-pressed="true"]{background:var(--nk-accent,#c0634c);border-color:var(--nk-accent,#c0634c);color:#fff}
+@media (hover:hover){
+  .ninja-kids .nk-zoom:hover{border-color:var(--nk-accent,#c0634c)}
+}
+/* はんてい後は けしゴムが消えるので、右上の角へ寄せる */
+.ninja-kids :is(.kj-pad,.kt-pad):not(:has(:is(.kj-eraser,.kt-eraser)))>.nk-zoom{right:6px}

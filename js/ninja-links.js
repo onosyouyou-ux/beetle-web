@@ -106,6 +106,41 @@
     if (t) t.textContent = 'できた！ ' + ok + '問';
   }
   global.NinjaHead = { inner: headInner, score: headScore };
+
+  /* かく しゅぎょう の「おおきく かく」ボタン（2026-09-29。かんじ・カタカナ）。
+     押すと盤面に .is-bigpad が付き、書くところが右カラムの上から下まで広がって、
+     はんてい（はんてい後は かけた／まちがった）がその真下に移る。並べかえは各アプリの CSS 側。
+     canvas は大きさが変わると線を保ったまま描き直すので、書いている途中で押してもよい。
+     選んだ大きさは次の問題にも引きつぐ（localStorage。使えないときは毎回ふつうの大きさ） */
+  var BIG_KEY = 'nk-bigpad';
+  var ICON_GROW = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+    '<path d="M14 4h6v6" /><path d="m20 4-6 6" /><path d="M10 20H4v-6" /><path d="m4 20 6-6" /></svg>';
+  var ICON_SHRINK = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+    '<path d="M20 10h-6V4" /><path d="m14 10 6-6" /><path d="M4 14h6v6" /><path d="m10 14-6 6" /></svg>';
+
+  function bigPad(board, pad) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'nk-zoom';
+    function set(on) {
+      board.classList.toggle('is-bigpad', on);
+      var label = on ? 'もとの おおきさに もどす' : 'おおきく かく';
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      btn.setAttribute('aria-label', label);
+      btn.title = label;
+      btn.innerHTML = on ? ICON_SHRINK : ICON_GROW;
+    }
+    btn.addEventListener('click', function () {
+      var on = !board.classList.contains('is-bigpad');
+      try { localStorage.setItem(BIG_KEY, on ? '1' : '0'); } catch (e) {}
+      set(on);
+    });
+    var saved = false;
+    try { saved = localStorage.getItem(BIG_KEY) === '1'; } catch (e) {}
+    set(saved);
+    pad.appendChild(btn);
+  }
+  global.NkBigPad = bigPad;
 })(window);
 
 /* 盤面の下の読み物（#howto）をアコーディオンにする（2026-09-24）。

@@ -217,6 +217,7 @@
       '</div>';
 
     root.querySelector('.kt-back').addEventListener('click', backToMenu);
+    NkBigPad(root.querySelector('.kt-quiz'), root.querySelector('.kt-pad'));
     var pen = setupCanvas(root.querySelector('.kt-canvas'));
     document.getElementById('kt-clear').addEventListener('click', pen.clear);
     document.getElementById('kt-judge').addEventListener('click', function () { revealKaku(q, pen); });

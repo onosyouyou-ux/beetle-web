@@ -477,6 +477,7 @@
     tools.appendChild(judge);
     wrap.appendChild(tools);
 
+    NkBigPad(wrap, pad);
     var pen = setupCanvas(canvas);
     clear.addEventListener('click', pen.clear);
     judge.addEventListener('click', function () { revealKaki(q, ask, tools, pen); });
