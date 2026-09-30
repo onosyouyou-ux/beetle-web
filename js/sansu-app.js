@@ -37,17 +37,19 @@
     return arr;
   }
 
-  // ---- むずかしさ（数の大きさで決める。学年は持たない）----
-  // note はモードによって意味が変わるので、選択中のモードに合わせて出し分ける
-  const DIFFS = SAKURANBO ? [
-    // さくらんぼざん専用：かず の大きさ。1けた どうし（8 + 3・4 + 8）と 2けたも でる（28 + 5・5 + 28）
-    { id: 'one', name: '1けた どうし', max: 20, two: false, icon: 'ringed-planet' },
-    { id: 'two', name: '2けたも でる', max: 100, two: true, icon: 'black-hole' }
-  ] : [
-    { id: 'vs', name: 'ちょうかんたん', max: 5, icon: 'moon' },
-    { id: 's', name: 'かんたん', max: 10, icon: 'ringed-planet' },
-    { id: 'm', name: 'ふつう', max: 20, icon: 'meteor' },
-    { id: 'l', name: 'ちょうなんもん', max: 100, icon: 'black-hole' }
+  // ---- むずかしさ ----
+  // さんすう：もんだいの形（1けた＋1けた など）を えらんでから、2段目で むずかしさを えらぶ（2026-09-30 ユーザー決定）。
+  //   ちょうかんたん＝＋1〜5 で こたえが10まで（ひきざんは −1〜5）
+  //   かんたん　　　＝くり上がり（くり下がり）なし
+  //   ふつう　　　　＝くり上がり（くり下がり）あり
+  //   ちょうなんもん＝2けた＋2けた で こたえが3けた
+  // 形ごとに 出せる むずかしさ だけを並べる（MODES の levels）。
+  // さくらんぼざん は むずかしさ の段を持たず、記録のキーに 'one' だけを使う
+  const DIFFS = SAKURANBO ? [{ id: 'one', name: '' }] : [
+    { id: 'vs', name: 'ちょうかんたん', icon: 'moon' },
+    { id: 's', name: 'かんたん', icon: 'ringed-planet' },
+    { id: 'm', name: 'ふつう', icon: 'meteor' },
+    { id: 'l', name: 'ちょうなんもん', icon: 'black-hole' }
   ];
 
   const PLAYSTYLES = [
@@ -58,128 +60,58 @@
   // ---- けいさんの しゅるい ----
   // 出題は make() が「答え・選択肢・見た目」まで返す。
   // さくらんぼ算のように4択の作り方が違うモードを足せるようにしてある。
-  function makeAdd(diff) {
-    let a, b;
-    if (diff.max <= 20) {
-      a = randInt(1, diff.max - 1);
-      b = randInt(1, diff.max - a);
-    } else {
-      a = randInt(10, 89);
-      b = randInt(1, diff.max - a);
+  // けたの形 × むずかしさ で たしざん・ひきざん を作る（2026-09-30）。
+  //   aDigits・bDigits＝まえ・うしろの数の けた数（1 か 2）
+  // かけざん・わりざん・さくらんぼざん は、かけざん修行・さくらんぼざん の アプリに ゆずった
+  const digitRange = (d) => (d === 1 ? [1, 9] : [10, 99]);
+
+  // 条件に合う組み合わせが出るまで引きなおす（どの形・むずかしさでも 数十回で見つかる）
+  function drawPair(aDigits, bDigits, ok) {
+    const [aLo, aHi] = digitRange(aDigits);
+    const [bLo, bHi] = digitRange(bDigits);
+    for (let guard = 0; guard < 5000; guard++) {
+      const a = randInt(aLo, aHi);
+      const b = randInt(bLo, bHi);
+      if (ok(a, b)) return [a, b];
     }
+    throw new Error('sansu: no problem for ' + aDigits + '/' + bDigits);
+  }
+
+  function makeAdd(aDigits, bDigits, level) {
+    const carry = (a, b) => (a % 10) + (b % 10) >= 10;
+    const rule = {
+      vs: (a, b) => b <= 5 && a + b <= 10,
+      s: (a, b) => !carry(a, b) && a + b <= 99,
+      m: (a, b) => carry(a, b) && a + b <= 99,
+      l: (a, b) => a + b >= 100
+    }[level];
+    const [a, b] = drawPair(aDigits, bDigits, rule);
     const answer = a + b;
     return {
       layout: 'plain',
       prompt: 'こたえは どれ?',
       text: a + ' + ' + b,
       answer: answer,
-      options: buildOptions(answer, 0, diff.max)
+      options: buildOptions(answer, 0, level === 'vs' ? 10 : level === 'l' ? 198 : aDigits + bDigits > 2 ? 99 : 18)
     };
   }
 
-  function makeSub(diff) {
-    // 引かれる数を難易度の上限に合わせる（こたえは自動的に上限以下になる）
-    const a = diff.max <= 20 ? randInt(2, diff.max) : randInt(11, diff.max);
-    const b = randInt(1, a - 1);   // こたえが0にならないようにする
+  // こたえが 0 に ならないように、まえの数は うしろの数より 大きくする
+  function makeSub(aDigits, bDigits, level) {
+    const borrow = (a, b) => (a % 10) < (b % 10);
+    const rule = {
+      vs: (a, b) => b <= 5 && a > b,
+      s: (a, b) => a > b && !borrow(a, b),
+      m: (a, b) => a > b && borrow(a, b)
+    }[level];
+    const [a, b] = drawPair(aDigits, bDigits, rule);
     const answer = a - b;
     return {
       layout: 'plain',
       prompt: 'こたえは どれ?',
       text: a + ' − ' + b,
       answer: answer,
-      options: buildOptions(answer, 0, diff.max)
-    };
-  }
-
-  // かけざん：むずかしさで「何の段まで出るか」を決める。ちょうなんもんだけ2けた×1けた
-  function makeMul(diff) {
-    let a, b;
-    if (diff.max <= 5) { a = pick([2, 5]); b = randInt(1, 9); }
-    else if (diff.max <= 10) { a = randInt(1, 5); b = randInt(1, 9); }
-    else if (diff.max <= 20) { a = randInt(1, 9); b = randInt(1, 9); }
-    else { a = randInt(11, 99); b = randInt(2, 9); }
-    const answer = a * b;
-    return {
-      layout: 'plain',
-      prompt: 'こたえは どれ?',
-      text: a + ' × ' + b,
-      answer: answer,
-      options: buildMulOptions(a, b, answer)
-    };
-  }
-
-  // かけざんのまちがいは「1つとなりの段」が圧倒的に多いので、それを選択肢に混ぜる。
-  // ±1・±2 のような足し算のまちがい方を並べても、九九の練習にならない
-  function buildMulOptions(a, b, correct) {
-    const near = [(a + 1) * b, (a - 1) * b, a * (b + 1), a * (b - 1)];
-    const opts = new Set([correct]);
-    shuffle(near).forEach((v) => { if (v > 0 && v !== correct && opts.size < 4) opts.add(v); });
-    let guard = 0;
-    while (opts.size < 4 && guard++ < 300) {
-      const v = randInt(Math.max(1, correct - 12), correct + 12);
-      if (v !== correct) opts.add(v);
-    }
-    return shuffle(Array.from(opts));
-  }
-
-  // わりざん：わりきれる問題が基本。ちょうなんもんだけ「あまり」を答えさせる
-  // （こたえは数字1つでないと4択にできないため、商ではなく あまり を聞く形にしている）
-  function makeDiv(diff) {
-    if (diff.max >= 100) {
-      const b = randInt(2, 9);
-      const rest = randInt(1, b - 1);
-      const a = b * randInt(1, 9) + rest;
-      return {
-        layout: 'plain',
-        prompt: 'あまりは どれ?',
-        text: a + ' ÷ ' + b,
-        answer: rest,
-        // わる数より大きい「あまり」も選択肢に出す（よくあるまちがい）
-        options: buildOptions(rest, 0, Math.min(9, b + 1))
-      };
-    }
-    let b;
-    if (diff.max <= 5) b = pick([2, 5]);
-    else if (diff.max <= 10) b = randInt(2, 5);
-    else b = randInt(2, 9);
-    const q = randInt(1, 9);
-    return {
-      layout: 'plain',
-      prompt: 'こたえは どれ?',
-      text: (b * q) + ' ÷ ' + b,
-      answer: q,
-      options: buildOptions(q, 1, 9)
-    };
-  }
-
-  // さくらんぼ算：うしろの数を「キリのいい数をつくる分」と「あまり」に分ける。
-  // 教科書どおり「大きいほうを10にする」ため、前の数 a は必ず b 以上にする
-  // （6+8 で 8 を崩すのは不自然。8+6 で 6 を 2 と 4 に分けるのが本来の形）
-  function makeCherry(diff) {
-    let a;
-    if (diff.max >= 100) {
-      do { a = randInt(11, 89); } while (a % 10 < 2);   // 1の位が0・1だと分けられない
-    } else if (diff.max >= 20) {
-      a = randInt(6, 9);
-    } else if (diff.max >= 10) {
-      a = randInt(7, 9);
-    } else {
-      a = randInt(8, 9);
-    }
-    const target = (Math.floor(a / 10) + 1) * 10;   // つくりたいキリのいい数
-    const need = target - a;                        // 左のさくらんぼ（これを答えさせる）
-    // くり上がるように need より大きく、かつ a を超えない（分けるのは小さいほう）
-    const b = randInt(need + 1, Math.min(9, a));
-    return {
-      layout: 'cherry',
-      // 「9 を わけて 90 を つくろう」は 9 から 90 を作ると読めて意味が通らないため、
-      // 動作（分ける）だけを書き、何のために分けるかは さくらんぼの下の説明に任せる
-      prompt: b + ' を 2つに わけよう',
-      text: a + ' + ' + b,
-      side: 'back',
-      a: a, b: b, target: target, need: need, rest: b - need, total: a + b,
-      answer: need,
-      options: buildOptions(need, 1, 9)
+      options: buildOptions(answer, 0, aDigits === 2 ? 99 : 9)
     };
   }
 
@@ -281,26 +213,27 @@
     { id: 'mix', name: 'ぜんぶ まぜる', note: '1けた・2けた、まえ・うしろ を まぜて', ready: true, icon: 'cherry',
       make: () => makeCherryPattern(Math.random() < 0.5, Math.random() < 0.5 ? 'front' : 'back') }
   ] : [
-    { id: 'tashizan', name: 'たしざん', emoji: '➕', ready: true, make: makeAdd,
-      icon: 'addition', diffNote: (d) => d.max + 'までの たしざん' },
-    { id: 'hikizan', name: 'ひきざん', emoji: '➖', ready: true, make: makeSub,
-      icon: 'subtraction', diffNote: (d) => d.max + 'までの ひきざん' },
-    { id: 'kakezan', name: 'かけざん', emoji: '✖️', ready: true, make: makeMul,
-      icon: 'multiplication',
-      diffNote: (d) => (d.max >= 100 ? '2けた × 1けた'
-        : d.max >= 20 ? '1〜9の だん'
-          : d.max >= 10 ? '1〜5の だん' : '2と5の だん') },
-    { id: 'warizan', name: 'わりざん', emoji: '➗', ready: true, make: makeDiv,
-      icon: 'division',
-      diffNote: (d) => (d.max >= 100 ? 'あまりを こたえる'
-        : d.max >= 20 ? '9の だんまで'
-          : d.max >= 10 ? '5の だんまで' : '2と5で わる') },
-    // さくらんぼ算は「10のかたまり」を作る技法なので、前の数の大きさで難しさが決まる
-    { id: 'sakuranbo', name: 'さくらんぼざん', emoji: '🍒', ready: true, make: makeCherry,
-      icon: 'cherry',
-      diffNote: (d) => (d.max >= 100 ? '2けたの くり上がり'
-        : d.max >= 20 ? '1けたどうし'
-          : d.max >= 10 ? '7〜9に たす' : '8・9に たす') }
+    // さんすう：けたの形で えらぶ（2026-09-30 ユーザー指示。かけざん・わりざん・さくらんぼざん は ぬいた）。
+    // levels＝その形で出せる むずかしさ。diffNote＝むずかしさ の説明（形ごとに 例が変わる）
+    // 並びは 2列のメニューで 左＝たしざん・右＝ひきざん になるよう、たし・ひき を交互に置く
+    { id: 'add-1-1', name: '1けたの たしざん', note: '1けた ＋ 1けた（3 + 4）', ready: true, icon: 'addition',
+      levels: ['vs', 's', 'm'], make: (d) => makeAdd(1, 1, d.id),
+      diffNote: { vs: '＋1〜5 で 10まで（3 + 2）', s: 'くり上がり なし（4 + 3）', m: 'くり上がり あり（8 + 5）' } },
+    { id: 'sub-1-1', name: '1けたの ひきざん', note: '1けた − 1けた（8 − 3）', ready: true, icon: 'subtraction',
+      levels: ['vs', 's'], make: (d) => makeSub(1, 1, d.id),
+      diffNote: { vs: '−1〜5（6 − 2）', s: '1けた どうし（9 − 7）' } },
+    { id: 'add-2-1', name: '2けたと 1けたの たしざん', note: '2けた ＋ 1けた（23 + 5）', ready: true, icon: 'addition',
+      levels: ['s', 'm'], make: (d) => makeAdd(2, 1, d.id),
+      diffNote: { s: 'くり上がり なし（23 + 5）', m: 'くり上がり あり（27 + 6）' } },
+    { id: 'sub-2-1', name: '2けたと 1けたの ひきざん', note: '2けた − 1けた（25 − 3）', ready: true, icon: 'subtraction',
+      levels: ['s', 'm'], make: (d) => makeSub(2, 1, d.id),
+      diffNote: { s: 'くり下がり なし（25 − 3）', m: 'くり下がり あり（23 − 5）' } },
+    { id: 'add-2-2', name: '2けたどうしの たしざん', note: '2けた ＋ 2けた（23 + 45）', ready: true, icon: 'addition',
+      levels: ['s', 'm', 'l'], make: (d) => makeAdd(2, 2, d.id),
+      diffNote: { s: 'くり上がり なし（23 + 45）', m: 'くり上がり あり（38 + 25）', l: 'こたえが 3けた（68 + 57）' } },
+    { id: 'sub-2-2', name: '2けたどうしの ひきざん', note: '2けた − 2けた（56 − 23）', ready: true, icon: 'subtraction',
+      levels: ['s', 'm'], make: (d) => makeSub(2, 2, d.id),
+      diffNote: { s: 'くり下がり なし（56 − 23）', m: 'くり下がり あり（52 − 27）' } }
   ];
 
   // ---- せいせきの保存 ----
@@ -399,7 +332,7 @@
   }
 
   // ---- 画面 ----
-  let selection = { modeId: SAKURANBO ? 'one-ushiro' : 'tashizan', diffId: SAKURANBO ? 'one' : 's', styleId: 'challenge' };
+  let selection = { modeId: SAKURANBO ? 'one-ushiro' : 'add-1-1', diffId: SAKURANBO ? 'one' : null, styleId: 'challenge' };
   let session = null;
 
   function el(tag, className, text) {
@@ -414,12 +347,10 @@
   const findStyle = (id) => PLAYSTYLES.find((s) => s.id === id);
 
   // ---- メニュー ----
-  // 2段で選ぶ（2026-09-23）：1段目で けいさんの しゅるい（下に あそびかた）、
-  // しゅるいを押したら 2段目の むずかしさ＋スタートへ進む
+  // さくらんぼざん：1画面。もんだい を押したら そのまま始まる（2026-09-28）
+  // さんすう　　：2段。1段目で もんだいの形、2段目で むずかしさ＋スタート（2026-09-30）
+  // ブラウザの「戻る」と画面の「← もどる」で1つ前の画面へ戻れるよう、2段目・やりかた・プレイで履歴を1つずつ積む
   let menuStep = 1;
-
-  // ブラウザの「戻る」と画面の「← もどる」で1つ前の画面へ戻れるようにする（2026-09-23）。
-  // 2段目と やりかた の画面で履歴を1つ積み、戻る操作は history.back() にそろえる
   function goMenu2() {
     history.pushState({ nkStep: 2 }, '');
     renderMenu(2);
@@ -428,11 +359,8 @@
     history.pushState({ nkStep: 'ref' }, '');
     renderReference();
   }
-  // プレイも履歴に1つ積む。プレイ・けっか から戻るときは直前の画面へ
-  // 「メニューに もどる」は、むずかしさ・やりかた の画面をとばして メニューの1段目へ（2026-09-23）。
-  // 履歴は [1段目, 2段目 か やりかた, プレイ] と積んであるので2つ戻る
-  // さくらんぼざん専用アプリは2段目が無く、履歴は [1段目, プレイ] なので1つ戻る。
-  // どこから始めたかを覚えておき、戻る数を合わせる（2つ戻るとページの外へ出てしまう。2026-09-28）
+  // プレイ・けっか から「メニューに もどる」ときは、2段目・やりかた の画面をとばして 1段目へ。
+  // どこから始めたかを覚えておき、戻る数を合わせる（戻りすぎるとページの外へ出てしまう。2026-09-28）
   let playFrom = null;
   function backFromPlay() {
     if (history.state && history.state.nkStep === 'play') history.go(playFrom === 2 || playFrom === 'ref' ? -2 : -1);
@@ -448,11 +376,10 @@
   function renderMenu(step, keep) {
     NkModal.close();
     session = null;
-    // 引数なし＝いまの段のまま描きなおす。ボタンから呼ばれた（イベントが来た）ときは1段目へ
+    // 引数なし＝いまの段のまま描きなおす
     if (step === 2) menuStep = 2;
     else if (step !== undefined) menuStep = 1;
-    // むずかしさの画面に来たときは何も選んでいない状態から始める（2026-09-27。かんじ修行などと同じ）。
-    // 前の選択や初期値が「選択ずみ」で出ていると、押していないのに選ばれて見えるため
+    // むずかしさの画面に来たときは何も選んでいない状態から始める（2026-09-27。かんじ修行などと同じ）
     if (step === 2 && !keep) selection.diffId = null;
     app.innerHTML = '';
     if (menuStep === 2) renderMenuStep2(); else renderMenuStep1();
@@ -466,16 +393,18 @@
 
     // しゅるいは押したら次の画面へ進む
     // さくらんぼざん専用：もんだい を押したら そのまま始める（2段目は無い）
-    const kinds = group(SAKURANBO ? 'もんだいを えらぼう' : 'けいさんの しゅるい', MODES, 'modeId', (m) => ({
+    const kinds = group('もんだいを えらぼう', MODES, 'modeId', (m) => ({
       label: m.name,
-      note: SAKURANBO ? m.note : (m.ready ? null : 'じゅんびちゅう'),
+      note: m.note,
       disabled: !m.ready
-    }), null, SAKURANBO ? () => { selection.diffId = 'one'; startSession(); } : goMenu2);
+    }), null, SAKURANBO ? startSession : goMenu2);
     // さくらんぼざんの やりかた（リファレンス）は、しゅるいの下にテキストリンクで置く（2026-09-23 ボタンから変更）
-    const refLink = el('button', 'sa-ref-link', 'さくらんぼざんの やりかた →');
-    refLink.type = 'button';
-    refLink.addEventListener('click', openReference);
-    kinds.appendChild(refLink);
+    if (SAKURANBO) {
+      const refLink = el('button', 'sa-ref-link', 'さくらんぼざんの やりかた →');
+      refLink.type = 'button';
+      refLink.addEventListener('click', openReference);
+      kinds.appendChild(refLink);
+    }
     app.appendChild(kinds);
 
     app.appendChild(group('あそびかた', PLAYSTYLES, 'styleId', (s) => ({
@@ -496,15 +425,15 @@
     app.appendChild(reset);
   }
 
+  // さんすうの2段目：えらんだ形で出せる むずかしさ を やさしい順に縦1列＋スタート
   function renderMenuStep2() {
     const chosenMode = findMode(selection.modeId);
     const chosenStyle = findStyle(selection.styleId);
-    app.appendChild(el('p', 'sa-step-chosen', chosenMode.name + '・' + chosenStyle.name));
+    app.appendChild(el('p', 'sa-step-chosen', chosenMode.name + '（' + chosenMode.note.replace(/（.*$/, '') + '）・' + chosenStyle.name));
 
-    // むずかしさは やさしい順に縦1列で並べ、上から下へ むずかしくなるのが分かるようにする（2026-09-23）
-    const diffs = group(SAKURANBO ? 'かず' : 'むずかしさ', DIFFS, 'diffId', (d) => ({
+    const diffs = group('むずかしさ', DIFFS.filter((d) => chosenMode.levels.indexOf(d.id) !== -1), 'diffId', (d) => ({
       label: d.name,
-      note: chosenMode.diffNote(d)
+      note: chosenMode.diffNote[d.id]
     }), null, () => renderMenu(2, true));
     diffs.classList.add('sa-group-diff');
     app.appendChild(diffs);
@@ -518,7 +447,7 @@
     if (!selection.diffId) start.disabled = true;
     app.appendChild(start);
 
-    const back = el('button', 'sa-step-back', SAKURANBO ? '← わけかたに もどる' : '← けいさんの しゅるいに もどる');
+    const back = el('button', 'sa-step-back', '← もんだいの かたちに もどる');
     back.type = 'button';
     back.addEventListener('click', () => history.back());
     app.appendChild(back);
@@ -641,9 +570,7 @@
     const tryBtn = el('button', 'sa-btn sa-btn-primary', '🍒 やってみる');
     tryBtn.type = 'button';
     tryBtn.addEventListener('click', () => {
-      selection.modeId = SAKURANBO ? 'one-ushiro' : 'sakuranbo';
-      // むずかしさ を選ぶ前に来ると diffId が空なので、いちばん やさしい段で始める
-      if (!findDiff(selection.diffId)) selection.diffId = SAKURANBO ? 'one' : 's';
+      selection.modeId = 'one-ushiro';
       startSession();
     });
     actions.appendChild(tryBtn);
@@ -740,9 +667,9 @@
     // 選択中のモード表示（もどるは一番下に配置）＋COMBOバッジ
     const head = el('div', 'sa-play-head');
     // さくらんぼざん専用アプリには むずかしさ が無いので、もんだいの形（うしろの すうじを わける 等）を出す
-    head.appendChild(el('span', 'sa-play-mode', SAKURANBO
-      ? s.mode.name + '（' + s.mode.note.replace(/（.*$/, '') + '）・' + s.style.name
-      : s.mode.name + '・' + s.diff.name + '・' + s.style.name));
+    // もんだいの形（うしろの すうじを わける／2けた ＋ 1けた 等）と、さんすうは むずかしさ も出す
+    head.appendChild(el('span', 'sa-play-mode', s.mode.name + '（' + s.mode.note.replace(/（.*$/, '') + '）・' +
+      (SAKURANBO ? '' : s.diff.name + '・') + s.style.name));
     app.appendChild(head);
 
     app.appendChild(progressBar());
