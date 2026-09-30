@@ -72,3 +72,28 @@
   .apps-tabs-inner { justify-content: center; gap: 2px; }
   .apps-tab { padding: 11px 10px 9px; }
 }
+
+/* 01 こども・おうち向け（2026-09-30）
+   こども向けと親子向けを小見出しで分ける。こども向けの8本は、修行アプリの中の
+   「しゅぎょう いちらん」と同じバナー絵（/assets/images/ninja/nk-link-*.webp・960x380・角が透明）を使う。
+   アプリの中と同じ濃い下地に置き、絵の比率のまま見せる */
+.apps-subhead {
+  margin: 0 0 14px;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--tp-text);
+}
+.apps-subhead span {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--tp-text2);
+}
+.tools-grid + .apps-subhead { margin-top: 40px; }
+.tool-thumb.is-banner {
+  aspect-ratio: auto;
+  padding: 14px 14px 12px;
+  background: linear-gradient(160deg, #1d2d36, #101a20);
+}
+.tool-thumb.is-banner img { height: auto; object-fit: contain; }
