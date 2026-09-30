@@ -190,6 +190,13 @@ body{
 /* 英語の 文字・単語は 大きく、読みやすい 欧文で */
 .pn-q-word{font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;font-size:56px;letter-spacing:.1em}
 
+/* つなげて よむ：文字の下に その音（l・o・g の下に ル・オ・グ） */
+.pn-blend{display:flex;justify-content:center;align-items:flex-start;gap:.3em;letter-spacing:0}
+.pn-blend-cell{display:flex;flex-direction:column;align-items:center;line-height:1.1}
+.pn-blend-oto{font-size:.42em;font-weight:800;margin-top:.25em;opacity:.85;
+  font-family:'M PLUS 1p','Hiragino Sans',sans-serif}
+.pn-blend-dash{opacity:.6;line-height:1.1}
+
 /* こたえあわせの ボタン（音を きく／つぎへ） */
 .pn-a-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 

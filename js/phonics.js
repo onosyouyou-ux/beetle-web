@@ -98,6 +98,11 @@
   function buildTsunage() {
     return pick(D.cvc, QUESTIONS).map(function (x) {
       var yomi = D.yomi[x.w];
+      // 文字の下に その音を 書く（l・o・g の下に ル・オ・グ）。音を つなげて 読みを えらぶ 練習にする
+      var sounds = x.w.split('').map(function (c) {
+        var hit = D.letters.filter(function (y) { return y.l === c; })[0];
+        return { l: c, oto: hit ? hit.oto : '' };
+      });
       return {
         type: 'tsunage',
         show: x.w.split('').join(' - '),
@@ -105,10 +110,8 @@
         word: yomi,
         head: x.w + '（' + yomi + '）',
         cat: 'つなげて よむ',
-        hint: x.w.split('').map(function (c) {
-          var hit = D.letters.filter(function (y) { return y.l === c; })[0];
-          return hit ? hit.oto : c;
-        }).join('・') + ' を つなげて「' + yomi + '」。' + x.w + ' は「' + x.ja + '」。',
+        sounds: sounds,
+        hint: sounds.map(function (x) { return x.oto; }).join('・') + ' を つなげて「' + yomi + '」。' + x.w + ' は「' + x.ja + '」。',
         choices: shuffle(uniq([x.w].concat(x.near.slice(0, 3)).map(function (w) { return D.yomi[w]; }))),
       };
     });
@@ -195,7 +198,12 @@
         '<div class="pn-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok, MODES[state.mode].label) + '</div>' +
         '<div class="pn-q">' +
           '<p class="pn-q-lead">' + esc(questionLead(q)) + '</p>' +
-          '<p class="pn-q-word">' + esc(q.show) + '</p>' +
+          (q.sounds
+            ? '<p class="pn-q-word pn-blend" aria-label="' + esc(q.show) + '">' + q.sounds.map(function (x) {
+                return '<span class="pn-blend-cell" aria-hidden="true"><span class="pn-blend-l">' + esc(x.l) + '</span>' +
+                  '<span class="pn-blend-oto">' + esc(x.oto) + '</span></span>';
+              }).join('<span class="pn-blend-dash" aria-hidden="true">-</span>') + '</p>'
+            : '<p class="pn-q-word">' + esc(q.show) + '</p>') +
         '</div>' +
         '<div class="pn-choices">' +
           q.choices.map(function (c) {
