@@ -94,19 +94,22 @@
   }
 
   // 2. つなげて よむ：c - a - t を つなげると？
+  // 選択肢は つづりではなく 読み（カタカナ）。つづりだと 同じ文字の並びを さがすだけで 当たるため（2026-09-30）
   function buildTsunage() {
     return pick(D.cvc, QUESTIONS).map(function (x) {
+      var yomi = D.yomi[x.w];
       return {
         type: 'tsunage',
         show: x.w.split('').join(' - '),
         speak: x.w,
-        word: x.w,
+        word: yomi,
+        head: x.w + '（' + yomi + '）',
         cat: 'つなげて よむ',
         hint: x.w.split('').map(function (c) {
           var hit = D.letters.filter(function (y) { return y.l === c; })[0];
           return hit ? hit.oto : c;
-        }).join('・') + ' を つなげて「' + x.w + '」（' + x.ja + '）。',
-        choices: shuffle(uniq([x.w].concat(x.near.slice(0, 3)))),
+        }).join('・') + ' を つなげて「' + yomi + '」。' + x.w + ' は「' + x.ja + '」。',
+        choices: shuffle(uniq([x.w].concat(x.near.slice(0, 3)).map(function (w) { return D.yomi[w]; }))),
       };
     });
   }
@@ -238,7 +241,7 @@
     box.className = 'pn-answer is-on' + (ok ? ' is-ok' : ' is-ng');
     box.innerHTML =
       '<div class="nk-a-body">' +
-      '<p class="pn-a-head">' + (ok ? 'せいかい！' : '正解は！') + '　<b>' + esc(q.word) + '</b></p>' +
+      '<p class="pn-a-head">' + (ok ? 'せいかい！' : '正解は！') + '　<b>' + esc(q.head || q.word) + '</b></p>' +
       // しゅぎょう名の札は出さない。盤面の見出しと同じ文字で、説明を下に押し出すだけだったため（2026-09-27）
       '<p class="pn-a-why">' + esc(q.hint) + '</p>' +
       '</div>' +
