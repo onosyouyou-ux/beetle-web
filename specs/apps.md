@@ -17,7 +17,10 @@ required_selectors: ["#site-header", "#site-footer", ".brand-hero", ".apps-tabs"
 - **レイアウト型**: Reference系に準拠。`brand-hero` ＋ `.section` ＋ `.tools-grid`。
   カードとグリッドは `/css/test-tools.css` を流用し、差分だけ `/css/apps.css` に持つ
 - **構成（4セクション）**:
-  - `#kids` 01 こども・おうち向けアプリ（とけい・かんじ・カタカナ・ローマ字・フォニックスの修行5本＋さんすう＋えいご）
+  - `#kids` 01 こども・おうち向けアプリ。小見出し（`.apps-subhead`）で2つに分ける（2026-09-30）
+    - **こども向けアプリ**：修行シリーズ8本（さんすう・カタカナ・かんじ・とけい・フォニックス・ローマ字・さくらんぼざん・かけざん）。
+      並びは修行アプリの中の「しゅぎょう いちらん」（`js/ninja-links.js` の `ORDER`）と同じ
+    - **親子向けアプリ**：えいごよんで！（親が教科書を撮って読み上げるアプリなので、こども向けと分ける）
   - `#teacher` 02 先生・おうちのかた向けアプリ（学級通信・所見・席替え・班分け・ルビメーカー）
   - `#qa-apps` 03 検証ツール（操作して使う。bug-checker ほか）
   - `#qa-ref` 04 検証ツール（読んで参照する。TESTパターン集ほか）
@@ -29,6 +32,9 @@ required_selectors: ["#site-header", "#site-footer", ".brand-hero", ".apps-tabs"
 - **カード末尾は「詳しく見る →」**（[_common.md](_common.md) のカードルール）。バッジは使わない
 - **サムネイル**（2026-09-12・29本すべてに入っている）:
   - 01・02の教育系12本 → `assets/images/edu-thumbs/`。`edu-tools.html` と**同じ画像・同じalt**を使う
+    - **例外：こども向けの修行8本は `assets/images/ninja/nk-link-*.webp`（アプリの中のバナー絵）**。
+      `.tool-thumb.is-banner` で濃い下地に絵の比率（960x380）のまま置く。
+      edu-thumbs の絵は明るい絵と暗い絵が混ざり、並べると まだらに見えたため（2026-09-30）
   - 03・04のQA系17本 → `assets/images/qa-thumbs/`。**既存のヒーロー画像から16:9で切り出した**もの
     （元は `qa-hero-banner.jpg` と `bug-checker-lp/` の7枚。新規生成はしていない）。640x360・JPG
   - 切り出しは PowerShell の System.Drawing（WSLにPILは無い）。同じ絵を2本で使い回さない
