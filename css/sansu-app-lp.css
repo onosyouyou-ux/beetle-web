@@ -544,6 +544,8 @@ img { max-width: 100%; height: auto; }
   font-weight: 800;
   box-shadow: 0 3px 8px rgba(33, 28, 75, .08);
 }
+/* 札が記号1字ではなく ことば（「1けた」「2 と 1」）のとき。正方形のままだと折り返して はみ出す（さくらんぼざんLP。2026-09-30） */
+.slp-step-art.is-select.is-words i { width: auto; min-width: 29px; height: 30px; padding: 0 10px; white-space: nowrap; font-size: 14px; }
 .slp-step-art.is-question { color: var(--sl-ink); font-size: 19px; font-weight: 800; }
 .slp-step-art.is-question i { color: var(--sl-purple); font-size: 28px; font-style: normal; }
 .slp-step-art.is-rocket { gap: 2px; overflow: hidden; }
