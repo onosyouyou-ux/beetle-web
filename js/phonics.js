@@ -94,19 +94,25 @@
   }
 
   // 2. つなげて よむ：c - a - t を つなげると？
+  // 選択肢は つづりではなく 読み（カタカナ）。つづりだと 同じ文字の並びを さがすだけで 当たるため（2026-09-30）
   function buildTsunage() {
     return pick(D.cvc, QUESTIONS).map(function (x) {
+      var yomi = D.yomi[x.w];
+      // 文字の下に その音を 書く（l・o・g の下に ル・オ・グ）。音を つなげて 読みを えらぶ 練習にする
+      var sounds = x.w.split('').map(function (c) {
+        var hit = D.letters.filter(function (y) { return y.l === c; })[0];
+        return { l: c, oto: hit ? hit.oto : '' };
+      });
       return {
         type: 'tsunage',
         show: x.w.split('').join(' - '),
         speak: x.w,
-        word: x.w,
+        word: yomi,
+        head: x.w + '（' + yomi + '）',
         cat: 'つなげて よむ',
-        hint: x.w.split('').map(function (c) {
-          var hit = D.letters.filter(function (y) { return y.l === c; })[0];
-          return hit ? hit.oto : c;
-        }).join('・') + ' を つなげて「' + x.w + '」（' + x.ja + '）。',
-        choices: shuffle(uniq([x.w].concat(x.near.slice(0, 3)))),
+        sounds: sounds,
+        hint: sounds.map(function (x) { return x.oto; }).join('・') + ' を つなげて「' + yomi + '」。' + x.w + ' は「' + x.ja + '」。',
+        choices: shuffle(uniq([x.w].concat(x.near.slice(0, 3)).map(function (w) { return D.yomi[w]; }))),
       };
     });
   }
@@ -192,7 +198,12 @@
         '<div class="pn-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok, MODES[state.mode].label) + '</div>' +
         '<div class="pn-q">' +
           '<p class="pn-q-lead">' + esc(questionLead(q)) + '</p>' +
-          '<p class="pn-q-word">' + esc(q.show) + '</p>' +
+          (q.sounds
+            ? '<p class="pn-q-word pn-blend" aria-label="' + esc(q.show) + '">' + q.sounds.map(function (x) {
+                return '<span class="pn-blend-cell" aria-hidden="true"><span class="pn-blend-l">' + esc(x.l) + '</span>' +
+                  '<span class="pn-blend-oto">' + esc(x.oto) + '</span></span>';
+              }).join('<span class="pn-blend-dash" aria-hidden="true">-</span>') + '</p>'
+            : '<p class="pn-q-word">' + esc(q.show) + '</p>') +
         '</div>' +
         '<div class="pn-choices">' +
           q.choices.map(function (c) {
@@ -238,7 +249,7 @@
     box.className = 'pn-answer is-on' + (ok ? ' is-ok' : ' is-ng');
     box.innerHTML =
       '<div class="nk-a-body">' +
-      '<p class="pn-a-head">' + (ok ? 'せいかい！' : '正解は！') + '　<b>' + esc(q.word) + '</b></p>' +
+      '<p class="pn-a-head">' + (ok ? 'せいかい！' : '正解は！') + '　<b>' + esc(q.head || q.word) + '</b></p>' +
       // しゅぎょう名の札は出さない。盤面の見出しと同じ文字で、説明を下に押し出すだけだったため（2026-09-27）
       '<p class="pn-a-why">' + esc(q.hint) + '</p>' +
       '</div>' +
