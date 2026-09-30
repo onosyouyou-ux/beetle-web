@@ -95,25 +95,29 @@
     return results;
   }
 
-  /* 見せる用のローマ字（style: 'kunrei' か 'hepburn'） */
-  function render(kana, style) {
+  /* 見せる用のローマ字（style: 'kunrei' か 'hepburn'）。
+     かな1つぶんずつの かたまり（shinbun → shi・n・bu・n）で返す。
+     「よむ」の問題は この かたまりごとに 下線を引き、どこまでが 1つの かな かを 見せる（2026-09-30） */
+  function renderParts(kana, style) {
     var mora = toMora(kana);
-    var out = '';
+    var out = [];
     for (var i = 0; i < mora.length; i++) {
       var m = mora[i];
       if (m === 'っ') {
         var nextRomas = D.mora[mora[i + 1]] || [''];
-        out += pickStyle(nextRomas, style).charAt(0);
+        out.push(pickStyle(nextRomas, style).charAt(0));
       } else if (m === 'ん') {
         var afterRomas = D.mora[mora[i + 1]] || [];
         var needsMark = afterRomas.some(function (r) { return VOWEL_HEAD.indexOf(r.charAt(0)) >= 0; });
-        out += needsMark ? "n'" : 'n';
+        out.push(needsMark ? "n'" : 'n');
       } else {
-        out += pickStyle(D.mora[m] || [''], style);
+        out.push(pickStyle(D.mora[m] || [''], style));
       }
     }
     return out;
   }
+
+  function render(kana, style) { return renderParts(kana, style).join(''); }
 
   /* mora の配列は 先頭がヘボン式（いま習う形）、2つ目以降が訓令式など まえの書き方 */
   function pickStyle(variants, style) {
@@ -130,6 +134,7 @@
       return {
         type: 'yomu',
         show: render(x.k, style),
+        parts: renderParts(x.k, style),
         word: x.k,
         hint: x.hint,
         cat: style === 'hepburn' ? 'ヘボンしき（いま がっこうで ならう かきかた）' : 'くんれいしき（まえの きょうかしょの かきかた）',
@@ -300,7 +305,10 @@
         '<div class="rj-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok, MODES[state.mode].label) + '</div>' +
         '<div class="rj-q">' +
           '<p class="rj-q-lead">' + esc(q.lead || questionLead(q)) + '</p>' +
-          '<p class="rj-q-word' + (q.type === 'futatsu' ? ' is-big' : '') + '">' + esc(q.show) + '</p>' +
+          '<p class="rj-q-word' + (q.type === 'futatsu' ? ' is-big' : '') + '"' +
+            (q.parts ? ' aria-label="' + esc(q.show) + '">' + q.parts.map(function (p) {
+              return '<span class="rj-mora" aria-hidden="true">' + esc(p) + '</span>';
+            }).join('') : '>' + esc(q.show)) + '</p>' +
           // 「キーボードで うつ」のヒントは置かない（2026-09-27）。押すと答えがそのまま出るだけで、
           // 問題の欄も縦に伸びて見出しと ことば が重なっていた
         '</div>' +
