@@ -22,6 +22,14 @@
     btn.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') toggle(e);
     });
+    // バナー絵のカード（apps.html のこども向け）は、▼ではなく「せつめい」の文字リンクをバナーの下に出す。
+    // 置き場所は CSS の grid で決めるので、ここではカード直下に足すだけ（2026-10-01）
+    if (card.querySelector('.tool-thumb.is-banner')) {
+      btn.classList.add('is-text');
+      btn.textContent = 'せつめい';
+      card.appendChild(btn);
+      return;
+    }
     top.appendChild(btn);
   });
 })();
