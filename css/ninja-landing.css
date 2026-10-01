@@ -460,3 +460,9 @@ body.ninja-lp-phonics .eal-card-num { display:none; }
 /* アイコンと同じ行に置くぶん、見出しは少し大きくして釣り合いを取る */
 .ninja-landing .eal-grid-3 .eal-card h3 { font-size:17.5px; line-height:1.5; }
 .ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step)>h3 { font-size:15.5px; line-height:1.5; }
+
+/* さくらんぼざんは専用の忍者（さくらんぼを持った子。2026-10-01・#70）。
+   それまでは さんすう の宇宙忍者を借りていた */
+.ninja-lp-sakuranbo .slp-hero-visual {
+  background-image:url('/assets/images/ninja/sakuranbo-hero.webp');
+}
