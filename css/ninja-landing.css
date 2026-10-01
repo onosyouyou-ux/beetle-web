@@ -356,7 +356,7 @@ body.ninja-lp-kuku { --nl-items:url('/assets/images/ninja/items/kuku-items.webp'
 .ninja-landing .eal-grid-3 .eal-card:nth-child(2)::before { background-position:33.333% 50%; }
 .ninja-landing .eal-grid-3 .eal-card:nth-child(3)::before { background-position:66.666% 50%; }
 .ninja-landing .eal-grid-3 .eal-card:nth-child(4)::before { background-position:100% 50%; }
-.ninja-landing .eal-feature-copy .eal-head { text-align:left; margin:0 0 22px; }
+/* 画像つきの節も、見出し（eyebrow・h2・リード）は ほかの節と同じく上の中央に置く（2026-10-01）。左の絵・右のポイント はその下 */
 body.ninja-lp-phonics .eal-card-num { display:none; }
 
 
