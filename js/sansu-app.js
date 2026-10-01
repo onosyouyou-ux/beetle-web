@@ -38,17 +38,21 @@
   }
 
   // ---- むずかしさ ----
-  // さんすう：もんだいの形（1けた＋1けた など）を えらんでから、2段目で むずかしさを えらぶ（2026-09-30 ユーザー決定）。
-  //   ちょうかんたん＝＋1〜5 で こたえが10まで（ひきざんは −1〜5）
-  //   かんたん　　　＝くり上がり（くり下がり）なし
-  //   ふつう　　　　＝くり上がり（くり下がり）あり
-  //   ちょうなんもん＝2けた＋2けた で こたえが3けた
-  // 形ごとに 出せる むずかしさ だけを並べる（MODES の levels）。
+  // さんすう：たしざん・ひきざん を えらんでから、2段目で むずかしさを えらぶ（2026-10-01 ユーザー決定。
+  // それまでの「けたの形6つ → むずかしさ」は 形とむずかしさが入りまじって わかりにくかった）
+  //   ちょうかんたん＝こたえが5まで（ひきざんは 5から ひく）
+  //   かんたん　　　＝こたえが10まで（ひきざんは 10から ひく）
+  //   ふつう　　　　＝くり上がり あり（ひきざんは くり下がり あり）
+  //   むずかしい　　＝2けたと 1けた（くり上がり・くり下がり なし）
+  //   すこしむずかしい＝2けたと 1けた（くり上がり・くり下がり あり）。むずかしい の つぎに置く（2026-10-01 ユーザー指示）
+  //   ちょうなんもん＝2けたどうし
   // さくらんぼざん は むずかしさ の段を持たず、記録のキーに 'one' だけを使う
   const DIFFS = SAKURANBO ? [{ id: 'one', name: '' }] : [
     { id: 'vs', name: 'ちょうかんたん', icon: 'moon' },
     { id: 's', name: 'かんたん', icon: 'ringed-planet' },
     { id: 'm', name: 'ふつう', icon: 'meteor' },
+    { id: 'h', name: 'むずかしい', icon: 'rocket-badge' },
+    { id: 'h2', name: 'すこしむずかしい', icon: 'rocket-title-badge' },
     { id: 'l', name: 'ちょうなんもん', icon: 'black-hole' }
   ];
 
@@ -60,58 +64,48 @@
   // ---- けいさんの しゅるい ----
   // 出題は make() が「答え・選択肢・見た目」まで返す。
   // さくらんぼ算のように4択の作り方が違うモードを足せるようにしてある。
-  // けたの形 × むずかしさ で たしざん・ひきざん を作る（2026-09-30）。
-  //   aDigits・bDigits＝まえ・うしろの数の けた数（1 か 2）
   // かけざん・わりざん・さくらんぼざん は、かけざん修行・さくらんぼざん の アプリに ゆずった
-  const digitRange = (d) => (d === 1 ? [1, 9] : [10, 99]);
 
-  // 条件に合う組み合わせが出るまで引きなおす（どの形・むずかしさでも 数十回で見つかる）
-  function drawPair(aDigits, bDigits, ok) {
-    const [aLo, aHi] = digitRange(aDigits);
-    const [bLo, bHi] = digitRange(bDigits);
+  // 条件に合う組み合わせが出るまで引きなおす（どの むずかしさでも 数十回で見つかる）
+  function drawPair(aLo, aHi, bLo, bHi, ok) {
     for (let guard = 0; guard < 5000; guard++) {
       const a = randInt(aLo, aHi);
       const b = randInt(bLo, bHi);
       if (ok(a, b)) return [a, b];
     }
-    throw new Error('sansu: no problem for ' + aDigits + '/' + bDigits);
+    throw new Error('sansu: no problem for ' + [aLo, aHi, bLo, bHi].join('/'));
   }
 
-  function makeAdd(aDigits, bDigits, level) {
-    const carry = (a, b) => (a % 10) + (b % 10) >= 10;
-    const rule = {
-      vs: (a, b) => b <= 5 && a + b <= 10,
-      s: (a, b) => !carry(a, b) && a + b <= 99,
-      m: (a, b) => carry(a, b) && a + b <= 99,
-      l: (a, b) => a + b >= 100
-    }[level];
-    const [a, b] = drawPair(aDigits, bDigits, rule);
-    const answer = a + b;
-    return {
-      layout: 'plain',
-      prompt: 'こたえは どれ?',
-      text: a + ' + ' + b,
-      answer: answer,
-      options: buildOptions(answer, 0, level === 'vs' ? 10 : level === 'l' ? 198 : aDigits + bDigits > 2 ? 99 : 18)
-    };
-  }
-
+  // むずかしさごとの [まえの数の範囲, うしろの数の範囲, 条件, 選択肢の上限]
+  const ADD_RULES = {
+    vs: [1, 4, 1, 4, (a, b) => a + b <= 5, 10],
+    s: [1, 9, 1, 9, (a, b) => a + b <= 10, 10],
+    m: [2, 9, 2, 9, (a, b) => a + b >= 11, 18],
+    h: [10, 98, 1, 9, (a, b) => (a % 10) + b <= 9, 99],
+    h2: [11, 98, 1, 9, (a, b) => (a % 10) + b >= 10 && a + b <= 99, 99],
+    l: [10, 99, 10, 99, () => true, 198]
+  };
   // こたえが 0 に ならないように、まえの数は うしろの数より 大きくする
-  function makeSub(aDigits, bDigits, level) {
-    const borrow = (a, b) => (a % 10) < (b % 10);
-    const rule = {
-      vs: (a, b) => b <= 5 && a > b,
-      s: (a, b) => a > b && !borrow(a, b),
-      m: (a, b) => a > b && borrow(a, b)
-    }[level];
-    const [a, b] = drawPair(aDigits, bDigits, rule);
-    const answer = a - b;
+  const SUB_RULES = {
+    vs: [2, 5, 1, 4, (a, b) => a > b, 5],
+    s: [2, 10, 1, 9, (a, b) => a > b, 10],
+    m: [11, 18, 2, 9, (a, b) => a % 10 < b && a - b <= 9, 9],
+    h: [10, 99, 1, 9, (a, b) => a % 10 >= b, 99],
+    h2: [11, 99, 1, 9, (a, b) => a % 10 < b, 99],
+    l: [11, 99, 10, 99, (a, b) => a > b, 99]
+  };
+
+  function makeCalc(op, level) {
+    const add = op === 'add';
+    const [aLo, aHi, bLo, bHi, ok, max] = (add ? ADD_RULES : SUB_RULES)[level];
+    const [a, b] = drawPair(aLo, aHi, bLo, bHi, ok);
+    const answer = add ? a + b : a - b;
     return {
       layout: 'plain',
       prompt: 'こたえは どれ?',
-      text: a + ' − ' + b,
+      text: a + (add ? ' + ' : ' − ') + b,
       answer: answer,
-      options: buildOptions(answer, 0, aDigits === 2 ? 99 : 9)
+      options: buildOptions(answer, add ? 2 : 1, max)
     };
   }
 
@@ -213,27 +207,16 @@
     { id: 'mix', name: 'ぜんぶ まぜる', note: '1けた・2けた、まえ・うしろ を まぜて', ready: true, icon: 'cherry',
       make: () => makeCherryPattern(Math.random() < 0.5, Math.random() < 0.5 ? 'front' : 'back') }
   ] : [
-    // さんすう：けたの形で えらぶ（2026-09-30 ユーザー指示。かけざん・わりざん・さくらんぼざん は ぬいた）。
-    // levels＝その形で出せる むずかしさ。diffNote＝むずかしさ の説明（形ごとに 例が変わる）
-    // 並びは 2列のメニューで 左＝たしざん・右＝ひきざん になるよう、たし・ひき を交互に置く
-    { id: 'add-1-1', name: '1けたの たしざん', note: '1けた ＋ 1けた（3 + 4）', ready: true, icon: 'addition',
-      levels: ['vs', 's', 'm'], make: (d) => makeAdd(1, 1, d.id),
-      diffNote: { vs: '＋1〜5 で 10まで（3 + 2）', s: 'くり上がり なし（4 + 3）', m: 'くり上がり あり（8 + 5）' } },
-    { id: 'sub-1-1', name: '1けたの ひきざん', note: '1けた − 1けた（8 − 3）', ready: true, icon: 'subtraction',
-      levels: ['vs', 's'], make: (d) => makeSub(1, 1, d.id),
-      diffNote: { vs: '−1〜5（6 − 2）', s: '1けた どうし（9 − 7）' } },
-    { id: 'add-2-1', name: '2けたと 1けたの たしざん', note: '2けた ＋ 1けた（23 + 5）', ready: true, icon: 'addition',
-      levels: ['s', 'm'], make: (d) => makeAdd(2, 1, d.id),
-      diffNote: { s: 'くり上がり なし（23 + 5）', m: 'くり上がり あり（27 + 6）' } },
-    { id: 'sub-2-1', name: '2けたと 1けたの ひきざん', note: '2けた − 1けた（25 − 3）', ready: true, icon: 'subtraction',
-      levels: ['s', 'm'], make: (d) => makeSub(2, 1, d.id),
-      diffNote: { s: 'くり下がり なし（25 − 3）', m: 'くり下がり あり（23 − 5）' } },
-    { id: 'add-2-2', name: '2けたどうしの たしざん', note: '2けた ＋ 2けた（23 + 45）', ready: true, icon: 'addition',
-      levels: ['s', 'm', 'l'], make: (d) => makeAdd(2, 2, d.id),
-      diffNote: { s: 'くり上がり なし（23 + 45）', m: 'くり上がり あり（38 + 25）', l: 'こたえが 3けた（68 + 57）' } },
-    { id: 'sub-2-2', name: '2けたどうしの ひきざん', note: '2けた − 2けた（56 − 23）', ready: true, icon: 'subtraction',
-      levels: ['s', 'm'], make: (d) => makeSub(2, 2, d.id),
-      diffNote: { s: 'くり下がり なし（56 − 23）', m: 'くり下がり あり（52 − 27）' } }
+    // さんすう：たしざん・ひきざん の2つ（2026-10-01 ユーザー指示）。むずかしさは2段目で えらぶ。
+    // levels＝その しゅるいで出せる むずかしさ。diffNote＝むずかしさ の説明
+    { id: 'add', name: 'たしざん', note: '＋ の けいさん（3 + 4）', ready: true, icon: 'addition',
+      levels: ['vs', 's', 'm', 'h', 'h2', 'l'], make: (d) => makeCalc('add', d.id),
+      diffNote: { vs: 'こたえが 5まで（2 + 3）', s: 'こたえが 10まで（4 + 5）', m: 'くり上がり あり（8 + 5）',
+        h: '2けた ＋ 1けた・くり上がり なし（23 + 5）', h2: '2けた ＋ 1けた・くり上がり あり（27 + 6）', l: '2けた ＋ 2けた（38 + 25）' } },
+    { id: 'sub', name: 'ひきざん', note: '− の けいさん（8 − 3）', ready: true, icon: 'subtraction',
+      levels: ['vs', 's', 'm', 'h', 'h2', 'l'], make: (d) => makeCalc('sub', d.id),
+      diffNote: { vs: '5までの かず から ひく（5 − 2）', s: '10までの かず から ひく（9 − 4）', m: 'くり下がり あり（13 − 6）',
+        h: '2けた − 1けた・くり下がり なし（25 − 3）', h2: '2けた − 1けた・くり下がり あり（23 − 5）', l: '2けた − 2けた（56 − 23）' } }
   ];
 
   // ---- せいせきの保存 ----
@@ -332,7 +315,7 @@
   }
 
   // ---- 画面 ----
-  let selection = { modeId: SAKURANBO ? 'one-ushiro' : 'add-1-1', diffId: SAKURANBO ? 'one' : null, styleId: 'challenge' };
+  let selection = { modeId: SAKURANBO ? 'one-ushiro' : 'add', diffId: SAKURANBO ? 'one' : null, styleId: 'challenge' };
   let session = null;
 
   function el(tag, className, text) {
@@ -429,7 +412,7 @@
   function renderMenuStep2() {
     const chosenMode = findMode(selection.modeId);
     const chosenStyle = findStyle(selection.styleId);
-    app.appendChild(el('p', 'sa-step-chosen', chosenMode.name + '（' + chosenMode.note.replace(/（.*$/, '') + '）・' + chosenStyle.name));
+    app.appendChild(el('p', 'sa-step-chosen', chosenMode.name + '・' + chosenStyle.name));
 
     const diffs = group('むずかしさ', DIFFS.filter((d) => chosenMode.levels.indexOf(d.id) !== -1), 'diffId', (d) => ({
       label: d.name,
@@ -447,7 +430,7 @@
     if (!selection.diffId) start.disabled = true;
     app.appendChild(start);
 
-    const back = el('button', 'sa-step-back', '← もんだいの かたちに もどる');
+    const back = el('button', 'sa-step-back', '← たしざん・ひきざん に もどる');
     back.type = 'button';
     back.addEventListener('click', () => history.back());
     app.appendChild(back);
@@ -668,8 +651,9 @@
     const head = el('div', 'sa-play-head');
     // さくらんぼざん専用アプリには むずかしさ が無いので、もんだいの形（うしろの すうじを わける 等）を出す
     // もんだいの形（うしろの すうじを わける／2けた ＋ 1けた 等）と、さんすうは むずかしさ も出す
-    head.appendChild(el('span', 'sa-play-mode', s.mode.name + '（' + s.mode.note.replace(/（.*$/, '') + '）・' +
-      (SAKURANBO ? '' : s.diff.name + '・') + s.style.name));
+    // さんすうは「たしざん・ふつう」で足りるので、形の説明は さくらんぼざん だけ
+    head.appendChild(el('span', 'sa-play-mode', s.mode.name +
+      (SAKURANBO ? '（' + s.mode.note.replace(/（.*$/, '') + '）・' : '・' + s.diff.name + '・') + s.style.name));
     app.appendChild(head);
 
     app.appendChild(progressBar());
