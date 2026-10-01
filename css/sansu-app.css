@@ -893,9 +893,9 @@ body::after {
 .sa-result-mark.is-ok { color: #f5b400; text-shadow: 0 2px 0 rgba(160, 110, 0, .25); }
 @media (max-width: 400px) { .sa-result-marks { font-size: 24px; } }
 
-/* むずかしさは2列（左上 → 右上 → 左下 … の順に やさしい。2026-10-01 ユーザー指示。それまでは縦1列）。
-   6まい あるので3段になる。スマホでも2列のまま */
-.sa-group-diff .sa-choices { grid-template-columns: 1fr 1fr; gap: 8px; }
+/* むずかしさは2列×3段。左の列を上から ちょうかんたん・かんたん・ふつう、右の列を すこしむずかしい・むずかしい・ちょうなんもん
+   （2026-10-01 ユーザー指示。列ごとに上から下へ やさしい順）。スマホでも2列のまま */
+.sa-group-diff .sa-choices { grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, auto); grid-auto-flow: column; gap: 8px; }
 .sa-group-diff .sa-choice { min-height: 62px; padding-block: 10px 12px; }
 
 /* むずかしさの画面：カードは もんだい えらび と同じ幅（2列ぶん）、スタートは7割の幅で中央に置く */
@@ -904,22 +904,22 @@ body::after {
 .sa-group-diff ~ .sa-start { width: min(100%, max(70%, 340px)); margin-inline: auto; }
 
 /* むずかしさ2列（スマホ）：1まいの幅が170pxほどしかなく、「ちょうかんたん」が3行に折れ、スタートが画面の外に出ていた。
-   絵を隠し、名前は1行で、説明は小さくして3段を1画面に収める（2026-10-01） */
+   天体の絵は小さく、名前は1行で、説明は小さくして3段を1画面に収める（2026-10-01） */
 @media (max-width: 767px) {
   body.ninja-space .sa-group-diff .sa-choices { gap: 6px; }
-  body.ninja-space .sa-group-diff .sa-choice { min-height: 0; padding: 8px 24px 8px 10px; gap: 0; }
-  body.ninja-space .sa-group-diff .sa-choice-icon { display: none; }
-  body.ninja-space .sa-group-diff .sa-choice-label { font-size: 14px; white-space: nowrap; letter-spacing: -.02em; }
+  body.ninja-space .sa-group-diff .sa-choice { min-height: 0; padding: 8px 22px 8px 8px; gap: 6px; }
+  body.ninja-space .sa-group-diff .sa-choice-icon { width: 22px; height: 22px; flex: 0 0 22px; }
+  body.ninja-space .sa-group-diff .sa-choice-label { font-size: 13.5px; white-space: nowrap; letter-spacing: -.03em; }
   body.ninja-space .sa-group-diff .sa-choice-note { font-size: 10.5px; line-height: 1.4; }
   body.ninja-space .sa-group-diff .sa-choice-check { width: 20px; height: 20px; right: 4px; }
 }
-/* 寝かせたスマホ：3段になったので、絵を隠して1まいを低くする（スタートが18pxはみ出していた） */
+/* 寝かせたスマホ：3段になったので、絵を小さくして1まいを低くする（スタートが18pxはみ出していた） */
 @media (orientation: landscape) and (max-height: 500px) {
   body.ninja-space .sa-group-diff .sa-choices { gap: 4px; }
   body.ninja-space .sa-group-diff .sa-choice { min-height: 0; padding-block: 4px 5px; }
   body.ninja-space .sa-group-diff .sa-choice-body { line-height: 1.25; }
   body.ninja-space .sa-step-chosen { margin-bottom: 4px; }
-  body.ninja-space .sa-group-diff .sa-choice-icon { display: none; }
+  body.ninja-space .sa-group-diff .sa-choice-icon { width: 22px; height: 22px; flex: 0 0 22px; }
   body.ninja-space .sa-group-diff .sa-choice-label { font-size: 14px; }
   body.ninja-space .sa-group-diff .sa-choice-note { font-size: 10.5px; }
 }

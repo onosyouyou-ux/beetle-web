@@ -48,11 +48,12 @@
   //   ちょうなんもん＝2けたどうし
   // さくらんぼざん は むずかしさ の段を持たず、記録のキーに 'one' だけを使う
   const DIFFS = SAKURANBO ? [{ id: 'one', name: '' }] : [
-    { id: 'vs', name: 'ちょうかんたん', icon: 'moon' },
-    { id: 's', name: 'かんたん', icon: 'ringed-planet' },
-    { id: 'm', name: 'ふつう', icon: 'meteor' },
-    { id: 'h', name: 'すこしむずかしい', icon: 'rocket-title-badge' },
-    { id: 'h2', name: 'むずかしい', icon: 'rocket-badge' },
+    // アイコンは とことん の旅路の天体（2026-10-01 ユーザー指示）。ちょうなんもん だけ ブラックホールのまま
+    { id: 'vs', name: 'ちょうかんたん', icon: 'route/moon' },
+    { id: 's', name: 'かんたん', icon: 'route/venus' },
+    { id: 'm', name: 'ふつう', icon: 'route/mars' },
+    { id: 'h', name: 'すこしむずかしい', icon: 'route/jupiter' },
+    { id: 'h2', name: 'むずかしい', icon: 'route/saturn' },
     { id: 'l', name: 'ちょうなんもん', icon: 'black-hole' }
   ];
 
@@ -438,7 +439,8 @@
 
   function icon(name, cls) {
     const img = el('img', cls || 'sa-choice-icon');
-    img.src = '/assets/images/sansu/icons/' + name + '.png';
+    // 'route/〇〇' は とことん の天体（/assets/images/sansu/route/）
+    img.src = '/assets/images/sansu/' + (name.indexOf('/') !== -1 ? name : 'icons/' + name) + '.png';
     img.alt = '';
     img.loading = 'lazy';
     return img;
