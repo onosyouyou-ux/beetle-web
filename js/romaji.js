@@ -172,12 +172,13 @@
     while (qs.length < QUESTIONS) {
       shuffle(D.futatsu.slice()).forEach(function (p) {
         if (qs.length >= QUESTIONS) return;
-        var askHepburn = Math.random() < 0.5;
+        // いつも「あたらしい かきかた」を問う（2026-10-01 ユーザー指示）。
+        // まえの かきかた（くんれいしき）を答えさせると、これから使わない形を覚えさせることになるため
         qs.push({
           type: 'futatsu',
           show: p.kana,
-          lead: askHepburn ? 'いま がっこうで ならう かきかた（ヘボンしき）は どっち？' : 'まえの きょうかしょの かきかた（くんれいしき）は どっち？',
-          word: askHepburn ? p.hepburn : p.kunrei,
+          lead: 'あたらしい かきかた（ヘボンしき）は どっち？',
+          word: p.hepburn,
           hint: D.whyTwo.replace('{kunrei}', p.kunrei).replace('{hepburn}', p.hepburn) + '　例：' + p.ex,
           cat: '2とおりの かきかた',
           choices: shuffle([p.hepburn, p.kunrei]),

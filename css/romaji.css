@@ -200,7 +200,8 @@ body{
 .rj-q-word.is-big{font-family:inherit}
 /* かな1つぶんずつ 下線を引く（shi・n・bu・n）。すきまを空けて 線を つなげない */
 .rj-mora{display:inline-block;margin:0 .14em;padding-bottom:.06em;line-height:1.15;
-  border-bottom:.09em solid color-mix(in srgb,currentColor 75%,transparent)}
+  /* 線は黄色（2026-10-01 ユーザー指示。白い字と同じ色だと字の一部に見えて、区切りに見えにくい） */
+  border-bottom:.09em solid #ffd878}
 
 /* キーボードで うつ モード */
 .rj-type{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
@@ -332,4 +333,45 @@ body{
       (min-width:768px) and (max-width:1179px) and (orientation:landscape),
       (orientation:landscape) and (max-height:500px){
   .ninja-kids .rj-quiz>.rj-write-tools{ grid-column:1 / -1; grid-row:3; justify-self:center; margin:0; }
+}
+
+/* かく しゅぎょう は 盤面を縦に積む（2026-10-01 ユーザー指示）。
+   ローマ字は横に長い（jitensha・kyuukyuusha）ので、右カラムでは紙が狭く、字が詰まっていた。
+   「うつ」（:has(.rj-type)・ninja-kids.css）と同じく1カラムにして、問題を上・紙を下に 横いっぱいで置く。
+   ninja-kids.css のほうが後に読まれるので、body を付けて詳細度で勝たせる */
+body.ninja-kids .rj-quiz:has(.rj-write) {
+  grid-template-columns:minmax(0,1fr);
+  grid-template-rows:auto;
+  align-content:start;
+}
+body.ninja-kids .rj-quiz:has(.rj-write)>* { grid-column:1; grid-row:auto; }
+body.ninja-kids .rj-quiz:has(.rj-write)>.rj-q {
+  min-height:0;
+  padding-block:12px;
+}
+body.ninja-kids .rj-quiz:has(.rj-write)>.rj-write { align-self:auto; margin:0; }
+body.ninja-kids .rj-quiz:has(.rj-write)>.rj-write-tools { justify-self:center; margin:0; }
+/* こたえあわせパネル（まるつけの後）は、盤面いっぱいに重ねる（1カラムでは明示の行が1本なので 1 / -1 に戻す） */
+body.ninja-kids .rj-quiz:has(.rj-write)>.rj-answer.is-on { grid-column:1 / -1; grid-row:auto; }
+/* まるつけの後：紙とボタンは畳み、こたえあわせパネルを問題の下に出す（場所だけ残ると窓がスクロールする） */
+body.ninja-kids .rj-quiz:has(.rj-write):has(.rj-answer.is-on)>:is(.rj-write,.rj-write-tools) { display:none; }
+/* 背の低い画面（学校のノートPC・寝かせたスマホ）：問題の帯と紙を低くして、はんてい・まるつけを画面に入れる */
+@media (min-width:768px) and (max-height:700px) {
+  body.ninja-kids .rj-quiz:has(.rj-write)>.rj-q { padding-block:6px; }
+  body.ninja-kids .rj-quiz:has(.rj-write) .rj-q-word { font-size:clamp(28px,7dvh,44px); margin:2px 0 0; }
+  body.ninja-kids:has(.rj-write) { --rj-strip-h:clamp(80px,18dvh,120px); }
+}
+@media (orientation:landscape) and (max-height:500px) {
+  body.ninja-kids .rj-quiz:has(.rj-write)>.rj-q { padding-block:4px; }
+  body.ninja-kids .rj-quiz:has(.rj-write) .rj-q-word { font-size:clamp(22px,8dvh,32px); margin:0; }
+  body.ninja-kids:has(.rj-write) { --rj-strip-h:clamp(56px,17dvh,80px); }
+}
+/* 背の低い画面では、問題の帯の「この ことばを…」と ことば を横1行に並べて帯を低くする（まるつけの後に窓が最大32pxはみ出していた） */
+@media (min-width:768px) and (max-height:700px), (orientation:landscape) and (max-height:500px) {
+  body.ninja-kids .rj-quiz:has(.rj-write)>.rj-q {
+    display:flex; flex-direction:row; align-items:center; justify-content:center; gap:18px; flex-wrap:wrap;
+  }
+  body.ninja-kids .rj-quiz:has(.rj-write)>.rj-q .rj-q-lead { margin:0; }
+  body.ninja-kids .rj-quiz:has(.rj-write) .rj-model { min-height:1.3em; font-size:18px; }
+  body.ninja-kids .rj-quiz:has(.rj-write) :is(.rj-tool,.rj-mark) { padding-block:8px; }
 }
