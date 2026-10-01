@@ -893,12 +893,145 @@ body::after {
 .sa-result-mark.is-ok { color: #f5b400; text-shadow: 0 2px 0 rgba(160, 110, 0, .25); }
 @media (max-width: 400px) { .sa-result-marks { font-size: 24px; } }
 
-/* むずかしさは縦1列（上ほど やさしい）。4まい積むので1まいの高さは少しつめる（2026-09-23） */
-.sa-group-diff .sa-choices { grid-template-columns: 1fr; gap: 8px; }
+/* むずかしさは2列×3段。左の列を上から ちょうかんたん・かんたん・ふつう、右の列を すこしむずかしい・むずかしい・ちょうなんもん
+   （2026-10-01 ユーザー指示。列ごとに上から下へ やさしい順）。スマホでも2列のまま */
+.sa-group-diff .sa-choices { grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, auto); grid-auto-flow: column; gap: 8px; }
 .sa-group-diff .sa-choice { min-height: 62px; padding-block: 10px 12px; }
 
-/* むずかしさの画面：カードは紙面の6割、スタートは7割の幅で中央に置く（2026-09-23）。
-   せまいスマホで細くなりすぎないよう、下限の幅を持たせる */
-.sa-group-diff .sa-choices { width: min(100%, max(60%, 320px)); margin-inline: auto; }
-.sa-group-diff .sa-group-title { width: min(100%, max(60%, 320px)); margin-inline: auto; }
+/* むずかしさの画面：カードは もんだい えらび と同じ幅（2列ぶん）、スタートは7割の幅で中央に置く */
+.sa-group-diff .sa-choices { width: 100%; margin-inline: auto; }
+.sa-group-diff .sa-group-title { width: 100%; margin-inline: auto; }
 .sa-group-diff ~ .sa-start { width: min(100%, max(70%, 340px)); margin-inline: auto; }
+
+/* むずかしさ2列（スマホ）：1まいの幅が170pxほどしかなく、「ちょうかんたん」が3行に折れ、スタートが画面の外に出ていた。
+   天体の絵は小さく、名前は1行で、説明は小さくして3段を1画面に収める（2026-10-01） */
+@media (max-width: 767px) {
+  body.ninja-space .sa-group-diff .sa-choices { gap: 6px; }
+  body.ninja-space .sa-group-diff .sa-choice { min-height: 0; padding: 8px 22px 8px 8px; gap: 6px; }
+  body.ninja-space .sa-group-diff .sa-choice-icon { width: 22px; height: 22px; flex: 0 0 22px; }
+  body.ninja-space .sa-group-diff .sa-choice-label { font-size: 13.5px; white-space: nowrap; letter-spacing: -.03em; }
+  body.ninja-space .sa-group-diff .sa-choice-note { font-size: 10.5px; line-height: 1.4; }
+  body.ninja-space .sa-group-diff .sa-choice-check { width: 20px; height: 20px; right: 4px; }
+}
+/* 寝かせたスマホ：3段になったので、絵を小さくして1まいを低くする（スタートが18pxはみ出していた） */
+@media (orientation: landscape) and (max-height: 500px) {
+  body.ninja-space .sa-group-diff .sa-choices { gap: 4px; }
+  body.ninja-space .sa-group-diff .sa-choice { min-height: 0; padding-block: 4px 5px; }
+  body.ninja-space .sa-group-diff .sa-choice-body { line-height: 1.25; }
+  body.ninja-space .sa-step-chosen { margin-bottom: 4px; }
+  body.ninja-space .sa-group-diff .sa-choice-icon { width: 22px; height: 22px; flex: 0 0 22px; }
+  body.ninja-space .sa-group-diff .sa-choice-label { font-size: 14px; }
+  body.ninja-space .sa-group-diff .sa-choice-note { font-size: 10.5px; }
+}
+
+/* たしざん・ひきざん は 絵つきの大きなカード（2026-10-01・#89）。
+   絵を上に大きく、その下に名前と説明を中央そろえ。とけい修行の「いま なんじ？」と同じ並び */
+.sa-choice.has-art {
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 14px 16px 18px;
+  text-align: center;
+}
+.sa-choice.has-art .sa-choice-body { align-items: center; }
+.sa-choice-art {
+  width: clamp(96px, 22dvh, 180px);
+  height: clamp(96px, 22dvh, 180px);
+  object-fit: contain;
+  filter: drop-shadow(0 6px 8px rgba(30, 20, 70, .25));
+}
+.sa-choice.has-art .sa-choice-label { font-size: 24px; }
+.sa-choice.has-art .sa-choice-check { top: 14px; transform: none; }
+@media (max-width: 767px) {
+  body.ninja-space .sa-choice.has-art { padding: 10px 8px 12px; }
+  body.ninja-space .sa-choice.has-art .sa-choice-label { font-size: 19px; }
+  body.ninja-space .sa-choice.has-art .sa-choice-note { font-size: 11px; }
+}
+/* 寝かせたスマホ・高さの低い画面：絵を左、文字を右にして高さを抑える */
+@media (orientation: landscape) and (max-height: 500px) {
+  body.ninja-space .sa-choice.has-art { flex-direction: row; text-align: left; padding: 6px 12px; gap: 10px; }
+  body.ninja-space .sa-choice.has-art .sa-choice-body { align-items: flex-start; }
+  body.ninja-space .sa-choice-art { width: 72px; height: 72px; }
+  body.ninja-space .sa-choice.has-art .sa-choice-label { font-size: 18px; }
+}
+/* スマホでも たしざん・ひきざん は横に2まい（縦に積むと あそびかた が画面の下に押し出される） */
+@media (max-width: 767px) {
+  body.ninja-space .sa-choices:has(> .sa-choice.has-art) { grid-template-columns: 1fr 1fr; }
+  body.ninja-space .sa-choice-art { width: clamp(84px, 30vw, 130px); height: clamp(84px, 30vw, 130px); }
+  body.ninja-space .sa-choice.has-art .sa-choice-check { top: 6px; right: 6px; width: 22px; height: 22px; }
+}
+/* 説明は ことばの切れ目（空白）で折り返す（「ふやそ／う」のように 途中で切れないように） */
+.sa-choice.has-art .sa-choice-note { word-break: keep-all; overflow-wrap: anywhere; }
+/* 寝かせたスマホは上のスマホ用の絵の大きさより優先して小さくする */
+@media (orientation: landscape) and (max-height: 500px) {
+  body.ninja-space .sa-choice-art { width: 64px; height: 64px; }
+}
+/* 寝かせたスマホ（667x375 など幅767px以下）：あそびかた も横に2つ並べて1画面に収める */
+@media (orientation: landscape) and (max-height: 500px) {
+  body.ninja-space .sa-choices { grid-template-columns: 1fr 1fr; }
+}
+
+/* むずかしさの色分け（2026-10-01 ユーザー指示）：ちょうかんたん＝白 → ちょうなんもん＝紫 に1まいずつ濃くする。
+   1まいの中はグラデーションにせず単色（板の絵・天体の色とぶつかって うるさくなるため）。
+   板は border-image で描いているので、中に薄い色の幕（::before）を multiply で重ね、板の質感は残す。
+   選んだ板（黄色）とマウスをのせた板には塗らない */
+.sa-group-diff .sa-choice { --sa-tint: transparent; }
+.sa-group-diff .sa-choice[data-id="s"] { --sa-tint: #f0ebff; }
+.sa-group-diff .sa-choice[data-id="m"] { --sa-tint: #e2d8ff; }
+.sa-group-diff .sa-choice[data-id="h"] { --sa-tint: #d0c1fb; }
+.sa-group-diff .sa-choice[data-id="h2"] { --sa-tint: #b9a2f3; }
+.sa-group-diff .sa-choice[data-id="l"] { --sa-tint: #7a58cf; }
+.sa-group-diff .sa-choice::before {
+  content: '';
+  position: absolute;
+  inset: 5px 6px 9px;
+  border-radius: 12px;
+  background: var(--sa-tint);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.sa-group-diff .sa-choice > * { position: relative; }
+.sa-group-diff .sa-choice > .sa-choice-check { position: absolute; }
+.sa-group-diff .sa-choice.is-on::before { display: none; }
+@media (hover:hover) {
+  .sa-group-diff .sa-choice:not(.is-disabled):hover::before { display: none; }
+}
+/* ちょうなんもん は 濃い紫なので 文字を白に（選んだとき・マウスをのせたときは 黄色の板なので元の色） */
+.sa-group-diff .sa-choice[data-id="l"]:not(.is-on) { color: #fff; }
+.sa-group-diff .sa-choice[data-id="l"]:not(.is-on) .sa-choice-note { color: #ece6ff; }
+@media (hover:hover) {
+  .sa-group-diff .sa-choice[data-id="l"]:not(.is-disabled):hover { color: #4a3d1a; }
+  .sa-group-diff .sa-choice[data-id="l"]:not(.is-disabled):hover .sa-choice-note { color: #6f6a90; }
+}
+
+/* たしざん・ひきざん のカードは 暗い紺のガラス板（2026-10-01 ユーザー指示：明るい板が2まい並ぶと 宇宙の画面でまぶしい）。
+   上の「さんすう うちゅうたんけん」の帯と同じ調子にして、絵だけを浮かせる。
+   縁の色で たしざん＝金、ひきざん＝水色 に分ける。選んだとき・マウスをのせたときは 縁を光らせる */
+body.ninja-space .sa-choice.has-art {
+  border-image: none;
+  border: 2px solid var(--sa-art-line);
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 50% 38%, var(--sa-art-glow), transparent 62%),
+    linear-gradient(180deg, rgba(40, 34, 96, .92), rgba(20, 18, 56, .94));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), 0 6px 18px rgba(0, 0, 0, .35);
+  color: #fff;
+}
+body.ninja-space .sa-choice.has-art[data-id="add"] { --sa-art-line: #e8b93a; --sa-art-glow: rgba(255, 196, 64, .22); }
+body.ninja-space .sa-choice.has-art[data-id="sub"] { --sa-art-line: #5fb4f0; --sa-art-glow: rgba(96, 180, 255, .22); }
+body.ninja-space .sa-choice.has-art .sa-choice-note { color: #d9d3ff; }
+body.ninja-space .sa-choice.has-art.is-on {
+  border-image: none;
+  color: #fff;
+  box-shadow: 0 0 0 3px var(--sa-art-line), 0 6px 18px rgba(0, 0, 0, .35);
+}
+@media (hover:hover) {
+  body.ninja-space .sa-choice.has-art:not(.is-disabled):hover {
+    border-image: none;
+    color: #fff;
+    box-shadow: 0 0 0 3px var(--sa-art-line), 0 0 24px var(--sa-art-glow), 0 6px 18px rgba(0, 0, 0, .35);
+  }
+}
+/* 紫が濃くなる板では、説明の灰色が沈むので 濃いめの紫に */
+.sa-group-diff .sa-choice[data-id="h"]:not(.is-on) .sa-choice-note,
+.sa-group-diff .sa-choice[data-id="h2"]:not(.is-on) .sa-choice-note { color: #3f3470; }

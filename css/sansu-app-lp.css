@@ -262,6 +262,8 @@ img { max-width: 100%; height: auto; }
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 14px;
 }
+/* さんすう は むずかしさ6つ（2026-10-01）。5列だと1枚あまるので3列×2段 */
+.slp-calc-grid.is-six { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .slp-calc-card {
   --card-color: var(--sl-purple);
   --card-soft: #f3efff;
@@ -544,6 +546,8 @@ img { max-width: 100%; height: auto; }
   font-weight: 800;
   box-shadow: 0 3px 8px rgba(33, 28, 75, .08);
 }
+/* 札が記号1字ではなく ことば（「1けた」「2 と 1」）のとき。正方形のままだと折り返して はみ出す（さくらんぼざんLP。2026-09-30） */
+.slp-step-art.is-select.is-words i { width: auto; min-width: 29px; height: 30px; padding: 0 10px; white-space: nowrap; font-size: 14px; }
 .slp-step-art.is-question { color: var(--sl-ink); font-size: 19px; font-weight: 800; }
 .slp-step-art.is-question i { color: var(--sl-purple); font-size: 28px; font-style: normal; }
 .slp-step-art.is-rocket { gap: 2px; overflow: hidden; }
@@ -636,6 +640,7 @@ img { max-width: 100%; height: auto; }
   .slp-proof-item:nth-child(2) { border-right: 0; }
   .slp-proof-item:nth-child(-n+2) { border-bottom: 1px solid var(--sl-line); }
   .slp-calc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .slp-calc-grid.is-six { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .slp-level-callout { grid-template-columns: auto 1fr; }
   .slp-level-callout .slp-text-link { grid-column: 1 / -1; justify-self: stretch; justify-content: center; }
   .slp-play-grid { grid-template-columns: 1fr; }
@@ -665,6 +670,7 @@ img { max-width: 100%; height: auto; }
   .slp-cherry-copy h2 { font-size: 27px; }
   .slp-head p { font-size: 13px; line-height: 1.8; }
   .slp-calc-grid { grid-template-columns: 1fr; }
+  .slp-calc-grid.is-six { grid-template-columns: 1fr; }
   .slp-calc-card { min-height: 0; padding: 18px; }
   .slp-calc-icon { height: 78px; margin: 10px 0 14px; }
   .slp-calc-card p { min-height: 0; }

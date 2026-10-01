@@ -356,7 +356,7 @@ body.ninja-lp-kuku { --nl-items:url('/assets/images/ninja/items/kuku-items.webp'
 .ninja-landing .eal-grid-3 .eal-card:nth-child(2)::before { background-position:33.333% 50%; }
 .ninja-landing .eal-grid-3 .eal-card:nth-child(3)::before { background-position:66.666% 50%; }
 .ninja-landing .eal-grid-3 .eal-card:nth-child(4)::before { background-position:100% 50%; }
-.ninja-landing .eal-feature-copy .eal-head { text-align:left; margin:0 0 22px; }
+/* 画像つきの節も、見出し（eyebrow・h2・リード）は ほかの節と同じく上の中央に置く（2026-10-01）。左の絵・右のポイント はその下 */
 body.ninja-lp-phonics .eal-card-num { display:none; }
 
 
@@ -460,3 +460,9 @@ body.ninja-lp-phonics .eal-card-num { display:none; }
 /* アイコンと同じ行に置くぶん、見出しは少し大きくして釣り合いを取る */
 .ninja-landing .eal-grid-3 .eal-card h3 { font-size:17.5px; line-height:1.5; }
 .ninja-kids :is(.tk-step,.kj-step,.kt-step,.rj-step,.pn-step)>h3 { font-size:15.5px; line-height:1.5; }
+
+/* さくらんぼざんは専用の忍者（さくらんぼを持った子。2026-10-01・#70）。
+   それまでは さんすう の宇宙忍者を借りていた */
+.ninja-lp-sakuranbo .slp-hero-visual {
+  background-image:url('/assets/images/ninja/sakuranbo-hero.webp');
+}

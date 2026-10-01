@@ -72,3 +72,79 @@
   .apps-tabs-inner { justify-content: center; gap: 2px; }
   .apps-tab { padding: 11px 10px 9px; }
 }
+
+/* 01 こども・おうち向け（2026-09-30）
+   こども向けと親子向けを小見出しで分ける。こども向けの8本は、修行アプリの中の
+   「しゅぎょう いちらん」と同じバナー絵（/assets/images/ninja/nk-link-*.webp・960x380・角が透明）を使う。
+   絵の比率のまま、カードの幅いっぱいに見せる。下地は敷かない（2026-09-30。濃い帯のぶん絵が小さくなっていた） */
+.apps-subhead {
+  margin: 0 0 14px;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--tp-text);
+}
+.apps-subhead span {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--tp-text2);
+}
+.tools-grid + .apps-subhead { margin-top: 40px; }
+.tool-thumb.is-banner {
+  aspect-ratio: auto;
+  margin: -14px -14px 10px;
+  border-radius: 0;
+  background: none;
+}
+.tool-thumb.is-banner img { height: auto; object-fit: contain; }
+
+/* スマホでは バナーを幅いっぱい → 下に「せつめい ▼」と「やってみる →」の1行（2026-10-01）
+   test-tools.css の「サムネを左104pxに回す」型だとバナーの文字が読めないほど小さくなるため、
+   バナーのカードだけ組み直す。名前はバナーに描いてあるので出さない。
+   「せつめい」は js/tool-card-accordion.js がカード直下に足す */
+@media (max-width: 600px) {
+  .tool-card:has(.tool-thumb.is-banner) {
+    grid-template-columns: 1fr auto;
+    row-gap: 0;
+    padding: 0 0 4px;
+    overflow: hidden;
+  }
+  .tool-card:has(.tool-thumb.is-banner) .tool-thumb.is-banner {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    aspect-ratio: auto;
+    margin: 0;
+    padding: 10px 10px 0;
+    border-radius: 0;
+  }
+  .tool-card:has(.tool-thumb.is-banner) .tool-card-top { display: none; }
+  .tool-card:has(.tool-thumb.is-banner) .tool-desc-toggle.is-text {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 10px 14px;
+    gap: 6px;
+    border-radius: 0;
+    background: none;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--tp-text2);
+  }
+  .tool-card:has(.tool-thumb.is-banner) .tool-desc-toggle.is-text::before { order: 1; }
+  .tool-card:has(.tool-thumb.is-banner) .tool-tag {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: center;
+    margin: 0;
+    padding: 10px 14px;
+  }
+  .tool-card:has(.tool-thumb.is-banner) .tool-desc {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    padding: 0 14px;
+  }
+}

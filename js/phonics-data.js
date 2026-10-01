@@ -11,6 +11,7 @@
    形式:
      letters: { l: 文字, oto: 音のカタカナ近似, name: 文字の名前, ex: 例のことば, ja: その意味 }
      cvc    : { w: 3文字のことば, ja: 意味, near: [まちがえやすい ことば×3] }
+     yomi   : { ことば: 読みのカタカナ }（cvc の w と near を ぜんぶ入れる。つなげて よむ の選択肢に使う）
      mahou  : { w: ことば, yomi: 正しい読み, romaji: ローマ字読みしたときの まちがい, eYomi: さいごのeも読んだ まちがい, ja: 意味 }
    ============================================================ */
 window.PHONICS_DATA = {
@@ -55,20 +56,49 @@ window.PHONICS_DATA = {
     { w: 'big', ja: 'おおきい', near: ['bag', 'bug', 'bit'] },
     { w: 'hat', ja: 'ぼうし',   near: ['hit', 'hot', 'ham'] },
     { w: 'red', ja: 'あかい',   near: ['rod', 'bed', 'rid'] },
-    { w: 'cup', ja: 'コップ',   near: ['cap', 'cop', 'cut'] },
+    { w: 'cup', ja: 'コップ',   near: ['cap', 'cub', 'cut'] },
     { w: 'fox', ja: 'きつね',   near: ['fix', 'box', 'fog'] },
     { w: 'map', ja: 'ちず',     near: ['mop', 'man', 'cap'] },
     { w: 'net', ja: 'あみ',     near: ['not', 'nut', 'met'] },
     { w: 'pig', ja: 'ぶた',     near: ['peg', 'pin', 'big'] },
-    { w: 'run', ja: 'はしる',   near: ['ran', 'rub', 'sun'] },
+    { w: 'run', ja: 'はしる',   near: ['rug', 'rub', 'sun'] },
     { w: 'top', ja: 'いちばん上', near: ['tap', 'tip', 'ton'] },
     { w: 'web', ja: 'くもの巣', near: ['wed', 'wet', 'wig'] },
     { w: 'jam', ja: 'ジャム',   near: ['jab', 'jog', 'ham'] },
     { w: 'kid', ja: 'こども',   near: ['kit', 'lid', 'kin'] },
     { w: 'log', ja: 'まるた',   near: ['leg', 'lot', 'dog'] },
-    { w: 'mud', ja: 'どろ',     near: ['mad', 'mug', 'bud'] },
+    { w: 'mud', ja: 'どろ',     near: ['mid', 'mug', 'bud'] },
     { w: 'bag', ja: 'かばん',   near: ['bug', 'big', 'bad'] },
   ],
+
+  /* ---- つなげて よむ の選択肢に出す 読み（2026-09-30）
+         問題は アルファベット（k - i - d）、選択肢は 読み（キッド／キット／キン／リッド）。
+         つづりを 選ばせると 同じ文字の並びを さがすだけで 当たってしまい、音を つなげる 練習にならなかった。
+         カタカナは a と u の音を 書き分けられないので、読みが 重なる組は near から外す
+         （run と ran＝ラン、mud と mad＝マッド）。cup の near の cop は 読みが「コップ」で、
+         cup の意味（コップ）と 重なって まぎらわしいので cub に かえた ---- */
+  yomi: {
+    cat: 'キャット', cut: 'カット',   cot: 'コット',   cap: 'キャップ',
+    dog: 'ドッグ',   dig: 'ディッグ', dot: 'ドット',   log: 'ログ',
+    pen: 'ペン',     pan: 'パン',     pin: 'ピン',     pet: 'ペット',
+    sun: 'サン',     sit: 'シット',   sat: 'サット',   bun: 'バン',
+    big: 'ビッグ',   bag: 'バッグ',   bug: 'バグ',     bit: 'ビット',
+    hat: 'ハット',   hit: 'ヒット',   hot: 'ホット',   ham: 'ハム',
+    red: 'レッド',   rod: 'ロッド',   bed: 'ベッド',   rid: 'リッド',
+    cup: 'カップ',   cub: 'カブ',
+    fox: 'フォックス', fix: 'フィックス', box: 'ボックス', fog: 'フォッグ',
+    map: 'マップ',   mop: 'モップ',   man: 'マン',
+    net: 'ネット',   not: 'ノット',   nut: 'ナット',   met: 'メット',
+    pig: 'ピッグ',   peg: 'ペッグ',
+    run: 'ラン',     rug: 'ラグ',     rub: 'ラブ',
+    top: 'トップ',   tap: 'タップ',   tip: 'ティップ', ton: 'トン',
+    web: 'ウェブ',   wed: 'ウェッド', wet: 'ウェット', wig: 'ウィッグ',
+    jam: 'ジャム',   jab: 'ジャブ',   jog: 'ジョグ',
+    kid: 'キッド',   kit: 'キット',   lid: 'リッド',   kin: 'キン',
+    leg: 'レッグ',   lot: 'ロット',
+    mud: 'マッド',   mid: 'ミッド',   mug: 'マグ',     bud: 'バッド',
+    bad: 'バッド',
+  },
 
   /* ---- まほうの e（さいごの e は 読まないが、まえの 母音を 名前の 音に かえる）
          romaji には「ローマ字読みしたら こうなる」を 入れる。ここが 日本の子の つまずき ---- */
