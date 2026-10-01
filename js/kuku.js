@@ -229,6 +229,7 @@
     pushPlay();
     var list = buildList(poolOf(state.danId));
     state.session = { list: list, total: list.length, index: 0, correct: 0, locked: false, q: null, missed: [] };
+    if (window.NkTrack) NkTrack('mode_select', { app: 'kuku', mode: state.modeId, level: state.danId });
     nextQuestion();
   }
 
@@ -342,6 +343,7 @@
   function renderResult() {
     var s = state.session;
     app.innerHTML = '';
+    if (window.NkTrack) NkTrack('set_complete', { app: 'kuku', mode: state.modeId, level: state.danId, score: s.correct, total: s.total });
     var wrap = el('div', 'kk-result');
     if (s.correct === s.total) wrap.classList.add('is-perfect');
     var rate = s.correct / s.total;  // じゅんばんは9もんなので、数ではなく割合で星を決める

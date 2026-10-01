@@ -399,6 +399,7 @@
   function start(mode) {
     pushPlay();
     state = { mode: mode, qs: MODES[mode].build(), i: 0, ok: 0, missed: [] };
+    if (window.NkTrack) NkTrack('mode_select', { app: 'katakana', mode: mode, level: 'none' });
     renderQuestion();
   }
 
@@ -505,6 +506,7 @@
 
   function renderResult() {
     var missed = state.missed;
+    if (window.NkTrack) NkTrack('set_complete', { app: 'katakana', mode: state.mode, level: 'none', score: state.ok, total: QUESTIONS });
     root.innerHTML =
       '<div class="kt-result' + (state.ok === QUESTIONS ? ' is-perfect' : '') + '">' +
         '<p class="kt-result-score">' + QUESTIONS + 'もん ちゅう <b>' + state.ok + 'もん</b> せいかい</p>' +

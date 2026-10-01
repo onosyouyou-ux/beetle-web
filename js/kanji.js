@@ -332,7 +332,13 @@
   function startSession() {
     pushPlay();
     state.session = { pool: poolOf(state.gradeId, state.termId), index: 0, correct: 0, locked: false, q: null, missed: [] };
+    if (window.NkTrack) NkTrack('mode_select', { app: 'kanji', mode: state.modeId, level: kanjiLevel() });
     nextQuestion();
+  }
+
+  // GA4 のイベントの level（#97）。学年、学期を しぼったときは 学年:学期
+  function kanjiLevel() {
+    return state.termId && state.termId !== 'all' ? state.gradeId + ':' + state.termId : state.gradeId;
   }
 
   function nextQuestion() {
@@ -602,6 +608,7 @@
   function renderResult() {
     var s = state.session;
     app.innerHTML = '';
+    if (window.NkTrack) NkTrack('set_complete', { app: 'kanji', mode: state.modeId, level: kanjiLevel(), score: s.correct, total: SET_LENGTH });
     var wrap = el('div', 'kj-result');
     // 全問正解のときだけ、お祝いの絵に差し替える（2026-09-03）
     if (s.correct === SET_LENGTH) wrap.classList.add('is-perfect');

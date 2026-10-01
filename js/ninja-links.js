@@ -185,3 +185,17 @@ document.addEventListener('DOMContentLoaded', function () {
     wrap(h2, body, 'is-howto');
   }
 });
+
+/* 修行アプリの GA4 カスタムイベント（2026-10-01・#97）。
+   mode_select … 練習を選んで始めたとき（app・mode・level）
+   set_complete … 1セット終わって けっか を出したとき（app・mode・level・score・total）
+   送るのは アプリ名・練習の種類・むずかしさ・正解数だけ。名前・答えの中身・書いた字は送らない。
+   GA のタグが無いページ・手元の確認・内部の点検（ga-disable）では何も起きない／送られない */
+(function (global) {
+  'use strict';
+  global.NkTrack = function (event, params) {
+    try {
+      if (typeof global.gtag === 'function') global.gtag('event', event, params);
+    } catch (e) { /* 計測の失敗で アプリを止めない */ }
+  };
+})(window);
