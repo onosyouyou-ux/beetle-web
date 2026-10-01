@@ -455,6 +455,7 @@
       const info = describe(item);
       const btn = el('button', 'sa-choice');
       btn.type = 'button';
+      btn.dataset.id = item.id;   // むずかしさの色分け（css の .sa-group-diff [data-id]）に使う
       if (item.icon) btn.appendChild(icon(item.icon));
       if (item.img) {
         btn.classList.add('has-art');

@@ -970,3 +970,68 @@ body::after {
 @media (orientation: landscape) and (max-height: 500px) {
   body.ninja-space .sa-choices { grid-template-columns: 1fr 1fr; }
 }
+
+/* むずかしさの色分け（2026-10-01 ユーザー指示）：ちょうかんたん＝白 → ちょうなんもん＝紫 に1まいずつ濃くする。
+   1まいの中はグラデーションにせず単色（板の絵・天体の色とぶつかって うるさくなるため）。
+   板は border-image で描いているので、中に薄い色の幕（::before）を multiply で重ね、板の質感は残す。
+   選んだ板（黄色）とマウスをのせた板には塗らない */
+.sa-group-diff .sa-choice { --sa-tint: transparent; }
+.sa-group-diff .sa-choice[data-id="s"] { --sa-tint: #f0ebff; }
+.sa-group-diff .sa-choice[data-id="m"] { --sa-tint: #e2d8ff; }
+.sa-group-diff .sa-choice[data-id="h"] { --sa-tint: #d0c1fb; }
+.sa-group-diff .sa-choice[data-id="h2"] { --sa-tint: #b9a2f3; }
+.sa-group-diff .sa-choice[data-id="l"] { --sa-tint: #7a58cf; }
+.sa-group-diff .sa-choice::before {
+  content: '';
+  position: absolute;
+  inset: 5px 6px 9px;
+  border-radius: 12px;
+  background: var(--sa-tint);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.sa-group-diff .sa-choice > * { position: relative; }
+.sa-group-diff .sa-choice > .sa-choice-check { position: absolute; }
+.sa-group-diff .sa-choice.is-on::before { display: none; }
+@media (hover:hover) {
+  .sa-group-diff .sa-choice:not(.is-disabled):hover::before { display: none; }
+}
+/* ちょうなんもん は 濃い紫なので 文字を白に（選んだとき・マウスをのせたときは 黄色の板なので元の色） */
+.sa-group-diff .sa-choice[data-id="l"]:not(.is-on) { color: #fff; }
+.sa-group-diff .sa-choice[data-id="l"]:not(.is-on) .sa-choice-note { color: #ece6ff; }
+@media (hover:hover) {
+  .sa-group-diff .sa-choice[data-id="l"]:not(.is-disabled):hover { color: #4a3d1a; }
+  .sa-group-diff .sa-choice[data-id="l"]:not(.is-disabled):hover .sa-choice-note { color: #6f6a90; }
+}
+
+/* たしざん・ひきざん のカードは 暗い紺のガラス板（2026-10-01 ユーザー指示：明るい板が2まい並ぶと 宇宙の画面でまぶしい）。
+   上の「さんすう うちゅうたんけん」の帯と同じ調子にして、絵だけを浮かせる。
+   縁の色で たしざん＝金、ひきざん＝水色 に分ける。選んだとき・マウスをのせたときは 縁を光らせる */
+body.ninja-space .sa-choice.has-art {
+  border-image: none;
+  border: 2px solid var(--sa-art-line);
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 50% 38%, var(--sa-art-glow), transparent 62%),
+    linear-gradient(180deg, rgba(40, 34, 96, .92), rgba(20, 18, 56, .94));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), 0 6px 18px rgba(0, 0, 0, .35);
+  color: #fff;
+}
+body.ninja-space .sa-choice.has-art[data-id="add"] { --sa-art-line: #e8b93a; --sa-art-glow: rgba(255, 196, 64, .22); }
+body.ninja-space .sa-choice.has-art[data-id="sub"] { --sa-art-line: #5fb4f0; --sa-art-glow: rgba(96, 180, 255, .22); }
+body.ninja-space .sa-choice.has-art .sa-choice-note { color: #d9d3ff; }
+body.ninja-space .sa-choice.has-art.is-on {
+  border-image: none;
+  color: #fff;
+  box-shadow: 0 0 0 3px var(--sa-art-line), 0 6px 18px rgba(0, 0, 0, .35);
+}
+@media (hover:hover) {
+  body.ninja-space .sa-choice.has-art:not(.is-disabled):hover {
+    border-image: none;
+    color: #fff;
+    box-shadow: 0 0 0 3px var(--sa-art-line), 0 0 24px var(--sa-art-glow), 0 6px 18px rgba(0, 0, 0, .35);
+  }
+}
+/* 紫が濃くなる板では、説明の灰色が沈むので 濃いめの紫に */
+.sa-group-diff .sa-choice[data-id="h"]:not(.is-on) .sa-choice-note,
+.sa-group-diff .sa-choice[data-id="h2"]:not(.is-on) .sa-choice-note { color: #3f3470; }
