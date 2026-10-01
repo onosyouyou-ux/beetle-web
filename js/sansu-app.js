@@ -48,11 +48,12 @@
   //   ちょうなんもん＝2けたどうし
   // さくらんぼざん は むずかしさ の段を持たず、記録のキーに 'one' だけを使う
   const DIFFS = SAKURANBO ? [{ id: 'one', name: '' }] : [
-    { id: 'vs', name: 'ちょうかんたん', icon: 'moon' },
-    { id: 's', name: 'かんたん', icon: 'ringed-planet' },
-    { id: 'm', name: 'ふつう', icon: 'meteor' },
-    { id: 'h', name: 'すこしむずかしい', icon: 'rocket-title-badge' },
-    { id: 'h2', name: 'むずかしい', icon: 'rocket-badge' },
+    // アイコンは とことん の旅路の天体（2026-10-01 ユーザー指示）。ちょうなんもん だけ ブラックホールのまま
+    { id: 'vs', name: 'ちょうかんたん', icon: 'route/moon' },
+    { id: 's', name: 'かんたん', icon: 'route/venus' },
+    { id: 'm', name: 'ふつう', icon: 'route/mars' },
+    { id: 'h', name: 'すこしむずかしい', icon: 'route/jupiter' },
+    { id: 'h2', name: 'むずかしい', icon: 'route/saturn' },
     { id: 'l', name: 'ちょうなんもん', icon: 'black-hole' }
   ];
 
@@ -209,11 +210,12 @@
   ] : [
     // さんすう：たしざん・ひきざん の2つ（2026-10-01 ユーザー指示）。むずかしさは2段目で えらぶ。
     // levels＝その しゅるいで出せる むずかしさ。diffNote＝むずかしさ の説明
-    { id: 'add', name: 'たしざん', note: '＋ の けいさん（3 + 4）', ready: true, icon: 'addition',
+    // 絵つきの大きなカード（とけい修行の「いま なんじ？」と同じ作り。絵は #89。2026-10-01）
+    { id: 'add', name: 'たしざん', note: 'ほしを あわせて かずを ふやそう', ready: true, img: '/assets/images/ninja/modes/sansu-tashi.webp',
       levels: ['vs', 's', 'm', 'h', 'h2', 'l'], make: (d) => makeCalc('add', d.id),
       diffNote: { vs: 'こたえが 5まで（2 + 3）', s: 'こたえが 10まで（4 + 5）', m: 'くり上がり あり（8 + 5）',
         h: '2けた ＋ 1けた・くり上がり なし（23 + 5）', h2: '2けた ＋ 1けた・くり上がり あり（27 + 6）', l: '2けた ＋ 2けた（38 + 25）' } },
-    { id: 'sub', name: 'ひきざん', note: '− の けいさん（8 − 3）', ready: true, icon: 'subtraction',
+    { id: 'sub', name: 'ひきざん', note: 'ほしを とって かずを へらそう', ready: true, img: '/assets/images/ninja/modes/sansu-hiki.webp',
       levels: ['vs', 's', 'm', 'h', 'h2', 'l'], make: (d) => makeCalc('sub', d.id),
       diffNote: { vs: '5までの かず から ひく（5 − 2）', s: '10までの かず から ひく（9 − 4）', m: 'くり下がり あり（13 − 6）',
         h: '2けた − 1けた・くり下がり なし（25 − 3）', h2: '2けた − 1けた・くり下がり あり（23 − 5）', l: '2けた − 2けた（56 − 23）' } }
@@ -438,7 +440,8 @@
 
   function icon(name, cls) {
     const img = el('img', cls || 'sa-choice-icon');
-    img.src = '/assets/images/sansu/icons/' + name + '.png';
+    // 'route/〇〇' は とことん の天体（/assets/images/sansu/route/）
+    img.src = '/assets/images/sansu/' + (name.indexOf('/') !== -1 ? name : 'icons/' + name) + '.png';
     img.alt = '';
     img.loading = 'lazy';
     return img;
@@ -453,6 +456,15 @@
       const btn = el('button', 'sa-choice');
       btn.type = 'button';
       if (item.icon) btn.appendChild(icon(item.icon));
+      if (item.img) {
+        btn.classList.add('has-art');
+        const art = el('img', 'sa-choice-art');
+        art.src = item.img;
+        art.alt = '';
+        art.width = 180;
+        art.height = 180;
+        btn.appendChild(art);
+      }
       const body = el('span', 'sa-choice-body');
       body.appendChild(el('span', 'sa-choice-label', info.label));
       if (info.note) body.appendChild(el('span', 'sa-choice-note', info.note));
