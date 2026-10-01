@@ -923,3 +923,50 @@ body::after {
   body.ninja-space .sa-group-diff .sa-choice-label { font-size: 14px; }
   body.ninja-space .sa-group-diff .sa-choice-note { font-size: 10.5px; }
 }
+
+/* たしざん・ひきざん は 絵つきの大きなカード（2026-10-01・#89）。
+   絵を上に大きく、その下に名前と説明を中央そろえ。とけい修行の「いま なんじ？」と同じ並び */
+.sa-choice.has-art {
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 14px 16px 18px;
+  text-align: center;
+}
+.sa-choice.has-art .sa-choice-body { align-items: center; }
+.sa-choice-art {
+  width: clamp(96px, 22dvh, 180px);
+  height: clamp(96px, 22dvh, 180px);
+  object-fit: contain;
+  filter: drop-shadow(0 6px 8px rgba(30, 20, 70, .25));
+}
+.sa-choice.has-art .sa-choice-label { font-size: 24px; }
+.sa-choice.has-art .sa-choice-check { top: 14px; transform: none; }
+@media (max-width: 767px) {
+  body.ninja-space .sa-choice.has-art { padding: 10px 8px 12px; }
+  body.ninja-space .sa-choice.has-art .sa-choice-label { font-size: 19px; }
+  body.ninja-space .sa-choice.has-art .sa-choice-note { font-size: 11px; }
+}
+/* 寝かせたスマホ・高さの低い画面：絵を左、文字を右にして高さを抑える */
+@media (orientation: landscape) and (max-height: 500px) {
+  body.ninja-space .sa-choice.has-art { flex-direction: row; text-align: left; padding: 6px 12px; gap: 10px; }
+  body.ninja-space .sa-choice.has-art .sa-choice-body { align-items: flex-start; }
+  body.ninja-space .sa-choice-art { width: 72px; height: 72px; }
+  body.ninja-space .sa-choice.has-art .sa-choice-label { font-size: 18px; }
+}
+/* スマホでも たしざん・ひきざん は横に2まい（縦に積むと あそびかた が画面の下に押し出される） */
+@media (max-width: 767px) {
+  body.ninja-space .sa-choices:has(> .sa-choice.has-art) { grid-template-columns: 1fr 1fr; }
+  body.ninja-space .sa-choice-art { width: clamp(84px, 30vw, 130px); height: clamp(84px, 30vw, 130px); }
+  body.ninja-space .sa-choice.has-art .sa-choice-check { top: 6px; right: 6px; width: 22px; height: 22px; }
+}
+/* 説明は ことばの切れ目（空白）で折り返す（「ふやそ／う」のように 途中で切れないように） */
+.sa-choice.has-art .sa-choice-note { word-break: keep-all; overflow-wrap: anywhere; }
+/* 寝かせたスマホは上のスマホ用の絵の大きさより優先して小さくする */
+@media (orientation: landscape) and (max-height: 500px) {
+  body.ninja-space .sa-choice-art { width: 64px; height: 64px; }
+}
+/* 寝かせたスマホ（667x375 など幅767px以下）：あそびかた も横に2つ並べて1画面に収める */
+@media (orientation: landscape) and (max-height: 500px) {
+  body.ninja-space .sa-choices { grid-template-columns: 1fr 1fr; }
+}
