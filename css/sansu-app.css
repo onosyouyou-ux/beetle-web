@@ -1004,23 +1004,33 @@ body::after {
   .sa-group-diff .sa-choice[data-id="l"]:not(.is-disabled):hover .sa-choice-note { color: #6f6a90; }
 }
 
-/* たしざん・ひきざん のカードも うすく色分け（2026-10-01）。ランディングのカードと同じ
-   たしざん＝あたたかい黄色、ひきざん＝水色。しくみは むずかしさ と同じ（板の上に multiply の幕） */
-.sa-choice.has-art[data-id="add"] { --sa-tint: #ffefc2; }
-.sa-choice.has-art[data-id="sub"] { --sa-tint: #d6e9ff; }
-.sa-choice.has-art::before {
-  content: '';
-  position: absolute;
-  inset: 5px 6px 9px;
-  border-radius: 12px;
-  background: var(--sa-tint, transparent);
-  mix-blend-mode: multiply;
-  pointer-events: none;
+/* たしざん・ひきざん のカードは 暗い紺のガラス板（2026-10-01 ユーザー指示：明るい板が2まい並ぶと 宇宙の画面でまぶしい）。
+   上の「さんすう うちゅうたんけん」の帯と同じ調子にして、絵だけを浮かせる。
+   縁の色で たしざん＝金、ひきざん＝水色 に分ける。選んだとき・マウスをのせたときは 縁を光らせる */
+body.ninja-space .sa-choice.has-art {
+  border-image: none;
+  border: 2px solid var(--sa-art-line);
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 50% 38%, var(--sa-art-glow), transparent 62%),
+    linear-gradient(180deg, rgba(40, 34, 96, .92), rgba(20, 18, 56, .94));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), 0 6px 18px rgba(0, 0, 0, .35);
+  color: #fff;
 }
-.sa-choice.has-art > * { position: relative; }
-.sa-choice.has-art > .sa-choice-check { position: absolute; }
+body.ninja-space .sa-choice.has-art[data-id="add"] { --sa-art-line: #e8b93a; --sa-art-glow: rgba(255, 196, 64, .22); }
+body.ninja-space .sa-choice.has-art[data-id="sub"] { --sa-art-line: #5fb4f0; --sa-art-glow: rgba(96, 180, 255, .22); }
+body.ninja-space .sa-choice.has-art .sa-choice-note { color: #d9d3ff; }
+body.ninja-space .sa-choice.has-art.is-on {
+  border-image: none;
+  color: #fff;
+  box-shadow: 0 0 0 3px var(--sa-art-line), 0 6px 18px rgba(0, 0, 0, .35);
+}
 @media (hover:hover) {
-  .sa-choice.has-art:not(.is-disabled):hover::before { display: none; }
+  body.ninja-space .sa-choice.has-art:not(.is-disabled):hover {
+    border-image: none;
+    color: #fff;
+    box-shadow: 0 0 0 3px var(--sa-art-line), 0 0 24px var(--sa-art-glow), 0 6px 18px rgba(0, 0, 0, .35);
+  }
 }
 /* 紫が濃くなる板では、説明の灰色が沈むので 濃いめの紫に */
 .sa-group-diff .sa-choice[data-id="h"]:not(.is-on) .sa-choice-note,
