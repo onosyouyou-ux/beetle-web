@@ -727,22 +727,7 @@ body::after {
   font-weight: 800;
   box-shadow: inset 0 -3px 0 rgba(90, 0, 10, .18);
 }
-/* 10の かたまりに使う玉は 金の輪で目立たせ、ゆらゆら ゆらす */
-.sa-cherry-ball.is-target {
-  box-shadow: 0 0 0 3px var(--sa-gold), inset 0 -3px 0 rgba(90, 0, 10, .18);
-  animation: sa-cherry-sway 2.4s ease-in-out infinite;
-  transform-origin: 50% -12px;
-}
-@keyframes sa-cherry-sway {
-  0%, 100% { transform: rotate(-5deg); }
-  50% { transform: rotate(5deg); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .sa-cherry-ball.is-target { animation: none; }
-}
-/* こたえたあと：ゆれを止め、10の かたまりの玉は緑の輪にする */
-.sa-cherry-ball.is-filled { animation: none; }
-.sa-cherry-ball.is-target.is-filled { box-shadow: 0 0 0 3px #7ad0a8, inset 0 -3px 0 rgba(90, 0, 10, .18); }
+/* 玉は2つとも答える（「2 と 4」）ので、片方だけ目立たせたり ゆらしたりしない（2026-10-02 ユーザー指示） */
 /* 「8 と あわせて 10」の注記。nowrap のまま行に並べると左の玉の列が
    50px→86px に広がり、式が問題パネルからはみ出す（2026-09-09 実測）。
    幅を0にして絵の中心から左右へこぼれさせ、玉の並びの幅は玉だけで決める。 */
