@@ -141,6 +141,11 @@
     q.answer = correct;
     q.options = shuffle(opts);
     q.ngText = split + ' は ' + correct + ' に わけるよ';
+    // 正誤の解説：わけかた から こたえ までの流れを ぜんぶ書く（2026-10-02 ユーザー指示）
+    q.explain = split + ' を ' + correct + ' に わけて、' + q.okText;
+    // 2だんめ：わけたあと、式の こたえ（11 など）も選ばせる（2026-10-02 ユーザー指示：たす作業まで正解に入れる）。
+    // 上限を20以上にして、10の かたまりを わすれた まちがい（11 → 1・21）も まぜる
+    q.sumOptions = buildOptions(q.total, 1, Math.max(q.total + 10, 20));
     return q;
   }
 
@@ -299,8 +304,33 @@
   const starsFor = (correct) => (correct >= CHALLENGE_LENGTH ? 3 : correct >= 8 ? 2 : correct >= 6 ? 1 : 0);
 
   // ---- おと（Web Audio）----
+  // 効果音の ON／OFF（2026-10-02 ユーザー指示）。さんすう・さくらんぼざん で共通の設定にする
+  const SOUND_KEY = 'sansuSound';
+  let soundOn = true;
+  try { soundOn = localStorage.getItem(SOUND_KEY) !== 'off'; } catch (e) { /* 読めなければ ON */ }
+
+  // 問題画面の見出しの右に置く 🔊／🔇 ボタン
+  function soundButton() {
+    const btn = el('button', 'sa-sound');
+    btn.type = 'button';
+    const paint = () => {
+      btn.textContent = soundOn ? '🔊' : '🔇';
+      btn.setAttribute('aria-label', soundOn ? 'こうかおん オン（おすと けす）' : 'こうかおん オフ（おすと だす）');
+      btn.setAttribute('aria-pressed', String(!soundOn));
+      btn.classList.toggle('is-off', !soundOn);
+    };
+    paint();
+    btn.addEventListener('click', () => {
+      soundOn = !soundOn;
+      try { localStorage.setItem(SOUND_KEY, soundOn ? 'on' : 'off'); } catch (e) { /* 保存できなくても その場は切りかわる */ }
+      paint();
+    });
+    return btn;
+  }
+
   let audioCtx = null;
   function playTone(freq, start, dur, type, gain) {
+    if (!soundOn) return;
     try {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const osc = audioCtx.createOscillator();
@@ -476,9 +506,10 @@
     app.appendChild(back);
   }
 
-  // さくらんぼざん は たしざん・ひきざん が2枚ずつあるので、わけかた まで言う
+  // さくらんぼざん の ひきざん は2枚あるので、わけかた まで短く言う（「ひきざん（まえを わける）」）。
+  // 長いと スマホの見出しが2行に折れる
   function modeTitle(mode) {
-    return SAKURANBO ? mode.name + '（' + mode.note.replace(/（.*$/, '') + '）' : mode.name;
+    return SAKURANBO && mode.id !== 'add' ? mode.name + '（' + mode.note.replace('の すうじを', 'を') + '）' : mode.name;
   }
 
   function icon(name, cls) {
@@ -733,6 +764,7 @@
     const head = el('div', 'sa-play-head');
     // さんすうは「たしざん・ふつう」で足りるので、わけかた の説明は さくらんぼざん だけ
     head.appendChild(el('span', 'sa-play-mode', modeTitle(s.mode) + '・' + s.diff.name + '・' + s.style.name));
+    head.appendChild(soundButton());
     app.appendChild(head);
 
     app.appendChild(progressBar());
@@ -743,7 +775,8 @@
 
     const built = s.current.layout === 'cherry' ? cherryProblem(s.current) : plainProblem(s.current);
     built.node.classList.add('has-prompt');
-    built.node.appendChild(el('span', 'sa-problem-prompt', s.current.prompt));
+    built.prompt = el('span', 'sa-problem-prompt', s.current.prompt);
+    built.node.appendChild(built.prompt);
     card.appendChild(built.node);
 
     // 選択肢の上に「こたえを えらぼう」を出す（2026-09-28 ユーザー指示）。問題の枠と こたえの枠の役目を分けて見せる
@@ -752,13 +785,7 @@
     const feedback = el('div', 'sa-feedback');
     feedback.innerHTML = '&nbsp;';
 
-    s.current.options.forEach((val) => {
-      const btn = el('button', 'sa-opt', String(val));
-      btn.dataset.v = String(val);
-      btn.type = 'button';
-      btn.addEventListener('click', () => answer(val, btn, options, feedback, built.reveal));
-      options.appendChild(btn);
-    });
+    fillOptions(options, s.current.options, feedback, built);
     card.appendChild(options);
     card.appendChild(feedback);
     app.appendChild(card);
@@ -773,6 +800,17 @@
     });
     backWrap.appendChild(back);
     app.appendChild(backWrap);
+  }
+
+  function fillOptions(options, values, feedback, built) {
+    options.innerHTML = '';
+    values.forEach((val) => {
+      const btn = el('button', 'sa-opt', String(val));
+      btn.dataset.v = String(val);
+      btn.type = 'button';
+      btn.addEventListener('click', () => answer(val, btn, options, feedback, built));
+      options.appendChild(btn);
+    });
   }
 
   // ふつうの式（こたえは伏せる）
@@ -842,15 +880,16 @@
 
     return {
       node: node,
-      reveal: () => {
+      // 1だんめを答えたら さくらんぼの中身を埋め、式に「= ?」を出す（2だんめで答える）
+      revealSplit: () => {
         target.textContent = String(q.need);
         rest.textContent = String(q.rest);
         target.classList.add('is-filled');
         rest.classList.add('is-filled');
-        total.textContent = String(q.total);
         eq.classList.remove('sa-eq-late');
         total.classList.remove('sa-eq-late');
-      }
+      },
+      reveal: () => { total.textContent = String(q.total); }
     };
   }
 
@@ -954,34 +993,53 @@
     return wrap;
   }
 
-  function answer(val, btn, options, feedback, reveal) {
+  function answer(val, btn, options, feedback, built) {
     const s = session;
     if (s.locked) return;
     s.locked = true;
-    if (reveal) reveal();   // 式のこたえ・さくらんぼの中身を埋める
 
     const q = s.current;
     const buttons = options.querySelectorAll('.sa-opt');
     buttons.forEach((b) => { b.disabled = true; });
 
-    const ok = val === q.answer;
+    // さくらんぼざん は1もん2だん：①わける → ②たす（ひく）。①は まちがえても正しい分け方を見せて②へ進む
+    if (q.layout === 'cherry' && !q.splitDone) {
+      q.splitDone = true;
+      q.splitOk = val === q.answer;
+      built.revealSplit();
+      markButtons(buttons, btn, q.splitOk, q.answer);
+      if (q.splitOk) playCorrect(); else playWrong();
+      feedback.textContent = (q.splitOk ? 'そう! ' + q.split + ' は ' + q.answer : q.ngText) + '。つぎは こたえ!';
+      feedback.classList.add(q.splitOk ? 'is-ok' : 'is-ng');
+      setTimeout(() => {
+        if (!session || session.current !== q) return;
+        built.prompt.textContent = 'こたえは どれ?';
+        feedback.classList.remove('is-ok', 'is-ng');
+        feedback.innerHTML = '&nbsp;';
+        fillOptions(options, q.sumOptions, feedback, built);
+        s.locked = false;
+      }, 1000);
+      return;
+    }
+
+    if (built.reveal) built.reveal();   // 式のこたえを埋める
+    const expected = q.layout === 'cherry' ? q.total : q.answer;
+    // さくらんぼざん は ①わける と ②こたえ の両方が合って せいかい
+    const ok = val === expected && (q.layout !== 'cherry' || q.splitOk);
     s.marks.push(ok);
     showAnswerEffect(ok);
+    markButtons(buttons, btn, val === expected, expected);
     if (ok) {
-      btn.classList.add('is-correct');
       s.correct += 1;
       playCorrect();
       // さくらんぼ算は「分けたあと」の流れまで見せるのが学びどころ（文は出題の okText）
-      feedback.textContent = q.layout === 'cherry' ? q.okText : pick(PRAISE_OK);
+      feedback.textContent = q.layout === 'cherry' ? q.explain : pick(PRAISE_OK);
       feedback.classList.add('is-ok');
     } else {
-      btn.classList.add('is-wrong');
-      buttons.forEach((b) => {
-        if (b.dataset.v === String(q.answer)) b.classList.add('is-correct');
-      });
       playWrong();
-      // 玉の並び（図の左から）と同じ順に言う（文は出題の ngText）
-      feedback.textContent = q.layout === 'cherry' ? q.ngText : pick(PRAISE_NG) + ' こたえは ' + q.answer;
+      feedback.textContent = q.layout === 'cherry'
+        ? (val === expected ? 'こたえは あってる! ' : 'おしい! こたえは ' + expected + '。') + q.explain
+        : pick(PRAISE_NG) + ' こたえは ' + q.answer;
       feedback.classList.add('is-ng');
     }
 
@@ -1023,6 +1081,12 @@
     saveProgress();
 
     setTimeout(() => { if (session) nextQuestion(); }, 1200);
+  }
+
+  // 押したボタンに ○／× の色、まちがえたときは正しいボタンにも ○ の色を付ける
+  function markButtons(buttons, btn, ok, expected) {
+    btn.classList.add(ok ? 'is-correct' : 'is-wrong');
+    if (!ok) buttons.forEach((b) => { if (b.dataset.v === String(expected)) b.classList.add('is-correct'); });
   }
 
   // 画面中央に短く出す答え合わせ演出。次の問題を邪魔しないようDOMは自動で片づける。

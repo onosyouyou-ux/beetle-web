@@ -442,6 +442,21 @@ body::after {
   gap: 12px;
   margin-bottom: 16px;
 }
+/* 効果音の ON／OFF。見出しの右（ロケットの手前）に小さな丸ボタン */
+.sa-sound {
+  flex: none;
+  margin-left: auto;
+  width: 38px;
+  height: 38px;
+  border: 2px solid #a08ef0;
+  border-radius: 50%;
+  background: #fff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.sa-sound.is-off { background: #e6e2f5; border-color: #b9b0e8; }
+.sa-sound:focus-visible { outline: 3px solid var(--sa-gold); outline-offset: 2px; }
 .sa-back {
   flex: none;
   padding: 8px 16px;
@@ -1089,4 +1104,11 @@ body[data-sansu-mode="sakuranbo"] .sa-choices:has(> .sa-choice.has-art) { grid-t
   body[data-sansu-mode="sakuranbo"].ninja-space .sa-choice.has-art .sa-choice-label { font-size: 15px; }
   body[data-sansu-mode="sakuranbo"].ninja-space .sa-choice-demo { font-size: clamp(19px, 6vw, 30px); }
   body[data-sansu-mode="sakuranbo"].ninja-space .sa-choice-demo + .sa-choice-note { font-size: 11px; line-height: 1.35; }
+}
+
+/* さくらんぼざん の解説（「3 を 2 と 1 に わけて、8 + 2 = 10、10 + 1 = 11!」）は2行になることがある。
+   はじめから2行ぶん取っておき、答えた瞬間に窓が伸びて画面が ずれないようにする（2026-10-02） */
+body[data-sansu-mode="sakuranbo"] .sa-feedback { min-height: 2.7em; line-height: 1.35; }
+@media (max-width: 767px) {
+  body[data-sansu-mode="sakuranbo"] .sa-feedback { font-size: 14px; }
 }
