@@ -228,27 +228,25 @@
     });
   }
 
-  // さくらんぼざん専用：1段目で しゅるい（4つ）、2段目で むずかしさ（2026-10-02 ユーザー指示。さんすう と同じ作り）。
-  // 左の列＝うしろを わける、右の列＝まえを わける。
+  // さくらんぼざん専用：1段目で しゅるい（3つ）、2段目で むずかしさ（2026-10-02 ユーザー指示。さんすう と同じ作り）。
+  // たしざんは「小さいほうを わける」だけなので1まい。まえを わける（4 + 8）は1けたどうし（ふつう）にだけ まぜる
+  // （2けたで まえを わける 5 + 28 は 教科書に出ず、子どもも 28 に 2 を たす と考える。ユーザーと決定）。
+  // ひきざんは げんかほう（まえ）と げんげんほう（うしろ）で やりかたが ちがうので2まい。
   // カードの絵の場所には、どっちの数を わけるかが ひと目で わかる小さな式（demo）を出す（絵は使わない。2026-10-02 ユーザー指示）
   const CHERRY_LEVELS = ['m', 'h2', 'l'];
   const MODES = SAKURANBO ? [
-    { id: 'add-back', name: 'たしざん', note: 'うしろの すうじを わける', ready: true,
+    { id: 'add', name: 'たしざん', note: 'ちいさい ほうの すうじを わける', ready: true,
       demo: { a: 8, b: 3, op: '+', side: 'back' }, levels: CHERRY_LEVELS,
-      make: (d) => makeCherryAdd(d.id, 'back'),
-      diffNote: { m: '1けた ＋ 1けた（8 + 3）', h2: '2けた ＋ 1けた（28 + 5）', l: '100を つくる・2けた ＋ 2けた（79 + 39）' } },
-    { id: 'add-front', name: 'たしざん', note: 'まえの すうじを わける', ready: true,
-      demo: { a: 4, b: 8, op: '+', side: 'front' }, levels: CHERRY_LEVELS,
-      make: (d) => makeCherryAdd(d.id, 'front'),
-      diffNote: { m: '1けた ＋ 1けた（4 + 8）', h2: '1けた ＋ 2けた（5 + 28）', l: '100を つくる・2けた ＋ 2けた（39 + 79）' } },
-    { id: 'sub-back', name: 'ひきざん', note: 'うしろの すうじを わける', ready: true,
-      demo: { a: 13, b: 4, op: '−', side: 'back' }, levels: CHERRY_LEVELS,
-      make: (d) => makeCherrySub(d.id, 'back'),
-      diffNote: { m: '10と いくつ − 1けた（13 − 4）', h2: '2けた − 1けた（43 − 6）', l: '100から ひく・100を こえる かず − 2けた（132 − 94）' } },
+      make: (d) => makeCherryAdd(d.id, d.id === 'm' && Math.random() < 0.5 ? 'front' : 'back'),
+      diffNote: { m: '1けた ＋ 1けた（8 + 3・4 + 8）', h2: '2けた ＋ 1けた（28 + 5）', l: '100を つくる・2けた ＋ 2けた（79 + 39）' } },
     { id: 'sub-front', name: 'ひきざん', note: 'まえの すうじを わける', ready: true,
       demo: { a: 13, b: 8, op: '−', side: 'front' }, levels: CHERRY_LEVELS,
       make: (d) => makeCherrySub(d.id, 'front'),
-      diffNote: { m: '10と いくつ − 1けた（13 − 8）', h2: '2けた − 1けた（43 − 8）', l: '100から ひく・100を こえる かず − 2けた（132 − 94）' } }
+      diffNote: { m: '10と いくつ − 1けた（13 − 8）', h2: '2けた − 1けた（43 − 8）', l: '100から ひく・100を こえる かず − 2けた（132 − 94）' } },
+    { id: 'sub-back', name: 'ひきざん', note: 'うしろの すうじを わける', ready: true,
+      demo: { a: 13, b: 4, op: '−', side: 'back' }, levels: CHERRY_LEVELS,
+      make: (d) => makeCherrySub(d.id, 'back'),
+      diffNote: { m: '10と いくつ − 1けた（13 − 4）', h2: '2けた − 1けた（43 − 6）', l: '100から ひく・100を こえる かず − 2けた（132 − 94）' } }
   ] : [
     // さんすう：たしざん・ひきざん の2つ（2026-10-01 ユーザー指示）。むずかしさは2段目で えらぶ。
     // levels＝その しゅるいで出せる むずかしさ。diffNote＝むずかしさ の説明
@@ -359,7 +357,7 @@
   }
 
   // ---- 画面 ----
-  let selection = { modeId: SAKURANBO ? 'add-back' : 'add', diffId: null, styleId: 'challenge' };
+  let selection = { modeId: 'add', diffId: null, styleId: 'challenge' };
   let session = null;
 
   function el(tag, className, text) {
@@ -636,7 +634,7 @@
     const tryBtn = el('button', 'sa-btn sa-btn-primary', '🍒 やってみる');
     tryBtn.type = 'button';
     tryBtn.addEventListener('click', () => {
-      selection.modeId = 'add-back';
+      selection.modeId = 'add';
       selection.diffId = 'm';
       startSession();
     });
