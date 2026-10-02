@@ -4426,6 +4426,17 @@ body.ninja-space .sa-cherry-tail .sa-eq-late { display:inline; visibility:hidden
 @media (max-width:767px) {
   body.ninja-space .sa-cherry-tail { padding-left:8px; }
 }
+/* 3けたの式（100きじゅんの ちょうなんもん）は、スマホ幅だと「= 108」が枠の右へ はみ出す。式を2割ほど小さくする（2026-10-02） */
+@media (max-width:767px) {
+  /* 「= 108」は場所を取らずに右へ付くので、式を左へ寄せて あいた左がわを使う */
+  body.ninja-space .sa-problem-cherry.is-long .sa-cherry-expr { font-size:.78em; translate:-1.2em 0; }
+  body.ninja-space .sa-problem-cherry.is-long .sa-qmark { font-size:1em; min-width:0 !important; }
+}
+/* さくらんぼの問いかけ（「79 と あわせて 100 に なるように 60 を わけよう」）は長いので、スマホ幅では1行に収まる大きさにする。
+   2行に折れると、絶対配置の問いかけが式の数字に重なる（2026-10-02） */
+@media (max-width:767px) {
+  body.ninja-space .sa-problem-cherry .sa-problem-prompt { font-size:11.5px; letter-spacing:-.03em; }
+}
 /* COMBO の札は すすみぐあいの帯の まん中（2026-09-28）。帯の行の高さを変えないよう小さく */
 body.ninja-space .sa-track-label { align-items:center; min-height:18px; }
 body.ninja-space .sa-track-label .sa-combo { margin:0; padding:0 8px; font-size:10px; line-height:16px; box-shadow:0 0 8px rgba(255,138,46,.55); }

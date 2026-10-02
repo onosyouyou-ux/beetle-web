@@ -46,8 +46,13 @@
   //   すこしむずかしい＝2けたと 1けた（くり上がり・くり下がり なし）
   //   むずかしい　　＝2けたと 1けた（くり上がり・くり下がり あり）。すこしむずかしい の つぎ（2026-10-01 ユーザー指示）
   //   ちょうなんもん＝2けたどうし
-  // さくらんぼざん は むずかしさ の段を持たず、記録のキーに 'one' だけを使う
-  const DIFFS = SAKURANBO ? [{ id: 'one', name: '' }] : [
+  // さくらんぼざん は 3段（2026-10-02 ユーザー指示）。id は さんすう と そろえて色分けの css を共用する
+  //   ふつう＝1けたどうし／むずかしい＝2けたと 1けた／ちょうなんもん＝100 きじゅん（どれも くり上がり・くり下がり あり）
+  const DIFFS = SAKURANBO ? [
+    { id: 'm', name: 'ふつう', icon: 'route/mars' },
+    { id: 'h2', name: 'むずかしい', icon: 'route/saturn' },
+    { id: 'l', name: 'ちょうなんもん', icon: 'black-hole' }
+  ] : [
     // アイコンは とことん の旅路の天体（2026-10-01 ユーザー指示）。ちょうなんもん だけ ブラックホールのまま
     { id: 'vs', name: 'ちょうかんたん', icon: 'route/moon' },
     { id: 's', name: 'かんたん', icon: 'route/venus' },
@@ -110,103 +115,139 @@
     };
   }
 
-  // さくらんぼざん専用アプリ：4パターン（2026-09-28）。
-  // 「わけかた」＝うしろ／まえ、「かず」＝1けた どうし／2けたも でる。
-  // 10の かたまりを つくるのは いつも大きいほう（big）。分けるのは小さいほう（small）。
-  //   うしろ：8 + 3 → 3 を 2 と 1 ／ 28 + 5 → 5 を 2 と 3
-  //   まえ　：4 + 8 → 4 を 2 と 2 ／ 5 + 28 → 5 を 3 と 2（ならった形：市販プリントの「まえの かずを わけて」）
-  // 答えさせるのは「big と あわせて キリのいい数になる ぶん」（need）だけ
-  // さくらんぼざん専用アプリは「分ける2つの数」をそのまま答えさせる（「2 と 1」。2026-09-28 ユーザー指示）。
-  // 並びは さくらんぼの玉の並び（図の左から）と同じ：うしろを わける＝[10をつくる数, のこり]、まえを わける＝[のこり, 10をつくる数]。
-  // まちがいの選択肢は、ほかの分け方（1 と 2 など）と、足しても元の数にならない組み合わせ（2 と 2 など）から作る
+  // さくらんぼざん専用アプリ（2026-10-02 作りなおし。さんすう と同じ2段メニュー）。
+  // 1段目：たしざん／ひきざん × うしろ／まえ を わける、2段目：ふつう・むずかしい・ちょうなんもん。
+  //   たしざん うしろ：8 + 3 → 3 を 2 と 1（8 と あわせて 10）
+  //   たしざん まえ　：4 + 8 → 4 を 2 と 2（ならった形：市販プリントの「まえの かずを わけて」）
+  //   ひきざん うしろ：13 − 4 → 4 を 3 と 1（13 から 3 を ひいて 10。げんげんほう）
+  //   ひきざん まえ　：13 − 8 → 13 を 10 と 3（10 から 8 を ひく。げんかほう）
+  // 同じ数どうし（7 + 7）は どっちの 7 を わけるのか わからないので出さない（2026-10-02 ユーザー指示）。
+  //
+  // 答えは「分ける2つの数」をそのまま選ばせる（「2 と 1」。2026-09-28 ユーザー指示）。
+  // need＝10の かたまりに使う玉、rest＝のこりの玉。needLeft で玉の並び（図の左から）を決め、答えの並びも同じにする。
+  // まちがいの選択肢は「ほかの分け方」だけ。足しても元の数にならない組み合わせ（7 を 4 と 4）は出さない
+  // （2026-10-02 ユーザー指示：分けたのに たして元にもどらないのは おかしい）。
+  // 近い分け方（10の かたまりに使う玉が ±2 以内）を優先する。分け方が3つ以下の数（3・4）は ボタンも そのぶんだけ
   function toPairQuestion(q) {
-    if (!SAKURANBO) return q;
-    const front = q.side === 'front';
-    const split = front ? q.a : q.b;
-    const pair = (x) => (front ? (split - x) + ' と ' + x : x + ' と ' + (split - x));
+    const left = q.needLeft;
+    const split = q.split;
+    const pair = (x) => (left ? x + ' と ' + (split - x) : (split - x) + ' と ' + x);
     const correct = pair(q.need);
-    const pool = [];
-    for (let x = 1; x < split; x++) if (x !== q.need) pool.push(pair(x));   // ほかの分け方
-    const off = [[q.need, q.rest + 1], [q.need, q.rest - 1], [q.need + 1, q.rest], [q.need - 1, q.rest]]
-      .filter(([n, r]) => n >= 1 && r >= 1)
-      .map(([n, r]) => (front ? r + ' と ' + n : n + ' と ' + r));      // 足しても元の数にならない
-    // 近い分け方を優先して2つ、足りないぶんを ずれた組み合わせで埋める
-    const near = shuffle(pool.filter((t) => Math.abs(parseInt(front ? t.split(' と ')[1] : t, 10) - q.need) <= 2)).slice(0, 2);
-    const opts = [correct];
-    near.concat(shuffle(off), shuffle(pool)).forEach((t) => { if (opts.length < 4 && opts.indexOf(t) < 0) opts.push(t); });
-    // 2 を 1 と 1 に分ける（9 + 2 など）ときは候補が3つしかないので、少し大きくずらした組み合わせで埋める
-    [[q.need + 1, q.rest + 1], [q.need, q.rest + 2], [q.need + 2, q.rest]].forEach(([n, r]) => {
-      const t = front ? r + ' と ' + n : n + ' と ' + r;
-      if (opts.length < 4 && opts.indexOf(t) < 0) opts.push(t);
-    });
+    const others = [];
+    for (let x = 1; x < split; x++) if (x !== q.need) others.push(x);
+    const near = shuffle(others.filter((x) => Math.abs(x - q.need) <= 2));
+    const far = shuffle(others.filter((x) => Math.abs(x - q.need) > 2));
+    const opts = [correct].concat(near.concat(far).slice(0, 3).map(pair));
     q.answer = correct;
     q.options = shuffle(opts);
+    q.ngText = split + ' は ' + correct + ' に わけるよ';
     return q;
   }
 
-  // ちょうなんもん：2けた ＋ 2けた（38 + 25 → 25 を 2 と 23 に分けて、38 と 2 で 40）。
-  // くり上がりが起きる組み合わせ（1の位の和が10以上）で、こたえは99まで。分けるのは うしろ
-  function makeCherryTwoTwo() {
-    for (let guard = 0; guard < 200; guard++) {
-      let a;
-      do { a = randInt(12, 79); } while (a % 10 < 2);
-      const target = (Math.floor(a / 10) + 1) * 10;
-      const need = target - a;
-      const cands = [];
-      for (let v = 11; v <= 99 - a; v++) if (v % 10 >= need && v % 10 !== 0) cands.push(v);
-      if (!cands.length) continue;
-      const b = cands[randInt(0, cands.length - 1)];
-      return toPairQuestion({
-        layout: 'cherry',
-        prompt: b + ' を 2つに わけよう',
-        text: a + ' + ' + b,
-        side: 'back',
-        a: a, b: b, target: target, need: need, rest: b - need, total: a + b,
-        answer: need,
-        options: buildOptions(need, 1, 9)
-      });
-    }
-    return makeCherryPattern(true, 'back');
-  }
+  // 1の位が いくつ以上か（くり上がりを作るため、10を つくる ぶんより 大きくする）
+  const onesOf = (n) => n % 10;
 
-  function makeCherryPattern(two, side) {
-    let big;
-    if (two) {
-      do { big = randInt(11, 89); } while (big % 10 < 2);   // 1の位が0・1だと くり上がりが作れない
-    } else {
+  // たしざん：大きいほう（big）を キリのいい数にし、小さいほう（small）を わける
+  function makeCherryAdd(level, side) {
+    let big, small;
+    if (level === 'm') {
       big = randInt(6, 9);
+      // 同じ数は出さない（7 + 7 → どっちの 7 か わからない）。2 は 1 と 1 にしか分けられないので3から
+      small = randInt(Math.max(3, 11 - big), big - 1);
+    } else if (level === 'h2') {
+      do { big = randInt(11, 89); } while (onesOf(big) < 2);   // 1の位が0・1だと くり上がりが作れない
+      small = randInt(Math.max(3, 11 - onesOf(big)), 9);
+    } else {
+      // ちょうなんもん：100 を きじゅんに する（79 + 39 → 39 を 21 と 18、79 + 21 = 100。2026-10-02 ユーザー指示）。
+      // 2けた ＋ 2けた で こたえは かならず100を こえる。分けるのは いつも小さいほう（46 + 45 で 46 を わけるのは不自然）
+      big = randInt(56, 98);
+      small = randInt(Math.max(11, 101 - big), big - 1);
     }
-    const target = (Math.floor(big / 10) + 1) * 10;
+    const target = level === 'l' ? 100 : (Math.floor(big / 10) + 1) * 10;
     const need = target - big;
-    const small = randInt(need + 1, two ? 9 : Math.min(9, big));
     const front = side === 'front';
     const a = front ? small : big;
     const b = front ? big : small;
     return toPairQuestion({
       layout: 'cherry',
-      prompt: small + ' を 2つに わけよう',
+      op: '+',
+      prompt: big + ' と あわせて ' + target + ' に なるように ' + small + ' を わけよう',
+      cap: big + ' と あわせて ' + target,
       text: a + ' + ' + b,
-      side: front ? 'front' : 'back',
-      a: a, b: b, target: target, need: need, rest: small - need, total: a + b,
-      answer: need,
-      options: buildOptions(need, 1, 9)
+      side: side, needLeft: !front,
+      a: a, b: b, split: small, need: need, rest: small - need, total: a + b,
+      okText: (front ? need + ' + ' + big : big + ' + ' + need) + ' = ' + target + '、'
+        + target + ' + ' + (small - need) + ' = ' + (a + b) + '!'
     });
   }
 
-  // さくらんぼざん専用：問題の形を1画面に全部並べ、押したらすぐ始める（2026-09-28 ユーザー指示。2段目の「かず」はやめた）
+  // ひきざん：くり下がりが ある組み合わせを作る（ひく数の1の位が、ひかれる数の1の位より大きい）
+  function drawSub(level) {
+    for (;;) {
+      let a, b;
+      // ひく数は3から（2 は 1 と 1 にしか分けられない）
+      if (level === 'm') { a = randInt(11, 18); b = randInt(3, 9); }
+      else if (level === 'h2') { a = randInt(21, 98); b = randInt(3, 9); }
+      // ちょうなんもん：100 を きじゅんに する（132 − 94。たしざん と そろえる）。こたえは100より小さい
+      else { a = randInt(101, 198); b = randInt(11, 99); if (a - b < 100) return [a, b]; continue; }
+      if (onesOf(b) > onesOf(a) && onesOf(a) >= 1) return [a, b];
+    }
+  }
+
+  function makeCherrySub(level, side) {
+    const [a, b] = drawSub(level);
+    if (side === 'back') {
+      // げんげんほう：うしろの数を「まえの数の1の位」と のこりに わけ、キリのいい数まで ひいてから のこりを ひく。
+      // ちょうなんもん は 100 まで ひく（132 − 94 → 94 を 32 と 62）
+      const need = level === 'l' ? a - 100 : onesOf(a);
+      const base = a - need;
+      return toPairQuestion({
+        layout: 'cherry',
+        op: '−',
+        prompt: a + ' から ひいて ' + base + ' に なるように ' + b + ' を わけよう',
+        cap: a + ' から ひいて ' + base,
+        text: a + ' − ' + b,
+        side: 'back', needLeft: true,
+        a: a, b: b, split: b, need: need, rest: b - need, total: a - b,
+        okText: a + ' − ' + need + ' = ' + base + '、' + base + ' − ' + (b - need) + ' = ' + (a - b) + '!'
+      });
+    }
+    // げんかほう：まえの数から「ひく数を ひける キリのいい数」を とりだし、ひいた のこりを たす。
+    // ちょうなんもん は 100 を とりだす（132 − 94 → 132 を 100 と 32）
+    const block = level === 'l' ? 100 : Math.ceil(b / 10) * 10;
+    const diff = block - b;
+    return toPairQuestion({
+      layout: 'cherry',
+      op: '−',
+      prompt: block + ' から ' + b + ' を ひけるように ' + a + ' を わけよう',
+      cap: 'ここから ' + b + ' を ひく',
+      text: a + ' − ' + b,
+      side: 'front', needLeft: true,
+      a: a, b: b, split: a, need: block, rest: a - block, total: a - b,
+      okText: block + ' − ' + b + ' = ' + diff + '、' + diff + ' + ' + (a - block) + ' = ' + (a - b) + '!'
+    });
+  }
+
+  // さくらんぼざん専用：1段目で しゅるい（4つ）、2段目で むずかしさ（2026-10-02 ユーザー指示。さんすう と同じ作り）。
+  // 左の列＝うしろを わける、右の列＝まえを わける
+  const CHERRY_LEVELS = ['m', 'h2', 'l'];
   const MODES = SAKURANBO ? [
-    { id: 'one-ushiro', name: '1けたの たしざん', note: 'うしろの すうじを わける（8 + 3）', ready: true, icon: 'cherry',
-      make: () => makeCherryPattern(false, 'back') },
-    { id: 'one-mae', name: '1けたの たしざん', note: 'まえの すうじを わける（4 + 8）', ready: true, icon: 'cherry',
-      make: () => makeCherryPattern(false, 'front') },
-    { id: 'two-ushiro', name: '2けたの たしざん', note: 'うしろの すうじを わける（28 + 5）', ready: true, icon: 'cherry',
-      make: () => makeCherryPattern(true, 'back') },
-    { id: 'two-mae', name: '2けたの たしざん', note: 'まえの すうじを わける（5 + 28）', ready: true, icon: 'cherry',
-      make: () => makeCherryPattern(true, 'front') },
-    { id: 'hard', name: 'ちょうなんもん', note: '2けた ＋ 2けた（38 + 25）', ready: true, icon: 'cherry',
-      make: () => makeCherryTwoTwo() },
-    { id: 'mix', name: 'ぜんぶ まぜる', note: '1けた・2けた、まえ・うしろ を まぜて', ready: true, icon: 'cherry',
-      make: () => makeCherryPattern(Math.random() < 0.5, Math.random() < 0.5 ? 'front' : 'back') }
+    { id: 'add-back', name: 'たしざん', note: 'うしろの すうじを わける（8 + 3）', ready: true,
+      img: '/assets/images/ninja/modes/sansu-tashi.webp', levels: CHERRY_LEVELS,
+      make: (d) => makeCherryAdd(d.id, 'back'),
+      diffNote: { m: '1けた ＋ 1けた（8 + 3）', h2: '2けた ＋ 1けた（28 + 5）', l: '100を つくる・2けた ＋ 2けた（79 + 39）' } },
+    { id: 'add-front', name: 'たしざん', note: 'まえの すうじを わける（4 + 8）', ready: true,
+      img: '/assets/images/ninja/modes/sansu-tashi.webp', levels: CHERRY_LEVELS,
+      make: (d) => makeCherryAdd(d.id, 'front'),
+      diffNote: { m: '1けた ＋ 1けた（4 + 8）', h2: '1けた ＋ 2けた（5 + 28）', l: '100を つくる・2けた ＋ 2けた（39 + 79）' } },
+    { id: 'sub-back', name: 'ひきざん', note: 'うしろの すうじを わける（13 − 4）', ready: true,
+      img: '/assets/images/ninja/modes/sansu-hiki.webp', levels: CHERRY_LEVELS,
+      make: (d) => makeCherrySub(d.id, 'back'),
+      diffNote: { m: '10と いくつ − 1けた（13 − 4）', h2: '2けた − 1けた（43 − 6）', l: '100から ひく・100を こえる かず − 2けた（132 − 94）' } },
+    { id: 'sub-front', name: 'ひきざん', note: 'まえの すうじを わける（13 − 8）', ready: true,
+      img: '/assets/images/ninja/modes/sansu-hiki.webp', levels: CHERRY_LEVELS,
+      make: (d) => makeCherrySub(d.id, 'front'),
+      diffNote: { m: '10と いくつ − 1けた（13 − 8）', h2: '2けた − 1けた（43 − 8）', l: '100から ひく・100を こえる かず − 2けた（132 − 94）' } }
   ] : [
     // さんすう：たしざん・ひきざん の2つ（2026-10-01 ユーザー指示）。むずかしさは2段目で えらぶ。
     // levels＝その しゅるいで出せる むずかしさ。diffNote＝むずかしさ の説明
@@ -317,7 +358,7 @@
   }
 
   // ---- 画面 ----
-  let selection = { modeId: SAKURANBO ? 'one-ushiro' : 'add', diffId: SAKURANBO ? 'one' : null, styleId: 'challenge' };
+  let selection = { modeId: SAKURANBO ? 'add-back' : 'add', diffId: null, styleId: 'challenge' };
   let session = null;
 
   function el(tag, className, text) {
@@ -332,8 +373,7 @@
   const findStyle = (id) => PLAYSTYLES.find((s) => s.id === id);
 
   // ---- メニュー ----
-  // さくらんぼざん：1画面。もんだい を押したら そのまま始まる（2026-09-28）
-  // さんすう　　：2段。1段目で もんだいの形、2段目で むずかしさ＋スタート（2026-09-30）
+  // 2段。1段目で もんだいの形、2段目で むずかしさ＋スタート（さんすう 2026-09-30、さくらんぼざん 2026-10-02）
   // ブラウザの「戻る」と画面の「← もどる」で1つ前の画面へ戻れるよう、2段目・やりかた・プレイで履歴を1つずつ積む
   let menuStep = 1;
   function goMenu2() {
@@ -377,12 +417,11 @@
     app.appendChild(total);
 
     // しゅるいは押したら次の画面へ進む
-    // さくらんぼざん専用：もんだい を押したら そのまま始める（2段目は無い）
     const kinds = group('もんだいを えらぼう', MODES, 'modeId', (m) => ({
       label: m.name,
       note: m.note,
       disabled: !m.ready
-    }), null, SAKURANBO ? startSession : goMenu2);
+    }), null, goMenu2);
     // さくらんぼざんの やりかた（リファレンス）は、しゅるいの下にテキストリンクで置く（2026-09-23 ボタンから変更）
     if (SAKURANBO) {
       const refLink = el('button', 'sa-ref-link', 'さくらんぼざんの やりかた →');
@@ -414,7 +453,7 @@
   function renderMenuStep2() {
     const chosenMode = findMode(selection.modeId);
     const chosenStyle = findStyle(selection.styleId);
-    app.appendChild(el('p', 'sa-step-chosen', chosenMode.name + '・' + chosenStyle.name));
+    app.appendChild(el('p', 'sa-step-chosen', modeTitle(chosenMode) + '・' + chosenStyle.name));
 
     const diffs = group('むずかしさ', DIFFS.filter((d) => chosenMode.levels.indexOf(d.id) !== -1), 'diffId', (d) => ({
       label: d.name,
@@ -432,10 +471,15 @@
     if (!selection.diffId) start.disabled = true;
     app.appendChild(start);
 
-    const back = el('button', 'sa-step-back', '← たしざん・ひきざん に もどる');
+    const back = el('button', 'sa-step-back', SAKURANBO ? '← もんだいの しゅるいに もどる' : '← たしざん・ひきざん に もどる');
     back.type = 'button';
     back.addEventListener('click', () => history.back());
     app.appendChild(back);
+  }
+
+  // さくらんぼざん は たしざん・ひきざん が2枚ずつあるので、わけかた まで言う
+  function modeTitle(mode) {
+    return SAKURANBO ? mode.name + '（' + mode.note.replace(/（.*$/, '') + '）' : mode.name;
   }
 
   function icon(name, cls) {
@@ -566,7 +610,8 @@
     const tryBtn = el('button', 'sa-btn sa-btn-primary', '🍒 やってみる');
     tryBtn.type = 'button';
     tryBtn.addEventListener('click', () => {
-      selection.modeId = 'one-ushiro';
+      selection.modeId = 'add-back';
+      selection.diffId = 'm';
       startSession();
     });
     actions.appendChild(tryBtn);
@@ -662,11 +707,8 @@
 
     // 選択中のモード表示（もどるは一番下に配置）＋COMBOバッジ
     const head = el('div', 'sa-play-head');
-    // さくらんぼざん専用アプリには むずかしさ が無いので、もんだいの形（うしろの すうじを わける 等）を出す
-    // もんだいの形（うしろの すうじを わける／2けた ＋ 1けた 等）と、さんすうは むずかしさ も出す
-    // さんすうは「たしざん・ふつう」で足りるので、形の説明は さくらんぼざん だけ
-    head.appendChild(el('span', 'sa-play-mode', s.mode.name +
-      (SAKURANBO ? '（' + s.mode.note.replace(/（.*$/, '') + '）・' : '・' + s.diff.name + '・') + s.style.name));
+    // さんすうは「たしざん・ふつう」で足りるので、わけかた の説明は さくらんぼざん だけ
+    head.appendChild(el('span', 'sa-play-mode', modeTitle(s.mode) + '・' + s.diff.name + '・' + s.style.name));
     app.appendChild(head);
 
     app.appendChild(progressBar());
@@ -727,12 +769,13 @@
 
   // さくらんぼ算：分ける数の真下にさくらんぼをぶら下げる（こたえは答えるまで伏せる）。
   // うしろを わける ときは うしろの数の下、まえを わける ときは まえの数の下。
-  // 答えさせる玉（is-target）は、もう一方の数の がわ（となりあう がわ）に置く
+  // 10の かたまりに使う玉（is-target）の位置は needLeft で決まる（たしざんは もう一方の数の がわ）
   function cherryProblem(q) {
     const front = q.side === 'front';
-    const split = front ? q.a : q.b;
-    const other = front ? q.b : q.a;
-    const node = el('div', 'sa-problem sa-problem-cherry' + (front ? ' is-front' : ''));
+    const split = q.split;
+    // 3けたが出る ちょうなんもん は、スマホ幅で「= 108」が枠の外へ はみ出すので、css で式を小さくする
+    const long = Math.max(q.a, q.b, q.total) >= 100;
+    const node = el('div', 'sa-problem sa-problem-cherry' + (front ? ' is-front' : '') + (long ? ' is-long' : ''));
 
     const col = el('div', 'sa-cherry-col');
     col.appendChild(el('span', 'sa-term sa-cherry-top', String(split)));
@@ -741,12 +784,12 @@
     const targetSlot = el('div', 'sa-cherry-slot');
     const target = el('span', 'sa-cherry-ball is-target', '?');
     targetSlot.appendChild(target);
-    targetSlot.appendChild(el('span', 'sa-cherry-cap', other + ' と あわせて ' + q.target));
+    targetSlot.appendChild(el('span', 'sa-cherry-cap', q.cap));
     const restSlot = el('div', 'sa-cherry-slot');
     const rest = el('span', 'sa-cherry-ball', '?');
     restSlot.appendChild(rest);
-    if (front) { pair.appendChild(restSlot); pair.appendChild(targetSlot); }
-    else { pair.appendChild(targetSlot); pair.appendChild(restSlot); }
+    if (q.needLeft) { pair.appendChild(targetSlot); pair.appendChild(restSlot); }
+    else { pair.appendChild(restSlot); pair.appendChild(targetSlot); }
     col.appendChild(pair);
 
     // 式は「数 + 数」のかたまり（sa-cherry-expr）にして枠のまん中に置き、
@@ -755,11 +798,11 @@
     const expr = el('span', 'sa-cherry-expr');
     if (front) {
       expr.appendChild(col);
-      expr.appendChild(el('span', 'sa-op', '+'));
+      expr.appendChild(el('span', 'sa-op', q.op));
       expr.appendChild(el('span', 'sa-term', String(q.b)));
     } else {
       expr.appendChild(el('span', 'sa-term', String(q.a)));
-      expr.appendChild(el('span', 'sa-op', '+'));
+      expr.appendChild(el('span', 'sa-op', q.op));
       expr.appendChild(col);
     }
 
@@ -904,12 +947,8 @@
       btn.classList.add('is-correct');
       s.correct += 1;
       playCorrect();
-      // さくらんぼ算は「分けたあと」の流れまで見せるのが学びどころ。
-      // まえを わける ときは 10をつくる数が前に来る（4 + 8 → 2 + 8 = 10）。2026-09-28 修正
-      feedback.textContent = q.layout === 'cherry'
-        ? (q.side === 'front' ? q.need + ' + ' + q.b : q.a + ' + ' + q.need)
-          + ' = ' + q.target + '、' + q.target + ' + ' + q.rest + ' = ' + q.total + '!'
-        : pick(PRAISE_OK);
+      // さくらんぼ算は「分けたあと」の流れまで見せるのが学びどころ（文は出題の okText）
+      feedback.textContent = q.layout === 'cherry' ? q.okText : pick(PRAISE_OK);
       feedback.classList.add('is-ok');
     } else {
       btn.classList.add('is-wrong');
@@ -917,12 +956,8 @@
         if (b.dataset.v === String(q.answer)) b.classList.add('is-correct');
       });
       playWrong();
-      // 分けるのは まえを わける なら前の数。玉の並び（図の左から）と同じ順に言う
-      feedback.textContent = q.layout === 'cherry'
-        ? (q.side === 'front'
-          ? q.a + ' は ' + q.rest + ' と ' + q.need + ' に わけるよ'
-          : q.b + ' は ' + q.need + ' と ' + q.rest + ' に わけるよ')
-        : pick(PRAISE_NG) + ' こたえは ' + q.answer;
+      // 玉の並び（図の左から）と同じ順に言う（文は出題の ngText）
+      feedback.textContent = q.layout === 'cherry' ? q.ngText : pick(PRAISE_NG) + ' こたえは ' + q.answer;
       feedback.classList.add('is-ng');
     }
 

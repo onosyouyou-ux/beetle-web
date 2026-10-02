@@ -678,7 +678,19 @@ body::after {
 }
 .sa-term { line-height: 1.1; }
 .sa-cherry-top { color: #f4553f; }
-.sa-cherry-stem { width: 2px; height: 16px; margin-top: 6px; background: #c9c4e6; }
+/* じく と 葉っぱ。教科書の「さくらんぼ」に見えるよう、じくは緑・てっぺんに葉を1まい（2026-10-02） */
+.sa-cherry-stem { position: relative; width: 3px; height: 16px; margin-top: 6px; border-radius: 2px; background: #5d9e3c; }
+.sa-cherry-stem::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0;
+  width: 16px;
+  height: 9px;
+  border-radius: 0 100% 0 100%;
+  background: linear-gradient(135deg, #8fd16a, #4f9a32);
+  transform: rotate(-18deg);
+}
 .sa-cherry-pair {
   position: relative;
   display: flex;
@@ -692,8 +704,9 @@ body::after {
   top: 0;
   left: 50%;
   width: 40px;
-  height: 2px;
-  background: #c9c4e6;
+  height: 3px;
+  border-radius: 2px;
+  background: #5d9e3c;
   transform-origin: left center;
 }
 .sa-cherry-pair::before { transform: rotate(151deg); }
@@ -706,18 +719,30 @@ body::after {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: #f0eefc;
-  color: #8b7ef0;
+  /* 赤い実。左上に つやを入れて まるく見せる。数字は白で、赤の上でも読める濃さにする */
+  background: radial-gradient(circle at 32% 28%, #ff9a9a 0, #e8424f 38%, #b5202f 100%);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(110, 10, 20, .45);
   font-size: 24px;
   font-weight: 800;
+  box-shadow: inset 0 -3px 0 rgba(90, 0, 10, .18);
 }
+/* 10の かたまりに使う玉は 金の輪で目立たせ、ゆらゆら ゆらす */
 .sa-cherry-ball.is-target {
-  background: #fff4d6;
-  color: #d98b12;
-  box-shadow: 0 0 0 3px var(--sa-gold);
+  box-shadow: 0 0 0 3px var(--sa-gold), inset 0 -3px 0 rgba(90, 0, 10, .18);
+  animation: sa-cherry-sway 2.4s ease-in-out infinite;
+  transform-origin: 50% -12px;
 }
-.sa-cherry-ball.is-filled { background: #e6f7ee; color: #2f9469; box-shadow: none; }
-.sa-cherry-ball.is-target.is-filled { box-shadow: 0 0 0 3px #7ad0a8; }
+@keyframes sa-cherry-sway {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sa-cherry-ball.is-target { animation: none; }
+}
+/* こたえたあと：ゆれを止め、10の かたまりの玉は緑の輪にする */
+.sa-cherry-ball.is-filled { animation: none; }
+.sa-cherry-ball.is-target.is-filled { box-shadow: 0 0 0 3px #7ad0a8, inset 0 -3px 0 rgba(90, 0, 10, .18); }
 /* 「8 と あわせて 10」の注記。nowrap のまま行に並べると左の玉の列が
    50px→86px に広がり、式が問題パネルからはみ出す（2026-09-09 実測）。
    幅を0にして絵の中心から左右へこぼれさせ、玉の並びの幅は玉だけで決める。 */
@@ -737,6 +762,8 @@ body::after {
   grid-template-columns: 1fr 1fr;
   gap: 14px;
 }
+/* さくらんぼざん は 分け方が3つしかない数（4 など）だとボタンが3つ。のこった1つは横いっぱいに広げる（2026-10-02） */
+.sa-options > .sa-opt:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .sa-opt {
   padding: 22px 0 26px;
   border: 0;
@@ -902,6 +929,10 @@ body::after {
 .sa-group-diff .sa-choices { width: 100%; margin-inline: auto; }
 .sa-group-diff .sa-group-title { width: 100%; margin-inline: auto; }
 .sa-group-diff ~ .sa-start { width: min(100%, max(70%, 340px)); margin-inline: auto; }
+/* さくらんぼざん は むずかしさ が3つなので1列に並べる（2026-10-02） */
+body[data-sansu-mode="sakuranbo"] .sa-group-diff .sa-choices,
+body[data-sansu-mode="sakuranbo"] .sa-group-diff .sa-group-title { width: min(100%, max(70%, 340px)); }
+body[data-sansu-mode="sakuranbo"] .sa-group-diff .sa-choices { grid-template-columns: 1fr; grid-auto-flow: row; }
 
 /* むずかしさ2列（スマホ）：1まいの幅が170pxほどしかなく、「ちょうかんたん」が3行に折れ、スタートが画面の外に出ていた。
    天体の絵は小さく、名前は1行で、説明は小さくして3段を1画面に収める（2026-10-01） */
@@ -1017,8 +1048,8 @@ body.ninja-space .sa-choice.has-art {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), 0 6px 18px rgba(0, 0, 0, .35);
   color: #fff;
 }
-body.ninja-space .sa-choice.has-art[data-id="add"] { --sa-art-line: #e8b93a; --sa-art-glow: rgba(255, 196, 64, .22); }
-body.ninja-space .sa-choice.has-art[data-id="sub"] { --sa-art-line: #5fb4f0; --sa-art-glow: rgba(96, 180, 255, .22); }
+body.ninja-space .sa-choice.has-art[data-id^="add"] { --sa-art-line: #e8b93a; --sa-art-glow: rgba(255, 196, 64, .22); }
+body.ninja-space .sa-choice.has-art[data-id^="sub"] { --sa-art-line: #5fb4f0; --sa-art-glow: rgba(96, 180, 255, .22); }
 body.ninja-space .sa-choice.has-art .sa-choice-note { color: #d9d3ff; }
 body.ninja-space .sa-choice.has-art.is-on {
   border-image: none;
