@@ -229,23 +229,24 @@
   }
 
   // さくらんぼざん専用：1段目で しゅるい（4つ）、2段目で むずかしさ（2026-10-02 ユーザー指示。さんすう と同じ作り）。
-  // 左の列＝うしろを わける、右の列＝まえを わける
+  // 左の列＝うしろを わける、右の列＝まえを わける。
+  // カードの絵の場所には、どっちの数を わけるかが ひと目で わかる小さな式（demo）を出す（絵は使わない。2026-10-02 ユーザー指示）
   const CHERRY_LEVELS = ['m', 'h2', 'l'];
   const MODES = SAKURANBO ? [
-    { id: 'add-back', name: 'たしざん', note: 'うしろの すうじを わける（8 + 3）', ready: true,
-      img: '/assets/images/ninja/modes/sansu-tashi.webp', levels: CHERRY_LEVELS,
+    { id: 'add-back', name: 'たしざん', note: 'うしろの すうじを わける', ready: true,
+      demo: { a: 8, b: 3, op: '+', side: 'back' }, levels: CHERRY_LEVELS,
       make: (d) => makeCherryAdd(d.id, 'back'),
       diffNote: { m: '1けた ＋ 1けた（8 + 3）', h2: '2けた ＋ 1けた（28 + 5）', l: '100を つくる・2けた ＋ 2けた（79 + 39）' } },
-    { id: 'add-front', name: 'たしざん', note: 'まえの すうじを わける（4 + 8）', ready: true,
-      img: '/assets/images/ninja/modes/sansu-tashi.webp', levels: CHERRY_LEVELS,
+    { id: 'add-front', name: 'たしざん', note: 'まえの すうじを わける', ready: true,
+      demo: { a: 4, b: 8, op: '+', side: 'front' }, levels: CHERRY_LEVELS,
       make: (d) => makeCherryAdd(d.id, 'front'),
       diffNote: { m: '1けた ＋ 1けた（4 + 8）', h2: '1けた ＋ 2けた（5 + 28）', l: '100を つくる・2けた ＋ 2けた（39 + 79）' } },
-    { id: 'sub-back', name: 'ひきざん', note: 'うしろの すうじを わける（13 − 4）', ready: true,
-      img: '/assets/images/ninja/modes/sansu-hiki.webp', levels: CHERRY_LEVELS,
+    { id: 'sub-back', name: 'ひきざん', note: 'うしろの すうじを わける', ready: true,
+      demo: { a: 13, b: 4, op: '−', side: 'back' }, levels: CHERRY_LEVELS,
       make: (d) => makeCherrySub(d.id, 'back'),
       diffNote: { m: '10と いくつ − 1けた（13 − 4）', h2: '2けた − 1けた（43 − 6）', l: '100から ひく・100を こえる かず − 2けた（132 − 94）' } },
-    { id: 'sub-front', name: 'ひきざん', note: 'まえの すうじを わける（13 − 8）', ready: true,
-      img: '/assets/images/ninja/modes/sansu-hiki.webp', levels: CHERRY_LEVELS,
+    { id: 'sub-front', name: 'ひきざん', note: 'まえの すうじを わける', ready: true,
+      demo: { a: 13, b: 8, op: '−', side: 'front' }, levels: CHERRY_LEVELS,
       make: (d) => makeCherrySub(d.id, 'front'),
       diffNote: { m: '10と いくつ − 1けた（13 − 8）', h2: '2けた − 1けた（43 − 8）', l: '100から ひく・100を こえる かず − 2けた（132 − 94）' } }
   ] : [
@@ -491,6 +492,28 @@
     return img;
   }
 
+  // しゅるいカード用の小さな式：わける数を赤くし、その下に さくらんぼを ぶら下げる。もう一方の数は うすくする
+  function cherryDemo(d) {
+    const wrap = el('span', 'sa-choice-demo');
+    wrap.setAttribute('aria-hidden', 'true');
+    const num = (n, split) => {
+      if (!split) return el('span', 'sa-demo-num', String(n));
+      const col = el('span', 'sa-demo-col');
+      col.appendChild(el('span', 'sa-demo-num is-split', String(n)));
+      col.insertAdjacentHTML('beforeend',
+        '<svg class="sa-demo-cherry" viewBox="0 0 44 34" aria-hidden="true">' +
+        '<path d="M22 1v7M22 8 11 21M22 8l11 13" stroke="#6fbf4a" stroke-width="2.6" fill="none" stroke-linecap="round"/>' +
+        '<path d="M23 3c4-3 9-2 11 0-3 3-8 3-11 0z" fill="#8fd16a"/>' +
+        '<circle cx="11" cy="25" r="8" fill="#e8424f"/><circle cx="33" cy="25" r="8" fill="#e8424f"/>' +
+        '<circle cx="8.5" cy="22" r="2.4" fill="#ffb3b3"/><circle cx="30.5" cy="22" r="2.4" fill="#ffb3b3"/></svg>');
+      return col;
+    };
+    wrap.appendChild(num(d.a, d.side === 'front'));
+    wrap.appendChild(el('span', 'sa-demo-op', d.op));
+    wrap.appendChild(num(d.b, d.side === 'back'));
+    return wrap;
+  }
+
   function group(title, items, key, describe, extra, onPick) {
     const wrap = el('section', 'sa-group');
     wrap.appendChild(el('h3', 'sa-group-title', title));
@@ -501,6 +524,10 @@
       btn.type = 'button';
       btn.dataset.id = item.id;   // むずかしさの色分け（css の .sa-group-diff [data-id]）に使う
       if (item.icon) btn.appendChild(icon(item.icon));
+      if (item.demo) {
+        btn.classList.add('has-art');
+        btn.appendChild(cherryDemo(item.demo));
+      }
       if (item.img) {
         btn.classList.add('has-art');
         const art = el('img', 'sa-choice-art');
