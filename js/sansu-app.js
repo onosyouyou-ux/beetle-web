@@ -143,6 +143,7 @@
     q.ngText = split + ' は ' + correct + ' に わけるよ';
     // 正誤の解説：わけかた から こたえ までの流れを ぜんぶ書く（2026-10-02 ユーザー指示）
     q.explain = split + ' を ' + correct + ' に わけて、' + q.okText;
+    q.steps = [split + ' を ' + correct + ' に わける'].concat(q.okText.replace('!', '').split('、'));
     // 2だんめ：わけたあと、式の こたえ（11 など）も選ばせる（2026-10-02 ユーザー指示：たす作業まで正解に入れる）。
     // 上限を20以上にして、10の かたまりを わすれた まちがい（11 → 1・21）も まぜる
     q.sumOptions = buildOptions(q.total, 1, Math.max(q.total + 10, 20));
@@ -1027,7 +1028,14 @@
     // さくらんぼざん は ①わける と ②こたえ の両方が合って せいかい
     const ok = val === expected && (q.layout !== 'cherry' || q.splitOk);
     s.marks.push(ok);
-    showAnswerEffect(ok);
+    // さくらんぼざん は 答えあわせの絵の中に 解説を出し、「つぎへ」を押すまで待つ（2026-10-02 ユーザー指示）。
+    // 1.2秒で次へ進むと、解説を読む前に消えていた
+    const cherry = q.layout === 'cherry';
+    showAnswerEffect(ok, cherry ? {
+      head: ok ? 'こたえは ' + expected + '!' : (val === expected ? 'こたえは あってる! わけかたを みてみよう' : 'こたえは ' + expected),
+      steps: q.steps,
+      onNext: () => { if (session) nextQuestion(); }
+    } : null);
     markButtons(buttons, btn, val === expected, expected);
     if (ok) {
       s.correct += 1;
@@ -1080,7 +1088,7 @@
     }
     saveProgress();
 
-    setTimeout(() => { if (session) nextQuestion(); }, 1200);
+    if (!cherry) setTimeout(() => { if (session) nextQuestion(); }, 1200);
   }
 
   // 押したボタンに ○／× の色、まちがえたときは正しいボタンにも ○ の色を付ける
@@ -1090,10 +1098,11 @@
   }
 
   // 画面中央に短く出す答え合わせ演出。次の問題を邪魔しないようDOMは自動で片づける。
-  function showAnswerEffect(ok) {
+  // explain を渡すと 解説（①②③）と「つぎへ」を出し、押されるまで消さない（さくらんぼざん）
+  function showAnswerEffect(ok, explain) {
     const old = document.querySelector('.sa-answer-effect');
     if (old) old.remove();
-    const effect = el('div', 'sa-answer-effect ' + (ok ? 'is-correct' : 'is-wrong'));
+    const effect = el('div', 'sa-answer-effect ' + (ok ? 'is-correct' : 'is-wrong') + (explain ? ' has-explain' : ''));
     effect.setAttribute('role', 'status');
     effect.setAttribute('aria-live', 'polite');
     const burst = el('div', 'sa-answer-burst');
@@ -1113,7 +1122,26 @@
     // 問題は窓（dialog）で開くので、ページ本体に付けると窓の後ろに隠れて見えなかった（2026-09-28 修正）。
     // 窓が開いていれば窓の中に出す
     effect.appendChild(burst); effect.appendChild(badge);
+    if (explain) {
+      const panel = el('div', 'sa-answer-explain');
+      panel.appendChild(el('p', 'sa-explain-head', explain.head));
+      const list = el('ol', 'sa-explain-steps');
+      explain.steps.forEach((t) => list.appendChild(el('li', null, t)));
+      panel.appendChild(list);
+      const next = el('button', 'sa-btn sa-btn-primary sa-explain-next', 'つぎへ →');
+      next.type = 'button';
+      next.addEventListener('click', () => {
+        effect.remove();
+        explain.onNext();
+      });
+      panel.appendChild(next);
+      badge.appendChild(panel);
+    }
     (document.querySelector('dialog.nk-modal[open]') || document.body).appendChild(effect);
+    if (explain) {
+      effect.querySelector('.sa-explain-next').focus({ preventScroll: true });
+      return;
+    }
     setTimeout(() => effect.classList.add('is-leaving'), 850);
     setTimeout(() => effect.remove(), 1150);
   }

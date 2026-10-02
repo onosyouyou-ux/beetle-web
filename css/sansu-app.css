@@ -1112,3 +1112,36 @@ body[data-sansu-mode="sakuranbo"] .sa-feedback { min-height: 2.7em; line-height:
 @media (max-width: 767px) {
   body[data-sansu-mode="sakuranbo"] .sa-feedback { font-size: 14px; }
 }
+
+/* さくらんぼざん の答えあわせ：絵の下に 解説（①わける ②10を つくる ③のこり）と「つぎへ」。押すまで消さない（2026-10-02） */
+.sa-answer-effect.has-explain { pointer-events: auto; background: rgba(20, 25, 55, .45); }
+.sa-answer-effect.has-explain .sa-answer-badge { width: min(92vw, 360px); min-height: 0; }
+.sa-answer-effect.has-explain .sa-answer-icon { width: clamp(96px, 22dvh, 170px); height: clamp(96px, 22dvh, 170px); }
+.sa-answer-effect.has-explain .sa-answer-burst { top: 0; }
+.sa-answer-explain {
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px 18px 16px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(25, 25, 55, .25);
+  color: #2a2350;
+  text-align: left;
+}
+.sa-explain-head { margin: 0 0 8px; text-align: center; font-size: 19px; font-weight: 800; }
+.is-correct .sa-explain-head { color: #27946b; }
+.is-wrong .sa-explain-head { color: #dd435a; }
+.sa-explain-steps { margin: 0 0 14px; padding-left: 1.6em; font-size: 20px; font-weight: 800; line-height: 1.6; }
+.sa-explain-steps li::marker { color: #e8424f; }
+.sa-explain-next { display: block; width: 100%; }
+@media (max-width: 767px), (orientation: landscape) and (max-height: 500px) {
+  .sa-explain-head { font-size: 16px; }
+  .sa-explain-steps { font-size: 17px; line-height: 1.5; margin-bottom: 10px; }
+  .sa-answer-explain { padding: 10px 14px 12px; margin-top: 8px; }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .sa-answer-effect.has-explain .sa-answer-badge { flex-direction: row; align-items: center; gap: 12px; width: min(92vw, 560px); }
+  .sa-answer-effect.has-explain .sa-answer-icon { width: 110px; height: 110px; }
+  .sa-answer-effect.has-explain .sa-answer-title { display: none; }
+  .sa-answer-explain { margin-top: 0; }
+}
