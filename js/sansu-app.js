@@ -1028,27 +1028,36 @@
     // さくらんぼざん は ①わける と ②こたえ の両方が合って せいかい
     const ok = val === expected && (q.layout !== 'cherry' || q.splitOk);
     s.marks.push(ok);
-    // さくらんぼざん は 答えあわせの絵の中に 解説を出し、「つぎへ」を押すまで待つ（2026-10-02 ユーザー指示）。
-    // 1.2秒で次へ進むと、解説を読む前に消えていた
+    // さくらんぼざん は 選択肢の場所に 解説を出し、「つぎへ」を押すまで待つ（2026-10-02 ユーザー指示）。
+    // 1.2秒で次へ進むと読む前に消えていた。絵に重ねると問題が見えなくなるので、選択肢と入れかえる。
+    // まちがいの「おしい!」は出さない（解説で こたえが わかるため。ユーザー指示）
     const cherry = q.layout === 'cherry';
-    showAnswerEffect(ok, cherry ? {
-      head: ok ? 'こたえは ' + expected + '!' : (val === expected ? 'こたえは あってる! わけかたを みてみよう' : 'こたえは ' + expected),
-      steps: q.steps,
-      onNext: () => { if (session) nextQuestion(); }
-    } : null);
+    showAnswerEffect(ok, cherry && !ok);
+    if (cherry) {
+      setTimeout(() => {
+        if (!session || session.current !== q) return;
+        showExplain(options, feedback, {
+          ok: ok,
+          head: ok ? 'せいかい! こたえは ' + expected : (val === expected ? 'こたえは あってる! わけかたを みてみよう' : 'こたえは ' + expected),
+          steps: q.steps
+        });
+      }, 500);
+    }
     markButtons(buttons, btn, val === expected, expected);
     if (ok) {
       s.correct += 1;
       playCorrect();
       // さくらんぼ算は「分けたあと」の流れまで見せるのが学びどころ（文は出題の okText）
-      feedback.textContent = q.layout === 'cherry' ? q.explain : pick(PRAISE_OK);
-      feedback.classList.add('is-ok');
+      if (!cherry) {
+        feedback.textContent = pick(PRAISE_OK);
+        feedback.classList.add('is-ok');
+      }
     } else {
       playWrong();
-      feedback.textContent = q.layout === 'cherry'
-        ? (val === expected ? 'こたえは あってる! ' : 'おしい! こたえは ' + expected + '。') + q.explain
-        : pick(PRAISE_NG) + ' こたえは ' + q.answer;
-      feedback.classList.add('is-ng');
+      if (!cherry) {
+        feedback.textContent = pick(PRAISE_NG) + ' こたえは ' + q.answer;
+        feedback.classList.add('is-ng');
+      }
     }
 
     // COMBO（連続正解）
@@ -1097,12 +1106,33 @@
     if (!ok) buttons.forEach((b) => { if (b.dataset.v === String(expected)) b.classList.add('is-correct'); });
   }
 
+  // 選択肢の場所を 解説（①わける ②10を つくる ③のこり）と「つぎへ」に入れかえる（さくらんぼざん）
+  function showExplain(options, feedback, ex) {
+    options.innerHTML = '';
+    options.classList.add('is-explain');
+    feedback.classList.remove('is-ok', 'is-ng');
+    feedback.innerHTML = '&nbsp;';
+    const label = app.querySelector('.sa-options-label');
+    if (label) label.textContent = 'ときかた';
+    const panel = el('div', 'sa-explain ' + (ex.ok ? 'is-ok' : 'is-ng'));
+    panel.appendChild(el('p', 'sa-explain-head', ex.head));
+    const list = el('ol', 'sa-explain-steps');
+    ex.steps.forEach((t) => list.appendChild(el('li', null, t)));
+    panel.appendChild(list);
+    const next = el('button', 'sa-btn sa-btn-primary sa-explain-next', 'つぎへ →');
+    next.type = 'button';
+    next.addEventListener('click', () => { if (session) nextQuestion(); });
+    panel.appendChild(next);
+    options.appendChild(panel);
+    next.focus({ preventScroll: true });
+  }
+
   // 画面中央に短く出す答え合わせ演出。次の問題を邪魔しないようDOMは自動で片づける。
-  // explain を渡すと 解説（①②③）と「つぎへ」を出し、押されるまで消さない（さくらんぼざん）
-  function showAnswerEffect(ok, explain) {
+  // noTitle＝「おしい!」の文字を出さない（さくらんぼざん の まちがい）
+  function showAnswerEffect(ok, noTitle) {
     const old = document.querySelector('.sa-answer-effect');
     if (old) old.remove();
-    const effect = el('div', 'sa-answer-effect ' + (ok ? 'is-correct' : 'is-wrong') + (explain ? ' has-explain' : ''));
+    const effect = el('div', 'sa-answer-effect ' + (ok ? 'is-correct' : 'is-wrong'));
     effect.setAttribute('role', 'status');
     effect.setAttribute('aria-live', 'polite');
     const burst = el('div', 'sa-answer-burst');
@@ -1118,30 +1148,11 @@
     mascot.alt = ok ? 'まる' : 'ばつ';
     mascot.width = 240; mascot.height = 240;
     badge.appendChild(mascot);
-    badge.appendChild(el('strong', 'sa-answer-title', ok ? 'せいかい!' : 'おしい!'));
+    if (!noTitle) badge.appendChild(el('strong', 'sa-answer-title', ok ? 'せいかい!' : 'おしい!'));
     // 問題は窓（dialog）で開くので、ページ本体に付けると窓の後ろに隠れて見えなかった（2026-09-28 修正）。
     // 窓が開いていれば窓の中に出す
     effect.appendChild(burst); effect.appendChild(badge);
-    if (explain) {
-      const panel = el('div', 'sa-answer-explain');
-      panel.appendChild(el('p', 'sa-explain-head', explain.head));
-      const list = el('ol', 'sa-explain-steps');
-      explain.steps.forEach((t) => list.appendChild(el('li', null, t)));
-      panel.appendChild(list);
-      const next = el('button', 'sa-btn sa-btn-primary sa-explain-next', 'つぎへ →');
-      next.type = 'button';
-      next.addEventListener('click', () => {
-        effect.remove();
-        explain.onNext();
-      });
-      panel.appendChild(next);
-      badge.appendChild(panel);
-    }
     (document.querySelector('dialog.nk-modal[open]') || document.body).appendChild(effect);
-    if (explain) {
-      effect.querySelector('.sa-explain-next').focus({ preventScroll: true });
-      return;
-    }
     setTimeout(() => effect.classList.add('is-leaving'), 850);
     setTimeout(() => effect.remove(), 1150);
   }
