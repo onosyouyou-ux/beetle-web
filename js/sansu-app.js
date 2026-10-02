@@ -524,10 +524,7 @@
       btn.type = 'button';
       btn.dataset.id = item.id;   // むずかしさの色分け（css の .sa-group-diff [data-id]）に使う
       if (item.icon) btn.appendChild(icon(item.icon));
-      if (item.demo) {
-        btn.classList.add('has-art');
-        btn.appendChild(cherryDemo(item.demo));
-      }
+      if (item.demo) btn.classList.add('has-art');
       if (item.img) {
         btn.classList.add('has-art');
         const art = el('img', 'sa-choice-art');
@@ -539,6 +536,8 @@
       }
       const body = el('span', 'sa-choice-body');
       body.appendChild(el('span', 'sa-choice-label', info.label));
+      // さくらんぼざん の小さな式は「たしざん」と「まえの すうじを わける」の あいだに置く（2026-10-02 ユーザー指示）
+      if (item.demo) body.appendChild(cherryDemo(item.demo));
       if (info.note) body.appendChild(el('span', 'sa-choice-note', info.note));
       btn.appendChild(body);
       if (info.disabled) {

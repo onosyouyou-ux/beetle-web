@@ -977,18 +977,21 @@ body[data-sansu-mode="sakuranbo"] .sa-group-diff .sa-choices { grid-template-col
   body.ninja-space .sa-choice.has-art .sa-choice-check { top: 6px; right: 6px; width: 22px; height: 22px; }
 }
 /* さくらんぼざん の しゅるいカード：絵の かわりに小さな式（8 + 3 の 3 の下に さくらんぼ）。2026-10-02
-   高さは絵と同じにして、たしざん・ひきざん の4まいの大きさを そろえる */
+   並びは 上から「たしざん」→ 式 → 「まえの すうじを わける」（ユーザー指示） */
 .sa-choice-demo {
   display: flex;
   align-items: flex-start;
   justify-content: center;
   gap: .3em;
-  height: clamp(96px, 22dvh, 180px);
-  padding-top: clamp(8px, 3dvh, 34px);
-  box-sizing: border-box;
+  margin: 10px 0 8px;
   font-size: clamp(34px, 6dvh, 50px);
   font-weight: 800;
   line-height: 1;
+}
+/* 「まえの すうじを わける」は このカードで いちばん大事な ことばなので、ほかの説明より大きく白く */
+body.ninja-space .sa-choice-demo + .sa-choice-note { font-size: 15px; color: #fff; }
+@media (max-width: 767px) {
+  body.ninja-space .sa-choice-demo + .sa-choice-note { font-size: 12px; }
 }
 .sa-demo-col { display: flex; flex-direction: column; align-items: center; }
 .sa-demo-num { color: #b9b0e8; }
@@ -996,10 +999,10 @@ body[data-sansu-mode="sakuranbo"] .sa-group-diff .sa-choices { grid-template-col
 .sa-demo-op { color: #a08ef0; }
 .sa-demo-cherry { width: 1.5em; height: auto; margin-top: .06em; }
 @media (max-width: 767px) {
-  body.ninja-space .sa-choice-demo { height: clamp(78px, 24vw, 110px); padding-top: 10px; font-size: clamp(26px, 8vw, 36px); }
+  body.ninja-space .sa-choice-demo { margin: 6px 0 4px; font-size: clamp(26px, 8vw, 36px); }
 }
 @media (orientation: landscape) and (max-height: 500px) {
-  body.ninja-space .sa-choice-demo { height: 64px; padding-top: 6px; font-size: 22px; }
+  body.ninja-space .sa-choice-demo { margin: 2px 0; font-size: 20px; }
 }
 /* 説明は ことばの切れ目（空白）で折り返す（「ふやそ／う」のように 途中で切れないように） */
 .sa-choice.has-art .sa-choice-note { word-break: keep-all; overflow-wrap: anywhere; }
