@@ -294,6 +294,20 @@ img { max-width: 100%; height: auto; }
   background: var(--card-soft);
 }
 .slp-calc-icon img { width: 142px; max-height: 76px; object-fit: contain; }
+
+/* さくらんぼ算：各カードの説明と同じ問題画面を表示する */
+.slp-calc-icon.slp-calc-preview {
+  height: auto;
+  aspect-ratio: 832 / 488;
+  background: #fff;
+  overflow: hidden;
+}
+.slp-calc-icon.slp-calc-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+}
 .slp-calc-card h3 { margin: 0 0 8px; font-size: 19px; font-weight: 800; }
 .slp-calc-card p { margin: 0; color: var(--sl-ink-soft); font-size: 12px; font-weight: 500; line-height: 1.75; }
 
