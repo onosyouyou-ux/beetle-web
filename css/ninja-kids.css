@@ -2294,9 +2294,7 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   color:#fff;
 }}
 
-/* かんじ修行だけ紙面下部が暗いので、文字色を反転させる */
-.ninja-kids.ninja-kanji .nk-doc-ref { color:#c7d5d8; }
-.ninja-kids.ninja-kanji .nk-doc-ref a { color:#ffad92; }
+/* かんじ修行だけ紙面下部が暗かったころの文字色の反転は、紙面が明るくなって読めなくなっていたので外した（2026-10-04） */
 
 /* とけい修行の忍具と進行表示（2026-09-09） */
 .ninja-kids.ninja-tokei .tk-tool-icon { width:28px; height:28px; object-fit:contain; flex:none; }
