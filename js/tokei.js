@@ -509,6 +509,7 @@
       hands: step.hands || 'both',
       index: 0, correct: 0, locked: false, q: null
     };
+    if (window.NkTrack) NkTrack('mode_select', { app: 'tokei', mode: state.modeId, level: state.stepId });
     nextQuestion();
   }
 
@@ -647,6 +648,7 @@
   function renderResult() {
     var s = state.session;
     app.innerHTML = '';
+    if (window.NkTrack) NkTrack('set_complete', { app: 'tokei', mode: state.modeId, level: state.stepId, score: s.correct, total: SET_LENGTH });
     var wrap = el('div', 'tk-result');
     // 全問正解のときだけ、お祝いの絵に差し替える（2026-09-03）
     if (s.correct === SET_LENGTH) wrap.classList.add('is-perfect');

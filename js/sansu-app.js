@@ -763,7 +763,17 @@
       combo: 0, bestCombo: 0,   // 連続正解（COMBO）
       arrivedStage: null   // 直前に到着した天体のステージ番号（アイコン上に「到着!」を出す）
     };
+    if (window.NkTrack) NkTrack('mode_select', trackParams());
     nextQuestion();
+  }
+
+  // GA4 のイベントに付ける値（#97）。level は むずかしさ:あそびかた（さくらんぼざん も 6段になったので同じ形。2026-10-03）
+  function trackParams() {
+    return {
+      app: SAKURANBO ? 'sakuranbo' : 'sansu',
+      mode: session.mode.id,
+      level: session.diff.id + ':' + session.style.id
+    };
   }
 
   function nextQuestion() {
@@ -1196,6 +1206,12 @@
     const s = session;
     app.innerHTML = '';
     playFanfare();
+    if (window.NkTrack) {
+      const tp = trackParams();
+      tp.score = s.correct;
+      tp.total = complete ? ENDLESS_MAX : CHALLENGE_LENGTH;
+      NkTrack('set_complete', tp);
+    }
 
     const card = el('div', 'sa-card sa-result');
 

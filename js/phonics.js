@@ -187,6 +187,7 @@
     // 音声合成は 1回 使っておかないと 声の 一覧が 読み込まれない ブラウザがある
     if (window.speechSynthesis) window.speechSynthesis.getVoices();
     state = { mode: mode, qs: MODES[mode].build(), i: 0, ok: 0, missed: [] };
+    if (window.NkTrack) NkTrack('mode_select', { app: 'phonics', mode: mode, level: 'none' });
     renderQuestion();
   }
 
@@ -273,6 +274,7 @@
 
   function renderResult() {
     var missed = state.missed;
+    if (window.NkTrack) NkTrack('set_complete', { app: 'phonics', mode: state.mode, level: 'none', score: state.ok, total: QUESTIONS });
     root.innerHTML =
       '<div class="pn-result' + (state.ok === QUESTIONS ? ' is-perfect' : '') + '">' +
         '<p class="pn-result-score">' + QUESTIONS + 'もん ちゅう <b>' + state.ok + 'もん</b> せいかい</p>' +
