@@ -84,7 +84,7 @@ body{
   display:block;margin:0;padding:0;background:none;border:none;font-size:13px;font-weight:700;
   color:var(--pn-ink2);cursor:pointer;font-family:inherit;text-align:center;
 }
-.pn-back:hover{color:var(--pn-orange)}
+@media (hover:hover){.pn-back:hover{color:var(--pn-orange)}}
 .pn-bar{
   display:flex;justify-content:space-between;align-items:center;
   font-size:12px;font-weight:700;color:var(--pn-ink2);margin-bottom:12px;
@@ -130,12 +130,12 @@ body{
   padding:13px 30px;border:none;border-radius:10px;background:var(--pn-orange);
   color:#fff;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:background .15s;
 }
-.pn-next:hover{background:var(--pn-orange-dk)}
+@media (hover:hover){.pn-next:hover{background:var(--pn-orange-dk)}}
 .pn-sub{
   padding:13px 24px;border:2px solid var(--pn-line2);border-radius:10px;background:#fff;
   color:var(--pn-ink);font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;
 }
-.pn-sub:hover{border-color:var(--pn-orange)}
+@media (hover:hover){.pn-sub:hover{border-color:var(--pn-orange)}}
 
 /* ====== けっか ====== */
 .pn-result{text-align:center}

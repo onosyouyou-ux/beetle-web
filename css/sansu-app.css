@@ -236,7 +236,7 @@ body::after {
   color: rgba(255, 255, 255, .55);
   cursor: default;
 }
-.sa-choice.is-disabled:hover { transform: none; }
+@media (hover:hover){.sa-choice.is-disabled:hover { transform: none; }}
 
 .sa-choice-icon {
   height: 46px;
@@ -276,7 +276,7 @@ body::after {
   box-shadow: 0 4px 0 rgba(120, 55, 10, .5);
   transition: transform .12s, box-shadow .12s;
 }
-.sa-ref:hover { transform: translateY(-2px); }
+@media (hover:hover){.sa-ref:hover { transform: translateY(-2px); }}
 .sa-ref:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(120, 55, 10, .5); }
 .sa-ref-icon { height: 40px; width: auto; flex-shrink: 0; }
 .sa-ref .sa-choice-label { font-size: 17px; font-weight: 800; }
@@ -298,7 +298,7 @@ body::after {
   text-underline-offset: 4px;
   cursor: pointer;
 }
-.sa-ref-link:hover { color: #fff; }
+@media (hover:hover){.sa-ref-link:hover { color: #fff; }}
 .sa-ref-card { padding: 24px 22px 26px; }
 .sa-ref-lead {
   margin: 0 0 20px;
@@ -433,7 +433,7 @@ body::after {
   font-weight: 700;
   cursor: pointer;
 }
-.sa-step-back:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+@media (hover:hover){.sa-step-back:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }}
 
 /* ── プレイ画面 ── */
 .sa-play-head {
@@ -469,7 +469,7 @@ body::after {
   font-weight: 700;
   cursor: pointer;
 }
-.sa-back:hover { background: rgba(139, 92, 246, .25); }
+@media (hover:hover){.sa-back:hover { background: rgba(139, 92, 246, .25); }}
 .sa-play-mode { font-size: 13px; font-weight: 700; color: rgba(255, 255, 255, .85); }
 
 /* COMBO バッジ（連続正解。2連から表示）*/
@@ -843,9 +843,9 @@ body::after {
   font-weight: 800;
   cursor: pointer;
 }
-.sa-btn:hover { background: #e0dbf7; }
+@media (hover:hover){.sa-btn:hover { background: #e0dbf7; }}
 .sa-btn-primary { background: var(--sa-purple); border-color: #6f5fc4; color: #fff; }
-.sa-btn-primary:hover { background: #a08ef0; }
+@media (hover:hover){.sa-btn-primary:hover { background: #a08ef0; }}
 
 /* 紙面下部：しょうかいページ（LP）への導線 */
 .paper-about {
@@ -861,7 +861,7 @@ body::after {
   border-bottom: 1px dotted rgba(182, 168, 245, .6);
   padding-bottom: 2px;
 }
-.paper-about a:hover { color: #fff; border-bottom-color: #fff; }
+@media (hover:hover){.paper-about a:hover { color: #fff; border-bottom-color: #fff; }}
 
 /* 紙面の一番下に置く更新日 */
 .paper-release {
@@ -929,10 +929,8 @@ body::after {
 .sa-group-diff .sa-choices { width: 100%; margin-inline: auto; }
 .sa-group-diff .sa-group-title { width: 100%; margin-inline: auto; }
 .sa-group-diff ~ .sa-start { width: min(100%, max(70%, 340px)); margin-inline: auto; }
-/* さくらんぼざん は むずかしさ が3つなので1列に並べる（2026-10-02） */
-body[data-sansu-mode="sakuranbo"] .sa-group-diff .sa-choices,
-body[data-sansu-mode="sakuranbo"] .sa-group-diff .sa-group-title { width: min(100%, max(70%, 340px)); }
-body[data-sansu-mode="sakuranbo"] .sa-group-diff .sa-choices { grid-template-columns: 1fr; grid-auto-flow: row; }
+/* さくらんぼざん も むずかしさ が6つになったので、さんすう と同じ2列×3段にする（2026-10-03。3つのころは1列だった。
+   1列のままだと 学校のノートPC（1366x657・1280x600・1093x520）で スタートが画面の下に はみ出していた） */
 
 /* むずかしさ2列（スマホ）：1まいの幅が170pxほどしかなく、「ちょうかんたん」が3行に折れ、スタートが画面の外に出ていた。
    天体の絵は小さく、名前は1行で、説明は小さくして3段を1画面に収める（2026-10-01） */

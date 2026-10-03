@@ -112,7 +112,7 @@ body.ninja-space {
 /* スマホはタップした所に :hover が残り、次の画面の同じ位置のボタンが選ばれて見える。マウスのときだけ効かせる（2026-09-27） */
 @media (hover:hover) { .ninja-kids .tk-mode:hover,.ninja-kids .kj-mode:hover,.ninja-kids .kt-mode:hover,.ninja-kids .rj-mode:hover,.ninja-kids .pn-mode:hover ,.ninja-kids .kk-mode:hover{ border-color:var(--nk-accent); } }
 .ninja-kids .tk-next,.ninja-kids .kj-next,.ninja-kids .kt-next,.ninja-kids .rj-next,.ninja-kids .pn-next ,.ninja-kids .kk-next{ background:var(--nk-accent); box-shadow:0 3px 0 var(--nk-accent-dark); }
-.ninja-kids .tk-next:hover,.ninja-kids .kj-next:hover,.ninja-kids .kt-next:hover,.ninja-kids .rj-next:hover,.ninja-kids .pn-next:hover ,.ninja-kids .kk-next:hover{ background:var(--nk-accent-dark); }
+@media (hover:hover){.ninja-kids .tk-next:hover,.ninja-kids .kj-next:hover,.ninja-kids .kt-next:hover,.ninja-kids .rj-next:hover,.ninja-kids .pn-next:hover ,.ninja-kids .kk-next:hover{ background:var(--nk-accent-dark); }}
 .ninja-space .app-paper { border-color:#6846b7; background:linear-gradient(rgba(8,20,48,.9),rgba(11,21,51,.94)); }
 .ninja-space .app-paper::before { opacity:.22; }
 .ninja-space .sa-head-badge { width:96px; height:96px; object-fit:contain; filter:drop-shadow(0 8px 12px rgba(0,0,0,.35)); }
@@ -231,7 +231,7 @@ body.ninja-space {
   box-shadow:0 4px 0 var(--nk-accent-dark);
   clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
 }
-.ninja-kids .app-ref-button:hover { background:var(--nk-accent-dark); }
+@media (hover:hover){.ninja-kids .app-ref-button:hover { background:var(--nk-accent-dark); }}
 /* 「アプリ一覧」は控えめな抜き文字。色は修行カラーに合わせる。 */
 .ninja-kids .app-ref-button.is-sub {
   background:transparent;
@@ -239,7 +239,7 @@ body.ninja-space {
   border-color:var(--nk-hero-a);
   box-shadow:0 4px 0 color-mix(in srgb,var(--nk-accent-dark) 70%,transparent);
 }
-.ninja-kids .app-ref-button.is-sub:hover { background:var(--nk-accent); color:#fff; border-color:var(--nk-accent); }
+@media (hover:hover){.ninja-kids .app-ref-button.is-sub:hover { background:var(--nk-accent); color:#fff; border-color:var(--nk-accent); }}
 .ninja-kids :is(#tk-app,#kj-app,#kt-app,#rj-app,#pn-app) ,.ninja-kids :is(#tk-app,#kk-app,#kt-app,#rj-app,#pn-app){
   position:relative;
   max-width:1020px;
@@ -674,7 +674,7 @@ body.ninja-space {
   box-shadow:none;
   clip-path:none;
 }
-.ninja-kids .app-ref-button:hover { background:#d87529; }
+@media (hover:hover){.ninja-kids .app-ref-button:hover { background:#d87529; }}
 /* 「アプリ一覧」は2番手のボタン。抜き文字にしていたが、ヒーローの地色が
    濃紺→淡い修行カラーへグラデするため、明るい側で文字が消えていた
    （スマホで実際に読めなくなっていた。2026-09-03修正）。
@@ -685,7 +685,7 @@ body.ninja-space {
   color:var(--nk-accent-dark);
   box-shadow:none;
 }
-.ninja-kids .app-ref-button.is-sub:hover { background:#fff; color:var(--nk-accent-dark); }
+@media (hover:hover){.ninja-kids .app-ref-button.is-sub:hover { background:#fff; color:var(--nk-accent-dark); }}
 .ninja-kids .app-ref-visual.is-ninja {
   min-height:188px;
   background:radial-gradient(circle at 50% 46%,rgba(255,255,255,.65),transparent 56%);
@@ -2289,10 +2289,10 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   font-weight:800;
   text-decoration:none;
 }
-.ninja-kids .nk-back-tools a:hover {
+@media (hover:hover){.ninja-kids .nk-back-tools a:hover {
   background:var(--nk-accent);
   color:#fff;
-}
+}}
 
 /* かんじ修行だけ紙面下部が暗いので、文字色を反転させる */
 .ninja-kids.ninja-kanji .nk-doc-ref { color:#c7d5d8; }
@@ -2583,9 +2583,9 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   border-radius:12px;
   box-shadow:0 5px 0 #bd6c17,0 10px 18px rgba(0,0,0,.28);
 }
-.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-next,.rj-next,.pn-next):hover {
+@media (hover:hover){.ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on :is(.kt-next,.rj-next,.pn-next):hover {
   background:linear-gradient(180deg,#ffd083,#ffa945)!important;
-}
+}}
 /* 音を きく は補助なので白のまま、少しだけ大きく */
 .ninja-kids :is(.kt-answer,.rj-answer,.pn-answer).is-on .pn-sub {
   font-size:clamp(15px,1.7vw,19px);
@@ -2712,10 +2712,10 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   text-decoration:none;
   transition:translate .12s ease, filter .12s ease;
 }
-.nk-link:hover { translate:0 -2px; filter:brightness(1.05); }
+@media (hover:hover){.nk-link:hover { translate:0 -2px; filter:brightness(1.05); }}
 /* いま開いている修行。押せるままにしておくが、「ここにいる」と分かるよう落とす */
 .nk-link[aria-current] { opacity:.5; }
-.nk-link[aria-current]:hover { translate:0 0; filter:none; }
+@media (hover:hover){.nk-link[aria-current]:hover { translate:0 0; filter:none; }}
 .nk-link:active { translate:0 1px; filter:brightness(.97); }
 .nk-link:focus-visible { outline:3px solid var(--nk-accent,#c0634c); outline-offset:3px; }
 .nk-link-img { display:block; width:100%; height:auto; }
@@ -2879,10 +2879,10 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   background:#fff;
   box-shadow:0 3px 0 #c5a876;
 }
-.ninja-kids :is(.kj-tool,.kj-mark):hover:not(:disabled) ,.ninja-kids :is(.kk-tool,.kk-mark):hover:not(:disabled){
+@media (hover:hover){.ninja-kids :is(.kj-tool,.kj-mark):hover:not(:disabled) ,.ninja-kids :is(.kk-tool,.kk-mark):hover:not(:disabled){
   translate:0 -2px;
   border-color:var(--nk-accent);
-}
+}}
 .ninja-kids .kj-judge-btn ,.ninja-kids .kk-judge-btn{
   border-left:6px solid var(--nk-accent);
   background:linear-gradient(#fff,color-mix(in srgb,var(--nk-accent) 14%,#fff));
@@ -2923,10 +2923,10 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   background:#fff;
   box-shadow:0 3px 0 #c5a876;
 }
-.ninja-kids :is(.rj-tool,.rj-mark):hover:not(:disabled) {
+@media (hover:hover){.ninja-kids :is(.rj-tool,.rj-mark):hover:not(:disabled) {
   translate:0 -2px;
   border-color:var(--nk-accent);
-}
+}}
 .ninja-kids .rj-judge {
   border-left:6px solid var(--nk-accent);
   background:linear-gradient(#fff,color-mix(in srgb,var(--nk-accent) 14%,#fff));
@@ -2998,11 +2998,11 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   background:#fff;
   box-shadow:0 2px 0 #c5a876;
 }
-.ninja-kids :is(.kj-eraser,.rj-eraser,.kt-eraser):hover {
+@media (hover:hover){.ninja-kids :is(.kj-eraser,.rj-eraser,.kt-eraser):hover {
   translate:0 -1px;
   border-color:var(--nk-accent);
   color:var(--nk-accent-dark,#17272e);
-}
+}}
 /* 寝かせた画面は紙そのものが小さいので、けしゴムも小さくする */
 @media (orientation:landscape) and (max-height:500px) {
   .ninja-kids :is(.kj-eraser,.rj-eraser,.kt-eraser) { width:30px; height:30px; top:4px; right:4px; }
@@ -3029,10 +3029,10 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   background:#fff;
   box-shadow:0 3px 0 #c5a876;
 }
-.ninja-kids :is(.kt-tool,.kt-mark):hover:not(:disabled) {
+@media (hover:hover){.ninja-kids :is(.kt-tool,.kt-mark):hover:not(:disabled) {
   translate:0 -2px;
   border-color:var(--nk-accent);
-}
+}}
 .ninja-kids .kt-judge {
   border-left:6px solid var(--nk-accent);
   background:linear-gradient(#fff,color-mix(in srgb,var(--nk-accent) 14%,#fff));

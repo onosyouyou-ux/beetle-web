@@ -84,7 +84,7 @@ body{
   display:block;margin:0;padding:0;background:none;border:none;font-size:13px;font-weight:700;
   color:var(--kt-ink2);cursor:pointer;font-family:inherit;text-align:center;
 }
-.kt-back:hover{color:var(--kt-orange)}
+@media (hover:hover){.kt-back:hover{color:var(--kt-orange)}}
 .kt-bar{
   display:flex;justify-content:space-between;align-items:center;
   font-size:12px;font-weight:700;color:var(--kt-ink2);margin-bottom:12px;
@@ -140,12 +140,12 @@ body{
   padding:13px 30px;border:none;border-radius:10px;background:var(--kt-orange);
   color:#fff;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:background .15s;
 }
-.kt-next:hover{background:var(--kt-orange-dk)}
+@media (hover:hover){.kt-next:hover{background:var(--kt-orange-dk)}}
 .kt-sub{
   padding:13px 24px;border:2px solid var(--kt-line2);border-radius:10px;background:#fff;
   color:var(--kt-ink);font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;
 }
-.kt-sub:hover{border-color:var(--kt-orange)}
+@media (hover:hover){.kt-sub:hover{border-color:var(--kt-orange)}}
 
 /* ====== けっか ====== */
 .kt-result{text-align:center}
@@ -241,9 +241,9 @@ body{
   flex:1;border:2px solid var(--kt-line2);border-radius:10px;background:#fff;color:var(--kt-ink);
   padding:12px 18px;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer;
 }
-.kt-tool:hover,.kt-mark:hover{border-color:var(--kt-orange)}
+@media (hover:hover){.kt-tool:hover,.kt-mark:hover{border-color:var(--kt-orange)}}
 .kt-judge{background:var(--kt-orange);border-color:var(--kt-orange-dk);color:#fff;box-shadow:0 3px 0 var(--kt-orange-dk)}
-.kt-judge:hover{background:var(--kt-orange-dk)}
+@media (hover:hover){.kt-judge:hover{background:var(--kt-orange-dk)}}
 .kt-mark-ok{border-color:var(--kt-green);color:var(--kt-green);background:var(--kt-green-bg)}
 .kt-mark-ng{border-color:var(--kt-red);color:var(--kt-red);background:var(--kt-red-bg)}
 .kt-write-tools .kt-tool{width:100%}
@@ -256,7 +256,7 @@ body{
   border:2px solid var(--kt-line2);border-radius:10px;
   background:#fff;color:var(--kt-ink2);cursor:pointer;
 }
-.kt-eraser:hover{border-color:var(--kt-orange);color:var(--kt-orange-dk)}
+@media (hover:hover){.kt-eraser:hover{border-color:var(--kt-orange);color:var(--kt-orange-dk)}}
 .kt-eraser svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
 /* --- 2カラムの段だけ右カラムに置く（1カラムの段は上から順に積む） --- */
