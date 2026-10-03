@@ -46,13 +46,14 @@
   //   すこしむずかしい＝2けたと 1けた（くり上がり・くり下がり なし）
   //   むずかしい　　＝2けたと 1けた（くり上がり・くり下がり あり）。すこしむずかしい の つぎ（2026-10-01 ユーザー指示）
   //   ちょうなんもん＝2けたどうし
-  // さくらんぼざん は 3段（2026-10-02 ユーザー指示）。id は さんすう と そろえて色分けの css を共用する
-  //   ふつう＝1けたどうし／むずかしい＝2けたと 1けた／ちょうなんもん＝100 きじゅん（どれも くり上がり・くり下がり あり）
-  const DIFFS = SAKURANBO ? [
-    { id: 'm', name: 'ふつう', icon: 'route/mars' },
-    { id: 'h2', name: 'むずかしい', icon: 'route/saturn' },
-    { id: 'l', name: 'ちょうなんもん', icon: 'black-hole' }
-  ] : [
+  // さくらんぼざん も 6段（2026-10-03 ユーザー決定。それまでは ふつう・むずかしい・ちょうなんもん の3段）。
+  // どれも くり上がり・くり下がり あり。やさしい段は「10を つくるのに たりない数」の小ささで分ける
+  //   ちょうかんたん＝わける数が いつも 1（9 + 4・15 − 9・11 − 4）
+  //   かんたん　　　＝わける数が 2・3（8 + 5・14 − 8・13 − 5）
+  //   ふつう　　　　＝1けたどうし ぜんぶ／すこしむずかしい＝2けたと 1けた（28 + 5）
+  //   むずかしい　　＝2けたどうし・つぎの10（38 + 25）／ちょうなんもん＝100 きじゅん（79 + 39）
+  // id は さんすう と そろえて色分けの css を共用する
+  const DIFFS = [
     // アイコンは とことん の旅路の天体（2026-10-01 ユーザー指示）。ちょうなんもん だけ ブラックホールのまま
     { id: 'vs', name: 'ちょうかんたん', icon: 'route/moon' },
     { id: 's', name: 'かんたん', icon: 'route/venus' },
@@ -156,13 +157,20 @@
   // たしざん：大きいほう（big）を キリのいい数にし、小さいほう（small）を わける
   function makeCherryAdd(level, side) {
     let big, small;
-    if (level === 'm') {
-      big = randInt(6, 9);
+    if (level === 'vs' || level === 's' || level === 'm') {
+      // ちょうかんたん＝9（1 を もらう）／かんたん＝8・7（2・3 を もらう）／ふつう＝6〜9
+      big = level === 'vs' ? 9 : level === 's' ? randInt(7, 8) : randInt(6, 9);
       // 同じ数は出さない（7 + 7 → どっちの 7 か わからない）。2 は 1 と 1 にしか分けられないので3から
       small = randInt(Math.max(3, 11 - big), big - 1);
-    } else if (level === 'h2') {
+    } else if (level === 'h') {
       do { big = randInt(11, 89); } while (onesOf(big) < 2);   // 1の位が0・1だと くり上がりが作れない
       small = randInt(Math.max(3, 11 - onesOf(big)), 9);
+    } else if (level === 'h2') {
+      // 2けた ＋ 2けた で つぎの10を つくる（38 + 25 → 25 を 2 と 23、38 + 2 = 40）。こたえは100まで
+      do {
+        big = randInt(12, 88);
+        small = randInt(11, big - 1);
+      } while (onesOf(big) < 2 || onesOf(small) < 10 - onesOf(big) || big + small > 99);
     } else {
       // ちょうなんもん：100 を きじゅんに する（79 + 39 → 39 を 21 と 18、79 + 21 = 100。2026-10-02 ユーザー指示）。
       // 2けた ＋ 2けた で こたえは かならず100を こえる。分けるのは いつも小さいほう（46 + 45 で 46 を わけるのは不自然）
@@ -188,12 +196,19 @@
   }
 
   // ひきざん：くり下がりが ある組み合わせを作る（ひく数の1の位が、ひかれる数の1の位より大きい）
-  function drawSub(level) {
+  // やさしい段は、まえを わける（げんかほう）なら「10 から ひく数」、うしろを わける（げんげんほう）なら「ひかれる数の1の位」を
+  // 小さくする。ちょうかんたん＝15 − 9（10 − 9 = 1）・11 − 4（4 を 1 と 3）、かんたん＝14 − 8・13 − 5
+  function drawSub(level, side) {
+    const front = side === 'front';
     for (;;) {
       let a, b;
       // ひく数は3から（2 は 1 と 1 にしか分けられない）
-      if (level === 'm') { a = randInt(11, 18); b = randInt(3, 9); }
-      else if (level === 'h2') { a = randInt(21, 98); b = randInt(3, 9); }
+      if (level === 'vs') { a = front ? randInt(11, 18) : 11; b = front ? 9 : randInt(3, 9); }
+      else if (level === 's') { a = front ? randInt(11, 18) : randInt(12, 13); b = front ? randInt(7, 8) : randInt(3, 9); }
+      else if (level === 'm') { a = randInt(11, 18); b = randInt(3, 9); }
+      else if (level === 'h') { a = randInt(21, 98); b = randInt(3, 9); }
+      // むずかしい：2けた − 2けた（62 − 25）
+      else if (level === 'h2') { a = randInt(21, 99); b = randInt(11, a - 1); }
       // ちょうなんもん：100 を きじゅんに する（132 − 94。たしざん と そろえる）。こたえは100より小さい
       else { a = randInt(101, 198); b = randInt(11, 99); if (a - b < 100) return [a, b]; continue; }
       if (onesOf(b) > onesOf(a) && onesOf(a) >= 1) return [a, b];
@@ -201,7 +216,7 @@
   }
 
   function makeCherrySub(level, side) {
-    const [a, b] = drawSub(level);
+    const [a, b] = drawSub(level, side);
     if (side === 'back') {
       // げんげんほう：うしろの数を「まえの数の1の位」と のこりに わけ、キリのいい数まで ひいてから のこりを ひく。
       // ちょうなんもん は 100 まで ひく（132 − 94 → 94 を 32 と 62）
@@ -226,7 +241,10 @@
       layout: 'cherry',
       op: '−',
       prompt: block + ' から ' + b + ' を ひけるように ' + a + ' を わけよう',
-      cap: 'ここから ' + b + ' を ひく',
+      // 「ここから ひく」だと どこから ひくのか 分かりにくかった。わけた 10 から ひいて、のこりを たす と書く。
+      // わける前に「3 を たす」まで出すと こたえが わかるので、わけたあと（capDone）で書きたす（2026-10-03 ユーザー指示）
+      cap: block + ' から ' + b + ' を ひく',
+      capDone: block + ' から ' + b + ' を ひいて、' + (a - block) + ' を たす',
       text: a + ' − ' + b,
       side: 'front', needLeft: true,
       a: a, b: b, split: a, need: block, rest: a - block, total: a - b,
@@ -235,24 +253,28 @@
   }
 
   // さくらんぼざん専用：1段目で しゅるい（3つ）、2段目で むずかしさ（2026-10-02 ユーザー指示。さんすう と同じ作り）。
-  // たしざんは「小さいほうを わける」だけなので1まい。まえを わける（4 + 8）は1けたどうし（ふつう）にだけ まぜる
+  // たしざんは「小さいほうを わける」だけなので1まい。まえを わける（4 + 8）は1けたどうし（ちょうかんたん〜ふつう）にだけ まぜる
   // （2けたで まえを わける 5 + 28 は 教科書に出ず、子どもも 28 に 2 を たす と考える。ユーザーと決定）。
   // ひきざんは げんかほう（まえ）と げんげんほう（うしろ）で やりかたが ちがうので2まい。
   // カードの絵の場所には、どっちの数を わけるかが ひと目で わかる小さな式（demo）を出す（絵は使わない。2026-10-02 ユーザー指示）
-  const CHERRY_LEVELS = ['m', 'h2', 'l'];
+  const CHERRY_LEVELS = ['vs', 's', 'm', 'h', 'h2', 'l'];
+  const ONE_DIGIT = { vs: true, s: true, m: true };
   const MODES = SAKURANBO ? [
     { id: 'add', name: 'たしざん', note: 'ちいさい ほうの すうじを わける', ready: true,
       demo: { a: 8, b: 3, op: '+', side: 'back' }, levels: CHERRY_LEVELS,
-      make: (d) => makeCherryAdd(d.id, d.id === 'm' && Math.random() < 0.5 ? 'front' : 'back'),
-      diffNote: { m: '1けた ＋ 1けた（8 + 3・4 + 8）', h2: '2けた ＋ 1けた（28 + 5）', l: '100を つくる・2けた ＋ 2けた（79 + 39）' } },
+      make: (d) => makeCherryAdd(d.id, ONE_DIGIT[d.id] && Math.random() < 0.5 ? 'front' : 'back'),
+      diffNote: { vs: '9 ＋ 1けた（9 + 4）', s: '8・7 ＋ 1けた（8 + 5）', m: '1けた ＋ 1けた（6 + 5・4 + 8）',
+        h: '2けた ＋ 1けた（28 + 5）', h2: '2けた ＋ 2けた（38 + 25）', l: '100を つくる・2けた ＋ 2けた（79 + 39）' } },
     { id: 'sub-front', name: 'ひきざん', note: 'まえの すうじを わける', ready: true,
       demo: { a: 13, b: 8, op: '−', side: 'front' }, levels: CHERRY_LEVELS,
       make: (d) => makeCherrySub(d.id, 'front'),
-      diffNote: { m: '10と いくつ − 1けた（13 − 8）', h2: '2けた − 1けた（43 − 8）', l: '100から ひく・100を こえる かず − 2けた（132 − 94）' } },
+      diffNote: { vs: '9 を ひく（15 − 9）', s: '8・7 を ひく（14 − 8）', m: '10と いくつ − 1けた（13 − 6）',
+        h: '2けた − 1けた（43 − 8）', h2: '2けた − 2けた（62 − 25）', l: '100から ひく・100を こえる かず − 2けた（132 − 94）' } },
     { id: 'sub-back', name: 'ひきざん', note: 'うしろの すうじを わける', ready: true,
       demo: { a: 13, b: 4, op: '−', side: 'back' }, levels: CHERRY_LEVELS,
       make: (d) => makeCherrySub(d.id, 'back'),
-      diffNote: { m: '10と いくつ − 1けた（13 − 4）', h2: '2けた − 1けた（43 − 6）', l: '100から ひく・100を こえる かず − 2けた（132 − 94）' } }
+      diffNote: { vs: '11 から ひく（11 − 4）', s: '12・13 から ひく（13 − 5）', m: '10と いくつ − 1けた（16 − 7）',
+        h: '2けた − 1けた（43 − 6）', h2: '2けた − 2けた（62 − 25）', l: '100から ひく・100を こえる かず − 2けた（132 − 94）' } }
   ] : [
     // さんすう：たしざん・ひきざん の2つ（2026-10-01 ユーザー指示）。むずかしさは2段目で えらぶ。
     // levels＝その しゅるいで出せる むずかしさ。diffNote＝むずかしさ の説明
@@ -275,6 +297,15 @@
   function loadProgress() {
     try {
       const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      // さくらんぼざん は 2026-10-03 に 6段へ。それまでの h2（2けた と 1けた）は いまの h なので、せいせきを移す
+      if (parsed && parsed.version === 2 && SAKURANBO && !parsed.sixLevels) {
+        ['challenge', 'endless'].forEach((k) => {
+          const old = parsed[k] || {};
+          parsed[k] = {};
+          Object.keys(old).forEach((key) => { parsed[k][key.replace(/:h2$/, ':h')] = old[key]; });
+        });
+        parsed.sixLevels = true;
+      }
       if (parsed && parsed.version === 2) return parsed;
     } catch (e) { /* 壊れていたら作り直す */ }
     return emptyProgress();
@@ -847,7 +878,8 @@
     const targetSlot = el('div', 'sa-cherry-slot');
     const target = el('span', 'sa-cherry-ball is-target', '?');
     targetSlot.appendChild(target);
-    targetSlot.appendChild(el('span', 'sa-cherry-cap', q.cap));
+    const cap = el('span', 'sa-cherry-cap', q.cap);
+    targetSlot.appendChild(cap);
     const restSlot = el('div', 'sa-cherry-slot');
     const rest = el('span', 'sa-cherry-ball', '?');
     restSlot.appendChild(rest);
@@ -887,6 +919,7 @@
         rest.textContent = String(q.rest);
         target.classList.add('is-filled');
         rest.classList.add('is-filled');
+        if (q.capDone) cap.textContent = q.capDone;
         eq.classList.remove('sa-eq-late');
         total.classList.remove('sa-eq-late');
       },
