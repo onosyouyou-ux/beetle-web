@@ -18,4 +18,7 @@ required_selectors: ["#site-header", ".footer-skyline-bar", ".footer-link-bar"]
 - **検索語**: title・description に「たし算・ひき算」「くり上がり・くり下がり」「小学1年生」「無料」を入れる（Googleの検索語に引っかかるよう文章を厚くする方針）
 - **ヒーロー画像** `assets/images/sakuranbo/lp/app-play.jpg`: 忍者の絵のタブレット画面（左上 413,272・495×370）に、
   1080×796 で撮った とき方が出ている画面を貼る。画面を変えたら撮り直して同じ位置に貼る
+- **しゅるいカードの画像** `assets/images/sakuranbo/lp/card-{add,sub-front,sub-back}.webp`（640×317）: 8 + 3／13 − 8／13 − 4 で
+  わけかた に答えた直後の盤面を `tests/capture-sakuranbo-cards.mjs` で撮る（幅430px・2倍）。さくらんぼの見た目や ことばを変えたら撮り直す。
+  WSL の Chromium は起動しないので Windows の node ＋ `SAKURANBO_BROWSER=chrome`・`NODE_PATH` に tests/node_modules（2026-10-03）
 - **手動確認観点**: 訴求文言がアプリの現行機能（わけかた3つ・かず2つ）と一致しているか／FAQ と JSON-LD の一致
