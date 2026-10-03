@@ -60,6 +60,7 @@ e2e: false
 - **もどるボタン**: プレイ画面では**一番下**（中央）に配置
 - **素材**: `assets/images/sansu/` … `bg-space.jpg`（背景）／`buttons/`（板枠 choice-default・choice-selected・start-button・reset-button）／
   `icons/`（余白付き icons-padded 由来）／`route/`（惑星9種）。**地球スタートとゴールの星はアイコン未支給のため ★／絵文字（仮）**
+- **効果音**: 問題画面の見出しの右に 🔊／🔇 の切りかえボタン（2026-10-02）。localStorage `sansuSound`（さくらんぼざん と共通）
 - **保存**: localStorage `sansuProgress`（`version: 2`。モード追加に耐える）。とことんの進捗バーはセッション内（0スタート）だが、通算成績は記録
 - **手動確認観点**: 実機での音（自動テスト不可）／スマホ縦でのボタンの押しやすさ／
   border-image の角・金具の歪み／とことんの到着バブルと★スタートの見え方
