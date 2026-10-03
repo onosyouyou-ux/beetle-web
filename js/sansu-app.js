@@ -767,12 +767,12 @@
     nextQuestion();
   }
 
-  // GA4 のイベントに付ける値（#97）。さくらんぼざんは むずかしさ が無いので level は あそびかた
+  // GA4 のイベントに付ける値（#97）。level は むずかしさ:あそびかた（さくらんぼざん も 6段になったので同じ形。2026-10-03）
   function trackParams() {
     return {
       app: SAKURANBO ? 'sakuranbo' : 'sansu',
       mode: session.mode.id,
-      level: SAKURANBO ? session.style.id : session.diff.id + ':' + session.style.id
+      level: session.diff.id + ':' + session.style.id
     };
   }
 

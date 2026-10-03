@@ -308,7 +308,7 @@ Vercelアプリは「**紙面固定＋余白は背景**」で作る。レイア�
 
 - 送り口は `js/ninja-links.js` の `NkTrack(event, params)`（全修行アプリが読み込んでいる）。gtag が無い・手元の確認・内部の点検では何も送られない
 - **mode_select**：練習を選んで始めたとき（`app`・`mode`・`level`）／**set_complete**：けっか画面を出したとき（`app`・`mode`・`level`・`score`・`total`）
-- `app` は sansu・sakuranbo・kuku・tokei・kanji・katakana・romaji・phonics。`level` は むずかしさ（さんすうは `m:challenge` のように むずかしさ:あそびかた、かんじは学年 `g1`／学期をしぼると `g1:t2`、カタカナ・ローマ字・フォニックスは段が無いので `none`）
+- `app` は sansu・sakuranbo・kuku・tokei・kanji・katakana・romaji・phonics。`level` は むずかしさ（さんすう・さくらんぼざんは `m:challenge` のように むずかしさ:あそびかた、かんじは学年 `g1`／学期をしぼると `g1:t2`、カタカナ・ローマ字・フォニックスは段が無いので `none`）
 - **送るのは アプリ名・練習の種類・むずかしさ・正解数だけ**。名前・答えの中身・書いた字は送らない
 - 新しい修行アプリを作ったら、始める関数と けっか の関数に同じ2行を入れる
 - GA4 側では app・mode・level をカスタムディメンション、score・total をカスタム指標に登録して使う（手順は #97。登録した日から後のデータだけ集計される）
