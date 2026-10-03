@@ -72,12 +72,12 @@ body{
   padding:16px;font-size:20px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:.1em;
   box-shadow:0 3px 0 var(--kj-orange-dk);
 }
-.kj-start:hover{background:var(--kj-orange-dk);box-shadow:0 3px 0 #a85d1e}
+@media (hover:hover){.kj-start:hover{background:var(--kj-orange-dk);box-shadow:0 3px 0 #a85d1e}}
 .kj-back{
   display:block;margin:16px auto 0;background:none;border:none;font-size:13px;font-weight:700;
   color:var(--kj-ink3);cursor:pointer;font-family:inherit;
 }
-.kj-back:hover{color:var(--kj-orange)}
+@media (hover:hover){.kj-back:hover{color:var(--kj-orange)}}
 
 /* ====== プレイ ====== */
 .kj-play{text-align:center}
@@ -218,9 +218,9 @@ body.ninja-kids .kj-opt.is-xlong .nk-answer-label{font-size:.7em}
   border:2px solid var(--kj-line2);border-radius:10px;background:#fff;color:var(--kj-ink);
   padding:10px 20px;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer;
 }
-.kj-tool:hover{border-color:var(--kj-orange)}
+@media (hover:hover){.kj-tool:hover{border-color:var(--kj-orange)}}
 .kj-judge-btn{background:var(--kj-orange);border-color:var(--kj-orange-dk);color:#fff;box-shadow:0 3px 0 var(--kj-orange-dk)}
-.kj-judge-btn:hover{background:var(--kj-orange-dk)}
+@media (hover:hover){.kj-judge-btn:hover{background:var(--kj-orange-dk)}}
 
 /* まるとばつは同じ大きさ・同じ並びにする（片方を小さくすると押しやすさが偏る） */
 .kj-write-tools.is-marks{display:grid;grid-template-columns:1fr 1fr}
@@ -292,7 +292,7 @@ body.ninja-kids .kj-opt.is-xlong .nk-answer-label{font-size:.7em}
   border:2px solid var(--kj-line2);border-radius:10px;
   background:#fff;color:var(--kj-ink2);cursor:pointer;
 }
-.kj-eraser:hover{border-color:var(--kj-orange);color:var(--kj-orange-dk)}
+@media (hover:hover){.kj-eraser:hover{border-color:var(--kj-orange);color:var(--kj-orange-dk)}}
 .kj-eraser svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .kj-write-tools .kj-tool{width:100%}
 

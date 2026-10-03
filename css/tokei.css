@@ -82,12 +82,12 @@ body{
   padding:16px;font-size:20px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:.1em;
   box-shadow:0 3px 0 var(--tk-orange-dk);
 }
-.tk-start:hover{background:var(--tk-orange-dk);box-shadow:0 3px 0 #a85d1e}
+@media (hover:hover){.tk-start:hover{background:var(--tk-orange-dk);box-shadow:0 3px 0 #a85d1e}}
 .tk-back{
   display:block;margin:16px auto 0;background:none;border:none;font-size:13px;font-weight:700;
   color:var(--tk-ink3);cursor:pointer;font-family:inherit;
 }
-.tk-back:hover{color:var(--tk-orange)}
+@media (hover:hover){.tk-back:hover{color:var(--tk-orange)}}
 
 /* ====== 時計 ====== */
 .tk-clock .tk-num{font-size:19px;font-weight:800;fill:#4a4438;font-family:inherit}
@@ -110,7 +110,7 @@ body{
   color:var(--tk-orange-dk);cursor:pointer;
 }
 .tk-hint-btn::before{content:"💡";font-size:15px}
-.tk-hint-btn:hover{background:#fdf1e2}
+@media (hover:hover){.tk-hint-btn:hover{background:#fdf1e2}}
 .tk-hint{
   background:var(--tk-cream2);border-radius:14px;padding:14px 16px;margin:0 0 16px;
   text-align:left;font-size:14px;line-height:1.85;font-weight:700;color:var(--tk-ink2);

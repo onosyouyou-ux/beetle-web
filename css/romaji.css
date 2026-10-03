@@ -84,7 +84,7 @@ body{
   display:block;margin:0;padding:0;background:none;border:none;font-size:13px;font-weight:700;
   color:var(--rj-ink2);cursor:pointer;font-family:inherit;text-align:center;
 }
-.rj-back:hover{color:var(--rj-orange)}
+@media (hover:hover){.rj-back:hover{color:var(--rj-orange)}}
 .rj-bar{
   display:flex;justify-content:space-between;align-items:center;
   font-size:12px;font-weight:700;color:var(--rj-ink2);margin-bottom:12px;
@@ -130,12 +130,12 @@ body{
   padding:13px 30px;border:none;border-radius:10px;background:var(--rj-orange);
   color:#fff;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:background .15s;
 }
-.rj-next:hover{background:var(--rj-orange-dk)}
+@media (hover:hover){.rj-next:hover{background:var(--rj-orange-dk)}}
 .rj-sub{
   padding:13px 24px;border:2px solid var(--rj-line2);border-radius:10px;background:#fff;
   color:var(--rj-ink);font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;
 }
-.rj-sub:hover{border-color:var(--rj-orange)}
+@media (hover:hover){.rj-sub:hover{border-color:var(--rj-orange)}}
 
 /* ====== けっか ====== */
 .rj-result{text-align:center}
@@ -223,7 +223,7 @@ body{
   color:var(--rj-orange-dk);font:800 13px/1.5 inherit;cursor:pointer;
 }
 .rj-hint-btn::before{content:"💡";font-size:14px}
-.rj-hint-btn:hover{background:#fdf1e2}
+@media (hover:hover){.rj-hint-btn:hover{background:#fdf1e2}}
 .rj-hint{
   margin:10px auto 0;padding:8px 18px;border-radius:12px;background:#fff;
   color:var(--rj-ink);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -283,9 +283,9 @@ body{
   flex:1;border:2px solid var(--rj-line2);border-radius:10px;background:#fff;color:var(--rj-ink);
   padding:12px 18px;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer;
 }
-.rj-tool:hover,.rj-mark:hover{border-color:var(--rj-orange)}
+@media (hover:hover){.rj-tool:hover,.rj-mark:hover{border-color:var(--rj-orange)}}
 .rj-judge{background:var(--rj-orange);border-color:var(--rj-orange-dk);color:#fff;box-shadow:0 3px 0 var(--rj-orange-dk)}
-.rj-judge:hover{background:var(--rj-orange-dk)}
+@media (hover:hover){.rj-judge:hover{background:var(--rj-orange-dk)}}
 /* まると「つぎ がんばろう」は同じ大きさ・同じ並びにする */
 .rj-mark-ok{border-color:var(--rj-green);color:var(--rj-green);background:var(--rj-green-bg)}
 .rj-mark-ng{border-color:var(--rj-red);color:var(--rj-red);background:var(--rj-red-bg)}
@@ -324,7 +324,7 @@ body{
   border:2px solid var(--rj-line2);border-radius:10px;
   background:#fff;color:var(--rj-ink2);cursor:pointer;
 }
-.rj-eraser:hover{border-color:var(--rj-orange);color:var(--rj-orange-dk)}
+@media (hover:hover){.rj-eraser:hover{border-color:var(--rj-orange);color:var(--rj-orange-dk)}}
 .rj-eraser svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .rj-write-tools .rj-tool{width:100%}
 

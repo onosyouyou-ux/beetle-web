@@ -107,12 +107,12 @@ body{margin:0;color:var(--kk-ink)}
   padding:16px;font-size:20px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:.1em;
   box-shadow:0 3px 0 var(--kk-blue-dk);
 }
-.kk-start:hover{background:var(--kk-blue-dk);box-shadow:0 3px 0 #12314f}
+@media (hover:hover){.kk-start:hover{background:var(--kk-blue-dk);box-shadow:0 3px 0 #12314f}}
 .kk-back{
   display:block;margin:16px auto 0;background:none;border:none;font-size:13px;font-weight:700;
   color:var(--kk-ink3);cursor:pointer;font-family:inherit;
 }
-.kk-back:hover{color:var(--kk-blue)}
+@media (hover:hover){.kk-back:hover{color:var(--kk-blue)}}
 
 /* ====== プレイ ====== */
 .kk-play{text-align:center}
@@ -139,7 +139,7 @@ body{margin:0;color:var(--kk-ink)}
   background:rgba(255,255,255,.12);color:#fff;
   padding:7px 18px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;
 }
-.kk-hint-btn:hover{border-color:#fff;background:rgba(255,255,255,.24)}
+@media (hover:hover){.kk-hint-btn:hover{border-color:#fff;background:rgba(255,255,255,.24)}}
 /* 文中の「●」は手裏剣のアイコンにする（アレイ図と同じ絵・同じ向き）。字の大きさに合わせる */
 .kk-ic{display:inline-block;width:1.15em;height:1.15em;vertical-align:-.2em;rotate:45deg;margin:0 .05em}
 .kk-ic-row{display:inline-flex;gap:.05em;vertical-align:-.2em}
