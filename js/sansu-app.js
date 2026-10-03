@@ -760,6 +760,7 @@
       index: 0, correct: 0, locked: false, current: null,
       marks: [],   // 1もんごとの せいかい（true）／まちがい（false）。けっかの ★☆ に使う
       recent: [],   // 直近の問題文。連続で同じ問題を出さないため
+      asked: {},    // この一巡で出した問題文（まだ出していない問題を先に出す。#109）
       combo: 0, bestCombo: 0,   // 連続正解（COMBO）
       arrivedStage: null   // 直前に到着した天体のステージ番号（アイコン上に「到着!」を出す）
     };
@@ -785,14 +786,25 @@
     renderPlay();
   }
 
-  // 直近3問と同じ問題を避けて出題する（プールが小さい難易度でも止まらないよう試行回数に上限）
+  // まだ出していない問題を先に出す（2026-10-03・#109）。さくらんぼざん の ちょうかんたん は7〜12種類しかなく、
+  // 直近3問を避けるだけでは 10問の中で同じ問題が何度も出ていた。出しきったら一巡したとみなして数えなおす。
+  // それでも直近3問とは重ねない（プールが小さい難易度でも止まらないよう試行回数に上限）
   function makeUniqueQuestion() {
     const s = session;
     let q, tries = 0;
     do {
       q = s.mode.make(s.diff);
       tries++;
-    } while (s.recent.indexOf(q.text) !== -1 && tries < 25);
+    } while (s.asked[q.text] && tries < 80);
+    if (s.asked[q.text]) {
+      s.asked = {};
+      tries = 0;
+      do {
+        q = s.mode.make(s.diff);
+        tries++;
+      } while (s.recent.indexOf(q.text) !== -1 && tries < 25);
+    }
+    s.asked[q.text] = true;
     s.recent.push(q.text);
     if (s.recent.length > 3) s.recent.shift();
     return q;
