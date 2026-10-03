@@ -1,0 +1,86 @@
+{
+  "_note": "先生向け案内ページ（/for-teachers.html）と配布用PDFの元データ。ここを直して node scripts/teacher-kit/build.mjs を実行すると、ページのカード・QR・PDF がそろう（#96）",
+  "site": "https://www.beetle-web.jp",
+  "apps": [
+    {
+      "id": "sansu",
+      "name": "さんすう うちゅうたんけん",
+      "path": "/tools/sansu-app/",
+      "landing": "/tools/sansu-app/landing.html",
+      "thumb": "/assets/images/ninja/nk-link-sansu.webp",
+      "grade": "幼児〜小学生",
+      "teacher": "たし算・ひき算を、こたえが5までの段から2けた同士まで6段階で。1セット10問。",
+      "kids": "たしざん・ひきざんで うちゅうを たんけんしよう"
+    },
+    {
+      "id": "sakuranbo",
+      "name": "さくらんぼざん",
+      "path": "/tools/sakuranbo/",
+      "landing": "/tools/sakuranbo/landing.html",
+      "thumb": "/assets/images/ninja/nk-link-sakuranbo.webp",
+      "grade": "小学1年（くり上がり・くり下がり）",
+      "teacher": "さくらんぼ算で、たし算と、ひき算の減加法・減減法を別々に練習。分ける→こたえ→とき方まで1問ずつ。",
+      "kids": "さくらんぼで 10を つくって けいさんしよう"
+    },
+    {
+      "id": "kuku",
+      "name": "かけざん修行",
+      "path": "/tools/kuku/",
+      "landing": "/tools/kuku/landing.html",
+      "thumb": "/assets/images/ninja/nk-link-kuku.webp",
+      "grade": "小学2年の2学期から",
+      "teacher": "九九を教科書どおりのとなえかたで。まちがえたら★の図で数えなおせます。ぎゃくびきで、わり算の準備も。",
+      "kids": "くくを となえて かけざんを しゅぎょう"
+    },
+    {
+      "id": "tokei",
+      "name": "とけい修行",
+      "path": "/tools/tokei/",
+      "landing": "/tools/tokei/landing.html",
+      "thumb": "/assets/images/ninja/nk-link-tokei.webp",
+      "grade": "小学1・2年",
+      "teacher": "アナログ時計の読み方を、ちょうど・30ぷん・5ふん・1ぷんの4段階で。長い針と短い針の取りちがえも直せます。",
+      "kids": "とけいを よめるように しゅぎょう"
+    },
+    {
+      "id": "kanji",
+      "name": "かんじ修行",
+      "path": "/tools/kanji/",
+      "landing": "/tools/kanji/landing.html",
+      "thumb": "/assets/images/ninja/nk-link-kanji.webp",
+      "grade": "小学1〜6年",
+      "teacher": "小1〜小6の配当漢字1026字を、学年・学期ごとのコースで。読みと書き。",
+      "kids": "かんじを よんで かいて しゅぎょう"
+    },
+    {
+      "id": "katakana",
+      "name": "カタカナ修行",
+      "path": "/tools/katakana/",
+      "landing": "/tools/katakana/landing.html",
+      "thumb": "/assets/images/ninja/nk-link-katakana.webp",
+      "grade": "小学1年の2学期から",
+      "teacher": "どの言葉をカタカナで書くのかを、毎回「なぜそう書くのか」の一文つきで。にた字の見分けも。",
+      "kids": "カタカナで かく ことばを みわけよう"
+    },
+    {
+      "id": "romaji",
+      "name": "ローマ字修行",
+      "path": "/tools/romaji/",
+      "landing": "/tools/romaji/landing.html",
+      "thumb": "/assets/images/ninja/nk-link-romaji.webp",
+      "grade": "小学3年から",
+      "teacher": "2025年12月の内閣告示に合わせ、shi・chi・tsu（ヘボン式）を基本に。読む・キーボードで打つ・くらべる の3つ。",
+      "kids": "ローマ字を よんで うって しゅぎょう"
+    },
+    {
+      "id": "phonics",
+      "name": "フォニックス修行",
+      "path": "/tools/phonics/",
+      "landing": "/tools/phonics/landing.html",
+      "thumb": "/assets/images/ninja/nk-link-phonics.webp",
+      "grade": "アルファベットが読めたら（小学3〜4年のころ）",
+      "teacher": "文字の「名前」ではなく「音」から英単語を読む練習。端末の読み上げ機能で音が出ます。",
+      "kids": "えいごの おとを きいて よんでみよう"
+    }
+  ]
+}

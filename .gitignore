@@ -4,5 +4,6 @@
 *Zone.Identifier
 
 tests/node_modules
+scripts/teacher-kit/node_modules
 tests/test-results
 tests/playwright-report

@@ -1,0 +1,56 @@
+/* 先生向けのご案内（for-teachers.html）。test-tools.css ＋ edu-tools.css（温かいオレンジ）の上に重ねる */
+
+/* ====== 01 お約束 ====== */
+.ft-promise{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ft-promise li{background:#fff;border:1px solid var(--tp-border);border-left:4px solid var(--tp-orange);border-radius:10px;padding:14px 16px}
+.ft-promise b{display:block;font-size:15px;font-weight:800;color:var(--tp-text);margin-bottom:4px}
+.ft-promise span{display:block;font-size:13px;line-height:1.75;color:var(--tp-text2)}
+
+/* ====== 02 アプリと配りかた（カードは scripts/teacher-kit/build.mjs が差し込む） ====== */
+.ft-apps{display:flex;flex-direction:column;gap:14px}
+.ft-app{display:grid;grid-template-columns:200px minmax(0,1fr) 132px;gap:18px;align-items:start;background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:16px;scroll-margin-top:60px}
+.ft-app-thumb{display:block;border-radius:8px;overflow:hidden;aspect-ratio:960/380;background:var(--tp-cream2)}
+.ft-app-thumb img{display:block;width:100%;height:100%;object-fit:cover}
+.ft-app-body h3{margin:0 0 4px;font-size:17px;font-weight:800;color:var(--tp-text)}
+.ft-app-grade{margin:0 0 6px;font-size:12px;font-weight:700;color:var(--tp-orange)}
+.ft-app-desc{margin:0 0 10px;font-size:13px;line-height:1.75;color:var(--tp-text2)}
+.ft-app-url{display:block;margin:0 0 10px;font-size:12px;color:var(--tp-text2);word-break:break-all}
+.ft-app-actions{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.ft-copy{appearance:none;border:0;border-radius:2px;background:var(--tp-orange);color:#fff;font:inherit;font-size:13px;font-weight:700;padding:8px 14px;cursor:pointer;min-width:9.5em}
+.ft-copy.is-done{background:#2e9c61}
+.ft-app-actions a{font-size:13px;font-weight:700;color:var(--tp-orange);text-decoration:none}
+.ft-app-qr{margin:0;text-align:center}
+.ft-app-qr img{display:block;width:132px;height:132px;background:#fff}
+.ft-app-qr figcaption{margin-top:4px;font-size:10px;line-height:1.4;color:var(--tp-text2)}
+@media (hover:hover){
+  .ft-copy:hover{filter:brightness(1.08)}
+  .ft-app-actions a:hover{text-decoration:underline;text-underline-offset:4px}
+}
+
+/* ====== 03 配布用プリント ====== */
+.ft-print{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ft-print-card{display:block;background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:18px 20px;color:inherit;text-decoration:none}
+.ft-print-kind{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--tp-orange);margin-bottom:6px}
+.ft-print-card b{display:block;font-size:16px;font-weight:800;color:var(--tp-text);margin-bottom:6px}
+.ft-print-card span:last-child{display:block;font-size:13px;line-height:1.7;color:var(--tp-text2)}
+.ft-print-note{margin:12px 0 0;font-size:13px;color:var(--tp-text2)}
+@media (hover:hover){
+  .ft-print-card:hover{border-color:var(--tp-orange-bd);box-shadow:0 2px 12px rgba(239,138,60,.12)}
+}
+
+/* ====== 04 FAQ（details/summary。csv-excel.css と同じスタイル） ====== */
+.faq-item{border-bottom:1px solid var(--tp-border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 2px;cursor:pointer;font-weight:700;font-size:14px;color:var(--tp-text);list-style:none}
+.faq-q::-webkit-details-marker{display:none}
+.faq-icon{color:var(--tp-orange);font-weight:700}
+details[open] .faq-icon{transform:rotate(45deg)}
+.faq-a{padding:0 2px 14px;font-size:13px;line-height:1.8;color:var(--tp-text2)}
+
+/* ====== スマホ・タブレット縦 ====== */
+@media (max-width:767px){
+  .ft-promise{grid-template-columns:1fr}
+  .ft-app{grid-template-columns:minmax(0,1fr) 96px;gap:12px}
+  .ft-app-thumb{grid-column:1 / -1}
+  .ft-app-qr img{width:96px;height:96px}
+  .ft-print{grid-template-columns:1fr}
+}

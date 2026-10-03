@@ -24,3 +24,7 @@
   font-size: 15px;
   font-weight: 800;
 }
+
+/* 先生向けのご案内（/for-teachers.html）への入口（#96） */
+.teacher-guide-link{display:inline-block;margin:-12px 0 20px;font-size:14px;font-weight:700;color:var(--tp-orange);text-decoration:none;border-bottom:2px solid var(--tp-orange-bd);padding-bottom:2px}
+@media (hover:hover){.teacher-guide-link:hover{border-bottom-color:var(--tp-orange)}}
