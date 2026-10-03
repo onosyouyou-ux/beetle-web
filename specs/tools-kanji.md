@@ -5,7 +5,7 @@ canonical: "https://www.beetle-web.jp/tools/kanji/landing.html"
 sitemap: false
 title_contains: "かんじ修行"
 og_image: "/assets/images/ninja/kanji-scroll-og.jpg"
-required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#kj-app", "#howto"]
+required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#kj-app", "#howto", ".paper-release"]
 e2e: true
 ---
 

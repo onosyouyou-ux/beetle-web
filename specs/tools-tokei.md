@@ -5,7 +5,7 @@ canonical: "https://www.beetle-web.jp/tools/tokei/landing.html"
 sitemap: false
 title_contains: "とけい修行"
 og_image: "/assets/images/ninja/tokei-clockwork-og.jpg"
-required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tk-app", "#howto"]
+required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tk-app", "#howto", ".paper-release"]
 e2e: true
 ---
 
