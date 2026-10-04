@@ -320,7 +320,7 @@ body{
   width:84px;min-height:40px;box-sizing:border-box;border:2px dashed var(--sk-line2);border-radius:8px;
   background:transparent;color:var(--sk-line2);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;opacity:.65;
 }
-.sk-ghost.is-in{opacity:1;background:#fff}
+/* 中の空きマスも外側の点線と同じ見た目（白いと席があるように見えるため） */
 .sk-ghost-sp{width:84px;min-height:40px}
 @media (hover:hover){
   .sk-cell-del:hover{color:var(--sk-red);background:var(--sk-red-bg)}
