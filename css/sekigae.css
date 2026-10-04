@@ -296,3 +296,7 @@ body{
   .sk-rule{max-width:100%;box-sizing:border-box;flex-wrap:wrap}
   .sk-rule select{max-width:none;min-width:0;flex:1 1 auto;padding:4px 2px}
 }
+
+/* 席の数は名簿より先に決める（2026-10-04：上段へ移動） */
+.sk-seatsize{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--sk-line)}
+.sk-controls .sk-go{margin-left:auto}

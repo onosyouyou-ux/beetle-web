@@ -117,6 +117,19 @@
   <main class="sk-main">
 
     <section class="sk-panel" id="tool">
+      <div class="sk-seatsize">
+        <span class="sk-lbl">席の数</span>
+        <span class="sk-ctl">
+          <label for="sk-cols">横（列）</label>
+          <select id="sk-cols"></select>
+        </span>
+        <span class="sk-ctl">
+          <label for="sk-rows">縦（行）</label>
+          <select id="sk-rows"></select>
+        </span>
+        <span class="sk-seats" id="sk-seats">—</span>
+      </div>
+
       <div class="sk-lbl-row">
         <span class="sk-lbl">名簿と配慮</span>
         <span class="sk-count" id="sk-count">0人</span>
@@ -160,15 +173,6 @@
       </div>
 
       <div class="sk-controls">
-        <span class="sk-ctl">
-          <label for="sk-cols">横（列）</label>
-          <select id="sk-cols"></select>
-        </span>
-        <span class="sk-ctl">
-          <label for="sk-rows">縦（行）</label>
-          <select id="sk-rows"></select>
-        </span>
-        <span class="sk-seats" id="sk-seats">—</span>
         <button type="button" class="sk-go" id="sk-gen">席替えする</button>
       </div>
 
