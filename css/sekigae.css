@@ -231,9 +231,10 @@ body{
 @media print{
   body{background:#fff}
   .app-paper{max-width:none;box-shadow:none;background:#fff}
-  #site-header,.sk-hero,.sk-panel,.sk-doc,.sk-actions,.sk-out,
+  #site-header,.sk-hero,.sk-panel > :not(.sk-result),.sk-doc,.sk-actions,.sk-out,
   .site-footer-app,.scroll-top-float,.sk-msg,.paper-release{display:none !important}
   .sk-main{padding:0}
+  .sk-panel{border:none;padding:0}
   .sk-result{margin:0}
   .sk-board-wrap{border:none;padding:0}
   .sk-seat{border-color:#999}
@@ -350,3 +351,8 @@ body{
 
 /* 見出し「座席を作成」は1行使い、プルダウンはその下に並べる */
 .sk-seatsize > .sk-lbl{flex-basis:100%;margin-bottom:-4px}
+
+/* 座席表は「座席を作成」の欄にそのまま出す（2026-10-04） */
+.sk-panel > .sk-result{margin-top:2px}
+.sk-panel > .sk-result .sk-board-wrap{background:var(--sk-cream);border-color:var(--sk-line)}
+.sk-panel > .sk-result .sk-out{margin-bottom:4px}

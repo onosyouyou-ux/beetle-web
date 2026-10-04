@@ -371,7 +371,7 @@
 
   function run() {
     if (!students.length) {
-      $('sk-result').classList.remove('is-on');
+      showEditor();
       showMsgs([{ text: '名簿が空です。', sub: '「＋1人」などで行を足すか、「見本を入れる」を押してください。', error: true }]);
       return;
     }
@@ -380,7 +380,7 @@
     var rows = map.length, cols = map[0].length;
     var got = collect();
     if (got.errors.length) {
-      $('sk-result').classList.remove('is-on');
+      showEditor();
       showMsgs(got.errors.map(function (t) { return { text: t, error: true }; }));
       return;
     }
@@ -388,7 +388,7 @@
 
     var problems = diagnose(names, map, got.rules);
     if (problems.length) {
-      $('sk-result').classList.remove('is-on');
+      showEditor();
       showMsgs(problems);
       return;
     }
@@ -402,7 +402,7 @@
     }
 
     if (!grid) {
-      $('sk-result').classList.remove('is-on');
+      showEditor();
       showMsgs([{
         text: '配慮を全部守れる並びが見つかりませんでした。',
         sub: '「離す」「隣」の指定が多すぎるか、前列・後列・固定の指定と重なって身動きが取れなくなっている可能性があります。条件を1つ減らすか、席の数を増やして試してください。',
@@ -474,6 +474,9 @@
     }
     board.innerHTML = html;
     $('sk-result').classList.add('is-on');
+    // 席替えのあとは、点線の編集表示のかわりに生徒の入った座席表を同じ場所に出す
+    $('sk-layout-wrap').hidden = true;
+    $('sk-layout').textContent = '座席の形を変える';
     $('sk-info').textContent = used + '人 / ' + state.total + '席（あき ' + (state.total - used) + '席）';
 
     // Excelに貼れるようタブ区切りで出す
@@ -563,6 +566,17 @@
     }
     board.innerHTML = html;
     $('sk-layout-wrap').hidden = false;
+    $('sk-result').classList.remove('is-on');
+    $('sk-layout').textContent = '座席を表示する';
+  }
+
+  /** エラーで座席表を出せないときは、席の形の表示へ戻しておく（欄を空にしない） */
+  function showEditor() {
+    if (seatMap) renderLayout();
+  }
+
+  function seatAreaShown() {
+    return !$('sk-layout-wrap').hidden || $('sk-result').classList.contains('is-on');
   }
 
   /** 点線の席を押したとき。外側なら1列（1行）広げてから席を置く */
@@ -933,7 +947,7 @@
       if (maxC + 1 >= 2 && maxC + 1 <= SEAT_MAX) $('sk-cols').value = String(maxC + 1);
       if (maxR + 1 >= 2 && maxR + 1 <= SEAT_MAX) $('sk-rows').value = String(maxR + 1);
       resetMapFromSelects();
-      if (!$('sk-layout-wrap').hidden) renderLayout();
+      if (seatAreaShown()) renderLayout();
     } else {
       clearPrev();
     }
@@ -1117,7 +1131,7 @@
   var onSizeChange = function () {
     resetMapFromSelects();
     updateCount();
-    if (!$('sk-layout-wrap').hidden) renderLayout();
+    if (seatAreaShown()) renderLayout();
   };
   $('sk-layout-board').addEventListener('click', function (e) {
     var t = e.target.closest('button');
