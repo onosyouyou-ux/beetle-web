@@ -326,3 +326,27 @@ body{
   .sk-ghost:hover{opacity:1;border-color:var(--sk-orange);color:var(--sk-orange);background:var(--sk-orange-bg)}
 }
 .sk-seat.is-hole{visibility:hidden}
+
+/* 席替えするボタン：下は中央、CSVの行の右端にも置く（2026-10-04） */
+.sk-controls{justify-content:center}
+.sk-controls .sk-go{margin-left:0;min-width:260px}
+.sk-go.sk-go-sm{margin-left:auto;padding:7px 20px;font-size:13px}
+
+/* できた席の入れかえ（ドラッグ＆ドロップ／タップ2回） */
+.sk-swap-hint{font-size:12px;color:var(--sk-ink3);text-align:center;margin:0 0 12px}
+#sk-board .sk-seat[data-at]{cursor:grab;user-select:none;transition:transform .12s, box-shadow .12s}
+#sk-board .sk-seat.is-picked{border-color:var(--sk-orange);box-shadow:0 0 0 3px rgba(224,138,60,.35);transform:translateY(-2px)}
+#sk-board .sk-seat.is-over{border-color:var(--sk-green);background:var(--sk-green-bg)}
+#sk-board .sk-seat.is-dragging{opacity:.45}
+#sk-board .sk-seat:focus-visible{outline:2px solid var(--sk-orange);outline-offset:2px}
+@media (hover:hover){
+  #sk-board .sk-seat[data-at]:hover{border-color:var(--sk-orange)}
+}
+@media(max-width:767px){
+  .sk-go.sk-go-sm{margin-left:0;width:auto}
+  .sk-controls .sk-go{width:100%;min-width:0}
+}
+@media print{ .sk-swap-hint{display:none} }
+
+/* 見出し「座席を作成」は1行使い、プルダウンはその下に並べる */
+.sk-seatsize > .sk-lbl{flex-basis:100%;margin-bottom:-4px}

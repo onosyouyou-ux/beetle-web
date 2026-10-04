@@ -5,7 +5,7 @@ canonical: "https://www.beetle-web.jp/tools/sekigae/landing.html"
 sitemap: false
 title_contains: "席替えメーカー"
 og_image: "/assets/images/OG.jpg"
-required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#sk-list", "#sk-add1", "#sk-add5", "#sk-add10", "#sk-cols", "#sk-rows", "#sk-gen", "#sk-layout", "#sk-layout-board", "#sk-board", "#sk-msg", "#sk-out", "#howto", "#sk-csv", "#sk-csv-save", "#sk-csv-template", "#sk-download", "#sk-prev"]
+required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#sk-list", "#sk-add1", "#sk-add5", "#sk-add10", "#sk-cols", "#sk-rows", "#sk-gen", "#sk-gen2", "#sk-layout", "#sk-layout-board", "#sk-board", "#sk-msg", "#sk-out", "#howto", "#sk-csv", "#sk-csv-save", "#sk-csv-template", "#sk-download", "#sk-prev"]
 e2e: true
 ---
 
@@ -42,6 +42,13 @@ e2e: true
 - 席の形は `seatMap[r][c]`（true＝席あり）で持ち、計算では席のない所を `''` で埋めて置かない。前列・後列の定員、固定席が消した席にないかも `seatMap` で数える
 - プルダウンで列・行を選び直すと、足した席・消した席はリセットして長方形に戻る
 - できた座席表では、消した席は見えない空白として並びを保つ
+
+## 席替えボタンと手直し（2026-10-04 追加）
+
+- 「席替えする」は入力パネル下の中央（`#sk-gen`）と、CSVボタンの行の右端（`#sk-gen2`）の2か所。1回作ったあとは両方とも「再配置する」になる
+- できた座席表の席は**ドラッグ＆ドロップ**か、**2つを順にタップ**（Enter／Space でも可）すると入れかわる。空席とも入れかえられ、消した席は動かせない
+- 入れかえは止めない。配慮（固定・前列・後列・離す・隣）から外れたら `#sk-msg` に何が外れたかを出す
+- 「見本を入れる」は、いまの座席が30席以上あれば形をそのまま使う（足した席・消した席を消さない）。足りないときだけ6×5に戻す
 
 ## 名簿の流し込み（2026-08-24追加）
 

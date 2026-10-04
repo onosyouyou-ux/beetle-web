@@ -413,7 +413,10 @@
 
     state = { grid: grid, rows: rows, cols: cols, rules: got.rules, total: seatTotal(map) };
     showMsgs(relaxed ? [{ text: relaxed }] : []);
+    picked = null;
     render();
+    // 2回目からは「再配置する」。上と下のボタンをそろえる
+    ['sk-gen', 'sk-gen2'].forEach(function (id) { $(id).textContent = '再配置する'; });
   }
 
   /**
@@ -452,14 +455,17 @@
       for (var c = 0; c < cols; c++) {
         var name = grid[r][c];
         if (name === '') { html += '<div class="sk-seat is-hole" aria-hidden="true"></div>'; continue; }
+        var at = r + ',' + c;
         if (name) used++;
         var tag = '';
         var cls = 'sk-seat';
+        if (picked === at) cls += ' is-picked';
         if (!name) cls += ' is-empty';
         else if (rules.fixed.some(function (f) { return f.name === name; })) { cls += ' is-fixed'; tag = '固定'; }
         else if (rules.front.indexOf(name) >= 0) tag = '前列';
         else if (rules.back.indexOf(name) >= 0) tag = '後列';
-        html += '<div class="' + cls + '">' +
+        html += '<div class="' + cls + '" draggable="true" tabindex="0" role="button" data-at="' + at + '"' +
+          ' aria-label="' + (c + 1) + 'れつ ' + (r + 1) + 'ばん ' + esc(name || 'あき') + '（えらんで入れかえ）">' +
           '<span class="sk-seat-pos">' + (c + 1) + 'れつ ' + (r + 1) + 'ばん</span>' +
           '<span>' + esc(name || 'あき') + '</span>' +
           (tag ? '<span class="sk-seat-tag">' + tag + '</span>' : '') +
@@ -478,6 +484,54 @@
       lines.push(row.join('\t'));
     }
     $('sk-out').value = 'こくばん\n' + lines.join('\n');
+  }
+
+  /* ---------- できた席を手で入れかえる ---------- */
+
+  var picked = null;   // タップで1つ目にえらんだ席 "r,c"
+
+  function swapSeats(a, b) {
+    if (!a || !b || a === b) return;
+    var pa = a.split(',').map(Number), pb = b.split(',').map(Number);
+    var g = state.grid;
+    var t = g[pa[0]][pa[1]];
+    g[pa[0]][pa[1]] = g[pb[0]][pb[1]];
+    g[pb[0]][pb[1]] = t;
+    picked = null;
+    render();
+    // 手で動かした結果、配慮から外れたら知らせる（入れかえ自体は止めない）
+    var broken = brokenRules(g, state.rules);
+    showMsgs(broken.length
+      ? [{ text: '入れかえで、守れていない配慮があります。', sub: broken.join('／') }]
+      : []);
+  }
+
+  function brokenRules(grid, rules) {
+    var pos = {}, out = [];
+    grid.forEach(function (row, r) { row.forEach(function (n, c) { if (n) pos[n] = [r, c]; }); });
+    var rows = grid.length;
+    rules.fixed.forEach(function (f) {
+      var p = pos[f.name];
+      if (p && (p[0] !== f.r || p[1] !== f.c)) out.push(f.name + 'が固定席にいません');
+    });
+    rules.front.forEach(function (n) { if (pos[n] && pos[n][0] >= FRONT_DEPTH) out.push(n + 'が前列にいません'); });
+    rules.back.forEach(function (n) { if (pos[n] && pos[n][0] < rows - BACK_DEPTH) out.push(n + 'が後列にいません'); });
+    rules.apart.forEach(function (p) {
+      var a = pos[p[0]], b = pos[p[1]];
+      if (a && b && Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1])) <= 1) out.push(p[0] + 'と' + p[1] + 'が近くにいます（離す）');
+    });
+    rules.next.forEach(function (p) {
+      var a = pos[p[0]], b = pos[p[1]];
+      if (a && b && Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) !== 1) out.push(p[0] + 'と' + p[1] + 'が隣ではありません');
+    });
+    return out;
+  }
+
+  /** タップ（クリック）で2つえらぶと入れかえる。スマホはドラッグが効かないのでこちらが本命 */
+  function pickSeat(at) {
+    if (!picked) { picked = at; render(); return; }
+    if (picked === at) { picked = null; render(); return; }
+    swapSeats(picked, at);
   }
 
   /**
@@ -1076,15 +1130,70 @@
   $('sk-rows').addEventListener('change', onSizeChange);
   $('sk-layout').addEventListener('click', renderLayout);
   $('sk-gen').addEventListener('click', run);
+  $('sk-gen2').addEventListener('click', run);
+
+  /* できた席の入れかえ：ドラッグ＆ドロップ、またはタップで2つえらぶ */
+  var board = $('sk-board');
+  var seatAt = function (el) {
+    var seat = el && el.closest && el.closest('.sk-seat[data-at]');
+    return seat ? seat.getAttribute('data-at') : null;
+  };
+  board.addEventListener('click', function (e) {
+    var at = seatAt(e.target);
+    if (at) pickSeat(at);
+  });
+  board.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var at = seatAt(e.target);
+    if (!at) return;
+    e.preventDefault();
+    pickSeat(at);
+    var again = board.querySelector('.sk-seat[data-at="' + at + '"]');
+    if (again) again.focus();
+  });
+  var dragFrom = null;
+  board.addEventListener('dragstart', function (e) {
+    dragFrom = seatAt(e.target);
+    if (!dragFrom) return;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', dragFrom);
+    e.target.classList.add('is-dragging');
+  });
+  board.addEventListener('dragover', function (e) {
+    if (!dragFrom || !seatAt(e.target)) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    Array.prototype.forEach.call(board.querySelectorAll('.is-over'), function (x) { x.classList.remove('is-over'); });
+    e.target.closest('.sk-seat').classList.add('is-over');
+  });
+  board.addEventListener('dragleave', function (e) {
+    var seat = e.target.closest && e.target.closest('.sk-seat');
+    if (seat && !seat.contains(e.relatedTarget)) seat.classList.remove('is-over');
+  });
+  board.addEventListener('drop', function (e) {
+    var to = seatAt(e.target);
+    if (!dragFrom || !to) return;
+    e.preventDefault();
+    var from = dragFrom;
+    dragFrom = null;
+    swapSeats(from, to);
+  });
+  board.addEventListener('dragend', function () {
+    dragFrom = null;
+    Array.prototype.forEach.call(board.querySelectorAll('.is-over,.is-dragging'), function (x) { x.classList.remove('is-over', 'is-dragging'); });
+  });
   $('sk-again').addEventListener('click', run);
   $('sk-copy').addEventListener('click', function () { copyText($('sk-out').value, this); });
   $('sk-print').addEventListener('click', function () { window.print(); });
   $('sk-sample').addEventListener('click', function () {
     loadRoster(SAMPLE_NAMES, SAMPLE_RULES);
-    // 見本は30人ぶん。席の数もそれに合う既定（6×5）へ戻す
-    $('sk-cols').value = '6';
-    $('sk-rows').value = '5';
-    onSizeChange();
+    // 見本は30人ぶん。いまの座席で足りるなら形はそのまま（足した席・消した席を残す）。
+    // 足りないときだけ既定の6×5に戻す
+    if (seatTotal(seatMap) < SAMPLE_NAMES.length) {
+      $('sk-cols').value = '6';
+      $('sk-rows').value = '5';
+      onSizeChange();
+    }
     clearPrev();
     rosterNote('');
     updateCount();
