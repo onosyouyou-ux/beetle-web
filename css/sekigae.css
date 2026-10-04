@@ -407,3 +407,14 @@ body{
 .sk-panel-roster > .sk-lbl-row:first-child{margin-top:0}
 .sk-seatsize{border-bottom:none;padding-bottom:0}
 .sk-seatsize + .sk-seat-area{margin-top:16px}
+
+/* 「座席を作成」の見出しの横に席数と空席の札（名簿の「30人」と同じ形） */
+.sk-seat-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;flex-basis:100%}
+.sk-count.is-sub{color:var(--sk-green);background:var(--sk-green-bg)}
+.sk-count.is-sub.is-short{color:var(--sk-red);background:var(--sk-red-bg)}
+
+/* 座席は白地＋オレンジ枠（形の画面・結果の画面とも）。固定席は薄いオレンジで塗って区別する */
+.sk-board-empty .sk-cell,
+#sk-board .sk-seat:not(.is-empty):not(.is-hole){background:#fff;border-color:var(--sk-orange)}
+#sk-board .sk-seat.is-fixed:not(.is-empty){background:var(--sk-orange-bg)}
+#sk-board .sk-seat.is-over:not(.is-hole){border-color:var(--sk-green);background:var(--sk-green-bg)}

@@ -664,8 +664,13 @@
     $('sk-count').textContent = n + '人';
     var rows = seatMap.length, cols = seatMap[0].length;
     var seats = seatTotal(seatMap);
-    $('sk-seats').textContent = '席は ' + seats + '（横' + cols + '×縦' + rows + (seats < rows * cols ? '・' + (rows * cols - seats) + '席消し' : '') + '）' +
-      (n ? '・' + (seats >= n ? 'あき ' + (seats - n) + '席' : n - seats + '席たりません') : '');
+    // 見出しの横に「30席」「あき 2席」を、名簿の「30人」と同じ札で出す
+    $('sk-seat-count').textContent = seats + '席';
+    var free = $('sk-seat-free');
+    free.textContent = seats >= n ? 'あき ' + (seats - n) + '席' : (n - seats) + '席たりません';
+    free.classList.toggle('is-short', seats < n);
+    // 横×縦はプルダウンで見えているので、席を消したときだけ添える
+    $('sk-seats').textContent = seats < rows * cols ? '（' + (rows * cols - seats) + '席消し）' : '';
   }
 
   function copyText(text, btn) { R.copyText(text, btn); }
