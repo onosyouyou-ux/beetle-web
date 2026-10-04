@@ -235,6 +235,7 @@ body{
   .site-footer-app,.scroll-top-float,.sk-msg,.paper-release{display:none !important}
   .sk-main{padding:0}
   .sk-panel{border:none;padding:0}
+  .sk-panel-roster{display:none !important}
   .sk-result{margin:0}
   .sk-board-wrap{border:none;padding:0}
   .sk-seat{border-color:#999}
@@ -400,3 +401,9 @@ body{
 
 /* 「座席を表示する」は行の右端 */
 .sk-seatsize .sk-layout-btn{margin-left:auto}
+
+/* 「座席を作成」と「名簿と配慮」は別の枠に分ける */
+.sk-panel-roster{margin-top:18px}
+.sk-panel-roster > .sk-lbl-row:first-child{margin-top:0}
+.sk-seatsize{border-bottom:none;padding-bottom:0}
+.sk-seatsize + .sk-seat-area{margin-top:16px}
