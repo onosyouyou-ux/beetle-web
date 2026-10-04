@@ -1,7 +1,13 @@
 /* ============================================================
    hanwake.css — 班分けメーカー（先生向け・本体ドメイン配信の静的ツール）
-   席替えメーカーの姉妹ツールなので、配色とトーンは sekigae.css に揃える。
+   2026-10-04 作り直し：席替えメーカー（sekigae.css）と同じ型にそろえるため、
+   sekigae.css の接頭辞を hw- に置きかえたものを土台にし、末尾に班分け用の部品を足している。
+   座席専用の部品（座席の形・通路など）は使わないが、型をそろえる都合で残している。
+   ============================================================ */
+/* ============================================================
+   hanwake.css — 班分けメーカー（先生向け・本体ドメイン配信の静的ツール）
    学校向けツールの作法：紙面固定（.app-paper 1180px）＋余白はモザイクタイル背景
+   子ども向けアプリより落ち着いたトーン（先生が職員室で使う画面）
    ============================================================ */
 
 :root{
@@ -20,9 +26,6 @@
   --hw-red:#c0503b;
   --hw-red-bg:#fbeeea;
 }
-
-/* display を指定した要素にも hidden 属性を効かせる */
-[hidden]{display:none !important}
 
 body{
   background-color:#ece1cb;
@@ -66,108 +69,27 @@ body{
 .hw-count{font-size:12px;font-weight:700;color:var(--hw-orange);background:var(--hw-orange-bg);border-radius:99px;padding:2px 12px}
 .hw-mini{margin-left:auto;font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px;border:1px solid var(--hw-line2);background:#fff;color:var(--hw-ink2);cursor:pointer;font-family:inherit}
 .hw-mini:hover{border-color:var(--hw-orange);color:var(--hw-orange)}
-
-.hw-col textarea{
-  width:100%;border:1px solid var(--hw-line2);border-radius:8px;padding:12px 14px;
-  font-family:inherit;font-size:14px;line-height:1.9;color:var(--hw-ink);
-  background:#fff;resize:vertical;box-sizing:border-box;
+.hw-panel textarea{
+  width:100%;border:1px solid var(--hw-line2);border-radius:8px;padding:11px 13px;
+  font-size:14px;line-height:1.9;resize:vertical;box-sizing:border-box;background:#fff;
+  color:var(--hw-ink);font-family:inherit;
 }
-.hw-col textarea:focus{outline:2px solid var(--hw-orange);outline-offset:-1px;border-color:var(--hw-orange)}
-
+.hw-panel textarea:focus{outline:none;border-color:var(--hw-orange)}
+/* 「1行に1人」が伝わっていないときだけ出す、その場で直せる注意書き */
 .hw-sep-note{
-  font-size:11.5px;font-weight:700;color:var(--hw-ink2);display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px;
+  font-size:11.5px;line-height:1.7;font-weight:700;color:var(--hw-ink2);
   background:var(--hw-cream2);border-radius:8px;padding:8px 10px;margin:7px 0 0;
 }
 .hw-sep-note .hw-mini{margin-left:0}
 
 .hw-hint{font-size:11.5px;line-height:1.8;color:var(--hw-ink3);margin:7px 0 0}
-.hw-hint a{color:var(--hw-orange);font-weight:700}
 .hw-hint code,.hw-table code{font-family:'SFMono-Regular','Consolas',monospace;background:var(--hw-cream2);border-radius:3px;padding:1px 6px;color:var(--hw-ink2)}
-.hw-hint-block{background:var(--hw-cream2);border-radius:8px;padding:12px 14px;color:var(--hw-ink2);margin-top:12px}
-
-/* ====== 名簿の行（1人1行） ====== */
-.hw-labelset{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-.hw-labelset label{font-size:11.5px;font-weight:800;color:var(--hw-ink2);white-space:nowrap}
-.hw-labelset input{
-  width:110px;border:1px solid var(--hw-line2);border-radius:6px;padding:5px 9px;
-  font-size:12.5px;font-family:inherit;color:var(--hw-ink);background:#fff;
-}
-.hw-labelset-tip{font-size:11px;color:var(--hw-ink3)}
-
-.hw-rows-head{display:flex;align-items:center;gap:8px;padding:0 8px 5px;border-bottom:1px solid var(--hw-line)}
-.hw-rows-h-name{flex:1;font-size:10.5px;font-weight:800;color:var(--hw-ink3);letter-spacing:.06em;padding-left:30px}
-.hw-rows-h-label{width:150px;font-size:10.5px;font-weight:800;color:var(--hw-ink3);letter-spacing:.06em;text-align:center}
-
-.hw-rows{max-height:330px;overflow-y:auto;border:1px solid var(--hw-line2);border-radius:8px;background:#fff;padding:5px}
-.hw-row{display:flex;align-items:center;gap:6px;padding:2px 3px}
-.hw-row + .hw-row{border-top:1px dashed var(--hw-line)}
-.hw-row-n{width:24px;flex:none;text-align:right;font-size:11px;color:var(--hw-ink3);font-variant-numeric:tabular-nums}
-.hw-row-name{
-  flex:1;min-width:0;border:1px solid transparent;border-radius:5px;padding:6px 8px;
-  font-family:inherit;font-size:14px;color:var(--hw-ink);background:transparent;
-}
-.hw-row-name:hover{border-color:var(--hw-line)}
-.hw-row-name:focus{outline:none;border-color:var(--hw-orange);background:var(--hw-orange-bg)}
-.hw-row-del{
-  flex:none;width:24px;height:24px;border:none;background:transparent;color:var(--hw-ink3);
-  font-size:15px;line-height:1;cursor:pointer;border-radius:5px;font-family:inherit;
-}
-.hw-row-del:hover{background:var(--hw-red-bg);color:var(--hw-red)}
-
-.hw-seg{display:inline-flex;flex:none;border:1px solid var(--hw-line2);border-radius:6px;overflow:hidden;background:#fff}
-.hw-seg-b{
-  min-width:34px;padding:5px 8px;border:none;background:#fff;color:var(--hw-ink3);
-  font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;line-height:1.3;
-}
-.hw-seg-b + .hw-seg-b{border-left:1px solid var(--hw-line2)}
-.hw-seg-b:hover{background:var(--hw-cream2)}
-.hw-seg-b.is-on{background:var(--hw-orange);color:#fff}
-
-.hw-rows-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
-.hw-rows-tip{font-size:11px;color:var(--hw-ink3)}
-
-.hw-bulk{margin-top:10px;border:1px solid var(--hw-line2);border-radius:8px;background:var(--hw-cream2);padding:10px 12px}
-.hw-bulk-q{font-size:12px;font-weight:800;color:var(--hw-ink2);margin:0 0 8px}
-.hw-bulk textarea{background:#fff}
-.hw-bulk-foot{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-
-/* ====== 配慮の行 ====== */
-.hw-rules{display:flex;flex-direction:column;gap:8px}
-.hw-rules:empty{display:none}
-.hw-rules-empty{font-size:12px;line-height:1.8;color:var(--hw-ink3);background:var(--hw-cream2);border-radius:8px;padding:12px 14px;margin:0}
-.hw-rule{display:flex;align-items:flex-start;gap:8px;border:1px solid var(--hw-line2);border-radius:8px;background:#fff;padding:8px 10px}
-.hw-rule-kind{
-  flex:none;border:1px solid var(--hw-line2);border-radius:6px;padding:6px 8px;
-  font-size:13px;font-weight:700;font-family:inherit;color:var(--hw-ink);background:var(--hw-cream2);
-}
-.hw-rule-body{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:5px}
-.hw-rule-add{
-  border:1px dashed var(--hw-line2);border-radius:6px;padding:4px 6px;max-width:100%;
-  font-size:12px;font-family:inherit;color:var(--hw-ink2);background:#fff;cursor:pointer;
-}
-.hw-rule-add:hover{border-color:var(--hw-orange);color:var(--hw-orange)}
-.hw-rule-del{
-  flex:none;width:24px;height:24px;border:none;background:transparent;color:var(--hw-ink3);
-  font-size:15px;line-height:1;cursor:pointer;border-radius:5px;font-family:inherit;
-}
-.hw-rule-del:hover{background:var(--hw-red-bg);color:var(--hw-red)}
-
-.hw-chip{
-  display:inline-flex;align-items:center;gap:3px;background:var(--hw-orange-bg);
-  border:1px solid rgba(224,138,60,.35);border-radius:99px;padding:3px 5px 3px 10px;
-  font-size:12.5px;font-weight:700;color:var(--hw-orange-dk);max-width:100%;
-}
-.hw-chip-x{
-  border:none;background:transparent;color:var(--hw-orange-dk);cursor:pointer;
-  font-size:13px;line-height:1;padding:0 3px;font-family:inherit;
-}
-.hw-chip-x:hover{color:var(--hw-red)}
-
-.hw-csv-role{font-size:9.5px;font-weight:800;color:var(--hw-orange-dk);letter-spacing:.04em}
-.hw-csv-col.is-label{border-color:var(--hw-green);background:var(--hw-green-bg);box-shadow:inset 0 0 0 1px var(--hw-green)}
-.hw-csv-col.is-label .hw-csv-h,.hw-csv-col.is-label .hw-csv-role{color:var(--hw-green)}
 
 /* ====== 名簿の保存・よびだし／CSV取り込み ====== */
+/* display を指定した要素にも hidden 属性を効かせる */
+[hidden]{display:none !important}
+
 .hw-mini2{
   font-size:11px;font-weight:700;padding:5px 11px;border-radius:6px;
   border:1px solid var(--hw-line2);background:#fff;color:var(--hw-ink2);
@@ -219,7 +141,7 @@ body{
 .hw-roster-note.is-ok{background:var(--hw-green-bg);color:var(--hw-green)}
 .hw-roster-note.is-error{background:var(--hw-red-bg);color:var(--hw-red)}
 
-/* ====== 前回の班をさける ====== */
+/* ====== 前回の席をさける ====== */
 .hw-prev{
   display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:16px;
   padding:10px 14px;border:1px solid rgba(224,138,60,.3);border-radius:8px;background:var(--hw-orange-bg);
@@ -227,12 +149,11 @@ body{
 .hw-prev-lbl{font-size:12px;font-weight:800;color:var(--hw-orange-dk)}
 .hw-prev .hw-mini2{margin-left:auto}
 
-/* ====== 操作 ====== */
 .hw-controls{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:18px;padding-top:18px;border-top:1px solid var(--hw-line)}
 .hw-ctl{display:flex;align-items:center;gap:7px}
 .hw-ctl label{font-size:13px;font-weight:800;color:var(--hw-ink2)}
 .hw-ctl select{border:1px solid var(--hw-line2);border-radius:6px;padding:8px 12px;font-size:14px;font-family:inherit;color:var(--hw-ink);background:#fff}
-.hw-plan{font-size:12.5px;color:var(--hw-ink3)}
+.hw-seats{font-size:12.5px;color:var(--hw-ink3)}
 .hw-go{
   margin-left:auto;background:var(--hw-orange);color:#fff;border:none;border-radius:6px;
   padding:12px 32px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;
@@ -251,30 +172,29 @@ body{
 .hw-note + .hw-note{margin-top:8px}
 .hw-note span{display:block;font-weight:400;color:var(--hw-ink2);margin-top:4px}
 
-/* ====== 班の表 ====== */
+/* ====== 座席表 ====== */
 .hw-result{margin-top:22px;display:none}
 .hw-result.is-on{display:block}
-.hw-board{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;
-  background:#fff;border:1px solid var(--hw-line);border-radius:12px;padding:20px;
+.hw-board-wrap{background:#fff;border:1px solid var(--hw-line);border-radius:12px;padding:24px;overflow-x:auto}
+.hw-blackboard{
+  max-width:420px;margin:0 auto 22px;background:#3d5645;color:#f4f1e6;
+  border:5px solid #a9825a;border-radius:4px;text-align:center;
+  padding:10px;font-size:14px;font-weight:800;letter-spacing:.3em;
 }
-.hw-group{border:2px solid var(--hw-line2);border-radius:10px;background:var(--hw-cream);overflow:hidden}
-.hw-group-head{
-  display:flex;align-items:baseline;justify-content:space-between;gap:8px;
-  padding:9px 14px;background:var(--hw-orange-bg);border-bottom:1px solid rgba(224,138,60,.25);
+.hw-board{display:grid;gap:10px;justify-content:center;min-width:max-content;margin:0 auto}
+.hw-seat{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  width:112px;min-height:62px;padding:8px 6px;
+  border:2px solid var(--hw-line2);border-radius:8px;background:var(--hw-cream);
+  font-size:14px;font-weight:700;line-height:1.4;text-align:center;word-break:break-all;
 }
-.hw-group-n{font-size:15px;font-weight:900;color:var(--hw-orange-dk)}
-.hw-group-size{font-size:11px;font-weight:700;color:var(--hw-ink3)}
-.hw-members{list-style:none;margin:0;padding:10px 14px 12px}
-.hw-members li{
-  display:flex;align-items:baseline;justify-content:space-between;gap:8px;
-  font-size:14px;font-weight:700;line-height:1.5;padding:4px 0;word-break:break-all;
-}
-.hw-members li + li{border-top:1px dashed var(--hw-line)}
-.hw-tag{font-size:10px;font-weight:700;color:var(--hw-orange);white-space:nowrap}
+.hw-seat.is-empty{border-style:dashed;background:#fff;color:var(--hw-ink3);font-weight:400}
+.hw-seat.is-fixed{border-color:var(--hw-orange);background:var(--hw-orange-bg)}
+.hw-seat-pos{font-size:10px;font-weight:400;color:var(--hw-ink3)}
+.hw-seat-tag{font-size:10px;font-weight:700;color:var(--hw-orange)}
 
 .hw-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px}
-.hw-info{font-size:12.5px;color:var(--hw-ink3);flex:1;min-width:120px}
+.hw-info{font-size:12.5px;color:var(--hw-ink3);flex:1;min-width:160px}
 .hw-out{
   width:100%;margin-top:12px;border:1px solid var(--hw-line2);border-radius:8px;padding:10px 12px;
   font-family:'SFMono-Regular','Consolas',monospace;font-size:12px;line-height:1.7;
@@ -285,7 +205,7 @@ body{
 .hw-doc{margin-top:34px}
 .hw-doc h2{font-size:19px;font-weight:900;margin:30px 0 14px;padding-left:12px;border-left:4px solid var(--hw-orange)}
 .hw-doc h2:first-child{margin-top:0}
-.hw-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.hw-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .hw-step{background:#fff;border:1px solid var(--hw-line);border-radius:12px;padding:18px 20px}
 .hw-step-n{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--hw-orange);color:#fff;font-size:13px;font-weight:900;margin-bottom:10px}
 .hw-step h3{font-size:14px;font-weight:800;margin:0 0 7px}
@@ -313,23 +233,412 @@ body{
   .hw-go{margin-left:0;width:100%}
 }
 
-/* ====== 印刷：班の表だけを出す ====== */
+/* ====== 印刷：座席表だけを出す ====== */
 @media print{
   body{background:#fff}
   .app-paper{max-width:none;box-shadow:none;background:#fff}
-  #site-header,.hw-hero,.hw-panel,.hw-doc,.hw-actions,.hw-out,
+  #site-header,.hw-hero,.hw-panel > :not(.hw-seat-area),.hw-result-top,.hw-result-foot,.hw-tabs,#hw-layout-wrap,.hw-doc,.hw-actions,.hw-out,
   .site-footer-app,.scroll-top-float,.hw-msg,.paper-release{display:none !important}
   .hw-main{padding:0}
+  .hw-panel{border:none;padding:0}
+  .hw-panel-roster{display:none !important}
   .hw-result{margin:0}
-  .hw-board{border:none;padding:0;gap:10px}
-  .hw-group{border-color:#999;break-inside:avoid}
-  .hw-group-head{background:#f0f0f0}
+  .hw-board-wrap{border:none;padding:0}
+  .hw-seat{border-color:#999}
 }
 
-.hw-csv-q span{display:block;font-weight:400;font-size:11px;color:var(--hw-ink3);margin-top:3px}
-.hw-plan.is-warn{color:var(--hw-red);font-weight:700}
-
+/* CSV取り込みの列カード（2026-08-24：役割をプルダウンで選ぶ形に変更） */
+.hw-csv-col{position:relative}
 .hw-csv-role-sel{
   margin-top:4px;width:100%;border:1px solid var(--hw-line2);border-radius:5px;
   padding:3px 4px;font-size:11px;font-family:inherit;color:var(--hw-ink2);background:#fff;cursor:pointer;
 }
+.hw-csv-col.is-on{border-color:var(--hw-orange);background:var(--hw-orange-bg)}
+.hw-csv-col.is-on .hw-csv-h{color:var(--hw-orange-dk)}
+
+/* ====== 名簿と配慮の表（2026-10-04：1人1行・配慮はプルダウンで足す） ====== */
+.hw-lbl{font-size:13px;font-weight:800;color:var(--hw-ink)}
+.hw-list-head,.hw-row{display:grid;grid-template-columns:34px minmax(150px,220px) 1fr 30px;gap:10px;align-items:center}
+.hw-list-head{font-size:11px;font-weight:800;color:var(--hw-ink3);padding:0 10px 6px;border-bottom:1px solid var(--hw-line)}
+.hw-list{max-height:520px;overflow-y:auto;border-bottom:1px solid var(--hw-line)}
+.hw-row{padding:7px 10px;border-bottom:1px solid var(--hw-cream2)}
+.hw-row:last-child{border-bottom:none}
+.hw-row:nth-child(even){background:#fdfbf7}
+.hw-no{font-size:12px;font-weight:700;color:var(--hw-ink3);text-align:right}
+.hw-name{
+  width:100%;box-sizing:border-box;border:1px solid var(--hw-line2);border-radius:6px;
+  padding:7px 10px;font-size:14px;font-family:inherit;color:var(--hw-ink);background:#fff;
+}
+.hw-name:focus{outline:none;border-color:var(--hw-orange)}
+.hw-rules{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0}
+.hw-rule{
+  display:inline-flex;align-items:center;gap:4px;padding:3px 4px 3px 6px;
+  border:1px solid var(--hw-line2);border-radius:6px;background:var(--hw-cream);
+}
+.hw-rule select{
+  border:1px solid var(--hw-line2);border-radius:5px;padding:4px 6px;font-size:12.5px;
+  font-family:inherit;color:var(--hw-ink);background:#fff;max-width:170px;
+}
+.hw-rule.is-front,.hw-rule.is-back,.hw-rule.is-fixed{border-color:rgba(224,138,60,.45);background:var(--hw-orange-bg)}
+.hw-rule.is-apart{border-color:rgba(192,80,59,.35);background:var(--hw-red-bg)}
+.hw-rule.is-next{border-color:rgba(47,125,85,.3);background:var(--hw-green-bg)}
+.hw-rule-del,.hw-row-del{
+  border:none;background:none;color:var(--hw-ink3);cursor:pointer;font-family:inherit;
+  font-size:14px;line-height:1;padding:4px 6px;border-radius:4px;
+}
+.hw-rule-add{
+  font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:6px;
+  border:1px dashed var(--hw-line2);background:#fff;color:var(--hw-ink2);cursor:pointer;font-family:inherit;
+}
+@media (hover:hover){
+  .hw-rule-del:hover,.hw-row-del:hover{color:var(--hw-red);background:var(--hw-red-bg)}
+  .hw-rule-add:hover{border-color:var(--hw-orange);color:var(--hw-orange)}
+}
+.hw-add{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.hw-add .hw-mini2{font-size:12px;padding:6px 14px}
+
+@media(max-width:767px){
+  .hw-list-head{display:none}
+  .hw-row{grid-template-columns:26px 1fr 30px;gap:6px 8px}
+  .hw-rules{grid-column:2 / 4;grid-row:2}
+  .hw-rule{max-width:100%;box-sizing:border-box;flex-wrap:wrap}
+  .hw-rule select{max-width:none;min-width:0;flex:1 1 auto;padding:4px 2px}
+}
+
+/* 席の数は名簿より先に決める（2026-10-04：上段へ移動） */
+.hw-seatsize{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--hw-line)}
+.hw-controls .hw-go{margin-left:auto}
+
+/* 座席を作成：列と行を決めて、空の座席表を先に見せる */
+.hw-seatsize{margin-bottom:0;padding-bottom:16px}
+.hw-layout{background:var(--hw-cream);border:1px solid var(--hw-line);border-radius:10px;padding:18px;overflow-x:auto;margin-top:2px}
+.hw-layout .hw-blackboard{margin-bottom:14px;font-size:12px;padding:6px}
+.hw-board-empty{gap:8px}
+.hw-board-empty .hw-seat{width:84px;min-height:40px;padding:6px 4px}
+.hw-panel > .hw-lbl-row{margin-top:22px}
+
+/* 座席の形を変える：まわりの点線の席を押すと足せる／席の ✕ で消せる */
+.hw-board-empty .hw-cell{position:relative;border-style:solid;background:#fff;padding-right:16px}
+.hw-cell-del{
+  position:absolute;top:2px;right:2px;border:none;background:none;cursor:pointer;
+  font-size:11px;line-height:1;padding:3px 4px;border-radius:4px;color:var(--hw-ink3);font-family:inherit;
+}
+.hw-ghost{
+  width:84px;min-height:40px;box-sizing:border-box;border:2px dashed var(--hw-line2);border-radius:8px;
+  background:transparent;color:var(--hw-line2);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;opacity:.65;
+}
+/* 中の空きマスも外側の点線と同じ見た目（白いと席があるように見えるため） */
+.hw-ghost-sp{width:84px;min-height:40px}
+@media (hover:hover){
+  .hw-cell-del:hover{color:var(--hw-red);background:var(--hw-red-bg)}
+  .hw-ghost:hover{opacity:1;border-color:var(--hw-orange);color:var(--hw-orange);background:var(--hw-orange-bg)}
+}
+.hw-seat.is-hole{visibility:hidden}
+
+/* 席替えするボタン：下は中央、CSVの行の右端にも置く（2026-10-04） */
+.hw-controls{justify-content:center}
+.hw-controls .hw-go{margin-left:0;min-width:260px}
+.hw-go.hw-go-sm{margin-left:auto;padding:7px 20px;font-size:13px}
+
+/* できた席の入れかえ（ドラッグ＆ドロップ／タップ2回） */
+.hw-swap-hint{font-size:12px;color:var(--hw-ink3);text-align:center;margin:0 0 12px}
+#hw-board .hw-seat[data-at]{cursor:grab;user-select:none;transition:transform .12s, box-shadow .12s}
+#hw-board .hw-seat.is-picked{border-color:var(--hw-orange);box-shadow:0 0 0 3px rgba(224,138,60,.35);transform:translateY(-2px)}
+#hw-board .hw-seat.is-over{border-color:var(--hw-green);background:var(--hw-green-bg)}
+#hw-board .hw-seat.is-dragging{opacity:.45}
+#hw-board .hw-seat:focus-visible{outline:2px solid var(--hw-orange);outline-offset:2px}
+@media (hover:hover){
+  #hw-board .hw-seat[data-at]:hover{border-color:var(--hw-orange)}
+}
+@media(max-width:767px){
+  .hw-go.hw-go-sm{margin-left:0;width:auto}
+  .hw-controls .hw-go{width:100%;min-width:0}
+}
+@media print{ .hw-swap-hint{display:none} }
+
+/* 見出し「座席を作成」は1行使い、プルダウンはその下に並べる */
+.hw-seatsize > .hw-lbl{flex-basis:100%;margin-bottom:-4px}
+
+/* 座席表は「座席を作成」の欄にそのまま出す（2026-10-04） */
+.hw-panel > .hw-result{margin-top:2px}
+.hw-panel > .hw-result .hw-board-wrap{background:var(--hw-cream);border-color:var(--hw-line)}
+.hw-panel > .hw-result .hw-out{margin-bottom:4px}
+
+/* 座席欄のタブ（① 座席の形／② 席替えの結果）と確定ボタン（2026-10-04） */
+.hw-seat-area{margin-top:2px}
+.hw-tabs{display:flex;gap:4px;border-bottom:2px solid var(--hw-line);margin-bottom:-1px}
+.hw-tab{
+  font-size:13px;font-weight:800;padding:9px 18px;border:1px solid var(--hw-line);border-bottom:none;
+  border-radius:8px 8px 0 0;background:var(--hw-cream2);color:var(--hw-ink3);cursor:pointer;font-family:inherit;
+  position:relative;top:2px;
+}
+.hw-tab.is-on{background:var(--hw-cream);color:var(--hw-orange-dk);border-color:var(--hw-line2);border-top:3px solid var(--hw-orange)}
+.hw-tab:disabled{cursor:not-allowed;opacity:.55}
+@media (hover:hover){ .hw-tab:not(:disabled):not(.is-on):hover{color:var(--hw-orange)} }
+.hw-seat-area .hw-layout,.hw-seat-area .hw-board-wrap{border-top-left-radius:0}
+.hw-layout-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 16px;margin-top:16px}
+.hw-layout-note{font-size:12px;color:var(--hw-ink3)}
+.hw-layout-foot .hw-go.hw-go-sm{margin-left:0;padding:9px 26px;font-size:14px}
+.hw-go.is-done{background:#fff;color:var(--hw-orange-dk);border:1px solid var(--hw-orange);box-shadow:none}
+@media (hover:hover){ .hw-go.is-done:hover{background:var(--hw-orange-bg)} }
+.hw-board-empty.is-locked .hw-cell{padding-right:4px}
+@media(max-width:767px){
+  .hw-tab{padding:8px 12px;font-size:12px}
+}
+
+/* 結果へ移動したとき、上の固定ナビに隠れないよう余白をとる */
+.hw-seat-area{scroll-margin-top:90px}
+
+/* 結果の枠：上に人数と道具（コピー・CSV・印刷）、下の中央に再編成（2026-10-04） */
+.hw-result-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.hw-result-top .hw-info{flex:0 1 auto;min-width:0;font-weight:700;color:var(--hw-ink2)}
+.hw-result-tools{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+.hw-result-tools .hw-sub{padding:7px 14px;font-size:12px}
+.hw-result-foot{display:flex;justify-content:center;margin-top:20px}
+.hw-result-foot .hw-go{margin-left:0;min-width:260px}
+@media(max-width:767px){
+  .hw-result-tools{margin-left:0}
+  .hw-result-foot .hw-go{width:100%;min-width:0}
+}
+
+/* 確定ボタンは説明文の下・中央に置く */
+.hw-layout-foot{flex-direction:column;gap:10px}
+.hw-layout-note{text-align:center}
+
+/* 「座席を表示する」は行の右端 */
+.hw-seatsize .hw-layout-btn{margin-left:auto}
+
+/* 「座席を作成」と「名簿と配慮」は別の枠に分ける */
+.hw-panel-roster{margin-top:18px}
+.hw-panel-roster > .hw-lbl-row:first-child{margin-top:0}
+.hw-seatsize{border-bottom:none;padding-bottom:0}
+.hw-seatsize + .hw-seat-area{margin-top:16px}
+
+/* 「座席を作成」の見出しの横に席数と空席の札（名簿の「30人」と同じ形） */
+.hw-seat-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;flex-basis:100%}
+.hw-count.is-sub{color:var(--hw-green);background:var(--hw-green-bg)}
+.hw-count.is-sub.is-short{color:var(--hw-red);background:var(--hw-red-bg)}
+
+/* 枠のオレンジは本体より淡く（濃いと30席並んだときにうるさい） */
+:root{--hw-seat-line:#f0c9a3}
+/* 座席は白地＋オレンジ枠（形の画面・結果の画面とも）。固定席も同じ見た目で「固定」の札だけで示す（塗るとハイライトと見分けがつかない） */
+.hw-board-empty .hw-cell,
+#hw-board .hw-seat:not(.is-empty):not(.is-hole){background:#fff;border-color:var(--hw-seat-line)}
+#hw-board .hw-seat.is-over:not(.is-hole){border-color:var(--hw-green);background:var(--hw-green-bg)}
+
+/* 名簿の名前を押したときに光らせる席（固定席と同じくらいの控えめな色） */
+#hw-board .hw-seat.is-hl:not(.is-hole){border-color:var(--hw-orange);background:var(--hw-orange-bg)}
+
+/* ====== 印刷の見た目（2026-10-04 作り直し） ======
+   ブラウザは既定で背景色を印刷しないので、塗りに頼らず線と文字で見せる */
+@media print{
+  @page{size:A4 landscape;margin:10mm}
+  .hw-seat-area,.hw-result,.hw-board-wrap{margin:0 !important;padding:0 2px 2px !important;border:none !important;background:none !important;overflow:visible !important}
+  .hw-blackboard{
+    background:none !important;color:#111 !important;border:2.5px solid #111 !important;border-radius:2px;
+    max-width:60%;margin:0 auto 10mm !important;padding:8px !important;font-size:16px;letter-spacing:.5em;
+  }
+  #hw-board{gap:6px;width:100%;min-width:0 !important;grid-template-columns:var(--print-tpl) !important}
+  #hw-board .hw-seat,
+  #hw-board .hw-seat:not(.is-empty):not(.is-hole),
+  #hw-board .hw-seat.is-fixed:not(.is-empty){
+    width:auto;min-width:0;min-height:60px;background:#fff !important;border:1.5px solid #333 !important;
+    box-shadow:none !important;transform:none !important;color:#111;
+  }
+  #hw-board .hw-seat > span:nth-child(2){font-size:16px;font-weight:800}
+  #hw-board .hw-seat-pos{color:#666;font-size:9px}
+  #hw-board .hw-seat-tag{color:#111;font-weight:700;border:1px solid #111;border-radius:3px;padding:0 4px}
+  #hw-board .hw-seat.is-empty{border:1.5px dashed #999 !important;color:#999}
+  #hw-board .hw-seat.is-hole{visibility:hidden}
+}
+
+/* 印刷は掲示に使うので、配慮（固定・前列・後列）の札は出さない。誰に配慮があるかが周りに分かってしまうため */
+@media print{ #hw-board .hw-seat-tag{display:none !important} }
+#hw-board .hw-seat.is-fixed:not(.is-hl){background:#fff;border-color:var(--hw-seat-line)}
+
+/* PC推奨の一言（ヒーロー） */
+.hw-pc{font-size:12px;color:var(--hw-ink2);margin:10px 0 0}
+
+/* 名簿の行に、席替えの結果のその子の席を出す */
+.hw-list-head,.hw-row{grid-template-columns:34px minmax(150px,220px) 1fr auto 30px}
+.hw-row-seat{font-size:11.5px;font-weight:700;color:var(--hw-orange-dk);white-space:nowrap}
+.hw-row-seat:empty{display:none}
+@media(max-width:767px){
+  .hw-row{grid-template-columns:26px 1fr auto 30px}
+  .hw-rules{grid-column:2 / 5}
+}
+
+/* ====== 操作の順番（2026-10-04）：迷子にならないよう、手順バー＋見出しの番号＋塗りボタンは手順ごとに1つ ====== */
+.hw-stepbar{
+  list-style:none;margin:0 0 18px;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
+}
+.hw-stepbar li a{
+  display:flex;align-items:center;gap:8px;height:100%;box-sizing:border-box;padding:10px 12px;border-radius:8px;
+  background:#fff;border:1px solid var(--hw-line);color:var(--hw-ink3);font-size:12.5px;font-weight:800;text-decoration:none;
+}
+.hw-stepbar-n{
+  flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
+  background:var(--hw-cream2);color:var(--hw-ink3);font-size:12px;font-weight:900;
+}
+.hw-stepbar li.is-on a{border:2px solid var(--hw-orange);color:var(--hw-orange-dk);background:var(--hw-orange-bg)}
+.hw-stepbar li.is-on .hw-stepbar-n{background:var(--hw-orange);color:#fff}
+.hw-stepbar li.is-done a{color:var(--hw-ink2)}
+.hw-stepbar li.is-done .hw-stepbar-n{background:var(--hw-green);color:#fff;font-size:0}
+.hw-stepbar li.is-done .hw-stepbar-n::after{content:"✓";font-size:12px}
+@media (hover:hover){ .hw-stepbar li a:hover{border-color:var(--hw-orange)} }
+
+/* 枠の見出しの番号 */
+.hw-step-no{
+  display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
+  background:var(--hw-ink);color:#fff;font-size:12px;font-weight:900;margin-right:8px;vertical-align:1px;
+}
+.hw-seat-head .hw-lbl,.hw-panel-roster > .hw-lbl-row .hw-lbl{font-size:15px}
+
+/* 3 配置する：見出しとボタンを中央に縦に並べる */
+.hw-controls{flex-direction:column;gap:10px}
+.hw-go-lbl{font-size:13px;color:var(--hw-ink2)}
+
+/* 名簿の上の「配置する」は控えめ（塗りは下の大きいボタンだけ） */
+.hw-sub.hw-gen-sub{margin-left:auto;padding:6px 16px;font-size:12px;border-color:var(--hw-orange);color:var(--hw-orange-dk)}
+
+@media(max-width:767px){
+  .hw-stepbar{grid-template-columns:repeat(2,1fr)}
+  .hw-stepbar li a{font-size:11.5px;padding:8px}
+  .hw-sub.hw-gen-sub{margin-left:0}
+}
+@media print{ .hw-stepbar{display:none !important} }
+
+/* 使い方の下の補足（次回の続き・基準変更の注意） */
+.hw-doc-note{font-size:12.5px;line-height:1.9;color:var(--hw-ink2);background:#fff;border:1px solid var(--hw-line);border-radius:10px;padding:12px 16px;margin:14px 0 0}
+@media(max-width:1000px) and (min-width:901px){ .hw-steps{grid-template-columns:repeat(2,1fr)} }
+
+/* ====== 通路（2026-10-04） ====== */
+.hw-sub.hw-aisle-btn{margin-left:auto;padding:7px 16px;font-size:12.5px}
+.hw-sub.hw-aisle-btn.is-on{border-color:var(--hw-orange);color:var(--hw-orange-dk);background:var(--hw-orange-bg)}
+/* 通路の帯：真ん中に点線 */
+.hw-aisle{
+  align-self:stretch;min-height:40px;
+  background:linear-gradient(var(--hw-line2),var(--hw-line2)) center/2px 100% no-repeat;
+  opacity:.8;
+}
+.hw-aisle-label{align-self:end;text-align:center;font-size:10.5px;font-weight:800;color:var(--hw-ink3);writing-mode:vertical-rl;letter-spacing:.2em}
+.hw-gap{display:block}
+/* 通路モードの「列のあいだ」 */
+.hw-slot{
+  position:relative;align-self:stretch;min-height:40px;padding:0;border:none;border-radius:4px;
+  background:transparent;cursor:pointer;font-family:inherit;
+}
+.hw-slot.is-aisle{background:linear-gradient(var(--hw-orange),var(--hw-orange)) center/2px 100% no-repeat}
+.hw-slot.is-hover{background-color:var(--hw-orange-bg);box-shadow:inset 0 0 0 2px var(--hw-orange)}
+.hw-slot.is-top.is-hover::after{
+  content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  white-space:nowrap;background:var(--hw-ink);color:#fff;font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:6px;z-index:3;
+  pointer-events:none;
+}
+@media print{
+  .hw-aisle{background:linear-gradient(#999,#999) center/1.5px 100% no-repeat}
+}
+/* 通路モードでは、押せる列のあいだに薄い点線を出しておく（どこを押せばいいか見えるように） */
+.hw-board-empty.is-aisle-mode .hw-slot:not(.is-aisle){background:repeating-linear-gradient(to bottom,var(--hw-orange) 0 4px,transparent 4px 9px) center/2px 100% no-repeat;opacity:.55}
+.hw-board-empty.is-aisle-mode .hw-slot.is-hover{opacity:1;background-color:var(--hw-orange-bg)}
+
+
+/* ============================================================
+   ここから班分け用（2026-10-04）
+   ============================================================ */
+.hw-pc{font-size:12px;color:var(--hw-ink2);margin:10px 0 0}
+
+/* 1 班の数を決める */
+.hw-groupsize{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+.hw-panel-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;flex-basis:100%}
+.hw-panel-head .hw-lbl,.hw-panel-roster > .hw-lbl-row .hw-lbl{font-size:15px}
+.hw-plan{font-size:12.5px;color:var(--hw-ink3)}
+.hw-plan.is-warn{color:var(--hw-red);font-weight:700}
+
+/* 班の枠（結果もここに出す） */
+.hw-board-wrap{margin-top:16px;background:var(--hw-cream);border:1px solid var(--hw-line);border-radius:12px;padding:18px}
+.hw-board-wrap:not(.is-result) .hw-result-top,
+.hw-board-wrap:not(.is-result) .hw-swap-hint,
+.hw-board-wrap:not(.is-result) .hw-result-foot,
+.hw-board-wrap:not(.is-result) .hw-out{display:none}
+.hw-board-wrap.is-result .hw-empty-hint{display:none}
+.hw-empty-hint{font-size:12px;color:var(--hw-ink3);text-align:center;margin:0 0 12px}
+.hw-result-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.hw-result-top .hw-info{font-weight:700;color:var(--hw-ink2);font-size:12.5px}
+.hw-result-tools{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+.hw-result-tools .hw-sub{padding:7px 14px;font-size:12px}
+.hw-result-foot{display:flex;justify-content:center;margin-top:18px}
+.hw-result-foot .hw-go{margin-left:0;min-width:260px}
+.hw-board-wrap .hw-out{margin-top:14px}
+
+.hw-board{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.hw-group{background:#fff;border:1.5px solid var(--hw-seat-line,#f0c9a3);border-radius:10px;overflow:hidden}
+.hw-group.is-empty{border-style:dashed;border-color:var(--hw-line2)}
+.hw-group-head{
+  display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+  padding:8px 12px;border-bottom:1px solid var(--hw-line);background:var(--hw-cream);
+}
+.hw-group-n{font-size:15px;font-weight:900;color:var(--hw-orange-dk)}
+.hw-group-size{font-size:11px;font-weight:700;color:var(--hw-ink3)}
+.hw-members{list-style:none;margin:0;padding:8px;min-height:40px}
+.hw-mem{
+  display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;padding:6px 8px;margin:0 0 4px;border-radius:6px;
+  border:1px solid transparent;font-size:14px;font-weight:700;line-height:1.4;cursor:grab;user-select:none;
+}
+.hw-mem:last-child{margin-bottom:0}
+.hw-mem-name{word-break:break-all}
+.hw-lead-tag{font-size:10.5px;font-weight:800;color:#fff;background:var(--hw-orange);border-radius:4px;padding:1px 6px}
+.hw-tag{font-size:10px;font-weight:700;color:var(--hw-ink3);background:var(--hw-cream2);border-radius:4px;padding:1px 5px}
+.hw-slot{height:30px;margin:0 0 4px;border:1.5px dashed var(--hw-line2);border-radius:6px}
+.hw-slot:last-child{margin-bottom:0}
+.hw-mem.is-picked{border-color:var(--hw-orange);box-shadow:0 0 0 3px rgba(224,138,60,.3);background:var(--hw-orange-bg)}
+.hw-mem.is-hl{border-color:var(--hw-orange);background:var(--hw-orange-bg)}
+.hw-mem.is-over,.hw-group.is-over{border-color:var(--hw-green);background:var(--hw-green-bg)}
+.hw-mem.is-dragging{opacity:.45}
+.hw-mem:focus-visible{outline:2px solid var(--hw-orange);outline-offset:1px}
+@media (hover:hover){ .hw-mem:hover{border-color:var(--hw-line2)} }
+
+/* 2 名簿：番｜なまえ｜性別｜配慮｜班｜✕ */
+.hw-list-head,.hw-row{display:grid;grid-template-columns:34px minmax(140px,200px) auto 1fr auto 30px;gap:10px;align-items:center}
+.hw-row-group{font-size:11.5px;font-weight:700;color:var(--hw-orange-dk);white-space:nowrap}
+.hw-row-group:empty{display:none}
+.hw-labelset{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+.hw-labelset label{font-size:11.5px;font-weight:800;color:var(--hw-ink2);white-space:nowrap}
+.hw-labelset input{width:110px;border:1px solid var(--hw-line2);border-radius:6px;padding:5px 9px;font-size:12.5px;font-family:inherit;color:var(--hw-ink);background:#fff}
+.hw-labelset-tip{font-size:11px;color:var(--hw-ink3)}
+.hw-seg{display:inline-flex;flex:none;border:1px solid var(--hw-line2);border-radius:6px;overflow:hidden;background:#fff}
+.hw-seg:empty{border:none}
+.hw-seg-b{min-width:34px;padding:5px 8px;border:none;background:#fff;color:var(--hw-ink3);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;line-height:1.3}
+.hw-seg-b + .hw-seg-b{border-left:1px solid var(--hw-line2)}
+.hw-seg-b.is-on{background:var(--hw-orange);color:#fff}
+@media (hover:hover){ .hw-seg-b:not(.is-on):hover{background:var(--hw-cream2)} }
+.hw-rule.is-apart{border-color:rgba(192,80,59,.35);background:var(--hw-red-bg)}
+.hw-rule.is-together{border-color:rgba(47,125,85,.3);background:var(--hw-green-bg)}
+.hw-rule.is-scatter{border-color:rgba(224,138,60,.45);background:var(--hw-orange-bg)}
+.hw-rule.is-leader{border-color:var(--hw-orange);background:var(--hw-orange-bg)}
+.hw-prev{margin-top:14px}
+.hw-csv-col{position:relative}
+
+@media(max-width:767px){
+  .hw-row{grid-template-columns:26px 1fr auto 30px}
+  .hw-seg{grid-column:2 / 4;grid-row:2;justify-self:start}
+  .hw-rules{grid-column:2 / 5;grid-row:3}
+  .hw-row-group{grid-column:3;grid-row:1}
+  .hw-board{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+}
+
+/* 印刷：班の表だけ。掲示に使うので、リーダー以外の配慮の札は出さない */
+@media print{
+  .hw-stepbar,.hw-groupsize,.hw-empty-hint,.hw-result-top,.hw-swap-hint,.hw-result-foot,.hw-out,
+  .hw-panel-roster,.hw-doc,.hw-msg,.hw-tag{display:none !important}
+  .hw-panel,.hw-board-wrap{border:none !important;padding:0 !important;background:none !important;margin:0 !important}
+  .hw-board{grid-template-columns:repeat(3,1fr);gap:8px}
+  .hw-group{border:1.5px solid #333 !important;break-inside:avoid}
+  .hw-group-head{background:#fff;border-bottom:1px solid #333}
+  .hw-group-n{color:#111}
+  .hw-group-size{color:#444}
+  .hw-mem{font-size:15px;color:#111;background:#fff !important;border:none !important;box-shadow:none !important}
+  .hw-lead-tag{color:#111;background:none;border:1px solid #111}
+}
+@media print{ #tool > .hw-board-wrap{display:block !important} }
+@media print{ #hw-board{grid-template-columns:repeat(3,minmax(0,1fr)) !important;width:100%;min-width:0 !important;gap:8px} .hw-group{break-inside:avoid} }

@@ -5,7 +5,7 @@ canonical: "https://www.beetle-web.jp/tools/hanwake/landing.html"
 sitemap: false
 title_contains: "班分けメーカー"
 og_image: "/assets/images/OG.jpg"
-required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#hw-rows", "#hw-add", "#hw-rules", "#hw-rule-add", "#hw-labelset-name", "#hw-labelset-input", "#hw-mode", "#hw-num", "#hw-gen", "#hw-board", "#hw-msg", "#hw-out", "#howto", "#hw-csv", "#hw-csv-save", "#hw-csv-template", "#hw-download", "#hw-prev"]
+required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#hw-stepbar", "#hw-list", "#hw-add1", "#hw-add5", "#hw-add10", "#hw-labelset-name", "#hw-labelset-input", "#hw-mode", "#hw-num", "#hw-gen", "#hw-gen2", "#hw-again", "#hw-board", "#hw-msg", "#hw-out", "#howto", "#hw-csv", "#hw-csv-save", "#hw-csv-template", "#hw-download", "#hw-prev"]
 e2e: false
 ---
 
@@ -20,6 +20,27 @@ e2e: false
 - **主要素**: `#hw-rows`（名簿の行）・`#hw-rules`（配慮の行）・`#hw-mode`（班の数／1班の人数）・`#hw-num`・
   `#hw-count`・`#hw-plan`・`#hw-sample`・`#hw-gen`／`#hw-again`・`#hw-board`（班カード）・`#hw-msg`・
   `#hw-info`・`#hw-out`（TSV）・`#hw-copy`・`#hw-download`・`#hw-print`
+
+## 2026-10-04 作り直し（席替えメーカーと同じ型）
+
+- **操作の順番を見せる**：手順バー `#hw-stepbar`（1 班の数を決める → 2 名簿と配慮を入れる → 3 班分けする → 4 手直しして印刷）。
+  名前が空で班の数も触っていない＝1、班の数を選んだ＝2、名前あり＝3、結果あり＝4。枠の見出しに同じ番号。
+  **オレンジで塗るのは「班分けする」（下）と「班分けし直す」（結果の枠）だけ**。名簿の上の `#hw-gen2`・CSVのボタンは白い枠
+- **1の枠**（`#tool`）：分け方・班の数を選ぶと、すぐ下に空の班の枠（1班 5人…）が出る。班分けすると同じ枠（`#hw-board`）に結果が出る（席替えのようなタブは不要）
+- **名簿は1人1行**（`#hw-list`）：番｜なまえ｜そろえる項目のボタン｜配慮（「＋ 配慮」から 別々・同じ・ちらす・リーダー。1人に何個でも）｜結果の班｜✕。
+  最初は10行、`＋1人／＋5人／＋10人`。複数行を貼るとその行から下へ流し込む。Enter で次の行。空欄は「3番」
+  - 別々・同じ：相手をプルダウンで選ぶ（2人1組）。ちらす：記号 A〜E を選び、同じ記号の子を1班に1人ずつ
+  - **リーダー**（2026-10-04 ユーザー要望）：リーダーにした子を各班に1人ずつ配り、班のいちばん上に「リーダー」と出す（印刷にも出す）。
+    班の数以下なら「1班に1人まで」を必ず守る（別々の組として解く）。多いときは「そろえる」で各班に均等に配り、その中から1人をリーダーにする。
+    少ないときは「リーダーのいない班が○班あります」とお知らせ
+- **手直し**：結果の子をドラッグしてほかの子に重ねると入れかえ、班の空いた所に落とすと移動（班の人数が変わる）。タップ2回でも入れかえ。
+  配慮から外れたら `#hw-msg` に知らせる（止めない）。リーダーは常に班のいちばん上
+- 名簿の名前欄に入ると結果のその子が光る。結果があれば名簿の各行に「3班・リーダー」
+- **印刷**：班のカードを3列で A4 横1枚に。黒線・黒文字。**配慮の札はリーダー以外出さない**（掲示で配慮が周りに分かるため）
+- **CSV**：共通の形。班の配慮のセルは `別々1`・`同じ1`・`ちらす1`（1〜5＝A〜E）・`リーダー` を `;` で並べる。
+  以前のCSVの3人以上の「別々」は、空いている記号の「ちらす」として読む
+- **消す前の確認**：名前か配慮が入っている行の ✕、名簿が入っているときの「見本を入れる」
+- 2026-08-24 版にあった「まとめて貼り付け」（textarea）は、行への貼り付けで足りるので外した。FAQ「男女が同じくらい…」の答えが `\{NEW\}` のまま本番に出ていたのも直した
 
 ## 共通CSV（2026-10-04）
 
