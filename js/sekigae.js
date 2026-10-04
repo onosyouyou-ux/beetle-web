@@ -73,7 +73,8 @@
   }
 
   function newStudent(name) {
-    return { id: nextId++, name: name || '', rules: [] };
+    // extra：CSVで読みこんだ、ほかのメーカーの列（班・クラスなど）。保存のときそのまま書き戻す
+    return { id: nextId++, name: name || '', rules: [], extra: {} };
   }
 
   function addRows(n, names) {
@@ -938,8 +939,11 @@
       var h = (raw || '').trim();
       if (!h) return;
       if (/^(出席番号|番号|no\.?|#)$/i.test(h)) return;
+      // 共通CSVの、ほかのメーカーの列は読まない（保存のときそのまま残す）
+      var rr = R.ruleColumnRole(h, '席の配慮', head);
+      if (rr === 'rule') { roles[c] = 'rule'; return; }
+      if (rr === 'skip' || /^(性別|班|前のクラス|新しいクラス)$/.test(h)) return;
       if (/(なまえ|名前|氏名|生徒名|児童名|姓|名|name)/i.test(h)) roles[c] = 'name';
-      else if (/(配慮|はいりょ)/i.test(h)) roles[c] = 'rule';
       else if (/(座席の形|shape)/i.test(h)) roles[c] = 'shape';
       else if (/(席|座席|seat)/i.test(h)) roles[c] = 'seat';
     });
@@ -1007,7 +1011,9 @@
     var shapeCol = colsWithRole('shape')[0];
 
     var body = $('sk-csv-head').checked ? csvRows.slice(1) : csvRows;
-    var names = [], ruleCells = [], seatCells = [], shape = null;
+    var names = [], ruleCells = [], seatCells = [], extras = [], shape = null;
+    var head = $('sk-csv-head').checked ? csvRows[0] : [];
+    var used = Object.keys(csvRoles).filter(function (c) { return csvRoles[c]; }).map(Number);
     body.forEach(function (r) {
       var name = nameCols.map(function (c) { return (r[c] || '').trim(); }).filter(Boolean).join(' ').trim();
       if (!name) return;
@@ -1015,6 +1021,7 @@
       ruleCells.push(ruleCol === undefined ? '' : (r[ruleCol] || '').trim());
       seatCells.push(seatCol === undefined ? '' : (r[seatCol] || '').trim());
       if (!shape && shapeCol !== undefined) shape = decodeShape(r[shapeCol]);
+      extras.push(R.keepExtras(head, r, used));
     });
 
     if (!names.length) { rosterNote('えらんだ列に名前が入っていませんでした。', 'error'); return; }
@@ -1049,6 +1056,7 @@
       });
     });
     loadRoster(names, ruleCol === undefined ? [] : ruleList);
+    students.forEach(function (s, i) { s.extra = extras[i] || {}; });
 
     // 前回の席：席の列から座席表を組み直す
     var maxC = 0, maxR = 0, seats = [];
@@ -1148,26 +1156,29 @@
       }
     }
 
-    var rows = [['出席番号', 'なまえ', '配慮', '席', '座席の形']];
-    got.names.forEach(function (n, i) {
-      // 座席の形は1行目にだけ入れる
-      rows.push([String(i + 1), n, cells[n] || '', seatOf[n] || '', i === 0 ? encodeShape(seatMap) : '']);
-    });
+    // 班分け・クラス分けと共通の形で書き出す。読みこんだほかのメーカーの列もそのまま残す
+    var rows = R.sharedRows(got.names.map(function (n, i) {
+      return {
+        values: {
+          'なまえ': n, '席の配慮': cells[n] || '', '席': seatOf[n] || '',
+          '座席の形': i === 0 ? encodeShape(seatMap) : ''   // 座席の形は1行目にだけ入れる
+        },
+        extra: students[i].extra
+      };
+    }));
     downloadCsv(withSeats ? '席替え.csv' : '席替え_名簿.csv', rows);
     rosterNote('CSVに保存しました。次回このファイルを「CSVを読む」から取り込めば、' +
       (withSeats ? '名簿・配慮・座席の形・前回の席' : '名簿・配慮・座席の形') + 'がそのまま戻ります。', 'ok');
   }
 
   function downloadTemplate() {
-    downloadCsv('席替え_名簿ひな形.csv', [
-      ['出席番号', 'なまえ', '配慮', '席'],
-      ['1', '佐藤 みゆき', '固定1-1', ''],
-      ['2', '鈴木 けんた', '隣1', ''],
-      ['3', '高橋 あおい', '前列;隣1', ''],
-      ['4', '田中 そうた', '離す1', ''],
-      ['5', '中村 はると', '離す1', ''],
-      ['6', '長谷川 れん', '後列', '']
-    ]);
+    var sample = [
+      ['佐藤 みゆき', '女', '固定1-1'], ['鈴木 けんた', '男', '隣1'], ['高橋 あおい', '女', '前列;隣1'],
+      ['田中 そうた', '男', '離す1'], ['中村 はると', '男', '離す1'], ['長谷川 れん', '男', '後列']
+    ];
+    downloadCsv('名簿ひな形.csv', R.sharedRows(sample.map(function (x) {
+      return { values: { 'なまえ': x[0], '性別': x[1], '席の配慮': x[2] } };
+    })));
     rosterNote('ひな形をダウンロードしました。配慮は「離す1」「隣1」のように、同じ番号どうしが1つの組になります。「;」で区切ると1人に何個でも付けられます。', 'ok');
   }
 
