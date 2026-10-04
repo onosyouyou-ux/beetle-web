@@ -393,3 +393,7 @@ body{
   .sk-result-tools{margin-left:0}
   .sk-result-foot .sk-go{width:100%;min-width:0}
 }
+
+/* 確定ボタンは説明文の下・中央に置く */
+.sk-layout-foot{flex-direction:column;gap:10px}
+.sk-layout-note{text-align:center}
