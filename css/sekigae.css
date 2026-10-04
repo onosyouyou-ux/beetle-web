@@ -421,3 +421,29 @@ body{
 #sk-board .sk-seat.is-fixed:not(.is-empty){background:var(--sk-orange-bg)}
 #sk-board .sk-seat.is-over:not(.is-hole){border-color:var(--sk-green);background:var(--sk-green-bg)}
 #sk-board .sk-seat.is-fixed:not(.is-empty){border-color:var(--sk-orange)}
+
+/* 名簿の行を押したときに光らせる席 */
+#sk-board .sk-seat.is-hl:not(.is-hole){border:3px solid #d99a00;background:#ffe27a;box-shadow:0 0 0 5px rgba(240,180,20,.35),0 6px 14px rgba(0,0,0,.15);transform:scale(1.08);position:relative;z-index:1}
+
+/* ====== 印刷の見た目（2026-10-04 作り直し） ======
+   ブラウザは既定で背景色を印刷しないので、塗りに頼らず線と文字で見せる */
+@media print{
+  @page{size:A4 landscape;margin:10mm}
+  .sk-seat-area,.sk-result,.sk-board-wrap{margin:0 !important;padding:0 2px 2px !important;border:none !important;background:none !important;overflow:visible !important}
+  .sk-blackboard{
+    background:none !important;color:#111 !important;border:2.5px solid #111 !important;border-radius:2px;
+    max-width:60%;margin:0 auto 10mm !important;padding:8px !important;font-size:16px;letter-spacing:.5em;
+  }
+  #sk-board{gap:6px;width:100%;min-width:0 !important;grid-template-columns:repeat(var(--cols),minmax(0,1fr)) !important}
+  #sk-board .sk-seat,
+  #sk-board .sk-seat:not(.is-empty):not(.is-hole),
+  #sk-board .sk-seat.is-fixed:not(.is-empty){
+    width:auto;min-width:0;min-height:60px;background:#fff !important;border:1.5px solid #333 !important;
+    box-shadow:none !important;transform:none !important;color:#111;
+  }
+  #sk-board .sk-seat > span:nth-child(2){font-size:16px;font-weight:800}
+  #sk-board .sk-seat-pos{color:#666;font-size:9px}
+  #sk-board .sk-seat-tag{color:#111;font-weight:700;border:1px solid #111;border-radius:3px;padding:0 4px}
+  #sk-board .sk-seat.is-empty{border:1.5px dashed #999 !important;color:#999}
+  #sk-board .sk-seat.is-hole{visibility:hidden}
+}

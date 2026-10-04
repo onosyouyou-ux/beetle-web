@@ -450,6 +450,7 @@
     var grid = state.grid, rows = state.rows, cols = state.cols, rules = state.rules;
     var board = $('sk-board');
     board.style.gridTemplateColumns = 'repeat(' + cols + ', auto)';
+    board.style.setProperty('--cols', cols);   // 印刷では紙の幅に合わせて等分する
 
     var html = '';
     var used = 0;
@@ -467,6 +468,7 @@
         else if (rules.front.indexOf(name) >= 0) tag = '前列';
         else if (rules.back.indexOf(name) >= 0) tag = '後列';
         html += '<div class="' + cls + '" draggable="true" tabindex="0" role="button" data-at="' + at + '"' +
+          (name ? ' data-name="' + esc(name) + '"' : '') +
           ' aria-label="' + (c + 1) + 'れつ ' + (r + 1) + 'ばん ' + esc(name || 'あき') + '（えらんで入れかえ）">' +
           '<span class="sk-seat-pos">' + (c + 1) + 'れつ ' + (r + 1) + 'ばん</span>' +
           '<span>' + esc(name || 'あき') + '</span>' +
@@ -1101,6 +1103,35 @@
   })();
 
   var list = $('sk-list');
+
+  /* 名簿の行を押す（名前欄に入る）・マウスを乗せると、座席表のその子の席を光らせる */
+  var hlName = null;
+  function highlightSeat(name) {
+    hlName = name;
+    Array.prototype.forEach.call(document.querySelectorAll('#sk-board .is-hl'), function (x) { x.classList.remove('is-hl'); });
+    if (!name) return;
+    Array.prototype.forEach.call(document.querySelectorAll('#sk-board .sk-seat[data-name]'), function (x) {
+      if (x.getAttribute('data-name') === name) x.classList.add('is-hl');
+    });
+  }
+  function nameOfRow(el) {
+    var row = el.closest && el.closest('.sk-row');
+    if (!row) return null;
+    var i = Array.prototype.indexOf.call(list.children, row);
+    return i >= 0 ? displayNames()[i] : null;
+  }
+  list.addEventListener('focusin', function (e) { highlightSeat(nameOfRow(e.target)); });
+  list.addEventListener('focusout', function (e) {
+    if (!list.contains(e.relatedTarget)) highlightSeat(null);
+  });
+  list.addEventListener('mouseover', function (e) {
+    var n = nameOfRow(e.target);
+    if (n && n !== hlName) highlightSeat(n);
+  });
+  list.addEventListener('mouseleave', function () {
+    var f = document.activeElement;
+    highlightSeat(list.contains(f) ? nameOfRow(f) : null);
+  });
 
   list.addEventListener('input', function (e) {
     if (!e.target.classList.contains('sk-name')) return;
