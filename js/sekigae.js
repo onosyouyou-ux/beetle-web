@@ -489,7 +489,7 @@
       }
     }
     board.innerHTML = html;
-    // 席替えのあとは「② 席替えの結果」タブに出す。形は確定扱いにする
+    // 配置のあとは「配置の結果」タブに出す。形は確定扱いにする
     $('sk-tab-result').disabled = false;
     if (!shapeLocked) { shapeLocked = true; renderLayout(); }
     showTab('result');
@@ -504,6 +504,7 @@
     }
     $('sk-out').value = 'こくばん\n' + lines.join('\n');
     updateRowSeats();
+    updateSteps();
   }
 
   /* ---------- できた席を手で入れかえる ---------- */
@@ -593,9 +594,27 @@
     board.innerHTML = html;
     $('sk-confirm').textContent = shapeLocked ? '座席の形を直す' : 'この形で確定する';
     $('sk-confirm').classList.toggle('is-done', shapeLocked);
+    updateSteps();
     $('sk-layout-note').textContent = shapeLocked
       ? 'この形で確定しました。下で名簿と配慮を入れて「配置する」を押してください。'
       : 'まわりの点線を押すと席を足せます。席の ✕ で消せます。';
+  }
+
+  /**
+   * 上の手順バー（1 形 → 2 名簿 → 3 配置 → 4 手直し・印刷）の「いまここ」を合わせる。
+   * どこから手をつければいいか迷わないよう、終わった手順に ✓、いまの手順に色を付ける
+   */
+  function updateSteps() {
+    var bar = $('sk-stepbar');
+    if (!bar) return;
+    var named = students.some(function (s) { return s.name.trim(); });
+    var now = state.grid ? 4 : !shapeLocked ? 1 : named ? 3 : 2;
+    Array.prototype.forEach.call(bar.children, function (li) {
+      var n = Number(li.getAttribute('data-step'));
+      li.classList.toggle('is-done', n < now);
+      li.classList.toggle('is-on', n === now);
+      if (n === now) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
+    });
   }
 
   /** 座席欄のタブを切り替える（'shape'＝座席の形／'result'＝席替えの結果） */
@@ -622,6 +641,7 @@
     $('sk-tab-result').disabled = true;
     $('sk-result').classList.remove('is-on');
     updateRowSeats();
+    updateSteps();
     // 結果がない状態に戻るので、ボタンも「配置する」に戻す
     ['sk-gen', 'sk-gen2'].forEach(function (id) { $(id).textContent = '配置する'; });
   }
@@ -748,6 +768,7 @@
     }).join('');
     updateCount();
     updateRowSeats();
+    updateSteps();
   }
 
   /** 席替えの結果があれば、名簿の各行にその子の席（「3れつ 2ばん」）を出す。座席表が画面の外でも分かるように */
@@ -1195,6 +1216,7 @@
     if (!s) return;
     s.name = e.target.value;
     refreshPartnerLabels();
+    updateSteps();
   });
 
   list.addEventListener('paste', function (e) {

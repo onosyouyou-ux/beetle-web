@@ -199,7 +199,7 @@ body{
 .sk-doc{margin-top:34px}
 .sk-doc h2{font-size:19px;font-weight:900;margin:30px 0 14px;padding-left:12px;border-left:4px solid var(--sk-orange)}
 .sk-doc h2:first-child{margin-top:0}
-.sk-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.sk-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .sk-step{background:#fff;border:1px solid var(--sk-line);border-radius:12px;padding:18px 20px}
 .sk-step-n{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--sk-orange);color:#fff;font-size:13px;font-weight:900;margin-bottom:10px}
 .sk-step h3{font-size:14px;font-weight:800;margin:0 0 7px}
@@ -461,3 +461,47 @@ body{
   .sk-row{grid-template-columns:26px 1fr auto 30px}
   .sk-rules{grid-column:2 / 5}
 }
+
+/* ====== 操作の順番（2026-10-04）：迷子にならないよう、手順バー＋見出しの番号＋塗りボタンは手順ごとに1つ ====== */
+.sk-stepbar{
+  list-style:none;margin:0 0 18px;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
+}
+.sk-stepbar li a{
+  display:flex;align-items:center;gap:8px;height:100%;box-sizing:border-box;padding:10px 12px;border-radius:8px;
+  background:#fff;border:1px solid var(--sk-line);color:var(--sk-ink3);font-size:12.5px;font-weight:800;text-decoration:none;
+}
+.sk-stepbar-n{
+  flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
+  background:var(--sk-cream2);color:var(--sk-ink3);font-size:12px;font-weight:900;
+}
+.sk-stepbar li.is-on a{border:2px solid var(--sk-orange);color:var(--sk-orange-dk);background:var(--sk-orange-bg)}
+.sk-stepbar li.is-on .sk-stepbar-n{background:var(--sk-orange);color:#fff}
+.sk-stepbar li.is-done a{color:var(--sk-ink2)}
+.sk-stepbar li.is-done .sk-stepbar-n{background:var(--sk-green);color:#fff;font-size:0}
+.sk-stepbar li.is-done .sk-stepbar-n::after{content:"✓";font-size:12px}
+@media (hover:hover){ .sk-stepbar li a:hover{border-color:var(--sk-orange)} }
+
+/* 枠の見出しの番号 */
+.sk-step-no{
+  display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
+  background:var(--sk-ink);color:#fff;font-size:12px;font-weight:900;margin-right:8px;vertical-align:1px;
+}
+.sk-seat-head .sk-lbl,.sk-panel-roster > .sk-lbl-row .sk-lbl{font-size:15px}
+
+/* 3 配置する：見出しとボタンを中央に縦に並べる */
+.sk-controls{flex-direction:column;gap:10px}
+.sk-go-lbl{font-size:13px;color:var(--sk-ink2)}
+
+/* 名簿の上の「配置する」は控えめ（塗りは下の大きいボタンだけ） */
+.sk-sub.sk-gen-sub{margin-left:auto;padding:6px 16px;font-size:12px;border-color:var(--sk-orange);color:var(--sk-orange-dk)}
+
+@media(max-width:767px){
+  .sk-stepbar{grid-template-columns:repeat(2,1fr)}
+  .sk-stepbar li a{font-size:11.5px;padding:8px}
+  .sk-sub.sk-gen-sub{margin-left:0}
+}
+@media print{ .sk-stepbar{display:none !important} }
+
+/* 使い方の下の補足（次回の続き・基準変更の注意） */
+.sk-doc-note{font-size:12.5px;line-height:1.9;color:var(--sk-ink2);background:#fff;border:1px solid var(--sk-line);border-radius:10px;padding:12px 16px;margin:14px 0 0}
+@media(max-width:1000px) and (min-width:901px){ .sk-steps{grid-template-columns:repeat(2,1fr)} }

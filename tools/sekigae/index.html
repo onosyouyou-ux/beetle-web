@@ -51,9 +51,10 @@
   "@type": "HowTo",
   "name": "席替えメーカーで座席表を作る手順",
   "step": [
-    { "@type": "HowToStep", "name": "名簿を貼る", "text": "児童・生徒の名前を1行に1人ずつ貼り付けます。「、」やカンマ・タブで区切ってもかまいません。空欄のままでも「1番」「2番」と番号で作れます。" },
-    { "@type": "HowToStep", "name": "席の数と配慮を決める", "text": "縦と横の席の数を選び、名簿の行ごとに「前列」「後列」「固定」「離す」「隣」の配慮をプルダウンで足します。1人に何個でも付けられます。" },
-    { "@type": "HowToStep", "name": "作って印刷する", "text": "「配置する」を押すと配慮を守った座席表ができます。気に入らなければ「再配置する」で何度でも引き直し、決まったら印刷します。" }
+    { "@type": "HowToStep", "name": "座席の形を決める", "text": "横と縦の席の数を選び、点線の席を押して足したり ✕ で消したりして教室の形に合わせ、「この形で確定する」を押します。" },
+    { "@type": "HowToStep", "name": "名簿と配慮を入れる", "text": "名前を1マスに1人ずつ入れ、「＋ 配慮」から前列・後列・固定・離す・隣を選びます。1人に何個でも付けられます。" },
+    { "@type": "HowToStep", "name": "配置する", "text": "「配置する」を押すと配慮を守った座席表ができます。気に入らなければ「再配置する」で何度でも引き直せます。" },
+    { "@type": "HowToStep", "name": "手直しして印刷", "text": "席をドラッグか2つを順にタップして入れかえ、「印刷する」で座席表だけを印刷します。" }
   ]
 }
 </script>
@@ -117,10 +118,17 @@
 
   <main class="sk-main">
 
+    <ol class="sk-stepbar" id="sk-stepbar" aria-label="操作の順番">
+      <li data-step="1"><a href="#tool"><span class="sk-stepbar-n">1</span>座席の形を決める</a></li>
+      <li data-step="2"><a href="#sk-roster"><span class="sk-stepbar-n">2</span>名簿と配慮を入れる</a></li>
+      <li data-step="3"><a href="#sk-go-area"><span class="sk-stepbar-n">3</span>配置する</a></li>
+      <li data-step="4"><a href="#tool"><span class="sk-stepbar-n">4</span>手直しして印刷</a></li>
+    </ol>
+
     <section class="sk-panel" id="tool">
       <div class="sk-seatsize">
         <div class="sk-seat-head">
-          <span class="sk-lbl">座席を作成</span>
+          <span class="sk-lbl"><span class="sk-step-no">1</span>座席の形を決める</span>
           <span class="sk-count" id="sk-seat-count">0席</span>
           <span class="sk-count is-sub" id="sk-seat-free">あき 0席</span>
         </div>
@@ -136,8 +144,8 @@
       </div>
       <div class="sk-seat-area" id="sk-seat-area">
       <div class="sk-tabs" role="tablist" aria-label="座席の表示">
-        <button type="button" class="sk-tab is-on" id="sk-tab-shape" role="tab" aria-selected="true" aria-controls="sk-layout-wrap">① 座席の形</button>
-        <button type="button" class="sk-tab" id="sk-tab-result" role="tab" aria-selected="false" aria-controls="sk-result" disabled>② 席替えの結果</button>
+        <button type="button" class="sk-tab is-on" id="sk-tab-shape" role="tab" aria-selected="true" aria-controls="sk-layout-wrap">座席の形</button>
+        <button type="button" class="sk-tab" id="sk-tab-result" role="tab" aria-selected="false" aria-controls="sk-result" disabled>配置の結果</button>
       </div>
       <div class="sk-layout" id="sk-layout-wrap" role="tabpanel">
         <div class="sk-blackboard">こくばん</div>
@@ -169,9 +177,9 @@
       </div>
     </section>
 
-    <section class="sk-panel sk-panel-roster" aria-label="名簿と配慮">
+    <section class="sk-panel sk-panel-roster" id="sk-roster" aria-label="名簿と配慮">
       <div class="sk-lbl-row">
-        <span class="sk-lbl">名簿と配慮</span>
+        <span class="sk-lbl"><span class="sk-step-no">2</span>名簿と配慮を入れる</span>
         <span class="sk-count" id="sk-count">0人</span>
         <button type="button" class="sk-mini" id="sk-sample">見本を入れる</button>
       </div>
@@ -180,9 +188,9 @@
           CSVを読む
           <input type="file" id="sk-csv" accept=".csv,.tsv,.txt,text/csv,text/plain">
         </label>
-        <button type="button" class="sk-mini2 is-go" id="sk-csv-save">CSVで保存</button>
+        <button type="button" class="sk-mini2" id="sk-csv-save">CSVで保存</button>
         <button type="button" class="sk-mini2" id="sk-csv-template">ひな形CSV</button>
-        <button type="button" class="sk-go sk-go-sm" id="sk-gen2">配置する</button>
+        <button type="button" class="sk-sub sk-gen-sub" id="sk-gen2">配置する</button>
       </div>
 
       <div class="sk-csv-pick" id="sk-csv-pick" hidden>
@@ -204,7 +212,7 @@
         <button type="button" class="sk-mini2" id="sk-add5">＋5人</button>
         <button type="button" class="sk-mini2" id="sk-add10">＋10人</button>
       </div>
-      <p class="sk-hint">名前は1行に1人。Excelの名前の列をコピーして<b>1行目に貼ると、下の行へ1人ずつ</b>入ります（足りない行は自動で増えます）。空欄の行は「3番」のように番号で作ります。<br>配慮は「＋ 配慮」から <code>前列</code> <code>後列</code> <code>固定</code> <code>離す</code> <code>隣</code> を選びます。<code>離す</code> <code>隣</code> は相手を、<code>固定</code> は席をえらんでください。<br><b>CSVで保存</b>すると、名簿・配慮・できた席を1枚のファイルに書き出します。次回そのファイルを<b>CSVを読む</b>から取り込めば、そのまま続きから始められます。</p>
+      <p class="sk-hint">Excelの名前の列をコピーして1行目に貼ると、下へ1人ずつ入ります。空欄の行は「3番」のように番号で作ります。</p>
 
       <div class="sk-prev" id="sk-prev" hidden>
         <span class="sk-prev-lbl" id="sk-prev-lbl">前回の席</span>
@@ -213,7 +221,8 @@
         <button type="button" class="sk-mini2" id="sk-prev-clear">つかわない</button>
       </div>
 
-      <div class="sk-controls">
+      <div class="sk-controls" id="sk-go-area">
+        <span class="sk-lbl sk-go-lbl"><span class="sk-step-no">3</span>名簿と配慮ができたら</span>
         <button type="button" class="sk-go" id="sk-gen">配置する</button>
       </div>
 
@@ -226,20 +235,26 @@
       <div class="sk-steps">
         <div class="sk-step">
           <span class="sk-step-n">1</span>
-          <h3>名簿を貼る</h3>
-          <p>パソコンでの利用をおすすめします。名前を1行に1人ずつ入れます。最初は10行あり、「＋1人」「＋5人」「＋10人」で増やせます。Excelや名簿ソフトから名前の列をコピーして<b>1行目に貼ると、下の行へ1人ずつ</b>入ります。「1 田中」のように出席番号がついていても読み取ります。空欄の行は「1番」「2番」の番号で作ります。<br><b>「CSVを読む」</b>を使えば、名簿CSVから名前の列を選んで流し込めます。<b>「CSVで保存」</b>すると、名簿と配慮を1枚のファイルに書き出せます（<b>ひな形CSV</b>も配布しています）。</p>
+          <h3>座席の形を決める</h3>
+          <p>横と縦の席の数を選びます。教室に合わせて、まわりの点線を押すと席を足せて、席の ✕ で消せます。決まったら「この形で確定する」を押します。</p>
         </div>
         <div class="sk-step">
           <span class="sk-step-n">2</span>
-          <h3>席の数と配慮を決める</h3>
-          <p>横と縦の席の数を選びます。人数より席が多いぶんは空席になります。配慮は名簿の行ごとに「＋ 配慮」から選びます。1人に何個でも付けられます。種類は下の表のとおりです。</p>
+          <h3>名簿と配慮を入れる</h3>
+          <p>名前を1マスに1人ずつ入れます。Excelの名前の列をコピーして1行目に貼ると、下へ1人ずつ入ります。配慮は「＋ 配慮」から選びます（1人に何個でも）。</p>
         </div>
         <div class="sk-step">
           <span class="sk-step-n">3</span>
-          <h3>作って、引き直して、印刷する</h3>
-          <p>「配置する」を押すと配慮を守った表ができます。納得いくまで「再配置する」を押して、決まったら印刷してください。印刷では座席表だけが出ます。決まった席を<b>「この席ごとCSVで保存」</b>しておくと、次回そのファイルを読み込むだけで「前回と同じ席・同じ隣にしない」が選べます。座席の形（足した席・消した席）もファイルに入ります。<br>※2026年10月から「前列・後列」は各列の一番前・一番後ろの席、「離す」は斜めも含めた周りの1マスになりました。それより前に保存したCSVで「作れません」と出たときは、前列・後列の人数や「離す」の数を見直してください。</p>
+          <h3>配置する</h3>
+          <p>「配置する」を押すと、配慮を守った座席表が上にできます。気に入らなければ「再配置する」で何度でも引き直せます。</p>
+        </div>
+        <div class="sk-step">
+          <span class="sk-step-n">4</span>
+          <h3>手直しして印刷</h3>
+          <p>席は、ドラッグか2つを順にタップすると入れかわります。「印刷する」で座席表だけを印刷できます（配慮の札は出ません）。</p>
         </div>
       </div>
+      <p class="sk-doc-note"><b>次回の続き：</b>「この席ごとCSVで保存」したファイルを「CSVを読む」から読み込むと、名簿・配慮・座席の形・前回の席が戻り、「前回と同じ席・同じ隣にしない」が選べます。<br>※2026年10月から「前列・後列」は各列の一番前・一番後ろの席、「離す」は斜めも含めた周りの1マスになりました。それより前のCSVで「作れません」と出たときは、前列・後列の人数や「離す」の数を見直してください。</p>
 
       <h2>配慮の種類</h2>
       <table class="sk-table">
