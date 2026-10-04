@@ -15,8 +15,8 @@
   if (!$('sk-list') || !R) return;
 
   var ATTEMPTS = 4000;   // ランダム再試行の上限
-  var FRONT_DEPTH = 2;   // 「前列」＝前から何列目までか
-  var BACK_DEPTH = 2;    // 「後列」＝後ろから何列目までか
+  // 「前列」＝各列の一番前の席、「後列」＝各列の一番後ろの席（2026-10-04 に「前から2列目まで」から変更。
+  //  2ばんの席に入っても前列に見えないため。席を足し引きした形でも列ごとに一番前・後ろを取る）
   var START_ROWS = 10;   // 最初に出しておく行の数
   var SEAT_MAX = 10;     // 席の数の上限（縦・横とも）
 
@@ -153,9 +153,24 @@
     return 'any';
   }
 
-  function seatOk(zone, r, rows) {
-    if (zone === 'front') return r < FRONT_DEPTH;
-    if (zone === 'back') return r >= rows - BACK_DEPTH;
+  var edges = null;   // いまの席の形での、列ごとの一番前・一番後ろの行
+
+  function columnEdges(map) {
+    var front = [], back = [];
+    for (var c = 0; c < map[0].length; c++) {
+      front[c] = -1; back[c] = -1;
+      for (var r = 0; r < map.length; r++) {
+        if (!map[r][c]) continue;
+        if (front[c] < 0) front[c] = r;
+        back[c] = r;
+      }
+    }
+    return { front: front, back: back };
+  }
+
+  function seatOk(zone, r, c) {
+    if (zone === 'front') return edges.front[c] === r;
+    if (zone === 'back') return edges.back[c] === r;
     return true;
   }
 
@@ -177,6 +192,7 @@
   // { seatOf:{name:'r,c'}, nbOf:{name:{other:true}}, avoidSeat:bool, avoidNb:bool }
   function solve(names, map, rules, prev) {
     var rows = map.length, cols = map[0].length;
+    edges = columnEdges(map);
     var avoidSeat = !!(prev && prev.avoidSeat && prev.seatOf);
     var avoidNb = !!(prev && prev.avoidNb && prev.nbOf);
 
@@ -207,7 +223,7 @@
         var spots = [];
         for (var rr = 0; rr < rows; rr++) {
           for (var cc = 0; cc < cols; cc++) {
-            if (grid[rr][cc] !== null || !seatOk(zone, rr, rows)) continue;
+            if (grid[rr][cc] !== null || !seatOk(zone, rr, cc)) continue;
             if (avoidSeat && prev.seatOf[name] === rr + ',' + cc) continue;
             spots.push([rr, cc]);
           }
@@ -283,7 +299,7 @@
       var zone = zoneOf(p, rules);
       return NEIGHBOR_D.some(function (d) {
         var nr = r + d[0], nc = c + d[1];
-        return inside(nr, nc, rows, cols) && grid[nr][nc] === null && seatOk(zone, nr, rows);
+        return inside(nr, nc, rows, cols) && grid[nr][nc] === null && seatOk(zone, nr, nc);
       });
     });
   }
@@ -306,6 +322,7 @@
 
   function diagnose(names, map, rules) {
     var rows = map.length, cols = map[0].length;
+    edges = columnEdges(map);
     var total = seatTotal(map);
     var msgs = [];
     if (names.length > total) {
@@ -324,23 +341,18 @@
       } else seen[key] = f.name;
 
       var z = zoneOf(f.name, rules);
-      if (z === 'front' && f.r >= FRONT_DEPTH) msgs.push({ text: '「' + f.name + '」は前列指定と固定席が矛盾しています。', error: true });
-      if (z === 'back' && f.r < rows - BACK_DEPTH) msgs.push({ text: '「' + f.name + '」は後列指定と固定席が矛盾しています。', error: true });
+      if (z === 'front' && map[f.r] && f.c >= 0 && f.c < cols && !seatOk('front', f.r, f.c)) msgs.push({ text: '「' + f.name + '」は前列指定と固定席が矛盾しています。', error: true });
+      if (z === 'back' && map[f.r] && f.c >= 0 && f.c < cols && !seatOk('back', f.r, f.c)) msgs.push({ text: '「' + f.name + '」は後列指定と固定席が矛盾しています。', error: true });
     });
 
-    var frontSeats = 0, backSeats = 0;
-    map.forEach(function (row, r) {
-      row.forEach(function (v) {
-        if (!v) return;
-        if (r < FRONT_DEPTH) frontSeats++;
-        if (r >= rows - BACK_DEPTH) backSeats++;
-      });
-    });
+    // 列ごとに一番前・一番後ろが1席ずつ
+    var frontSeats = edges.front.filter(function (r) { return r >= 0; }).length;
+    var backSeats = frontSeats;
     if (rules.front.length > frontSeats) {
-      msgs.push({ text: '前列に入りきりません。', sub: '前列指定が' + rules.front.length + '人いますが、前から' + FRONT_DEPTH + '列には' + frontSeats + '席しかありません。', error: true });
+      msgs.push({ text: '前列に入りきりません。', sub: '前列指定が' + rules.front.length + '人いますが、各列の一番前の席は' + frontSeats + '席しかありません。', error: true });
     }
     if (rules.back.length > backSeats) {
-      msgs.push({ text: '後列に入りきりません。', sub: '後列指定が' + rules.back.length + '人いますが、後ろから' + BACK_DEPTH + '列には' + backSeats + '席しかありません。', error: true });
+      msgs.push({ text: '後列に入りきりません。', sub: '後列指定が' + rules.back.length + '人いますが、各列の一番後ろの席は' + backSeats + '席しかありません。', error: true });
     }
 
     // 隣：相手は前後左右の4人までしか置けない
@@ -521,8 +533,9 @@
       var p = pos[f.name];
       if (p && (p[0] !== f.r || p[1] !== f.c)) out.push(f.name + 'が固定席にいません');
     });
-    rules.front.forEach(function (n) { if (pos[n] && pos[n][0] >= FRONT_DEPTH) out.push(n + 'が前列にいません'); });
-    rules.back.forEach(function (n) { if (pos[n] && pos[n][0] < rows - BACK_DEPTH) out.push(n + 'が後列にいません'); });
+    edges = columnEdges(seatMap);
+    rules.front.forEach(function (n) { if (pos[n] && !seatOk('front', pos[n][0], pos[n][1])) out.push(n + 'が前列にいません'); });
+    rules.back.forEach(function (n) { if (pos[n] && !seatOk('back', pos[n][0], pos[n][1])) out.push(n + 'が後列にいません'); });
     rules.apart.forEach(function (p) {
       var a = pos[p[0]], b = pos[p[1]];
       if (a && b && Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1])) <= 1) out.push(p[0] + 'と' + p[1] + 'が近くにいます（離す）');
