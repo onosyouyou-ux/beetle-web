@@ -64,6 +64,29 @@
 
   function resetMapFromSelects() {
     seatMap = fullMap(parseInt($('sk-rows').value, 10), parseInt($('sk-cols').value, 10));
+    aisles = {};
+  }
+
+  /*
+   * 通路（2026-10-04）：aisles[c] が true なら、c れつ と c+1 れつ のあいだが通路。
+   * 通路をはさんだ席は「隣」にも「離す」の周り1マスにも数えない。れつの番号は変わらない
+   */
+  var aisles = {};
+  var aisleMode = false;   // 「通路を入れる」を押しているあいだだけ、列のあいだを押せる
+
+  /** 横に1つずれるとき、通路をまたぐか */
+  function crosses(c1, c2) {
+    return c1 !== c2 && !!aisles[Math.min(c1, c2)];
+  }
+
+  /** 前後左右の隣か（通路をまたげば隣ではない） */
+  function adjacent(r1, c1, r2, c2) {
+    return Math.abs(r1 - r2) + Math.abs(c1 - c2) === 1 && !crosses(c1, c2);
+  }
+
+  /** 周り1マス（斜めも含む）か（通路をまたげば近くではない） */
+  function around(r1, c1, r2, c2) {
+    return Math.max(Math.abs(r1 - r2), Math.abs(c1 - c2)) <= 1 && !crosses(c1, c2);
   }
 
   function seatTotal(m) {
@@ -270,7 +293,7 @@
     var out = [];
     for (var i = 0; i < NEIGHBOR_D.length; i++) {
       var nr = r + NEIGHBOR_D[i][0], nc = c + NEIGHBOR_D[i][1];
-      if (inside(nr, nc, rows, cols) && grid[nr][nc]) out.push(grid[nr][nc]);
+      if (inside(nr, nc, rows, cols) && grid[nr][nc] && !crosses(c, nc)) out.push(grid[nr][nc]);
     }
     return out;
   }
@@ -281,7 +304,7 @@
     if (!mine) return false;
     for (var i = 0; i < AROUND_D.length; i++) {
       var nr = r + AROUND_D[i][0], nc = c + AROUND_D[i][1];
-      if (inside(nr, nc, rows, cols) && grid[nr][nc] && mine[grid[nr][nc]]) return true;
+      if (inside(nr, nc, rows, cols) && grid[nr][nc] && mine[grid[nr][nc]] && !crosses(c, nc)) return true;
     }
     return false;
   }
@@ -296,11 +319,11 @@
     if (!mine) return true;
     return Object.keys(mine).every(function (p) {
       var at = posOf[p];
-      if (at) return Math.abs(at[0] - r) + Math.abs(at[1] - c) === 1;
+      if (at) return adjacent(at[0], at[1], r, c);
       var zone = zoneOf(p, rules);
       return NEIGHBOR_D.some(function (d) {
         var nr = r + d[0], nc = c + d[1];
-        return inside(nr, nc, rows, cols) && grid[nr][nc] === null && seatOk(zone, nr, nc);
+        return inside(nr, nc, rows, cols) && grid[nr][nc] === null && !crosses(c, nc) && seatOk(zone, nr, nc);
       });
     });
   }
@@ -308,7 +331,7 @@
   function allNextOk(pairs, posOf) {
     return pairs.every(function (p) {
       var a = posOf[p[0]], b = posOf[p[1]];
-      return a && b && Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) === 1;
+      return a && b && adjacent(a[0], a[1], b[0], b[1]);
     });
   }
 
@@ -364,7 +387,7 @@
     });
     rules.next.forEach(function (p) {
       var a = fixedOf[p[0]], b = fixedOf[p[1]];
-      if (a && b && Math.abs(a.r - b.r) + Math.abs(a.c - b.c) !== 1) {
+      if (a && b && !adjacent(a.r, a.c, b.r, b.c)) {
         msgs.push({ text: '「' + p[0] + '」と「' + p[1] + '」は「隣」ですが、2人とも離れた固定席です。', error: true });
       }
     });
@@ -462,13 +485,17 @@
   function render() {
     var grid = state.grid, rows = state.rows, cols = state.cols, rules = state.rules;
     var board = $('sk-board');
-    board.style.gridTemplateColumns = 'repeat(' + cols + ', auto)';
-    board.style.setProperty('--cols', cols);   // 印刷では紙の幅に合わせて等分する
+    var track = colTrack(cols, 0, false);
+    board.style.gridTemplateColumns = trackTemplate(track, 'auto', '26px', '');
+    // 印刷では紙の幅に合わせて等分する（通路は細い帯のまま）
+    board.style.setProperty('--print-tpl', trackTemplate(track, 'minmax(0,1fr)', '14px', ''));
 
     var html = '';
     var used = 0;
     for (var r = 0; r < rows; r++) {
-      for (var c = 0; c < cols; c++) {
+      for (var k = 0; k < track.length; k++) {
+        if (track[k].gap !== undefined) { html += '<span class="sk-aisle" aria-hidden="true"></span>'; continue; }
+        var c = track[k].c;
         var name = grid[r][c];
         if (name === '') { html += '<div class="sk-seat is-hole" aria-hidden="true"></div>'; continue; }
         var at = r + ',' + c;
@@ -541,11 +568,11 @@
     rules.back.forEach(function (n) { if (pos[n] && !seatOk('back', pos[n][0], pos[n][1])) out.push(n + 'が後列にいません'); });
     rules.apart.forEach(function (p) {
       var a = pos[p[0]], b = pos[p[1]];
-      if (a && b && Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1])) <= 1) out.push(p[0] + 'と' + p[1] + 'が近くにいます（離す）');
+      if (a && b && around(a[0], a[1], b[0], b[1])) out.push(p[0] + 'と' + p[1] + 'が近くにいます（離す）');
     });
     rules.next.forEach(function (p) {
       var a = pos[p[0]], b = pos[p[1]];
-      if (a && b && Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) !== 1) out.push(p[0] + 'と' + p[1] + 'が隣ではありません');
+      if (a && b && !adjacent(a[0], a[1], b[0], b[1])) out.push(p[0] + 'と' + p[1] + 'が隣ではありません');
     });
     return out;
   }
@@ -555,6 +582,28 @@
     if (!picked) { picked = at; render(); return; }
     if (picked === at) { picked = null; render(); return; }
     swapSeats(picked, at);
+  }
+
+  /**
+   * 横の並び（列と通路）。withSlots のときは、通路を入れられる列のあいだ（すき間）も並べる。
+   * edge は座席の外側に点線の席を出すか
+   */
+  function colTrack(cols, edge, withSlots) {
+    var t = [];
+    if (edge) t.push({ c: -1 });
+    for (var c = 0; c < cols; c++) {
+      t.push({ c: c });
+      if (c < cols - 1) {
+        if (aisles[c]) t.push({ gap: c, aisle: true });
+        else if (withSlots) t.push({ gap: c });
+      }
+    }
+    if (edge) t.push({ c: cols });
+    return t;
+  }
+
+  function trackTemplate(t, seat, aisle, slot) {
+    return t.map(function (x) { return x.gap === undefined ? seat : (x.aisle ? aisle : slot); }).join(' ');
   }
 
   /**
@@ -569,11 +618,21 @@
     var growR = rows < SEAT_MAX, growC = cols < SEAT_MAX;
     var board = $('sk-layout-board');
     var edge = shapeLocked ? 0 : 1;
-    board.style.gridTemplateColumns = 'repeat(' + (cols + edge * 2) + ', auto)';
+    if (shapeLocked) aisleMode = false;
+    var slots = aisleMode;
+    var track = colTrack(cols, edge, slots);
+    board.style.gridTemplateColumns = trackTemplate(track, 'auto', '26px', '14px');
     board.classList.toggle('is-locked', shapeLocked);
+    board.classList.toggle('is-aisle-mode', slots);
     var html = '';
     for (var r = -edge; r < rows + edge; r++) {
-      for (var c = -edge; c < cols + edge; c++) {
+      for (var k = 0; k < track.length; k++) {
+        var x = track[k];
+        if (x.gap !== undefined) {
+          html += gapCell(x, r, rows, slots);
+          continue;
+        }
+        var c = x.c;
         var outR = r < 0 || r >= rows, outC = c < 0 || c >= cols;
         if (shapeLocked) {
           html += m[r][c]
@@ -593,12 +652,37 @@
       }
     }
     board.innerHTML = html;
+    $('sk-aisle').hidden = shapeLocked;
+    $('sk-aisle').textContent = aisleMode ? '通路を入れ終わる' : '通路を入れる';
+    $('sk-aisle').classList.toggle('is-on', aisleMode);
     $('sk-confirm').textContent = shapeLocked ? '座席の形を直す' : 'この形で確定する';
     $('sk-confirm').classList.toggle('is-done', shapeLocked);
     updateSteps();
     $('sk-layout-note').textContent = shapeLocked
       ? 'この形で確定しました。下で名簿と配慮を入れて「配置する」を押してください。'
-      : 'まわりの点線を押すと席を足せます。席の ✕ で消せます。';
+      : aisleMode
+        ? '列と列のあいだにマウスを乗せて、クリックすると通路が入ります。もう一度クリックすると消えます。'
+        : 'まわりの点線を押すと席を足せます。席の ✕ で消せます。';
+  }
+
+  /** 列のあいだの1マス。通路モードなら押せる「すき間」、通路なら点線の帯 */
+  function gapCell(x, r, rows, slots) {
+    var inRow = r >= 0 && r < rows;
+    if (!inRow) {
+      // 上の点線の行にだけ「通路」と書く
+      return x.aisle && r < 0 ? '<span class="sk-aisle-label">通路</span>' : '<span class="sk-gap"></span>';
+    }
+    if (slots) {
+      return '<button type="button" class="sk-slot' + (x.aisle ? ' is-aisle' : '') + (r === 0 ? ' is-top' : '') + '"' +
+        ' data-slot="' + x.gap + '" data-tip="' + (x.aisle ? '通路を消す' : 'ここに通路を入れる') + '"' +
+        ' aria-label="' + (x.gap + 1) + 'れつと' + (x.gap + 2) + 'れつのあいだ' + (x.aisle ? 'の通路を消す' : 'に通路を入れる') + '"></button>';
+    }
+    return '<span class="sk-aisle" aria-hidden="true"></span>';
+  }
+
+  function toggleAisle(c) {
+    if (aisles[c]) delete aisles[c]; else aisles[c] = true;
+    afterMapEdit();
   }
 
   /**
@@ -661,7 +745,7 @@
     var m = seatMap;
     if (r < 0) { m.unshift(new Array(m[0].length).fill(false)); r = 0; }
     if (r >= m.length) { m.push(new Array(m[0].length).fill(false)); r = m.length - 1; }
-    if (c < 0) { m.forEach(function (row) { row.unshift(false); }); c = 0; }
+    if (c < 0) { m.forEach(function (row) { row.unshift(false); }); c = 0; shiftAisles(1); }
     if (c >= m[0].length) { m.forEach(function (row) { row.push(false); }); c = m[0].length - 1; }
     m[r][c] = true;
     afterMapEdit();
@@ -676,9 +760,20 @@
     while (m.length > 1 && empty(m[0])) m.shift();
     while (m.length > 1 && empty(m[m.length - 1])) m.pop();
     var colEmpty = function (i) { return m.every(function (row) { return !row[i]; }); };
-    while (m[0].length > 1 && colEmpty(0)) m.forEach(function (row) { row.shift(); });
+    while (m[0].length > 1 && colEmpty(0)) { m.forEach(function (row) { row.shift(); }); shiftAisles(-1); }
     while (m[0].length > 1 && colEmpty(m[0].length - 1)) m.forEach(function (row) { row.pop(); });
+    shiftAisles(0);
     afterMapEdit();
+  }
+
+  /** 左に列が増えた・減ったぶん通路の位置をずらし、端からはみ出た通路は消す */
+  function shiftAisles(d) {
+    var next = {}, cols = seatMap[0].length;
+    Object.keys(aisles).forEach(function (k) {
+      var c = Number(k) + d;
+      if (c >= 0 && c < cols - 1) next[c] = true;
+    });
+    aisles = next;
   }
 
   function afterMapEdit() {
@@ -917,19 +1012,27 @@
    * 座席の形をCSVの1セルに入れる書き方。行を「/」で区切り、席あり＝o・席なし＝x。
    * 例：「oooooo/ooxooo」。数字や「-」で始めるとExcelが日付や式に変えてしまうので文字にする
    */
+  // 通路は「|」で入れる（例：「ooo|ooo/ooo|ooo」＝3れつと4れつのあいだが通路）
   function encodeShape(m) {
-    return m.map(function (row) { return row.map(function (v) { return v ? 'o' : 'x'; }).join(''); }).join('/');
+    return m.map(function (row) {
+      return row.map(function (v, c) { return (v ? 'o' : 'x') + (aisles[c] && c < row.length - 1 ? '|' : ''); }).join('');
+    }).join('/');
   }
 
+  /** { map, aisles } を返す。読めなければ null */
   function decodeShape(text) {
     var rows = String(text || '').trim().split('/');
     if (!rows.length || rows.length > SEAT_MAX) return null;
-    var width = rows[0].length;
+    var found = {};
+    var c = -1;
+    rows[0].split('').forEach(function (ch) { if (ch === '|') found[c] = true; else c++; });
+    var plain = rows.map(function (r) { return r.replace(/\|/g, ''); });
+    var width = plain[0].length;
     if (!width || width > SEAT_MAX) return null;
-    var ok = rows.every(function (r) { return r.length === width && /^[ox]+$/i.test(r); });
+    var ok = plain.every(function (r) { return r.length === width && /^[ox]+$/i.test(r); });
     if (!ok) return null;
-    var m = rows.map(function (r) { return r.split('').map(function (ch) { return ch.toLowerCase() === 'o'; }); });
-    return seatTotal(m) ? m : null;
+    var m = plain.map(function (r) { return r.split('').map(function (ch) { return ch.toLowerCase() === 'o'; }); });
+    return seatTotal(m) ? { map: m, aisles: found } : null;
   }
 
   /** 見出しから列の役割を当てる。自分が書き出したCSVはそのまま読み戻せる */
@@ -1078,9 +1181,10 @@
 
     // 席の形：保存してあればそのまま戻す。なければ前回の席から縦横だけ合わせる（以前のCSV）
     if (shape) {
-      seatMap = shape;
-      $('sk-rows').value = String(shape.length);
-      $('sk-cols').value = String(shape[0].length);
+      seatMap = shape.map;
+      aisles = shape.aisles;
+      $('sk-rows').value = String(seatMap.length);
+      $('sk-cols').value = String(seatMap[0].length);
       shapeLocked = true;
     } else if (seats.length > 1) {
       if (maxC + 1 >= 2 && maxC + 1 <= SEAT_MAX) $('sk-cols').value = String(maxC + 1);
@@ -1306,9 +1410,26 @@
     updateCount();
     if (seatAreaShown()) openShape();
   };
+  $('sk-aisle').addEventListener('click', function () {
+    aisleMode = !aisleMode;
+    renderLayout();
+  });
+  // 通路モードでは、列のあいだにマウスを乗せるとその列のあいだ全体を光らせる
+  var lb = $('sk-layout-board');
+  var hoverSlot = function (c) {
+    Array.prototype.forEach.call(lb.querySelectorAll('.sk-slot'), function (x) {
+      x.classList.toggle('is-hover', x.getAttribute('data-slot') === c);
+    });
+  };
+  lb.addEventListener('mouseover', function (e) {
+    var s = e.target.closest && e.target.closest('.sk-slot');
+    hoverSlot(s ? s.getAttribute('data-slot') : null);
+  });
+  lb.addEventListener('mouseleave', function () { hoverSlot(null); });
   $('sk-layout-board').addEventListener('click', function (e) {
     var t = e.target.closest('button');
     if (!t) return;
+    if (t.classList.contains('sk-slot')) { toggleAisle(Number(t.getAttribute('data-slot'))); return; }
     var r = Number(t.getAttribute('data-r')), c = Number(t.getAttribute('data-c'));
     if (t.classList.contains('sk-ghost')) addSeat(r, c);
     else if (t.classList.contains('sk-cell-del')) removeSeat(r, c);

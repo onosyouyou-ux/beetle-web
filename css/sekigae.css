@@ -432,7 +432,7 @@ body{
     background:none !important;color:#111 !important;border:2.5px solid #111 !important;border-radius:2px;
     max-width:60%;margin:0 auto 10mm !important;padding:8px !important;font-size:16px;letter-spacing:.5em;
   }
-  #sk-board{gap:6px;width:100%;min-width:0 !important;grid-template-columns:repeat(var(--cols),minmax(0,1fr)) !important}
+  #sk-board{gap:6px;width:100%;min-width:0 !important;grid-template-columns:var(--print-tpl) !important}
   #sk-board .sk-seat,
   #sk-board .sk-seat:not(.is-empty):not(.is-hole),
   #sk-board .sk-seat.is-fixed:not(.is-empty){
@@ -505,3 +505,33 @@ body{
 /* 使い方の下の補足（次回の続き・基準変更の注意） */
 .sk-doc-note{font-size:12.5px;line-height:1.9;color:var(--sk-ink2);background:#fff;border:1px solid var(--sk-line);border-radius:10px;padding:12px 16px;margin:14px 0 0}
 @media(max-width:1000px) and (min-width:901px){ .sk-steps{grid-template-columns:repeat(2,1fr)} }
+
+/* ====== 通路（2026-10-04） ====== */
+.sk-sub.sk-aisle-btn{margin-left:auto;padding:7px 16px;font-size:12.5px}
+.sk-sub.sk-aisle-btn.is-on{border-color:var(--sk-orange);color:var(--sk-orange-dk);background:var(--sk-orange-bg)}
+/* 通路の帯：真ん中に点線 */
+.sk-aisle{
+  align-self:stretch;min-height:40px;
+  background:linear-gradient(var(--sk-line2),var(--sk-line2)) center/2px 100% no-repeat;
+  opacity:.8;
+}
+.sk-aisle-label{align-self:end;text-align:center;font-size:10.5px;font-weight:800;color:var(--sk-ink3);writing-mode:vertical-rl;letter-spacing:.2em}
+.sk-gap{display:block}
+/* 通路モードの「列のあいだ」 */
+.sk-slot{
+  position:relative;align-self:stretch;min-height:40px;padding:0;border:none;border-radius:4px;
+  background:transparent;cursor:pointer;font-family:inherit;
+}
+.sk-slot.is-aisle{background:linear-gradient(var(--sk-orange),var(--sk-orange)) center/2px 100% no-repeat}
+.sk-slot.is-hover{background-color:var(--sk-orange-bg);box-shadow:inset 0 0 0 2px var(--sk-orange)}
+.sk-slot.is-top.is-hover::after{
+  content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  white-space:nowrap;background:var(--sk-ink);color:#fff;font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:6px;z-index:3;
+  pointer-events:none;
+}
+@media print{
+  .sk-aisle{background:linear-gradient(#999,#999) center/1.5px 100% no-repeat}
+}
+/* 通路モードでは、押せる列のあいだに薄い点線を出しておく（どこを押せばいいか見えるように） */
+.sk-board-empty.is-aisle-mode .sk-slot:not(.is-aisle){background:repeating-linear-gradient(to bottom,var(--sk-orange) 0 4px,transparent 4px 9px) center/2px 100% no-repeat;opacity:.55}
+.sk-board-empty.is-aisle-mode .sk-slot.is-hover{opacity:1;background-color:var(--sk-orange-bg)}
