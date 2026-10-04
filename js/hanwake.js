@@ -125,7 +125,7 @@
 
   function setPeople(list) {
     people = list.map(function (p) {
-      return { id: nextId(), name: (p.name || '').trim(), label: (p.label || '').trim() };
+      return { id: nextId(), name: (p.name || '').trim(), label: (p.label || '').trim(), extra: p.extra || {} };
     });
     if (!people.length) addPerson();
     renderRows();
@@ -674,9 +674,12 @@
       var h = (raw || '').trim();
       if (!h) return;
       if (/^(出席番号|番号|no\.?|#)$/i.test(h)) return;              // 番号は使わない
+      // 共通CSVの、ほかのメーカーの列（席・クラス）は読まない（保存のときそのまま残す）
+      var rr = R.ruleColumnRole(h, '班の配慮', head);
+      if (rr === 'rule') { roles[c] = 'rule'; return; }
+      if (rr === 'skip' || /^(席|座席の形|前のクラス|新しいクラス)$/.test(h)) return;
       if (/(なまえ|名前|氏名|生徒名|児童名|姓|名|name)/i.test(h)) roles[c] = 'name';
       else if (/(ラベル|性別|せいべつ|gender|sex)/i.test(h)) roles[c] = 'label';
-      else if (/(配慮|はいりょ)/i.test(h)) roles[c] = 'rule';
       else if (/(班|グループ|group|team)/i.test(h)) roles[c] = 'group';
     });
     return roles;
@@ -748,11 +751,17 @@
 
     var body = $('hw-csv-head').checked ? csvRows.slice(1) : csvRows;
     var list = [], ruleCells = [], groupCells = [];
+    var head = $('hw-csv-head').checked ? csvRows[0] : [];
+    var used = Object.keys(csvRoles).filter(function (c) { return csvRoles[c]; }).map(Number);
 
     body.forEach(function (r) {
       var name = nameCols.map(function (c) { return (r[c] || '').trim(); }).filter(Boolean).join(' ').trim();
       if (!name) return;
-      list.push({ name: name, label: labelCol >= 0 && labelCol !== undefined ? (r[labelCol] || '').trim() : '' });
+      list.push({
+        name: name,
+        label: labelCol >= 0 && labelCol !== undefined ? (r[labelCol] || '').trim() : '',
+        extra: R.keepExtras(head, r, used)   // ほかのメーカーの列。保存のときそのまま書き戻す
+      });
       ruleCells.push(ruleCol === undefined ? '' : (r[ruleCol] || '').trim());
       groupCells.push(groupCol === undefined ? '' : (r[groupCol] || '').trim());
     });
@@ -837,16 +846,13 @@
   }
 
   function downloadTemplate() {
-    downloadCsv('班分け_名簿ひな形.csv', [
-      ['出席番号', 'なまえ', '性別', '配慮', '班'],
-      ['1', '佐藤 みゆき', '女', 'ちらす1', ''],
-      ['2', '鈴木 けんた', '男', '', ''],
-      ['3', '高橋 あおい', '女', '', ''],
-      ['4', '田中 そうた', '男', '別々1', ''],
-      ['5', '中村 はると', '男', '別々1', ''],
-      ['6', '小林 ゆい', '女', '同じ1', ''],
-      ['7', '石川 えま', '女', '同じ1', '']
-    ]);
+    var sample = [
+      ['佐藤 みゆき', '女', 'ちらす1'], ['鈴木 けんた', '男', ''], ['高橋 あおい', '女', ''],
+      ['田中 そうた', '男', '別々1'], ['中村 はると', '男', '別々1'], ['小林 ゆい', '女', '同じ1'], ['石川 えま', '女', '同じ1']
+    ];
+    downloadCsv('名簿ひな形.csv', R.sharedRows(sample.map(function (x) {
+      return { values: { 'なまえ': x[0], '性別': x[1], '班の配慮': x[2] } };
+    })));
     rosterNote('ひな形をダウンロードしました。配慮は「別々1」のように、同じ番号どうしが1つの組になります。', 'ok');
   }
 
@@ -864,11 +870,13 @@
       });
     }
 
-    var rows = [['出席番号', 'なまえ', labelSetName(), '配慮', '班']];
-    filledPeople().forEach(function (p, i) {
+    // 席替え・クラス分けと共通の形で書き出す。読みこんだほかのメーカーの列もそのまま残す
+    var rows = R.sharedRows(filledPeople().map(function (p) {
       var n = names[p.id];
-      rows.push([String(i + 1), n, p.label || '', cells[p.id] || '', groupOf[n] || '']);
-    });
+      var values = { 'なまえ': n, '班の配慮': cells[p.id] || '', '班': groupOf[n] || '' };
+      values[labelSetName()] = p.label || '';   // 既定は「性別」。書き換えていれば右端に足す
+      return { values: values, extra: p.extra };
+    }));
     downloadCsv(withGroups ? '班分け.csv' : '班分け_名簿.csv', rows);
     rosterNote('CSVに保存しました。次回このファイルを「CSVを読む」から取り込めば、' +
       (withGroups ? '名簿・配慮・前回の班' : '名簿と配慮') + 'がそのまま戻ります。', 'ok');

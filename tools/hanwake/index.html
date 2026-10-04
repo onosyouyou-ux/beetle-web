@@ -84,8 +84,8 @@
     },
     {
       "@type": "Question",
-      "name": "席替えメーカーと名簿を共有できますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "どちらも同じ「出席番号・なまえ・配慮」の形でCSVを読み書きします。席替えで保存したCSVを班分けで読めば名簿がそのまま入ります（配慮の書き方はツールごとに違うので、そこは読み替えられません）。" }
+      "name": "席替えメーカーと同じCSVを使えますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "使えます。席替えメーカーと班分けメーカーは同じ形のCSVを読み書きします。1つのファイルに「席の配慮」「席」「班の配慮」「班」のように列が分かれていて、それぞれ自分の列だけを読みます。ほかのメーカーの列は消さずにそのまま残して保存するので、1つの名簿ファイルを使い回せます。" }
     }
   ]
 }
@@ -172,7 +172,7 @@
             </div>
           </div>
 
-          <p class="hw-hint">なまえの右のボタンで<b>そろえる項目</b>を選ぶと、各班の人数がなるべく同じになるように配ります。男女以外にも使えます（「そろえる項目」を <code>A, B</code> や <code>体育係, 図書係</code> に変えてください）。<br>CSVの形は <a href="/tools/sekigae/">席替えメーカー</a> とそろえてあります。名簿はどこにも保存しないので、続きはCSVファイルから戻してください。</p>
+          <p class="hw-hint">なまえの右のボタンで<b>そろえる項目</b>を選ぶと、各班の人数がなるべく同じになるように配ります。男女以外にも使えます（「そろえる項目」を <code>A, B</code> や <code>体育係, 図書係</code> に変えてください）。<br>CSVは <a href="/tools/sekigae/">席替えメーカー</a>・班分けメーカーで共通です。1つの名簿ファイルを使い回せます（ほかのメーカーの列はそのまま残ります）。名簿はどこにも保存しないので、続きはCSVファイルから戻してください。</p>
         </div>
 
         <div class="hw-col">
@@ -281,8 +281,8 @@
         <div>できます。できあがった班を「この班ごとCSVで保存」しておき、次回そのファイルを「CSVを読む」から取り込んでください。CSVの「班」の列が前回の班として読まれ、「前回と同じ人と同じ班にしない」が選べます。人数と班の数によっては避けきれないことがあり、そのときは何組残ったかを画面に表示します。</div>
       </details>
       <details class="hw-faq">
-        <summary>席替えメーカーと名簿を共有できますか？<span>+</span></summary>
-        <div>どちらも同じ「出席番号・なまえ・配慮」の形でCSVを読み書きします。席替えで保存したCSVを班分けで読めば名簿がそのまま入ります（配慮の書き方はツールごとに違うので、そこは読み替えられません）。</div>
+        <summary>席替えメーカーと同じCSVを使えますか？<span>+</span></summary>
+        <div>使えます。席替えメーカーと班分けメーカーは同じ形のCSVを読み書きします。1つのファイルに「席の配慮」「席」「班の配慮」「班」のように列が分かれていて、それぞれ自分の列だけを読みます。ほかのメーカーの列は消さずにそのまま残して保存するので、1つの名簿ファイルを使い回せます。</div>
       </details>
 
       <p class="hw-more">席の並びを決めるなら <a href="/tools/sekigae/">席替えメーカー</a>、クラスだよりを書くなら <a href="/tools/gakkyu-tsushin/">学級通信メーカー</a>、通知表の所見には <a href="/tools/shoken/">所見メーカー</a> もどうぞ。</p>
@@ -313,7 +313,7 @@
 <script src="/js/common.js"></script>
 <script src="/js/contact-track.js"></script>
 <script src="/js/app-reference.js"></script>
-<script src="/js/class-roster.js"></script>
-<script src="/js/hanwake.js"></script>
+<script src="/js/class-roster.js?v=20261004"></script>
+<script src="/js/hanwake.js?v=20261004"></script>
 </body>
 </html>

@@ -39,7 +39,7 @@
   "operatingSystem": "Web",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
   "url": "https://www.beetle-web.jp/tools/sekigae/landing.html",
-  "description": "名簿と席の数から座席表を自動生成し、「離す」「前列」「後列」「固定」の配慮を守ったまま何度でも引き直せる先生向けの無料ツール。"
+  "description": "名簿と席の数から座席表を自動生成し、「前列」「後列」「固定」「離す」「隣」の配慮を守ったまま何度でも引き直せる先生向けの無料ツール。"
 }
 </script>
 <script type="application/ld+json">
@@ -51,9 +51,10 @@
   "@type": "HowTo",
   "name": "席替えメーカーで座席表を作る手順",
   "step": [
-    { "@type": "HowToStep", "name": "名簿を貼る", "text": "児童・生徒の名前を1行に1人ずつ貼り付けます。「、」やカンマ・タブで区切ってもかまいません。空欄のままでも「1番」「2番」と番号で作れます。" },
-    { "@type": "HowToStep", "name": "席の数と配慮を決める", "text": "縦と横の席の数を選び、「離す」「前列」「後列」「固定」の配慮を1行ずつ書きます。" },
-    { "@type": "HowToStep", "name": "作って印刷する", "text": "「席替えする」を押すと配慮を守った座席表ができます。気に入らなければ何度でも引き直し、決まったら印刷します。" }
+    { "@type": "HowToStep", "name": "座席の形を決める", "text": "横と縦の席の数を選び、点線の席を押して足したり ✕ で消したりして教室の形に合わせ、「この形で確定する」を押します。" },
+    { "@type": "HowToStep", "name": "名簿と配慮を入れる", "text": "名前を1マスに1人ずつ入れ、「＋ 配慮」から前列・後列・固定・離す・隣を選びます。1人に何個でも付けられます。" },
+    { "@type": "HowToStep", "name": "配置する", "text": "「配置する」を押すと配慮を守った座席表ができます。気に入らなければ「再配置する」で何度でも引き直せます。" },
+    { "@type": "HowToStep", "name": "手直しして印刷", "text": "席をドラッグか2つを順にタップして入れかえ、「印刷する」で座席表だけを印刷します。" }
   ]
 }
 </script>
@@ -70,7 +71,7 @@
     {
       "@type": "Question",
       "name": "「この2人は離す」はどこまで離れますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "前後左右の隣り合う席にならないようにします。斜めの席は隣として扱いません。もっと離したい場合は、片方に「前列」、もう片方に「後列」を指定すると確実に距離が取れます。" }
+      "acceptedAnswer": { "@type": "Answer", "text": "周りの1マス（前後左右と斜め）には座らせません。もっと離したい場合は、片方に「前列」、もう片方に「後列」を指定すると確実に距離が取れます。" }
     },
     {
       "@type": "Question",
@@ -89,6 +90,11 @@
     },
     {
       "@type": "Question",
+      "name": "班分けメーカーと同じCSVを使えますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "使えます。席替えメーカーと班分けメーカーは同じ形のCSVを読み書きします。1つのファイルに「席の配慮」「席」「班の配慮」「班」のように列が分かれていて、それぞれ自分の列だけを読みます。ほかのメーカーの列は消さずにそのまま残して保存するので、1つの名簿ファイルを使い回せます。" }
+    },
+    {
+      "@type": "Question",
       "name": "班（グループ）の形の席にはできますか？",
       "acceptedAnswer": { "@type": "Answer", "text": "このツールは縦横に並んだ座席表のみに対応しています。誰と誰を同じ班にするかを決めたいときは、姉妹ツールの「班分けメーカー」をお使いください。「この2人は別々に」「世話役は各班に1人ずつ」「男女はそろえる」を守ってグループ分けができ、名簿もこのツールと共通です。" }
     }
@@ -98,7 +104,7 @@
 <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 <link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/css/app-reference.css">
-<link rel="stylesheet" href="/css/sekigae.css">
+<link rel="stylesheet" href="/css/sekigae.css?v=20261004">
 </head>
 <body>
 
@@ -112,59 +118,25 @@
     <h1>席替えメーカー</h1>
     <p class="sk-lead">名簿を貼って、席の数を決めるだけ。<br>「この2人は離す」「視力配慮で前列」を守ったまま、何度でも引き直せます。</p>
     <p class="sk-privacy">名簿はどこにも保存しません。計算は全部この端末の中で行い、サーバーにもブラウザにも残しません。</p>
+    <p class="sk-pc">パソコンでの利用をおすすめします。座席の形づくりや席の入れかえは、大きな画面のほうが楽にできます。</p>
   </header>
 
   <main class="sk-main">
 
+    <ol class="sk-stepbar" id="sk-stepbar" aria-label="操作の順番">
+      <li data-step="1"><a href="#tool"><span class="sk-stepbar-n">1</span>座席の形を決める</a></li>
+      <li data-step="2"><a href="#sk-roster"><span class="sk-stepbar-n">2</span>名簿と配慮を入れる</a></li>
+      <li data-step="3"><a href="#sk-go-area"><span class="sk-stepbar-n">3</span>配置する</a></li>
+      <li data-step="4"><a href="#tool"><span class="sk-stepbar-n">4</span>手直しして印刷</a></li>
+    </ol>
+
     <section class="sk-panel" id="tool">
-      <div class="sk-form">
-        <div class="sk-col">
-          <div class="sk-lbl-row">
-            <label for="sk-names">名簿</label>
-            <span class="sk-count" id="sk-count">0人</span>
-            <button type="button" class="sk-mini" id="sk-sample">見本を入れる</button>
-          </div>
-          <div class="sk-roster-bar">
-            <label class="sk-file">
-              CSVを読む
-              <input type="file" id="sk-csv" accept=".csv,.tsv,.txt,text/csv,text/plain">
-            </label>
-            <button type="button" class="sk-mini2 is-go" id="sk-csv-save">CSVで保存</button>
-            <button type="button" class="sk-mini2" id="sk-csv-template">ひな形CSV</button>
-          </div>
-
-          <div class="sk-csv-pick" id="sk-csv-pick" hidden>
-            <p class="sk-csv-q">どの列が名前ですか？（姓と名が分かれていれば両方えらべます）</p>
-            <div class="sk-csv-cols" id="sk-csv-cols"></div>
-            <div class="sk-csv-foot">
-              <label class="sk-chk"><input type="checkbox" id="sk-csv-head" checked> 1行目は見出し</label>
-              <button type="button" class="sk-mini2 is-go" id="sk-csv-ok">この列でよみこむ</button>
-              <button type="button" class="sk-mini2" id="sk-csv-cancel">やめる</button>
-            </div>
-          </div>
-
-          <p class="sk-roster-note" id="sk-roster-note" hidden></p>
-
-          <textarea id="sk-names" rows="10" spellcheck="false" placeholder="田中 そうた&#10;佐藤 みゆき&#10;鈴木 かい&#10;&#10;↑ このように 1行に1人ずつ。空のままでも「1番」「2番」で作れます"></textarea>
-          <p class="sk-sep-note" id="sk-sep-note" hidden></p>
-          <p class="sk-hint"><b>1行に1人</b>ずつ書きます。「、」やカンマ・タブで区切ってもかまいません。出席番号つきの名簿（「1 田中」など）をそのまま貼っても大丈夫です。<br><b>CSVで保存</b>すると、名簿・配慮・できた席を1枚のファイルに書き出します。次回そのファイルを<b>CSVを読む</b>から取り込めば、そのまま続きから始められます。</p>
+      <div class="sk-seatsize">
+        <div class="sk-seat-head">
+          <span class="sk-lbl"><span class="sk-step-no">1</span>座席の形を決める</span>
+          <span class="sk-count" id="sk-seat-count">0席</span>
+          <span class="sk-count is-sub" id="sk-seat-free">あき 0席</span>
         </div>
-
-        <div class="sk-col">
-          <div class="sk-lbl-row"><label for="sk-rules">配慮</label></div>
-          <textarea id="sk-rules" rows="10" spellcheck="false" placeholder="離す: 田中, 佐藤&#10;前列: 鈴木&#10;後列: 高橋&#10;固定: 山本 = 1れつ 1ばん"></textarea>
-          <p class="sk-hint">1行に1つ。<code>離す</code> <code>前列</code> <code>後列</code> <code>固定</code> の4種類が使えます。名前は名簿と同じ書き方で。</p>
-        </div>
-      </div>
-
-      <div class="sk-prev" id="sk-prev" hidden>
-        <span class="sk-prev-lbl" id="sk-prev-lbl">前回の席</span>
-        <label class="sk-chk"><input type="checkbox" id="sk-prev-seat" checked> 前回と同じ席にしない</label>
-        <label class="sk-chk"><input type="checkbox" id="sk-prev-nb" checked> 前回と同じ隣にしない</label>
-        <button type="button" class="sk-mini2" id="sk-prev-clear">つかわない</button>
-      </div>
-
-      <div class="sk-controls">
         <span class="sk-ctl">
           <label for="sk-cols">横（列）</label>
           <select id="sk-cols"></select>
@@ -174,55 +146,131 @@
           <select id="sk-rows"></select>
         </span>
         <span class="sk-seats" id="sk-seats">—</span>
-        <button type="button" class="sk-go" id="sk-gen">席替えする</button>
+        <button type="button" class="sk-sub sk-aisle-btn" id="sk-aisle">通路を入れる</button>
+      </div>
+      <div class="sk-seat-area" id="sk-seat-area">
+      <div class="sk-tabs" role="tablist" aria-label="座席の表示">
+        <button type="button" class="sk-tab is-on" id="sk-tab-shape" role="tab" aria-selected="true" aria-controls="sk-layout-wrap">座席の形</button>
+        <button type="button" class="sk-tab" id="sk-tab-result" role="tab" aria-selected="false" aria-controls="sk-result" disabled>配置の結果</button>
+      </div>
+      <div class="sk-layout" id="sk-layout-wrap" role="tabpanel">
+        <div class="sk-blackboard">こくばん</div>
+        <div class="sk-board sk-board-empty" id="sk-layout-board"></div>
+        <div class="sk-layout-foot">
+          <span class="sk-layout-note" id="sk-layout-note">まわりの点線を押すと席を足せます。席の ✕ で消せます。</span>
+          <button type="button" class="sk-go sk-go-sm" id="sk-confirm">この形で確定する</button>
+        </div>
+      </div>
+      <div class="sk-result" id="sk-result" role="tabpanel">
+        <div class="sk-board-wrap">
+          <div class="sk-result-top">
+            <span class="sk-info" id="sk-info">—</span>
+            <div class="sk-result-tools">
+              <button type="button" class="sk-sub" id="sk-copy">表をコピー</button>
+              <button type="button" class="sk-sub" id="sk-download">この席ごとCSVで保存</button>
+              <button type="button" class="sk-sub" id="sk-print">印刷する</button>
+            </div>
+          </div>
+          <p class="sk-swap-hint">席をドラッグして重ねるか、2つの席を順にタップすると入れかえられます。</p>
+          <div class="sk-blackboard">こくばん</div>
+          <div class="sk-board" id="sk-board"></div>
+          <div class="sk-result-foot">
+            <button type="button" class="sk-go" id="sk-again">再配置する</button>
+          </div>
+        </div>
+        <textarea id="sk-out" class="sk-out" rows="4" readonly aria-label="座席表のテキスト"></textarea>
+      </div>
+      </div>
+    </section>
+
+    <section class="sk-panel sk-panel-roster" id="sk-roster" aria-label="名簿と配慮">
+      <div class="sk-lbl-row">
+        <span class="sk-lbl"><span class="sk-step-no">2</span>名簿と配慮を入れる</span>
+        <span class="sk-count" id="sk-count">0人</span>
+        <button type="button" class="sk-mini" id="sk-sample">見本を入れる</button>
+      </div>
+      <div class="sk-roster-bar">
+        <label class="sk-file">
+          CSVを読む
+          <input type="file" id="sk-csv" accept=".csv,.tsv,.txt,text/csv,text/plain">
+        </label>
+        <button type="button" class="sk-mini2" id="sk-csv-save">CSVで保存</button>
+        <button type="button" class="sk-mini2" id="sk-csv-template">ひな形CSV</button>
+        <button type="button" class="sk-sub sk-gen-sub" id="sk-gen2">配置する</button>
+      </div>
+
+      <div class="sk-csv-pick" id="sk-csv-pick" hidden>
+        <p class="sk-csv-q">どの列が名前ですか？（姓と名が分かれていれば両方えらべます）</p>
+        <div class="sk-csv-cols" id="sk-csv-cols"></div>
+        <div class="sk-csv-foot">
+          <label class="sk-chk"><input type="checkbox" id="sk-csv-head" checked> 1行目は見出し</label>
+          <button type="button" class="sk-mini2 is-go" id="sk-csv-ok">この列でよみこむ</button>
+          <button type="button" class="sk-mini2" id="sk-csv-cancel">やめる</button>
+        </div>
+      </div>
+
+      <p class="sk-roster-note" id="sk-roster-note" hidden></p>
+
+      <div class="sk-list-head" aria-hidden="true"><span>番</span><span>なまえ</span><span>配慮（1人に何個でも）</span></div>
+      <div class="sk-list" id="sk-list"></div>
+      <div class="sk-add">
+        <button type="button" class="sk-mini2" id="sk-add1">＋1人</button>
+        <button type="button" class="sk-mini2" id="sk-add5">＋5人</button>
+        <button type="button" class="sk-mini2" id="sk-add10">＋10人</button>
+      </div>
+      <p class="sk-hint">Excelの名前の列をコピーして1行目に貼ると、下へ1人ずつ入ります。空欄の行は「3番」のように番号で作ります。<br>CSVは席替えメーカー・班分けメーカーで共通です。1つの名簿ファイルを使い回せます（ほかのメーカーの列はそのまま残ります）。</p>
+
+      <div class="sk-prev" id="sk-prev" hidden>
+        <span class="sk-prev-lbl" id="sk-prev-lbl">前回の席</span>
+        <label class="sk-chk"><input type="checkbox" id="sk-prev-seat" checked> 前回と同じ席にしない</label>
+        <label class="sk-chk"><input type="checkbox" id="sk-prev-nb" checked> 前回と同じ隣にしない</label>
+        <button type="button" class="sk-mini2" id="sk-prev-clear">つかわない</button>
+      </div>
+
+      <div class="sk-controls" id="sk-go-area">
+        <span class="sk-lbl sk-go-lbl"><span class="sk-step-no">3</span>名簿と配慮ができたら</span>
+        <button type="button" class="sk-go" id="sk-gen">配置する</button>
       </div>
 
       <div class="sk-msg" id="sk-msg"></div>
     </section>
 
-    <section class="sk-result" id="sk-result">
-      <div class="sk-board-wrap">
-        <div class="sk-blackboard">こくばん</div>
-        <div class="sk-board" id="sk-board"></div>
-      </div>
-      <div class="sk-actions">
-        <span class="sk-info" id="sk-info">—</span>
-        <button type="button" class="sk-sub" id="sk-copy">表をコピー</button>
-        <button type="button" class="sk-sub" id="sk-download">この席ごとCSVで保存</button>
-        <button type="button" class="sk-sub" id="sk-print">印刷する</button>
-        <button type="button" class="sk-go" id="sk-again">もう一度ひく</button>
-      </div>
-      <textarea id="sk-out" class="sk-out" rows="4" readonly aria-label="座席表のテキスト"></textarea>
-    </section>
 
     <section class="sk-doc" id="howto">
       <h2>使い方</h2>
       <div class="sk-steps">
         <div class="sk-step">
           <span class="sk-step-n">1</span>
-          <h3>名簿を貼る</h3>
-          <p>Excelや名簿ソフトから、名前の列をそのままコピーして貼り付けてください。<b>1行に1人</b>ずつです（「、」やカンマ・タブで区切ってもかまいません）。「1 田中」のように出席番号がついていても読み取ります。空のままなら「1番」「2番」の番号で作ります。<br><b>「CSVを読む」</b>を使えば、名簿CSVから名前の列を選んで流し込めます。<b>「CSVで保存」</b>すると、名簿と配慮を1枚のファイルに書き出せます（<b>ひな形CSV</b>も配布しています）。</p>
+          <h3>座席の形を決める</h3>
+          <p>横と縦の席の数を選びます。教室に合わせて、まわりの点線を押すと席を足せて、席の ✕ で消せます。決まったら「この形で確定する」を押します。</p>
         </div>
         <div class="sk-step">
           <span class="sk-step-n">2</span>
-          <h3>席の数と配慮を決める</h3>
-          <p>横と縦の席の数を選びます。人数より席が多いぶんは空席になります。配慮は1行に1つずつ。書き方は下の表のとおりです。</p>
+          <h3>名簿と配慮を入れる</h3>
+          <p>名前を1マスに1人ずつ入れます。Excelの名前の列をコピーして1行目に貼ると、下へ1人ずつ入ります。配慮は「＋ 配慮」から選びます（1人に何個でも）。</p>
         </div>
         <div class="sk-step">
           <span class="sk-step-n">3</span>
-          <h3>作って、引き直して、印刷する</h3>
-          <p>「席替えする」を押すと配慮を守った表ができます。納得いくまで「もう一度ひく」を押して、決まったら印刷してください。印刷では座席表だけが出ます。決まった席を<b>「この席ごとCSVで保存」</b>しておくと、次回そのファイルを読み込むだけで「前回と同じ席・同じ隣にしない」が選べます。</p>
+          <h3>配置する</h3>
+          <p>「配置する」を押すと、配慮を守った座席表が上にできます。気に入らなければ「再配置する」で何度でも引き直せます。</p>
+        </div>
+        <div class="sk-step">
+          <span class="sk-step-n">4</span>
+          <h3>手直しして印刷</h3>
+          <p>席は、ドラッグか2つを順にタップすると入れかわります。「印刷する」で座席表だけを印刷できます（配慮の札は出ません）。</p>
         </div>
       </div>
+      <p class="sk-doc-note"><b>次回の続き：</b>「この席ごとCSVで保存」したファイルを「CSVを読む」から読み込むと、名簿・配慮・座席の形・前回の席が戻り、「前回と同じ席・同じ隣にしない」が選べます。CSVは席替えメーカー・班分けメーカーで共通です。1つの名簿ファイルを使い回せます（ほかのメーカーの列はそのまま残ります）。<br>※2026年10月から「前列・後列」は各列の一番前・一番後ろの席、「離す」は斜めも含めた周りの1マスになりました。それより前のCSVで「作れません」と出たときは、前列・後列の人数や「離す」の数を見直してください。</p>
 
-      <h2>配慮の書き方</h2>
+      <h2>配慮の種類</h2>
       <table class="sk-table">
-        <thead><tr><th>書き方</th><th>意味</th></tr></thead>
+        <thead><tr><th>種類</th><th>意味</th></tr></thead>
         <tbody>
-          <tr><td><code>離す: 田中, 佐藤</code></td><td>この2人を前後左右の隣にしません（斜めは隣として数えません）。3人以上並べると、その全員がおたがい隣にならないようにします。</td></tr>
-          <tr><td><code>前列: 鈴木</code></td><td>前から2列目までに座らせます。黒板が見えにくいお子さんに。</td></tr>
-          <tr><td><code>後列: 高橋</code></td><td>後ろから2列目までに座らせます。背の高いお子さんや、出入りが多いお子さんに。</td></tr>
-          <tr><td><code>固定: 山本 = 2れつ 3ばん</code></td><td>席をぴったり決めます。「2れつ」は黒板から見て左から2番目の列、「3ばん」は前から3番目です。</td></tr>
+          <tr><td><code>前列</code></td><td>一番前の席（各列の先頭）に座らせます。黒板が見えにくいお子さんに。</td></tr>
+          <tr><td><code>後列</code></td><td>一番後ろの席（各列の最後）に座らせます。背の高いお子さんや、出入りが多いお子さんに。</td></tr>
+          <tr><td><code>固定</code></td><td>席をぴったり決めます。「2れつ」は黒板から見て左から2番目の列、「3ばん」は前から3番目です。</td></tr>
+          <tr><td><code>離す</code></td><td>えらんだ相手を、周りの1マス（前後左右と斜め）に座らせません。3人を互いに離したいときは、組み合わせごとに「離す」を足してください。</td></tr>
+          <tr><td><code>隣</code></td><td>えらんだ相手を、前後左右のどれかの隣に座らせます（斜めは隣として数えません）。お世話係や、手助けが必要なお子さんに。</td></tr>
         </tbody>
       </table>
 
@@ -233,7 +281,7 @@
       </details>
       <details class="sk-faq">
         <summary>「この2人は離す」はどこまで離れますか？<span>+</span></summary>
-        <div>前後左右の隣り合う席にならないようにします。斜めの席は隣として扱いません。もっと離したい場合は、片方に「前列」、もう片方に「後列」を指定すると確実に距離が取れます。</div>
+        <div>周りの1マス（前後左右と斜め）には座らせません。もっと離したい場合は、片方に「前列」、もう片方に「後列」を指定すると確実に距離が取れます。</div>
       </details>
       <details class="sk-faq">
         <summary>配慮が多すぎると作れないことはありますか？<span>+</span></summary>
@@ -248,6 +296,10 @@
         <div>読み込めます。名簿をCSVで書き出して「CSVを読む」から選ぶと、どの列が名前かを確認する画面が出ます。姓と名が別の列に分かれていても、両方えらべば1人ぶんにまとまります。学校の名簿に多い Shift_JIS の文字コードもそのまま読めます。読み込んだファイルもサーバーには送りません。</div>
       </details>
       <details class="sk-faq">
+        <summary>班分けメーカーと同じCSVを使えますか？<span>+</span></summary>
+        <div>使えます。席替えメーカーと班分けメーカーは同じ形のCSVを読み書きします。1つのファイルに「席の配慮」「席」「班の配慮」「班」のように列が分かれていて、それぞれ自分の列だけを読みます。ほかのメーカーの列は消さずにそのまま残して保存するので、1つの名簿ファイルを使い回せます。</div>
+      </details>
+      <details class="sk-faq">
         <summary>班（グループ）の形の席にはできますか？<span>+</span></summary>
         <div>このツールは縦横に並んだ座席表のみに対応しています。誰と誰を同じ班にするかを決めたいときは、姉妹ツールの <a href="/tools/hanwake/">班分けメーカー</a> をお使いください。「この2人は別々に」「世話役は各班に1人ずつ」「男女はそろえる」を守ってグループ分けができ、名簿もこのツールと共通です。</div>
       </details>
@@ -256,7 +308,7 @@
     </section>
 
   </main>
-  <p class="paper-release">更新日：2026-08-23</p>
+  <p class="paper-release">更新日：2026-10-04</p>
 </div>
 
 <!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一） -->
@@ -280,7 +332,7 @@
 <script src="/js/common.js"></script>
 <script src="/js/contact-track.js"></script>
 <script src="/js/app-reference.js"></script>
-<script src="/js/class-roster.js"></script>
-<script src="/js/sekigae.js"></script>
+<script src="/js/class-roster.js?v=20261004"></script>
+<script src="/js/sekigae.js?v=20261004"></script>
 </body>
 </html>

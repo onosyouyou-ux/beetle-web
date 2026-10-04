@@ -162,10 +162,66 @@
     } else fallback();
   }
 
+  /* ============================================================
+     先生向けメーカー（席替え・班分け・クラス分け）で共通のCSV（2026-10-04）
+     1つのファイルに各メーカーの列を区分けして並べる。
+     各メーカーは自分の列だけを読み書きし、ほかのメーカーの列は消さずにそのまま残して保存する
+     ============================================================ */
+  var SHARED_COLS = ['出席番号', 'なまえ', '性別', '席の配慮', '席', '座席の形', '班の配慮', '班', 'クラスの配慮', '前のクラス', '新しいクラス'];
+
+  /** 読みこんだ1行のうち、そのメーカーが使わなかった列を「見出し → 値」で取っておく */
+  function keepExtras(head, row, usedCols) {
+    var out = {};
+    (head || []).forEach(function (raw, c) {
+      var h = String(raw || '').trim();
+      if (!h || usedCols.indexOf(c) >= 0 || /^(出席番号|番号|no\.?|#)$/i.test(h)) return;
+      var v = String(row[c] == null ? '' : row[c]).trim();
+      if (v) out[h] = v;
+    });
+    return out;
+  }
+
+  /**
+   * 共通の列順で書き出す表を作る。
+   * people: [{ values: {見出し: 値}（そのメーカーの列）, extra: {見出し: 値}（読みこんだほかの列） }]
+   * 共通の列にない見出しは右端に足す
+   */
+  function sharedRows(people) {
+    var heads = SHARED_COLS.slice();
+    people.forEach(function (p) {
+      [p.values, p.extra].forEach(function (o) {
+        Object.keys(o || {}).forEach(function (h) { if (heads.indexOf(h) < 0) heads.push(h); });
+      });
+    });
+    var rows = [heads];
+    people.forEach(function (p, i) {
+      rows.push(heads.map(function (h) {
+        if (h === '出席番号') return String(i + 1);
+        if (p.values && Object.prototype.hasOwnProperty.call(p.values, h)) return p.values[h];
+        return (p.extra && p.extra[h]) || '';
+      }));
+    });
+    return rows;
+  }
+
+  /**
+   * 見出しが「○○の配慮」の列のうち、どれがこのメーカーのものか。
+   * own は「席の配慮」など。以前のCSVの見出し「配慮」は、自分の列がないときだけ自分のものとして読む
+   */
+  function ruleColumnRole(h, own, head) {
+    if (/の配慮$/.test(h)) return h === own ? 'rule' : 'skip';
+    if (/^(配慮|はいりょ)$/.test(h)) {
+      var hasOwn = (head || []).some(function (x) { return String(x || '').trim() === own; });
+      return hasOwn ? 'skip' : 'rule';
+    }
+    return null;
+  }
+
   global.BeetleRoster = {
     cleanName: cleanName, parseNames: parseNames, looksCrammed: looksCrammed, splitList: splitList,
     decode: decode, detectSep: detectSep, parseDelimited: parseDelimited,
     guessNameCol: guessNameCol, colWidth: colWidth,
-    shuffle: shuffle, esc: esc, copyText: copyText
+    shuffle: shuffle, esc: esc, copyText: copyText,
+    SHARED_COLS: SHARED_COLS, keepExtras: keepExtras, sharedRows: sharedRows, ruleColumnRole: ruleColumnRole
   };
 })(window);
