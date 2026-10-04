@@ -1104,7 +1104,7 @@
 
   var list = $('sk-list');
 
-  /* 名簿の行を押す（名前欄に入る）・マウスを乗せると、座席表のその子の席を光らせる */
+  /* 名簿の名前を押す（名前欄に入る）と、座席表のその子の席を光らせる。マウスを乗せただけでは光らせない（うるさいため） */
   var hlName = null;
   function highlightSeat(name) {
     hlName = name;
@@ -1123,14 +1123,6 @@
   list.addEventListener('focusin', function (e) { highlightSeat(nameOfRow(e.target)); });
   list.addEventListener('focusout', function (e) {
     if (!list.contains(e.relatedTarget)) highlightSeat(null);
-  });
-  list.addEventListener('mouseover', function (e) {
-    var n = nameOfRow(e.target);
-    if (n && n !== hlName) highlightSeat(n);
-  });
-  list.addEventListener('mouseleave', function () {
-    var f = document.activeElement;
-    highlightSeat(list.contains(f) ? nameOfRow(f) : null);
   });
 
   list.addEventListener('input', function (e) {

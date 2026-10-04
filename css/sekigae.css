@@ -415,15 +415,13 @@ body{
 
 /* 枠のオレンジは本体より淡く（濃いと30席並んだときにうるさい） */
 :root{--sk-seat-line:#f0c9a3}
-/* 座席は白地＋オレンジ枠（形の画面・結果の画面とも）。固定席は薄いオレンジで塗って区別する */
+/* 座席は白地＋オレンジ枠（形の画面・結果の画面とも）。固定席も同じ見た目で「固定」の札だけで示す（塗るとハイライトと見分けがつかない） */
 .sk-board-empty .sk-cell,
 #sk-board .sk-seat:not(.is-empty):not(.is-hole){background:#fff;border-color:var(--sk-seat-line)}
-#sk-board .sk-seat.is-fixed:not(.is-empty){background:var(--sk-orange-bg)}
 #sk-board .sk-seat.is-over:not(.is-hole){border-color:var(--sk-green);background:var(--sk-green-bg)}
-#sk-board .sk-seat.is-fixed:not(.is-empty){border-color:var(--sk-orange)}
 
-/* 名簿の行を押したときに光らせる席 */
-#sk-board .sk-seat.is-hl:not(.is-hole){border:3px solid #d99a00;background:#ffe27a;box-shadow:0 0 0 5px rgba(240,180,20,.35),0 6px 14px rgba(0,0,0,.15);transform:scale(1.08);position:relative;z-index:1}
+/* 名簿の名前を押したときに光らせる席（固定席と同じくらいの控えめな色） */
+#sk-board .sk-seat.is-hl:not(.is-hole){border-color:var(--sk-orange);background:var(--sk-orange-bg)}
 
 /* ====== 印刷の見た目（2026-10-04 作り直し） ======
    ブラウザは既定で背景色を印刷しないので、塗りに頼らず線と文字で見せる */
@@ -450,3 +448,4 @@ body{
 
 /* 印刷は掲示に使うので、配慮（固定・前列・後列）の札は出さない。誰に配慮があるかが周りに分かってしまうため */
 @media print{ #sk-board .sk-seat-tag{display:none !important} }
+#sk-board .sk-seat.is-fixed:not(.is-hl){background:#fff;border-color:var(--sk-seat-line)}
