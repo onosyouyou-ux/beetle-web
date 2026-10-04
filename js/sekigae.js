@@ -503,6 +503,7 @@
       lines.push(row.join('\t'));
     }
     $('sk-out').value = 'こくばん\n' + lines.join('\n');
+    updateRowSeats();
   }
 
   /* ---------- できた席を手で入れかえる ---------- */
@@ -620,6 +621,7 @@
     picked = null;
     $('sk-tab-result').disabled = true;
     $('sk-result').classList.remove('is-on');
+    updateRowSeats();
     // 結果がない状態に戻るので、ボタンも「配置する」に戻す
     ['sk-gen', 'sk-gen2'].forEach(function (id) { $(id).textContent = '配置する'; });
   }
@@ -740,10 +742,26 @@
         s.rules.map(function (rule, ri) { return ruleHtml(s, rule, ri, names); }).join('') +
         '<button type="button" class="sk-rule-add">＋ 配慮</button>' +
         '</div>' +
+        '<span class="sk-row-seat"></span>' +
         '<button type="button" class="sk-row-del" aria-label="' + (i + 1) + '人目を消す">✕</button>' +
         '</div>';
     }).join('');
     updateCount();
+    updateRowSeats();
+  }
+
+  /** 席替えの結果があれば、名簿の各行にその子の席（「3れつ 2ばん」）を出す。座席表が画面の外でも分かるように */
+  function updateRowSeats() {
+    var at = {};
+    if (state.grid) {
+      state.grid.forEach(function (row, r) {
+        row.forEach(function (n, c) { if (n) at[n] = (c + 1) + 'れつ ' + (r + 1) + 'ばん'; });
+      });
+    }
+    var names = displayNames();
+    Array.prototype.forEach.call(document.querySelectorAll('#sk-list .sk-row-seat'), function (el, i) {
+      el.textContent = at[names[i]] || '';
+    });
   }
 
   /** 名前を打っている途中は表を描き直さず、相手のプルダウンの表示だけ差し替える（入力欄のフォーカスを守る） */
@@ -871,7 +889,26 @@
 
   var csvRows = null, csvRoles = {};   // 列番号 → 'name' | 'rule' | 'seat'
 
-  var ROLE_LABEL = { '': '（使わない）', name: 'なまえ', rule: '配慮', seat: '前回の席' };
+  var ROLE_LABEL = { '': '（使わない）', name: 'なまえ', rule: '配慮', seat: '前回の席', shape: '座席の形' };
+
+  /*
+   * 座席の形をCSVの1セルに入れる書き方。行を「/」で区切り、席あり＝o・席なし＝x。
+   * 例：「oooooo/ooxooo」。数字や「-」で始めるとExcelが日付や式に変えてしまうので文字にする
+   */
+  function encodeShape(m) {
+    return m.map(function (row) { return row.map(function (v) { return v ? 'o' : 'x'; }).join(''); }).join('/');
+  }
+
+  function decodeShape(text) {
+    var rows = String(text || '').trim().split('/');
+    if (!rows.length || rows.length > SEAT_MAX) return null;
+    var width = rows[0].length;
+    if (!width || width > SEAT_MAX) return null;
+    var ok = rows.every(function (r) { return r.length === width && /^[ox]+$/i.test(r); });
+    if (!ok) return null;
+    var m = rows.map(function (r) { return r.split('').map(function (ch) { return ch.toLowerCase() === 'o'; }); });
+    return seatTotal(m) ? m : null;
+  }
 
   /** 見出しから列の役割を当てる。自分が書き出したCSVはそのまま読み戻せる */
   function autoDetectRoles(head) {
@@ -882,6 +919,7 @@
       if (/^(出席番号|番号|no\.?|#)$/i.test(h)) return;
       if (/(なまえ|名前|氏名|生徒名|児童名|姓|名|name)/i.test(h)) roles[c] = 'name';
       else if (/(配慮|はいりょ)/i.test(h)) roles[c] = 'rule';
+      else if (/(座席の形|shape)/i.test(h)) roles[c] = 'shape';
       else if (/(席|座席|seat)/i.test(h)) roles[c] = 'seat';
     });
     return roles;
@@ -945,15 +983,17 @@
     if (!nameCols.length) { rosterNote('「なまえ」の列を1つ以上えらんでください。', 'error'); return; }
     var ruleCol = colsWithRole('rule')[0];
     var seatCol = colsWithRole('seat')[0];
+    var shapeCol = colsWithRole('shape')[0];
 
     var body = $('sk-csv-head').checked ? csvRows.slice(1) : csvRows;
-    var names = [], ruleCells = [], seatCells = [];
+    var names = [], ruleCells = [], seatCells = [], shape = null;
     body.forEach(function (r) {
       var name = nameCols.map(function (c) { return (r[c] || '').trim(); }).filter(Boolean).join(' ').trim();
       if (!name) return;
       names.push(R.cleanName(name));
       ruleCells.push(ruleCol === undefined ? '' : (r[ruleCol] || '').trim());
       seatCells.push(seatCol === undefined ? '' : (r[seatCol] || '').trim());
+      if (!shape && shapeCol !== undefined) shape = decodeShape(r[shapeCol]);
     });
 
     if (!names.length) { rosterNote('えらんだ列に名前が入っていませんでした。', 'error'); return; }
@@ -1003,22 +1043,32 @@
       for (var r = 0; r <= maxR; r++) grid.push(new Array(maxC + 1).fill(null));
       seats.forEach(function (s) { grid[s.r][s.c] = s.name; });
       applyPrevSeating(grid);
-      // 席の数も前回に合わせておく
+    } else {
+      clearPrev();
+    }
+
+    // 席の形：保存してあればそのまま戻す。なければ前回の席から縦横だけ合わせる（以前のCSV）
+    if (shape) {
+      seatMap = shape;
+      $('sk-rows').value = String(shape.length);
+      $('sk-cols').value = String(shape[0].length);
+      shapeLocked = true;
+    } else if (seats.length > 1) {
       if (maxC + 1 >= 2 && maxC + 1 <= SEAT_MAX) $('sk-cols').value = String(maxC + 1);
       if (maxR + 1 >= 2 && maxR + 1 <= SEAT_MAX) $('sk-rows').value = String(maxR + 1);
       resetMapFromSelects();
       shapeLocked = false;
-      invalidateResult();
-      if (seatAreaShown()) openShape();
-    } else {
-      clearPrev();
     }
+    // 名簿が入れかわったので、前の結果は使わない
+    invalidateResult();
+    openShape();
 
     closeCsvPick();
     updateCount();
     var got = [names.length + '人'];
     if (ruleList.length && ruleCol !== undefined) got.push('配慮');
     if (seats.length > 1) got.push('前回の席');
+    if (shape) got.push('座席の形');
     rosterNote(got.join('・') + ' を読みこみました。', 'ok');
   }
 
@@ -1077,13 +1127,14 @@
       }
     }
 
-    var rows = [['出席番号', 'なまえ', '配慮', '席']];
+    var rows = [['出席番号', 'なまえ', '配慮', '席', '座席の形']];
     got.names.forEach(function (n, i) {
-      rows.push([String(i + 1), n, cells[n] || '', seatOf[n] || '']);
+      // 座席の形は1行目にだけ入れる
+      rows.push([String(i + 1), n, cells[n] || '', seatOf[n] || '', i === 0 ? encodeShape(seatMap) : '']);
     });
     downloadCsv(withSeats ? '席替え.csv' : '席替え_名簿.csv', rows);
     rosterNote('CSVに保存しました。次回このファイルを「CSVを読む」から取り込めば、' +
-      (withSeats ? '名簿・配慮・前回の席' : '名簿と配慮') + 'がそのまま戻ります。', 'ok');
+      (withSeats ? '名簿・配慮・座席の形・前回の席' : '名簿・配慮・座席の形') + 'がそのまま戻ります。', 'ok');
   }
 
   function downloadTemplate() {
@@ -1201,6 +1252,10 @@
       s.rules = s.rules.filter(function (x) { return x !== rule; });
       renderList();
     } else if (t.classList.contains('sk-row-del')) {
+      // 名前か配慮が入っている行だけ確かめる（空の行はそのまま消す）
+      var label = R.cleanName(s.name) || ((students.indexOf(s) + 1) + '番');
+      if ((s.name.trim() || s.rules.length) &&
+          !window.confirm('「' + label + '」の行を消します。付けた配慮も消えます。よろしいですか？')) return;
       removeStudent(s);
     }
   });
@@ -1294,7 +1349,14 @@
   $('sk-again').addEventListener('click', run);
   $('sk-copy').addEventListener('click', function () { copyText($('sk-out').value, this); });
   $('sk-print').addEventListener('click', function () { window.print(); });
+  // ブラウザのメニューから印刷しても、結果があれば座席表を出す（形のタブを開いたままだと白紙になっていた）
+  window.addEventListener('beforeprint', function () {
+    if (state.grid && !$('sk-result').classList.contains('is-on')) showTab('result');
+  });
   $('sk-sample').addEventListener('click', function () {
+    // 名簿に何か入っていたら、見本で上書きしてよいか確かめる
+    var filled = students.some(function (s) { return s.name.trim() || s.rules.length; });
+    if (filled && !window.confirm('いま入っている名簿と配慮を、見本に入れかえます。よろしいですか？')) return;
     loadRoster(SAMPLE_NAMES, SAMPLE_RULES);
     // 見本は30人ぶん。いまの座席で足りるなら形はそのまま（足した席・消した席を残す）。
     // 足りないときだけ既定の6×5に戻す
