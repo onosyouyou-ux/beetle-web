@@ -413,8 +413,11 @@ body{
 .sk-count.is-sub{color:var(--sk-green);background:var(--sk-green-bg)}
 .sk-count.is-sub.is-short{color:var(--sk-red);background:var(--sk-red-bg)}
 
+/* 枠のオレンジは本体より淡く（濃いと30席並んだときにうるさい） */
+:root{--sk-seat-line:#f0c9a3}
 /* 座席は白地＋オレンジ枠（形の画面・結果の画面とも）。固定席は薄いオレンジで塗って区別する */
 .sk-board-empty .sk-cell,
-#sk-board .sk-seat:not(.is-empty):not(.is-hole){background:#fff;border-color:var(--sk-orange)}
+#sk-board .sk-seat:not(.is-empty):not(.is-hole){background:#fff;border-color:var(--sk-seat-line)}
 #sk-board .sk-seat.is-fixed:not(.is-empty){background:var(--sk-orange-bg)}
 #sk-board .sk-seat.is-over:not(.is-hole){border-color:var(--sk-green);background:var(--sk-green-bg)}
+#sk-board .sk-seat.is-fixed:not(.is-empty){border-color:var(--sk-orange)}
