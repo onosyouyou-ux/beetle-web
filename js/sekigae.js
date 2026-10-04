@@ -473,10 +473,10 @@
       }
     }
     board.innerHTML = html;
-    $('sk-result').classList.add('is-on');
-    // 席替えのあとは、点線の編集表示のかわりに生徒の入った座席表を同じ場所に出す
-    $('sk-layout-wrap').hidden = true;
-    $('sk-layout').textContent = '座席の形を変える';
+    // 席替えのあとは「② 席替えの結果」タブに出す。形は確定扱いにする
+    $('sk-tab-result').disabled = false;
+    if (!shapeLocked) { shapeLocked = true; renderLayout(); }
+    showTab('result');
     $('sk-info').textContent = used + '人 / ' + state.total + '席（あき ' + (state.total - used) + '席）';
 
     // Excelに貼れるようタブ区切りで出す
@@ -541,17 +541,25 @@
    * 座席の形を決める画面。いまの席のまわりに点線の席を出し、押すと足せる。
    * 席の ✕ で消すと、そこは点線になって押せば戻せる。
    */
+  var shapeLocked = false;   // 「この形で確定する」を押したら点線と ✕ を隠す
+
   function renderLayout() {
     var m = seatMap;
     var rows = m.length, cols = m[0].length;
     var growR = rows < SEAT_MAX, growC = cols < SEAT_MAX;
     var board = $('sk-layout-board');
-    board.style.gridTemplateColumns = 'repeat(' + (cols + 2) + ', auto)';
+    var edge = shapeLocked ? 0 : 1;
+    board.style.gridTemplateColumns = 'repeat(' + (cols + edge * 2) + ', auto)';
+    board.classList.toggle('is-locked', shapeLocked);
     var html = '';
-    for (var r = -1; r <= rows; r++) {
-      for (var c = -1; c <= cols; c++) {
+    for (var r = -edge; r < rows + edge; r++) {
+      for (var c = -edge; c < cols + edge; c++) {
         var outR = r < 0 || r >= rows, outC = c < 0 || c >= cols;
-        if (outR || outC) {
+        if (shapeLocked) {
+          html += m[r][c]
+            ? '<div class="sk-seat sk-cell"><span class="sk-seat-pos">' + (c + 1) + 'れつ ' + (r + 1) + 'ばん</span></div>'
+            : '<span class="sk-ghost-sp"></span>';
+        } else if (outR || outC) {
           var ok = (!outR || growR) && (!outC || growC) && !(outR && outC);
           html += ok
             ? '<button type="button" class="sk-ghost" data-r="' + r + '" data-c="' + c + '" aria-label="ここに席を足す">＋</button>'
@@ -565,18 +573,45 @@
       }
     }
     board.innerHTML = html;
-    $('sk-layout-wrap').hidden = false;
+    $('sk-confirm').textContent = shapeLocked ? '座席の形を直す' : 'この形で確定する';
+    $('sk-confirm').classList.toggle('is-done', shapeLocked);
+    $('sk-layout-note').textContent = shapeLocked
+      ? 'この形で確定しました。下で名簿と配慮を入れて「席替えする」を押してください。'
+      : 'まわりの点線を押すと席を足せます。席の ✕ で消せます。';
+  }
+
+  /** 座席欄のタブを切り替える（'shape'＝座席の形／'result'＝席替えの結果） */
+  function showTab(name) {
+    $('sk-seat-area').hidden = false;
+    $('sk-layout-wrap').hidden = name !== 'shape';
+    $('sk-result').classList.toggle('is-on', name === 'result');
+    [['sk-tab-shape', 'shape'], ['sk-tab-result', 'result']].forEach(function (t) {
+      var on = t[1] === name;
+      $(t[0]).classList.toggle('is-on', on);
+      $(t[0]).setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+  }
+
+  function openShape() {
+    renderLayout();
+    showTab('shape');
+  }
+
+  /** 席の形が変わったら、前の結果はその形に合わないので捨てる */
+  function invalidateResult() {
+    state.grid = null;
+    picked = null;
+    $('sk-tab-result').disabled = true;
     $('sk-result').classList.remove('is-on');
-    $('sk-layout').textContent = '座席を表示する';
   }
 
   /** エラーで座席表を出せないときは、席の形の表示へ戻しておく（欄を空にしない） */
   function showEditor() {
-    if (seatMap) renderLayout();
+    if (seatMap) openShape();
   }
 
   function seatAreaShown() {
-    return !$('sk-layout-wrap').hidden || $('sk-result').classList.contains('is-on');
+    return !$('sk-seat-area').hidden;
   }
 
   /** 点線の席を押したとき。外側なら1列（1行）広げてから席を置く */
@@ -607,7 +642,8 @@
   function afterMapEdit() {
     $('sk-rows').value = String(seatMap.length);
     $('sk-cols').value = String(seatMap[0].length);
-    renderLayout();
+    invalidateResult();
+    openShape();
     updateCount();
   }
 
@@ -947,7 +983,9 @@
       if (maxC + 1 >= 2 && maxC + 1 <= SEAT_MAX) $('sk-cols').value = String(maxC + 1);
       if (maxR + 1 >= 2 && maxR + 1 <= SEAT_MAX) $('sk-rows').value = String(maxR + 1);
       resetMapFromSelects();
-      if (seatAreaShown()) renderLayout();
+      shapeLocked = false;
+      invalidateResult();
+      if (seatAreaShown()) openShape();
     } else {
       clearPrev();
     }
@@ -1130,8 +1168,10 @@
   // （プルダウンで選び直すと、足した席・消した席はリセットして長方形に戻す）
   var onSizeChange = function () {
     resetMapFromSelects();
+    shapeLocked = false;
+    invalidateResult();
     updateCount();
-    if (seatAreaShown()) renderLayout();
+    if (seatAreaShown()) openShape();
   };
   $('sk-layout-board').addEventListener('click', function (e) {
     var t = e.target.closest('button');
@@ -1142,7 +1182,18 @@
   });
   $('sk-cols').addEventListener('change', onSizeChange);
   $('sk-rows').addEventListener('change', onSizeChange);
-  $('sk-layout').addEventListener('click', renderLayout);
+  $('sk-layout').addEventListener('click', openShape);
+  $('sk-tab-shape').addEventListener('click', function () { showTab('shape'); });
+  $('sk-tab-result').addEventListener('click', function () { if (state.grid) showTab('result'); });
+  $('sk-confirm').addEventListener('click', function () {
+    shapeLocked = !shapeLocked;
+    renderLayout();
+    // 確定したら、次にやること（名簿と配慮）へ送る
+    if (shapeLocked) {
+      var next = document.querySelector('.sk-panel > .sk-lbl-row');
+      if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
   $('sk-gen').addEventListener('click', run);
   $('sk-gen2').addEventListener('click', run);
 

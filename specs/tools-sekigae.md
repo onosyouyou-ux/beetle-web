@@ -5,7 +5,7 @@ canonical: "https://www.beetle-web.jp/tools/sekigae/landing.html"
 sitemap: false
 title_contains: "席替えメーカー"
 og_image: "/assets/images/OG.jpg"
-required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#sk-list", "#sk-add1", "#sk-add5", "#sk-add10", "#sk-cols", "#sk-rows", "#sk-gen", "#sk-gen2", "#sk-layout", "#sk-layout-board", "#sk-board", "#sk-msg", "#sk-out", "#howto", "#sk-csv", "#sk-csv-save", "#sk-csv-template", "#sk-download", "#sk-prev"]
+required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#sk-list", "#sk-add1", "#sk-add5", "#sk-add10", "#sk-cols", "#sk-rows", "#sk-gen", "#sk-gen2", "#sk-layout", "#sk-layout-board", "#sk-tab-shape", "#sk-tab-result", "#sk-confirm", "#sk-board", "#sk-msg", "#sk-out", "#howto", "#sk-csv", "#sk-csv-save", "#sk-csv-template", "#sk-download", "#sk-prev"]
 e2e: true
 ---
 
@@ -48,7 +48,9 @@ e2e: true
 - 「席替えする」は入力パネル下の中央（`#sk-gen`）と、CSVボタンの行の右端（`#sk-gen2`）の2か所。1回作ったあとは両方とも「再配置する」になる
 - できた座席表の席は**ドラッグ＆ドロップ**か、**2つを順にタップ**（Enter／Space でも可）すると入れかわる。空席とも入れかえられ、消した席は動かせない
 - 入れかえは止めない。配慮（固定・前列・後列・離す・隣）から外れたら `#sk-msg` に何が外れたかを出す
-- **できた座席表は「座席を作成」の欄にそのまま出す**（`#sk-result` は入力パネルの中、席の形の表示と入れかわる）。席替えのあとはボタンが「座席の形を変える」になり、押すと点線の編集表示へ戻る。列・行を選び直したときやエラーのときも編集表示へ戻る
+- **座席欄はタブ2枚**（`#sk-tab-shape`「① 座席の形」／`#sk-tab-result`「② 席替えの結果」）。結果タブは席替えするまで押せない。
+  形の下の `#sk-confirm`「この形で確定する」で点線と ✕ を隠して名簿へスクロール、もう一度押す（「座席の形を直す」）と編集に戻る。
+  席替えすると形は確定扱いになり結果タブへ切り替わる。**形を変えたら前の結果は捨てる**（結果タブも押せなくなる）
 - 「見本を入れる」は、いまの座席が30席以上あれば形をそのまま使う（足した席・消した席を消さない）。足りないときだけ6×5に戻す
 
 ## 名簿の流し込み（2026-08-24追加）
