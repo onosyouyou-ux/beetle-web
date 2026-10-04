@@ -447,3 +447,6 @@ body{
   #sk-board .sk-seat.is-empty{border:1.5px dashed #999 !important;color:#999}
   #sk-board .sk-seat.is-hole{visibility:hidden}
 }
+
+/* 印刷は掲示に使うので、配慮（固定・前列・後列）の札は出さない。誰に配慮があるかが周りに分かってしまうため */
+@media print{ #sk-board .sk-seat-tag{display:none !important} }
