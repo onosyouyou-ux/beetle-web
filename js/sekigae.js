@@ -415,7 +415,7 @@
     showMsgs(relaxed ? [{ text: relaxed }] : []);
     picked = null;
     render();
-    // 下の「席替えする／再配置する」から押しても結果が見えるよう、座席欄まで移動する
+    // 下の「配置する／再配置する」から押しても結果が見えるよう、座席欄まで移動する
     $('sk-seat-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
     // 2回目からは「再配置する」。上と下のボタンをそろえる
     ['sk-gen', 'sk-gen2'].forEach(function (id) { $(id).textContent = '再配置する'; });
@@ -578,7 +578,7 @@
     $('sk-confirm').textContent = shapeLocked ? '座席の形を直す' : 'この形で確定する';
     $('sk-confirm').classList.toggle('is-done', shapeLocked);
     $('sk-layout-note').textContent = shapeLocked
-      ? 'この形で確定しました。下で名簿と配慮を入れて「席替えする」を押してください。'
+      ? 'この形で確定しました。下で名簿と配慮を入れて「配置する」を押してください。'
       : 'まわりの点線を押すと席を足せます。席の ✕ で消せます。';
   }
 
@@ -605,6 +605,8 @@
     picked = null;
     $('sk-tab-result').disabled = true;
     $('sk-result').classList.remove('is-on');
+    // 結果がない状態に戻るので、ボタンも「配置する」に戻す
+    ['sk-gen', 'sk-gen2'].forEach(function (id) { $(id).textContent = '配置する'; });
   }
 
   /** エラーで座席表を出せないときは、席の形の表示へ戻しておく（欄を空にしない） */
@@ -1184,7 +1186,6 @@
   });
   $('sk-cols').addEventListener('change', onSizeChange);
   $('sk-rows').addEventListener('change', onSizeChange);
-  $('sk-layout').addEventListener('click', openShape);
   $('sk-tab-shape').addEventListener('click', function () { showTab('shape'); });
   $('sk-tab-result').addEventListener('click', function () { if (state.grid) showTab('result'); });
   $('sk-confirm').addEventListener('click', function () {
@@ -1288,6 +1289,8 @@
   });
 
   resetMapFromSelects();
+  // 座席欄は最初から出しておく（横・縦を選べばその場で形が変わる）
+  openShape();
   addRows(START_ROWS);
   renderList();
 })();
