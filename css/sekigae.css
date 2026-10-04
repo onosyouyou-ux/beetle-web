@@ -300,3 +300,29 @@ body{
 /* 席の数は名簿より先に決める（2026-10-04：上段へ移動） */
 .sk-seatsize{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--sk-line)}
 .sk-controls .sk-go{margin-left:auto}
+
+/* 座席を作成：列と行を決めて、空の座席表を先に見せる */
+.sk-seatsize{margin-bottom:0;padding-bottom:16px}
+.sk-layout{background:var(--sk-cream);border:1px solid var(--sk-line);border-radius:10px;padding:18px;overflow-x:auto;margin-top:2px}
+.sk-layout .sk-blackboard{margin-bottom:14px;font-size:12px;padding:6px}
+.sk-board-empty{gap:8px}
+.sk-board-empty .sk-seat{width:84px;min-height:40px;padding:6px 4px}
+.sk-panel > .sk-lbl-row{margin-top:22px}
+
+/* 座席の形を変える：まわりの点線の席を押すと足せる／席の ✕ で消せる */
+.sk-board-empty .sk-cell{position:relative;border-style:solid;background:#fff;padding-right:16px}
+.sk-cell-del{
+  position:absolute;top:2px;right:2px;border:none;background:none;cursor:pointer;
+  font-size:11px;line-height:1;padding:3px 4px;border-radius:4px;color:var(--sk-ink3);font-family:inherit;
+}
+.sk-ghost{
+  width:84px;min-height:40px;box-sizing:border-box;border:2px dashed var(--sk-line2);border-radius:8px;
+  background:transparent;color:var(--sk-line2);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;opacity:.65;
+}
+.sk-ghost.is-in{opacity:1;background:#fff}
+.sk-ghost-sp{width:84px;min-height:40px}
+@media (hover:hover){
+  .sk-cell-del:hover{color:var(--sk-red);background:var(--sk-red-bg)}
+  .sk-ghost:hover{opacity:1;border-color:var(--sk-orange);color:var(--sk-orange);background:var(--sk-orange-bg)}
+}
+.sk-seat.is-hole{visibility:hidden}

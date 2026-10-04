@@ -5,7 +5,7 @@ canonical: "https://www.beetle-web.jp/tools/sekigae/landing.html"
 sitemap: false
 title_contains: "席替えメーカー"
 og_image: "/assets/images/OG.jpg"
-required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#sk-list", "#sk-add1", "#sk-add5", "#sk-add10", "#sk-cols", "#sk-rows", "#sk-gen", "#sk-board", "#sk-msg", "#sk-out", "#howto", "#sk-csv", "#sk-csv-save", "#sk-csv-template", "#sk-download", "#sk-prev"]
+required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#sk-list", "#sk-add1", "#sk-add5", "#sk-add10", "#sk-cols", "#sk-rows", "#sk-gen", "#sk-layout", "#sk-layout-board", "#sk-board", "#sk-msg", "#sk-out", "#howto", "#sk-csv", "#sk-csv-save", "#sk-csv-template", "#sk-download", "#sk-prev"]
 e2e: true
 ---
 
@@ -33,6 +33,15 @@ e2e: true
   `離す`・`隣` を選ぶと相手のプルダウン（自分以外の全員）、`固定` を選ぶと「○れつ」「○ばん」のプルダウンが出る。
   相手は行の id で持つので、あとで名前を直しても指定は外れない
 - 同じ組み合わせを両方の行に書いても1つと数える。前列＋後列、離す＋隣（同じ2人）、固定2つ、相手の選び忘れはエラー
+
+## 座席の形（2026-10-04 追加）
+
+- 入力パネルの一番上が「座席を作成」。横（列）・縦（行）を選んで `#sk-layout`「座席を表示する」を押すと、空の座席表（`#sk-layout-board`）が出る
+- 席のまわりに**点線の席**が出て、押すとそこに席を足せる（外側なら1列／1行広がる。上限は縦横10）。席の ✕ で消すと点線になり、押せば戻る。
+  端の行・列が丸ごと空になったら詰める
+- 席の形は `seatMap[r][c]`（true＝席あり）で持ち、計算では席のない所を `''` で埋めて置かない。前列・後列の定員、固定席が消した席にないかも `seatMap` で数える
+- プルダウンで列・行を選び直すと、足した席・消した席はリセットして長方形に戻る
+- できた座席表では、消した席は見えない空白として並びを保つ
 
 ## 名簿の流し込み（2026-08-24追加）
 

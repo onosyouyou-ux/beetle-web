@@ -49,6 +49,29 @@
   var students = [];
   var nextId = 1;
 
+  /* ============================================================
+     座席の形：seatMap[r][c] が true の所だけ席がある（2026-10-04）
+     列・行のプルダウンで長方形を作り、点線の席を押して足す／✕で消す
+     ============================================================ */
+
+  var seatMap = null;
+
+  function fullMap(rows, cols) {
+    var m = [];
+    for (var r = 0; r < rows; r++) m.push(new Array(cols).fill(true));
+    return m;
+  }
+
+  function resetMapFromSelects() {
+    seatMap = fullMap(parseInt($('sk-rows').value, 10), parseInt($('sk-cols').value, 10));
+  }
+
+  function seatTotal(m) {
+    var n = 0;
+    m.forEach(function (row) { row.forEach(function (v) { if (v) n++; }); });
+    return n;
+  }
+
   function newStudent(name) {
     return { id: nextId++, name: name || '', rules: [] };
   }
@@ -152,7 +175,8 @@
 
   // prev は「前回の席」を避けるための任意条件。
   // { seatOf:{name:'r,c'}, nbOf:{name:{other:true}}, avoidSeat:bool, avoidNb:bool }
-  function solve(names, rows, cols, rules, prev) {
+  function solve(names, map, rules, prev) {
+    var rows = map.length, cols = map[0].length;
     var avoidSeat = !!(prev && prev.avoidSeat && prev.seatOf);
     var avoidNb = !!(prev && prev.avoidNb && prev.nbOf);
 
@@ -169,7 +193,8 @@
 
     for (var attempt = 0; attempt < ATTEMPTS; attempt++) {
       var grid = [];
-      for (var r = 0; r < rows; r++) { grid.push(new Array(cols).fill(null)); }
+      // 席のない所は '' で埋めておく（null＝空席、'' ＝席なし）
+      for (var r = 0; r < rows; r++) { grid.push(map[r].map(function (v) { return v ? null : ''; })); }
       var posOf = {};
       rules.fixed.forEach(function (f) { grid[f.r][f.c] = f.name; posOf[f.name] = [f.r, f.c]; });
 
@@ -279,10 +304,12 @@
 
   /* ---------- 作れない理由を具体的に出す ---------- */
 
-  function diagnose(names, rows, cols, rules) {
+  function diagnose(names, map, rules) {
+    var rows = map.length, cols = map[0].length;
+    var total = seatTotal(map);
     var msgs = [];
-    if (names.length > rows * cols) {
-      msgs.push({ text: '席が足りません。', sub: '名簿は' + names.length + '人ですが、席は' + rows + '×' + cols + '＝' + (rows * cols) + '席です。', error: true });
+    if (names.length > total) {
+      msgs.push({ text: '席が足りません。', sub: '名簿は' + names.length + '人ですが、席は' + total + '席です。', error: true });
     }
     var seen = {}, fixedOf = {};
     rules.fixed.forEach(function (f) {
@@ -290,6 +317,8 @@
       var key = f.r + ',' + f.c;
       if (f.c < 0 || f.c >= cols || f.r < 0 || f.r >= rows) {
         msgs.push({ text: '「' + f.name + '」の固定席が席の外にあります。', sub: '指定は ' + (f.c + 1) + 'れつ ' + (f.r + 1) + 'ばん ですが、席は ' + cols + 'れつ × ' + rows + 'ばん です。', error: true });
+      } else if (!map[f.r][f.c]) {
+        msgs.push({ text: '「' + f.name + '」の固定席（' + (f.c + 1) + 'れつ ' + (f.r + 1) + 'ばん）は、消した席です。', error: true });
       } else if (seen[key]) {
         msgs.push({ text: '固定席が重なっています。', sub: (f.c + 1) + 'れつ ' + (f.r + 1) + 'ばん に「' + seen[key] + '」と「' + f.name + '」の2人が指定されています。', error: true });
       } else seen[key] = f.name;
@@ -299,13 +328,19 @@
       if (z === 'back' && f.r < rows - BACK_DEPTH) msgs.push({ text: '「' + f.name + '」は後列指定と固定席が矛盾しています。', error: true });
     });
 
-    var frontSeats = Math.min(FRONT_DEPTH, rows) * cols;
-    var backSeats = Math.min(BACK_DEPTH, rows) * cols;
+    var frontSeats = 0, backSeats = 0;
+    map.forEach(function (row, r) {
+      row.forEach(function (v) {
+        if (!v) return;
+        if (r < FRONT_DEPTH) frontSeats++;
+        if (r >= rows - BACK_DEPTH) backSeats++;
+      });
+    });
     if (rules.front.length > frontSeats) {
-      msgs.push({ text: '前列に入りきりません。', sub: '前列指定が' + rules.front.length + '人いますが、前から' + FRONT_DEPTH + '列は' + frontSeats + '席しかありません。', error: true });
+      msgs.push({ text: '前列に入りきりません。', sub: '前列指定が' + rules.front.length + '人いますが、前から' + FRONT_DEPTH + '列には' + frontSeats + '席しかありません。', error: true });
     }
     if (rules.back.length > backSeats) {
-      msgs.push({ text: '後列に入りきりません。', sub: '後列指定が' + rules.back.length + '人いますが、後ろから' + BACK_DEPTH + '列は' + backSeats + '席しかありません。', error: true });
+      msgs.push({ text: '後列に入りきりません。', sub: '後列指定が' + rules.back.length + '人いますが、後ろから' + BACK_DEPTH + '列には' + backSeats + '席しかありません。', error: true });
     }
 
     // 隣：相手は前後左右の4人までしか置けない
@@ -341,8 +376,8 @@
       return;
     }
 
-    var rows = parseInt($('sk-rows').value, 10);
-    var cols = parseInt($('sk-cols').value, 10);
+    var map = seatMap;
+    var rows = map.length, cols = map[0].length;
     var got = collect();
     if (got.errors.length) {
       $('sk-result').classList.remove('is-on');
@@ -351,7 +386,7 @@
     }
     var names = got.names;
 
-    var problems = diagnose(names, rows, cols, got.rules);
+    var problems = diagnose(names, map, got.rules);
     if (problems.length) {
       $('sk-result').classList.remove('is-on');
       showMsgs(problems);
@@ -362,7 +397,7 @@
     var attempts = prevAttempts();
     var grid = null, relaxed = null;
     for (var i = 0; i < attempts.length; i++) {
-      grid = solve(names, rows, cols, got.rules, attempts[i].prev);
+      grid = solve(names, map, got.rules, attempts[i].prev);
       if (grid) { relaxed = attempts[i].note; break; }
     }
 
@@ -376,7 +411,7 @@
       return;
     }
 
-    state = { grid: grid, rows: rows, cols: cols, rules: got.rules };
+    state = { grid: grid, rows: rows, cols: cols, rules: got.rules, total: seatTotal(map) };
     showMsgs(relaxed ? [{ text: relaxed }] : []);
     render();
   }
@@ -416,6 +451,7 @@
     for (var r = 0; r < rows; r++) {
       for (var c = 0; c < cols; c++) {
         var name = grid[r][c];
+        if (name === '') { html += '<div class="sk-seat is-hole" aria-hidden="true"></div>'; continue; }
         if (name) used++;
         var tag = '';
         var cls = 'sk-seat';
@@ -432,7 +468,7 @@
     }
     board.innerHTML = html;
     $('sk-result').classList.add('is-on');
-    $('sk-info').textContent = used + '人 / ' + (rows * cols) + '席（あき ' + (rows * cols - used) + '席）';
+    $('sk-info').textContent = used + '人 / ' + state.total + '席（あき ' + (state.total - used) + '席）';
 
     // Excelに貼れるようタブ区切りで出す
     var lines = [['', ].concat(colLabels(cols)).join('\t')];
@@ -442,6 +478,69 @@
       lines.push(row.join('\t'));
     }
     $('sk-out').value = 'こくばん\n' + lines.join('\n');
+  }
+
+  /**
+   * 座席の形を決める画面。いまの席のまわりに点線の席を出し、押すと足せる。
+   * 席の ✕ で消すと、そこは点線になって押せば戻せる。
+   */
+  function renderLayout() {
+    var m = seatMap;
+    var rows = m.length, cols = m[0].length;
+    var growR = rows < SEAT_MAX, growC = cols < SEAT_MAX;
+    var board = $('sk-layout-board');
+    board.style.gridTemplateColumns = 'repeat(' + (cols + 2) + ', auto)';
+    var html = '';
+    for (var r = -1; r <= rows; r++) {
+      for (var c = -1; c <= cols; c++) {
+        var outR = r < 0 || r >= rows, outC = c < 0 || c >= cols;
+        if (outR || outC) {
+          var ok = (!outR || growR) && (!outC || growC) && !(outR && outC);
+          html += ok
+            ? '<button type="button" class="sk-ghost" data-r="' + r + '" data-c="' + c + '" aria-label="ここに席を足す">＋</button>'
+            : '<span class="sk-ghost-sp"></span>';
+        } else if (m[r][c]) {
+          html += '<div class="sk-seat sk-cell"><span class="sk-seat-pos">' + (c + 1) + 'れつ ' + (r + 1) + 'ばん</span>' +
+            '<button type="button" class="sk-cell-del" data-r="' + r + '" data-c="' + c + '" aria-label="' + (c + 1) + 'れつ ' + (r + 1) + 'ばんの席を消す">✕</button></div>';
+        } else {
+          html += '<button type="button" class="sk-ghost is-in" data-r="' + r + '" data-c="' + c + '" aria-label="' + (c + 1) + 'れつ ' + (r + 1) + 'ばんに席を戻す">＋</button>';
+        }
+      }
+    }
+    board.innerHTML = html;
+    $('sk-layout-wrap').hidden = false;
+  }
+
+  /** 点線の席を押したとき。外側なら1列（1行）広げてから席を置く */
+  function addSeat(r, c) {
+    var m = seatMap;
+    if (r < 0) { m.unshift(new Array(m[0].length).fill(false)); r = 0; }
+    if (r >= m.length) { m.push(new Array(m[0].length).fill(false)); r = m.length - 1; }
+    if (c < 0) { m.forEach(function (row) { row.unshift(false); }); c = 0; }
+    if (c >= m[0].length) { m.forEach(function (row) { row.push(false); }); c = m[0].length - 1; }
+    m[r][c] = true;
+    afterMapEdit();
+  }
+
+  /** 席を消す。端の行・列が丸ごと空になったら詰める（1席は残す） */
+  function removeSeat(r, c) {
+    var m = seatMap;
+    if (seatTotal(m) <= 1) return;
+    m[r][c] = false;
+    var empty = function (row) { return row.every(function (v) { return !v; }); };
+    while (m.length > 1 && empty(m[0])) m.shift();
+    while (m.length > 1 && empty(m[m.length - 1])) m.pop();
+    var colEmpty = function (i) { return m.every(function (row) { return !row[i]; }); };
+    while (m[0].length > 1 && colEmpty(0)) m.forEach(function (row) { row.shift(); });
+    while (m[0].length > 1 && colEmpty(m[0].length - 1)) m.forEach(function (row) { row.pop(); });
+    afterMapEdit();
+  }
+
+  function afterMapEdit() {
+    $('sk-rows').value = String(seatMap.length);
+    $('sk-cols').value = String(seatMap[0].length);
+    renderLayout();
+    updateCount();
   }
 
   function colLabels(cols) {
@@ -455,10 +554,9 @@
   function updateCount() {
     var n = students.length;
     $('sk-count').textContent = n + '人';
-    var rows = parseInt($('sk-rows').value, 10);
-    var cols = parseInt($('sk-cols').value, 10);
-    var seats = rows * cols;
-    $('sk-seats').textContent = '席は ' + seats + '（' + cols + '×' + rows + '）' +
+    var rows = seatMap.length, cols = seatMap[0].length;
+    var seats = seatTotal(seatMap);
+    $('sk-seats').textContent = '席は ' + seats + '（横' + cols + '×縦' + rows + (seats < rows * cols ? '・' + (rows * cols - seats) + '席消し' : '') + '）' +
       (n ? '・' + (seats >= n ? 'あき ' + (seats - n) + '席' : n - seats + '席たりません') : '');
   }
 
@@ -780,6 +878,8 @@
       // 席の数も前回に合わせておく
       if (maxC + 1 >= 2 && maxC + 1 <= SEAT_MAX) $('sk-cols').value = String(maxC + 1);
       if (maxR + 1 >= 2 && maxR + 1 <= SEAT_MAX) $('sk-rows').value = String(maxR + 1);
+      resetMapFromSelects();
+      if (!$('sk-layout-wrap').hidden) renderLayout();
     } else {
       clearPrev();
     }
@@ -873,7 +973,7 @@
 
   (function fillSelects() {
     var c = $('sk-cols'), r = $('sk-rows');
-    for (var i = 2; i <= SEAT_MAX; i++) {
+    for (var i = 1; i <= SEAT_MAX; i++) {
       var o1 = document.createElement('option');
       o1.value = i; o1.textContent = i + 'れつ';
       if (i === 6) o1.selected = true;
@@ -958,8 +1058,23 @@
   $('sk-add5').addEventListener('click', function () { addAndFocus(5); });
   $('sk-add10').addEventListener('click', function () { addAndFocus(10); });
 
-  $('sk-cols').addEventListener('change', updateCount);
-  $('sk-rows').addEventListener('change', updateCount);
+  // 列・行を変えたら、空の座席表を出していればそれも作り直す
+  // （プルダウンで選び直すと、足した席・消した席はリセットして長方形に戻す）
+  var onSizeChange = function () {
+    resetMapFromSelects();
+    updateCount();
+    if (!$('sk-layout-wrap').hidden) renderLayout();
+  };
+  $('sk-layout-board').addEventListener('click', function (e) {
+    var t = e.target.closest('button');
+    if (!t) return;
+    var r = Number(t.getAttribute('data-r')), c = Number(t.getAttribute('data-c'));
+    if (t.classList.contains('sk-ghost')) addSeat(r, c);
+    else if (t.classList.contains('sk-cell-del')) removeSeat(r, c);
+  });
+  $('sk-cols').addEventListener('change', onSizeChange);
+  $('sk-rows').addEventListener('change', onSizeChange);
+  $('sk-layout').addEventListener('click', renderLayout);
   $('sk-gen').addEventListener('click', run);
   $('sk-again').addEventListener('click', run);
   $('sk-copy').addEventListener('click', function () { copyText($('sk-out').value, this); });
@@ -969,6 +1084,7 @@
     // 見本は30人ぶん。席の数もそれに合う既定（6×5）へ戻す
     $('sk-cols').value = '6';
     $('sk-rows').value = '5';
+    onSizeChange();
     clearPrev();
     rosterNote('');
     updateCount();
@@ -995,6 +1111,7 @@
     renderCsvPick();
   });
 
+  resetMapFromSelects();
   addRows(START_ROWS);
   renderList();
 })();

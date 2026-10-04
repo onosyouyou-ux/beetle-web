@@ -118,7 +118,7 @@
 
     <section class="sk-panel" id="tool">
       <div class="sk-seatsize">
-        <span class="sk-lbl">席の数</span>
+        <span class="sk-lbl">座席を作成</span>
         <span class="sk-ctl">
           <label for="sk-cols">横（列）</label>
           <select id="sk-cols"></select>
@@ -127,7 +127,12 @@
           <label for="sk-rows">縦（行）</label>
           <select id="sk-rows"></select>
         </span>
+        <button type="button" class="sk-mini2 is-go sk-layout-btn" id="sk-layout">座席を表示する</button>
         <span class="sk-seats" id="sk-seats">—</span>
+      </div>
+      <div class="sk-layout" id="sk-layout-wrap" hidden>
+        <div class="sk-blackboard">こくばん</div>
+        <div class="sk-board sk-board-empty" id="sk-layout-board"></div>
       </div>
 
       <div class="sk-lbl-row">
