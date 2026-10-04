@@ -397,3 +397,6 @@ body{
 /* 確定ボタンは説明文の下・中央に置く */
 .sk-layout-foot{flex-direction:column;gap:10px}
 .sk-layout-note{text-align:center}
+
+/* 「座席を表示する」は行の右端 */
+.sk-seatsize .sk-layout-btn{margin-left:auto}
