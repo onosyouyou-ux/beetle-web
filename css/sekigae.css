@@ -378,3 +378,6 @@ body{
 @media(max-width:767px){
   .sk-tab{padding:8px 12px;font-size:12px}
 }
+
+/* 結果へ移動したとき、上の固定ナビに隠れないよう余白をとる */
+.sk-seat-area{scroll-margin-top:90px}

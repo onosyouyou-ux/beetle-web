@@ -415,6 +415,8 @@
     showMsgs(relaxed ? [{ text: relaxed }] : []);
     picked = null;
     render();
+    // 下の「席替えする／再配置する」から押しても結果が見えるよう、座席欄まで移動する
+    $('sk-seat-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
     // 2回目からは「再配置する」。上と下のボタンをそろえる
     ['sk-gen', 'sk-gen2'].forEach(function (id) { $(id).textContent = '再配置する'; });
   }
