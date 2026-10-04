@@ -39,7 +39,7 @@
   "operatingSystem": "Web",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
   "url": "https://www.beetle-web.jp/tools/sekigae/landing.html",
-  "description": "名簿と席の数から座席表を自動生成し、「離す」「前列」「後列」「固定」の配慮を守ったまま何度でも引き直せる先生向けの無料ツール。"
+  "description": "名簿と席の数から座席表を自動生成し、「前列」「後列」「固定」「離す」「隣」の配慮を守ったまま何度でも引き直せる先生向けの無料ツール。"
 }
 </script>
 <script type="application/ld+json">
@@ -52,7 +52,7 @@
   "name": "席替えメーカーで座席表を作る手順",
   "step": [
     { "@type": "HowToStep", "name": "名簿を貼る", "text": "児童・生徒の名前を1行に1人ずつ貼り付けます。「、」やカンマ・タブで区切ってもかまいません。空欄のままでも「1番」「2番」と番号で作れます。" },
-    { "@type": "HowToStep", "name": "席の数と配慮を決める", "text": "縦と横の席の数を選び、「離す」「前列」「後列」「固定」の配慮を1行ずつ書きます。" },
+    { "@type": "HowToStep", "name": "席の数と配慮を決める", "text": "縦と横の席の数を選び、名簿の行ごとに「前列」「後列」「固定」「離す」「隣」の配慮をプルダウンで足します。1人に何個でも付けられます。" },
     { "@type": "HowToStep", "name": "作って印刷する", "text": "「席替えする」を押すと配慮を守った座席表ができます。気に入らなければ何度でも引き直し、決まったら印刷します。" }
   ]
 }
@@ -70,7 +70,7 @@
     {
       "@type": "Question",
       "name": "「この2人は離す」はどこまで離れますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "前後左右の隣り合う席にならないようにします。斜めの席は隣として扱いません。もっと離したい場合は、片方に「前列」、もう片方に「後列」を指定すると確実に距離が取れます。" }
+      "acceptedAnswer": { "@type": "Answer", "text": "周りの1マス（前後左右と斜め）には座らせません。もっと離したい場合は、片方に「前列」、もう片方に「後列」を指定すると確実に距離が取れます。" }
     },
     {
       "@type": "Question",
@@ -98,7 +98,7 @@
 <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 <link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/css/app-reference.css">
-<link rel="stylesheet" href="/css/sekigae.css">
+<link rel="stylesheet" href="/css/sekigae.css?v=20261004">
 </head>
 <body>
 
@@ -117,45 +117,40 @@
   <main class="sk-main">
 
     <section class="sk-panel" id="tool">
-      <div class="sk-form">
-        <div class="sk-col">
-          <div class="sk-lbl-row">
-            <label for="sk-names">名簿</label>
-            <span class="sk-count" id="sk-count">0人</span>
-            <button type="button" class="sk-mini" id="sk-sample">見本を入れる</button>
-          </div>
-          <div class="sk-roster-bar">
-            <label class="sk-file">
-              CSVを読む
-              <input type="file" id="sk-csv" accept=".csv,.tsv,.txt,text/csv,text/plain">
-            </label>
-            <button type="button" class="sk-mini2 is-go" id="sk-csv-save">CSVで保存</button>
-            <button type="button" class="sk-mini2" id="sk-csv-template">ひな形CSV</button>
-          </div>
+      <div class="sk-lbl-row">
+        <span class="sk-lbl">名簿と配慮</span>
+        <span class="sk-count" id="sk-count">0人</span>
+        <button type="button" class="sk-mini" id="sk-sample">見本を入れる</button>
+      </div>
+      <div class="sk-roster-bar">
+        <label class="sk-file">
+          CSVを読む
+          <input type="file" id="sk-csv" accept=".csv,.tsv,.txt,text/csv,text/plain">
+        </label>
+        <button type="button" class="sk-mini2 is-go" id="sk-csv-save">CSVで保存</button>
+        <button type="button" class="sk-mini2" id="sk-csv-template">ひな形CSV</button>
+      </div>
 
-          <div class="sk-csv-pick" id="sk-csv-pick" hidden>
-            <p class="sk-csv-q">どの列が名前ですか？（姓と名が分かれていれば両方えらべます）</p>
-            <div class="sk-csv-cols" id="sk-csv-cols"></div>
-            <div class="sk-csv-foot">
-              <label class="sk-chk"><input type="checkbox" id="sk-csv-head" checked> 1行目は見出し</label>
-              <button type="button" class="sk-mini2 is-go" id="sk-csv-ok">この列でよみこむ</button>
-              <button type="button" class="sk-mini2" id="sk-csv-cancel">やめる</button>
-            </div>
-          </div>
-
-          <p class="sk-roster-note" id="sk-roster-note" hidden></p>
-
-          <textarea id="sk-names" rows="10" spellcheck="false" placeholder="田中 そうた&#10;佐藤 みゆき&#10;鈴木 かい&#10;&#10;↑ このように 1行に1人ずつ。空のままでも「1番」「2番」で作れます"></textarea>
-          <p class="sk-sep-note" id="sk-sep-note" hidden></p>
-          <p class="sk-hint"><b>1行に1人</b>ずつ書きます。「、」やカンマ・タブで区切ってもかまいません。出席番号つきの名簿（「1 田中」など）をそのまま貼っても大丈夫です。<br><b>CSVで保存</b>すると、名簿・配慮・できた席を1枚のファイルに書き出します。次回そのファイルを<b>CSVを読む</b>から取り込めば、そのまま続きから始められます。</p>
-        </div>
-
-        <div class="sk-col">
-          <div class="sk-lbl-row"><label for="sk-rules">配慮</label></div>
-          <textarea id="sk-rules" rows="10" spellcheck="false" placeholder="離す: 田中, 佐藤&#10;前列: 鈴木&#10;後列: 高橋&#10;固定: 山本 = 1れつ 1ばん"></textarea>
-          <p class="sk-hint">1行に1つ。<code>離す</code> <code>前列</code> <code>後列</code> <code>固定</code> の4種類が使えます。名前は名簿と同じ書き方で。</p>
+      <div class="sk-csv-pick" id="sk-csv-pick" hidden>
+        <p class="sk-csv-q">どの列が名前ですか？（姓と名が分かれていれば両方えらべます）</p>
+        <div class="sk-csv-cols" id="sk-csv-cols"></div>
+        <div class="sk-csv-foot">
+          <label class="sk-chk"><input type="checkbox" id="sk-csv-head" checked> 1行目は見出し</label>
+          <button type="button" class="sk-mini2 is-go" id="sk-csv-ok">この列でよみこむ</button>
+          <button type="button" class="sk-mini2" id="sk-csv-cancel">やめる</button>
         </div>
       </div>
+
+      <p class="sk-roster-note" id="sk-roster-note" hidden></p>
+
+      <div class="sk-list-head" aria-hidden="true"><span>番</span><span>なまえ</span><span>配慮（1人に何個でも）</span></div>
+      <div class="sk-list" id="sk-list"></div>
+      <div class="sk-add">
+        <button type="button" class="sk-mini2" id="sk-add1">＋1人</button>
+        <button type="button" class="sk-mini2" id="sk-add5">＋5人</button>
+        <button type="button" class="sk-mini2" id="sk-add10">＋10人</button>
+      </div>
+      <p class="sk-hint">名前は1行に1人。Excelの名前の列をコピーして<b>1行目に貼ると、下の行へ1人ずつ</b>入ります（足りない行は自動で増えます）。空欄の行は「3番」のように番号で作ります。<br>配慮は「＋ 配慮」から <code>前列</code> <code>後列</code> <code>固定</code> <code>離す</code> <code>隣</code> を選びます。<code>離す</code> <code>隣</code> は相手を、<code>固定</code> は席をえらんでください。<br><b>CSVで保存</b>すると、名簿・配慮・できた席を1枚のファイルに書き出します。次回そのファイルを<b>CSVを読む</b>から取り込めば、そのまま続きから始められます。</p>
 
       <div class="sk-prev" id="sk-prev" hidden>
         <span class="sk-prev-lbl" id="sk-prev-lbl">前回の席</span>
@@ -201,12 +196,12 @@
         <div class="sk-step">
           <span class="sk-step-n">1</span>
           <h3>名簿を貼る</h3>
-          <p>Excelや名簿ソフトから、名前の列をそのままコピーして貼り付けてください。<b>1行に1人</b>ずつです（「、」やカンマ・タブで区切ってもかまいません）。「1 田中」のように出席番号がついていても読み取ります。空のままなら「1番」「2番」の番号で作ります。<br><b>「CSVを読む」</b>を使えば、名簿CSVから名前の列を選んで流し込めます。<b>「CSVで保存」</b>すると、名簿と配慮を1枚のファイルに書き出せます（<b>ひな形CSV</b>も配布しています）。</p>
+          <p>名前を1行に1人ずつ入れます。最初は10行あり、「＋1人」「＋5人」「＋10人」で増やせます。Excelや名簿ソフトから名前の列をコピーして<b>1行目に貼ると、下の行へ1人ずつ</b>入ります。「1 田中」のように出席番号がついていても読み取ります。空欄の行は「1番」「2番」の番号で作ります。<br><b>「CSVを読む」</b>を使えば、名簿CSVから名前の列を選んで流し込めます。<b>「CSVで保存」</b>すると、名簿と配慮を1枚のファイルに書き出せます（<b>ひな形CSV</b>も配布しています）。</p>
         </div>
         <div class="sk-step">
           <span class="sk-step-n">2</span>
           <h3>席の数と配慮を決める</h3>
-          <p>横と縦の席の数を選びます。人数より席が多いぶんは空席になります。配慮は1行に1つずつ。書き方は下の表のとおりです。</p>
+          <p>横と縦の席の数を選びます。人数より席が多いぶんは空席になります。配慮は名簿の行ごとに「＋ 配慮」から選びます。1人に何個でも付けられます。種類は下の表のとおりです。</p>
         </div>
         <div class="sk-step">
           <span class="sk-step-n">3</span>
@@ -215,14 +210,15 @@
         </div>
       </div>
 
-      <h2>配慮の書き方</h2>
+      <h2>配慮の種類</h2>
       <table class="sk-table">
-        <thead><tr><th>書き方</th><th>意味</th></tr></thead>
+        <thead><tr><th>種類</th><th>意味</th></tr></thead>
         <tbody>
-          <tr><td><code>離す: 田中, 佐藤</code></td><td>この2人を前後左右の隣にしません（斜めは隣として数えません）。3人以上並べると、その全員がおたがい隣にならないようにします。</td></tr>
-          <tr><td><code>前列: 鈴木</code></td><td>前から2列目までに座らせます。黒板が見えにくいお子さんに。</td></tr>
-          <tr><td><code>後列: 高橋</code></td><td>後ろから2列目までに座らせます。背の高いお子さんや、出入りが多いお子さんに。</td></tr>
-          <tr><td><code>固定: 山本 = 2れつ 3ばん</code></td><td>席をぴったり決めます。「2れつ」は黒板から見て左から2番目の列、「3ばん」は前から3番目です。</td></tr>
+          <tr><td><code>前列</code></td><td>前から2列目までに座らせます。黒板が見えにくいお子さんに。</td></tr>
+          <tr><td><code>後列</code></td><td>後ろから2列目までに座らせます。背の高いお子さんや、出入りが多いお子さんに。</td></tr>
+          <tr><td><code>固定</code></td><td>席をぴったり決めます。「2れつ」は黒板から見て左から2番目の列、「3ばん」は前から3番目です。</td></tr>
+          <tr><td><code>離す</code></td><td>えらんだ相手を、周りの1マス（前後左右と斜め）に座らせません。3人を互いに離したいときは、組み合わせごとに「離す」を足してください。</td></tr>
+          <tr><td><code>隣</code></td><td>えらんだ相手を、前後左右のどれかの隣に座らせます（斜めは隣として数えません）。お世話係や、手助けが必要なお子さんに。</td></tr>
         </tbody>
       </table>
 
@@ -233,7 +229,7 @@
       </details>
       <details class="sk-faq">
         <summary>「この2人は離す」はどこまで離れますか？<span>+</span></summary>
-        <div>前後左右の隣り合う席にならないようにします。斜めの席は隣として扱いません。もっと離したい場合は、片方に「前列」、もう片方に「後列」を指定すると確実に距離が取れます。</div>
+        <div>周りの1マス（前後左右と斜め）には座らせません。もっと離したい場合は、片方に「前列」、もう片方に「後列」を指定すると確実に距離が取れます。</div>
       </details>
       <details class="sk-faq">
         <summary>配慮が多すぎると作れないことはありますか？<span>+</span></summary>
@@ -256,7 +252,7 @@
     </section>
 
   </main>
-  <p class="paper-release">更新日：2026-08-23</p>
+  <p class="paper-release">更新日：2026-10-04</p>
 </div>
 
 <!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一） -->
@@ -281,6 +277,6 @@
 <script src="/js/contact-track.js"></script>
 <script src="/js/app-reference.js"></script>
 <script src="/js/class-roster.js"></script>
-<script src="/js/sekigae.js"></script>
+<script src="/js/sekigae.js?v=20261004"></script>
 </body>
 </html>

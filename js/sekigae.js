@@ -2,111 +2,122 @@
    sekigae.js — 席替えメーカー（先生向け）
    名簿と配慮から座席表を作る。計算はすべてブラウザ内で完結し、
    名簿はサーバーに送らない（個人情報を預けずに使えることが前提のツール）。
+
+   2026-10-04：名簿と配慮を「1人1行」の表に変更。
+   配慮は行ごとにプルダウン（前列・後列・固定・離す・隣）で足し、1人に何個でも付けられる。
    ============================================================ */
 (function () {
   'use strict';
 
-  // 名簿まわり（保存・CSV取り込み・名前の読み取り）は班分けメーカーと共有する
+  // 名簿まわり（CSV取り込み・名前の読み取り）は班分けメーカーと共有する
   var R = window.BeetleRoster;
   var $ = function (id) { return document.getElementById(id); };
-  if (!$('sk-names') || !R) return;
+  if (!$('sk-list') || !R) return;
 
   var ATTEMPTS = 4000;   // ランダム再試行の上限
   var FRONT_DEPTH = 2;   // 「前列」＝前から何列目までか
   var BACK_DEPTH = 2;    // 「後列」＝後ろから何列目までか
+  var START_ROWS = 10;   // 最初に出しておく行の数
+  var SEAT_MAX = 10;     // 席の数の上限（縦・横とも）
+
+  var KIND_LABEL = { '': '配慮をえらぶ', front: '前列', back: '後列', fixed: '固定', apart: '離す', next: '隣' };
+  var KIND_ORDER = ['', 'front', 'back', 'fixed', 'apart', 'next'];
 
   var SAMPLE_NAMES = [
-    '1 佐藤 みゆき', '2 鈴木 けんた', '3 高橋 あおい', '4 田中 そうた', '5 伊藤 ひなた',
-    '6 渡辺 りく', '7 山本 さくら', '8 中村 はると', '9 小林 ゆい', '10 加藤 だいち',
-    '11 吉田 めい', '12 山田 かなた', '13 佐々木 のあ', '14 山口 いつき', '15 松本 ひまり',
-    '16 井上 そら', '17 木村 あかり', '18 林 ゆうき', '19 清水 みなと', '20 山崎 ひなの',
-    '21 森 かいと', '22 池田 つむぎ', '23 橋本 りひと', '24 石川 えま', '25 前田 あさひ',
-    '26 藤田 ことね', '27 後藤 はやと', '28 岡田 みお', '29 長谷川 れん', '30 村上 ゆあ'
-  ].join('\n');
+    '佐藤 みゆき', '鈴木 けんた', '高橋 あおい', '田中 そうた', '伊藤 ひなた',
+    '渡辺 りく', '山本 さくら', '中村 はると', '小林 ゆい', '加藤 だいち',
+    '吉田 めい', '山田 かなた', '佐々木 のあ', '山口 いつき', '松本 ひまり',
+    '井上 そら', '木村 あかり', '林 ゆうき', '清水 みなと', '山崎 ひなの',
+    '森 かいと', '池田 つむぎ', '橋本 りひと', '石川 えま', '前田 あさひ',
+    '藤田 ことね', '後藤 はやと', '岡田 みお', '長谷川 れん', '村上 ゆあ'
+  ];
 
+  // 見本の配慮：[だれに, 種類, 相手 or 席]
   var SAMPLE_RULES = [
-    '離す: 田中 そうた, 中村 はると',
-    '前列: 小林 ゆい',
-    '後列: 長谷川 れん',
-    '固定: 佐藤 みゆき = 1れつ 1ばん'
-  ].join('\n');
+    ['田中 そうた', 'apart', '中村 はると'],
+    ['小林 ゆい', 'front'],
+    ['長谷川 れん', 'back'],
+    ['伊藤 ひなた', 'next', '渡辺 りく'],
+    ['佐藤 みゆき', 'fixed', { c: 0, r: 0 }]
+  ];
 
-  /* ---------- 入力を読む ---------- */
+  /* ============================================================
+     名簿のデータ：1人1行。配慮は行ごとに持つ
+     { id, name, rules: [{ kind, to(相手のid), c, r }] }
+     ============================================================ */
 
-  // 「スペースでも区切る」を押されたときだけ立てる
-  var splitOnSpace = false;
+  var students = [];
+  var nextId = 1;
 
-  function parseNames(text) { return R.parseNames(text, splitOnSpace); }
-  function looksCrammed(names) { return R.looksCrammed(names); }
-  function splitNames(s) { return R.splitList(s); }
+  function newStudent(name) {
+    return { id: nextId++, name: name || '', rules: [] };
+  }
 
-  function parseRules(text, names) {
-    var rules = { apart: [], front: [], back: [], fixed: [] };
-    var errors = [], warns = [];
-    var known = {};
-    names.forEach(function (n) { known[n] = true; });
+  function addRows(n, names) {
+    for (var i = 0; i < n; i++) students.push(newStudent(names ? names[i] : ''));
+  }
 
-    var checkName = function (n, lineNo) {
-      if (known[n]) return n;
-      // 名簿が「1 田中」形式でも配慮欄に「田中」だけ書けるようにする
-      var hit = names.filter(function (x) { return x.indexOf(n) >= 0; });
-      if (hit.length === 1) return hit[0];
-      if (hit.length > 1) {
-        errors.push(lineNo + '行目：「' + n + '」に当てはまる人が' + hit.length + '人います。名簿と同じ書き方にしてください。');
-        return null;
-      }
-      errors.push(lineNo + '行目：「' + n + '」は名簿にありません。');
-      return null;
-    };
+  function byId(id) {
+    for (var i = 0; i < students.length; i++) if (students[i].id === id) return students[i];
+    return null;
+  }
 
-    text.split('\n').forEach(function (raw, i) {
-      var line = raw.trim();
-      if (!line || line.charAt(0) === '#') return;
-      var lineNo = i + 1;
-      var m = line.match(/^([^:：]+)[:：](.*)$/);
-      if (!m) {
-        errors.push(lineNo + '行目：「離す: 田中, 佐藤」のように、種類と名前を「:」で区切って書いてください。');
-        return;
-      }
-      var kind = m[1].trim(), body = m[2].trim();
+  /** 画面と座席表に出す名前。空欄は「3番」、同姓同名は2人目以降に（2）を付けて別人にする */
+  function displayNames() {
+    var seen = {};
+    return students.map(function (s, i) {
+      var n = R.cleanName(s.name) || (i + 1) + '番';
+      seen[n] = (seen[n] || 0) + 1;
+      return seen[n] > 1 ? n + '（' + seen[n] + '）' : n;
+    });
+  }
 
-      if (/^(離す|はなす|離)$/.test(kind)) {
-        var group = splitNames(body).map(function (n) { return checkName(n, lineNo); });
-        if (group.some(function (x) { return !x; })) return;
-        if (group.length < 2) { errors.push(lineNo + '行目：「離す」は2人以上を「,」で並べてください。'); return; }
-        rules.apart.push(group);
+  /** 表の中身を、席を決める計算で使う形に直す */
+  function collect() {
+    var names = displayNames();
+    var idx = {};
+    students.forEach(function (s, i) { idx[s.id] = i; });
 
-      } else if (/^(前列|前|まえ)$/.test(kind)) {
-        splitNames(body).forEach(function (n) {
-          var v = checkName(n, lineNo);
-          if (v) rules.front.push(v);
-        });
+    var rules = { apart: [], next: [], front: [], back: [], fixed: [] };
+    var errors = [];
+    var pairSeen = { apart: {}, next: {} };
+    var fixedSeen = {};
 
-      } else if (/^(後列|後ろ|後|うしろ)$/.test(kind)) {
-        splitNames(body).forEach(function (n) {
-          var v = checkName(n, lineNo);
-          if (v) rules.back.push(v);
-        });
-
-      } else if (/^(固定|席|指定)$/.test(kind)) {
-        var fm = body.split(/[=＝]/);
-        if (fm.length < 2) { errors.push(lineNo + '行目：「固定: 山本 = 2れつ 3ばん」のように席を書いてください。'); return; }
-        var v2 = checkName(fm[0].trim(), lineNo);
-        if (!v2) return;
-        var nums = (fm[1].match(/\d+/g) || []).map(Number);
-        if (nums.length < 2) { errors.push(lineNo + '行目：席は「2れつ 3ばん」のように数字を2つ書いてください。'); return; }
-        rules.fixed.push({ name: v2, c: nums[0] - 1, r: nums[1] - 1 });
-
-      } else {
-        errors.push(lineNo + '行目：「' + kind + '」は使えません。離す・前列・後列・固定 のどれかにしてください。');
-      }
+    students.forEach(function (s, i) {
+      var me = names[i];
+      s.rules.forEach(function (rule) {
+        var k = rule.kind;
+        if (k === 'front' || k === 'back') {
+          if (rules[k].indexOf(me) < 0) rules[k].push(me);
+        } else if (k === 'fixed') {
+          if (fixedSeen[me]) { errors.push('「' + me + '」に固定席が2つ指定されています。'); return; }
+          fixedSeen[me] = true;
+          rules.fixed.push({ name: me, c: rule.c, r: rule.r });
+        } else if (k === 'apart' || k === 'next') {
+          if (!rule.to || idx[rule.to] === undefined) {
+            errors.push('「' + me + '」の「' + KIND_LABEL[k] + '」の相手をえらんでください。');
+            return;
+          }
+          if (rule.to === s.id) { errors.push('「' + me + '」の「' + KIND_LABEL[k] + '」の相手が本人になっています。'); return; }
+          var other = names[idx[rule.to]];
+          var key = [me, other].sort().join('\n');
+          if (pairSeen[k][key]) return;   // 両方の行に同じ指定があっても1つと数える
+          pairSeen[k][key] = true;
+          rules[k].push([me, other]);
+        }
+      });
     });
 
-    // 同じ人に前列と後列の両方が付いていたら成立しない
     rules.front.forEach(function (n) {
       if (rules.back.indexOf(n) >= 0) errors.push('「' + n + '」に前列と後列の両方が指定されています。');
     });
-    return { rules: rules, errors: errors, warns: warns };
+    Object.keys(pairSeen.next).forEach(function (key) {
+      if (pairSeen.apart[key]) {
+        var p = key.split('\n');
+        errors.push('「' + p[0] + '」と「' + p[1] + '」に「離す」と「隣」の両方が指定されています。');
+      }
+    });
+    return { names: names, rules: rules, errors: errors };
   }
 
   /* ---------- 席を決める ---------- */
@@ -125,29 +136,31 @@
     return true;
   }
 
+  // 「隣」＝前後左右。「前回と同じ隣」もこの4方向で数える
+  var NEIGHBOR_D = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+  // 「離す」＝周囲1マス（斜めも含む8方向）に入れない
+  var AROUND_D = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
+
+  function pairMap(pairs) {
+    var map = {};
+    pairs.forEach(function (p) {
+      (map[p[0]] = map[p[0]] || {})[p[1]] = true;
+      (map[p[1]] = map[p[1]] || {})[p[0]] = true;
+    });
+    return map;
+  }
+
   // prev は「前回の席」を避けるための任意条件。
   // { seatOf:{name:'r,c'}, nbOf:{name:{other:true}}, avoidSeat:bool, avoidNb:bool }
   function solve(names, rows, cols, rules, prev) {
     var avoidSeat = !!(prev && prev.avoidSeat && prev.seatOf);
     var avoidNb = !!(prev && prev.avoidNb && prev.nbOf);
 
-    // 「離す」相手をすぐ引けるようにしておく
-    var apartOf = {};
-    rules.apart.forEach(function (group) {
-      group.forEach(function (a) {
-        group.forEach(function (b) {
-          if (a === b) return;
-          (apartOf[a] = apartOf[a] || {})[b] = true;
-        });
-      });
-    });
+    var apartOf = pairMap(rules.apart);
+    var nextOf = pairMap(rules.next);
 
-    var fixedAt = {};   // "r,c" → name
     var fixedOf = {};   // name → {r,c}
-    rules.fixed.forEach(function (f) {
-      fixedAt[f.r + ',' + f.c] = f.name;
-      fixedOf[f.name] = f;
-    });
+    rules.fixed.forEach(function (f) { fixedOf[f.name] = f; });
 
     var rest = names.filter(function (n) { return !fixedOf[n]; });
     // 席の候補が狭い順（前列・後列 → それ以外）に置くと成功しやすい
@@ -157,9 +170,10 @@
     for (var attempt = 0; attempt < ATTEMPTS; attempt++) {
       var grid = [];
       for (var r = 0; r < rows; r++) { grid.push(new Array(cols).fill(null)); }
-      rules.fixed.forEach(function (f) { grid[f.r][f.c] = f.name; });
+      var posOf = {};
+      rules.fixed.forEach(function (f) { grid[f.r][f.c] = f.name; posOf[f.name] = [f.r, f.c]; });
 
-      var order = shuffle(zoned.slice()).concat(shuffle(free.slice()));
+      var order = withPartnersNext(shuffle(zoned.slice()).concat(shuffle(free.slice())), nextOf);
       var ok = true;
 
       for (var i = 0; i < order.length; i++) {
@@ -176,38 +190,84 @@
         shuffle(spots);
         var placed = false;
         for (var s = 0; s < spots.length; s++) {
-          if (!conflicts(grid, spots[s][0], spots[s][1], name, apartOf, rows, cols) &&
-              !(avoidNb && prevNeighbor(grid, spots[s][0], spots[s][1], name, prev.nbOf, rows, cols))) {
-            grid[spots[s][0]][spots[s][1]] = name;
-            placed = true;
-            break;
-          }
+          var sr = spots[s][0], sc = spots[s][1];
+          if (nearApart(grid, sr, sc, name, apartOf, rows, cols)) continue;
+          if (!nextFits(grid, sr, sc, name, nextOf, posOf, rules, rows, cols)) continue;
+          if (avoidNb && prevNeighbor(grid, sr, sc, name, prev.nbOf, rows, cols)) continue;
+          grid[sr][sc] = name;
+          posOf[name] = [sr, sc];
+          placed = true;
+          break;
         }
         if (!placed) { ok = false; break; }
       }
-      if (ok) return grid;
+      if (ok && allNextOk(rules.next, posOf)) return grid;
     }
     return null;
   }
 
-  var NEIGHBOR_D = [[-1, 0], [1, 0], [0, -1], [0, 1]]; // 斜めは隣として数えない
+  /** 「隣」の相手が並び順のすぐ後ろに来るようにする（離れていると相手の席が埋まりやすい） */
+  function withPartnersNext(order, nextOf) {
+    var out = [], done = {};
+    var visit = function (n) {
+      if (done[n]) return;
+      done[n] = true;
+      out.push(n);
+      Object.keys(nextOf[n] || {}).forEach(function (p) {
+        if (order.indexOf(p) >= 0) visit(p);
+      });
+    };
+    order.forEach(visit);
+    return out;
+  }
+
+  function inside(r, c, rows, cols) { return r >= 0 && r < rows && c >= 0 && c < cols; }
 
   /** その席の前後左右にいる名前を集める */
   function neighborNames(grid, r, c, rows, cols) {
     var out = [];
     for (var i = 0; i < NEIGHBOR_D.length; i++) {
       var nr = r + NEIGHBOR_D[i][0], nc = c + NEIGHBOR_D[i][1];
-      if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
-      if (grid[nr][nc]) out.push(grid[nr][nc]);
+      if (inside(nr, nc, rows, cols) && grid[nr][nc]) out.push(grid[nr][nc]);
     }
     return out;
   }
 
-  // 前後左右の隣に「離す」相手がいないか
-  function conflicts(grid, r, c, name, apartOf, rows, cols) {
+  // 周囲1マス（斜めも含む）に「離す」相手がいないか
+  function nearApart(grid, r, c, name, apartOf, rows, cols) {
     var mine = apartOf[name];
     if (!mine) return false;
-    return neighborNames(grid, r, c, rows, cols).some(function (other) { return !!mine[other]; });
+    for (var i = 0; i < AROUND_D.length; i++) {
+      var nr = r + AROUND_D[i][0], nc = c + AROUND_D[i][1];
+      if (inside(nr, nc, rows, cols) && grid[nr][nc] && mine[grid[nr][nc]]) return true;
+    }
+    return false;
+  }
+
+  /**
+   * 「隣」の相手とつじつまが合うか。
+   * 相手がもう座っていれば、その前後左右であること。
+   * まだなら、この席の前後左右に相手が座れる空席が残っていること。
+   */
+  function nextFits(grid, r, c, name, nextOf, posOf, rules, rows, cols) {
+    var mine = nextOf[name];
+    if (!mine) return true;
+    return Object.keys(mine).every(function (p) {
+      var at = posOf[p];
+      if (at) return Math.abs(at[0] - r) + Math.abs(at[1] - c) === 1;
+      var zone = zoneOf(p, rules);
+      return NEIGHBOR_D.some(function (d) {
+        var nr = r + d[0], nc = c + d[1];
+        return inside(nr, nc, rows, cols) && grid[nr][nc] === null && seatOk(zone, nr, rows);
+      });
+    });
+  }
+
+  function allNextOk(pairs, posOf) {
+    return pairs.every(function (p) {
+      var a = posOf[p[0]], b = posOf[p[1]];
+      return a && b && Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) === 1;
+    });
   }
 
   // 前後左右の隣が「前回も隣だった相手」になっていないか
@@ -224,8 +284,9 @@
     if (names.length > rows * cols) {
       msgs.push({ text: '席が足りません。', sub: '名簿は' + names.length + '人ですが、席は' + rows + '×' + cols + '＝' + (rows * cols) + '席です。', error: true });
     }
-    var seen = {};
+    var seen = {}, fixedOf = {};
     rules.fixed.forEach(function (f) {
+      fixedOf[f.name] = f;
       var key = f.r + ',' + f.c;
       if (f.c < 0 || f.c >= cols || f.r < 0 || f.r >= rows) {
         msgs.push({ text: '「' + f.name + '」の固定席が席の外にあります。', sub: '指定は ' + (f.c + 1) + 'れつ ' + (f.r + 1) + 'ばん ですが、席は ' + cols + 'れつ × ' + rows + 'ばん です。', error: true });
@@ -246,6 +307,19 @@
     if (rules.back.length > backSeats) {
       msgs.push({ text: '後列に入りきりません。', sub: '後列指定が' + rules.back.length + '人いますが、後ろから' + BACK_DEPTH + '列は' + backSeats + '席しかありません。', error: true });
     }
+
+    // 隣：相手は前後左右の4人までしか置けない
+    var nextOf = pairMap(rules.next);
+    Object.keys(nextOf).forEach(function (n) {
+      var cnt = Object.keys(nextOf[n]).length;
+      if (cnt > 4) msgs.push({ text: '「' + n + '」の「隣」が多すぎます。', sub: '前後左右には4人までしか座れませんが、' + cnt + '人が指定されています。', error: true });
+    });
+    rules.next.forEach(function (p) {
+      var a = fixedOf[p[0]], b = fixedOf[p[1]];
+      if (a && b && Math.abs(a.r - b.r) + Math.abs(a.c - b.c) !== 1) {
+        msgs.push({ text: '「' + p[0] + '」と「' + p[1] + '」は「隣」ですが、2人とも離れた固定席です。', error: true });
+      }
+    });
     return msgs;
   }
 
@@ -261,23 +335,23 @@
   }
 
   function run() {
-    var names = parseNames($('sk-names').value);
-    if (!names.length) {
+    if (!students.length) {
       $('sk-result').classList.remove('is-on');
-      showMsgs([{ text: '名簿が空です。', sub: '名前を1行に1人ずつ貼り付けるか、「見本を入れる」を押してください。', error: true }]);
+      showMsgs([{ text: '名簿が空です。', sub: '「＋1人」などで行を足すか、「見本を入れる」を押してください。', error: true }]);
       return;
     }
 
     var rows = parseInt($('sk-rows').value, 10);
     var cols = parseInt($('sk-cols').value, 10);
-    var parsed = parseRules($('sk-rules').value, names);
-    if (parsed.errors.length) {
+    var got = collect();
+    if (got.errors.length) {
       $('sk-result').classList.remove('is-on');
-      showMsgs(parsed.errors.map(function (t) { return { text: t, error: true }; }));
+      showMsgs(got.errors.map(function (t) { return { text: t, error: true }; }));
       return;
     }
+    var names = got.names;
 
-    var problems = diagnose(names, rows, cols, parsed.rules);
+    var problems = diagnose(names, rows, cols, got.rules);
     if (problems.length) {
       $('sk-result').classList.remove('is-on');
       showMsgs(problems);
@@ -288,7 +362,7 @@
     var attempts = prevAttempts();
     var grid = null, relaxed = null;
     for (var i = 0; i < attempts.length; i++) {
-      grid = solve(names, rows, cols, parsed.rules, attempts[i].prev);
+      grid = solve(names, rows, cols, got.rules, attempts[i].prev);
       if (grid) { relaxed = attempts[i].note; break; }
     }
 
@@ -296,13 +370,13 @@
       $('sk-result').classList.remove('is-on');
       showMsgs([{
         text: '配慮を全部守れる並びが見つかりませんでした。',
-        sub: '「離す」の指定が多すぎるか、前列・後列の指定と重なって身動きが取れなくなっている可能性があります。条件を1つ減らすか、席の数を増やして試してください。',
+        sub: '「離す」「隣」の指定が多すぎるか、前列・後列・固定の指定と重なって身動きが取れなくなっている可能性があります。条件を1つ減らすか、席の数を増やして試してください。',
         error: true
       }]);
       return;
     }
 
-    state = { grid: grid, rows: rows, cols: cols, rules: parsed.rules };
+    state = { grid: grid, rows: rows, cols: cols, rules: got.rules };
     showMsgs(relaxed ? [{ text: relaxed }] : []);
     render();
   }
@@ -379,10 +453,8 @@
   function esc(s) { return R.esc(s); }
 
   function updateCount() {
-    var names = parseNames($('sk-names').value);
-    var n = names.length;
+    var n = students.length;
     $('sk-count').textContent = n + '人';
-    updateSepNote(names);
     var rows = parseInt($('sk-rows').value, 10);
     var cols = parseInt($('sk-cols').value, 10);
     var seats = rows * cols;
@@ -390,35 +462,137 @@
       (n ? '・' + (seats >= n ? 'あき ' + (seats - n) + '席' : n - seats + '席たりません') : '');
   }
 
-  // 「1行に1人」が伝わりにくいので、詰まって見えるときだけその場で直せるようにする
-  function updateSepNote(names) {
-    var note = $('sk-sep-note');
-    if (!note) return;
-    if (splitOnSpace) {
-      note.hidden = false;
-      note.innerHTML = 'スペースでも区切って ' + names.length + '人 として読んでいます。' +
-        '<button type="button" class="sk-mini" id="sk-sep-off">もとに戻す</button>';
-      $('sk-sep-off').addEventListener('click', function () {
-        splitOnSpace = false;
-        updateCount();
-      });
-      return;
-    }
-    if (looksCrammed(names)) {
-      note.hidden = false;
-      note.innerHTML = '名前が1行に詰まっていませんか？ いまは ' + names.length + '人 として読んでいます。' +
-        '<button type="button" class="sk-mini" id="sk-sep-on">スペースでも区切る</button>';
-      $('sk-sep-on').addEventListener('click', function () {
-        splitOnSpace = true;
-        updateCount();
-      });
-      return;
-    }
-    note.hidden = true;
-    note.innerHTML = '';
+  function copyText(text, btn) { R.copyText(text, btn); }
+
+  /* ============================================================
+     名簿の表（1人1行）
+     ============================================================ */
+
+  function options(list, current) {
+    return list.map(function (o) {
+      return '<option value="' + esc(o[0]) + '"' + (String(o[0]) === String(current) ? ' selected' : '') + '>' + esc(o[1]) + '</option>';
+    }).join('');
   }
 
-  function copyText(text, btn) { R.copyText(text, btn); }
+  function numOptions(unit, current) {
+    var list = [];
+    for (var i = 0; i < SEAT_MAX; i++) list.push([i, (i + 1) + unit]);
+    return options(list, current);
+  }
+
+  /** 相手のプルダウン：自分以外の全員 */
+  function partnerOptions(self, current, names) {
+    var list = [['', 'だれと？']];
+    students.forEach(function (s, i) {
+      if (s.id !== self.id) list.push([s.id, (i + 1) + '　' + names[i]]);
+    });
+    return options(list, current || '');
+  }
+
+  function ruleHtml(s, rule, ri, names) {
+    var k = rule.kind;
+    var html = '<span class="sk-rule' + (k ? ' is-' + k : '') + '" data-ri="' + ri + '">' +
+      '<select class="sk-kind" aria-label="配慮の種類">' +
+      options(KIND_ORDER.map(function (x) { return [x, KIND_LABEL[x]]; }), k) + '</select>';
+    if (k === 'apart' || k === 'next') {
+      html += '<select class="sk-to" aria-label="' + KIND_LABEL[k] + 'の相手">' + partnerOptions(s, rule.to, names) + '</select>';
+    } else if (k === 'fixed') {
+      html += '<select class="sk-fc" aria-label="固定する列">' + numOptions('れつ', rule.c) + '</select>' +
+        '<select class="sk-fr" aria-label="固定する番">' + numOptions('ばん', rule.r) + '</select>';
+    }
+    html += '<button type="button" class="sk-rule-del" aria-label="この配慮を消す">×</button></span>';
+    return html;
+  }
+
+  function renderList() {
+    var names = displayNames();
+    $('sk-list').innerHTML = students.map(function (s, i) {
+      return '<div class="sk-row" data-id="' + s.id + '">' +
+        '<span class="sk-no">' + (i + 1) + '</span>' +
+        '<input type="text" class="sk-name" value="' + esc(s.name) + '" placeholder="' + (i + 1) + '番" aria-label="' + (i + 1) + '人目のなまえ" spellcheck="false">' +
+        '<div class="sk-rules">' +
+        s.rules.map(function (rule, ri) { return ruleHtml(s, rule, ri, names); }).join('') +
+        '<button type="button" class="sk-rule-add">＋ 配慮</button>' +
+        '</div>' +
+        '<button type="button" class="sk-row-del" aria-label="' + (i + 1) + '人目を消す">✕</button>' +
+        '</div>';
+    }).join('');
+    updateCount();
+  }
+
+  /** 名前を打っている途中は表を描き直さず、相手のプルダウンの表示だけ差し替える（入力欄のフォーカスを守る） */
+  function refreshPartnerLabels() {
+    var names = displayNames();
+    var label = {};
+    students.forEach(function (s, i) { label[s.id] = (i + 1) + '　' + names[i]; });
+    Array.prototype.forEach.call(document.querySelectorAll('#sk-list .sk-to option'), function (o) {
+      if (o.value && label[o.value]) o.textContent = label[o.value];
+    });
+  }
+
+  function rowOf(el) {
+    var row = el.closest('.sk-row');
+    return row ? byId(Number(row.getAttribute('data-id'))) : null;
+  }
+
+  function ruleOf(el, s) {
+    var box = el.closest('.sk-rule');
+    return box ? s.rules[Number(box.getAttribute('data-ri'))] : null;
+  }
+
+  function addAndFocus(n) {
+    var first = students.length;
+    addRows(n);
+    renderList();
+    var inputs = document.querySelectorAll('#sk-list .sk-name');
+    if (inputs[first]) inputs[first].focus();
+  }
+
+  function removeStudent(s) {
+    students = students.filter(function (x) { return x.id !== s.id; });
+    // その人を相手にしていた「離す」「隣」も消す
+    students.forEach(function (x) {
+      x.rules = x.rules.filter(function (rule) { return rule.to !== s.id; });
+    });
+    renderList();
+  }
+
+  /** Excelから縦に何人ぶんか貼られたら、その行から下へ1人ずつ流し込む */
+  function pasteNames(s, text) {
+    var list = String(text).split(/\r?\n|\t/).map(R.cleanName).filter(Boolean);
+    if (list.length < 2) return false;
+    var at = students.indexOf(s);
+    list.forEach(function (name, i) {
+      if (!students[at + i]) students.push(newStudent(''));
+      students[at + i].name = name;
+    });
+    renderList();
+    rosterNote(list.length + '人ぶん貼り付けました。', 'ok');
+    return true;
+  }
+
+  /** 名前と「名前で書いた配慮」から表を作り直す（見本・CSV読みこみ用） */
+  function loadRoster(names, ruleList) {
+    nextId = 1;
+    students = names.map(function (n) { return newStudent(n); });
+    var find = function (name) {
+      for (var i = 0; i < students.length; i++) if (students[i].name === name) return students[i];
+      return null;
+    };
+    (ruleList || []).forEach(function (x) {
+      var s = find(x[0]);
+      if (!s) return;
+      if (x[1] === 'apart' || x[1] === 'next') {
+        var t = find(x[2]);
+        if (t && t !== s) s.rules.push({ kind: x[1], to: t.id });
+      } else if (x[1] === 'fixed') {
+        s.rules.push({ kind: 'fixed', c: x[2].c, r: x[2].r });
+      } else {
+        s.rules.push({ kind: x[1] });
+      }
+    });
+    renderList();
+  }
 
   /* ============================================================
      保存はCSVファイルだけ（2026-08-24決定）
@@ -551,44 +725,51 @@
     body.forEach(function (r) {
       var name = nameCols.map(function (c) { return (r[c] || '').trim(); }).filter(Boolean).join(' ').trim();
       if (!name) return;
-      names.push(name);
+      names.push(R.cleanName(name));
       ruleCells.push(ruleCol === undefined ? '' : (r[ruleCol] || '').trim());
       seatCells.push(seatCol === undefined ? '' : (r[seatCol] || '').trim());
     });
 
     if (!names.length) { rosterNote('えらんだ列に名前が入っていませんでした。', 'error'); return; }
 
-    $('sk-names').value = names.join('\n');
-    splitOnSpace = false;
-
-    // 配慮：同じ「離すN」どうしを1行にまとめ、前列・後列・固定はその場で1行にする
-    var apartGroups = {}, lines = [];
+    // 配慮：同じ「離すN」「隣N」どうしが1つの組。前列・後列・固定はその人だけ
+    var groups = { apart: {}, next: {} }, ruleList = [];
     ruleCells.forEach(function (cell, i) {
       String(cell).split(/[;；]+/).forEach(function (t) {
         t = t.trim();
         if (!t) return;
-        var m = t.match(/^離す\s*(\d*)$/);
-        if (m) { (apartGroups[m[1] || '1'] = apartGroups[m[1] || '1'] || []).push(names[i]); return; }
-        if (/^前列$/.test(t)) { lines.push('前列: ' + names[i]); return; }
-        if (/^後列$/.test(t)) { lines.push('後列: ' + names[i]); return; }
+        var m = t.match(/^(離す|隣)\s*(\d*)$/);
+        if (m) {
+          var g = groups[m[1] === '隣' ? 'next' : 'apart'];
+          (g[m[2] || '1'] = g[m[2] || '1'] || []).push(names[i]);
+          return;
+        }
+        if (/^前列$/.test(t)) { ruleList.push([names[i], 'front']); return; }
+        if (/^後列$/.test(t)) { ruleList.push([names[i], 'back']); return; }
         var f = t.match(/^固定\s*(.+)$/);
         if (f) {
           var s = parseSeat(f[1]);
-          if (s) lines.push('固定: ' + names[i] + ' = ' + (s.c + 1) + 'れつ ' + (s.r + 1) + 'ばん');
+          if (s) ruleList.push([names[i], 'fixed', s]);
         }
       });
     });
-    var apartLines = Object.keys(apartGroups).sort().filter(function (k) { return apartGroups[k].length >= 2; })
-      .map(function (k) { return '離す: ' + apartGroups[k].join(', '); });
-    var ruleText = apartLines.concat(lines).join('\n');
-    if (ruleCol !== undefined) $('sk-rules').value = ruleText;
+    ['apart', 'next'].forEach(function (kind) {
+      Object.keys(groups[kind]).forEach(function (k) {
+        var g = groups[kind][k];
+        for (var a = 0; a < g.length; a++) {
+          for (var b = a + 1; b < g.length; b++) ruleList.push([g[a], kind, g[b]]);
+        }
+      });
+    });
+    loadRoster(names, ruleCol === undefined ? [] : ruleList);
 
     // 前回の席：席の列から座席表を組み直す
     var maxC = 0, maxR = 0, seats = [];
+    var shown = displayNames();
     seatCells.forEach(function (cell, i) {
       var s = parseSeat(cell);
       if (!s) return;
-      seats.push({ name: names[i], r: s.r, c: s.c });
+      seats.push({ name: shown[i], r: s.r, c: s.c });
       maxC = Math.max(maxC, s.c); maxR = Math.max(maxR, s.r);
     });
     if (seats.length > 1) {
@@ -597,8 +778,8 @@
       seats.forEach(function (s) { grid[s.r][s.c] = s.name; });
       applyPrevSeating(grid);
       // 席の数も前回に合わせておく
-      if (maxC + 1 >= 2 && maxC + 1 <= 10) $('sk-cols').value = String(maxC + 1);
-      if (maxR + 1 >= 2 && maxR + 1 <= 10) $('sk-rows').value = String(maxR + 1);
+      if (maxC + 1 >= 2 && maxC + 1 <= SEAT_MAX) $('sk-cols').value = String(maxC + 1);
+      if (maxR + 1 >= 2 && maxR + 1 <= SEAT_MAX) $('sk-rows').value = String(maxR + 1);
     } else {
       clearPrev();
     }
@@ -606,7 +787,7 @@
     closeCsvPick();
     updateCount();
     var got = [names.length + '人'];
-    if (ruleText) got.push('配慮');
+    if (ruleList.length && ruleCol !== undefined) got.push('配慮');
     if (seats.length > 1) got.push('前回の席');
     rosterNote(got.join('・') + ' を読みこみました。', 'ok');
   }
@@ -640,24 +821,22 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   }
 
-  /** いまの配慮欄を、人ごとのセル（「離す1」「前列」「固定2-3」）に直す */
-  function ruleCellsByName(names) {
-    var parsed = parseRules($('sk-rules').value, names);
+  /** いまの配慮を、人ごとのセル（「離す1」「隣2」「前列」「固定2-3」）に直す。組は2人ずつ番号を振る */
+  function ruleCellsByName(rules) {
     var cells = {};
     var add = function (n, code) { cells[n] = cells[n] ? cells[n] + ';' + code : code; };
-    parsed.rules.apart.forEach(function (g, i) {
-      g.forEach(function (n) { add(n, '離す' + (i + 1)); });
-    });
-    parsed.rules.front.forEach(function (n) { add(n, '前列'); });
-    parsed.rules.back.forEach(function (n) { add(n, '後列'); });
-    parsed.rules.fixed.forEach(function (f) { add(f.name, '固定' + (f.c + 1) + '-' + (f.r + 1)); });
+    rules.apart.forEach(function (p, i) { add(p[0], '離す' + (i + 1)); add(p[1], '離す' + (i + 1)); });
+    rules.next.forEach(function (p, i) { add(p[0], '隣' + (i + 1)); add(p[1], '隣' + (i + 1)); });
+    rules.front.forEach(function (n) { add(n, '前列'); });
+    rules.back.forEach(function (n) { add(n, '後列'); });
+    rules.fixed.forEach(function (f) { add(f.name, '固定' + (f.c + 1) + '-' + (f.r + 1)); });
     return cells;
   }
 
   function downloadState(withSeats) {
-    var names = parseNames($('sk-names').value);
-    if (!names.length) { rosterNote('名簿が空です。', 'error'); return; }
-    var cells = ruleCellsByName(names);
+    if (!students.length) { rosterNote('名簿が空です。', 'error'); return; }
+    var got = collect();
+    var cells = ruleCellsByName(got.rules);
 
     var seatOf = {};
     if (withSeats && state.grid) {
@@ -669,7 +848,7 @@
     }
 
     var rows = [['出席番号', 'なまえ', '配慮', '席']];
-    names.forEach(function (n, i) {
+    got.names.forEach(function (n, i) {
       rows.push([String(i + 1), n, cells[n] || '', seatOf[n] || '']);
     });
     downloadCsv(withSeats ? '席替え.csv' : '席替え_名簿.csv', rows);
@@ -681,20 +860,20 @@
     downloadCsv('席替え_名簿ひな形.csv', [
       ['出席番号', 'なまえ', '配慮', '席'],
       ['1', '佐藤 みゆき', '固定1-1', ''],
-      ['2', '鈴木 けんた', '', ''],
-      ['3', '高橋 あおい', '前列', ''],
+      ['2', '鈴木 けんた', '隣1', ''],
+      ['3', '高橋 あおい', '前列;隣1', ''],
       ['4', '田中 そうた', '離す1', ''],
       ['5', '中村 はると', '離す1', ''],
       ['6', '長谷川 れん', '後列', '']
     ]);
-    rosterNote('ひな形をダウンロードしました。配慮は「離す1」のように、同じ番号どうしが1つの組になります。', 'ok');
+    rosterNote('ひな形をダウンロードしました。配慮は「離す1」「隣1」のように、同じ番号どうしが1つの組になります。「;」で区切ると1人に何個でも付けられます。', 'ok');
   }
 
   /* ---------- 配線 ---------- */
 
   (function fillSelects() {
     var c = $('sk-cols'), r = $('sk-rows');
-    for (var i = 2; i <= 10; i++) {
+    for (var i = 2; i <= SEAT_MAX; i++) {
       var o1 = document.createElement('option');
       o1.value = i; o1.textContent = i + 'れつ';
       if (i === 6) o1.selected = true;
@@ -706,7 +885,79 @@
     }
   })();
 
-  $('sk-names').addEventListener('input', updateCount);
+  var list = $('sk-list');
+
+  list.addEventListener('input', function (e) {
+    if (!e.target.classList.contains('sk-name')) return;
+    var s = rowOf(e.target);
+    if (!s) return;
+    s.name = e.target.value;
+    refreshPartnerLabels();
+  });
+
+  list.addEventListener('paste', function (e) {
+    if (!e.target.classList.contains('sk-name')) return;
+    var s = rowOf(e.target);
+    var text = (e.clipboardData || window.clipboardData).getData('text');
+    if (s && pasteNames(s, text)) e.preventDefault();
+  });
+
+  // Enter で次の行へ（最後の行なら1行足す）
+  list.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' || e.isComposing || !e.target.classList.contains('sk-name')) return;
+    e.preventDefault();
+    var inputs = Array.prototype.slice.call(list.querySelectorAll('.sk-name'));
+    var at = inputs.indexOf(e.target);
+    if (at === inputs.length - 1) addAndFocus(1);
+    else inputs[at + 1].focus();
+  });
+
+  list.addEventListener('change', function (e) {
+    var t = e.target;
+    var s = rowOf(t);
+    if (!s) return;
+    var rule = ruleOf(t, s);
+    if (!rule) return;
+    if (t.classList.contains('sk-kind')) {
+      rule.kind = t.value;
+      delete rule.to; delete rule.c; delete rule.r;
+      if (rule.kind === 'fixed') { rule.c = 0; rule.r = 0; }
+      renderList();
+      // 相手や席をすぐ選べるように、出てきたプルダウンへ移る
+      var box = list.querySelector('.sk-row[data-id="' + s.id + '"] .sk-rule[data-ri="' + s.rules.indexOf(rule) + '"]');
+      var nextSel = box && box.querySelector('.sk-to, .sk-fc');
+      (nextSel || (box && box.querySelector('.sk-kind')) || document.body).focus();
+    } else if (t.classList.contains('sk-to')) {
+      rule.to = t.value ? Number(t.value) : null;
+    } else if (t.classList.contains('sk-fc')) {
+      rule.c = Number(t.value);
+    } else if (t.classList.contains('sk-fr')) {
+      rule.r = Number(t.value);
+    }
+  });
+
+  list.addEventListener('click', function (e) {
+    var t = e.target;
+    var s = rowOf(t);
+    if (!s) return;
+    if (t.classList.contains('sk-rule-add')) {
+      s.rules.push({ kind: '' });
+      renderList();
+      var boxes = list.querySelectorAll('.sk-row[data-id="' + s.id + '"] .sk-kind');
+      if (boxes.length) boxes[boxes.length - 1].focus();
+    } else if (t.classList.contains('sk-rule-del')) {
+      var rule = ruleOf(t, s);
+      s.rules = s.rules.filter(function (x) { return x !== rule; });
+      renderList();
+    } else if (t.classList.contains('sk-row-del')) {
+      removeStudent(s);
+    }
+  });
+
+  $('sk-add1').addEventListener('click', function () { addAndFocus(1); });
+  $('sk-add5').addEventListener('click', function () { addAndFocus(5); });
+  $('sk-add10').addEventListener('click', function () { addAndFocus(10); });
+
   $('sk-cols').addEventListener('change', updateCount);
   $('sk-rows').addEventListener('change', updateCount);
   $('sk-gen').addEventListener('click', run);
@@ -714,8 +965,7 @@
   $('sk-copy').addEventListener('click', function () { copyText($('sk-out').value, this); });
   $('sk-print').addEventListener('click', function () { window.print(); });
   $('sk-sample').addEventListener('click', function () {
-    $('sk-names').value = SAMPLE_NAMES;
-    $('sk-rules').value = SAMPLE_RULES;
+    loadRoster(SAMPLE_NAMES, SAMPLE_RULES);
     // 見本は30人ぶん。席の数もそれに合う既定（6×5）へ戻す
     $('sk-cols').value = '6';
     $('sk-rows').value = '5';
@@ -745,5 +995,6 @@
     renderCsvPick();
   });
 
-  updateCount();
+  addRows(START_ROWS);
+  renderList();
 })();
