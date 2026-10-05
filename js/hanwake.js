@@ -489,7 +489,7 @@
     var names = got.names;
     var count = groupCount();
     if (!count) {
-      showMsgs([{ text: '班の数と1班の人数を選んでください。', sub: '1の「班の数」「1班の人数」がまだ「---」です。', error: true }]);
+      showMsgs([{ text: '班の数と1班の人数を選んでください。', sub: '1の「班の数」「1班の人数」が未設定です。', error: true }]);
       $('tool').scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
     }

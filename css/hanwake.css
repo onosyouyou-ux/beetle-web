@@ -676,3 +676,5 @@ body{
 @media print{ .hw-group-del,.hw-slot-del,.hw-slot-add,.hw-group-add{display:none !important} }
 .hw-rule.is-fixed{border-color:var(--hw-orange);background:var(--hw-orange-bg)}
 .hw-empty-hint[hidden]{display:none}
+/* 「班分けする」の下のお知らせは、ボタンに合わせて中央寄せ（2026-10-05） */
+#hw-msg .hw-note{text-align:center}
