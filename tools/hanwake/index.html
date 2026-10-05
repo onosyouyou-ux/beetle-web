@@ -16,11 +16,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>班分けメーカー｜配慮を守ってグループ分けを自動で作る【無料・先生向け】｜BEETLE</title>
-<meta name="description" content="名簿を貼って班の数を決めるだけで、グループ分けを自動作成。「この2人は別々」「この2人は同じ班」「世話役をちらす」「男女をそろえる」といった配慮を守ったまま何度でも引き直せます。前回と同じ班を避けることもできます。印刷対応・完全無料・登録不要。名簿は送信されません。">
+<meta name="description" content="名簿を貼って班の数を決めるだけで、グループ分けを自動作成。「この2人は別々」「この2人は同じ班」「リーダーは各班に1人」「男女をそろえる」といった配慮を守ったまま何度でも引き直せます。前回と同じ班を避けることもできます。印刷対応・完全無料・登録不要。名簿は送信されません。">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="BEETLE合同会社">
 <meta property="og:title" content="班分けメーカー | BEETLE">
-<meta property="og:description" content="名簿を貼るだけで班分けを自動作成。「別々」「同じ」「ちらす」「そろえる」を守ったまま引き直せます。印刷対応・完全無料。">
+<meta property="og:description" content="名簿を貼るだけで班分けを自動作成。「別々」「同じ」「リーダー」「男女比」を守ったまま引き直せます。印刷対応・完全無料。">
 <meta property="og:url" content="https://www.beetle-web.jp/tools/hanwake/landing.html">
 <meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
 <meta property="og:image:width" content="1200">
@@ -39,7 +39,7 @@
   "operatingSystem": "Web",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
   "url": "https://www.beetle-web.jp/tools/hanwake/landing.html",
-  "description": "名簿と班の数からグループ分けを自動生成し、「別々」「同じ」「ちらす」「そろえる」の配慮を守ったまま何度でも引き直せる先生向けの無料ツール。"
+  "description": "名簿と班の数からグループ分けを自動生成し、「別々」「同じ」「リーダー」「固定」「男女比」の配慮を守ったまま何度でも引き直せる先生向けの無料ツール。"
 }
 </script>
 <script type="application/ld+json">
@@ -51,9 +51,10 @@
   "@type": "HowTo",
   "name": "班分けメーカーでグループ分けを作る手順",
   "step": [
-    { "@type": "HowToStep", "name": "名簿を入れる", "text": "なまえを1人ずつ入れます。Enterで次の人に進み、最後の行で押すと1人増えます。Excelからまとめて貼り付けると、そのぶんの行に自動で分かれます。CSVから読み込むこともできます。" },
-    { "@type": "HowToStep", "name": "班の数と配慮を決める", "text": "「6班に分ける」か「1班4人ずつ」を選び、別々・同じ・ちらす の配慮を1件ずつ足します。名前は名簿からえらぶだけです。男女をそろえたいときは名簿側のボタンで選びます。" },
-    { "@type": "HowToStep", "name": "作って印刷する", "text": "「班分けする」を押すと配慮を守った班ができます。気に入らなければ何度でも引き直し、決まったら印刷します。" }
+    { "@type": "HowToStep", "name": "班の数を決める", "text": "「班の数」と「1班の人数」を選びます（6班×5人なら30人）。班ごとに人数を変えたいときは、下の班の枠でメンバーや班を足し引きできます。名簿が席より少なければ、なるべく同じ人数になるよう配ります。" },
+    { "@type": "HowToStep", "name": "名簿と配慮を入れる", "text": "名前を1マスに1人ずつ入れ、性別などのボタンを押します。配慮は配慮の列の「＋ 追加」から 別々・同じ・リーダー・固定 を選びます。1人に何個でも付けられます。" },
+    { "@type": "HowToStep", "name": "班分けする", "text": "「班分けする」を押すと配慮を守った班ができます。気に入らなければ何度でも分け直せます。" },
+    { "@type": "HowToStep", "name": "手直しして印刷", "text": "子をドラッグか2人を順にタップして入れかえ、「印刷する」で班の表だけを印刷します。" }
   ]
 }
 </script>
@@ -69,13 +70,13 @@
     },
     {
       "@type": "Question",
-      "name": "「ちらす」と「別々」はどう違いますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "働きは同じで、書いた人全員がちがう班に入ります。2人の相性に配慮するときは「別々」、司会や世話役を各班に1人ずつ置きたいときは「ちらす」と書くと、あとから読み返したときに意図が分かりやすくなります。" }
+      "name": "リーダーを各班に1人ずつ置けますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "置けます。リーダーにしたい子の行で配慮の列の「＋ 追加」から「リーダー」を選んでください。各班に1人ずつ配り、班のいちばん上に「リーダー」と出します。リーダーが班の数より少ないときはリーダーのいない班ができるので、そのことを画面でお知らせします。多いときは、各班になるべく同じ人数ずつ配り、その中から1人をリーダーにします。" }
     },
     {
       "@type": "Question",
       "name": "男女が同じくらいになるようにできますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "できます。なまえの右にある「女／男」のボタンを押すだけです。そのまとまりの人数が各班でなるべく同じになるように配ります。男女にかぎらず、「そろえる項目」を書き換えれば係や委員会など好きなまとまりで使えます。名簿CSVに性別の列があれば、取り込みのときにその列を「ラベル」として選べます。" }
+      "acceptedAnswer": { "@type": "Answer", "text": "できます。なまえの右にある「女／男」のボタンを押すだけです。そのまとまりの人数が各班でなるべく同じになるように配ります。男女にかぎらず、「そろえる項目」を書き換えれば係や委員会など好きなまとまりで使えます。名簿CSVに性別の列があれば、取り込みのときにその列を「そろえる項目」として選べます。" }
     },
     {
       "@type": "Question",
@@ -95,105 +96,131 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="/css/hanwake.css">
+<link rel="stylesheet" href="/css/hanwake.css?v=20261005">
 </head>
 <body>
 
 <div id="site-header"></div>
 
+<!-- 紙面（1180px固定）。余白はモザイクタイルの背景 -->
 <div class="app-paper">
 
   <header class="hw-hero">
     <p class="hw-eyebrow">先生向けツール</p>
     <h1>班分けメーカー</h1>
-    <p class="hw-lead">名簿を貼って、班の数を決めるだけ。<br>「この2人は別々に」「世話役は各班に1人」を守ったまま、何度でも引き直せます。</p>
+    <p class="hw-lead">班の数を決めて、名簿を入れるだけ。<br>「この2人は別々に」「リーダーは各班に1人」を守ったまま、何度でも分け直せます。</p>
     <p class="hw-privacy">名簿はどこにも保存しません。計算は全部この端末の中で行い、サーバーにもブラウザにも残しません。</p>
+    <p class="hw-pc">パソコンでの利用をおすすめします。班の入れかえは、大きな画面のほうが楽にできます。</p>
   </header>
 
   <main class="hw-main">
 
+    <ol class="hw-stepbar" id="hw-stepbar" aria-label="操作の順番">
+      <li data-step="1"><a href="#tool"><span class="hw-stepbar-n">1</span>班の数を決める</a></li>
+      <li data-step="2"><a href="#hw-roster"><span class="hw-stepbar-n">2</span>名簿と配慮を入れる</a></li>
+      <li data-step="3"><a href="#hw-go-area"><span class="hw-stepbar-n">3</span>班分けする</a></li>
+      <li data-step="4"><a href="#tool"><span class="hw-stepbar-n">4</span>手直しして印刷</a></li>
+    </ol>
+
     <section class="hw-panel" id="tool">
-      <div class="hw-form">
-        <div class="hw-col">
-          <div class="hw-lbl-row">
-            <label>名簿</label>
-            <span class="hw-count" id="hw-count">0人</span>
-            <button type="button" class="hw-mini" id="hw-sample">見本を入れる</button>
-          </div>
-
-          <div class="hw-roster-bar">
-            <label class="hw-file">
-              CSVを読む
-              <input type="file" id="hw-csv" accept=".csv,.tsv,.txt,text/csv,text/plain">
-            </label>
-            <button type="button" class="hw-mini2 is-go" id="hw-csv-save">CSVで保存</button>
-            <button type="button" class="hw-mini2" id="hw-csv-template">ひな形CSV</button>
-          </div>
-
-          <div class="hw-csv-pick" id="hw-csv-pick" hidden>
-            <p class="hw-csv-q">どの列が名前ですか？<span>押すたびに「なまえ」→「ラベル」→ なし と切り替わります。姓と名が分かれていれば、なまえを両方えらべます。</span></p>
-            <div class="hw-csv-cols" id="hw-csv-cols"></div>
-            <div class="hw-csv-foot">
-              <label class="hw-chk"><input type="checkbox" id="hw-csv-head" checked> 1行目は見出し</label>
-              <button type="button" class="hw-mini2 is-go" id="hw-csv-ok">この列でよみこむ</button>
-              <button type="button" class="hw-mini2" id="hw-csv-cancel">やめる</button>
-            </div>
-          </div>
-
-          <p class="hw-roster-note" id="hw-roster-note" hidden></p>
-
-          <div class="hw-labelset">
-            <label for="hw-labelset-name">そろえる項目</label>
-            <input type="text" id="hw-labelset-name" value="性別" maxlength="12" spellcheck="false" aria-label="そろえる項目の名前">
-            <span class="hw-labelset-eq">＝</span>
-            <input type="text" id="hw-labelset-input" value="女, 男" maxlength="40" spellcheck="false" aria-label="そろえる項目の選択肢">
-            <span class="hw-labelset-tip">各班になるべく同じ人数ずつ配ります</span>
-          </div>
-
-          <div class="hw-rows-head">
-            <span class="hw-rows-h-name">なまえ</span>
-            <span class="hw-rows-h-label" id="hw-rows-h-label">性別</span>
-          </div>
-          <div class="hw-rows" id="hw-rows"></div>
-
-          <div class="hw-rows-foot">
-            <button type="button" class="hw-mini2 is-go" id="hw-add">＋ 人を追加</button>
-            <button type="button" class="hw-mini2" id="hw-bulk-toggle">まとめて貼り付け</button>
-            <span class="hw-rows-tip">なまえ欄で Enter を押すと、次の人に進みます</span>
-          </div>
-
-          <div class="hw-bulk" id="hw-bulk" hidden>
-            <p class="hw-bulk-q">1行に1人ずつ。Excelや名簿ソフトからそのまま貼り付けてください。</p>
-            <textarea id="hw-names" rows="8" spellcheck="false" placeholder="田中 そうた&#10;佐藤 みゆき&#10;鈴木 かい"></textarea>
-            <p class="hw-sep-note" id="hw-sep-note" hidden></p>
-            <div class="hw-bulk-foot">
-              <button type="button" class="hw-mini2 is-go" id="hw-bulk-apply">この内容にする</button>
-              <button type="button" class="hw-mini2" id="hw-bulk-cancel">やめる</button>
-            </div>
-          </div>
-
-          <p class="hw-hint">なまえの右のボタンで<b>そろえる項目</b>を選ぶと、各班の人数がなるべく同じになるように配ります。男女以外にも使えます（「そろえる項目」を <code>A, B</code> や <code>体育係, 図書係</code> に変えてください）。<br>CSVは <a href="/tools/sekigae/">席替えメーカー</a>・班分けメーカーで共通です。1つの名簿ファイルを使い回せます（ほかのメーカーの列はそのまま残ります）。名簿はどこにも保存しないので、続きはCSVファイルから戻してください。</p>
+      <div class="hw-groupsize">
+        <div class="hw-panel-head">
+          <span class="hw-lbl"><span class="hw-step-no">1</span>班の数を決める</span>
+          <span class="hw-count" id="hw-group-count">0班</span>
         </div>
+        <span class="hw-ctl">
+          <label for="hw-num">班の数</label>
+          <select id="hw-num"></select>
+        </span>
+        <span class="hw-ctl">
+          <label for="hw-per">1班の人数</label>
+          <select id="hw-per"></select>
+        </span>
+        <span class="hw-ctl">
+          <label for="hw-gmode" id="hw-gmode-lbl">男女比</label>
+          <select id="hw-gmode">
+            <option value="" selected>---</option>
+            <option value="even">均等</option>
+            <option value="split">分ける</option>
+            <option value="none">気にしない</option>
+          </select>
+        </span>
+        <span class="hw-plan" id="hw-plan">—</span>
+      </div>
 
-        <div class="hw-col">
-          <div class="hw-lbl-row">
-            <label>配慮</label>
-            <span class="hw-count" id="hw-rule-count">0件</span>
+      <div class="hw-board-wrap" id="hw-board-wrap">
+        <div class="hw-result-top">
+          <span class="hw-info" id="hw-info">—</span>
+          <div class="hw-result-tools">
+            <button type="button" class="hw-sub" id="hw-copy">表をコピー</button>
+            <button type="button" class="hw-sub" id="hw-download">この班ごとCSVで保存</button>
+            <button type="button" class="hw-sub" id="hw-print">印刷する</button>
           </div>
+        </div>
+        <p class="hw-swap-hint">子をドラッグしてほかの子に重ねると入れかわり、班の空いた所に落とすとその班へ移ります（2人を順にタップしても入れかわります）。</p>
+        <p class="hw-empty-hint hw-pick-hint" id="hw-pick-hint">「班の数」を選ぶと、ここに班の枠が出ます。</p>
+        <p class="hw-empty-hint" id="hw-edit-hint">班ごとに人数を変えたいときは「＋ メンバー」「✕」で足し引きできます。名簿を入れて「班分けする」を押すと、ここに班ができます。</p>
+        <div class="hw-board" id="hw-board"></div>
+        <!-- おすすめ配置：班の枠（結果）のすぐ下。名簿の人数と班の人数が合わないときだけ出す（2026-10-05） -->
+        <div class="hw-fit-row">
+          <button type="button" class="hw-go hw-fit" id="hw-fit" hidden>おすすめ配置にする</button>
+        </div>
+        <div class="hw-result-foot">
+          <button type="button" class="hw-go" id="hw-again">再配置する</button>
+        </div>
+        <!-- 「表をコピー」で渡すテキスト。画面には出さない -->
+        <textarea id="hw-out" class="hw-out" rows="4" readonly hidden aria-label="班分けのテキスト"></textarea>
+      </div>
+    </section>
 
-          <div class="hw-rules" id="hw-rules"></div>
-          <p class="hw-rules-empty" id="hw-rules-empty">配慮はなくても班分けできます。必要なときだけ足してください。</p>
+    <section class="hw-panel hw-panel-roster" id="hw-roster" aria-label="名簿と配慮">
+      <div class="hw-lbl-row">
+        <span class="hw-lbl"><span class="hw-step-no">2</span>名簿と配慮を入れる</span>
+        <span class="hw-count" id="hw-count">0人</span>
+        <button type="button" class="hw-mini" id="hw-sample">見本を入れる</button>
+      </div>
+      <div class="hw-roster-bar">
+        <label class="hw-file">
+          CSVを読む
+          <input type="file" id="hw-csv" accept=".csv,.tsv,.txt,text/csv,text/plain">
+        </label>
+        <button type="button" class="hw-mini2" id="hw-csv-save">CSVで保存</button>
+        <button type="button" class="hw-mini2" id="hw-csv-template">ひな形CSV</button>
+        <button type="button" class="hw-sub hw-gen-sub" id="hw-gen2">班分けする</button>
+      </div>
 
-          <div class="hw-rows-foot">
-            <button type="button" class="hw-mini2 is-go" id="hw-rule-add">＋ 配慮を追加</button>
-          </div>
-
-          <p class="hw-hint">
-            <b>別々</b>＝同じ班にしない／<b>同じ</b>＝同じ班にする／<b>ちらす</b>＝1班に1人ずつ配る（司会や世話役に）。<br>
-            <b>別々</b>と<b>同じ</b>は必ず守ります。守れない組み合わせのときは理由を出します。
-          </p>
+      <div class="hw-csv-pick" id="hw-csv-pick" hidden>
+        <p class="hw-csv-q">どの列が名前ですか？（姓と名が分かれていれば両方えらべます）</p>
+        <div class="hw-csv-cols" id="hw-csv-cols"></div>
+        <div class="hw-csv-foot">
+          <label class="hw-chk"><input type="checkbox" id="hw-csv-head" checked> 1行目は見出し</label>
+          <button type="button" class="hw-mini2 is-go" id="hw-csv-ok">この列でよみこむ</button>
+          <button type="button" class="hw-mini2" id="hw-csv-cancel">やめる</button>
         </div>
       </div>
+
+      <p class="hw-roster-note" id="hw-roster-note" hidden></p>
+
+      <div class="hw-labelset">
+        <details class="hw-labelset-more">
+          <summary>男女のかわりに、係・委員会などで「均等／分ける」</summary>
+          <div class="hw-labelset-body">
+            <label for="hw-labelset-name">項目の名前</label>
+            <input type="text" id="hw-labelset-name" value="性別" maxlength="12" spellcheck="false">
+            <label for="hw-labelset-input">えらぶ値（「,」で区切る・3つまで）</label>
+            <input type="text" id="hw-labelset-input" value="女, 男" maxlength="40" spellcheck="false">
+          </div>
+        </details>
+      </div>
+
+      <div class="hw-list-head" aria-hidden="true"><span>NO</span><span>名前</span><span id="hw-list-h-label">性別</span><span>配慮（1人に何個でも）</span><span>班</span><span>削除</span></div>
+      <div class="hw-list" id="hw-list"></div>
+      <div class="hw-add">
+        <button type="button" class="hw-mini2" id="hw-add1">＋1人</button>
+        <button type="button" class="hw-mini2" id="hw-add5">＋5人</button>
+        <button type="button" class="hw-mini2" id="hw-add10">＋10人</button>
+      </div>
+      <p class="hw-hint">Excelの名前の列をコピーして1行目に貼ると、下へ1人ずつ入ります。空欄の行は「3番」のように番号で作ります。<br>CSVは席替えメーカー・班分けメーカーで共通です。1つの名簿ファイルを使い回せます（ほかのメーカーの列はそのまま残ります）。</p>
 
       <div class="hw-prev" id="hw-prev" hidden>
         <span class="hw-prev-lbl" id="hw-prev-lbl">前回の班</span>
@@ -201,34 +228,12 @@
         <button type="button" class="hw-mini2" id="hw-prev-clear">つかわない</button>
       </div>
 
-      <div class="hw-controls">
-        <span class="hw-ctl">
-          <label for="hw-mode">分け方</label>
-          <select id="hw-mode">
-            <option value="groups">班の数で決める</option>
-            <option value="per">1班の人数で決める</option>
-          </select>
-        </span>
-        <span class="hw-ctl">
-          <select id="hw-num" aria-label="班の数または1班の人数"></select>
-        </span>
-        <span class="hw-plan" id="hw-plan">—</span>
+      <div class="hw-controls" id="hw-go-area">
+        <span class="hw-lbl hw-go-lbl"><span class="hw-step-no">3</span>名簿と配慮ができたら</span>
         <button type="button" class="hw-go" id="hw-gen">班分けする</button>
       </div>
 
       <div class="hw-msg" id="hw-msg"></div>
-    </section>
-
-    <section class="hw-result" id="hw-result">
-      <div class="hw-board" id="hw-board"></div>
-      <div class="hw-actions">
-        <span class="hw-info" id="hw-info">—</span>
-        <button type="button" class="hw-sub" id="hw-copy">表をコピー</button>
-        <button type="button" class="hw-sub" id="hw-download">この班ごとCSVで保存</button>
-        <button type="button" class="hw-sub" id="hw-print">印刷する</button>
-        <button type="button" class="hw-go" id="hw-again">もう一度ひく</button>
-      </div>
-      <textarea id="hw-out" class="hw-out" rows="4" readonly aria-label="班分けのテキスト"></textarea>
     </section>
 
     <section class="hw-doc" id="howto">
@@ -236,32 +241,38 @@
       <div class="hw-steps">
         <div class="hw-step">
           <span class="hw-step-n">1</span>
-          <h3>名簿を入れる</h3>
-          <p>なまえを1人ずつ入れます。<b>Enter で次の人に進み</b>、最後の行で押すと1人増えます。Excelから何人分かを<b>まとめて貼り付ければ、そのぶんの行に自動で分かれます</b>。「CSVを読む」で名簿CSVから流し込むこともできます（<b>ひな形CSV</b>を配布しています）。<b>「CSVで保存」</b>しておくと、次回そのファイルを読み込むだけで、名簿も配慮も前回の班もそのまま戻ります。</p>
+          <h3>班の数を決める</h3>
+          <p>「班の数」と「1班の人数」を選びます（6班×5人なら30人）。班ごとに人数を変えたいときは、下の班の枠でメンバーや班を足し引きできます。名簿が席より少なければ、なるべく同じ人数になるよう配ります。</p>
         </div>
         <div class="hw-step">
           <span class="hw-step-n">2</span>
-          <h3>班の数と配慮を決める</h3>
-          <p>「6班に分ける」か「1班4人ずつ」を選びます。割り切れないぶんは自動で1人ずつ調整します。配慮は「＋ 配慮を追加」で1つずつ足し、<b>名前は名簿からえらぶ</b>だけです。打ち間違いは起きません。</p>
+          <h3>名簿と配慮を入れる</h3>
+          <p>名前を1マスに1人ずつ入れ、性別などのボタンを押します。配慮は配慮の列の「＋ 追加」から選びます（1人に何個でも）。</p>
         </div>
         <div class="hw-step">
           <span class="hw-step-n">3</span>
-          <h3>作って、引き直して、印刷する</h3>
-          <p>「班分けする」を押すと配慮を守った班ができます。納得いくまで「もう一度ひく」を押して、決まったら印刷してください。決まった班を<b>「この班ごとCSVで保存」</b>しておくと、次回そのファイルを読み込むだけで同じ顔ぶれを避けられます。</p>
+          <h3>班分けする</h3>
+          <p>「班分けする」を押すと、配慮を守った班が上にできます。気に入らなければ「再配置する」で何度でも分け直せます。</p>
+        </div>
+        <div class="hw-step">
+          <span class="hw-step-n">4</span>
+          <h3>手直しして印刷</h3>
+          <p>子はドラッグか2人を順にタップすると入れかわります。「印刷する」で班の表だけを印刷できます（リーダー以外の配慮の札は出ません）。</p>
         </div>
       </div>
+      <p class="hw-doc-note"><b>次回の続き：</b>「この班ごとCSVで保存」したファイルを「CSVを読む」から読み込むと、名簿・配慮・前回の班が戻り、「前回と同じ人と同じ班にしない」が選べます。CSVは席替えメーカー・班分けメーカーで共通です。1つの名簿ファイルを使い回せます（ほかのメーカーの列はそのまま残ります）。</p>
 
       <h2>配慮の種類</h2>
       <table class="hw-table">
         <thead><tr><th>種類</th><th>意味</th></tr></thead>
         <tbody>
-          <tr><td><code>別々</code></td><td>えらんだ人を同じ班にしません。3人以上えらぶと、その全員がおたがい別の班になります。</td></tr>
-          <tr><td><code>同じ</code></td><td>えらんだ人を同じ班にします。支援が必要なお子さんと、面倒見のよいお子さんを組ませたいときに。</td></tr>
-          <tr><td><code>ちらす</code></td><td>えらんだ人を1班に1人ずつ配ります。司会や世話役を各班に置きたいときに。働きは「別々」と同じです。</td></tr>
-          <tr><td><code>そろえる項目</code></td><td>名簿側で選びます（既定は 女／男）。そのまとまりの人数が、各班でなるべく同じになるように配ります。</td></tr>
+          <tr><td><code>別々</code></td><td>えらんだ相手と同じ班にしません。</td></tr>
+          <tr><td><code>同じ</code></td><td>えらんだ相手と同じ班にします。支援が必要なお子さんと、面倒見のよいお子さんを組ませたいときに。</td></tr>
+          <tr><td><code>リーダー</code></td><td>リーダーにした子を各班に1人ずつ配り、班のいちばん上に「リーダー」と出します。印刷にも出ます。</td></tr>
+          <tr><td><code>そろえる項目</code></td><td>名簿のボタンで選びます（既定は 女／男）。そのまとまりの人数が、各班でなるべく同じになるように配ります。</td></tr>
         </tbody>
       </table>
-      <p class="hw-hint hw-hint-block"><b>「別々」「同じ」は必ず守ります。</b>守れない指定のときは、その理由を画面に出します。<br><b>「そろえる項目」と「前回と同じ班にしない」は、できるだけ守ります。</b>ほかの条件とぶつかったときは、いちばん近い分け方を選んで、どれくらい外れたかをお知らせします。</p>
+      <p class="hw-hint hw-hint-block"><b>「別々」「同じ」「固定」「リーダー（班の数以下のとき）」は必ず守ります。</b>守れない指定のときは、その理由を画面に出します。<br><b>「そろえる項目」と「前回と同じ班にしない」は、できるだけ守ります。</b>ほかの条件とぶつかったときは、いちばん近い分け方を選んで、どれくらい外れたかをお知らせします。</p>
 
       <h2>よくある質問</h2>
       <details class="hw-faq">
@@ -269,12 +280,12 @@
         <div>送られません。班分けの計算もCSVの読み書きも、すべてブラウザ内（先生の端末上）で処理していて、サーバーには一切送信していません。ブラウザにも保存しません。ページを閉じれば何も残らないので、続きは「CSVで保存」したファイルから戻してください。ファイルは先生の手元にあるので、職員室と自宅など別のパソコンでも使えます。</div>
       </details>
       <details class="hw-faq">
-        <summary>「ちらす」と「別々」はどう違いますか？<span>+</span></summary>
-        <div>働きは同じで、書いた人全員がちがう班に入ります。2人の相性に配慮するときは「別々」、司会や世話役を各班に1人ずつ置きたいときは「ちらす」と書くと、あとから読み返したときに意図が分かりやすくなります。</div>
+        <summary>リーダーを各班に1人ずつ置けますか？<span>+</span></summary>
+        <div>置けます。リーダーにしたい子の行で配慮の列の「＋ 追加」から「リーダー」を選んでください。各班に1人ずつ配り、班のいちばん上に「リーダー」と出します。リーダーが班の数より少ないときはリーダーのいない班ができるので、そのことを画面でお知らせします。多いときは、各班になるべく同じ人数ずつ配り、その中から1人をリーダーにします。</div>
       </details>
       <details class="hw-faq">
         <summary>男女が同じくらいになるようにできますか？<span>+</span></summary>
-        <div>\{NEW\}</div>
+        <div>できます。なまえの右にある「女／男」のボタンを押すだけです。そのまとまりの人数が各班でなるべく同じになるように配ります。男女にかぎらず、「そろえる項目」を書き換えれば係や委員会など好きなまとまりで使えます。名簿CSVに性別の列があれば、取り込みのときにその列を「そろえる項目」として選べます。</div>
       </details>
       <details class="hw-faq">
         <summary>前回と同じ班にならないようにできますか？<span>+</span></summary>
@@ -289,7 +300,7 @@
     </section>
 
   </main>
-  <p class="paper-release">更新日：2026-08-24</p>
+  <p class="paper-release">更新日：2026-10-05</p>
 </div>
 
 <!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一） -->
@@ -314,6 +325,6 @@
 <script src="/js/contact-track.js"></script>
 <script src="/js/app-reference.js"></script>
 <script src="/js/class-roster.js?v=20261004"></script>
-<script src="/js/hanwake.js?v=20261004"></script>
+<script src="/js/hanwake.js?v=20261005"></script>
 </body>
 </html>

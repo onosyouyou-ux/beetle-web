@@ -1,228 +1,193 @@
 /* ============================================================
    hanwake.js — 班分けメーカー（先生向け）
    名簿と配慮からグループ分けを作る。席替えメーカーの姉妹ツールで、
-   CSV取り込み・名前の読み取りは class-roster.js を共有する。
+   CSV取り込み・名前の読み取り・共通CSVは class-roster.js を共有する。
    計算はすべてブラウザ内で完結し、名簿はサーバーに送らない。
 
-   ■ 入力は「1人1行」「配慮1件1行」のフォーム（2026-08-24に textarea から変更）
-   名前を手で打ち直す／名簿と同じ書き方をさせる、という負担をなくすため、
-   配慮の名前は**名簿から選ぶ**方式にした。打ち間違いも「名簿にありません」も起きない。
-   「そろえる」は名簿側のトグルが担うので、配慮は 別々・同じ・ちらす の3種類だけになった。
+   ■ 2026-10-04 作り直し（席替えメーカーと同じ型）
+   ・操作の順番を見せる：手順バー（1 班の数 → 2 名簿と配慮 → 3 班分け → 4 手直し・印刷）
+     ＋見出しの番号＋オレンジで塗るボタンは手順ごとに1つ
+   ・名簿は1人1行。配慮は行ごとに配慮の列の「＋ 追加」から 別々・同じ・リーダー・固定 を選ぶ（1人に何個でも）
+   ・2026-10-05：「ちらす」はなくした（「別々」と区別しにくいため）。以前のCSVの「ちらすA」は、同じ記号の子どうしを「別々」にして読む
+   ・結果は1の枠（空の班の枠）にそのまま出す。子はドラッグかタップで入れかえ・移動できる
+   ・リーダー：リーダーにした子を各班に1人ずつ配り、班のいちばん上に出す
 
    ■ 保存はCSVファイルだけ（2026-08-24決定）
-   配慮も前回の班もCSVに入るようになったので、ブラウザ保存（localStorage）は役割が重なった。
-   ブラウザ保存は端末ごとに分かれて職員室と自宅で共有できないうえ、
-   「名簿は一切保存しません」と言い切れなくなるため、CSVに一本化した。
-   35人をExcelから貼る流れは残したいので、「まとめて貼り付け」も併存させている。
+   ブラウザ保存は端末ごとに分かれて共有できず、「名簿は一切保存しません」と言い切れなくなるため。
    ============================================================ */
 (function () {
   'use strict';
 
   var R = window.BeetleRoster;
   var $ = function (id) { return document.getElementById(id); };
-  if (!$('hw-rows') || !R) return;
+  if (!$('hw-list') || !R) return;
 
   var ATTEMPTS = 60;         // ランダムに置き直す回数（1回ごとに下の入れ替えで詰める）
   var IMPROVE_ROUNDS = 1200; // 1回の割り当てに対する入れ替えの試行回数
+  var START_ROWS = 10;       // 最初に出しておく行の数
+  var SCATTER_SETS = ['A', 'B', 'C', 'D', 'E'];   // 「ちらす」のまとまりの記号
 
-  var KIND_LABEL = { apart: '別々', together: '同じ', scatter: 'ちらす' };
+  var KIND_LABEL = { '': '配慮をえらぶ', apart: '別々', together: '同じ', scatter: 'ちらす', leader: 'リーダー', fixed: '固定' };
+  var KIND_ORDER = ['', 'apart', 'together', 'leader', 'fixed'];   // 「ちらす」は 2026-10-05 になくした   // 固定＝この班に入れる（2026-10-05）
 
-  /* ---------- 画面の状態 ---------- */
+  var SAMPLE = [
+    ['佐藤 みゆき', '女'], ['鈴木 けんた', '男'], ['高橋 あおい', '女'], ['田中 そうた', '男'],
+    ['伊藤 ひなた', '女'], ['渡辺 りく', '男'], ['山本 さくら', '女'], ['中村 はると', '男'],
+    ['小林 ゆい', '女'], ['加藤 だいち', '男'], ['吉田 めい', '女'], ['山田 かなた', '男'],
+    ['佐々木 のあ', '女'], ['山口 いつき', '男'], ['松本 ひまり', '女'], ['井上 そら', '男'],
+    ['木村 あかり', '女'], ['林 ゆうき', '男'], ['清水 みなと', '男'], ['山崎 ひなの', '女'],
+    ['森 かいと', '男'], ['池田 つむぎ', '女'], ['橋本 りひと', '男'], ['石川 えま', '女'],
+    ['前田 あさひ', '男'], ['藤田 ことね', '女'], ['後藤 はやと', '男'], ['岡田 みお', '女'],
+    ['長谷川 れん', '男'], ['村上 ゆあ', '女']
+  ];
+  // 見本の配慮：[だれに, 種類, 相手]
+  var SAMPLE_RULES = [
+    ['田中 そうた', 'apart', '中村 はると'],
+    ['小林 ゆい', 'together', '石川 えま'],
+    ['佐藤 みゆき', 'leader'], ['鈴木 けんた', 'leader'], ['高橋 あおい', 'leader'],
+    ['伊藤 ひなた', 'leader'], ['山本 さくら', 'leader'], ['加藤 だいち', 'leader'],
+    ['渡辺 りく', 'apart', '林 ゆうき'], ['前田 あさひ', 'apart', '村上 ゆあ']
+  ];
 
-  var seq = 0;
-  var people = [];   // [{id, name, label}]
-  var rules = [];    // [{id, kind, ids:[personId]}]
-  var prevState = { pairs: null, when: '' };
-  var state = { groups: null, tagOf: null };
+  /* ============================================================
+     名簿のデータ：1人1行。配慮は行ごとに持つ
+     { id, name, label, rules: [{ kind, to(相手のid), set(ちらすの番号) }], extra }
+     ============================================================ */
 
-  function nextId() { return ++seq; }
+  var students = [];
+  var nextId = 1;
+  var state = { groups: null };   // 結果：{ groups:[[name]], leaders:{name:true}, tagOf, balance, rules }
+  var prevState = { pairs: null };
+  var touchedStep1 = false;       // 班の数を自分で選んだか（手順バー用）
 
-  function personById(id) {
-    for (var i = 0; i < people.length; i++) if (people[i].id === id) return people[i];
+  function newStudent(name, label) {
+    // extra：CSVで読みこんだ、ほかのメーカーの列（席・クラスなど）。保存のときそのまま書き戻す
+    return { id: nextId++, name: name || '', label: label || '', rules: [], extra: {} };
+  }
+
+  function addRows(n) {
+    for (var i = 0; i < n; i++) students.push(newStudent());
+  }
+
+  function byId(id) {
+    for (var i = 0; i < students.length; i++) if (students[i].id === id) return students[i];
     return null;
   }
 
-  /**
-   * 表示用の名前を確定させる。同姓同名は区別できないので2人目以降に印をつける
-   * （席替えメーカーの名簿テキストと同じ考え方）。
-   */
+  /** 画面と結果に出す名前。空欄は「3番」、同姓同名は2人目以降に（2）を付けて別人にする */
   function displayNames() {
-    var seen = {}, map = {};
-    people.forEach(function (p) {
-      var n = (p.name || '').trim();
-      if (!n) { map[p.id] = ''; return; }
+    var seen = {};
+    return students.map(function (s, i) {
+      var n = R.cleanName(s.name) || (i + 1) + '番';
       seen[n] = (seen[n] || 0) + 1;
-      map[p.id] = seen[n] > 1 ? n + '（' + seen[n] + '）' : n;
+      return seen[n] > 1 ? n + '（' + seen[n] + '）' : n;
     });
-    return map;
   }
 
-  function filledPeople() {
-    return people.filter(function (p) { return (p.name || '').trim(); });
-  }
+  /* ---------- そろえる項目（既定は 性別＝女／男） ---------- */
 
-  /* ---------- 名簿の行 ---------- */
-
-  /** そろえる項目の名前（既定は「性別」）。CSVの見出しにも使う */
   function labelSetName() {
     return ($('hw-labelset-name').value || '').trim() || '性別';
   }
 
-  /** そろえる項目の選択肢（既定は 女／男）。ここを変えれば係や委員会でも使える */
+  /** チェックボックスの文言。既定（性別＝女・男）なら「男女」、変えていればその名前 */
+  function balanceWord() {
+    return labelSetName() === '性別' && labelSet().join(',') === '女,男' ? '男女' : labelSetName();
+  }
+
+  /** 1の「男女比」の見出し。係・委員会などに変えていればその名前にする */
+  function updateBalanceName() {
+    $('hw-gmode-lbl').textContent = balanceWord() === '男女' ? '男女比' : balanceWord();
+  }
+
   function labelSet() {
-    var raw = ($('hw-labelset-input').value || '').split(/[,、，\/／\s　]+/)
+    return ($('hw-labelset-input').value || '').split(/[,、，\/／\s　]+/)
       .map(function (s) { return s.trim(); })
-      .filter(Boolean);
-    // 3つを超えると1行に収まらないので切る
-    return raw.slice(0, 3);
+      .filter(Boolean)
+      .slice(0, 3);   // 3つを超えると1行に収まらない
   }
 
-  function renderRows() {
-    var set = labelSet();
-    var html = '';
-    people.forEach(function (p, i) {
-      // 性別のような2〜3択は、打つより押すほうが速いのでトグルにする
-      var seg = '<span class="hw-seg" role="group" aria-label="' + R.esc(p.name || (i + 1) + '人目') + 'の項目">' +
-        '<button type="button" class="hw-seg-b' + (p.label ? '' : ' is-on') + '" data-label="">—</button>' +
-        set.map(function (l) {
-          return '<button type="button" class="hw-seg-b' + (p.label === l ? ' is-on' : '') +
-            '" data-label="' + R.esc(l) + '">' + R.esc(l) + '</button>';
-        }).join('') +
-        '</span>';
+  /* ---------- 表の中身を、班を決める計算で使う形に直す ---------- */
 
-      html += '<div class="hw-row" data-id="' + p.id + '">' +
-        '<span class="hw-row-n">' + (i + 1) + '</span>' +
-        '<input class="hw-row-name" type="text" value="' + R.esc(p.name) + '" placeholder="なまえ" autocomplete="off" spellcheck="false">' +
-        seg +
-        '<button type="button" class="hw-row-del" aria-label="' + R.esc(p.name || (i + 1) + '人目') + 'を消す">×</button>' +
-        '</div>';
-    });
-    $('hw-rows').innerHTML = html;
-    $('hw-rows-h-label').textContent = set.length ? labelSetName() : '—';
-  }
-
-  function addPerson(name, label, focus) {
-    var p = { id: nextId(), name: name || '', label: label || '' };
-    people.push(p);
-    if (focus) {
-      renderRows();
-      var el = $('hw-rows').querySelector('.hw-row[data-id="' + p.id + '"] .hw-row-name');
-      if (el) el.focus();
-    }
-    return p;
-  }
-
-  function removePerson(id) {
-    people = people.filter(function (p) { return p.id !== id; });
-    // 消した人が配慮に入っていたら、そこからも外す
-    rules.forEach(function (r) {
-      r.ids = r.ids.filter(function (x) { return x !== id; });
-    });
-    renderRows();
-    renderRules();
-    updateCount();
-  }
-
-  function setPeople(list) {
-    people = list.map(function (p) {
-      return { id: nextId(), name: (p.name || '').trim(), label: (p.label || '').trim(), extra: p.extra || {} };
-    });
-    if (!people.length) addPerson();
-    renderRows();
-    updateCount();
-  }
-
-  /* ---------- 配慮の行 ---------- */
-
-  function renderRules() {
+  function collect() {
     var names = displayNames();
-    var html = '';
+    var idx = {};
+    students.forEach(function (s, i) { idx[s.id] = i; });
 
-    rules.forEach(function (r) {
-      var chips = r.ids.map(function (pid) {
-        var p = personById(pid);
-        if (!p) return '';
-        return '<span class="hw-chip">' + R.esc(names[pid] || p.name || '（未入力）') +
-          '<button type="button" class="hw-chip-x" data-rule="' + r.id + '" data-person="' + pid + '" aria-label="外す">×</button></span>';
-      }).join('');
-
-      // まだ選ばれていない人だけを候補に出す
-      var options = '<option value="">＋ 人をえらぶ</option>';
-      people.forEach(function (p) {
-        if (!(p.name || '').trim()) return;
-        if (r.ids.indexOf(p.id) >= 0) return;
-        options += '<option value="' + p.id + '">' + R.esc(names[p.id]) + '</option>';
-      });
-
-      html += '<div class="hw-rule" data-rule="' + r.id + '">' +
-        '<select class="hw-rule-kind" aria-label="配慮の種類">' +
-          Object.keys(KIND_LABEL).map(function (k) {
-            return '<option value="' + k + '"' + (r.kind === k ? ' selected' : '') + '>' + KIND_LABEL[k] + '</option>';
-          }).join('') +
-        '</select>' +
-        '<div class="hw-rule-body">' + chips +
-          '<select class="hw-rule-add" aria-label="人を追加">' + options + '</select>' +
-        '</div>' +
-        '<button type="button" class="hw-rule-del" aria-label="この配慮を消す">×</button>' +
-        '</div>';
-    });
-
-    $('hw-rules').innerHTML = html;
-    $('hw-rules-empty').hidden = rules.length > 0;
-    $('hw-rule-count').textContent = rules.length + '件';
-  }
-
-  function addRule(kind, ids) {
-    rules.push({ id: nextId(), kind: kind || 'apart', ids: ids || [] });
-    renderRules();
-  }
-
-  /* ---------- 入力を解く形に組み立てる ---------- */
-
-  /**
-   * 画面の状態から、解く側が使う形に変換する。
-   * balance（そろえる）は配慮欄ではなく、名簿のラベルから作る。
-   */
-  function buildInput() {
-    var names = displayNames();
-    var list = filledPeople().map(function (p) { return names[p.id]; });
-
-    var out = { apart: [], together: [], balance: [], tagOf: {} };
+    var out = { apart: [], together: [], scatter: {}, leaders: [], labelOf: {}, fixed: {} };
     var errors = [];
+    var seen = { apart: {}, together: {} };
 
-    rules.forEach(function (r) {
-      var picked = r.ids
-        .map(function (pid) { return names[pid]; })
-        .filter(function (n) { return n; });
-      if (!picked.length) return;                      // 空の行は無視する
-      if (picked.length < 2) {
-        errors.push('「' + KIND_LABEL[r.kind] + '」は2人以上えらんでください。');
-        return;
+    students.forEach(function (s, i) {
+      var me = names[i];
+      if (s.label) out.labelOf[me] = s.label;
+      s.rules.forEach(function (rule) {
+        var k = rule.kind;
+        if (k === 'leader') {
+          if (out.leaders.indexOf(me) < 0) out.leaders.push(me);
+        } else if (k === 'fixed') {
+          var fg = rule.g || 0;
+          if (out.fixed[me] !== undefined && out.fixed[me] !== fg) { errors.push('「' + me + '」に固定の班が2つ指定されています。'); return; }
+          out.fixed[me] = fg;
+        } else if (k === 'scatter') {
+          var key = String(rule.set || 1);
+          (out.scatter[key] = out.scatter[key] || []);
+          if (out.scatter[key].indexOf(me) < 0) out.scatter[key].push(me);
+        } else if (k === 'apart' || k === 'together') {
+          if (!rule.to || idx[rule.to] === undefined) {
+            errors.push('「' + me + '」の「' + KIND_LABEL[k] + '」の相手をえらんでください。');
+            return;
+          }
+          if (rule.to === s.id) { errors.push('「' + me + '」の「' + KIND_LABEL[k] + '」の相手が本人になっています。'); return; }
+          var other = names[idx[rule.to]];
+          var pk = [me, other].sort().join('\n');
+          if (seen[k][pk]) return;   // 両方の行に同じ指定があっても1つと数える
+          seen[k][pk] = true;
+          out[k].push([me, other]);
+        }
+      });
+    });
+
+    Object.keys(seen.together).forEach(function (pk) {
+      if (seen.apart[pk]) {
+        var p = pk.split('\n');
+        errors.push('「' + p[0] + '」と「' + p[1] + '」に「別々」と「同じ」の両方が指定されています。');
       }
-      if (r.kind === 'together') {
-        out.together.push(picked);
-        picked.forEach(function (n) { out.tagOf[n] = '同じ'; });
-      } else {
-        out.apart.push(picked);
-        picked.forEach(function (n) { out.tagOf[n] = KIND_LABEL[r.kind]; });
-      }
     });
-
-    // ラベルごとに「そろえる」を作る。1人だけのラベルは配りようがないので入れない
-    var byLabel = {};
-    filledPeople().forEach(function (p) {
-      if (!p.label) return;
-      (byLabel[p.label] = byLabel[p.label] || []).push(names[p.id]);
-    });
-    Object.keys(byLabel).forEach(function (label) {
-      if (byLabel[label].length < 2) return;
-      out.balance.push({ label: label, names: byLabel[label] });
-    });
-
-    return { names: list, rules: out, errors: errors };
+    return { names: names, rules: out, errors: errors };
   }
 
-  /* ---------- 班を決める ---------- */
+  /** 計算に渡す形（別々の組・同じの組・そろえる）を作る。リーダーの扱いは班の数で変わる */
+  function solverRules(r, count) {
+    var apart = r.apart.slice();
+    Object.keys(r.scatter).forEach(function (k) {
+      if (r.scatter[k].length >= 2) apart.push(r.scatter[k]);
+    });
+
+    var balance = [];
+    var byLabel = {};
+    // 男女比（2026-10-05）：'even' 均等にそろえる／'split' 男女で分ける（同じ班に混ぜない）／'' 気にしない
+    var gmode = $('hw-gmode').value;
+    var split = null;   // 'split' のとき：名前 → ラベル
+    if (gmode !== 'even') {
+      if (gmode === 'split') split = r.labelOf;
+      r = Object.create(r); r.labelOf = {};
+    }
+    Object.keys(r.labelOf).forEach(function (n) { (byLabel[r.labelOf[n]] = byLabel[r.labelOf[n]] || []).push(n); });
+    Object.keys(byLabel).forEach(function (label) {
+      if (byLabel[label].length >= 2) balance.push({ label: label, names: byLabel[label] });
+    });
+
+    // リーダーが班の数以下なら「1班に1人まで」を必ず守る。多いときは各班になるべく同じ数ずつ配る
+    // 男女で分けるときは「混ぜない」を優先し、リーダーは「なるべく各班に」にゆるめる（女のリーダーが女の班より多いことがある）
+    if (r.leaders.length >= 2) {
+      if (r.leaders.length <= count && !split) apart.push(r.leaders.slice());
+      else balance.push({ label: 'リーダー', names: r.leaders.slice() });
+    }
+    return { apart: apart, together: r.together, balance: balance, split: split, fixed: r.fixed || {} };
+  }
+
+  /* ---------- 班を決める（2026-08-24 版の計算をそのまま使う） ---------- */
 
   /** 「同じ」でつながった人をひとかたまりにする（A・BとB・Cなら A・B・C が1つ） */
   function buildClusters(names, together) {
@@ -232,36 +197,65 @@
       while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x]; }
       return x;
     };
-    var union = function (a, b) { parent[find(a)] = find(b); };
-
     together.forEach(function (g) {
-      for (var i = 1; i < g.length; i++) union(g[0], g[i]);
+      for (var i = 1; i < g.length; i++) parent[find(g[0])] = find(g[i]);
     });
-
     var byRoot = {};
-    names.forEach(function (n) {
-      var r = find(n);
-      (byRoot[r] = byRoot[r] || []).push(n);
-    });
+    names.forEach(function (n) { var r = find(n); (byRoot[r] = byRoot[r] || []).push(n); });
     return Object.keys(byRoot).map(function (k) { return byRoot[k]; });
   }
 
   /** 人数を班に振り分ける（35人4班なら 9,9,9,8） */
   function groupSizes(total, count) {
-    var base = Math.floor(total / count);
-    var rem = total % count;
-    var sizes = [];
+    var base = Math.floor(total / count), rem = total % count, sizes = [];
     for (var i = 0; i < count; i++) sizes.push(base + (i < rem ? 1 : 0));
     return sizes;
   }
+
+  /*
+   * 班ごとの人数を手で決めたとき（2026-10-05）：customSizes[班] ＝ その班の席の数。
+   * 空の班の枠で 班を足す・消す／席を足す・消す をすると入る。班の数・1班の人数のプルダウンを変えると捨てる
+   */
+  var customSizes = null;
+
+  /** 班ごとの席の数。手で決めていればそれ、なければ「班の数 × 1班の人数」 */
+  function seatSizes() {
+    if (customSizes) return customSizes.slice();
+    // 最初は「---」（何も選んでいない）。両方そろうまで班の枠は出さない
+    // 班の数だけ選んだら、席なしの枠だけ出す（1班の人数を選ぶか「＋ 席」で足す）
+    var num = parseInt($('hw-num').value, 10), per = parseInt($('hw-per').value, 10) || 0;
+    if (!num) return [];
+    var out = [];
+    for (var i = 0; i < num; i++) out.push(per);
+    return out;
+  }
+
+  /**
+   * 名簿の人数を、席の数を上限に班へ配る。席があまるときは、なるべく同じ人数になるよう1人ずつ順に入れる
+   * （30席に25人なら 5,4,4,4,4,4）。人数のほうが多いときは席の数をそのまま返す（diagnose が止める）
+   */
+  function plannedSizes(total) {
+    var caps = seatSizes();
+    if (total >= seatSum(caps)) return caps;
+    var sizes = caps.map(function () { return 0; }), left = total;
+    while (left > 0) {
+      var best = -1;
+      for (var i = 0; i < caps.length; i++) {
+        if (sizes[i] >= caps[i]) continue;
+        if (best < 0 || sizes[i] < sizes[best]) best = i;
+      }
+      sizes[best]++; left--;
+    }
+    return sizes;
+  }
+
+  function seatSum(sizes) { return sizes.reduce(function (a, b) { return a + b; }, 0); }
 
   function buildApartMap(apart) {
     var map = {};
     apart.forEach(function (g) {
       g.forEach(function (a) {
-        g.forEach(function (b) {
-          if (a !== b) (map[a] = map[a] || {})[b] = true;
-        });
+        g.forEach(function (b) { if (a !== b) (map[a] = map[a] || {})[b] = true; });
       });
     });
     return map;
@@ -271,33 +265,49 @@
     for (var i = 0; i < cluster.length; i++) {
       var mine = apartOf[cluster[i]];
       if (!mine) continue;
-      for (var j = 0; j < group.length; j++) {
-        if (mine[group[j]]) return false;
-      }
+      for (var j = 0; j < group.length; j++) if (mine[group[j]]) return false;
     }
     return true;
   }
 
-  /** 1回ぶんの割り当て。「どのかたまりを何班に入れたか」を返す */
-  function tryOnce(clusters, sizes, apartOf) {
-    var count = sizes.length;
-    var members = [], remain = sizes.slice();
-    for (var i = 0; i < count; i++) members.push([]);
+  /** かたまりごとの固定の班（なければ undefined）。1つのかたまりに別々の班が固定されていれば null */
+  function clusterPins(clusters, fixed) {
+    return clusters.map(function (cl) {
+      var pin;
+      for (var i = 0; i < cl.length; i++) {
+        var g = fixed[cl[i]];
+        if (g === undefined) continue;
+        if (pin !== undefined && pin !== g) return null;
+        pin = g;
+      }
+      return pin;
+    });
+  }
 
+  /** 1回ぶんの割り当て。「どのかたまりを何班に入れたか」を返す */
+  function tryOnce(clusters, sizes, apartOf, pins, want) {
+    var count = sizes.length, members = [], remain = sizes.slice();
+    for (var i = 0; i < count; i++) members.push([]);
     var assign = new Array(clusters.length);
     // 大きいかたまりほど入る場所が少ないので先に置く。同じ大きさの中はランダム
     var order = clusters.map(function (cl, i) { return i; });
-    R.shuffle(order).sort(function (a, b) { return clusters[b].length - clusters[a].length; });
-
+    // 固定の班があるかたまりを先に置く（入れる場所が1つしかない）
+    R.shuffle(order).sort(function (a, b) {
+      var pa = pins[a] !== undefined ? 1 : 0, pb = pins[b] !== undefined ? 1 : 0;
+      return pb - pa || clusters[b].length - clusters[a].length;
+    });
     for (var o = 0; o < order.length; o++) {
-      var ci = order[o], cl = clusters[ci];
-      var cand = [];
+      var ci = order[o], cl = clusters[ci], cand = [];
       for (var g = 0; g < count; g++) {
-        if (remain[g] < cl.length) continue;
-        if (!clusterFits(members[g], cl, apartOf)) continue;
+        if (pins[ci] !== undefined && pins[ci] !== g) continue;
+        if (remain[g] < cl.length || !clusterFits(members[g], cl, apartOf)) continue;
         cand.push(g);
       }
       if (!cand.length) return null;
+      if (want && want.of[ci] !== undefined) {
+        var same = cand.filter(function (g) { return want.labels[g] === want.of[ci]; });
+        if (same.length) cand = same;
+      }
       var pick = cand[Math.floor(Math.random() * cand.length)];
       members[pick] = members[pick].concat(cl);
       remain[pick] -= cl.length;
@@ -313,129 +323,154 @@
     return groups;
   }
 
-  /** その班の中に「別々」の相手どうしが同居していないか */
   function groupOk(list, apartOf) {
     for (var i = 0; i < list.length; i++) {
       var mine = apartOf[list[i]];
       if (!mine) continue;
-      for (var j = 0; j < list.length; j++) {
-        if (i !== j && mine[list[j]]) return false;
-      }
+      for (var j = 0; j < list.length; j++) if (i !== j && mine[list[j]]) return false;
     }
     return true;
   }
 
-  function pairKey(a, b) {
-    return a < b ? a + '' + b : b + '' + a;
-  }
+  function pairKey(a, b) { return a < b ? a + '' + b : b + '' + a; }
 
   /**
    * できあがりの「よくなさ」を数える。小さいほどよい。
-   * 前回と同じ組み合わせ／ラベルの偏り は、守れないこともある希望なので
-   * エラーにせずスコアにして、いちばんマシなものを選ぶ。
+   * 前回と同じ組み合わせ／ラベルの偏り は、守れないこともある希望なのでスコアにする
    */
-  function scoreOf(groups, balance, prevPairs, forcedPairs) {
+  function scoreOf(groups, balance, prevPairs, forcedPairs, split) {
     var repeats = 0;
     if (prevPairs) {
       groups.forEach(function (g) {
         for (var i = 0; i < g.length; i++) {
           for (var j = i + 1; j < g.length; j++) {
             var k = pairKey(g[i], g[j]);
-            // 「同じ」で先生が組ませた2人は、前回も今回も一緒で当たり前。
-            // ここを数えると「避けきれませんでした」と嘘の警告が出る
-            if (forcedPairs && forcedPairs[k]) continue;
+            if (forcedPairs && forcedPairs[k]) continue;   // 「同じ」で組ませた2人は数えない
             if (prevPairs[k]) repeats++;
           }
         }
       });
     }
-
     var bias = 0;
     balance.forEach(function (b) {
       var set = {};
       b.names.forEach(function (n) { set[n] = true; });
       var ideal = b.names.length / groups.length;
-      groups.forEach(function (g) {
-        var c = g.filter(function (n) { return set[n]; }).length;
-        bias += Math.abs(c - ideal);
-      });
+      groups.forEach(function (g) { bias += Math.abs(g.filter(function (n) { return set[n]; }).length - ideal); });
     });
-
-    return { repeats: repeats, bias: bias, total: repeats * 10 + bias * 3 };
+    // 男女で分ける：班の中で少ないほうのラベルの人数を「混ざり」として数える（できるだけ0にする）
+    var mix = 0, mixedGroups = 0;
+    if (split) {
+      groups.forEach(function (g) {
+        var cnt = {}, labeled = 0, top = 0;
+        g.forEach(function (n) { var l = split[n]; if (!l) return; labeled++; cnt[l] = (cnt[l] || 0) + 1; top = Math.max(top, cnt[l]); });
+        mix += labeled - top;
+        if (labeled > top) mixedGroups++;
+      });
+    }
+    return { repeats: repeats, bias: bias, mix: mix, mixedGroups: mixedGroups, total: repeats * 10 + bias * 3 + mix * 20 };
   }
 
-  /**
-   * ラベルの偏りは、完璧に配っても0にはならない。
-   * 15人を6班に配れば1班2.5人が理想で、実際は2人か3人にしかできず 0.5×6＝3 残る。
-   * この「どうやっても残る分」を先に出しておき、警告の基準と打ち切り判定に使う。
-   */
+  /** 割り切れないぶん、どうやっても残る偏り（警告の基準と打ち切り判定に使う） */
   function minBias(balance, count) {
     return balance.reduce(function (sum, b) {
-      var m = b.names.length;
-      var rem = m % count;
+      var rem = b.names.length % count;
       return sum + 2 * rem * (1 - rem / count);
     }, 0);
   }
 
-  /**
-   * できた班を入れ替えて改善する（山登り）。
-   * ランダムに置くだけだと「前回と同じ顔ぶれ」がなかなか0にならないため、
-   * 同じ大きさのかたまりを2つ選んで交換し、よくなったときだけ採用する。
-   * 班の人数を崩さないよう、交換するのは同じ大きさのかたまりだけにしている。
-   */
-  function improve(clusters, assign, count, rulesObj, prevPairs, apartOf, floorScore, rounds, forcedPairs) {
+  /** 同じ大きさのかたまりを入れ替えて、よくなったときだけ採用する（山登り） */
+  function improve(clusters, assign, count, rulesObj, prevPairs, apartOf, floorScore, rounds, forcedPairs, pins) {
     var groups = buildGroups(clusters, assign, count);
-    var cur = scoreOf(groups, rulesObj.balance, prevPairs, forcedPairs);
-
+    var cur = scoreOf(groups, rulesObj.balance, prevPairs, forcedPairs, rulesObj.split);
     for (var r = 0; r < rounds; r++) {
       if (cur.total <= floorScore + 0.001) break;
       var a = Math.floor(Math.random() * clusters.length);
       var b = Math.floor(Math.random() * clusters.length);
-      if (a === b || assign[a] === assign[b]) continue;
-      if (clusters[a].length !== clusters[b].length) continue;
-
+      if (a === b || assign[a] === assign[b] || clusters[a].length !== clusters[b].length) continue;
+      if (pins[a] !== undefined || pins[b] !== undefined) continue;   // 固定の班は動かさない
       var ga = assign[a], gb = assign[b];
       assign[a] = gb; assign[b] = ga;
       var next = buildGroups(clusters, assign, count);
-
-      if (!groupOk(next[ga], apartOf) || !groupOk(next[gb], apartOf)) {
-        assign[a] = ga; assign[b] = gb;
-        continue;
-      }
-      var s = scoreOf(next, rulesObj.balance, prevPairs, forcedPairs);
-      if (s.total < cur.total) {
-        cur = s; groups = next;
-      } else {
-        assign[a] = ga; assign[b] = gb;
-      }
+      if (!groupOk(next[ga], apartOf) || !groupOk(next[gb], apartOf)) { assign[a] = ga; assign[b] = gb; continue; }
+      var s = scoreOf(next, rulesObj.balance, prevPairs, forcedPairs, rulesObj.split);
+      if (s.total < cur.total) { cur = s; groups = next; } else { assign[a] = ga; assign[b] = gb; }
     }
     return { groups: groups, score: cur };
   }
 
+  /**
+   * 男女で分ける（2026-10-05）：班の人数を先に男女の人数から決める。
+   * 均等の人数（5,5,4,4,4,4,4）のままだと、女15人をちょうど入れる班の組み合わせがなく、混ざる班が必ず出ていた。
+   * 女15・男15を7班なら、女の班4つ（4,4,4,3）と男の班3つ（5,5,5）にする。決められないときは null
+   */
+  function splitSizes(names, split) {
+    if (!split || customSizes) return null;
+    var caps = seatSizes(), G = caps.length, cap = caps[0];
+    var cnt = {}, unl = 0;
+    names.forEach(function (n) { if (split[n]) cnt[split[n]] = (cnt[split[n]] || 0) + 1; else unl++; });
+    var keys = Object.keys(cnt).sort(function (a, b) { return cnt[b] - cnt[a]; });
+    var total = names.length - unl;
+    if (keys.length < 2 || G < keys.length) return null;
+    var k = keys.map(function (l) { return Math.max(1, Math.round(cnt[l] / total * G)); });
+    var sum = function () { return k.reduce(function (a, b) { return a + b; }, 0); };
+    while (sum() > G) {
+      var hi = -1;
+      k.forEach(function (v, i) { if (v > 1 && (hi < 0 || cnt[keys[i]] / v < cnt[keys[hi]] / k[hi])) hi = i; });
+      if (hi < 0) return null;
+      k[hi]--;
+    }
+    while (sum() < G) {
+      var lo = 0;
+      k.forEach(function (v, i) { if (cnt[keys[i]] / v > cnt[keys[lo]] / k[lo]) lo = i; });
+      k[lo]++;
+    }
+    var sizes = [], labels = [];
+    keys.forEach(function (l, i) {
+      groupSizes(cnt[l], k[i]).forEach(function (v) { sizes.push(v); labels.push(l); });
+    });
+    // 性別を入れていない子は、少ない班から1人ずつ
+    for (var u = 0; u < unl; u++) {
+      var m = 0;
+      sizes.forEach(function (v, i) { if (v < sizes[m]) m = i; });
+      sizes[m]++;
+    }
+    if (sizes.some(function (v) { return v < 1 || v > cap; })) return null;
+    return { sizes: sizes, labels: labels };
+  }
+
   function solve(names, count, rulesObj, prevPairs) {
     var clusters = buildClusters(names, rulesObj.together);
-    var sizes = groupSizes(names.length, count);
+    var sp = splitSizes(names, rulesObj.split);
+    var sizes = sp ? sp.sizes : plannedSizes(names.length);
+    var pins = clusterPins(clusters, rulesObj.fixed);
+    // 男女で分ける：かたまりごとの性別（混ざっていれば undefined）。同じ性別の班を先に選ぶ
+    var want = null;
+    if (sp) {
+      want = { labels: sp.labels, of: clusters.map(function (cl) {
+        var l;
+        for (var i = 0; i < cl.length; i++) {
+          var x = rulesObj.split[cl[i]];
+          if (!x) continue;
+          if (l !== undefined && l !== x) return undefined;
+          l = x;
+        }
+        return l;
+      }) };
+    }
     var apartOf = buildApartMap(rulesObj.apart);
-    var floorScore = minBias(rulesObj.balance, count) * 3;   // これ以上はよくならない
-
-    // 「同じ」で必ず一緒になる2人。前回と同じでも当然なので、重複には数えない
+    var floorScore = minBias(rulesObj.balance, count) * 3;
     var forcedPairs = {};
     clusters.forEach(function (cl) {
-      for (var i = 0; i < cl.length; i++) {
-        for (var j = i + 1; j < cl.length; j++) forcedPairs[pairKey(cl[i], cl[j])] = true;
-      }
+      for (var i = 0; i < cl.length; i++) for (var j = i + 1; j < cl.length; j++) forcedPairs[pairKey(cl[i], cl[j])] = true;
     });
-
     var best = null, bestScore = Infinity;
     for (var t = 0; t < ATTEMPTS; t++) {
-      var assign = tryOnce(clusters, sizes, apartOf);
+      var assign = tryOnce(clusters, sizes, apartOf, pins, want);
       if (!assign) continue;
-
-      // 置いただけでは「前回と同じ顔ぶれ」が残るので、入れ替えて詰める
-      var got = improve(clusters, assign, count, rulesObj, prevPairs, apartOf, floorScore, IMPROVE_ROUNDS, forcedPairs);
+      var got = improve(clusters, assign, count, rulesObj, prevPairs, apartOf, floorScore, IMPROVE_ROUNDS, forcedPairs, pins);
       if (got.score.total < bestScore) {
-        bestScore = got.score.total;
-        best = got;
+        bestScore = got.score.total; best = got;
         if (bestScore <= floorScore + 0.001) break;
       }
     }
@@ -444,61 +479,54 @@
 
   /* ---------- 作れない理由を具体的に出す ---------- */
 
-  function diagnose(names, count, rulesObj) {
+  function diagnose(names, count, rulesObj, raw) {
     var msgs = [];
-    if (count > names.length) {
-      msgs.push({
-        text: '班の数が人数より多いです。',
-        sub: '名簿は' + names.length + '人ですが、' + count + '班に分けようとしています。',
-        error: true
-      });
+    if (seatSum(seatSizes()) < names.length) {
+      msgs.push({ text: '班のメンバーの枠が足りません。', sub: '名簿は' + names.length + '人ですが、班の枠は合わせて' + seatSum(seatSizes()) + '人ぶんです。班の数・1班の人数を増やすか、班の枠の「＋ メンバー」で足してください。', error: true });
     }
-
+    if (count > names.length) {
+      msgs.push({ text: '班の数が人数より多いです。', sub: '名簿は' + names.length + '人ですが、' + count + '班に分けようとしています。', error: true });
+    }
     var clusters = buildClusters(names, rulesObj.together);
-    var sizes = groupSizes(names.length, count);
-    var maxSize = Math.max.apply(null, sizes);
-
+    var maxSize = Math.max.apply(null, plannedSizes(names.length));
     clusters.forEach(function (cl) {
       if (cl.length > maxSize) {
-        msgs.push({
-          text: '「同じ」でまとめた人が、1つの班に入りきりません。',
-          sub: '「' + cl.join('・') + '」の' + cl.length + '人ですが、1班は最大' + maxSize + '人です。班の数を減らすか、「同じ」を減らしてください。',
-          error: true
-        });
+        msgs.push({ text: '「同じ」でまとめた人が、1つの班に入りきりません。', sub: '「' + cl.join('・') + '」の' + cl.length + '人ですが、1班は最大' + maxSize + '人です。班の数を減らすか、「同じ」を減らしてください。', error: true });
       }
     });
-
-    // 「同じ」と「別々」が同じ2人に付いていたら成立しない
+    Object.keys(rulesObj.fixed).forEach(function (n) {
+      if (rulesObj.fixed[n] >= count) msgs.push({ text: '「' + n + '」を固定した ' + (rulesObj.fixed[n] + 1) + '班 がありません。', sub: 'いまは' + count + '班です。', error: true });
+    });
+    var sizesNow = plannedSizes(names.length), pinCount = {};
+    clusterPins(clusters, rulesObj.fixed).forEach(function (pin, i) {
+      if (pin === null) msgs.push({ text: '「同じ」でまとめた人に、ちがう班が固定されています。', sub: '「' + clusters[i].join('・') + '」', error: true });
+      else if (pin !== undefined) pinCount[pin] = (pinCount[pin] || 0) + clusters[i].length;
+    });
+    Object.keys(pinCount).forEach(function (g) {
+      var cap = seatSizes()[g];
+      if (cap !== undefined && pinCount[g] > cap) msgs.push({ text: (Number(g) + 1) + '班に固定した人が入りきりません。', sub: pinCount[g] + '人を固定していますが、' + (Number(g) + 1) + '班は' + cap + '人です。', error: true });
+    });
     var rootOf = {};
     clusters.forEach(function (cl, i) { cl.forEach(function (n) { rootOf[n] = i; }); });
     rulesObj.apart.forEach(function (g) {
       for (var i = 0; i < g.length; i++) {
         for (var j = i + 1; j < g.length; j++) {
           if (rootOf[g[i]] === rootOf[g[j]]) {
-            msgs.push({
-              text: '「同じ」と「別々」が矛盾しています。',
-              sub: '「' + g[i] + '」と「' + g[j] + '」は、同じ班にする指定と、別の班にする指定の両方が効いています。',
-              error: true
-            });
+            msgs.push({ text: '「同じ」と「別々・リーダー」がぶつかっています。', sub: '「' + g[i] + '」と「' + g[j] + '」は、同じ班にする指定と、別の班にする指定の両方が効いています。', error: true });
           }
         }
       }
     });
-
-    rulesObj.apart.forEach(function (g) {
+    Object.keys(raw.scatter).forEach(function (k) {
+      var g = raw.scatter[k];
       if (g.length > count) {
-        msgs.push({
-          text: 'ちらしきれません。',
-          sub: '「' + g.join('・') + '」の' + g.length + '人を別々の班にするには、' + g.length + '班以上が必要です（いまは' + count + '班）。',
-          error: true
-        });
+        msgs.push({ text: 'ちらしきれません。', sub: '「ちらす ' + SCATTER_SETS[k - 1] + '」の' + g.length + '人を別々の班にするには、' + g.length + '班以上が必要です（いまは' + count + '班）。', error: true });
       }
     });
-
     return msgs;
   }
 
-  /* ---------- 画面に出す ---------- */
+  /* ---------- 実行 ---------- */
 
   function showMsgs(list) {
     $('hw-msg').innerHTML = list.map(function (m) {
@@ -507,127 +535,488 @@
     }).join('');
   }
 
-  /** 「班の数」で指定されたか「1班の人数」で指定されたかを、班の数に直す */
-  function groupCount(total) {
-    var n = parseInt($('hw-num').value, 10);
-    if ($('hw-mode').value === 'per') return Math.max(1, Math.ceil(total / n));
-    return n;
+  /** 班の数（名簿の人数には左右されない） */
+  function groupCount() {
+    return seatSizes().length;
   }
 
-  function run() {
-    var input = buildInput();
-    if (!input.names.length) {
-      $('hw-result').classList.remove('is-on');
-      showMsgs([{ text: '名簿が空です。', sub: '名前を入れるか、「見本を入れる」を押してください。', error: true }]);
-      return;
-    }
-    if (input.errors.length) {
-      $('hw-result').classList.remove('is-on');
-      showMsgs(input.errors.map(function (t) { return { text: t, error: true }; }));
-      return;
-    }
+  /*
+   * force（おすすめ配置。2026-10-05）：守れない配慮があっても止めずに最後まで分ける。
+   * 固定 → 別々 → 同じ → リーダー の順に外して試し、外したものは画面で知らせる
+   */
+  var RELAX = [
+    { label: '', drop: [] },
+    { label: '固定', drop: ['fixed'] },
+    { label: '固定・別々', drop: ['fixed', 'apart'] },
+    { label: '固定・別々・同じ', drop: ['fixed', 'apart', 'together'] },
+    { label: '固定・別々・同じ・リーダー', drop: ['fixed', 'apart', 'together', 'leaders'] }
+  ];
 
-    var count = groupCount(input.names.length);
-    var problems = diagnose(input.names, count, input.rules);
-    if (problems.length) {
-      $('hw-result').classList.remove('is-on');
-      showMsgs(problems);
+  function relaxed(rules, drop) {
+    var r = Object.create(rules);
+    if (drop.indexOf('fixed') >= 0) r.fixed = {};
+    if (drop.indexOf('apart') >= 0) r.apart = [];
+    if (drop.indexOf('together') >= 0) r.together = [];
+    if (drop.indexOf('leaders') >= 0) r.leaders = [];
+    return r;
+  }
+
+  function run(force) {
+    force = force === true;
+    // 名前を入れた子がいれば、名前も配慮もない空の行は外して分ける（最初の10行の残りを1人と数えない）
+    if (students.some(function (s) { return s.name.trim(); })) {
+      var blank = students.filter(function (s) { return !s.name.trim() && !s.rules.length; });
+      if (blank.length) {
+        students = students.filter(function (s) { return blank.indexOf(s) < 0; });
+        renderList();
+      }
+    }
+    if (!students.length) {
+      showMsgs([{ text: '名簿が空です。', sub: '「＋1人」などで行を足すか、「見本を入れる」を押してください。', error: true }]);
       return;
     }
+    var got = collect();
+    // おすすめ配置では、相手をえらんでいない配慮などは無視して進める（collect はそういう配慮を数えていない）
+    if (got.errors.length && !force) { showMsgs(got.errors.map(function (t) { return { text: t, error: true }; })); return; }
 
+    var names = got.names;
+    var count = groupCount();
+    if (!count || !seatSum(seatSizes())) {
+      showMsgs([{ text: '班の数と1班の人数を選んでください。', sub: !count ? '1の「班の数」「1班の人数」が未設定です。' : '1の「1班の人数」が未設定です（班の枠の「＋ メンバー」で足すこともできます）。', error: true }]);
+      $('tool').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
     var usePrev = !!(prevState.pairs && $('hw-prev-avoid').checked);
-    var best = solve(input.names, count, input.rules, usePrev ? prevState.pairs : null);
+    var rulesObj, best = null, dropped = '';
+    var levels = force ? RELAX : RELAX.slice(0, 1);
+    for (var lv = 0; lv < levels.length && !best; lv++) {
+      var r = relaxed(got.rules, levels[lv].drop);
+      rulesObj = solverRules(r, count);
+      var problems = diagnose(names, count, rulesObj, r);
+      if (problems.length) {
+        if (!force) { showMsgs(problems); return; }
+        continue;
+      }
+      best = solve(names, count, rulesObj, usePrev ? prevState.pairs : null);
+      if (best) { dropped = levels[lv].label; got.rules = r; }
+    }
     if (!best) {
-      $('hw-result').classList.remove('is-on');
       showMsgs([{
         text: '配慮を全部守れる分け方が見つかりませんでした。',
-        sub: '「別々」や「ちらす」が多すぎるか、「同じ」と重なって身動きが取れなくなっている可能性があります。配慮を1つ減らすか、班の数を変えて試してください。',
+        sub: '「別々」「リーダー」が多すぎるか、「同じ」と重なって身動きが取れなくなっている可能性があります。配慮を1つ減らすか、班の数を変えて試してください。',
         error: true
       }]);
       return;
     }
 
-    state = { groups: best.groups, tagOf: input.rules.tagOf, balance: input.rules.balance };
-    showMsgs(softNotes(best.score, input.rules, count, usePrev));
+    // リーダー：各班のリーダー候補から1人を選び、班のいちばん上に置く
+    var noLeader = 0;
+    var groups = best.groups.map(function (g) {
+      var cand = R.shuffle(g.filter(function (n) { return got.rules.leaders.indexOf(n) >= 0; }));
+      if (!cand.length) { noLeader++; return g.slice(); }
+      return [cand[0]].concat(g.filter(function (n) { return n !== cand[0]; }));
+    });
+
+    state = { groups: groups, leaders: {}, useLeaders: got.rules.leaders.length > 0, rules: got.rules, balance: rulesObj.balance.filter(function (b) { return b.label !== 'リーダー'; }) };
+    syncLeaders();
+    picked = null;
+    var notes = softNotes(best.score, rulesObj, count, usePrev);
+    if (dropped) notes.unshift({ text: 'おすすめ配置のため、守れなかった配慮（' + dropped + '）を外して分けました。', sub: '外した配慮は名簿に残っています。班の数を変えるか配慮を見直して「再配置する」を押すと、もう一度守ろうとします。' });
+    if (state.useLeaders && noLeader) {
+      notes.push({ text: 'リーダーにした子がいない班が ' + noLeader + '班 あります。その班は いちばん上の子をリーダーにしています。', sub: 'リーダーにした子が ' + got.rules.leaders.length + '人で、班は ' + count + '班です。入れかえて決めるか、リーダーを増やしてください。' });
+    }
+    showMsgs(notes);
     render();
+    $('tool').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    ['hw-gen', 'hw-gen2'].forEach(function (id) { $(id).textContent = '再配置する'; });
+  }
+
+  /**
+   * 班のいちばん上の子がリーダー（2026-10-05）。手直しで上に来た子がその班のリーダーになる。
+   * 名簿で「リーダー」を1人も付けていなければ、リーダーは出さない
+   */
+  function syncLeaders() {
+    state.leaders = {};
+    if (!state.useLeaders) return;
+    state.groups.forEach(function (g) { if (g.length) state.leaders[g[0]] = true; });
   }
 
   /** 守りきれなかった希望を、エラーではなく「お知らせ」として出す */
   function softNotes(score, rulesObj, count, usePrev) {
     var notes = [];
     if (usePrev && score.repeats > 0) {
-      notes.push({
-        text: '前回と同じ班になった組み合わせが ' + score.repeats + '組 あります。',
-        sub: 'この人数と班の数では避けきれませんでした。班の数を増やすと減らせます。'
-      });
+      notes.push({ text: '前回と同じ班になった組み合わせが ' + score.repeats + '組 あります。', sub: 'この人数と班の数では避けきれませんでした。班の数を増やすと減らせます。' });
     }
-    // 割り切れないぶんの偏り（どうやっても残る）を超えたときだけ知らせる
-    if (rulesObj.balance.length && score.bias > minBias(rulesObj.balance, count) + 0.001) {
-      notes.push({
-        text: 'ラベルの人数に偏りが残りました。',
-        sub: '「同じ」や「別々」を優先したためです。班ごとの内訳は下の表で確認してください。'
-      });
+    // 男女で分けるときの偏りはリーダーの配り方のぶんなので、ここでは出さない（リーダーのいない班は別にお知らせする）
+    if (!rulesObj.split && rulesObj.balance.length && score.bias > minBias(rulesObj.balance, count) + 0.001) {
+      notes.push({ text: '人数に偏りが残りました。', sub: '「同じ」や「別々」を優先したためです。班ごとの内訳は班の見出しで確認してください。' });
+    }
+    if (rulesObj.split && score.mix > 0) {
+      notes.push({ text: balanceWord() + 'が混ざった班が ' + score.mixedGroups + '班 あります。', sub: '1班の人数に対して班の数が足りないか、「同じ」「固定」の指定で混ざることがあります。班の数か1班の人数を増やすと分けきれます。' });
     }
     return notes;
   }
 
-  function render() {
-    var groups = state.groups, tagOf = state.tagOf, balance = state.balance;
+  /* ---------- 1の枠：空の班の枠、または班分けの結果 ---------- */
+
+  var picked = null;   // タップで1人目にえらんだ子 "班,番目"
+
+  function tagsOf(name) {
+    var r = state.rules, tags = [];
+    if (!r) return tags;
+    if (r.apart.some(function (p) { return p.indexOf(name) >= 0; })) tags.push('別々');
+    if (r.together.some(function (p) { return p.indexOf(name) >= 0; })) tags.push('同じ');
+    Object.keys(r.scatter).forEach(function (k) { if (r.scatter[k].indexOf(name) >= 0) tags.push('ちらす' + SCATTER_SETS[k - 1]); });
+    if (r.fixed && r.fixed[name] !== undefined) tags.push('固定');
+    return tags;
+  }
+
+  function renderBoard() {
+    var board = $('hw-board');
+    var hasResult = !!state.groups;
+    $('hw-board-wrap').classList.toggle('is-result', hasResult);
     var html = '';
+    if (hasResult) {
+      var names = displayNames(), lbl = {};
+      students.forEach(function (s, i) { if (s.label) lbl[names[i]] = s.label; });
+      state.groups.forEach(function (g, gi) {
+        var anyLabel = Object.keys(lbl).length > 0;
+        var counts = !anyLabel ? '' : labelSet().map(function (l) { return l + ' ' + g.filter(function (n) { return lbl[n] === l; }).length; }).join('・');
+        html += '<div class="hw-group" data-g="' + gi + '">' +
+          '<div class="hw-group-head"><span class="hw-group-n">' + (gi + 1) + '班</span>' +
+          '<span class="hw-group-size">' + g.length + '人' + (counts ? '（' + R.esc(counts) + '）' : '') + '</span></div>' +
+          '<ul class="hw-members">' +
+          g.map(function (n, mi) {
+            var at = gi + ',' + mi;
+            var lead = !!state.leaders[n];
+            var tags = tagsOf(n);
+            return '<li class="hw-mem' + (lead ? ' is-leader' : '') + (picked === at ? ' is-picked' : '') + '"' +
+              ' draggable="true" tabindex="0" role="button" data-at="' + at + '" data-name="' + R.esc(n) + '"' +
+              ' aria-label="' + (gi + 1) + '班 ' + R.esc(n) + '（えらんで入れかえ）">' +
+              '<span class="hw-mem-name">' + R.esc(n) + '</span>' +
+              tags.map(function (t) { return '<span class="hw-tag">' + R.esc(t) + '</span>'; }).join('') +
+              // リーダーの札は行の右はし（名前の頭をそろえるため。2026-10-05）
+              (lead ? '<span class="hw-lead-tag">リーダー</span>' : '') +
+              '</li>';
+          }).join('') +
+          '</ul></div>';
+      });
+    } else {
+      // まだ班分けしていない：班の数と人数だけの空の枠。名前が1人も入っていないうちは枠ごと出さない
+      // 枠の中で 班を足す・消す／席を足す・消す ができる（班ごとに人数を変えたいとき）
+      var lead = students.some(function (s) { return s.rules.some(function (r) { return r.kind === 'leader'; }); });
+      var sizes = seatSizes();
+      {
+        sizes.forEach(function (size, gi) {
+          var slots = '';
+          // いちばん上の枠がリーダーの席
+          for (var k = 0; k < size; k++) {
+            slots += '<li class="hw-slot' + (lead && k === 0 ? ' is-leader' : '') + '">' + (lead && k === 0 ? 'リーダー' : '') +
+              (size > 1 ? '<button type="button" class="hw-slot-del" data-g="' + gi + '" aria-label="' + (gi + 1) + '班のメンバーの枠を1つ消す">✕</button>' : '') + '</li>';
+          }
+          slots += '<li class="hw-slot-add"><button type="button" class="hw-ghost-add" data-g="' + gi + '" aria-label="' + (gi + 1) + '班にメンバーを足す">＋ メンバー</button></li>';
+          html += '<div class="hw-group is-empty"><div class="hw-group-head"><span class="hw-group-n">' + (gi + 1) + '班</span>' +
+            '<span class="hw-group-size">' + size + '人</span>' +
+            (sizes.length > 1 ? '<button type="button" class="hw-group-del" data-g="' + gi + '" aria-label="' + (gi + 1) + '班を消す">✕</button>' : '') +
+            '</div><ul class="hw-members">' + slots + '</ul></div>';
+        });
+        if (sizes.length && sizes.length < 12) html += '<button type="button" class="hw-group-add" aria-label="班を足す">＋ 班を足す</button>';
+      }
+    }
+    board.innerHTML = html;
+    // 班の数・1班の人数が「---」のうちは、枠のかわりに案内だけ出す
+    var none = !hasResult && !seatSizes().length;
+    $('hw-pick-hint').hidden = !none;
+    $('hw-edit-hint').hidden = none;
+    updateRowGroups();
+    updateSteps();
+  }
 
-    groups.forEach(function (g, i) {
-      var members = g.map(function (n) {
-        var tag = tagOf[n];
-        return '<li>' + R.esc(n) + (tag ? '<span class="hw-tag">' + R.esc(tag) + '</span>' : '') + '</li>';
-      }).join('');
-
-      // ラベルを使っていたら、班ごとの内訳を出して先生が目で確かめられるようにする
-      var counts = balance.map(function (b) {
-        var set = {};
-        b.names.forEach(function (x) { set[x] = true; });
-        return R.esc(b.label) + ' ' + g.filter(function (n) { return set[n]; }).length;
-      }).join('・');
-
-      html += '<div class="hw-group">' +
-        '<div class="hw-group-head"><span class="hw-group-n">' + (i + 1) + '班</span>' +
-        '<span class="hw-group-size">' + g.length + '人' + (counts ? '（' + counts + '）' : '') + '</span></div>' +
-        '<ul class="hw-members">' + members + '</ul>' +
-        '</div>';
-    });
-
-    $('hw-board').innerHTML = html;
-    $('hw-result').classList.add('is-on');
-
+  /** 結果のまとめ・Excel用テキスト */
+  function render() {
+    renderBoard();
+    var groups = state.groups;
     var total = groups.reduce(function (a, g) { return a + g.length; }, 0);
     $('hw-info').textContent = groups.length + '班 / ' + total + '人';
+    $('hw-out').value = groups.map(function (g, i) { return [(i + 1) + '班'].concat(g).join('\t'); }).join('\n');
+  }
 
-    // Excelに貼れるようタブ区切りで出す（1行＝1班）
-    $('hw-out').value = groups.map(function (g, i) {
-      return [(i + 1) + '班'].concat(g).join('\t');
-    }).join('\n');
+  function clearResult() {
+    state = { groups: null };
+    picked = null;
+    ['hw-gen', 'hw-gen2'].forEach(function (id) { $(id).textContent = '班分けする'; });
+    renderBoard();
+  }
+
+  /* ---------- 結果を手で直す ---------- */
+
+  function parseAt(at) { return at.split(',').map(Number); }
+
+  /** 2人を入れかえる */
+  function swapMembers(a, b) {
+    if (!a || !b || a === b) return;
+    var pa = parseAt(a), pb = parseAt(b), g = state.groups;
+    var t = g[pa[0]][pa[1]];
+    g[pa[0]][pa[1]] = g[pb[0]][pb[1]];
+    g[pb[0]][pb[1]] = t;
+    afterHandEdit();
+  }
+
+  /** 1人を別の班へ移す（班の人数は変わる） */
+  function moveMember(a, toGroup) {
+    var pa = parseAt(a), g = state.groups;
+    if (pa[0] === toGroup) return;
+    var name = g[pa[0]].splice(pa[1], 1)[0];
+    g[toGroup].push(name);
+    afterHandEdit();
+  }
+
+  function afterHandEdit() {
+    picked = null;
+    syncLeaders();
+    render();
+    var broken = brokenRules();
+    showMsgs(broken.length ? [{ text: '手直しで、守れていない配慮があります。', sub: broken.join('／') }] : []);
+  }
+
+  function brokenRules() {
+    var r = state.rules, groupOf = {}, out = [];
+    state.groups.forEach(function (g, i) { g.forEach(function (n) { groupOf[n] = i; }); });
+    r.apart.forEach(function (p) { if (groupOf[p[0]] === groupOf[p[1]]) out.push(p[0] + 'と' + p[1] + 'が同じ班です（別々）'); });
+    r.together.forEach(function (p) { if (groupOf[p[0]] !== groupOf[p[1]]) out.push(p[0] + 'と' + p[1] + 'が別の班です（同じ）'); });
+    Object.keys(r.scatter).forEach(function (k) {
+      var seen = {};
+      r.scatter[k].forEach(function (n) {
+        if (seen[groupOf[n]]) out.push('ちらす' + SCATTER_SETS[k - 1] + 'の子が' + (groupOf[n] + 1) + '班に2人います');
+        seen[groupOf[n]] = true;
+      });
+    });
+    state.groups.forEach(function (g, i) {
+      var lc = g.filter(function (n) { return state.leaders[n]; }).length;
+      if (lc > 1) out.push((i + 1) + '班にリーダーが' + lc + '人います');
+    });
+    var sizes = state.groups.map(function (g) { return g.length; });
+    if (!customSizes && $('hw-gmode').value !== 'split' && Math.max.apply(null, sizes) - Math.min.apply(null, sizes) >= 2) out.push('班の人数に2人以上の差があります');
+    return out;
+  }
+
+  function pickMember(at) {
+    if (!picked) { picked = at; renderBoard(); return; }
+    if (picked === at) { picked = null; renderBoard(); return; }
+    swapMembers(picked, at);
+  }
+
+  /* ---------- 手順バー ---------- */
+
+  function updateSteps() {
+    var bar = $('hw-stepbar');
+    if (!bar) return;
+    var named = students.some(function (s) { return s.name.trim(); });
+    // 1 で班の数と1班の人数を両方選んではじめて 2（名簿と配慮）へ進む
+    var now = state.groups ? 4 : !seatSum(seatSizes()) ? 1 : named ? 3 : 2;
+    Array.prototype.forEach.call(bar.children, function (li) {
+      var n = Number(li.getAttribute('data-step'));
+      li.classList.toggle('is-done', n < now);
+      li.classList.toggle('is-on', n === now);
+      if (n === now) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
+    });
   }
 
   function updateCount() {
-    var n = filledPeople().length;
+    // 名簿の人数は名前を入れた子だけ数える（最初の空の行は数えない。1の段で「たりません」と出さない）
+    var n = students.filter(function (s) { return s.name.trim(); }).length;
     $('hw-count').textContent = n + '人';
-
     var info = $('hw-plan');
     info.classList.remove('is-warn');
-    if (!n) { info.textContent = '—'; return; }
-
-    var count = groupCount(n);
-    if (count > n) {
-      // 「6班（1班 0〜1人）」のような意味のない表示を出さない
-      info.textContent = n + '人を' + count + '班には分けられません';
-      info.classList.add('is-warn');
-      return;
-    }
-    var sizes = groupSizes(n, count);
-    var min = Math.min.apply(null, sizes), max = Math.max.apply(null, sizes);
-    info.textContent = count + '班（1班 ' + (min === max ? min + '人' : min + '〜' + max + '人') + '）';
+    var caps = seatSizes(), sum = seatSum(caps);
+    $('hw-group-count').textContent = caps.length + '班';
+    if (!caps.length) { info.textContent = '班の数と1班の人数を選んでください'; updateFit(n, caps); return; }
+    if (!sum) { info.textContent = caps.length + '班（1班の人数を選ぶか、班の枠の「＋ メンバー」で足してください）'; updateFit(n, caps); return; }
+    info.textContent = (customSizes ? caps.length + '班・合わせて' : caps.length + '班 × ' + caps[0] + '人 ＝ ') + sum + '人' +
+      (n ? '（名簿 ' + n + '人' + (sum < n ? '・' + (n - sum) + '人たりません' : sum > n ? '・あと ' + (sum - n) + '人入れます' : '') + '）' : '');
+    if (sum < n) info.classList.add('is-warn');
+    updateFit(n, caps);
   }
 
-  /* ---------- 名簿の保存・よびだし ---------- */
+  /**
+   * おすすめ（2026-10-05）：名簿の人数と席の数が合わないとき、いまの班の数のまま
+   * 名簿の人数を各班へ均等に配った席の数にするボタンを出す（32人・5班 → 7,7,6,6,6）
+   */
+  // いま選んでいる値を生かす：班の数を選んでいればその班の数のまま、1班の人数だけならその人数を超えない班の数で
+  function fitSizes(n) {
+    var num = customSizes ? customSizes.length : parseInt($('hw-num').value, 10) || 0;
+    var per = parseInt($('hw-per').value, 10) || 0;
+    var count = num || (per ? Math.ceil(n / per) : 0);
+    return n && count && count <= n ? groupSizes(n, count) : null;
+  }
+
+  function updateFit(n, caps) {
+    var fit = fitSizes(n);
+    // 席が足りていて、配ると均等になるなら出さない（2×3に5人なら 3・2 になる）
+    var planned = seatSum(caps) >= n ? plannedSizes(n).slice().sort() : caps;
+    var same = fit && caps.length === fit.length && planned.join() === fit.slice().sort().join();
+    var hide = !fit || same;
+    var min = fit && Math.min.apply(null, fit), max = fit && Math.max.apply(null, fit);
+    // 班の枠（結果）のすぐ下
+    Array.prototype.forEach.call(document.querySelectorAll('.hw-fit'), function (btn) {
+      btn.hidden = hide;
+      if (!hide) btn.textContent = 'おすすめ配置にする（' + n + '人を' + fit.length + '班に均等・1班 ' + (min === max ? min : min + '〜' + max) + '人）';
+    });
+  }
+
+  /* ============================================================
+     名簿の表（1人1行）
+     ============================================================ */
+
+  function options(list, current) {
+    return list.map(function (o) {
+      return '<option value="' + R.esc(o[0]) + '"' + (String(o[0]) === String(current) ? ' selected' : '') + '>' + R.esc(o[1]) + '</option>';
+    }).join('');
+  }
+
+  function partnerOptions(self, current, names) {
+    var list = [['', 'だれと？']];
+    students.forEach(function (s, i) { if (s.id !== self.id) list.push([s.id, (i + 1) + '　' + names[i]]); });
+    return options(list, current || '');
+  }
+
+  function ruleHtml(s, rule, ri, names) {
+    var k = rule.kind;
+    var html = '<span class="hw-rule' + (k ? ' is-' + k : '') + '" data-ri="' + ri + '">' +
+      '<select class="hw-kind" aria-label="配慮の種類">' +
+      options(KIND_ORDER.map(function (x) { return [x, KIND_LABEL[x]]; }), k) + '</select>';
+    if (k === 'apart' || k === 'together') {
+      html += '<select class="hw-to" aria-label="' + KIND_LABEL[k] + 'の相手">' + partnerOptions(s, rule.to, names) + '</select>';
+    } else if (k === 'fixed') {
+      var gl = [];
+      for (var gi = 0; gi < Math.max(seatSizes().length, (rule.g || 0) + 1); gi++) gl.push([gi, (gi + 1) + '班']);
+      html += '<select class="hw-fg" aria-label="固定する班">' + options(gl, rule.g || 0) + '</select>';
+    } else if (k === 'scatter') {
+      html += '<select class="hw-set" aria-label="ちらすまとまり">' +
+        options(SCATTER_SETS.map(function (l, i) { return [i + 1, l + 'の子']; }), rule.set || 1) + '</select>';
+    }
+    html += '<button type="button" class="hw-rule-del" aria-label="この配慮を消す">×</button></span>';
+    return html;
+  }
+
+  function segHtml(s, i) {
+    var set = labelSet();
+    if (!set.length) return '<span class="hw-seg"></span>';
+    return '<span class="hw-seg" role="group" aria-label="' + (i + 1) + '人目の' + R.esc(labelSetName()) + '">' +
+      '<button type="button" class="hw-seg-b' + (s.label ? '' : ' is-on') + '" data-label="">—</button>' +
+      set.map(function (l) {
+        return '<button type="button" class="hw-seg-b' + (s.label === l ? ' is-on' : '') + '" data-label="' + R.esc(l) + '">' + R.esc(l) + '</button>';
+      }).join('') + '</span>';
+  }
+
+  function renderList() {
+    var names = displayNames();
+    $('hw-list').innerHTML = students.map(function (s, i) {
+      return '<div class="hw-row" data-id="' + s.id + '">' +
+        '<span class="hw-no">' + (i + 1) + '</span>' +
+        '<input type="text" class="hw-name" value="' + R.esc(s.name) + '" placeholder="' + (i + 1) + '番" aria-label="' + (i + 1) + '人目のなまえ" spellcheck="false" autocomplete="off">' +
+        segHtml(s, i) +
+        '<div class="hw-rules">' +
+        s.rules.map(function (rule, ri) { return ruleHtml(s, rule, ri, names); }).join('') +
+        '<button type="button" class="hw-rule-add" aria-label="配慮を追加">＋ 追加</button>' +
+        '</div>' +
+        '<span class="hw-row-group"></span>' +
+        '<button type="button" class="hw-row-del" aria-label="' + (i + 1) + '人目を消す">✕</button>' +
+        '</div>';
+    }).join('');
+    $('hw-list-h-label').textContent = labelSet().length ? labelSetName() : '';
+    updateCount();
+    if (state.groups) render(); else renderBoard();
+  }
+
+  /** 結果があれば、名簿の各行にその子の班（「3班」）を出す */
+  function updateRowGroups() {
+    var at = {};
+    if (state.groups) state.groups.forEach(function (g, i) { g.forEach(function (n) { at[n] = (i + 1) + '班' + (state.leaders[n] ? '・リーダー' : ''); }); });
+    var names = displayNames();
+    Array.prototype.forEach.call(document.querySelectorAll('#hw-list .hw-row-group'), function (el, i) {
+      el.textContent = at[names[i]] || '';
+    });
+  }
+
+  function refreshPartnerLabels() {
+    var names = displayNames(), label = {};
+    students.forEach(function (s, i) { label[s.id] = (i + 1) + '　' + names[i]; });
+    Array.prototype.forEach.call(document.querySelectorAll('#hw-list .hw-to option'), function (o) {
+      if (o.value && label[o.value]) o.textContent = label[o.value];
+    });
+  }
+
+  function rowOf(el) {
+    var row = el.closest('.hw-row');
+    return row ? byId(Number(row.getAttribute('data-id'))) : null;
+  }
+
+  function ruleOf(el, s) {
+    var box = el.closest('.hw-rule');
+    return box ? s.rules[Number(box.getAttribute('data-ri'))] : null;
+  }
+
+  function addAndFocus(n) {
+    var first = students.length;
+    addRows(n);
+    clearResult();
+    renderList();
+    var inputs = document.querySelectorAll('#hw-list .hw-name');
+    if (inputs[first]) inputs[first].focus();
+  }
+
+  function removeStudent(s) {
+    students = students.filter(function (x) { return x.id !== s.id; });
+    students.forEach(function (x) { x.rules = x.rules.filter(function (rule) { return rule.to !== s.id; }); });
+    clearResult();
+    renderList();
+  }
+
+  /** Excelから縦に何人ぶんか貼られたら、その行から下へ1人ずつ流し込む */
+  function pasteNames(s, text) {
+    var list = String(text).split(/\r?\n|\t/).map(R.cleanName).filter(Boolean);
+    if (list.length < 2) return false;
+    var at = students.indexOf(s);
+    list.forEach(function (name, i) {
+      if (!students[at + i]) students.push(newStudent());
+      students[at + i].name = name;
+    });
+    clearResult();
+    renderList();
+    rosterNote(list.length + '人ぶん貼り付けました。', 'ok');
+    return true;
+  }
+
+  /** 名前・ラベルと「名前で書いた配慮」から表を作り直す（見本・CSV読みこみ用） */
+  function loadRoster(list, ruleList) {
+    nextId = 1;
+    students = list.map(function (p) { var s = newStudent(p.name, p.label); s.extra = p.extra || {}; return s; });
+    var find = function (name) {
+      for (var i = 0; i < students.length; i++) if (students[i].name === name) return students[i];
+      return null;
+    };
+    (ruleList || []).forEach(function (x) {
+      var s = find(x[0]);
+      if (!s) return;
+      if (x[1] === 'apart' || x[1] === 'together') {
+        var t = find(x[2]);
+        if (t && t !== s) s.rules.push({ kind: x[1], to: t.id });
+      } else if (x[1] === 'scatter') {
+        s.rules.push({ kind: 'scatter', set: x[2] || 1 });
+      } else if (x[1] === 'leader') {
+        s.rules.push({ kind: 'leader' });
+      } else if (x[1] === 'fixed') {
+        s.rules.push({ kind: 'fixed', g: x[2] || 0 });
+      }
+    });
+    clearResult();
+    renderList();
+  }
+
+  /* ============================================================
+     CSV（席替え・クラス分けと共通の形。班分けが読み書きするのは 性別・班の配慮・班）
+     ============================================================ */
 
   function rosterNote(text, kind) {
     var el = $('hw-roster-note');
@@ -637,35 +1026,25 @@
     el.className = 'hw-roster-note' + (kind ? ' is-' + kind : '');
   }
 
-  /* ---------- 前回の班 ---------- */
-
-  /**
-   * 読みこんだCSVの「班」列から、前回いっしょだった組み合わせを取り出す。
-   * ブラウザには何も保存しないので、前回の班はCSV経由でしか入ってこない。
-   */
-  function applyPrevGrouping(groups, when) {
+  /** 読みこんだCSVの「班」列から、前回いっしょだった組み合わせを取り出す */
+  function applyPrevGrouping(groups) {
     if (!groups || groups.length < 2) { clearPrev(); return; }
     var pairs = {};
-    groups.forEach(function (members) {
-      for (var i = 0; i < members.length; i++) {
-        for (var j = i + 1; j < members.length; j++) pairs[pairKey(members[i], members[j])] = true;
-      }
+    groups.forEach(function (m) {
+      for (var i = 0; i < m.length; i++) for (var j = i + 1; j < m.length; j++) pairs[pairKey(m[i], m[j])] = true;
     });
-    prevState = { pairs: pairs, when: when || '' };
+    prevState = { pairs: pairs };
     $('hw-prev').hidden = false;
     $('hw-prev-lbl').textContent = '読みこんだCSVの班を「前回の班」として使います';
   }
 
   function clearPrev() {
-    prevState = { pairs: null, when: '' };
+    prevState = { pairs: null };
     $('hw-prev').hidden = true;
   }
 
-  /* ---------- CSV ---------- */
-
   var csvRows = null, csvRoles = {};   // 列番号 → 'name' | 'label' | 'rule' | 'group'
-
-  var ROLE_LABEL = { '': '（使わない）', name: 'なまえ', label: 'ラベル', rule: '配慮', group: '前回の班' };
+  var ROLE_LABEL = { '': '（使わない）', name: 'なまえ', label: 'そろえる項目', rule: '配慮', group: '前回の班' };
 
   /** 見出しから列の役割を当てる。自分が書き出したCSVはそのまま読み戻せる */
   function autoDetectRoles(head) {
@@ -673,7 +1052,7 @@
     head.forEach(function (raw, c) {
       var h = (raw || '').trim();
       if (!h) return;
-      if (/^(出席番号|番号|no\.?|#)$/i.test(h)) return;              // 番号は使わない
+      if (/^(出席番号|番号|no\.?|#)$/i.test(h)) return;
       // 共通CSVの、ほかのメーカーの列（席・クラス）は読まない（保存のときそのまま残す）
       var rr = R.ruleColumnRole(h, '班の配慮', head);
       if (rr === 'rule') { roles[c] = 'rule'; return; }
@@ -708,7 +1087,6 @@
     var width = R.colWidth(csvRows);
     var sample = csvRows[hasHead ? 1 : 0] || [];
     var html = '';
-
     for (var c = 0; c < width; c++) {
       var head = hasHead ? ((csvRows[0][c] || '').trim() || (c + 1) + '列目') : (c + 1) + '列目';
       var val = (sample[c] || '').trim() || '（空）';
@@ -719,8 +1097,7 @@
         '<select class="hw-csv-role-sel" data-col="' + c + '" aria-label="' + R.esc(head) + 'の役割">' +
         Object.keys(ROLE_LABEL).map(function (k) {
           return '<option value="' + k + '"' + (role === k ? ' selected' : '') + '>' + ROLE_LABEL[k] + '</option>';
-        }).join('') +
-        '</select></div>';
+        }).join('') + '</select></div>';
     }
     $('hw-csv-cols').innerHTML = html;
     $('hw-csv-pick').hidden = false;
@@ -732,13 +1109,19 @@
       .map(Number).sort(function (a, b) { return a - b; });
   }
 
-  /** 「別々1」「同じ2;ちらす3」のような書き方をほどく */
+  /** 「別々1」「同じ2;固定3;リーダー」のような書き方をほどく（以前の「ちらす3」も読む） */
   function parseRuleCell(cell) {
     return String(cell || '').split(/[;；,、，\/／\s　]+/).map(function (t) {
-      var m = t.trim().match(/^(別々|同じ|ちらす)\s*(\d*)$/);
+      t = t.trim();
+      if (/^(リーダー|りーだー|班長)$/.test(t)) return { kind: 'leader' };
+      var fx = t.match(/^固定\s*(\d+)\s*班?$/);
+      if (fx) return { kind: 'fixed', g: Math.max(0, Number(fx[1]) - 1) };
+      var m = t.match(/^(別々|同じ|ちらす)\s*([0-9A-Ea-e]*)$/);
       if (!m) return null;
       var kind = m[1] === '同じ' ? 'together' : (m[1] === 'ちらす' ? 'scatter' : 'apart');
-      return { kind: kind, no: m[2] || '1' };
+      var no = m[2] || '1';
+      if (/[A-Ea-e]/.test(no)) no = String('ABCDE'.indexOf(no.toUpperCase()) + 1);
+      return { kind: kind, no: no };
     }).filter(Boolean);
   }
 
@@ -750,54 +1133,67 @@
     var groupCol = colsWithRole('group')[0];
 
     var body = $('hw-csv-head').checked ? csvRows.slice(1) : csvRows;
-    var list = [], ruleCells = [], groupCells = [];
     var head = $('hw-csv-head').checked ? csvRows[0] : [];
     var used = Object.keys(csvRoles).filter(function (c) { return csvRoles[c]; }).map(Number);
-
+    var list = [], ruleCells = [], groupCells = [];
     body.forEach(function (r) {
       var name = nameCols.map(function (c) { return (r[c] || '').trim(); }).filter(Boolean).join(' ').trim();
       if (!name) return;
       list.push({
-        name: name,
-        label: labelCol >= 0 && labelCol !== undefined ? (r[labelCol] || '').trim() : '',
+        name: R.cleanName(name),
+        label: labelCol === undefined ? '' : (r[labelCol] || '').trim(),
         extra: R.keepExtras(head, r, used)   // ほかのメーカーの列。保存のときそのまま書き戻す
       });
       ruleCells.push(ruleCol === undefined ? '' : (r[ruleCol] || '').trim());
       groupCells.push(groupCol === undefined ? '' : (r[groupCol] || '').trim());
     });
-
     if (!list.length) { rosterNote('えらんだ列に名前が入っていませんでした。', 'error'); return; }
 
-    setPeople(list);
+    // ラベルの種類を「そろえる項目」に合わせる（女／男 以外の値が入っていたらそれを使う）
+    var seenLabels = [];
+    list.forEach(function (p) { if (p.label && seenLabels.indexOf(p.label) < 0) seenLabels.push(p.label); });
+    if (seenLabels.length && seenLabels.some(function (l) { return labelSet().indexOf(l) < 0; })) {
+      $('hw-labelset-input').value = seenLabels.slice(0, 3).join(', ');
+      if (labelCol !== undefined && head[labelCol]) $('hw-labelset-name').value = String(head[labelCol]).trim();
+      updateBalanceName();
+    }
 
-    // 配慮：同じ「種類＋番号」の人どうしを1件にまとめる
-    rules = [];
-    var buckets = {};
+    // 配慮：同じ「種類＋番号」の人どうしが1つの組
+    var buckets = {}, ruleList = [];
     ruleCells.forEach(function (cell, i) {
       parseRuleCell(cell).forEach(function (t) {
+        if (t.kind === 'leader') { ruleList.push([list[i].name, 'leader']); return; }
+        if (t.kind === 'fixed') { ruleList.push([list[i].name, 'fixed', t.g]); return; }
         var key = t.kind + t.no;
-        (buckets[key] = buckets[key] || { kind: t.kind, ids: [] }).ids.push(people[i].id);
+        (buckets[key] = buckets[key] || { kind: t.kind, no: t.no, names: [] }).names.push(list[i].name);
       });
     });
+    // 「別々」と以前のCSVの「ちらす」は、同じ番号の子どうしを全部「別々」の組にする（3人なら3組）
     Object.keys(buckets).sort().forEach(function (k) {
-      if (buckets[k].ids.length >= 2) rules.push({ id: nextId(), kind: buckets[k].kind, ids: buckets[k].ids });
+      var b = buckets[k];
+      if (b.kind === 'scatter' || b.kind === 'apart') {
+        for (var x = 0; x < b.names.length; x++) {
+          for (var y = x + 1; y < b.names.length; y++) ruleList.push([b.names[x], 'apart', b.names[y]]);
+        }
+      } else if (b.names.length >= 2) {
+        for (var i = 1; i < b.names.length; i++) ruleList.push([b.names[0], b.kind, b.names[i]]);
+      }
     });
-    renderRules();
+    loadRoster(list, ruleCol === undefined ? [] : ruleList);
 
-    // 前回の班：班ごとに名前を集めて「同じ顔ぶれを避ける」の材料にする
-    var byGroup = {};
-    groupCells.forEach(function (g, i) {
-      if (!g) return;
-      (byGroup[g] = byGroup[g] || []).push(list[i].name);
-    });
-    var groupsFound = Object.keys(byGroup);
-    applyPrevGrouping(groupsFound.sort().map(function (k) { return byGroup[k]; }));
+    // 前回の班
+    var byGroup = {}, shown = displayNames();
+    groupCells.forEach(function (g, i) { if (g) (byGroup[g] = byGroup[g] || []).push(shown[i]); });
+    var found = Object.keys(byGroup);
+    applyPrevGrouping(found.sort().map(function (k) { return byGroup[k]; }));
 
     closeCsvPick();
+    touchedStep1 = true;
+    updateSteps();
     var got = [list.length + '人'];
-    if (labelCol !== undefined) got.push('ラベル');
-    if (rules.length) got.push('配慮' + rules.length + '件');
-    if (groupsFound.length > 1) got.push('前回の班');
+    if (labelCol !== undefined) got.push(labelSetName());
+    if (ruleList.length) got.push('配慮');
+    if (found.length > 1) got.push('前回の班');
     rosterNote(got.join('・') + ' を読みこみました。', 'ok');
   }
 
@@ -816,7 +1212,6 @@
         return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
       }).join(',');
     }).join('\r\n');
-
     var blob = new Blob(['﻿' + body], { type: 'text/csv;charset=utf-8;' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
@@ -828,273 +1223,319 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   }
 
-  var KIND_JP = { apart: '別々', together: '同じ', scatter: 'ちらす' };
-
-  /** 人ごとの配慮セル（「別々1」「同じ2;ちらす3」）を作る */
-  function ruleCellsByPerson() {
+  /** 人ごとの配慮セル（「別々1」「同じ2」「ちらす1」「リーダー」） */
+  function ruleCellsByName(r) {
     var cells = {};
-    var no = { apart: 0, together: 0, scatter: 0 };
-    rules.forEach(function (r) {
-      if (r.ids.length < 2) return;
-      no[r.kind] += 1;
-      var code = KIND_JP[r.kind] + no[r.kind];
-      r.ids.forEach(function (pid) {
-        cells[pid] = cells[pid] ? cells[pid] + ';' + code : code;
-      });
-    });
+    var add = function (n, code) { cells[n] = cells[n] ? cells[n] + ';' + code : code; };
+    r.apart.forEach(function (p, i) { add(p[0], '別々' + (i + 1)); add(p[1], '別々' + (i + 1)); });
+    r.together.forEach(function (p, i) { add(p[0], '同じ' + (i + 1)); add(p[1], '同じ' + (i + 1)); });
+    Object.keys(r.scatter).forEach(function (k) { r.scatter[k].forEach(function (n) { add(n, 'ちらす' + k); }); });
+    r.leaders.forEach(function (n) { add(n, 'リーダー'); });
+    Object.keys(r.fixed || {}).forEach(function (n) { add(n, '固定' + (r.fixed[n] + 1)); });
     return cells;
   }
 
-  function downloadTemplate() {
-    var sample = [
-      ['佐藤 みゆき', '女', 'ちらす1'], ['鈴木 けんた', '男', ''], ['高橋 あおい', '女', ''],
-      ['田中 そうた', '男', '別々1'], ['中村 はると', '男', '別々1'], ['小林 ゆい', '女', '同じ1'], ['石川 えま', '女', '同じ1']
-    ];
-    downloadCsv('名簿ひな形.csv', R.sharedRows(sample.map(function (x) {
-      return { values: { 'なまえ': x[0], '性別': x[1], '班の配慮': x[2] } };
-    })));
-    rosterNote('ひな形をダウンロードしました。配慮は「別々1」のように、同じ番号どうしが1つの組になります。', 'ok');
-  }
-
-  /**
-   * 名簿・そろえる項目・配慮・（あれば）できた班を1枚に書き出す。
-   * このファイルを読み戻せば全部そのまま復元でき、班の列は「前回の班」として使われる。
-   */
   function downloadState(withGroups) {
-    var names = displayNames();
-    var cells = ruleCellsByPerson();
+    if (!students.length) { rosterNote('名簿が空です。', 'error'); return; }
+    var got = collect();
+    var cells = ruleCellsByName(got.rules);
     var groupOf = {};
-    if (withGroups && state.groups) {
-      state.groups.forEach(function (g, i) {
-        g.forEach(function (n) { groupOf[n] = (i + 1) + '班'; });
-      });
-    }
+    if (withGroups && state.groups) state.groups.forEach(function (g, i) { g.forEach(function (n) { groupOf[n] = (i + 1) + '班'; }); });
 
     // 席替え・クラス分けと共通の形で書き出す。読みこんだほかのメーカーの列もそのまま残す
-    var rows = R.sharedRows(filledPeople().map(function (p) {
-      var n = names[p.id];
-      var values = { 'なまえ': n, '班の配慮': cells[p.id] || '', '班': groupOf[n] || '' };
-      values[labelSetName()] = p.label || '';   // 既定は「性別」。書き換えていれば右端に足す
-      return { values: values, extra: p.extra };
+    var rows = R.sharedRows(got.names.map(function (n, i) {
+      var values = { 'なまえ': n, '班の配慮': cells[n] || '', '班': groupOf[n] || '' };
+      values[labelSetName()] = students[i].label || '';   // 既定は「性別」。書き換えていれば右端に足す
+      return { values: values, extra: students[i].extra };
     }));
     downloadCsv(withGroups ? '班分け.csv' : '班分け_名簿.csv', rows);
     rosterNote('CSVに保存しました。次回このファイルを「CSVを読む」から取り込めば、' +
       (withGroups ? '名簿・配慮・前回の班' : '名簿と配慮') + 'がそのまま戻ります。', 'ok');
   }
 
-  /* ---------- まとめて貼り付け ---------- */
-
-  function openBulk() {
-    $('hw-names').value = namesText();
-    $('hw-bulk').hidden = false;
-    $('hw-names').focus();
-  }
-
-  function applyBulk() {
-    var names = R.parseNames($('hw-names').value, false);
-    if (!names.length) { rosterNote('名前が読み取れませんでした。', 'error'); return; }
-    // 同じ名前の人には、いま付いているラベルを引き継ぐ
-    var labelOf = {};
-    people.forEach(function (p) { if (p.name.trim() && p.label) labelOf[p.name.trim()] = p.label; });
-    setPeople(names.map(function (n) { return { name: n, label: labelOf[n] || '' }; }));
-    renderRules();
-    $('hw-bulk').hidden = true;
-    rosterNote(names.length + '人にしました。', 'ok');
-  }
-
-  /* ---------- 見本 ---------- */
-
-  var SAMPLE = [
-    ['佐藤 みゆき', '女'], ['鈴木 けんた', '男'], ['高橋 あおい', '女'], ['田中 そうた', '男'],
-    ['伊藤 ひなた', '女'], ['渡辺 りく', '男'], ['山本 さくら', '女'], ['中村 はると', '男'],
-    ['小林 ゆい', '女'], ['加藤 だいち', '男'], ['吉田 めい', '女'], ['山田 かなた', '男'],
-    ['佐々木 のあ', '女'], ['山口 いつき', '男'], ['松本 ひまり', '女'], ['井上 そら', '男'],
-    ['木村 あかり', '女'], ['林 ゆうき', '男'], ['清水 みなと', '男'], ['山崎 ひなの', '女'],
-    ['森 かいと', '男'], ['池田 つむぎ', '女'], ['橋本 りひと', '男'], ['石川 えま', '女'],
-    ['前田 あさひ', '男'], ['藤田 ことね', '女'], ['後藤 はやと', '男'], ['岡田 みお', '女'],
-    ['長谷川 れん', '男'], ['村上 ゆあ', '女']
-  ];
-
-  function loadSample() {
-    // 見本は女／男でラベルを付けてあるので、そろえる項目も既定に戻す
-    $('hw-labelset-name').value = '性別';
-    $('hw-labelset-input').value = '女, 男';
-    setPeople(SAMPLE.map(function (s) { return { name: s[0], label: s[1] }; }));
-    var idOf = {};
-    people.forEach(function (p) { idOf[p.name] = p.id; });
-    rules = [
-      { id: nextId(), kind: 'apart', ids: [idOf['田中 そうた'], idOf['中村 はると']] },
-      { id: nextId(), kind: 'together', ids: [idOf['小林 ゆい'], idOf['石川 えま']] },
-      { id: nextId(), kind: 'scatter', ids: ['佐藤 みゆき', '渡辺 りく', '林 ゆうき', '前田 あさひ', '村上 ゆあ'].map(function (n) { return idOf[n]; }) }
+  function downloadTemplate() {
+    var sample = [
+      ['佐藤 みゆき', '女', 'リーダー'], ['鈴木 けんた', '男', 'リーダー'], ['高橋 あおい', '女', ''],
+      ['田中 そうた', '男', '別々1'], ['中村 はると', '男', '別々1'], ['小林 ゆい', '女', '同じ1'],
+      ['石川 えま', '女', '同じ1'], ['渡辺 りく', '男', '別々2'], ['林 ゆうき', '男', '別々2']
     ];
-    renderRules();
-    $('hw-mode').value = 'groups';
-    rebuildNums();
-    $('hw-num').value = '6';
-    clearPrev();
-    rosterNote('');
-    $('hw-bulk').hidden = true;
-    updateCount();
-    run();
+    downloadCsv('名簿ひな形.csv', R.sharedRows(sample.map(function (x) {
+      return { values: { 'なまえ': x[0], '性別': x[1], '班の配慮': x[2] } };
+    })));
+    rosterNote('ひな形をダウンロードしました。配慮は「別々1」のように、同じ番号どうしが1つの組になります。「;」で区切ると1人に何個でも付けられます。', 'ok');
   }
 
-  /* ---------- 配線 ---------- */
+  /* ============================================================
+     配線
+     ============================================================ */
 
+  /*
+   * 分け方（2026-10-05）：「班の数」と「1班の人数」を名簿と切りはなして自由に選ぶ。
+   * 班の数 × 1班の人数 が席の数。班ごとに変えたいときは、空の班の枠で 班・席 を足し引きする
+   */
   function rebuildNums() {
-    var sel = $('hw-num');
-    var mode = $('hw-mode').value;
-    var keep = sel.value;
-    sel.innerHTML = '';
-    for (var i = 2; i <= 12; i++) {
-      var o = document.createElement('option');
-      o.value = i;
-      o.textContent = mode === 'per' ? i + '人ずつ' : i + '班';
-      sel.appendChild(o);
-    }
-    sel.value = keep || (mode === 'per' ? '4' : '6');
+    [['hw-num', '班'], ['hw-per', '人']].forEach(function (x) {
+      var sel = $(x[0]), keep = sel.value;
+      sel.innerHTML = '<option value="">---</option>';
+      for (var i = 1; i <= 12; i++) {
+        var o = document.createElement('option');
+        o.value = i;
+        o.textContent = i + x[1];
+        sel.appendChild(o);
+      }
+      sel.value = keep || '';
+    });
   }
 
-  $('hw-mode').addEventListener('change', function () { rebuildNums(); updateCount(); });
-  $('hw-num').addEventListener('change', updateCount);
+  var onSizeChange = function () {
+    touchedStep1 = true;
+    clearResult();
+    updateCount();
+  };
+  // プルダウンを選び直したら、班ごとに足し引きした席は捨てて「班の数 × 1班の人数」に戻す
+  $('hw-num').addEventListener('change', function () { customSizes = null; onSizeChange(); renderList(); });
+  $('hw-per').addEventListener('change', function () { customSizes = null; onSizeChange(); });
 
-  /* 名簿の行 */
-  $('hw-rows').addEventListener('input', function (e) {
-    var row = e.target.closest('.hw-row');
-    if (!row) return;
-    var p = personById(Number(row.getAttribute('data-id')));
-    if (!p) return;
-    if (e.target.classList.contains('hw-row-name')) {
-      p.name = e.target.value;
-      updateCount();
-      renderRules();   // 配慮の候補と表示名を追従させる
+  /* 空の班の枠で、班ごとに 班・席 を足す／消す（2026-10-05） */
+  function editSizes(fn) {
+    if (!customSizes) customSizes = seatSizes();
+    fn(customSizes);
+    onSizeChange();
+    renderList();   // 「固定」の班のプルダウンを班の数に合わせる
+  }
+  /** おすすめ配置：班の人数を均等に合わせて、そのまま班分けする（「班分けする」「再配置する」と同じ扱い） */
+  function runFit() {
+    var n = students.filter(function (s) { return s.name.trim(); }).length;
+    var fit = fitSizes(n);
+    if (!fit) return;
+    var min = Math.min.apply(null, fit), max = Math.max.apply(null, fit);
+    $('hw-num').value = String(fit.length);
+    // 割り切れて、1班の人数がプルダウン（12人まで）に入るならプルダウンだけで表す。
+    // そうでなければ班ごとの人数（7,7,6,6,6 や 15,15）として持つ（15人を入れようとして「未設定」になっていた）
+    var fitsSelect = min === max && max <= 12;
+    $('hw-per').value = max <= 12 ? String(max) : '';
+    customSizes = fitsSelect ? null : fit;
+    onSizeChange();
+    renderList();
+    run(true);   // 守れない配慮があっても止めずに分けきる
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.hw-fit'), function (b) { b.addEventListener('click', runFit); });
+  $('hw-board').addEventListener('click', function (e) {
+    if (state.groups) return;
+    var t = e.target.closest('button');
+    if (!t) return;
+    var g = Number(t.getAttribute('data-g'));
+    if (t.classList.contains('hw-ghost-add')) editSizes(function (a) { a[g]++; });
+    else if (t.classList.contains('hw-slot-del')) editSizes(function (a) { if (a[g] > 1) a[g]--; });
+    else if (t.classList.contains('hw-group-del')) editSizes(function (a) { if (a.length > 1) a.splice(g, 1); });
+    else if (t.classList.contains('hw-group-add')) editSizes(function (a) { a.push(Math.min.apply(null, a)); });
+  });
+
+  var list = $('hw-list');
+
+  list.addEventListener('input', function (e) {
+    if (!e.target.classList.contains('hw-name')) return;
+    var s = rowOf(e.target);
+    if (!s) return;
+    s.name = e.target.value;
+    refreshPartnerLabels();
+    updateCount();
+    updateSteps();
+  });
+
+  list.addEventListener('paste', function (e) {
+    if (!e.target.classList.contains('hw-name')) return;
+    var s = rowOf(e.target);
+    var text = (e.clipboardData || window.clipboardData).getData('text');
+    if (s && pasteNames(s, text)) e.preventDefault();
+  });
+
+  // Enter で次の行へ（最後の行なら1行足す）
+  list.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' || e.isComposing || !e.target.classList.contains('hw-name')) return;
+    e.preventDefault();
+    var inputs = Array.prototype.slice.call(list.querySelectorAll('.hw-name'));
+    var at = inputs.indexOf(e.target);
+    if (at === inputs.length - 1) addAndFocus(1);
+    else inputs[at + 1].focus();
+  });
+
+  list.addEventListener('change', function (e) {
+    var t = e.target, s = rowOf(t);
+    if (!s) return;
+    var rule = ruleOf(t, s);
+    if (!rule) return;
+    if (t.classList.contains('hw-kind')) {
+      rule.kind = t.value;
+      delete rule.to; delete rule.set; delete rule.g;
+      if (rule.kind === 'scatter') rule.set = 1;
+      if (rule.kind === 'fixed') rule.g = 0;
+      clearResult();
+      renderList();
+      var box = list.querySelector('.hw-row[data-id="' + s.id + '"] .hw-rule[data-ri="' + s.rules.indexOf(rule) + '"]');
+      var nextSel = box && box.querySelector('.hw-to, .hw-set, .hw-fg');
+      (nextSel || (box && box.querySelector('.hw-kind')) || document.body).focus();
+    } else if (t.classList.contains('hw-to')) {
+      rule.to = t.value ? Number(t.value) : null;
+      clearResult();
+    } else if (t.classList.contains('hw-set')) {
+      rule.set = Number(t.value);
+      clearResult();
+    } else if (t.classList.contains('hw-fg')) {
+      rule.g = Number(t.value);
+      clearResult();
     }
   });
 
-  $('hw-rows').addEventListener('click', function (e) {
-    var seg = e.target.closest('.hw-seg-b');
+  list.addEventListener('click', function (e) {
+    var t = e.target, s = rowOf(t);
+    if (!s) return;
+    var seg = t.closest('.hw-seg-b');
     if (seg) {
-      var r = seg.closest('.hw-row');
-      var p = personById(Number(r.getAttribute('data-id')));
-      if (!p) return;
-      p.label = seg.getAttribute('data-label');
+      s.label = seg.getAttribute('data-label');
       // 押した行だけ塗り替える（全部描き直すと入力中のフォーカスが飛ぶ）
-      [].forEach.call(r.querySelectorAll('.hw-seg-b'), function (b) {
-        b.classList.toggle('is-on', b.getAttribute('data-label') === p.label);
+      Array.prototype.forEach.call(seg.parentNode.querySelectorAll('.hw-seg-b'), function (b) {
+        b.classList.toggle('is-on', b.getAttribute('data-label') === s.label);
       });
+      if (state.groups) render();
       return;
     }
-    var btn = e.target.closest('.hw-row-del');
-    if (!btn) return;
-    removePerson(Number(btn.closest('.hw-row').getAttribute('data-id')));
+    if (t.classList.contains('hw-rule-add')) {
+      s.rules.push({ kind: '' });
+      renderList();
+      var boxes = list.querySelectorAll('.hw-row[data-id="' + s.id + '"] .hw-kind');
+      if (boxes.length) boxes[boxes.length - 1].focus();
+    } else if (t.classList.contains('hw-rule-del')) {
+      var rule = ruleOf(t, s);
+      s.rules = s.rules.filter(function (x) { return x !== rule; });
+      clearResult();
+      renderList();
+    } else if (t.classList.contains('hw-row-del')) {
+      // 名前か配慮が入っている行だけ確かめる（空の行はそのまま消す）
+      var label = R.cleanName(s.name) || ((students.indexOf(s) + 1) + '番');
+      if ((s.name.trim() || s.rules.length) &&
+          !window.confirm('「' + label + '」の行を消します。付けた配慮も消えます。よろしいですか？')) return;
+      removeStudent(s);
+    }
   });
+
+  /* 名簿の名前を押す（名前欄に入る）と、結果のその子を光らせる */
+  function highlight(name) {
+    Array.prototype.forEach.call(document.querySelectorAll('#hw-board .is-hl'), function (x) { x.classList.remove('is-hl'); });
+    if (!name) return;
+    Array.prototype.forEach.call(document.querySelectorAll('#hw-board .hw-mem[data-name]'), function (x) {
+      if (x.getAttribute('data-name') === name) x.classList.add('is-hl');
+    });
+  }
+  function nameOfRow(el) {
+    var row = el.closest && el.closest('.hw-row');
+    if (!row) return null;
+    var i = Array.prototype.indexOf.call(list.children, row);
+    return i >= 0 ? displayNames()[i] : null;
+  }
+  list.addEventListener('focusin', function (e) { highlight(nameOfRow(e.target)); });
+  list.addEventListener('focusout', function (e) { if (!list.contains(e.relatedTarget)) highlight(null); });
 
   $('hw-labelset-input').addEventListener('change', function () {
-    // 項目から外れたラベルが人に残らないようにする
     var set = labelSet();
-    people.forEach(function (p) { if (p.label && set.indexOf(p.label) < 0) p.label = ''; });
-    renderRows();
+    students.forEach(function (s) { if (s.label && set.indexOf(s.label) < 0) s.label = ''; });
+    renderList();
+    updateBalanceName();
   });
+  $('hw-labelset-name').addEventListener('change', function () { renderList(); updateBalanceName(); });
 
-  // なまえ欄で Enter → 次の人へ。最後の行なら1人足す
-  $('hw-rows').addEventListener('keydown', function (e) {
-    if (e.key !== 'Enter' || !e.target.classList.contains('hw-row-name')) return;
-    e.preventDefault();
-    var row = e.target.closest('.hw-row');
-    var next = row.nextElementSibling;
-    if (next) {
-      next.querySelector('.hw-row-name').focus();
-    } else {
-      addPerson('', '', true);
-      updateCount();
-    }
-  });
+  $('hw-add1').addEventListener('click', function () { addAndFocus(1); });
+  $('hw-add5').addEventListener('click', function () { addAndFocus(5); });
+  $('hw-add10').addEventListener('click', function () { addAndFocus(10); });
 
-  // 複数行を貼られたら、そのぶんの行に展開する（Excelからの貼り付けを1行に潰さない）
-  $('hw-rows').addEventListener('paste', function (e) {
-    if (!e.target.classList.contains('hw-row-name')) return;
-    var text = (e.clipboardData || window.clipboardData).getData('text');
-    if (!/[\n\r\t]/.test(text)) return;
-    e.preventDefault();
-
-    var names = R.parseNames(text, false);
-    if (!names.length) return;
-    var row = e.target.closest('.hw-row');
-    var id = Number(row.getAttribute('data-id'));
-    var at = -1;
-    people.forEach(function (p, i) { if (p.id === id) at = i; });
-
-    var added = names.map(function (n) { return { id: nextId(), name: n, label: '' }; });
-    people.splice.apply(people, [at, 1].concat(added));
-    renderRows();
-    renderRules();
-    updateCount();
-    rosterNote(names.length + '人を貼り付けました。', 'ok');
-  });
-
-  $('hw-add').addEventListener('click', function () { addPerson('', '', true); updateCount(); });
-  $('hw-bulk-toggle').addEventListener('click', openBulk);
-  $('hw-bulk-apply').addEventListener('click', applyBulk);
-  $('hw-bulk-cancel').addEventListener('click', function () { $('hw-bulk').hidden = true; });
-
-  /* 配慮の行 */
-  $('hw-rule-add').addEventListener('click', function () { addRule('apart', []); });
-
-  $('hw-rules').addEventListener('change', function (e) {
-    var wrap = e.target.closest('.hw-rule');
-    if (!wrap) return;
-    var rid = Number(wrap.getAttribute('data-rule'));
-    var rule = null;
-    rules.forEach(function (r) { if (r.id === rid) rule = r; });
-    if (!rule) return;
-
-    if (e.target.classList.contains('hw-rule-kind')) {
-      rule.kind = e.target.value;
-      renderRules();
-    } else if (e.target.classList.contains('hw-rule-add')) {
-      var pid = Number(e.target.value);
-      if (pid && rule.ids.indexOf(pid) < 0) rule.ids.push(pid);
-      renderRules();
-    }
-  });
-
-  $('hw-rules').addEventListener('click', function (e) {
-    var x = e.target.closest('.hw-chip-x');
-    if (x) {
-      var rid = Number(x.getAttribute('data-rule')), pid = Number(x.getAttribute('data-person'));
-      rules.forEach(function (r) {
-        if (r.id === rid) r.ids = r.ids.filter(function (i) { return i !== pid; });
-      });
-      renderRules();
-      return;
-    }
-    var del = e.target.closest('.hw-rule-del');
-    if (del) {
-      var id = Number(del.closest('.hw-rule').getAttribute('data-rule'));
-      rules = rules.filter(function (r) { return r.id !== id; });
-      renderRules();
-    }
-  });
-
-  /* 実行・結果 */
   $('hw-gen').addEventListener('click', run);
+  $('hw-gen2').addEventListener('click', run);
   $('hw-again').addEventListener('click', run);
   $('hw-copy').addEventListener('click', function () { R.copyText($('hw-out').value, this); });
   $('hw-print').addEventListener('click', function () { window.print(); });
   $('hw-download').addEventListener('click', function () { downloadState(true); });
   $('hw-csv-save').addEventListener('click', function () { downloadState(false); });
-  $('hw-sample').addEventListener('click', loadSample);
-
+  $('hw-sample').addEventListener('click', function () {
+    var filled = students.some(function (s) { return s.name.trim() || s.rules.length; });
+    if (filled && !window.confirm('いま入っている名簿と配慮を、見本に入れかえます。よろしいですか？')) return;
+    // 見本は女／男でラベルを付けてあるので、そろえる項目も既定に戻す
+    $('hw-labelset-name').value = '性別';
+    $('hw-labelset-input').value = '女, 男';
+    updateBalanceName();
+    // 見本は名簿（名前・性別・配慮）だけ。班の数などは触らず、班分けもしない（押すのは先生。2026-10-05）
+    loadRoster(SAMPLE.map(function (x) { return { name: x[0], label: x[1] }; }), SAMPLE_RULES);
+    clearPrev();
+    showMsgs([]);
+    rosterNote('見本の名簿（30人）を入れました。1で班の数などを選んで「班分けする」を押してください。', 'ok');
+  });
   $('hw-prev-clear').addEventListener('click', clearPrev);
 
-  /* CSV */
-  $('hw-csv').addEventListener('change', function () {
-    if (this.files && this.files[0]) readCsvFile(this.files[0]);
+  /* 結果の入れかえ：ドラッグ＆ドロップ、またはタップで2人えらぶ。班の空いた所に落とすと移動 */
+  var board = $('hw-board');
+  var memAt = function (el) {
+    var m = el && el.closest && el.closest('.hw-mem[data-at]');
+    return m ? m.getAttribute('data-at') : null;
+  };
+  var groupAt = function (el) {
+    var g = el && el.closest && el.closest('.hw-group[data-g]');
+    return g ? Number(g.getAttribute('data-g')) : null;
+  };
+  board.addEventListener('click', function (e) {
+    if (!state.groups) return;
+    var at = memAt(e.target);
+    if (at) { pickMember(at); return; }
+    var g = groupAt(e.target);
+    if (picked && g !== null) moveMember(picked, g);
   });
+  board.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var at = memAt(e.target);
+    if (!at) return;
+    e.preventDefault();
+    pickMember(at);
+    var again = board.querySelector('.hw-mem[data-at="' + at + '"]');
+    if (again) again.focus();
+  });
+  var dragFrom = null;
+  var clearOver = function () {
+    Array.prototype.forEach.call(board.querySelectorAll('.is-over'), function (x) { x.classList.remove('is-over'); });
+  };
+  board.addEventListener('dragstart', function (e) {
+    dragFrom = memAt(e.target);
+    if (!dragFrom) return;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', dragFrom);
+    e.target.classList.add('is-dragging');
+  });
+  board.addEventListener('dragover', function (e) {
+    if (!dragFrom || groupAt(e.target) === null) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    clearOver();
+    (e.target.closest('.hw-mem') || e.target.closest('.hw-group')).classList.add('is-over');
+  });
+  board.addEventListener('drop', function (e) {
+    if (!dragFrom) return;
+    var to = memAt(e.target), g = groupAt(e.target);
+    if (to === null && g === null) return;
+    e.preventDefault();
+    var from = dragFrom;
+    dragFrom = null;
+    clearOver();
+    if (to) swapMembers(from, to); else moveMember(from, g);
+  });
+  board.addEventListener('dragend', function () {
+    dragFrom = null;
+    clearOver();
+    Array.prototype.forEach.call(board.querySelectorAll('.is-dragging'), function (x) { x.classList.remove('is-dragging'); });
+  });
+
+  /* CSV */
+  $('hw-csv').addEventListener('change', function () { if (this.files && this.files[0]) readCsvFile(this.files[0]); });
   $('hw-csv-template').addEventListener('click', downloadTemplate);
   $('hw-csv-head').addEventListener('change', function () { if (csvRows) renderCsvPick(); });
   $('hw-csv-cancel').addEventListener('click', closeCsvPick);
   $('hw-csv-ok').addEventListener('click', applyCsvPick);
-  // 列ごとに役割をえらぶ（見出しから自動で当たっていることが多い）
   $('hw-csv-cols').addEventListener('change', function (e) {
     if (!e.target.classList.contains('hw-csv-role-sel')) return;
     csvRoles[Number(e.target.getAttribute('data-col'))] = e.target.value;
@@ -1102,7 +1543,6 @@
   });
 
   rebuildNums();
-  setPeople([{ name: '' }, { name: '' }, { name: '' }]);
-  renderRules();
-
+  addRows(START_ROWS);
+  renderList();
 })();
