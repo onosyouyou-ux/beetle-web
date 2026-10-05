@@ -52,7 +52,7 @@
   "name": "席替えメーカーで座席表を作る手順",
   "step": [
     { "@type": "HowToStep", "name": "座席の形を決める", "text": "横と縦の席の数を選び、点線の席を押して足したり ✕ で消したりして教室の形に合わせ、「この形で確定する」を押します。" },
-    { "@type": "HowToStep", "name": "名簿と配慮を入れる", "text": "名前を1マスに1人ずつ入れ、「＋ 配慮」から前列・後列・固定・離す・隣を選びます。1人に何個でも付けられます。" },
+    { "@type": "HowToStep", "name": "名簿と配慮を入れる", "text": "名前を1マスに1人ずつ入れ、配慮の列の「＋ 追加」から前列・後列・固定・離す・隣を選びます。1人に何個でも付けられます。" },
     { "@type": "HowToStep", "name": "配置する", "text": "「配置する」を押すと配慮を守った座席表ができます。気に入らなければ「再配置する」で何度でも引き直せます。" },
     { "@type": "HowToStep", "name": "手直しして印刷", "text": "席をドラッグか2つを順にタップして入れかえ、「印刷する」で座席表だけを印刷します。" }
   ]
@@ -85,6 +85,11 @@
     },
     {
       "@type": "Question",
+      "name": "男女を交互に並べられますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "できます。名簿の各行で「女／男」を押し、「男女の並べ方」で「となりは男女（左右）」か「前後左右とも男女（市松もよう）」を選んでください。通路をはさんだ席は隣として数えません。女子と男子の人数に差があると同性どうしが隣になる所が少し出ますが、その数を画面でお知らせし、なるべく少ない並びを選びます。性別を「—」のままにした子は、どこに座ってもかまいません。" }
+    },
+    {
+      "@type": "Question",
       "name": "Excelの名簿から名前を読み込めますか？",
       "acceptedAnswer": { "@type": "Answer", "text": "読み込めます。名簿をCSVで書き出して「CSVを読む」から選ぶと、どの列が名前かを確認する画面が出ます。姓と名が別の列に分かれていても、両方えらべば1人ぶんにまとまります。学校の名簿に多い Shift_JIS の文字コードもそのまま読めます。読み込んだファイルもサーバーには送りません。" }
     },
@@ -104,7 +109,7 @@
 <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 <link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/css/app-reference.css">
-<link rel="stylesheet" href="/css/sekigae.css?v=20261004">
+<link rel="stylesheet" href="/css/sekigae.css?v=20261005">
 </head>
 <body>
 
@@ -211,7 +216,7 @@
 
       <p class="sk-roster-note" id="sk-roster-note" hidden></p>
 
-      <div class="sk-list-head" aria-hidden="true"><span>番</span><span>なまえ</span><span>配慮（1人に何個でも）</span></div>
+      <div class="sk-list-head" aria-hidden="true"><span>NO</span><span>名前</span><span>性別</span><span>配慮（1人に何個でも）</span><span>席</span><span>削除</span></div>
       <div class="sk-list" id="sk-list"></div>
       <div class="sk-add">
         <button type="button" class="sk-mini2" id="sk-add1">＋1人</button>
@@ -225,6 +230,16 @@
         <label class="sk-chk"><input type="checkbox" id="sk-prev-seat" checked> 前回と同じ席にしない</label>
         <label class="sk-chk"><input type="checkbox" id="sk-prev-nb" checked> 前回と同じ隣にしない</label>
         <button type="button" class="sk-mini2" id="sk-prev-clear">つかわない</button>
+      </div>
+
+      <div class="sk-genderset">
+        <label for="sk-gender">男女の並べ方</label>
+        <select id="sk-gender">
+          <option value="">気にしない</option>
+          <option value="pair">となりは男女（左右）</option>
+          <option value="checker">前後左右とも男女（市松もよう）</option>
+        </select>
+        <span class="sk-genderset-tip">名簿の「女／男」を押した子だけに使います。「—」の子はどこに座ってもかまいません。</span>
       </div>
 
       <div class="sk-controls" id="sk-go-area">
@@ -247,7 +262,7 @@
         <div class="sk-step">
           <span class="sk-step-n">2</span>
           <h3>名簿と配慮を入れる</h3>
-          <p>名前を1マスに1人ずつ入れます。Excelの名前の列をコピーして1行目に貼ると、下へ1人ずつ入ります。配慮は「＋ 配慮」から選びます（1人に何個でも）。</p>
+          <p>名前を1マスに1人ずつ入れます。Excelの名前の列をコピーして1行目に貼ると、下へ1人ずつ入ります。配慮は配慮の列の「＋ 追加」から選びます（1人に何個でも）。</p>
         </div>
         <div class="sk-step">
           <span class="sk-step-n">3</span>
@@ -292,6 +307,10 @@
         <div>できます。できあがった座席表を「この席ごとCSVで保存」しておき、次回そのファイルを「CSVを読む」から取り込んでください。「前回と同じ席にしない」「前回と同じ隣にしない」が選べるようになります。条件がきつくて全部は守れないときは、守れたところまでで作り、そのことを画面に表示します。</div>
       </details>
       <details class="sk-faq">
+        <summary>男女を交互に並べられますか？<span>+</span></summary>
+        <div>できます。名簿の各行で「女／男」を押し、「男女の並べ方」で「となりは男女（左右）」か「前後左右とも男女（市松もよう）」を選んでください。通路をはさんだ席は隣として数えません。女子と男子の人数に差があると同性どうしが隣になる所が少し出ますが、その数を画面でお知らせし、なるべく少ない並びを選びます。性別を「—」のままにした子は、どこに座ってもかまいません。</div>
+      </details>
+      <details class="sk-faq">
         <summary>Excelの名簿から名前を読み込めますか？<span>+</span></summary>
         <div>読み込めます。名簿をCSVで書き出して「CSVを読む」から選ぶと、どの列が名前かを確認する画面が出ます。姓と名が別の列に分かれていても、両方えらべば1人ぶんにまとまります。学校の名簿に多い Shift_JIS の文字コードもそのまま読めます。読み込んだファイルもサーバーには送りません。</div>
       </details>
@@ -308,7 +327,7 @@
     </section>
 
   </main>
-  <p class="paper-release">更新日：2026-10-04</p>
+  <p class="paper-release">更新日：2026-10-05</p>
 </div>
 
 <!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一） -->
@@ -333,6 +352,6 @@
 <script src="/js/contact-track.js"></script>
 <script src="/js/app-reference.js"></script>
 <script src="/js/class-roster.js?v=20261004"></script>
-<script src="/js/sekigae.js?v=20261004"></script>
+<script src="/js/sekigae.js?v=20261005"></script>
 </body>
 </html>

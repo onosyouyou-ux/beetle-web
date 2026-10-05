@@ -535,3 +535,41 @@ body{
 /* 通路モードでは、押せる列のあいだに薄い点線を出しておく（どこを押せばいいか見えるように） */
 .sk-board-empty.is-aisle-mode .sk-slot:not(.is-aisle){background:repeating-linear-gradient(to bottom,var(--sk-orange) 0 4px,transparent 4px 9px) center/2px 100% no-repeat;opacity:.55}
 .sk-board-empty.is-aisle-mode .sk-slot.is-hover{opacity:1;background-color:var(--sk-orange-bg)}
+
+/* ====== 男女（2026-10-05）：名簿の 女／男 トグルと、男女の並べ方 ====== */
+/* 2 名簿：番｜なまえ｜性別｜配慮｜席｜✕ */
+.sk-list-head,.sk-row{grid-template-columns:34px minmax(140px,200px) auto 1fr auto 30px}
+.sk-seg{display:inline-flex;flex:none;border:1px solid var(--sk-line2);border-radius:6px;overflow:hidden;background:#fff}
+.sk-seg-b{min-width:34px;padding:5px 8px;border:none;background:#fff;color:var(--sk-ink3);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;line-height:1.3}
+.sk-seg-b + .sk-seg-b{border-left:1px solid var(--sk-line2)}
+.sk-seg-b.is-on{background:var(--sk-orange);color:#fff}
+@media (hover:hover){ .sk-seg-b:not(.is-on):hover{background:var(--sk-cream2)} }
+.sk-genderset{display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap;margin:14px 0 0}
+.sk-genderset label{font-size:12.5px;font-weight:800;color:var(--sk-ink2);white-space:nowrap}
+.sk-genderset select{border:1px solid var(--sk-line2);border-radius:6px;padding:6px 9px;font-size:13px;font-family:inherit;color:var(--sk-ink);background:#fff}
+.sk-genderset-tip{font-size:11px;color:var(--sk-ink3)}
+/* 結果の席：女＝左に赤み、男＝左に青み（並べ方をえらんだときだけ。印刷には出さない） */
+#sk-board .sk-seat.is-f{box-shadow:inset 4px 0 0 #e58a9a}
+#sk-board .sk-seat.is-m{box-shadow:inset 4px 0 0 #6f9fd8}
+@media print{ #sk-board .sk-seat.is-f,#sk-board .sk-seat.is-m{box-shadow:none !important} }
+@media(max-width:767px){
+  .sk-row{grid-template-columns:26px 1fr auto 30px}
+  .sk-seg{grid-column:2 / 4;grid-row:2;justify-self:start}
+  .sk-rules{grid-column:2 / 5;grid-row:3}
+  .sk-row-seat{grid-column:3;grid-row:1}
+}
+/* 見出しを列にそろえる（NO｜名前｜性別｜配慮｜席｜削除） */
+.sk-list-head > span:nth-child(5),.sk-list-head > span:nth-child(6){text-align:center;white-space:nowrap}
+.sk-list-head > span:nth-child(1){text-align:right}
+/* 見出しと行は別々のgridなので、auto の列は幅がずれる。PCでは固定幅にしてそろえる */
+@media(min-width:768px){
+  .sk-list-head,.sk-row{grid-template-columns:34px minmax(140px,200px) 106px 1fr 90px 34px}
+  .sk-row-seat{text-align:center}
+  .sk-row-seat:empty{display:block}
+}
+/* 3の見出しは、1・2の見出しと同じく左ずめ（ボタンは中央のまま）。下のお知らせは中央寄せ（2026-10-05） */
+.sk-controls .sk-go-lbl{align-self:flex-start}
+#sk-msg .sk-note{text-align:center}
+/* 名簿の上の「配置する」も下と同じオレンジの塗り（班分けメーカーとそろえる。2026-10-05） */
+.sk-sub.sk-gen-sub{background:var(--sk-orange);color:#fff;border-color:var(--sk-orange);box-shadow:0 2px 0 #a85d1e}
+@media (hover:hover){ .sk-sub.sk-gen-sub:hover{background:var(--sk-orange-dk);color:#fff} }
