@@ -678,3 +678,5 @@ body{
 .hw-empty-hint[hidden]{display:none}
 /* 「班分けする」の下のお知らせは、ボタンに合わせて中央寄せ（2026-10-05） */
 #hw-msg .hw-note{text-align:center}
+/* 3の見出しは、1・2の見出しと同じく左ずめ（ボタンは中央のまま。2026-10-05） */
+.hw-controls .hw-go-lbl{align-self:flex-start}
