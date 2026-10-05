@@ -20,7 +20,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="BEETLE合同会社">
 <meta property="og:title" content="班分けメーカー | BEETLE">
-<meta property="og:description" content="名簿を貼るだけで班分けを自動作成。「別々」「同じ」「ちらす」「そろえる」を守ったまま引き直せます。印刷対応・完全無料。">
+<meta property="og:description" content="名簿を貼るだけで班分けを自動作成。「別々」「同じ」「リーダー」「男女比」を守ったまま引き直せます。印刷対応・完全無料。">
 <meta property="og:url" content="https://www.beetle-web.jp/tools/hanwake/landing.html">
 <meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
 <meta property="og:image:width" content="1200">
@@ -39,7 +39,7 @@
   "operatingSystem": "Web",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
   "url": "https://www.beetle-web.jp/tools/hanwake/landing.html",
-  "description": "名簿と班の数からグループ分けを自動生成し、「別々」「同じ」「ちらす」「リーダー」「そろえる」の配慮を守ったまま何度でも引き直せる先生向けの無料ツール。"
+  "description": "名簿と班の数からグループ分けを自動生成し、「別々」「同じ」「リーダー」「固定」「男女比」の配慮を守ったまま何度でも引き直せる先生向けの無料ツール。"
 }
 </script>
 <script type="application/ld+json">
@@ -52,7 +52,7 @@
   "name": "班分けメーカーでグループ分けを作る手順",
   "step": [
     { "@type": "HowToStep", "name": "班の数を決める", "text": "「班の数」と「1班の人数」を選びます（6班×5人なら30人）。班ごとに人数を変えたいときは、下の班の枠でメンバーや班を足し引きできます。名簿が席より少なければ、なるべく同じ人数になるよう配ります。" },
-    { "@type": "HowToStep", "name": "名簿と配慮を入れる", "text": "名前を1マスに1人ずつ入れ、性別などのボタンを押します。配慮は配慮の列の「＋ 追加」から 別々・同じ・ちらす・リーダー を選びます。1人に何個でも付けられます。" },
+    { "@type": "HowToStep", "name": "名簿と配慮を入れる", "text": "名前を1マスに1人ずつ入れ、性別などのボタンを押します。配慮は配慮の列の「＋ 追加」から 別々・同じ・リーダー・固定 を選びます。1人に何個でも付けられます。" },
     { "@type": "HowToStep", "name": "班分けする", "text": "「班分けする」を押すと配慮を守った班ができます。気に入らなければ何度でも分け直せます。" },
     { "@type": "HowToStep", "name": "手直しして印刷", "text": "子をドラッグか2人を順にタップして入れかえ、「印刷する」で班の表だけを印刷します。" }
   ]
@@ -72,11 +72,6 @@
       "@type": "Question",
       "name": "リーダーを各班に1人ずつ置けますか？",
       "acceptedAnswer": { "@type": "Answer", "text": "置けます。リーダーにしたい子の行で配慮の列の「＋ 追加」から「リーダー」を選んでください。各班に1人ずつ配り、班のいちばん上に「リーダー」と出します。リーダーが班の数より少ないときはリーダーのいない班ができるので、そのことを画面でお知らせします。多いときは、各班になるべく同じ人数ずつ配り、その中から1人をリーダーにします。" }
-    },
-    {
-      "@type": "Question",
-      "name": "「ちらす」と「別々」はどう違いますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "「別々」は2人の組み合わせで、その2人を同じ班にしません。「ちらす」は同じ記号（A〜E）をえらんだ子全員を、1班に1人ずつ配ります。司会や係のように、何人かを各班にばらしたいときは「ちらす」が便利です。" }
     },
     {
       "@type": "Question",
@@ -151,7 +146,6 @@
           </select>
         </span>
         <span class="hw-plan" id="hw-plan">—</span>
-        <button type="button" class="hw-sub hw-fit" id="hw-fit" hidden>おすすめ配置にする</button>
       </div>
 
       <div class="hw-board-wrap" id="hw-board-wrap">
@@ -169,6 +163,7 @@
         <div class="hw-board" id="hw-board"></div>
         <div class="hw-result-foot">
           <button type="button" class="hw-go" id="hw-again">再配置する</button>
+          <button type="button" class="hw-go hw-fit" hidden>おすすめ配置にする</button>
         </div>
         <!-- 「表をコピー」で渡すテキスト。画面には出さない -->
         <textarea id="hw-out" class="hw-out" rows="4" readonly hidden aria-label="班分けのテキスト"></textarea>
@@ -232,7 +227,10 @@
 
       <div class="hw-controls" id="hw-go-area">
         <span class="hw-lbl hw-go-lbl"><span class="hw-step-no">3</span>名簿と配慮ができたら</span>
-        <button type="button" class="hw-go" id="hw-gen">班分けする</button>
+        <div class="hw-go-row">
+          <button type="button" class="hw-go" id="hw-gen">班分けする</button>
+          <button type="button" class="hw-go hw-fit" id="hw-fit" hidden>おすすめ配置にする</button>
+        </div>
       </div>
 
       <div class="hw-msg" id="hw-msg"></div>
@@ -270,12 +268,11 @@
         <tbody>
           <tr><td><code>別々</code></td><td>えらんだ相手と同じ班にしません。</td></tr>
           <tr><td><code>同じ</code></td><td>えらんだ相手と同じ班にします。支援が必要なお子さんと、面倒見のよいお子さんを組ませたいときに。</td></tr>
-          <tr><td><code>ちらす</code></td><td>同じ記号（A〜E）をえらんだ子を、1班に1人ずつ配ります。司会や係を各班に置きたいときに。</td></tr>
           <tr><td><code>リーダー</code></td><td>リーダーにした子を各班に1人ずつ配り、班のいちばん上に「リーダー」と出します。印刷にも出ます。</td></tr>
           <tr><td><code>そろえる項目</code></td><td>名簿のボタンで選びます（既定は 女／男）。そのまとまりの人数が、各班でなるべく同じになるように配ります。</td></tr>
         </tbody>
       </table>
-      <p class="hw-hint hw-hint-block"><b>「別々」「同じ」「ちらす」「リーダー（班の数以下のとき）」は必ず守ります。</b>守れない指定のときは、その理由を画面に出します。<br><b>「そろえる項目」と「前回と同じ班にしない」は、できるだけ守ります。</b>ほかの条件とぶつかったときは、いちばん近い分け方を選んで、どれくらい外れたかをお知らせします。</p>
+      <p class="hw-hint hw-hint-block"><b>「別々」「同じ」「固定」「リーダー（班の数以下のとき）」は必ず守ります。</b>守れない指定のときは、その理由を画面に出します。<br><b>「そろえる項目」と「前回と同じ班にしない」は、できるだけ守ります。</b>ほかの条件とぶつかったときは、いちばん近い分け方を選んで、どれくらい外れたかをお知らせします。</p>
 
       <h2>よくある質問</h2>
       <details class="hw-faq">
@@ -285,10 +282,6 @@
       <details class="hw-faq">
         <summary>リーダーを各班に1人ずつ置けますか？<span>+</span></summary>
         <div>置けます。リーダーにしたい子の行で配慮の列の「＋ 追加」から「リーダー」を選んでください。各班に1人ずつ配り、班のいちばん上に「リーダー」と出します。リーダーが班の数より少ないときはリーダーのいない班ができるので、そのことを画面でお知らせします。多いときは、各班になるべく同じ人数ずつ配り、その中から1人をリーダーにします。</div>
-      </details>
-      <details class="hw-faq">
-        <summary>「ちらす」と「別々」はどう違いますか？<span>+</span></summary>
-        <div>「別々」は2人の組み合わせで、その2人を同じ班にしません。「ちらす」は同じ記号（A〜E）をえらんだ子全員を、1班に1人ずつ配ります。司会や係のように、何人かを各班にばらしたいときは「ちらす」が便利です。</div>
       </details>
       <details class="hw-faq">
         <summary>男女が同じくらいになるようにできますか？<span>+</span></summary>

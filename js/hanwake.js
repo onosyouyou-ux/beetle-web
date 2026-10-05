@@ -7,7 +7,8 @@
    ■ 2026-10-04 作り直し（席替えメーカーと同じ型）
    ・操作の順番を見せる：手順バー（1 班の数 → 2 名簿と配慮 → 3 班分け → 4 手直し・印刷）
      ＋見出しの番号＋オレンジで塗るボタンは手順ごとに1つ
-   ・名簿は1人1行。配慮は行ごとに配慮の列の「＋ 追加」から 別々・同じ・ちらす・リーダー を選ぶ（1人に何個でも）
+   ・名簿は1人1行。配慮は行ごとに配慮の列の「＋ 追加」から 別々・同じ・リーダー・固定 を選ぶ（1人に何個でも）
+   ・2026-10-05：「ちらす」はなくした（「別々」と区別しにくいため）。以前のCSVの「ちらすA」は、同じ記号の子どうしを「別々」にして読む
    ・結果は1の枠（空の班の枠）にそのまま出す。子はドラッグかタップで入れかえ・移動できる
    ・リーダー：リーダーにした子を各班に1人ずつ配り、班のいちばん上に出す
 
@@ -27,7 +28,7 @@
   var SCATTER_SETS = ['A', 'B', 'C', 'D', 'E'];   // 「ちらす」のまとまりの記号
 
   var KIND_LABEL = { '': '配慮をえらぶ', apart: '別々', together: '同じ', scatter: 'ちらす', leader: 'リーダー', fixed: '固定' };
-  var KIND_ORDER = ['', 'apart', 'together', 'scatter', 'leader', 'fixed'];   // 固定＝この班に入れる（2026-10-05）
+  var KIND_ORDER = ['', 'apart', 'together', 'leader', 'fixed'];   // 「ちらす」は 2026-10-05 になくした   // 固定＝この班に入れる（2026-10-05）
 
   var SAMPLE = [
     ['佐藤 みゆき', '女'], ['鈴木 けんた', '男'], ['高橋 あおい', '女'], ['田中 そうた', '男'],
@@ -39,13 +40,13 @@
     ['前田 あさひ', '男'], ['藤田 ことね', '女'], ['後藤 はやと', '男'], ['岡田 みお', '女'],
     ['長谷川 れん', '男'], ['村上 ゆあ', '女']
   ];
-  // 見本の配慮：[だれに, 種類, 相手 or ちらすの記号]
+  // 見本の配慮：[だれに, 種類, 相手]
   var SAMPLE_RULES = [
     ['田中 そうた', 'apart', '中村 はると'],
     ['小林 ゆい', 'together', '石川 えま'],
     ['佐藤 みゆき', 'leader'], ['鈴木 けんた', 'leader'], ['高橋 あおい', 'leader'],
     ['伊藤 ひなた', 'leader'], ['山本 さくら', 'leader'], ['加藤 だいち', 'leader'],
-    ['渡辺 りく', 'scatter', 1], ['林 ゆうき', 'scatter', 1], ['前田 あさひ', 'scatter', 1], ['村上 ゆあ', 'scatter', 1]
+    ['渡辺 りく', 'apart', '林 ゆうき'], ['前田 あさひ', 'apart', '村上 ゆあ']
   ];
 
   /* ============================================================
@@ -451,7 +452,7 @@
       for (var i = 0; i < g.length; i++) {
         for (var j = i + 1; j < g.length; j++) {
           if (rootOf[g[i]] === rootOf[g[j]]) {
-            msgs.push({ text: '「同じ」と「別々・ちらす・リーダー」がぶつかっています。', sub: '「' + g[i] + '」と「' + g[j] + '」は、同じ班にする指定と、別の班にする指定の両方が効いています。', error: true });
+            msgs.push({ text: '「同じ」と「別々・リーダー」がぶつかっています。', sub: '「' + g[i] + '」と「' + g[j] + '」は、同じ班にする指定と、別の班にする指定の両方が効いています。', error: true });
           }
         }
       }
@@ -511,7 +512,7 @@
     if (!best) {
       showMsgs([{
         text: '配慮を全部守れる分け方が見つかりませんでした。',
-        sub: '「別々」「ちらす」「リーダー」が多すぎるか、「同じ」と重なって身動きが取れなくなっている可能性があります。配慮を1つ減らすか、班の数を変えて試してください。',
+        sub: '「別々」「リーダー」が多すぎるか、「同じ」と重なって身動きが取れなくなっている可能性があります。配慮を1つ減らすか、班の数を変えて試してください。',
         error: true
       }]);
       return;
@@ -748,20 +749,26 @@
    * おすすめ（2026-10-05）：名簿の人数と席の数が合わないとき、いまの班の数のまま
    * 名簿の人数を各班へ均等に配った席の数にするボタンを出す（32人・5班 → 7,7,6,6,6）
    */
+  // いま選んでいる値を生かす：班の数を選んでいればその班の数のまま、1班の人数だけならその人数を超えない班の数で
   function fitSizes(n) {
-    var count = seatSizes().length || parseInt($('hw-num').value, 10) || 0;
+    var num = customSizes ? customSizes.length : parseInt($('hw-num').value, 10) || 0;
+    var per = parseInt($('hw-per').value, 10) || 0;
+    var count = num || (per ? Math.ceil(n / per) : 0);
     return n && count && count <= n ? groupSizes(n, count) : null;
   }
 
   function updateFit(n, caps) {
-    var btn = $('hw-fit'), fit = fitSizes(n);
+    var fit = fitSizes(n);
     // 席が足りていて、配ると均等になるなら出さない（2×3に5人なら 3・2 になる）
     var planned = seatSum(caps) >= n ? plannedSizes(n).slice().sort() : caps;
     var same = fit && caps.length === fit.length && planned.join() === fit.slice().sort().join();
-    btn.hidden = !fit || same;
-    if (btn.hidden) return;
-    var min = Math.min.apply(null, fit), max = Math.max.apply(null, fit);
-    btn.textContent = 'おすすめ配置にする（' + n + '人を' + fit.length + '班に均等・1班 ' + (min === max ? min : min + '〜' + max) + '人）';
+    var hide = !fit || same;
+    var min = fit && Math.min.apply(null, fit), max = fit && Math.max.apply(null, fit);
+    // 「班分けする」の横と、結果の「再配置する」の横の2か所
+    Array.prototype.forEach.call(document.querySelectorAll('.hw-fit'), function (btn) {
+      btn.hidden = hide;
+      if (!hide) btn.textContent = 'おすすめ配置にする（' + n + '人を' + fit.length + '班に均等・1班 ' + (min === max ? min : min + '〜' + max) + '人）';
+    });
   }
 
   /* ============================================================
@@ -1009,7 +1016,7 @@
       .map(Number).sort(function (a, b) { return a - b; });
   }
 
-  /** 「別々1」「同じ2;ちらす3;リーダー」のような書き方をほどく */
+  /** 「別々1」「同じ2;固定3;リーダー」のような書き方をほどく（以前の「ちらす3」も読む） */
   function parseRuleCell(cell) {
     return String(cell || '').split(/[;；,、，\/／\s　]+/).map(function (t) {
       t = t.trim();
@@ -1068,18 +1075,13 @@
         (buckets[key] = buckets[key] || { kind: t.kind, no: t.no, names: [] }).names.push(list[i].name);
       });
     });
-    // 3人以上の「別々」（以前のCSV）は「ちらす」と同じ働きなので、空いている記号のちらすにする
-    var usedSets = {};
-    Object.keys(buckets).forEach(function (k) { if (buckets[k].kind === 'scatter') usedSets[Number(buckets[k].no) || 1] = true; });
-    var freeSet = function () {
-      for (var n = 1; n <= SCATTER_SETS.length; n++) if (!usedSets[n]) { usedSets[n] = true; return n; }
-      return SCATTER_SETS.length;
-    };
+    // 「別々」と以前のCSVの「ちらす」は、同じ番号の子どうしを全部「別々」の組にする（3人なら3組）
     Object.keys(buckets).sort().forEach(function (k) {
       var b = buckets[k];
-      if (b.kind === 'scatter' || (b.kind === 'apart' && b.names.length >= 3)) {
-        var set = b.kind === 'scatter' ? Math.min(Number(b.no) || 1, SCATTER_SETS.length) : freeSet();
-        b.names.forEach(function (n) { ruleList.push([n, 'scatter', set]); });
+      if (b.kind === 'scatter' || b.kind === 'apart') {
+        for (var x = 0; x < b.names.length; x++) {
+          for (var y = x + 1; y < b.names.length; y++) ruleList.push([b.names[x], 'apart', b.names[y]]);
+        }
       } else if (b.names.length >= 2) {
         for (var i = 1; i < b.names.length; i++) ruleList.push([b.names[0], b.kind, b.names[i]]);
       }
@@ -1162,7 +1164,7 @@
     var sample = [
       ['佐藤 みゆき', '女', 'リーダー'], ['鈴木 けんた', '男', 'リーダー'], ['高橋 あおい', '女', ''],
       ['田中 そうた', '男', '別々1'], ['中村 はると', '男', '別々1'], ['小林 ゆい', '女', '同じ1'],
-      ['石川 えま', '女', '同じ1'], ['渡辺 りく', '男', 'ちらす1'], ['林 ゆうき', '男', 'ちらす1']
+      ['石川 えま', '女', '同じ1'], ['渡辺 りく', '男', '別々2'], ['林 ゆうき', '男', '別々2']
     ];
     downloadCsv('名簿ひな形.csv', R.sharedRows(sample.map(function (x) {
       return { values: { 'なまえ': x[0], '性別': x[1], '班の配慮': x[2] } };
@@ -1208,18 +1210,21 @@
     onSizeChange();
     renderList();   // 「固定」の班のプルダウンを班の数に合わせる
   }
-  $('hw-fit').addEventListener('click', function () {
+  /** おすすめ配置：班の人数を均等に合わせて、そのまま班分けする（「班分けする」「再配置する」と同じ扱い） */
+  function runFit() {
     var n = students.filter(function (s) { return s.name.trim(); }).length;
     var fit = fitSizes(n);
     if (!fit) return;
     var min = Math.min.apply(null, fit), max = Math.max.apply(null, fit);
     $('hw-num').value = String(fit.length);
     $('hw-per').value = String(max);
-    // 割り切れるならプルダウンだけで表せる。割り切れなければ班ごとの席（7,7,6,6,6）にする
+    // 割り切れるならプルダウンだけで表せる。割り切れなければ班ごとの人数（7,7,6,6,6）にする
     customSizes = min === max ? null : fit;
     onSizeChange();
     renderList();
-  });
+    run();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.hw-fit'), function (b) { b.addEventListener('click', runFit); });
   $('hw-board').addEventListener('click', function (e) {
     if (state.groups) return;
     var t = e.target.closest('button');

@@ -681,5 +681,10 @@ body{
 /* 3の見出しは、1・2の見出しと同じく左ずめ（ボタンは中央のまま。2026-10-05） */
 .hw-controls .hw-go-lbl{align-self:flex-start}
 .hw-mem .hw-lead-tag{margin-left:auto}
-.hw-fit{border-color:var(--hw-orange);color:var(--hw-orange-dk);background:var(--hw-orange-bg)}
-.hw-fit[hidden]{display:none}
+/* おすすめ配置は「班分けする」「再配置する」の横に並べる（2026-10-05） */
+.hw-go-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.hw-result-foot{flex-wrap:wrap;gap:10px}
+.hw-go.hw-fit{background:#fff;color:var(--hw-orange-dk);border:1.5px solid var(--hw-orange);box-shadow:none;font-size:13px}
+@media (hover:hover){ .hw-go.hw-fit:hover{background:var(--hw-orange-bg)} }
+.hw-go.hw-fit[hidden]{display:none}
+@media print{ .hw-fit{display:none !important} }
