@@ -31,6 +31,19 @@
     '森 かいと', '池田 つむぎ', '橋本 りひと', '石川 えま', '前田 あさひ',
     '藤田 ことね', '後藤 はやと', '岡田 みお', '長谷川 れん', '村上 ゆあ'
   ];
+  // 見本の性別（班分けメーカーの見本と同じ。女15人・男15人）
+  var SAMPLE_GENDERS = [
+    '女', '男', '女', '男', '女', '男', '女', '男', '女', '男',
+    '女', '男', '女', '男', '女', '男', '女', '男', '男', '女',
+    '男', '女', '男', '女', '男', '女', '男', '女', '男', '女'
+  ];
+
+  /*
+   * 男女の並べ方（2026-10-05）：'' 気にしない／'pair' となりは男女（左右）／'checker' 前後左右とも男女
+   * 性別が「—」の子はどこに座ってもよい（条件の外）
+   */
+  var GENDERS = ['女', '男'];
+  var GENDER_NOTE = { pair: 'となりは男女', checker: '前後左右とも男女' };
 
   // 見本の配慮：[だれに, 種類, 相手 or 席]
   var SAMPLE_RULES = [
@@ -97,11 +110,19 @@
 
   function newStudent(name) {
     // extra：CSVで読みこんだ、ほかのメーカーの列（班・クラスなど）。保存のときそのまま書き戻す
-    return { id: nextId++, name: name || '', rules: [], extra: {} };
+    return { id: nextId++, name: name || '', gender: '', rules: [], extra: {} };
   }
 
   function addRows(n, names) {
     for (var i = 0; i < n; i++) students.push(newStudent(names ? names[i] : ''));
+  }
+
+  /** CSVの「性別」のセルを 女／男 にそろえる。読めなければ ''（気にしない） */
+  function normGender(v) {
+    v = String(v || '').trim();
+    if (/^(女|女子|おんな|f|female|girl)$/i.test(v)) return '女';
+    if (/^(男|男子|おとこ|m|male|boy)$/i.test(v)) return '男';
+    return '';
   }
 
   function byId(id) {
@@ -125,13 +146,14 @@
     var idx = {};
     students.forEach(function (s, i) { idx[s.id] = i; });
 
-    var rules = { apart: [], next: [], front: [], back: [], fixed: [] };
+    var rules = { apart: [], next: [], front: [], back: [], fixed: [], genderOf: {}, genderMode: $('sk-gender').value };
     var errors = [];
     var pairSeen = { apart: {}, next: {} };
     var fixedSeen = {};
 
     students.forEach(function (s, i) {
       var me = names[i];
+      if (s.gender) rules.genderOf[me] = s.gender;
       s.rules.forEach(function (rule) {
         var k = rule.kind;
         if (k === 'front' || k === 'back') {
@@ -214,11 +236,14 @@
 
   // prev は「前回の席」を避けるための任意条件。
   // { seatOf:{name:'r,c'}, nbOf:{name:{other:true}}, avoidSeat:bool, avoidNb:bool }
-  function solve(names, map, rules, prev) {
+  // useGender が true なら、男女の並べ方（rules.genderMode）も守る
+  function solve(names, map, rules, prev, useGender) {
     var rows = map.length, cols = map[0].length;
     edges = columnEdges(map);
     var avoidSeat = !!(prev && prev.avoidSeat && prev.seatOf);
     var avoidNb = !!(prev && prev.avoidNb && prev.nbOf);
+    var gMode = useGender ? rules.genderMode : '';
+    var genderOf = rules.genderOf || {};
 
     var apartOf = pairMap(rules.apart);
     var nextOf = pairMap(rules.next);
@@ -241,13 +266,29 @@
       var order = withPartnersNext(shuffle(zoned.slice()).concat(shuffle(free.slice())), nextOf);
       var ok = true;
 
+      // 男女：席ごとに「女の席／男の席」を塗り分けた模様を毎回ランダムに作り、その色の席にだけ座らせる
+      var color = null, loose = {};
+      if (gMode) {
+        color = genderPattern(map, gMode);
+        var clash = rules.fixed.some(function (f) {
+          var g = genderOf[f.name];
+          return g && color[f.r][f.c] !== GENDERS.indexOf(g);
+        });
+        if (clash) continue;   // 固定席の子と模様が合わない。別の模様で試す
+        loose = surplus(rest, genderOf, color, map, grid);
+        // 模様に入りきらない子（人数の差のぶん）は最後に空いた席へ
+        order = order.filter(function (n) { return !loose[n]; }).concat(order.filter(function (n) { return loose[n]; }));
+      }
+
       for (var i = 0; i < order.length; i++) {
         var name = order[i];
         var zone = zoneOf(name, rules);
+        var want = color && genderOf[name] && !loose[name] ? GENDERS.indexOf(genderOf[name]) : -1;
         var spots = [];
         for (var rr = 0; rr < rows; rr++) {
           for (var cc = 0; cc < cols; cc++) {
             if (grid[rr][cc] !== null || !seatOk(zone, rr, cc)) continue;
+            if (want >= 0 && color[rr][cc] !== want) continue;
             if (avoidSeat && prev.seatOf[name] === rr + ',' + cc) continue;
             spots.push([rr, cc]);
           }
@@ -269,6 +310,73 @@
       if (ok && allNextOk(rules.next, posOf)) return grid;
     }
     return null;
+  }
+
+  /*
+   * 男女の模様：color[r][c] が 0 なら女の席、1 なら男の席。
+   * 通路で区切られたまとまりごとに向きをランダムに変える（通路をはさめば隣ではないので、合わせなくてよい）
+   *   pair    … 左右だけ交互。行ごと・まとまりごとに向きを変える（前後は同性でもよい）
+   *   checker … 前後左右とも交互（市松）。まとまりごとに向きを変える
+   */
+  function genderPattern(map, mode) {
+    var rows = map.length, cols = map[0].length;
+    var segOf = [], segStart = [], seg = 0, start = 0;
+    for (var c = 0; c < cols; c++) {
+      segOf[c] = seg; segStart[c] = start;
+      if (aisles[c]) { seg++; start = c + 1; }
+    }
+    var flip = function () { return Math.random() < 0.5 ? 1 : 0; };
+    var segFlip = [];
+    for (var s = 0; s <= seg; s++) segFlip.push(flip());
+    var out = [];
+    for (var r = 0; r < rows; r++) {
+      var rowFlip = [];
+      for (var t = 0; t <= seg; t++) rowFlip.push(flip());
+      out.push([]);
+      for (var cc = 0; cc < cols; cc++) {
+        var x = cc - segStart[cc];
+        out[r].push(mode === 'checker' ? (r + x + segFlip[segOf[cc]]) % 2 : (x + rowFlip[segOf[cc]]) % 2);
+      }
+    }
+    return out;
+  }
+
+  /**
+   * 模様の席の数より多い性別の子は、多いぶんだけ模様の外（どこに座ってもよい）にする。
+   * 女16人・男14人のように差があっても作れるようにするため。外れた子のまわりは同性になることがある
+   */
+  function surplus(people, genderOf, color, map, grid) {
+    var cap = [0, 0];
+    for (var r = 0; r < map.length; r++) {
+      for (var c = 0; c < map[0].length; c++) if (grid[r][c] === null) cap[color[r][c]]++;
+    }
+    var loose = {};
+    GENDERS.forEach(function (g, k) {
+      var mine = shuffle(people.filter(function (n) { return genderOf[n] === g; }));
+      for (var i = cap[k]; i < mine.length; i++) loose[mine[i]] = true;
+    });
+    return loose;
+  }
+
+  /** 男女の並べ方から外れている組（同性どうしが隣）を集める。通路をまたぐ組は数えない */
+  function genderClashes(grid, rules) {
+    var mode = rules.genderMode, g = rules.genderOf || {};
+    if (!mode) return [];
+    var out = [];
+    var D = mode === 'checker' ? [[0, 1], [1, 0]] : [[0, 1]];
+    for (var r = 0; r < grid.length; r++) {
+      for (var c = 0; c < grid[0].length; c++) {
+        var a = grid[r][c];
+        if (!a || !g[a]) continue;
+        D.forEach(function (d) {
+          var nr = r + d[0], nc = c + d[1];
+          if (nr >= grid.length || nc >= grid[0].length || crosses(c, nc)) return;
+          var b = grid[nr][nc];
+          if (b && g[b] === g[a]) out.push([a, b]);
+        });
+      }
+    }
+    return out;
   }
 
   /** 「隣」の相手が並び順のすぐ後ろに来るようにする（離れていると相手の席が埋まりやすい） */
@@ -432,9 +540,24 @@
     // 「前回とちがう席に」は守れないこともあるので、守れなければ段階的にゆるめる
     var attempts = prevAttempts();
     var grid = null, relaxed = null;
-    for (var i = 0; i < attempts.length; i++) {
-      grid = solve(names, map, got.rules, attempts[i].prev);
-      if (grid) { relaxed = attempts[i].note; break; }
+    // 男女の並べ方は、守れる限り守る。だめなら前回の席の条件と同じように外して作る
+    var useGender = !!got.rules.genderMode && Object.keys(got.rules.genderOf).length > 0;
+    var tiers = useGender ? [true, false] : [false];
+    var genderDropped = false;
+    for (var t = 0; t < tiers.length && !grid; t++) {
+      for (var i = 0; i < attempts.length; i++) {
+        grid = solve(names, map, got.rules, attempts[i].prev, tiers[t]);
+        if (grid) { relaxed = attempts[i].note; genderDropped = useGender && !tiers[t]; break; }
+      }
+    }
+    // 人数に差があると同性の隣が出るので、何回か引いて いちばん少ない並びを使う
+    if (grid && useGender && !genderDropped && genderClashes(grid, got.rules).length) {
+      var best = genderClashes(grid, got.rules).length;
+      for (var k = 0; k < 40 && best > 0; k++) {
+        var g2 = solve(names, map, got.rules, attempts[i].prev, true);
+        var n2 = g2 ? genderClashes(g2, got.rules).length : Infinity;
+        if (n2 < best) { best = n2; grid = g2; }
+      }
     }
 
     if (!grid) {
@@ -448,13 +571,26 @@
     }
 
     state = { grid: grid, rows: rows, cols: cols, rules: got.rules, total: seatTotal(map) };
-    showMsgs(relaxed ? [{ text: relaxed }] : []);
+    var notes = relaxed ? [{ text: relaxed }] : [];
+    if (got.rules.genderMode && !useGender) {
+      notes.push({ text: '男女の並べ方をえらんでいますが、名簿に性別が入っていません。', sub: '名簿の「女／男」を押すと、並べ方に使います。' });
+    } else if (genderDropped) {
+      notes.push({ text: '「' + GENDER_NOTE[got.rules.genderMode] + '」は、ほかの配慮と両立できなかったので外して作りました。', sub: '固定・前列・後列・隣の指定を減らすと守れることがあります。' });
+    } else if (useGender) {
+      var clash = genderClashes(grid, got.rules).length;
+      if (clash) notes.push({ text: '女' + countGender(got.rules, '女') + '人・男' + countGender(got.rules, '男') + '人と席の数の都合で、同性どうしが隣の所が' + clash + 'か所あります。', sub: '気になるときは、席をタップして入れかえるか「再配置する」で引き直してください。' });
+    }
+    showMsgs(notes);
     picked = null;
     render();
     // 下の「配置する／再配置する」から押しても結果が見えるよう、座席欄まで移動する
     $('sk-seat-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
     // 2回目からは「再配置する」。上と下のボタンをそろえる
     ['sk-gen', 'sk-gen2'].forEach(function (id) { $(id).textContent = '再配置する'; });
+  }
+
+  function countGender(rules, g) {
+    return Object.keys(rules.genderOf).filter(function (n) { return rules.genderOf[n] === g; }).length;
   }
 
   /**
@@ -507,6 +643,8 @@
         else if (rules.fixed.some(function (f) { return f.name === name; })) { cls += ' is-fixed'; tag = '固定'; }
         else if (rules.front.indexOf(name) >= 0) tag = '前列';
         else if (rules.back.indexOf(name) >= 0) tag = '後列';
+        // 男女の並べ方をえらんでいるときだけ、席に 女／男 の色を付ける（印刷には出さない）
+        if (name && rules.genderMode && rules.genderOf[name]) cls += rules.genderOf[name] === '女' ? ' is-f' : ' is-m';
         html += '<div class="' + cls + '" draggable="true" tabindex="0" role="button" data-at="' + at + '"' +
           (name ? ' data-name="' + esc(name) + '"' : '') +
           ' aria-label="' + (c + 1) + 'れつ ' + (r + 1) + 'ばん ' + esc(name || 'あき') + '（えらんで入れかえ）">' +
@@ -574,6 +712,8 @@
       var a = pos[p[0]], b = pos[p[1]];
       if (a && b && !adjacent(a[0], a[1], b[0], b[1])) out.push(p[0] + 'と' + p[1] + 'が隣ではありません');
     });
+    var clash = genderClashes(grid, rules).length;
+    if (clash) out.push('同性どうしが隣の所が' + clash + 'か所（' + GENDER_NOTE[rules.genderMode] + '）');
     return out;
   }
 
@@ -854,9 +994,14 @@
       return '<div class="sk-row" data-id="' + s.id + '">' +
         '<span class="sk-no">' + (i + 1) + '</span>' +
         '<input type="text" class="sk-name" value="' + esc(s.name) + '" placeholder="' + (i + 1) + '番" aria-label="' + (i + 1) + '人目のなまえ" spellcheck="false">' +
+        '<span class="sk-seg" role="group" aria-label="' + (i + 1) + '人目の性別">' +
+        ['', '女', '男'].map(function (g) {
+          return '<button type="button" class="sk-seg-b' + (s.gender === g ? ' is-on' : '') + '" data-gender="' + g + '"' +
+            ' aria-pressed="' + (s.gender === g ? 'true' : 'false') + '">' + (g || '—') + '</button>';
+        }).join('') + '</span>' +
         '<div class="sk-rules">' +
         s.rules.map(function (rule, ri) { return ruleHtml(s, rule, ri, names); }).join('') +
-        '<button type="button" class="sk-rule-add">＋ 配慮</button>' +
+        '<button type="button" class="sk-rule-add" aria-label="配慮を追加">＋ 追加</button>' +
         '</div>' +
         '<span class="sk-row-seat"></span>' +
         '<button type="button" class="sk-row-del" aria-label="' + (i + 1) + '人目を消す">✕</button>' +
@@ -1006,7 +1151,7 @@
 
   var csvRows = null, csvRoles = {};   // 列番号 → 'name' | 'rule' | 'seat'
 
-  var ROLE_LABEL = { '': '（使わない）', name: 'なまえ', rule: '配慮', seat: '前回の席', shape: '座席の形' };
+  var ROLE_LABEL = { '': '（使わない）', name: 'なまえ', gender: '性別', rule: '配慮', seat: '前回の席', shape: '座席の形' };
 
   /*
    * 座席の形をCSVの1セルに入れる書き方。行を「/」で区切り、席あり＝o・席なし＝x。
@@ -1045,8 +1190,9 @@
       // 共通CSVの、ほかのメーカーの列は読まない（保存のときそのまま残す）
       var rr = R.ruleColumnRole(h, '席の配慮', head);
       if (rr === 'rule') { roles[c] = 'rule'; return; }
-      if (rr === 'skip' || /^(性別|班|前のクラス|新しいクラス)$/.test(h)) return;
-      if (/(なまえ|名前|氏名|生徒名|児童名|姓|名|name)/i.test(h)) roles[c] = 'name';
+      if (rr === 'skip' || /^(班|前のクラス|新しいクラス)$/.test(h)) return;
+      if (/^(性別|せいべつ|男女|gender|sex)$/i.test(h)) roles[c] = 'gender';
+      else if (/(なまえ|名前|氏名|生徒名|児童名|姓|名|name)/i.test(h)) roles[c] = 'name';
       else if (/(座席の形|shape)/i.test(h)) roles[c] = 'shape';
       else if (/(席|座席|seat)/i.test(h)) roles[c] = 'seat';
     });
@@ -1112,9 +1258,10 @@
     var ruleCol = colsWithRole('rule')[0];
     var seatCol = colsWithRole('seat')[0];
     var shapeCol = colsWithRole('shape')[0];
+    var genderCol = colsWithRole('gender')[0];
 
     var body = $('sk-csv-head').checked ? csvRows.slice(1) : csvRows;
-    var names = [], ruleCells = [], seatCells = [], extras = [], shape = null;
+    var names = [], ruleCells = [], seatCells = [], extras = [], genders = [], shape = null;
     var head = $('sk-csv-head').checked ? csvRows[0] : [];
     var used = Object.keys(csvRoles).filter(function (c) { return csvRoles[c]; }).map(Number);
     body.forEach(function (r) {
@@ -1123,6 +1270,7 @@
       names.push(R.cleanName(name));
       ruleCells.push(ruleCol === undefined ? '' : (r[ruleCol] || '').trim());
       seatCells.push(seatCol === undefined ? '' : (r[seatCol] || '').trim());
+      genders.push(genderCol === undefined ? '' : normGender(r[genderCol]));
       if (!shape && shapeCol !== undefined) shape = decodeShape(r[shapeCol]);
       extras.push(R.keepExtras(head, r, used));
     });
@@ -1159,7 +1307,8 @@
       });
     });
     loadRoster(names, ruleCol === undefined ? [] : ruleList);
-    students.forEach(function (s, i) { s.extra = extras[i] || {}; });
+    students.forEach(function (s, i) { s.extra = extras[i] || {}; s.gender = genders[i] || ''; });
+    renderList();
 
     // 前回の席：席の列から座席表を組み直す
     var maxC = 0, maxR = 0, seats = [];
@@ -1199,6 +1348,7 @@
     closeCsvPick();
     updateCount();
     var got = [names.length + '人'];
+    if (genders.some(Boolean)) got.push('性別');
     if (ruleList.length && ruleCol !== undefined) got.push('配慮');
     if (seats.length > 1) got.push('前回の席');
     if (shape) got.push('座席の形');
@@ -1264,7 +1414,7 @@
     var rows = R.sharedRows(got.names.map(function (n, i) {
       return {
         values: {
-          'なまえ': n, '席の配慮': cells[n] || '', '席': seatOf[n] || '',
+          'なまえ': n, '性別': students[i].gender || '', '席の配慮': cells[n] || '', '席': seatOf[n] || '',
           '座席の形': i === 0 ? encodeShape(seatMap) : ''   // 座席の形は1行目にだけ入れる
         },
         extra: students[i].extra
@@ -1379,6 +1529,17 @@
     var t = e.target;
     var s = rowOf(t);
     if (!s) return;
+    var seg = t.closest('.sk-seg-b');
+    if (seg) {
+      s.gender = seg.getAttribute('data-gender');
+      // 押した行だけ塗り替える（全部描き直すと入力中のフォーカスが飛ぶ）
+      Array.prototype.forEach.call(seg.parentNode.querySelectorAll('.sk-seg-b'), function (b) {
+        var on = b.getAttribute('data-gender') === s.gender;
+        b.classList.toggle('is-on', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      return;
+    }
     if (t.classList.contains('sk-rule-add')) {
       s.rules.push({ kind: '' });
       renderList();
@@ -1512,6 +1673,8 @@
     var filled = students.some(function (s) { return s.name.trim() || s.rules.length; });
     if (filled && !window.confirm('いま入っている名簿と配慮を、見本に入れかえます。よろしいですか？')) return;
     loadRoster(SAMPLE_NAMES, SAMPLE_RULES);
+    students.forEach(function (s, i) { s.gender = SAMPLE_GENDERS[i] || ''; });
+    renderList();
     // 見本は30人ぶん。いまの座席で足りるなら形はそのまま（足した席・消した席を残す）。
     // 足りないときだけ既定の6×5に戻す
     if (seatTotal(seatMap) < SAMPLE_NAMES.length) {
