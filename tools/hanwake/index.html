@@ -52,7 +52,7 @@
   "name": "班分けメーカーでグループ分けを作る手順",
   "step": [
     { "@type": "HowToStep", "name": "班の数を決める", "text": "「6班に分ける」か「1班4人ずつ」を選びます。割り切れないぶんは自動で1人ずつ調整します。" },
-    { "@type": "HowToStep", "name": "名簿と配慮を入れる", "text": "名前を1マスに1人ずつ入れ、性別などのボタンを押します。配慮は「＋ 配慮」から 別々・同じ・ちらす・リーダー を選びます。1人に何個でも付けられます。" },
+    { "@type": "HowToStep", "name": "名簿と配慮を入れる", "text": "名前を1マスに1人ずつ入れ、性別などのボタンを押します。配慮は配慮の列の「＋ 追加」から 別々・同じ・ちらす・リーダー を選びます。1人に何個でも付けられます。" },
     { "@type": "HowToStep", "name": "班分けする", "text": "「班分けする」を押すと配慮を守った班ができます。気に入らなければ何度でも分け直せます。" },
     { "@type": "HowToStep", "name": "手直しして印刷", "text": "子をドラッグか2人を順にタップして入れかえ、「印刷する」で班の表だけを印刷します。" }
   ]
@@ -71,7 +71,7 @@
     {
       "@type": "Question",
       "name": "リーダーを各班に1人ずつ置けますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "置けます。リーダーにしたい子の行で「＋ 配慮」から「リーダー」を選んでください。各班に1人ずつ配り、班のいちばん上に「リーダー」と出します。リーダーが班の数より少ないときはリーダーのいない班ができるので、そのことを画面でお知らせします。多いときは、各班になるべく同じ人数ずつ配り、その中から1人をリーダーにします。" }
+      "acceptedAnswer": { "@type": "Answer", "text": "置けます。リーダーにしたい子の行で配慮の列の「＋ 追加」から「リーダー」を選んでください。各班に1人ずつ配り、班のいちばん上に「リーダー」と出します。リーダーが班の数より少ないときはリーダーのいない班ができるので、そのことを画面でお知らせします。多いときは、各班になるべく同じ人数ずつ配り、その中から1人をリーダーにします。" }
     },
     {
       "@type": "Question",
@@ -101,7 +101,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="/css/hanwake.css?v=20261004b">
+<link rel="stylesheet" href="/css/hanwake.css?v=20261005">
 </head>
 <body>
 
@@ -133,15 +133,23 @@
           <span class="hw-lbl"><span class="hw-step-no">1</span>班の数を決める</span>
           <span class="hw-count" id="hw-group-count">0班</span>
         </div>
+        <!-- 分け方：班の数か1班の人数のどちらかを選ぶと、もう一方は名簿の人数から合わせる -->
+        <input type="hidden" id="hw-mode" value="groups">
         <span class="hw-ctl">
-          <label for="hw-mode">分け方</label>
-          <select id="hw-mode">
-            <option value="groups">班の数で決める</option>
-            <option value="per">1班の人数で決める</option>
-          </select>
+          <label for="hw-num">班の数</label>
+          <select id="hw-num"></select>
         </span>
         <span class="hw-ctl">
-          <select id="hw-num" aria-label="班の数または1班の人数"></select>
+          <label for="hw-per">1班の人数</label>
+          <select id="hw-per"></select>
+        </span>
+        <span class="hw-ctl">
+          <label for="hw-gmode" id="hw-gmode-lbl">男女比</label>
+          <select id="hw-gmode">
+            <option value="even">均等</option>
+            <option value="split">分ける</option>
+            <option value="">気にしない</option>
+          </select>
         </span>
         <span class="hw-plan" id="hw-plan">—</span>
       </div>
@@ -159,9 +167,10 @@
         <p class="hw-empty-hint">名簿を入れて「班分けする」を押すと、ここに班ができます。</p>
         <div class="hw-board" id="hw-board"></div>
         <div class="hw-result-foot">
-          <button type="button" class="hw-go" id="hw-again">班分けし直す</button>
+          <button type="button" class="hw-go" id="hw-again">再配置する</button>
         </div>
-        <textarea id="hw-out" class="hw-out" rows="4" readonly aria-label="班分けのテキスト"></textarea>
+        <!-- 「表をコピー」で渡すテキスト。画面には出さない -->
+        <textarea id="hw-out" class="hw-out" rows="4" readonly hidden aria-label="班分けのテキスト"></textarea>
       </div>
     </section>
 
@@ -194,14 +203,18 @@
       <p class="hw-roster-note" id="hw-roster-note" hidden></p>
 
       <div class="hw-labelset">
-        <label for="hw-labelset-name">そろえる項目</label>
-        <input type="text" id="hw-labelset-name" value="性別" maxlength="12" spellcheck="false" aria-label="そろえる項目の名前">
-        <span class="hw-labelset-eq">＝</span>
-        <input type="text" id="hw-labelset-input" value="女, 男" maxlength="40" spellcheck="false" aria-label="そろえる項目の選択肢">
-        <span class="hw-labelset-tip">各班になるべく同じ人数ずつ配ります（係や委員会にも使えます）</span>
+        <details class="hw-labelset-more">
+          <summary>男女のかわりに、係・委員会などで「均等／分ける」</summary>
+          <div class="hw-labelset-body">
+            <label for="hw-labelset-name">項目の名前</label>
+            <input type="text" id="hw-labelset-name" value="性別" maxlength="12" spellcheck="false">
+            <label for="hw-labelset-input">えらぶ値（「,」で区切る・3つまで）</label>
+            <input type="text" id="hw-labelset-input" value="女, 男" maxlength="40" spellcheck="false">
+          </div>
+        </details>
       </div>
 
-      <div class="hw-list-head" aria-hidden="true"><span>番</span><span>なまえ</span><span id="hw-list-h-label">性別</span><span>配慮（1人に何個でも）</span></div>
+      <div class="hw-list-head" aria-hidden="true"><span>NO</span><span>名前</span><span id="hw-list-h-label">性別</span><span>配慮（1人に何個でも）</span><span>班</span><span>削除</span></div>
       <div class="hw-list" id="hw-list"></div>
       <div class="hw-add">
         <button type="button" class="hw-mini2" id="hw-add1">＋1人</button>
@@ -235,12 +248,12 @@
         <div class="hw-step">
           <span class="hw-step-n">2</span>
           <h3>名簿と配慮を入れる</h3>
-          <p>名前を1マスに1人ずつ入れ、性別などのボタンを押します。配慮は「＋ 配慮」から選びます（1人に何個でも）。</p>
+          <p>名前を1マスに1人ずつ入れ、性別などのボタンを押します。配慮は配慮の列の「＋ 追加」から選びます（1人に何個でも）。</p>
         </div>
         <div class="hw-step">
           <span class="hw-step-n">3</span>
           <h3>班分けする</h3>
-          <p>「班分けする」を押すと、配慮を守った班が上にできます。気に入らなければ「班分けし直す」で何度でも分け直せます。</p>
+          <p>「班分けする」を押すと、配慮を守った班が上にできます。気に入らなければ「再配置する」で何度でも分け直せます。</p>
         </div>
         <div class="hw-step">
           <span class="hw-step-n">4</span>
@@ -270,7 +283,7 @@
       </details>
       <details class="hw-faq">
         <summary>リーダーを各班に1人ずつ置けますか？<span>+</span></summary>
-        <div>置けます。リーダーにしたい子の行で「＋ 配慮」から「リーダー」を選んでください。各班に1人ずつ配り、班のいちばん上に「リーダー」と出します。リーダーが班の数より少ないときはリーダーのいない班ができるので、そのことを画面でお知らせします。多いときは、各班になるべく同じ人数ずつ配り、その中から1人をリーダーにします。</div>
+        <div>置けます。リーダーにしたい子の行で配慮の列の「＋ 追加」から「リーダー」を選んでください。各班に1人ずつ配り、班のいちばん上に「リーダー」と出します。リーダーが班の数より少ないときはリーダーのいない班ができるので、そのことを画面でお知らせします。多いときは、各班になるべく同じ人数ずつ配り、その中から1人をリーダーにします。</div>
       </details>
       <details class="hw-faq">
         <summary>「ちらす」と「別々」はどう違いますか？<span>+</span></summary>
@@ -293,7 +306,7 @@
     </section>
 
   </main>
-  <p class="paper-release">更新日：2026-10-04</p>
+  <p class="paper-release">更新日：2026-10-05</p>
 </div>
 
 <!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一） -->
@@ -318,6 +331,6 @@
 <script src="/js/contact-track.js"></script>
 <script src="/js/app-reference.js"></script>
 <script src="/js/class-roster.js?v=20261004"></script>
-<script src="/js/hanwake.js?v=20261004b"></script>
+<script src="/js/hanwake.js?v=20261005"></script>
 </body>
 </html>

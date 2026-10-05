@@ -642,3 +642,22 @@ body{
 }
 @media print{ #tool > .hw-board-wrap{display:block !important} }
 @media print{ #hw-board{grid-template-columns:repeat(3,minmax(0,1fr)) !important;width:100%;min-width:0 !important;gap:8px} .hw-group{break-inside:avoid} }
+
+/* 2026-10-05：見出しを列にそろえる（NO｜名前｜性別｜配慮｜班｜削除）。班・削除は中身に合わせて中央 */
+.hw-list-head > span:nth-child(5),.hw-list-head > span:nth-child(6){text-align:center;white-space:nowrap}
+.hw-list-head > span:nth-child(1){text-align:right}
+/* 空の班の枠：いちばん上がリーダーの席 */
+.hw-slot.is-leader{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--hw-orange-dk);border-color:var(--hw-orange);background:var(--hw-orange-bg)}
+.hw-out[hidden]{display:none !important}
+/* 見出しと行は別々のgridなので、auto の列は幅がずれる。PCでは固定幅にしてそろえる */
+@media(min-width:768px){
+  .hw-list-head,.hw-row{grid-template-columns:34px minmax(140px,200px) 106px 1fr 104px 34px}
+  .hw-row-group{text-align:center}
+  .hw-row-group:empty{display:block}
+}
+/* そろえる：ふだんは「男女をそろえる」のチェックだけ。ほかの項目は たたんでおく（2026-10-05） */
+.hw-labelset{display:block}
+.hw-labelset > .hw-chk{display:inline-flex;gap:6px;font-size:13px;color:var(--hw-ink);white-space:nowrap}
+.hw-labelset-more{margin-top:6px}
+.hw-labelset-more summary{font-size:11.5px;color:var(--hw-ink3);cursor:pointer;width:max-content}
+.hw-labelset-body{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}
