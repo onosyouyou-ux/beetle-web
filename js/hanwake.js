@@ -589,9 +589,10 @@
             return '<li class="hw-mem' + (lead ? ' is-leader' : '') + (picked === at ? ' is-picked' : '') + '"' +
               ' draggable="true" tabindex="0" role="button" data-at="' + at + '" data-name="' + R.esc(n) + '"' +
               ' aria-label="' + (gi + 1) + '班 ' + R.esc(n) + '（えらんで入れかえ）">' +
-              (lead ? '<span class="hw-lead-tag">リーダー</span>' : '') +
               '<span class="hw-mem-name">' + R.esc(n) + '</span>' +
               tags.map(function (t) { return '<span class="hw-tag">' + R.esc(t) + '</span>'; }).join('') +
+              // リーダーの札は行の右はし（名前の頭をそろえるため。2026-10-05）
+              (lead ? '<span class="hw-lead-tag">リーダー</span>' : '') +
               '</li>';
           }).join('') +
           '</ul></div>';
