@@ -761,7 +761,7 @@
     btn.hidden = !fit || same;
     if (btn.hidden) return;
     var min = Math.min.apply(null, fit), max = Math.max.apply(null, fit);
-    btn.textContent = 'おすすめ：' + n + '人を' + fit.length + '班に均等（1班 ' + (min === max ? min : min + '〜' + max) + '人）';
+    btn.textContent = 'おすすめ配置にする（' + n + '人を' + fit.length + '班に均等・1班 ' + (min === max ? min : min + '〜' + max) + '人）';
   }
 
   /* ============================================================
