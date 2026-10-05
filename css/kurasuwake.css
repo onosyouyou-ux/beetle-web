@@ -744,7 +744,7 @@ body{
 .kw-flag.is-on{border-style:solid;border-color:var(--kw-orange);background:var(--kw-orange-bg);color:var(--kw-orange-dk)}
 .kw-flag[data-flag="support"].is-on{border-color:#d9776a;background:#fdecea;color:#b4473a}
 @media (hover:hover){ .kw-flag:not(.is-on):hover{background:var(--kw-cream2)} }
-.kw-list{max-height:none}
+.kw-list{max-height:min(640px,70vh)}
 
 @media(max-width:767px){
   .kw-list-head{display:none}
@@ -765,3 +765,9 @@ body{
   .kw-board{grid-template-columns:repeat(4,1fr) !important;gap:8px !important}
   .kw-members .kw-mem{font-size:11px !important;padding:1px 4px !important;margin:0 !important}
 }
+
+/* 1人1行に収める（リーダーの札が付くと点数が次の行に落ちていた） */
+.kw-members .kw-mem{flex-wrap:nowrap}
+.kw-members .kw-mem-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kw-members .kw-tag{flex:none}
+.kw-list-head > span:nth-child(6){text-align:left}
