@@ -707,7 +707,8 @@
     var bar = $('hw-stepbar');
     if (!bar) return;
     var named = students.some(function (s) { return s.name.trim(); });
-    var now = state.groups ? 4 : named ? 3 : touchedStep1 ? 2 : 1;
+    // 1 で班の数と1班の人数を両方選んではじめて 2（名簿と配慮）へ進む
+    var now = state.groups ? 4 : !seatSizes().length ? 1 : named ? 3 : 2;
     Array.prototype.forEach.call(bar.children, function (li) {
       var n = Number(li.getAttribute('data-step'));
       li.classList.toggle('is-done', n < now);
@@ -717,7 +718,8 @@
   }
 
   function updateCount() {
-    var n = students.length;
+    // 名簿の人数は名前を入れた子だけ数える（最初の空の行は数えない。1の段で「たりません」と出さない）
+    var n = students.filter(function (s) { return s.name.trim(); }).length;
     $('hw-count').textContent = n + '人';
     var info = $('hw-plan');
     info.classList.remove('is-warn');
@@ -1192,6 +1194,7 @@
     if (!s) return;
     s.name = e.target.value;
     refreshPartnerLabels();
+    updateCount();
     updateSteps();
   });
 
