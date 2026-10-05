@@ -179,8 +179,9 @@
     });
 
     // リーダーが班の数以下なら「1班に1人まで」を必ず守る。多いときは各班になるべく同じ数ずつ配る
+    // 男女で分けるときは「混ぜない」を優先し、リーダーは「なるべく各班に」にゆるめる（女のリーダーが女の班より多いことがある）
     if (r.leaders.length >= 2) {
-      if (r.leaders.length <= count) apart.push(r.leaders.slice());
+      if (r.leaders.length <= count && !split) apart.push(r.leaders.slice());
       else balance.push({ label: 'リーダー', names: r.leaders.slice() });
     }
     return { apart: apart, together: r.together, balance: balance, split: split, fixed: r.fixed || {} };
@@ -284,7 +285,7 @@
   }
 
   /** 1回ぶんの割り当て。「どのかたまりを何班に入れたか」を返す */
-  function tryOnce(clusters, sizes, apartOf, pins) {
+  function tryOnce(clusters, sizes, apartOf, pins, want) {
     var count = sizes.length, members = [], remain = sizes.slice();
     for (var i = 0; i < count; i++) members.push([]);
     var assign = new Array(clusters.length);
@@ -303,6 +304,10 @@
         cand.push(g);
       }
       if (!cand.length) return null;
+      if (want && want.of[ci] !== undefined) {
+        var same = cand.filter(function (g) { return want.labels[g] === want.of[ci]; });
+        if (same.length) cand = same;
+      }
       var pick = cand[Math.floor(Math.random() * cand.length)];
       members[pick] = members[pick].concat(cl);
       remain[pick] -= cl.length;
@@ -394,10 +399,65 @@
     return { groups: groups, score: cur };
   }
 
+  /**
+   * 男女で分ける（2026-10-05）：班の人数を先に男女の人数から決める。
+   * 均等の人数（5,5,4,4,4,4,4）のままだと、女15人をちょうど入れる班の組み合わせがなく、混ざる班が必ず出ていた。
+   * 女15・男15を7班なら、女の班4つ（4,4,4,3）と男の班3つ（5,5,5）にする。決められないときは null
+   */
+  function splitSizes(names, split) {
+    if (!split || customSizes) return null;
+    var caps = seatSizes(), G = caps.length, cap = caps[0];
+    var cnt = {}, unl = 0;
+    names.forEach(function (n) { if (split[n]) cnt[split[n]] = (cnt[split[n]] || 0) + 1; else unl++; });
+    var keys = Object.keys(cnt).sort(function (a, b) { return cnt[b] - cnt[a]; });
+    var total = names.length - unl;
+    if (keys.length < 2 || G < keys.length) return null;
+    var k = keys.map(function (l) { return Math.max(1, Math.round(cnt[l] / total * G)); });
+    var sum = function () { return k.reduce(function (a, b) { return a + b; }, 0); };
+    while (sum() > G) {
+      var hi = -1;
+      k.forEach(function (v, i) { if (v > 1 && (hi < 0 || cnt[keys[i]] / v < cnt[keys[hi]] / k[hi])) hi = i; });
+      if (hi < 0) return null;
+      k[hi]--;
+    }
+    while (sum() < G) {
+      var lo = 0;
+      k.forEach(function (v, i) { if (cnt[keys[i]] / v > cnt[keys[lo]] / k[lo]) lo = i; });
+      k[lo]++;
+    }
+    var sizes = [], labels = [];
+    keys.forEach(function (l, i) {
+      groupSizes(cnt[l], k[i]).forEach(function (v) { sizes.push(v); labels.push(l); });
+    });
+    // 性別を入れていない子は、少ない班から1人ずつ
+    for (var u = 0; u < unl; u++) {
+      var m = 0;
+      sizes.forEach(function (v, i) { if (v < sizes[m]) m = i; });
+      sizes[m]++;
+    }
+    if (sizes.some(function (v) { return v < 1 || v > cap; })) return null;
+    return { sizes: sizes, labels: labels };
+  }
+
   function solve(names, count, rulesObj, prevPairs) {
     var clusters = buildClusters(names, rulesObj.together);
-    var sizes = plannedSizes(names.length);
+    var sp = splitSizes(names, rulesObj.split);
+    var sizes = sp ? sp.sizes : plannedSizes(names.length);
     var pins = clusterPins(clusters, rulesObj.fixed);
+    // 男女で分ける：かたまりごとの性別（混ざっていれば undefined）。同じ性別の班を先に選ぶ
+    var want = null;
+    if (sp) {
+      want = { labels: sp.labels, of: clusters.map(function (cl) {
+        var l;
+        for (var i = 0; i < cl.length; i++) {
+          var x = rulesObj.split[cl[i]];
+          if (!x) continue;
+          if (l !== undefined && l !== x) return undefined;
+          l = x;
+        }
+        return l;
+      }) };
+    }
     var apartOf = buildApartMap(rulesObj.apart);
     var floorScore = minBias(rulesObj.balance, count) * 3;
     var forcedPairs = {};
@@ -406,7 +466,7 @@
     });
     var best = null, bestScore = Infinity;
     for (var t = 0; t < ATTEMPTS; t++) {
-      var assign = tryOnce(clusters, sizes, apartOf, pins);
+      var assign = tryOnce(clusters, sizes, apartOf, pins, want);
       if (!assign) continue;
       var got = improve(clusters, assign, count, rulesObj, prevPairs, apartOf, floorScore, IMPROVE_ROUNDS, forcedPairs, pins);
       if (got.score.total < bestScore) {
@@ -587,11 +647,12 @@
     if (usePrev && score.repeats > 0) {
       notes.push({ text: '前回と同じ班になった組み合わせが ' + score.repeats + '組 あります。', sub: 'この人数と班の数では避けきれませんでした。班の数を増やすと減らせます。' });
     }
-    if (rulesObj.balance.length && score.bias > minBias(rulesObj.balance, count) + 0.001) {
+    // 男女で分けるときの偏りはリーダーの配り方のぶんなので、ここでは出さない（リーダーのいない班は別にお知らせする）
+    if (!rulesObj.split && rulesObj.balance.length && score.bias > minBias(rulesObj.balance, count) + 0.001) {
       notes.push({ text: '人数に偏りが残りました。', sub: '「同じ」や「別々」を優先したためです。班ごとの内訳は班の見出しで確認してください。' });
     }
     if (rulesObj.split && score.mix > 0) {
-      notes.push({ text: balanceWord() + 'が混ざった班が ' + score.mixedGroups + '班 あります。', sub: 'リーダーや「同じ」の指定、または人数が班の大きさで割り切れないためです。班の数か1班の人数を変えると分けきれることがあります。' });
+      notes.push({ text: balanceWord() + 'が混ざった班が ' + score.mixedGroups + '班 あります。', sub: '1班の人数に対して班の数が足りないか、「同じ」「固定」の指定で混ざることがあります。班の数か1班の人数を増やすと分けきれます。' });
     }
     return notes;
   }
@@ -735,7 +796,7 @@
       if (lc > 1) out.push((i + 1) + '班にリーダーが' + lc + '人います');
     });
     var sizes = state.groups.map(function (g) { return g.length; });
-    if (!customSizes && Math.max.apply(null, sizes) - Math.min.apply(null, sizes) >= 2) out.push('班の人数に2人以上の差があります');
+    if (!customSizes && $('hw-gmode').value !== 'split' && Math.max.apply(null, sizes) - Math.min.apply(null, sizes) >= 2) out.push('班の人数に2人以上の差があります');
     return out;
   }
 
