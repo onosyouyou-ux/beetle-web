@@ -1,0 +1,767 @@
+/* ============================================================
+   kurasuwake.css — クラス分けメーカー（先生向け・本体ドメイン配信の静的ツール。2026-10-05 新規）
+   班分けメーカー（hanwake.css）の接頭辞を kw- に置きかえたものを土台にし、末尾にクラス分け用の部品を足している。
+   班分けの部品（班の枠の足し引き・配慮のプルダウンなど）は使わないが、型をそろえる都合で残している。
+   学校向けツールの作法：紙面固定（.app-paper 1180px）＋余白はモザイクタイル背景
+   ============================================================ */
+
+:root{
+  --kw-ink:#2b2a26;
+  --kw-ink2:#6f6d66;
+  --kw-ink3:#9c9a93;
+  --kw-line:#e2ddd2;
+  --kw-line2:#cdc7b9;
+  --kw-cream:#faf7f1;
+  --kw-cream2:#f2ede3;
+  --kw-orange:#e08a3c;
+  --kw-orange-dk:#c4712a;
+  --kw-orange-bg:#fdf3e7;
+  --kw-green:#2f7d55;
+  --kw-green-bg:#eaf5ee;
+  --kw-red:#c0503b;
+  --kw-red-bg:#fbeeea;
+}
+
+body{
+  background-color:#ece1cb;
+  background-image:url('/assets/images/bg-mosaic.png');
+  background-size:160px 160px;
+  margin:0;
+  color:var(--kw-ink);
+}
+
+.app-paper{
+  width:100%;
+  max-width:1180px;   /* アプリ紙面の固定幅（全アプリ共通） */
+  margin:0 auto;
+  background:var(--kw-cream);
+  box-shadow:0 0 32px rgba(28,28,46,.16);
+}
+
+/* ====== ヒーロー ====== */
+.kw-hero{
+  background:linear-gradient(135deg,#f7efe0 0%,#f3e6d2 100%);
+  border-bottom:1px solid var(--kw-line);
+  padding:34px 40px 30px;
+  text-align:center;
+}
+.kw-eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--kw-orange);margin:0 0 8px}
+.kw-hero h1{font-size:32px;font-weight:900;margin:0 0 12px;letter-spacing:.02em}
+.kw-lead{font-size:14px;line-height:1.9;color:var(--kw-ink2);margin:0 0 12px}
+.kw-privacy{
+  display:inline-block;font-size:11.5px;font-weight:700;color:var(--kw-green);
+  background:var(--kw-green-bg);border:1px solid rgba(47,125,85,.2);border-radius:99px;padding:5px 16px;margin:0;
+}
+
+.kw-main{padding:26px 40px 40px}
+
+/* ====== 入力パネル ====== */
+.kw-panel{background:#fff;border:1px solid var(--kw-line);border-radius:12px;padding:22px 24px}
+.kw-form{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.kw-col{display:flex;flex-direction:column;min-width:0}
+.kw-lbl-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.kw-lbl-row label{font-size:13px;font-weight:800;color:var(--kw-ink)}
+.kw-count{font-size:12px;font-weight:700;color:var(--kw-orange);background:var(--kw-orange-bg);border-radius:99px;padding:2px 12px}
+.kw-mini{margin-left:auto;font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px;border:1px solid var(--kw-line2);background:#fff;color:var(--kw-ink2);cursor:pointer;font-family:inherit}
+.kw-mini:hover{border-color:var(--kw-orange);color:var(--kw-orange)}
+.kw-panel textarea{
+  width:100%;border:1px solid var(--kw-line2);border-radius:8px;padding:11px 13px;
+  font-size:14px;line-height:1.9;resize:vertical;box-sizing:border-box;background:#fff;
+  color:var(--kw-ink);font-family:inherit;
+}
+.kw-panel textarea:focus{outline:none;border-color:var(--kw-orange)}
+/* 「1行に1人」が伝わっていないときだけ出す、その場で直せる注意書き */
+.kw-sep-note{
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px;
+  font-size:11.5px;line-height:1.7;font-weight:700;color:var(--kw-ink2);
+  background:var(--kw-cream2);border-radius:8px;padding:8px 10px;margin:7px 0 0;
+}
+.kw-sep-note .kw-mini{margin-left:0}
+
+.kw-hint{font-size:11.5px;line-height:1.8;color:var(--kw-ink3);margin:7px 0 0}
+.kw-hint code,.kw-table code{font-family:'SFMono-Regular','Consolas',monospace;background:var(--kw-cream2);border-radius:3px;padding:1px 6px;color:var(--kw-ink2)}
+
+/* ====== 名簿の保存・よびだし／CSV取り込み ====== */
+/* display を指定した要素にも hidden 属性を効かせる */
+[hidden]{display:none !important}
+
+.kw-mini2{
+  font-size:11px;font-weight:700;padding:5px 11px;border-radius:6px;
+  border:1px solid var(--kw-line2);background:#fff;color:var(--kw-ink2);
+  cursor:pointer;font-family:inherit;white-space:nowrap;
+}
+.kw-mini2:hover{border-color:var(--kw-orange);color:var(--kw-orange)}
+.kw-mini2.is-go{background:var(--kw-orange);border-color:var(--kw-orange);color:#fff}
+.kw-mini2.is-go:hover{background:var(--kw-orange-dk);border-color:var(--kw-orange-dk);color:#fff}
+.kw-mini2.is-del:hover{border-color:var(--kw-red);color:var(--kw-red)}
+
+.kw-roster-bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:8px}
+.kw-roster-bar select{
+  flex:1 1 150px;min-width:0;border:1px solid var(--kw-line2);border-radius:6px;
+  padding:5px 8px;font-size:12px;font-family:inherit;color:var(--kw-ink);background:#fff;
+}
+.kw-file{
+  font-size:11px;font-weight:700;padding:5px 11px;border-radius:6px;
+  border:1px dashed var(--kw-line2);background:var(--kw-cream2);color:var(--kw-ink2);
+  cursor:pointer;white-space:nowrap;
+}
+.kw-file:hover{border-color:var(--kw-orange);color:var(--kw-orange)}
+.kw-file input{display:none}
+
+.kw-save-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:8px}
+.kw-save-row input{
+  flex:1 1 140px;min-width:0;border:1px solid var(--kw-line2);border-radius:6px;
+  padding:6px 10px;font-size:13px;font-family:inherit;color:var(--kw-ink);background:#fff;
+}
+
+.kw-csv-pick{border:1px solid var(--kw-line2);border-radius:8px;background:var(--kw-cream2);padding:10px 12px;margin-bottom:8px}
+.kw-csv-q{font-size:12px;font-weight:800;color:var(--kw-ink2);margin:0 0 8px}
+.kw-csv-cols{display:flex;flex-wrap:wrap;gap:6px;max-height:150px;overflow-y:auto}
+.kw-csv-col{
+  display:flex;flex-direction:column;gap:2px;text-align:left;
+  border:1px solid var(--kw-line2);border-radius:6px;background:#fff;
+  padding:6px 10px;cursor:pointer;font-family:inherit;max-width:160px;
+}
+.kw-csv-col:hover{border-color:var(--kw-orange)}
+.kw-csv-col.is-on{border-color:var(--kw-orange);background:var(--kw-orange-bg);box-shadow:inset 0 0 0 1px var(--kw-orange)}
+.kw-csv-h{font-size:10.5px;font-weight:800;color:var(--kw-ink3);letter-spacing:.04em}
+.kw-csv-col.is-on .kw-csv-h{color:var(--kw-orange-dk)}
+.kw-csv-v{font-size:12.5px;color:var(--kw-ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kw-csv-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+
+.kw-chk{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--kw-ink2);cursor:pointer}
+.kw-chk input{accent-color:var(--kw-orange);margin:0}
+
+.kw-roster-note{font-size:11.5px;font-weight:700;line-height:1.7;margin:0 0 8px;padding:6px 10px;border-radius:6px;background:var(--kw-cream2);color:var(--kw-ink2)}
+.kw-roster-note.is-ok{background:var(--kw-green-bg);color:var(--kw-green)}
+.kw-roster-note.is-error{background:var(--kw-red-bg);color:var(--kw-red)}
+
+/* ====== 前回の席をさける ====== */
+.kw-prev{
+  display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:16px;
+  padding:10px 14px;border:1px solid rgba(224,138,60,.3);border-radius:8px;background:var(--kw-orange-bg);
+}
+.kw-prev-lbl{font-size:12px;font-weight:800;color:var(--kw-orange-dk)}
+.kw-prev .kw-mini2{margin-left:auto}
+
+.kw-controls{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:18px;padding-top:18px;border-top:1px solid var(--kw-line)}
+.kw-ctl{display:flex;align-items:center;gap:7px}
+.kw-ctl label{font-size:13px;font-weight:800;color:var(--kw-ink2)}
+.kw-ctl select{border:1px solid var(--kw-line2);border-radius:6px;padding:8px 12px;font-size:14px;font-family:inherit;color:var(--kw-ink);background:#fff}
+.kw-seats{font-size:12.5px;color:var(--kw-ink3)}
+.kw-go{
+  margin-left:auto;background:var(--kw-orange);color:#fff;border:none;border-radius:6px;
+  padding:12px 32px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;
+  box-shadow:0 2px 0 var(--kw-orange-dk);
+}
+.kw-go:hover{background:var(--kw-orange-dk);box-shadow:0 2px 0 #a85d1e}
+.kw-sub{background:#fff;border:1px solid var(--kw-line2);border-radius:6px;padding:9px 18px;font-size:13px;font-weight:700;color:var(--kw-ink2);cursor:pointer;font-family:inherit}
+.kw-sub:hover{border-color:var(--kw-orange);color:var(--kw-orange)}
+.kw-sub.is-done{border-color:var(--kw-green);color:var(--kw-green)}
+
+/* ====== メッセージ ====== */
+.kw-msg{margin-top:16px}
+.kw-msg:empty{display:none}
+.kw-note{font-size:13px;line-height:1.9;padding:12px 16px;border-radius:8px;background:var(--kw-orange-bg);color:var(--kw-orange-dk);border:1px solid rgba(224,138,60,.25);font-weight:700}
+.kw-note.is-error{background:var(--kw-red-bg);color:var(--kw-red);border-color:rgba(192,80,59,.25)}
+.kw-note + .kw-note{margin-top:8px}
+.kw-note span{display:block;font-weight:400;color:var(--kw-ink2);margin-top:4px}
+
+/* ====== 座席表 ====== */
+.kw-result{margin-top:22px;display:none}
+.kw-result.is-on{display:block}
+.kw-board-wrap{background:#fff;border:1px solid var(--kw-line);border-radius:12px;padding:24px;overflow-x:auto}
+.kw-blackboard{
+  max-width:420px;margin:0 auto 22px;background:#3d5645;color:#f4f1e6;
+  border:5px solid #a9825a;border-radius:4px;text-align:center;
+  padding:10px;font-size:14px;font-weight:800;letter-spacing:.3em;
+}
+.kw-board{display:grid;gap:10px;justify-content:center;min-width:max-content;margin:0 auto}
+.kw-seat{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  width:112px;min-height:62px;padding:8px 6px;
+  border:2px solid var(--kw-line2);border-radius:8px;background:var(--kw-cream);
+  font-size:14px;font-weight:700;line-height:1.4;text-align:center;word-break:break-all;
+}
+.kw-seat.is-empty{border-style:dashed;background:#fff;color:var(--kw-ink3);font-weight:400}
+.kw-seat.is-fixed{border-color:var(--kw-orange);background:var(--kw-orange-bg)}
+.kw-seat-pos{font-size:10px;font-weight:400;color:var(--kw-ink3)}
+.kw-seat-tag{font-size:10px;font-weight:700;color:var(--kw-orange)}
+
+.kw-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px}
+.kw-info{font-size:12.5px;color:var(--kw-ink3);flex:1;min-width:160px}
+.kw-out{
+  width:100%;margin-top:12px;border:1px solid var(--kw-line2);border-radius:8px;padding:10px 12px;
+  font-family:'SFMono-Regular','Consolas',monospace;font-size:12px;line-height:1.7;
+  resize:vertical;box-sizing:border-box;background:var(--kw-cream2);color:var(--kw-ink2);white-space:pre;
+}
+
+/* ====== 説明・FAQ ====== */
+.kw-doc{margin-top:34px}
+.kw-doc h2{font-size:19px;font-weight:900;margin:30px 0 14px;padding-left:12px;border-left:4px solid var(--kw-orange)}
+.kw-doc h2:first-child{margin-top:0}
+.kw-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.kw-step{background:#fff;border:1px solid var(--kw-line);border-radius:12px;padding:18px 20px}
+.kw-step-n{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--kw-orange);color:#fff;font-size:13px;font-weight:900;margin-bottom:10px}
+.kw-step h3{font-size:14px;font-weight:800;margin:0 0 7px}
+.kw-step p{font-size:12.5px;line-height:1.9;color:var(--kw-ink2);margin:0}
+.kw-table{border-collapse:collapse;width:100%;font-size:13px;background:#fff}
+.kw-table th,.kw-table td{border:1px solid var(--kw-line);padding:10px 14px;text-align:left;vertical-align:top}
+.kw-table th{background:var(--kw-cream2);font-weight:800;color:var(--kw-ink2)}
+.kw-table td{color:var(--kw-ink2);line-height:1.8}
+.kw-table td:first-child{white-space:nowrap}
+.kw-faq{border-bottom:1px solid var(--kw-line);background:#fff}
+.kw-faq summary{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;font-weight:800;font-size:14px;list-style:none}
+.kw-faq summary::-webkit-details-marker{display:none}
+.kw-faq summary span{color:var(--kw-orange)}
+.kw-faq[open] summary span{transform:rotate(45deg)}
+.kw-faq div{padding:0 16px 14px;font-size:13px;line-height:1.9;color:var(--kw-ink2)}
+.kw-more{font-size:13px;line-height:1.9;color:var(--kw-ink2);margin:24px 0 0;padding-top:16px;border-top:1px dashed var(--kw-line)}
+.kw-more a{color:var(--kw-orange);font-weight:700}
+
+@media(max-width:900px){
+  .kw-form{grid-template-columns:1fr}
+  .kw-steps{grid-template-columns:1fr}
+  .kw-main{padding:22px 20px 32px}
+  .kw-hero{padding:26px 20px 24px}
+  .kw-hero h1{font-size:26px}
+  .kw-go{margin-left:0;width:100%}
+}
+
+/* ====== 印刷：座席表だけを出す ====== */
+@media print{
+  body{background:#fff}
+  .app-paper{max-width:none;box-shadow:none;background:#fff}
+  #site-header,.kw-hero,.kw-panel > :not(.kw-seat-area),.kw-result-top,.kw-result-foot,.kw-tabs,#kw-layout-wrap,.kw-doc,.kw-actions,.kw-out,
+  .site-footer-app,.scroll-top-float,.kw-msg,.paper-release{display:none !important}
+  .kw-main{padding:0}
+  .kw-panel{border:none;padding:0}
+  .kw-panel-roster{display:none !important}
+  .kw-result{margin:0}
+  .kw-board-wrap{border:none;padding:0}
+  .kw-seat{border-color:#999}
+}
+
+/* CSV取り込みの列カード（2026-08-24：役割をプルダウンで選ぶ形に変更） */
+.kw-csv-col{position:relative}
+.kw-csv-role-sel{
+  margin-top:4px;width:100%;border:1px solid var(--kw-line2);border-radius:5px;
+  padding:3px 4px;font-size:11px;font-family:inherit;color:var(--kw-ink2);background:#fff;cursor:pointer;
+}
+.kw-csv-col.is-on{border-color:var(--kw-orange);background:var(--kw-orange-bg)}
+.kw-csv-col.is-on .kw-csv-h{color:var(--kw-orange-dk)}
+
+/* ====== 名簿と配慮の表（2026-10-04：1人1行・配慮はプルダウンで足す） ====== */
+.kw-lbl{font-size:13px;font-weight:800;color:var(--kw-ink)}
+.kw-list-head,.kw-row{display:grid;grid-template-columns:34px minmax(150px,220px) 1fr 30px;gap:10px;align-items:center}
+.kw-list-head{font-size:11px;font-weight:800;color:var(--kw-ink3);padding:0 10px 6px;border-bottom:1px solid var(--kw-line)}
+.kw-list{max-height:520px;overflow-y:auto;border-bottom:1px solid var(--kw-line)}
+.kw-row{padding:7px 10px;border-bottom:1px solid var(--kw-cream2)}
+.kw-row:last-child{border-bottom:none}
+.kw-row:nth-child(even){background:#fdfbf7}
+.kw-no{font-size:12px;font-weight:700;color:var(--kw-ink3);text-align:right}
+.kw-name{
+  width:100%;box-sizing:border-box;border:1px solid var(--kw-line2);border-radius:6px;
+  padding:7px 10px;font-size:14px;font-family:inherit;color:var(--kw-ink);background:#fff;
+}
+.kw-name:focus{outline:none;border-color:var(--kw-orange)}
+.kw-rules{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0}
+.kw-rule{
+  display:inline-flex;align-items:center;gap:4px;padding:3px 4px 3px 6px;
+  border:1px solid var(--kw-line2);border-radius:6px;background:var(--kw-cream);
+}
+.kw-rule select{
+  border:1px solid var(--kw-line2);border-radius:5px;padding:4px 6px;font-size:12.5px;
+  font-family:inherit;color:var(--kw-ink);background:#fff;max-width:170px;
+}
+.kw-rule.is-front,.kw-rule.is-back,.kw-rule.is-fixed{border-color:rgba(224,138,60,.45);background:var(--kw-orange-bg)}
+.kw-rule.is-apart{border-color:rgba(192,80,59,.35);background:var(--kw-red-bg)}
+.kw-rule.is-next{border-color:rgba(47,125,85,.3);background:var(--kw-green-bg)}
+.kw-rule-del,.kw-row-del{
+  border:none;background:none;color:var(--kw-ink3);cursor:pointer;font-family:inherit;
+  font-size:14px;line-height:1;padding:4px 6px;border-radius:4px;
+}
+.kw-rule-add{
+  font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:6px;
+  border:1px dashed var(--kw-line2);background:#fff;color:var(--kw-ink2);cursor:pointer;font-family:inherit;
+}
+@media (hover:hover){
+  .kw-rule-del:hover,.kw-row-del:hover{color:var(--kw-red);background:var(--kw-red-bg)}
+  .kw-rule-add:hover{border-color:var(--kw-orange);color:var(--kw-orange)}
+}
+.kw-add{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.kw-add .kw-mini2{font-size:12px;padding:6px 14px}
+
+@media(max-width:767px){
+  .kw-list-head{display:none}
+  .kw-row{grid-template-columns:26px 1fr 30px;gap:6px 8px}
+  .kw-rules{grid-column:2 / 4;grid-row:2}
+  .kw-rule{max-width:100%;box-sizing:border-box;flex-wrap:wrap}
+  .kw-rule select{max-width:none;min-width:0;flex:1 1 auto;padding:4px 2px}
+}
+
+/* 席の数は名簿より先に決める（2026-10-04：上段へ移動） */
+.kw-seatsize{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--kw-line)}
+.kw-controls .kw-go{margin-left:auto}
+
+/* 座席を作成：列と行を決めて、空の座席表を先に見せる */
+.kw-seatsize{margin-bottom:0;padding-bottom:16px}
+.kw-layout{background:var(--kw-cream);border:1px solid var(--kw-line);border-radius:10px;padding:18px;overflow-x:auto;margin-top:2px}
+.kw-layout .kw-blackboard{margin-bottom:14px;font-size:12px;padding:6px}
+.kw-board-empty{gap:8px}
+.kw-board-empty .kw-seat{width:84px;min-height:40px;padding:6px 4px}
+.kw-panel > .kw-lbl-row{margin-top:22px}
+
+/* 座席の形を変える：まわりの点線の席を押すと足せる／席の ✕ で消せる */
+.kw-board-empty .kw-cell{position:relative;border-style:solid;background:#fff;padding-right:16px}
+.kw-cell-del{
+  position:absolute;top:2px;right:2px;border:none;background:none;cursor:pointer;
+  font-size:11px;line-height:1;padding:3px 4px;border-radius:4px;color:var(--kw-ink3);font-family:inherit;
+}
+.kw-ghost{
+  width:84px;min-height:40px;box-sizing:border-box;border:2px dashed var(--kw-line2);border-radius:8px;
+  background:transparent;color:var(--kw-line2);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;opacity:.65;
+}
+/* 中の空きマスも外側の点線と同じ見た目（白いと席があるように見えるため） */
+.kw-ghost-sp{width:84px;min-height:40px}
+@media (hover:hover){
+  .kw-cell-del:hover{color:var(--kw-red);background:var(--kw-red-bg)}
+  .kw-ghost:hover{opacity:1;border-color:var(--kw-orange);color:var(--kw-orange);background:var(--kw-orange-bg)}
+}
+.kw-seat.is-hole{visibility:hidden}
+
+/* 席替えするボタン：下は中央、CSVの行の右端にも置く（2026-10-04） */
+.kw-controls{justify-content:center}
+.kw-controls .kw-go{margin-left:0;min-width:260px}
+.kw-go.kw-go-sm{margin-left:auto;padding:7px 20px;font-size:13px}
+
+/* できた席の入れかえ（ドラッグ＆ドロップ／タップ2回） */
+.kw-swap-hint{font-size:12px;color:var(--kw-ink3);text-align:center;margin:0 0 12px}
+#kw-board .kw-seat[data-at]{cursor:grab;user-select:none;transition:transform .12s, box-shadow .12s}
+#kw-board .kw-seat.is-picked{border-color:var(--kw-orange);box-shadow:0 0 0 3px rgba(224,138,60,.35);transform:translateY(-2px)}
+#kw-board .kw-seat.is-over{border-color:var(--kw-green);background:var(--kw-green-bg)}
+#kw-board .kw-seat.is-dragging{opacity:.45}
+#kw-board .kw-seat:focus-visible{outline:2px solid var(--kw-orange);outline-offset:2px}
+@media (hover:hover){
+  #kw-board .kw-seat[data-at]:hover{border-color:var(--kw-orange)}
+}
+@media(max-width:767px){
+  .kw-go.kw-go-sm{margin-left:0;width:auto}
+  .kw-controls .kw-go{width:100%;min-width:0}
+}
+@media print{ .kw-swap-hint{display:none} }
+
+/* 見出し「座席を作成」は1行使い、プルダウンはその下に並べる */
+.kw-seatsize > .kw-lbl{flex-basis:100%;margin-bottom:-4px}
+
+/* 座席表は「座席を作成」の欄にそのまま出す（2026-10-04） */
+.kw-panel > .kw-result{margin-top:2px}
+.kw-panel > .kw-result .kw-board-wrap{background:var(--kw-cream);border-color:var(--kw-line)}
+.kw-panel > .kw-result .kw-out{margin-bottom:4px}
+
+/* 座席欄のタブ（① 座席の形／② 席替えの結果）と確定ボタン（2026-10-04） */
+.kw-seat-area{margin-top:2px}
+.kw-tabs{display:flex;gap:4px;border-bottom:2px solid var(--kw-line);margin-bottom:-1px}
+.kw-tab{
+  font-size:13px;font-weight:800;padding:9px 18px;border:1px solid var(--kw-line);border-bottom:none;
+  border-radius:8px 8px 0 0;background:var(--kw-cream2);color:var(--kw-ink3);cursor:pointer;font-family:inherit;
+  position:relative;top:2px;
+}
+.kw-tab.is-on{background:var(--kw-cream);color:var(--kw-orange-dk);border-color:var(--kw-line2);border-top:3px solid var(--kw-orange)}
+.kw-tab:disabled{cursor:not-allowed;opacity:.55}
+@media (hover:hover){ .kw-tab:not(:disabled):not(.is-on):hover{color:var(--kw-orange)} }
+.kw-seat-area .kw-layout,.kw-seat-area .kw-board-wrap{border-top-left-radius:0}
+.kw-layout-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 16px;margin-top:16px}
+.kw-layout-note{font-size:12px;color:var(--kw-ink3)}
+.kw-layout-foot .kw-go.kw-go-sm{margin-left:0;padding:9px 26px;font-size:14px}
+.kw-go.is-done{background:#fff;color:var(--kw-orange-dk);border:1px solid var(--kw-orange);box-shadow:none}
+@media (hover:hover){ .kw-go.is-done:hover{background:var(--kw-orange-bg)} }
+.kw-board-empty.is-locked .kw-cell{padding-right:4px}
+@media(max-width:767px){
+  .kw-tab{padding:8px 12px;font-size:12px}
+}
+
+/* 結果へ移動したとき、上の固定ナビに隠れないよう余白をとる */
+.kw-seat-area{scroll-margin-top:90px}
+
+/* 結果の枠：上に人数と道具（コピー・CSV・印刷）、下の中央に再編成（2026-10-04） */
+.kw-result-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.kw-result-top .kw-info{flex:0 1 auto;min-width:0;font-weight:700;color:var(--kw-ink2)}
+.kw-result-tools{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+.kw-result-tools .kw-sub{padding:7px 14px;font-size:12px}
+.kw-result-foot{display:flex;justify-content:center;margin-top:20px}
+.kw-result-foot .kw-go{margin-left:0;min-width:260px}
+@media(max-width:767px){
+  .kw-result-tools{margin-left:0}
+  .kw-result-foot .kw-go{width:100%;min-width:0}
+}
+
+/* 確定ボタンは説明文の下・中央に置く */
+.kw-layout-foot{flex-direction:column;gap:10px}
+.kw-layout-note{text-align:center}
+
+/* 「座席を表示する」は行の右端 */
+.kw-seatsize .kw-layout-btn{margin-left:auto}
+
+/* 「座席を作成」と「名簿と配慮」は別の枠に分ける */
+.kw-panel-roster{margin-top:18px}
+.kw-panel-roster > .kw-lbl-row:first-child{margin-top:0}
+.kw-seatsize{border-bottom:none;padding-bottom:0}
+.kw-seatsize + .kw-seat-area{margin-top:16px}
+
+/* 「座席を作成」の見出しの横に席数と空席の札（名簿の「30人」と同じ形） */
+.kw-seat-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;flex-basis:100%}
+.kw-count.is-sub{color:var(--kw-green);background:var(--kw-green-bg)}
+.kw-count.is-sub.is-short{color:var(--kw-red);background:var(--kw-red-bg)}
+
+/* 枠のオレンジは本体より淡く（濃いと30席並んだときにうるさい） */
+:root{--kw-seat-line:#f0c9a3}
+/* 座席は白地＋オレンジ枠（形の画面・結果の画面とも）。固定席も同じ見た目で「固定」の札だけで示す（塗るとハイライトと見分けがつかない） */
+.kw-board-empty .kw-cell,
+#kw-board .kw-seat:not(.is-empty):not(.is-hole){background:#fff;border-color:var(--kw-seat-line)}
+#kw-board .kw-seat.is-over:not(.is-hole){border-color:var(--kw-green);background:var(--kw-green-bg)}
+
+/* 名簿の名前を押したときに光らせる席（固定席と同じくらいの控えめな色） */
+#kw-board .kw-seat.is-hl:not(.is-hole){border-color:var(--kw-orange);background:var(--kw-orange-bg)}
+
+/* ====== 印刷の見た目（2026-10-04 作り直し） ======
+   ブラウザは既定で背景色を印刷しないので、塗りに頼らず線と文字で見せる */
+@media print{
+  @page{size:A4 landscape;margin:10mm}
+  .kw-seat-area,.kw-result,.kw-board-wrap{margin:0 !important;padding:0 2px 2px !important;border:none !important;background:none !important;overflow:visible !important}
+  .kw-blackboard{
+    background:none !important;color:#111 !important;border:2.5px solid #111 !important;border-radius:2px;
+    max-width:60%;margin:0 auto 10mm !important;padding:8px !important;font-size:16px;letter-spacing:.5em;
+  }
+  #kw-board{gap:6px;width:100%;min-width:0 !important;grid-template-columns:var(--print-tpl) !important}
+  #kw-board .kw-seat,
+  #kw-board .kw-seat:not(.is-empty):not(.is-hole),
+  #kw-board .kw-seat.is-fixed:not(.is-empty){
+    width:auto;min-width:0;min-height:60px;background:#fff !important;border:1.5px solid #333 !important;
+    box-shadow:none !important;transform:none !important;color:#111;
+  }
+  #kw-board .kw-seat > span:nth-child(2){font-size:16px;font-weight:800}
+  #kw-board .kw-seat-pos{color:#666;font-size:9px}
+  #kw-board .kw-seat-tag{color:#111;font-weight:700;border:1px solid #111;border-radius:3px;padding:0 4px}
+  #kw-board .kw-seat.is-empty{border:1.5px dashed #999 !important;color:#999}
+  #kw-board .kw-seat.is-hole{visibility:hidden}
+}
+
+/* 印刷は掲示に使うので、配慮（固定・前列・後列）の札は出さない。誰に配慮があるかが周りに分かってしまうため */
+@media print{ #kw-board .kw-seat-tag{display:none !important} }
+#kw-board .kw-seat.is-fixed:not(.is-hl){background:#fff;border-color:var(--kw-seat-line)}
+
+/* PC推奨の一言（ヒーロー） */
+.kw-pc{font-size:12px;color:var(--kw-ink2);margin:10px 0 0}
+
+/* 名簿の行に、席替えの結果のその子の席を出す */
+.kw-list-head,.kw-row{grid-template-columns:34px minmax(150px,220px) 1fr auto 30px}
+.kw-row-seat{font-size:11.5px;font-weight:700;color:var(--kw-orange-dk);white-space:nowrap}
+.kw-row-seat:empty{display:none}
+@media(max-width:767px){
+  .kw-row{grid-template-columns:26px 1fr auto 30px}
+  .kw-rules{grid-column:2 / 5}
+}
+
+/* ====== 操作の順番（2026-10-04）：迷子にならないよう、手順バー＋見出しの番号＋塗りボタンは手順ごとに1つ ====== */
+.kw-stepbar{
+  list-style:none;margin:0 0 18px;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
+}
+.kw-stepbar li a{
+  display:flex;align-items:center;gap:8px;height:100%;box-sizing:border-box;padding:10px 12px;border-radius:8px;
+  background:#fff;border:1px solid var(--kw-line);color:var(--kw-ink3);font-size:12.5px;font-weight:800;text-decoration:none;
+}
+.kw-stepbar-n{
+  flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
+  background:var(--kw-cream2);color:var(--kw-ink3);font-size:12px;font-weight:900;
+}
+.kw-stepbar li.is-on a{border:2px solid var(--kw-orange);color:var(--kw-orange-dk);background:var(--kw-orange-bg)}
+.kw-stepbar li.is-on .kw-stepbar-n{background:var(--kw-orange);color:#fff}
+.kw-stepbar li.is-done a{color:var(--kw-ink2)}
+.kw-stepbar li.is-done .kw-stepbar-n{background:var(--kw-green);color:#fff;font-size:0}
+.kw-stepbar li.is-done .kw-stepbar-n::after{content:"✓";font-size:12px}
+@media (hover:hover){ .kw-stepbar li a:hover{border-color:var(--kw-orange)} }
+
+/* 枠の見出しの番号 */
+.kw-step-no{
+  display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
+  background:var(--kw-ink);color:#fff;font-size:12px;font-weight:900;margin-right:8px;vertical-align:1px;
+}
+.kw-seat-head .kw-lbl,.kw-panel-roster > .kw-lbl-row .kw-lbl{font-size:15px}
+
+/* 3 配置する：見出しとボタンを中央に縦に並べる */
+.kw-controls{flex-direction:column;gap:10px}
+.kw-go-lbl{font-size:13px;color:var(--kw-ink2)}
+
+/* 名簿の上の「配置する」は控えめ（塗りは下の大きいボタンだけ） */
+.kw-sub.kw-gen-sub{margin-left:auto;padding:6px 16px;font-size:12px;border-color:var(--kw-orange);color:var(--kw-orange-dk)}
+
+@media(max-width:767px){
+  .kw-stepbar{grid-template-columns:repeat(2,1fr)}
+  .kw-stepbar li a{font-size:11.5px;padding:8px}
+  .kw-sub.kw-gen-sub{margin-left:0}
+}
+@media print{ .kw-stepbar{display:none !important} }
+
+/* 使い方の下の補足（次回の続き・基準変更の注意） */
+.kw-doc-note{font-size:12.5px;line-height:1.9;color:var(--kw-ink2);background:#fff;border:1px solid var(--kw-line);border-radius:10px;padding:12px 16px;margin:14px 0 0}
+@media(max-width:1000px) and (min-width:901px){ .kw-steps{grid-template-columns:repeat(2,1fr)} }
+
+/* ====== 通路（2026-10-04） ====== */
+.kw-sub.kw-aisle-btn{margin-left:auto;padding:7px 16px;font-size:12.5px}
+.kw-sub.kw-aisle-btn.is-on{border-color:var(--kw-orange);color:var(--kw-orange-dk);background:var(--kw-orange-bg)}
+/* 通路の帯：真ん中に点線 */
+.kw-aisle{
+  align-self:stretch;min-height:40px;
+  background:linear-gradient(var(--kw-line2),var(--kw-line2)) center/2px 100% no-repeat;
+  opacity:.8;
+}
+.kw-aisle-label{align-self:end;text-align:center;font-size:10.5px;font-weight:800;color:var(--kw-ink3);writing-mode:vertical-rl;letter-spacing:.2em}
+.kw-gap{display:block}
+/* 通路モードの「列のあいだ」 */
+.kw-slot{
+  position:relative;align-self:stretch;min-height:40px;padding:0;border:none;border-radius:4px;
+  background:transparent;cursor:pointer;font-family:inherit;
+}
+.kw-slot.is-aisle{background:linear-gradient(var(--kw-orange),var(--kw-orange)) center/2px 100% no-repeat}
+.kw-slot.is-hover{background-color:var(--kw-orange-bg);box-shadow:inset 0 0 0 2px var(--kw-orange)}
+.kw-slot.is-top.is-hover::after{
+  content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  white-space:nowrap;background:var(--kw-ink);color:#fff;font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:6px;z-index:3;
+  pointer-events:none;
+}
+@media print{
+  .kw-aisle{background:linear-gradient(#999,#999) center/1.5px 100% no-repeat}
+}
+/* 通路モードでは、押せる列のあいだに薄い点線を出しておく（どこを押せばいいか見えるように） */
+.kw-board-empty.is-aisle-mode .kw-slot:not(.is-aisle){background:repeating-linear-gradient(to bottom,var(--kw-orange) 0 4px,transparent 4px 9px) center/2px 100% no-repeat;opacity:.55}
+.kw-board-empty.is-aisle-mode .kw-slot.is-hover{opacity:1;background-color:var(--kw-orange-bg)}
+
+
+/* ============================================================
+   ここから班分け用（2026-10-04）
+   ============================================================ */
+.kw-pc{font-size:12px;color:var(--kw-ink2);margin:10px 0 0}
+
+/* 1 班の数を決める */
+.kw-groupsize{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+.kw-panel-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;flex-basis:100%}
+.kw-panel-head .kw-lbl,.kw-panel-roster > .kw-lbl-row .kw-lbl{font-size:15px}
+.kw-plan{font-size:12.5px;color:var(--kw-ink3)}
+.kw-plan.is-warn{color:var(--kw-red);font-weight:700}
+
+/* 班の枠（結果もここに出す） */
+.kw-board-wrap{margin-top:16px;background:var(--kw-cream);border:1px solid var(--kw-line);border-radius:12px;padding:18px}
+.kw-board-wrap:not(.is-result) .kw-result-top,
+.kw-board-wrap:not(.is-result) .kw-swap-hint,
+.kw-board-wrap:not(.is-result) .kw-result-foot,
+.kw-board-wrap:not(.is-result) .kw-out{display:none}
+.kw-board-wrap.is-result .kw-empty-hint{display:none}
+.kw-empty-hint{font-size:12px;color:var(--kw-ink3);text-align:center;margin:0 0 12px}
+.kw-result-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.kw-result-top .kw-info{font-weight:700;color:var(--kw-ink2);font-size:12.5px}
+.kw-result-tools{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+.kw-result-tools .kw-sub{padding:7px 14px;font-size:12px}
+.kw-result-foot{display:flex;justify-content:center;margin-top:18px}
+.kw-result-foot .kw-go{margin-left:0;min-width:260px}
+.kw-board-wrap .kw-out{margin-top:14px}
+
+.kw-board{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.kw-group{background:#fff;border:1.5px solid var(--kw-seat-line,#f0c9a3);border-radius:10px;overflow:hidden}
+.kw-group.is-empty{border-style:dashed;border-color:var(--kw-line2)}
+.kw-group-head{
+  display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+  padding:8px 12px;border-bottom:1px solid var(--kw-line);background:var(--kw-cream);
+}
+.kw-group-n{font-size:15px;font-weight:900;color:var(--kw-orange-dk)}
+.kw-group-size{font-size:11px;font-weight:700;color:var(--kw-ink3)}
+.kw-members{list-style:none;margin:0;padding:8px;min-height:40px}
+.kw-mem{
+  display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;padding:6px 8px;margin:0 0 4px;border-radius:6px;
+  border:1px solid transparent;font-size:14px;font-weight:700;line-height:1.4;cursor:grab;user-select:none;
+}
+.kw-mem:last-child{margin-bottom:0}
+.kw-mem-name{word-break:break-all}
+.kw-lead-tag{font-size:10.5px;font-weight:800;color:#fff;background:var(--kw-orange);border-radius:4px;padding:1px 6px}
+.kw-tag{font-size:10px;font-weight:700;color:var(--kw-ink3);background:var(--kw-cream2);border-radius:4px;padding:1px 5px}
+.kw-slot{height:30px;margin:0 0 4px;border:1.5px dashed var(--kw-line2);border-radius:6px}
+.kw-slot:last-child{margin-bottom:0}
+.kw-mem.is-picked{border-color:var(--kw-orange);box-shadow:0 0 0 3px rgba(224,138,60,.3);background:var(--kw-orange-bg)}
+.kw-mem.is-hl{border-color:var(--kw-orange);background:var(--kw-orange-bg)}
+.kw-mem.is-over,.kw-group.is-over{border-color:var(--kw-green);background:var(--kw-green-bg)}
+.kw-mem.is-dragging{opacity:.45}
+.kw-mem:focus-visible{outline:2px solid var(--kw-orange);outline-offset:1px}
+@media (hover:hover){ .kw-mem:hover{border-color:var(--kw-line2)} }
+
+/* 2 名簿：番｜なまえ｜性別｜配慮｜班｜✕ */
+.kw-list-head,.kw-row{display:grid;grid-template-columns:34px minmax(140px,200px) auto 1fr auto 30px;gap:10px;align-items:center}
+.kw-row-group{font-size:11.5px;font-weight:700;color:var(--kw-orange-dk);white-space:nowrap}
+.kw-row-group:empty{display:none}
+.kw-labelset{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+.kw-labelset label{font-size:11.5px;font-weight:800;color:var(--kw-ink2);white-space:nowrap}
+.kw-labelset input{width:110px;border:1px solid var(--kw-line2);border-radius:6px;padding:5px 9px;font-size:12.5px;font-family:inherit;color:var(--kw-ink);background:#fff}
+.kw-labelset-tip{font-size:11px;color:var(--kw-ink3)}
+.kw-seg{display:inline-flex;flex:none;border:1px solid var(--kw-line2);border-radius:6px;overflow:hidden;background:#fff}
+.kw-seg:empty{border:none}
+.kw-seg-b{min-width:34px;padding:5px 8px;border:none;background:#fff;color:var(--kw-ink3);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;line-height:1.3}
+.kw-seg-b + .kw-seg-b{border-left:1px solid var(--kw-line2)}
+.kw-seg-b.is-on{background:var(--kw-orange);color:#fff}
+@media (hover:hover){ .kw-seg-b:not(.is-on):hover{background:var(--kw-cream2)} }
+.kw-rule.is-apart{border-color:rgba(192,80,59,.35);background:var(--kw-red-bg)}
+.kw-rule.is-together{border-color:rgba(47,125,85,.3);background:var(--kw-green-bg)}
+.kw-rule.is-scatter{border-color:rgba(224,138,60,.45);background:var(--kw-orange-bg)}
+.kw-rule.is-leader{border-color:var(--kw-orange);background:var(--kw-orange-bg)}
+.kw-prev{margin-top:14px}
+.kw-csv-col{position:relative}
+
+@media(max-width:767px){
+  .kw-row{grid-template-columns:26px 1fr auto 30px}
+  .kw-seg{grid-column:2 / 4;grid-row:2;justify-self:start}
+  .kw-rules{grid-column:2 / 5;grid-row:3}
+  .kw-row-group{grid-column:3;grid-row:1}
+  .kw-board{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+}
+
+/* 印刷：班の表だけ。掲示に使うので、リーダー以外の配慮の札は出さない */
+@media print{
+  .kw-stepbar,.kw-groupsize,.kw-empty-hint,.kw-result-top,.kw-swap-hint,.kw-result-foot,.kw-out,
+  .kw-panel-roster,.kw-doc,.kw-msg,.kw-tag{display:none !important}
+  .kw-panel,.kw-board-wrap{border:none !important;padding:0 !important;background:none !important;margin:0 !important}
+  .kw-board{grid-template-columns:repeat(3,1fr);gap:8px}
+  .kw-group{border:1.5px solid #333 !important;break-inside:avoid}
+  .kw-group-head{background:#fff;border-bottom:1px solid #333}
+  .kw-group-n{color:#111}
+  .kw-group-size{color:#444}
+  .kw-mem{font-size:15px;color:#111;background:#fff !important;border:none !important;box-shadow:none !important}
+  .kw-lead-tag{color:#111;background:none;border:1px solid #111}
+}
+@media print{ #tool > .kw-board-wrap{display:block !important} }
+@media print{ #kw-board{grid-template-columns:repeat(3,minmax(0,1fr)) !important;width:100%;min-width:0 !important;gap:8px} .kw-group{break-inside:avoid} }
+
+/* 2026-10-05：見出しを列にそろえる（NO｜名前｜性別｜配慮｜班｜削除）。班・削除は中身に合わせて中央 */
+.kw-list-head > span:nth-child(5),.kw-list-head > span:nth-child(6){text-align:center;white-space:nowrap}
+.kw-list-head > span:nth-child(1){text-align:right}
+/* 空の班の枠：いちばん上がリーダーの席 */
+.kw-slot.is-leader{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--kw-orange-dk);border-color:var(--kw-orange);background:var(--kw-orange-bg)}
+.kw-out[hidden]{display:none !important}
+/* 見出しと行は別々のgridなので、auto の列は幅がずれる。PCでは固定幅にしてそろえる */
+@media(min-width:768px){
+  .kw-list-head,.kw-row{grid-template-columns:34px minmax(140px,200px) 106px 1fr 104px 34px}
+  .kw-row-group{text-align:center}
+  .kw-row-group:empty{display:block}
+}
+/* そろえる：ふだんは「男女をそろえる」のチェックだけ。ほかの項目は たたんでおく（2026-10-05） */
+.kw-labelset{display:block}
+.kw-labelset > .kw-chk{display:inline-flex;gap:6px;font-size:13px;color:var(--kw-ink);white-space:nowrap}
+.kw-labelset-more{margin-top:6px}
+.kw-labelset-more summary{font-size:11.5px;color:var(--kw-ink3);cursor:pointer;width:max-content}
+.kw-labelset-body{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}
+/* 空の班の枠で、班・席を足し引きする（2026-10-05） */
+.kw-group.is-empty .kw-group-head{position:relative}
+.kw-group-del{border:none;background:none;color:var(--kw-ink3);cursor:pointer;font-size:13px;line-height:1;padding:3px 5px;border-radius:4px;margin-left:6px}
+.kw-slot{position:relative}
+.kw-slot-del{position:absolute;top:50%;right:6px;transform:translateY(-50%);border:none;background:none;color:var(--kw-ink3);cursor:pointer;font-size:11px;line-height:1;padding:3px 4px;border-radius:4px;opacity:.55}
+.kw-slot-add{list-style:none}
+.kw-ghost-add{width:100%;min-height:30px;border:1px dashed var(--kw-line2);border-radius:8px;background:none;color:var(--kw-ink3);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer}
+.kw-group-add{min-height:120px;border:1.5px dashed var(--kw-line2);border-radius:12px;background:none;color:var(--kw-ink3);font-size:13px;font-weight:800;font-family:inherit;cursor:pointer}
+@media (hover:hover){
+  .kw-group-del:hover,.kw-slot-del:hover{color:var(--kw-red);background:var(--kw-red-bg);opacity:1}
+  .kw-ghost-add:hover,.kw-group-add:hover{border-color:var(--kw-orange);color:var(--kw-orange-dk);background:var(--kw-orange-bg)}
+}
+@media print{ .kw-group-del,.kw-slot-del,.kw-slot-add,.kw-group-add{display:none !important} }
+.kw-rule.is-fixed{border-color:var(--kw-orange);background:var(--kw-orange-bg)}
+.kw-empty-hint[hidden]{display:none}
+/* 「班分けする」の下のお知らせは、ボタンに合わせて中央寄せ（2026-10-05） */
+#kw-msg .kw-note{text-align:center}
+/* 3の見出しは、1・2の見出しと同じく左ずめ（ボタンは中央のまま。2026-10-05） */
+.kw-controls .kw-go-lbl{align-self:flex-start}
+.kw-mem .kw-lead-tag{margin-left:auto}
+/* おすすめ配置は班の枠（結果）のすぐ下（2026-10-05） */
+.kw-fit-row{display:flex;justify-content:center;margin-top:14px}
+.kw-fit-row:has(.kw-fit[hidden]){display:none}
+.kw-go.kw-fit{background:#fff;color:var(--kw-orange-dk);border:1.5px solid var(--kw-orange);box-shadow:none;font-size:13px}
+@media (hover:hover){ .kw-go.kw-fit:hover{background:var(--kw-orange-bg)} }
+.kw-go.kw-fit[hidden]{display:none}
+@media print{ .kw-fit{display:none !important} }
+.kw-fit-row .kw-go{margin-left:0}
+
+/* ボタンの色（2026-10-05）：「班分けする」は上も下もオレンジの塗り。おすすめ配置は黒の塗りで区別する */
+.kw-sub.kw-gen-sub{background:var(--kw-orange);color:#fff;border-color:var(--kw-orange);box-shadow:0 2px 0 #a85d1e}
+@media (hover:hover){ .kw-sub.kw-gen-sub:hover{background:var(--kw-orange-dk);color:#fff} }
+.kw-go.kw-fit{background:#1c1c2e;color:#fff;border:none;box-shadow:0 2px 0 #000;font-size:13px}
+@media (hover:hover){ .kw-go.kw-fit:hover{background:#33334a} }
+
+/* 空の班の枠：メンバーの枠（実線の白い箱）と「＋ メンバー」（枠なしの文字ボタン）を見分けやすく（2026-10-05） */
+.kw-group.is-empty .kw-slot{border:1px solid var(--kw-line);background:#fff}
+.kw-group.is-empty .kw-slot.is-leader{border-color:var(--kw-orange)}
+.kw-ghost-add{min-height:26px;border:none;background:none;color:var(--kw-orange-dk);font-size:12px}
+@media (hover:hover){ .kw-ghost-add:hover{background:var(--kw-orange-bg);border:none} }.kw-group.is-empty{border-style:solid}
+
+/* ============================================================
+   ここから下はクラス分けメーカーだけのスタイル（2026-10-05 新規）
+   上は班分けメーカー（hanwake.css）を hw- → kw- にしたもの。型をそろえるためにそのまま使う
+   ============================================================ */
+
+/* 1：そろえるもののチェック */
+.kw-balset{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:4px}
+.kw-balset-lbl{font-size:12.5px;font-weight:800;color:var(--kw-ink2)}
+.kw-balset .kw-chk{font-size:12.5px;color:var(--kw-ink)}
+
+/* 1：まだクラス分けしていないときの枠 */
+.kw-empty-body{margin:0;padding:18px 10px;text-align:center;font-size:12px;color:var(--kw-ink3)}
+.kw-group.is-empty{border-style:solid}
+
+/* 結果：クラスの列。人数が多いので行を詰める */
+.kw-board{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+.kw-members .kw-mem{padding:3px 8px;margin:0 0 2px;font-size:13px;gap:2px 5px;border-left:3px solid transparent}
+.kw-mem.is-f{border-left-color:#e58a9a}
+.kw-mem.is-m{border-left-color:#6f9fd8}
+.kw-mem .kw-tag{font-size:10px;padding:0 5px}
+.kw-tag.is-support{background:#fdecea;color:#b4473a}
+.kw-tag.is-leader{background:var(--kw-orange-bg);color:var(--kw-orange-dk)}
+.kw-mem-score{margin-left:auto;font-size:11px;font-weight:700;color:var(--kw-ink3)}
+
+/* 結果の下：クラスごとの内訳 */
+.kw-balance{margin-top:16px;overflow-x:auto}
+.kw-balance[hidden]{display:none}
+.kw-bal-table{border-collapse:collapse;width:100%;font-size:12.5px;background:#fff}
+.kw-bal-table caption{text-align:left;font-size:12.5px;font-weight:800;color:var(--kw-ink2);padding:0 0 6px}
+.kw-bal-table th,.kw-bal-table td{border:1px solid var(--kw-line);padding:5px 8px;text-align:center;white-space:nowrap}
+.kw-bal-table thead th{background:var(--kw-cream2);font-weight:800;color:var(--kw-ink2)}
+.kw-bal-table tbody th{background:var(--kw-cream2);font-weight:800;color:var(--kw-orange-dk)}
+.kw-bal-table tr.is-all th,.kw-bal-table tr.is-all td{background:#f7f3ea;color:var(--kw-ink2);font-weight:700}
+
+/* 2：名簿の列（NO｜名前｜性別｜前のクラス｜点数｜支援・リーダー｜クラス｜削除） */
+.kw-list-head,.kw-row{display:grid;grid-template-columns:34px minmax(130px,190px) 106px 72px 64px 1fr 56px 34px;gap:10px;align-items:center}
+.kw-list-head > span:nth-child(1){text-align:right}
+.kw-list-head > span:nth-child(7),.kw-list-head > span:nth-child(8){text-align:center;white-space:nowrap}
+.kw-row-group{text-align:center}
+.kw-row-group:empty{display:block}
+.kw-prevc,.kw-score{width:100%;box-sizing:border-box;border:1px solid var(--kw-line2);border-radius:6px;padding:6px 7px;font-size:13px;font-family:inherit;color:var(--kw-ink);background:#fff}
+.kw-score{text-align:right}
+.kw-flags{display:flex;flex-wrap:wrap;gap:6px}
+.kw-flag{border:1px dashed var(--kw-line2);border-radius:6px;background:#fff;color:var(--kw-ink3);font-size:12px;font-weight:700;font-family:inherit;padding:4px 10px;cursor:pointer}
+.kw-flag.is-on{border-style:solid;border-color:var(--kw-orange);background:var(--kw-orange-bg);color:var(--kw-orange-dk)}
+.kw-flag[data-flag="support"].is-on{border-color:#d9776a;background:#fdecea;color:#b4473a}
+@media (hover:hover){ .kw-flag:not(.is-on):hover{background:var(--kw-cream2)} }
+.kw-list{max-height:none}
+
+@media(max-width:767px){
+  .kw-list-head{display:none}
+  .kw-row{grid-template-columns:26px 1fr 64px 30px;gap:6px 8px}
+  .kw-row .kw-seg{grid-column:2 / 3;grid-row:2;justify-self:start}
+  .kw-row .kw-prevc{grid-column:3;grid-row:2}
+  .kw-row .kw-score{grid-column:3;grid-row:1}
+  .kw-row .kw-flags{grid-column:2 / 4;grid-row:3}
+  .kw-row .kw-row-group{grid-column:4;grid-row:2}
+  .kw-row .kw-row-del{grid-column:4;grid-row:1}
+  .kw-board{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+}
+
+/* 印刷：掲示用にクラスごとの名前だけ。点数・支援・リーダー・前のクラス・内訳の表は出さない */
+@media print{
+  .kw-balance,.kw-balset,.kw-mem .kw-tag,.kw-mem-score{display:none !important}
+  .kw-mem{border-left:none !important}
+  .kw-board{grid-template-columns:repeat(4,1fr) !important;gap:8px !important}
+  .kw-members .kw-mem{font-size:11px !important;padding:1px 4px !important;margin:0 !important}
+}

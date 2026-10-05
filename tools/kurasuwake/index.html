@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6JXJGQ1Q6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  // ローカル確認（localhost・LAN内のIP・file://）と内部の点検はGA4に計上しない
+  // 内部の点検：?internal=1 で一度開いたブラウザは以後計上しない（iframeにも効く）。?internal=0 で解除
+  try { var nkInt = new URLSearchParams(location.search).get('internal'); if (nkInt === '1') localStorage.setItem('beetle-internal', '1'); else if (nkInt === '0') localStorage.removeItem('beetle-internal'); } catch (e) {}
+  if (['localhost','127.0.0.1','0.0.0.0','::1','[::1]'].indexOf(location.hostname) >= 0 || location.hostname.indexOf('192.168.') === 0 || location.hostname.indexOf('10.') === 0 || location.protocol === 'file:' || (function () { try { return localStorage.getItem('beetle-internal') === '1'; } catch (e) { return false; } })()) { window['ga-disable-G-N6JXJGQ1Q6'] = true; }
+  gtag('config', 'G-N6JXJGQ1Q6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>クラス分けメーカー｜男女・前のクラス・学力をそろえて自動でクラス編成【無料・先生向け】｜BEETLE</title>
+<meta name="description" content="学年の名簿（200人まで）を入れて、クラスの数を決めるだけでクラス分けを自動作成。男女の人数・前のクラスのばらし方・点数の平均・支援が必要な子やリーダーの人数を、各クラスでそろえます。手直し・印刷・CSV対応。完全無料・登録不要。名簿は送信されません。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BEETLE合同会社">
+<meta property="og:title" content="クラス分けメーカー | BEETLE">
+<meta property="og:description" content="学年の名簿を入れるだけでクラス分けを自動作成。男女・前のクラス・点数・支援の子を各クラスでそろえます。完全無料。">
+<meta property="og:url" content="https://www.beetle-web.jp/tools/kurasuwake/landing.html">
+<meta property="og:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="クラス分けメーカー | BEETLE">
+<meta name="twitter:description" content="学年の名簿を入れるだけでクラス分けを自動作成。男女・前のクラス・点数・支援の子をそろえます。完全無料。">
+<meta name="twitter:image" content="https://www.beetle-web.jp/assets/images/OG.jpg">
+<link rel="canonical" href="https://www.beetle-web.jp/tools/kurasuwake/landing.html">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "クラス分けメーカー",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "url": "https://www.beetle-web.jp/tools/kurasuwake/landing.html",
+  "description": "学年の名簿とクラスの数から、男女・前のクラス・点数・支援の子・リーダーを各クラスでそろえたクラス分けを自動で作る先生向けの無料ツール。"
+}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.beetle-web.jp/"},{"@type":"ListItem","position":2,"name":"教育支援","item":"https://www.beetle-web.jp/edu-tools.html"},{"@type":"ListItem","position":3,"name":"クラス分けメーカー","item":"https://www.beetle-web.jp/tools/kurasuwake/landing.html"}]}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "クラス分けメーカーでクラス編成を作る手順",
+  "step": [
+    { "@type": "HowToStep", "name": "クラスの数を決める", "text": "「クラスの数」を選び、そろえたいもの（男女・前のクラス・点数・支援・リーダー）にチェックを入れます。" },
+    { "@type": "HowToStep", "name": "名簿を入れる", "text": "学年の名簿をCSVで読み込みます。名前・性別・前のクラス・点数・支援・リーダーを1人1行で入れます。" },
+    { "@type": "HowToStep", "name": "クラス分けする", "text": "「クラス分けする」を押すと、そろえたいものが各クラスでなるべく同じになるクラス分けができます。気に入らなければ「再配置する」で何度でも作り直せます。" },
+    { "@type": "HowToStep", "name": "手直しして印刷", "text": "子をドラッグか2人を順にタップして入れかえ、「印刷する」でクラスごとの名簿を印刷します。" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "児童の名前や点数はサーバーに送られますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "送られません。クラス分けの計算もCSVの読み書きも、すべてブラウザ内（先生の端末上）で処理していて、サーバーには一切送信していません。ブラウザにも保存しません。ページを閉じれば何も残らないので、続きは「CSVで保存」したファイルから戻してください。" }
+    },
+    {
+      "@type": "Question",
+      "name": "何をそろえてクラスを分けますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "男女の人数、前のクラスの子の人数（前のクラスをばらす）、点数の平均、支援が必要な子の人数、リーダーの人数の5つです。1のチェックで、そろえるものを選べます。名簿に入っていない項目は使いません。全部を完全にそろえられないときは、いちばん近い分け方を選び、クラスごとの内訳を表で見せます。" }
+    },
+    {
+      "@type": "Question",
+      "name": "何人まで分けられますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "1学年200人くらいまでを想定しています。クラスの数は2〜8から選べます。人数が多いので、名簿はCSVで読み込むのがおすすめです。どんなCSVを作ればよいかは「ダミー名簿CSV」をダウンロードすると見られます。" }
+    },
+    {
+      "@type": "Question",
+      "name": "点数や支援の情報は印刷に出ますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "出ません。印刷するとクラスごとの名前だけが出ます。点数・支援・リーダー・前のクラスは画面でクラス分けを確かめるためだけに使います。" }
+    },
+    {
+      "@type": "Question",
+      "name": "席替えメーカーや班分けメーカーと同じCSVを使えますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "使えます。席替えメーカー・班分けメーカー・クラス分けメーカーは同じ形のCSVを読み書きします。クラス分けメーカーが読み書きするのは「性別」「クラスの配慮」「前のクラス」「新しいクラス」「点数」の列で、ほかのメーカーの列は消さずにそのまま残して保存します。" }
+    }
+  ]
+}
+</script>
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/kurasuwake.css?v=20261005">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<!-- 紙面（1180px固定）。余白はモザイクタイルの背景 -->
+<div class="app-paper">
+
+  <header class="kw-hero">
+    <p class="kw-eyebrow">先生向けツール</p>
+    <h1>クラス分けメーカー</h1>
+    <p class="kw-lead">学年の名簿を入れて、クラスの数を決めるだけ。<br>男女・前のクラス・点数・支援の子が、どのクラスもなるべく同じになるように分けます。</p>
+    <p class="kw-privacy">名簿も点数もどこにも保存しません。計算は全部この端末の中で行い、サーバーにもブラウザにも残しません。</p>
+    <p class="kw-pc">パソコンでの利用をおすすめします。人数が多いので、名簿はCSVで読み込むのが楽です。</p>
+  </header>
+
+  <main class="kw-main">
+
+    <ol class="kw-stepbar" id="kw-stepbar" aria-label="操作の順番">
+      <li data-step="1"><a href="#tool"><span class="kw-stepbar-n">1</span>クラスの数を決める</a></li>
+      <li data-step="2"><a href="#kw-roster"><span class="kw-stepbar-n">2</span>名簿を入れる</a></li>
+      <li data-step="3"><a href="#kw-go-area"><span class="kw-stepbar-n">3</span>クラス分けする</a></li>
+      <li data-step="4"><a href="#tool"><span class="kw-stepbar-n">4</span>手直しして印刷</a></li>
+    </ol>
+
+    <section class="kw-panel" id="tool">
+      <div class="kw-groupsize">
+        <div class="kw-panel-head">
+          <span class="kw-lbl"><span class="kw-step-no">1</span>クラスの数を決める</span>
+          <span class="kw-count" id="kw-group-count">0クラス</span>
+        </div>
+        <span class="kw-ctl">
+          <label for="kw-num">クラスの数</label>
+          <select id="kw-num"></select>
+        </span>
+        <span class="kw-plan" id="kw-plan">—</span>
+        <div class="kw-balset" role="group" aria-label="各クラスでそろえるもの">
+          <span class="kw-balset-lbl">そろえるもの</span>
+          <label class="kw-chk"><input type="checkbox" id="kw-bal-gender" checked> 男女の人数</label>
+          <label class="kw-chk"><input type="checkbox" id="kw-bal-prev" checked> 前のクラスをばらす</label>
+          <label class="kw-chk"><input type="checkbox" id="kw-bal-score" checked> 点数の平均</label>
+          <label class="kw-chk"><input type="checkbox" id="kw-bal-support" checked> 支援の子の人数</label>
+          <label class="kw-chk"><input type="checkbox" id="kw-bal-leader" checked> リーダーの人数</label>
+        </div>
+      </div>
+
+      <div class="kw-board-wrap" id="kw-board-wrap">
+        <div class="kw-result-top">
+          <span class="kw-info" id="kw-info">—</span>
+          <div class="kw-result-tools">
+            <button type="button" class="kw-sub" id="kw-copy">表をコピー</button>
+            <button type="button" class="kw-sub" id="kw-download">このクラスごとCSVで保存</button>
+            <button type="button" class="kw-sub" id="kw-print">印刷する</button>
+          </div>
+        </div>
+        <p class="kw-swap-hint">子をドラッグしてほかの子に重ねると入れかわり、クラスの空いた所に落とすとそのクラスへ移ります（2人を順にタップしても入れかわります）。</p>
+        <p class="kw-empty-hint" id="kw-pick-hint">「クラスの数」を選ぶと、ここにクラスの枠が出ます。</p>
+        <p class="kw-empty-hint" id="kw-edit-hint">名簿を入れて「クラス分けする」を押すと、ここにクラスができます。</p>
+        <div class="kw-board" id="kw-board"></div>
+        <div class="kw-balance" id="kw-balance" hidden></div>
+        <div class="kw-result-foot">
+          <button type="button" class="kw-go" id="kw-again">再配置する</button>
+        </div>
+        <!-- 「表をコピー」で渡すテキスト。画面には出さない -->
+        <textarea id="kw-out" class="kw-out" rows="4" readonly hidden aria-label="クラス分けのテキスト"></textarea>
+      </div>
+    </section>
+
+    <section class="kw-panel kw-panel-roster" id="kw-roster" aria-label="名簿">
+      <div class="kw-lbl-row">
+        <span class="kw-lbl"><span class="kw-step-no">2</span>名簿を入れる</span>
+        <span class="kw-count" id="kw-count">0人</span>
+        <button type="button" class="kw-mini" id="kw-sample">見本を入れる</button>
+      </div>
+      <div class="kw-roster-bar">
+        <label class="kw-file">
+          CSVを読む
+          <input type="file" id="kw-csv" accept=".csv,.tsv,.txt,text/csv,text/plain">
+        </label>
+        <button type="button" class="kw-mini2" id="kw-csv-save">CSVで保存</button>
+        <button type="button" class="kw-mini2" id="kw-csv-template">ひな形CSV</button>
+        <button type="button" class="kw-mini2" id="kw-csv-dummy">ダミー名簿CSV（140人）</button>
+        <button type="button" class="kw-sub kw-gen-sub" id="kw-gen2">クラス分けする</button>
+      </div>
+
+      <div class="kw-csv-pick" id="kw-csv-pick" hidden>
+        <p class="kw-csv-q">それぞれの列は何ですか？（見出しから当てています。違っていれば選び直してください）</p>
+        <div class="kw-csv-cols" id="kw-csv-cols"></div>
+        <div class="kw-csv-foot">
+          <label class="kw-chk"><input type="checkbox" id="kw-csv-head" checked> 1行目は見出し</label>
+          <button type="button" class="kw-mini2 is-go" id="kw-csv-ok">この列でよみこむ</button>
+          <button type="button" class="kw-mini2" id="kw-csv-cancel">やめる</button>
+        </div>
+      </div>
+
+      <p class="kw-roster-note" id="kw-roster-note" hidden></p>
+
+      <div class="kw-list-head" aria-hidden="true"><span>NO</span><span>名前</span><span>性別</span><span>前のクラス</span><span>点数</span><span>支援・リーダー</span><span>クラス</span><span>削除</span></div>
+      <div class="kw-list" id="kw-list"></div>
+      <div class="kw-add">
+        <button type="button" class="kw-mini2" id="kw-add1">＋1人</button>
+        <button type="button" class="kw-mini2" id="kw-add10">＋10人</button>
+        <button type="button" class="kw-mini2" id="kw-add30">＋30人</button>
+      </div>
+      <p class="kw-hint">人数が多いときは「CSVを読む」が楽です。どんな列を作ればよいかは「ダミー名簿CSV」で見られます。Excelの名前の列をコピーして1行目に貼ると、下へ1人ずつ入ります。<br>CSVは席替えメーカー・班分けメーカー・クラス分けメーカーで共通です。1つの名簿ファイルを使い回せます（ほかのメーカーの列はそのまま残ります）。</p>
+
+      <div class="kw-controls" id="kw-go-area">
+        <span class="kw-lbl kw-go-lbl"><span class="kw-step-no">3</span>名簿ができたら</span>
+        <button type="button" class="kw-go" id="kw-gen">クラス分けする</button>
+      </div>
+
+      <div class="kw-msg" id="kw-msg"></div>
+    </section>
+
+    <section class="kw-doc" id="howto">
+      <h2>使い方</h2>
+      <div class="kw-steps">
+        <div class="kw-step">
+          <span class="kw-step-n">1</span>
+          <h3>クラスの数を決める</h3>
+          <p>「クラスの数」を選び、そろえたいものにチェックを入れます。名簿に入っていない項目（点数がない、など）は自動で使いません。</p>
+        </div>
+        <div class="kw-step">
+          <span class="kw-step-n">2</span>
+          <h3>名簿を入れる</h3>
+          <p>学年の名簿をCSVで読み込みます。名前・性別・前のクラス・点数・支援・リーダーを1人1行で。画面で直接入れることもできます。</p>
+        </div>
+        <div class="kw-step">
+          <span class="kw-step-n">3</span>
+          <h3>クラス分けする</h3>
+          <p>「クラス分けする」を押すと、そろえたいものがどのクラスもなるべく同じになるように分けます。下の表でクラスごとの内訳を確かめられます。</p>
+        </div>
+        <div class="kw-step">
+          <span class="kw-step-n">4</span>
+          <h3>手直しして印刷</h3>
+          <p>子はドラッグか2人を順にタップすると入れかわります。表の内訳もすぐ変わります。「印刷する」ではクラスごとの名前だけが出ます。</p>
+        </div>
+      </div>
+      <p class="kw-doc-note"><b>次回の続き：</b>「このクラスごとCSVで保存」したファイルを「CSVを読む」から読み込むと、名簿と「新しいクラス」が戻ります。CSVは席替えメーカー・班分けメーカー・クラス分けメーカーで共通です（ほかのメーカーの列はそのまま残ります）。</p>
+
+      <h2>CSVの列</h2>
+      <table class="kw-table">
+        <thead><tr><th>見出し</th><th>中身</th></tr></thead>
+        <tbody>
+          <tr><td><code>なまえ</code></td><td>名前。姓と名が別の列でも、両方えらべば1人ぶんにまとまります。</td></tr>
+          <tr><td><code>性別</code></td><td><code>女</code>／<code>男</code>（女子・男子・F・M でも読めます）。</td></tr>
+          <tr><td><code>前のクラス</code></td><td>いまのクラス（<code>1組</code>、<code>A</code> など）。同じ書き方の子どうしを、新しいクラスへなるべく同じ人数ずつばらします。</td></tr>
+          <tr><td><code>点数</code></td><td>学力テストなどの点数（数字）。各クラスの平均がなるべく同じになるように分けます。</td></tr>
+          <tr><td><code>クラスの配慮</code></td><td><code>支援</code>・<code>リーダー</code>。両方なら <code>支援;リーダー</code>。それぞれの人数を各クラスでそろえます。</td></tr>
+          <tr><td><code>新しいクラス</code></td><td>クラス分けの結果（<code>1組</code> など）。「このクラスごとCSVで保存」で書き出します。</td></tr>
+        </tbody>
+      </table>
+
+      <h2>よくある質問</h2>
+      <details class="kw-faq">
+        <summary>児童の名前や点数はサーバーに送られますか？<span>+</span></summary>
+        <div>送られません。クラス分けの計算もCSVの読み書きも、すべてブラウザ内（先生の端末上）で処理していて、サーバーには一切送信していません。ブラウザにも保存しません。ページを閉じれば何も残らないので、続きは「CSVで保存」したファイルから戻してください。</div>
+      </details>
+      <details class="kw-faq">
+        <summary>何をそろえてクラスを分けますか？<span>+</span></summary>
+        <div>男女の人数、前のクラスの子の人数（前のクラスをばらす）、点数の平均、支援が必要な子の人数、リーダーの人数の5つです。1のチェックで、そろえるものを選べます。名簿に入っていない項目は使いません。全部を完全にそろえられないときは、いちばん近い分け方を選び、クラスごとの内訳を表で見せます。</div>
+      </details>
+      <details class="kw-faq">
+        <summary>何人まで分けられますか？<span>+</span></summary>
+        <div>1学年200人くらいまでを想定しています。クラスの数は2〜8から選べます。人数が多いので、名簿はCSVで読み込むのがおすすめです。どんなCSVを作ればよいかは「ダミー名簿CSV」をダウンロードすると見られます。</div>
+      </details>
+      <details class="kw-faq">
+        <summary>点数や支援の情報は印刷に出ますか？<span>+</span></summary>
+        <div>出ません。印刷するとクラスごとの名前だけが出ます。点数・支援・リーダー・前のクラスは画面でクラス分けを確かめるためだけに使います。</div>
+      </details>
+      <details class="kw-faq">
+        <summary>席替えメーカーや班分けメーカーと同じCSVを使えますか？<span>+</span></summary>
+        <div>使えます。席替えメーカー・班分けメーカー・クラス分けメーカーは同じ形のCSVを読み書きします。クラス分けメーカーが読み書きするのは「性別」「クラスの配慮」「前のクラス」「新しいクラス」「点数」の列で、ほかのメーカーの列は消さずにそのまま残して保存します。</div>
+      </details>
+
+      <p class="kw-more">新しいクラスが決まったら、<a href="/tools/sekigae/">席替えメーカー</a> で座席を、<a href="/tools/hanwake/">班分けメーカー</a> で班を。同じCSVのまま使えます。</p>
+    </section>
+
+  </main>
+  <p class="paper-release">更新日：2026-10-05</p>
+</div>
+
+<!-- 全アプリ共通のテキストロゴ版フッター（2026-07-15統一） -->
+<footer class="site-footer-app">
+  <div class="sfa-row">
+    <a href="/" class="sfa-logo">BEET<span>LE</span></a>
+    <nav class="sfa-nav">
+      <a href="/">トップ</a>
+      <a href="/test-tools.html">QA支援</a>
+      <a href="/edu-tools.html">教育支援</a>
+      <a href="/blog/">コラム</a>
+      <a href="/#contact">お問い合わせ</a>
+    </nav>
+  </div>
+  <div class="sfa-copy">
+    <a href="/privacy">プライバシーポリシー</a>
+    <span>© 2026 BEETLE Co., LLC</span>
+  </div>
+</footer>
+<button type="button" class="scroll-top-float" id="scrollTopBtn" aria-label="ページ上部へ戻る">↑</button>
+<script src="/js/common.js"></script>
+<script src="/js/contact-track.js"></script>
+<script src="/js/app-reference.js"></script>
+<script src="/js/class-roster.js?v=20261004"></script>
+<script src="/js/kurasuwake.js?v=20261005"></script>
+</body>
+</html>
