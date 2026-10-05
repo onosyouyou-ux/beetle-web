@@ -570,3 +570,6 @@ body{
 /* 3の見出しは、1・2の見出しと同じく左ずめ（ボタンは中央のまま）。下のお知らせは中央寄せ（2026-10-05） */
 .sk-controls .sk-go-lbl{align-self:flex-start}
 #sk-msg .sk-note{text-align:center}
+/* 名簿の上の「配置する」も下と同じオレンジの塗り（班分けメーカーとそろえる。2026-10-05） */
+.sk-sub.sk-gen-sub{background:var(--sk-orange);color:#fff;border-color:var(--sk-orange);box-shadow:0 2px 0 #a85d1e}
+@media (hover:hover){ .sk-sub.sk-gen-sub:hover{background:var(--sk-orange-dk);color:#fff} }
