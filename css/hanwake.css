@@ -681,3 +681,5 @@ body{
 /* 3の見出しは、1・2の見出しと同じく左ずめ（ボタンは中央のまま。2026-10-05） */
 .hw-controls .hw-go-lbl{align-self:flex-start}
 .hw-mem .hw-lead-tag{margin-left:auto}
+.hw-fit{border-color:var(--hw-orange);color:var(--hw-orange-dk);background:var(--hw-orange-bg)}
+.hw-fit[hidden]{display:none}

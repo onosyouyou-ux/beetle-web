@@ -220,8 +220,9 @@
   function seatSizes() {
     if (customSizes) return customSizes.slice();
     // 最初は「---」（何も選んでいない）。両方そろうまで班の枠は出さない
-    var num = parseInt($('hw-num').value, 10), per = parseInt($('hw-per').value, 10);
-    if (!num || !per) return [];
+    // 班の数だけ選んだら、席なしの枠だけ出す（1班の人数を選ぶか「＋ 席」で足す）
+    var num = parseInt($('hw-num').value, 10), per = parseInt($('hw-per').value, 10) || 0;
+    if (!num) return [];
     var out = [];
     for (var i = 0; i < num; i++) out.push(per);
     return out;
@@ -420,7 +421,7 @@
   function diagnose(names, count, rulesObj, raw) {
     var msgs = [];
     if (seatSum(seatSizes()) < names.length) {
-      msgs.push({ text: '班の席が足りません。', sub: '名簿は' + names.length + '人ですが、班の席は合わせて' + seatSum(seatSizes()) + '席です。班の数・1班の人数を増やすか、班の枠で席を足してください。', error: true });
+      msgs.push({ text: '班のメンバーの枠が足りません。', sub: '名簿は' + names.length + '人ですが、班の枠は合わせて' + seatSum(seatSizes()) + '人ぶんです。班の数・1班の人数を増やすか、班の枠の「＋ メンバー」で足してください。', error: true });
     }
     if (count > names.length) {
       msgs.push({ text: '班の数が人数より多いです。', sub: '名簿は' + names.length + '人ですが、' + count + '班に分けようとしています。', error: true });
@@ -442,7 +443,7 @@
     });
     Object.keys(pinCount).forEach(function (g) {
       var cap = seatSizes()[g];
-      if (cap !== undefined && pinCount[g] > cap) msgs.push({ text: (Number(g) + 1) + '班に固定した人が入りきりません。', sub: pinCount[g] + '人を固定していますが、' + (Number(g) + 1) + '班は' + cap + '席です。', error: true });
+      if (cap !== undefined && pinCount[g] > cap) msgs.push({ text: (Number(g) + 1) + '班に固定した人が入りきりません。', sub: pinCount[g] + '人を固定していますが、' + (Number(g) + 1) + '班は' + cap + '人です。', error: true });
     });
     var rootOf = {};
     clusters.forEach(function (cl, i) { cl.forEach(function (n) { rootOf[n] = i; }); });
@@ -479,6 +480,14 @@
   }
 
   function run() {
+    // 名前を入れた子がいれば、名前も配慮もない空の行は外して分ける（最初の10行の残りを1人と数えない）
+    if (students.some(function (s) { return s.name.trim(); })) {
+      var blank = students.filter(function (s) { return !s.name.trim() && !s.rules.length; });
+      if (blank.length) {
+        students = students.filter(function (s) { return blank.indexOf(s) < 0; });
+        renderList();
+      }
+    }
     if (!students.length) {
       showMsgs([{ text: '名簿が空です。', sub: '「＋1人」などで行を足すか、「見本を入れる」を押してください。', error: true }]);
       return;
@@ -488,8 +497,8 @@
 
     var names = got.names;
     var count = groupCount();
-    if (!count) {
-      showMsgs([{ text: '班の数と1班の人数を選んでください。', sub: '1の「班の数」「1班の人数」が未設定です。', error: true }]);
+    if (!count || !seatSum(seatSizes())) {
+      showMsgs([{ text: '班の数と1班の人数を選んでください。', sub: !count ? '1の「班の数」「1班の人数」が未設定です。' : '1の「1班の人数」が未設定です（班の枠の「＋ メンバー」で足すこともできます）。', error: true }]);
       $('tool').scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
     }
@@ -577,7 +586,8 @@
       var names = displayNames(), lbl = {};
       students.forEach(function (s, i) { if (s.label) lbl[names[i]] = s.label; });
       state.groups.forEach(function (g, gi) {
-        var counts = labelSet().map(function (l) { return l + ' ' + g.filter(function (n) { return lbl[n] === l; }).length; }).join('・');
+        var anyLabel = Object.keys(lbl).length > 0;
+        var counts = !anyLabel ? '' : labelSet().map(function (l) { return l + ' ' + g.filter(function (n) { return lbl[n] === l; }).length; }).join('・');
         html += '<div class="hw-group" data-g="' + gi + '">' +
           '<div class="hw-group-head"><span class="hw-group-n">' + (gi + 1) + '班</span>' +
           '<span class="hw-group-size">' + g.length + '人' + (counts ? '（' + R.esc(counts) + '）' : '') + '</span></div>' +
@@ -608,11 +618,11 @@
           // いちばん上の枠がリーダーの席
           for (var k = 0; k < size; k++) {
             slots += '<li class="hw-slot' + (lead && k === 0 ? ' is-leader' : '') + '">' + (lead && k === 0 ? 'リーダー' : '') +
-              (size > 1 ? '<button type="button" class="hw-slot-del" data-g="' + gi + '" aria-label="' + (gi + 1) + '班の席を1つ消す">✕</button>' : '') + '</li>';
+              (size > 1 ? '<button type="button" class="hw-slot-del" data-g="' + gi + '" aria-label="' + (gi + 1) + '班のメンバーの枠を1つ消す">✕</button>' : '') + '</li>';
           }
-          slots += '<li class="hw-slot-add"><button type="button" class="hw-ghost-add" data-g="' + gi + '" aria-label="' + (gi + 1) + '班に席を足す">＋ 席</button></li>';
+          slots += '<li class="hw-slot-add"><button type="button" class="hw-ghost-add" data-g="' + gi + '" aria-label="' + (gi + 1) + '班にメンバーを足す">＋ メンバー</button></li>';
           html += '<div class="hw-group is-empty"><div class="hw-group-head"><span class="hw-group-n">' + (gi + 1) + '班</span>' +
-            '<span class="hw-group-size">' + size + '席</span>' +
+            '<span class="hw-group-size">' + size + '人</span>' +
             (sizes.length > 1 ? '<button type="button" class="hw-group-del" data-g="' + gi + '" aria-label="' + (gi + 1) + '班を消す">✕</button>' : '') +
             '</div><ul class="hw-members">' + slots + '</ul></div>';
         });
@@ -709,7 +719,7 @@
     if (!bar) return;
     var named = students.some(function (s) { return s.name.trim(); });
     // 1 で班の数と1班の人数を両方選んではじめて 2（名簿と配慮）へ進む
-    var now = state.groups ? 4 : !seatSizes().length ? 1 : named ? 3 : 2;
+    var now = state.groups ? 4 : !seatSum(seatSizes()) ? 1 : named ? 3 : 2;
     Array.prototype.forEach.call(bar.children, function (li) {
       var n = Number(li.getAttribute('data-step'));
       li.classList.toggle('is-done', n < now);
@@ -726,10 +736,32 @@
     info.classList.remove('is-warn');
     var caps = seatSizes(), sum = seatSum(caps);
     $('hw-group-count').textContent = caps.length + '班';
-    if (!caps.length) { info.textContent = '班の数と1班の人数を選んでください'; return; }
-    info.textContent = (customSizes ? caps.length + '班・合わせて' : caps.length + '班 × ' + caps[0] + '人 ＝ ') + sum + '席' +
-      (n ? '（名簿 ' + n + '人' + (sum < n ? '・' + (n - sum) + '席たりません' : sum > n ? '・あき ' + (sum - n) + '席' : '') + '）' : '');
+    if (!caps.length) { info.textContent = '班の数と1班の人数を選んでください'; updateFit(n, caps); return; }
+    if (!sum) { info.textContent = caps.length + '班（1班の人数を選ぶか、班の枠の「＋ メンバー」で足してください）'; updateFit(n, caps); return; }
+    info.textContent = (customSizes ? caps.length + '班・合わせて' : caps.length + '班 × ' + caps[0] + '人 ＝ ') + sum + '人' +
+      (n ? '（名簿 ' + n + '人' + (sum < n ? '・' + (n - sum) + '人たりません' : sum > n ? '・あと ' + (sum - n) + '人入れます' : '') + '）' : '');
     if (sum < n) info.classList.add('is-warn');
+    updateFit(n, caps);
+  }
+
+  /**
+   * おすすめ（2026-10-05）：名簿の人数と席の数が合わないとき、いまの班の数のまま
+   * 名簿の人数を各班へ均等に配った席の数にするボタンを出す（32人・5班 → 7,7,6,6,6）
+   */
+  function fitSizes(n) {
+    var count = seatSizes().length || parseInt($('hw-num').value, 10) || 0;
+    return n && count && count <= n ? groupSizes(n, count) : null;
+  }
+
+  function updateFit(n, caps) {
+    var btn = $('hw-fit'), fit = fitSizes(n);
+    // 席が足りていて、配ると均等になるなら出さない（2×3に5人なら 3・2 になる）
+    var planned = seatSum(caps) >= n ? plannedSizes(n).slice().sort() : caps;
+    var same = fit && caps.length === fit.length && planned.join() === fit.slice().sort().join();
+    btn.hidden = !fit || same;
+    if (btn.hidden) return;
+    var min = Math.min.apply(null, fit), max = Math.max.apply(null, fit);
+    btn.textContent = 'おすすめ：' + n + '人を' + fit.length + '班に均等（1班 ' + (min === max ? min : min + '〜' + max) + '人）';
   }
 
   /* ============================================================
@@ -1176,6 +1208,18 @@
     onSizeChange();
     renderList();   // 「固定」の班のプルダウンを班の数に合わせる
   }
+  $('hw-fit').addEventListener('click', function () {
+    var n = students.filter(function (s) { return s.name.trim(); }).length;
+    var fit = fitSizes(n);
+    if (!fit) return;
+    var min = Math.min.apply(null, fit), max = Math.max.apply(null, fit);
+    $('hw-num').value = String(fit.length);
+    $('hw-per').value = String(max);
+    // 割り切れるならプルダウンだけで表せる。割り切れなければ班ごとの席（7,7,6,6,6）にする
+    customSizes = min === max ? null : fit;
+    onSizeChange();
+    renderList();
+  });
   $('hw-board').addEventListener('click', function (e) {
     if (state.groups) return;
     var t = e.target.closest('button');
