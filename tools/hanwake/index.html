@@ -161,9 +161,12 @@
         <p class="hw-empty-hint hw-pick-hint" id="hw-pick-hint">「班の数」を選ぶと、ここに班の枠が出ます。</p>
         <p class="hw-empty-hint" id="hw-edit-hint">班ごとに人数を変えたいときは「＋ メンバー」「✕」で足し引きできます。名簿を入れて「班分けする」を押すと、ここに班ができます。</p>
         <div class="hw-board" id="hw-board"></div>
+        <!-- おすすめ配置：班の枠（結果）のすぐ下。名簿の人数と班の人数が合わないときだけ出す（2026-10-05） -->
+        <div class="hw-fit-row">
+          <button type="button" class="hw-go hw-fit" id="hw-fit" hidden>おすすめ配置にする</button>
+        </div>
         <div class="hw-result-foot">
           <button type="button" class="hw-go" id="hw-again">再配置する</button>
-          <button type="button" class="hw-go hw-fit" hidden>おすすめ配置にする</button>
         </div>
         <!-- 「表をコピー」で渡すテキスト。画面には出さない -->
         <textarea id="hw-out" class="hw-out" rows="4" readonly hidden aria-label="班分けのテキスト"></textarea>
@@ -227,10 +230,7 @@
 
       <div class="hw-controls" id="hw-go-area">
         <span class="hw-lbl hw-go-lbl"><span class="hw-step-no">3</span>名簿と配慮ができたら</span>
-        <div class="hw-go-row">
-          <button type="button" class="hw-go" id="hw-gen">班分けする</button>
-          <button type="button" class="hw-go hw-fit" id="hw-fit" hidden>おすすめ配置にする</button>
-        </div>
+        <button type="button" class="hw-go" id="hw-gen">班分けする</button>
       </div>
 
       <div class="hw-msg" id="hw-msg"></div>

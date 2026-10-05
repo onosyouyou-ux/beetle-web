@@ -681,10 +681,23 @@ body{
 /* 3の見出しは、1・2の見出しと同じく左ずめ（ボタンは中央のまま。2026-10-05） */
 .hw-controls .hw-go-lbl{align-self:flex-start}
 .hw-mem .hw-lead-tag{margin-left:auto}
-/* おすすめ配置は「班分けする」「再配置する」の横に並べる（2026-10-05） */
-.hw-go-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
-.hw-result-foot{flex-wrap:wrap;gap:10px}
+/* おすすめ配置は班の枠（結果）のすぐ下（2026-10-05） */
+.hw-fit-row{display:flex;justify-content:center;margin-top:14px}
+.hw-fit-row:has(.hw-fit[hidden]){display:none}
 .hw-go.hw-fit{background:#fff;color:var(--hw-orange-dk);border:1.5px solid var(--hw-orange);box-shadow:none;font-size:13px}
 @media (hover:hover){ .hw-go.hw-fit:hover{background:var(--hw-orange-bg)} }
 .hw-go.hw-fit[hidden]{display:none}
 @media print{ .hw-fit{display:none !important} }
+.hw-fit-row .hw-go{margin-left:0}
+
+/* ボタンの色（2026-10-05）：「班分けする」は上も下もオレンジの塗り。おすすめ配置は黒の塗りで区別する */
+.hw-sub.hw-gen-sub{background:var(--hw-orange);color:#fff;border-color:var(--hw-orange);box-shadow:0 2px 0 #a85d1e}
+@media (hover:hover){ .hw-sub.hw-gen-sub:hover{background:var(--hw-orange-dk);color:#fff} }
+.hw-go.hw-fit{background:#1c1c2e;color:#fff;border:none;box-shadow:0 2px 0 #000;font-size:13px}
+@media (hover:hover){ .hw-go.hw-fit:hover{background:#33334a} }
+
+/* 空の班の枠：メンバーの枠（実線の白い箱）と「＋ メンバー」（枠なしの文字ボタン）を見分けやすく（2026-10-05） */
+.hw-group.is-empty .hw-slot{border:1px solid var(--hw-line);background:#fff}
+.hw-group.is-empty .hw-slot.is-leader{border-color:var(--hw-orange)}
+.hw-ghost-add{min-height:26px;border:none;background:none;color:var(--hw-orange-dk);font-size:12px}
+@media (hover:hover){ .hw-ghost-add:hover{background:var(--hw-orange-bg);border:none} }.hw-group.is-empty{border-style:solid}

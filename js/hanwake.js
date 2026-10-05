@@ -480,7 +480,29 @@
     return seatSizes().length;
   }
 
-  function run() {
+  /*
+   * force（おすすめ配置。2026-10-05）：守れない配慮があっても止めずに最後まで分ける。
+   * 固定 → 別々 → 同じ → リーダー の順に外して試し、外したものは画面で知らせる
+   */
+  var RELAX = [
+    { label: '', drop: [] },
+    { label: '固定', drop: ['fixed'] },
+    { label: '固定・別々', drop: ['fixed', 'apart'] },
+    { label: '固定・別々・同じ', drop: ['fixed', 'apart', 'together'] },
+    { label: '固定・別々・同じ・リーダー', drop: ['fixed', 'apart', 'together', 'leaders'] }
+  ];
+
+  function relaxed(rules, drop) {
+    var r = Object.create(rules);
+    if (drop.indexOf('fixed') >= 0) r.fixed = {};
+    if (drop.indexOf('apart') >= 0) r.apart = [];
+    if (drop.indexOf('together') >= 0) r.together = [];
+    if (drop.indexOf('leaders') >= 0) r.leaders = [];
+    return r;
+  }
+
+  function run(force) {
+    force = force === true;
     // 名前を入れた子がいれば、名前も配慮もない空の行は外して分ける（最初の10行の残りを1人と数えない）
     if (students.some(function (s) { return s.name.trim(); })) {
       var blank = students.filter(function (s) { return !s.name.trim() && !s.rules.length; });
@@ -494,7 +516,8 @@
       return;
     }
     var got = collect();
-    if (got.errors.length) { showMsgs(got.errors.map(function (t) { return { text: t, error: true }; })); return; }
+    // おすすめ配置では、相手をえらんでいない配慮などは無視して進める（collect はそういう配慮を数えていない）
+    if (got.errors.length && !force) { showMsgs(got.errors.map(function (t) { return { text: t, error: true }; })); return; }
 
     var names = got.names;
     var count = groupCount();
@@ -503,12 +526,20 @@
       $('tool').scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
     }
-    var rulesObj = solverRules(got.rules, count);
-    var problems = diagnose(names, count, rulesObj, got.rules);
-    if (problems.length) { showMsgs(problems); return; }
-
     var usePrev = !!(prevState.pairs && $('hw-prev-avoid').checked);
-    var best = solve(names, count, rulesObj, usePrev ? prevState.pairs : null);
+    var rulesObj, best = null, dropped = '';
+    var levels = force ? RELAX : RELAX.slice(0, 1);
+    for (var lv = 0; lv < levels.length && !best; lv++) {
+      var r = relaxed(got.rules, levels[lv].drop);
+      rulesObj = solverRules(r, count);
+      var problems = diagnose(names, count, rulesObj, r);
+      if (problems.length) {
+        if (!force) { showMsgs(problems); return; }
+        continue;
+      }
+      best = solve(names, count, rulesObj, usePrev ? prevState.pairs : null);
+      if (best) { dropped = levels[lv].label; got.rules = r; }
+    }
     if (!best) {
       showMsgs([{
         text: '配慮を全部守れる分け方が見つかりませんでした。',
@@ -530,6 +561,7 @@
     syncLeaders();
     picked = null;
     var notes = softNotes(best.score, rulesObj, count, usePrev);
+    if (dropped) notes.unshift({ text: 'おすすめ配置のため、守れなかった配慮（' + dropped + '）を外して分けました。', sub: '外した配慮は名簿に残っています。班の数を変えるか配慮を見直して「再配置する」を押すと、もう一度守ろうとします。' });
     if (state.useLeaders && noLeader) {
       notes.push({ text: 'リーダーにした子がいない班が ' + noLeader + '班 あります。その班は いちばん上の子をリーダーにしています。', sub: 'リーダーにした子が ' + got.rules.leaders.length + '人で、班は ' + count + '班です。入れかえて決めるか、リーダーを増やしてください。' });
     }
@@ -764,7 +796,7 @@
     var same = fit && caps.length === fit.length && planned.join() === fit.slice().sort().join();
     var hide = !fit || same;
     var min = fit && Math.min.apply(null, fit), max = fit && Math.max.apply(null, fit);
-    // 「班分けする」の横と、結果の「再配置する」の横の2か所
+    // 班の枠（結果）のすぐ下
     Array.prototype.forEach.call(document.querySelectorAll('.hw-fit'), function (btn) {
       btn.hidden = hide;
       if (!hide) btn.textContent = 'おすすめ配置にする（' + n + '人を' + fit.length + '班に均等・1班 ' + (min === max ? min : min + '〜' + max) + '人）';
@@ -1217,12 +1249,14 @@
     if (!fit) return;
     var min = Math.min.apply(null, fit), max = Math.max.apply(null, fit);
     $('hw-num').value = String(fit.length);
-    $('hw-per').value = String(max);
-    // 割り切れるならプルダウンだけで表せる。割り切れなければ班ごとの人数（7,7,6,6,6）にする
-    customSizes = min === max ? null : fit;
+    // 割り切れて、1班の人数がプルダウン（12人まで）に入るならプルダウンだけで表す。
+    // そうでなければ班ごとの人数（7,7,6,6,6 や 15,15）として持つ（15人を入れようとして「未設定」になっていた）
+    var fitsSelect = min === max && max <= 12;
+    $('hw-per').value = max <= 12 ? String(max) : '';
+    customSizes = fitsSelect ? null : fit;
     onSizeChange();
     renderList();
-    run();
+    run(true);   // 守れない配慮があっても止めずに分けきる
   }
   Array.prototype.forEach.call(document.querySelectorAll('.hw-fit'), function (b) { b.addEventListener('click', runFit); });
   $('hw-board').addEventListener('click', function (e) {
