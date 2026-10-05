@@ -675,3 +675,4 @@ body{
 }
 @media print{ .hw-group-del,.hw-slot-del,.hw-slot-add,.hw-group-add{display:none !important} }
 .hw-rule.is-fixed{border-color:var(--hw-orange);background:var(--hw-orange-bg)}
+.hw-empty-hint[hidden]{display:none}

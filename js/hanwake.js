@@ -219,7 +219,10 @@
   /** 班ごとの席の数。手で決めていればそれ、なければ「班の数 × 1班の人数」 */
   function seatSizes() {
     if (customSizes) return customSizes.slice();
-    var out = [], num = parseInt($('hw-num').value, 10) || 1, per = parseInt($('hw-per').value, 10) || 1;
+    // 最初は「---」（何も選んでいない）。両方そろうまで班の枠は出さない
+    var num = parseInt($('hw-num').value, 10), per = parseInt($('hw-per').value, 10);
+    if (!num || !per) return [];
+    var out = [];
     for (var i = 0; i < num; i++) out.push(per);
     return out;
   }
@@ -485,6 +488,11 @@
 
     var names = got.names;
     var count = groupCount();
+    if (!count) {
+      showMsgs([{ text: '班の数と1班の人数を選んでください。', sub: '1の「班の数」「1班の人数」がまだ「---」です。', error: true }]);
+      $('tool').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
     var rulesObj = solverRules(got.rules, count);
     var problems = diagnose(names, count, rulesObj, got.rules);
     if (problems.length) { showMsgs(problems); return; }
@@ -607,10 +615,14 @@
             (sizes.length > 1 ? '<button type="button" class="hw-group-del" data-g="' + gi + '" aria-label="' + (gi + 1) + '班を消す">✕</button>' : '') +
             '</div><ul class="hw-members">' + slots + '</ul></div>';
         });
-        if (sizes.length < 12) html += '<button type="button" class="hw-group-add" aria-label="班を足す">＋ 班を足す</button>';
+        if (sizes.length && sizes.length < 12) html += '<button type="button" class="hw-group-add" aria-label="班を足す">＋ 班を足す</button>';
       }
     }
     board.innerHTML = html;
+    // 班の数・1班の人数が「---」のうちは、枠のかわりに案内だけ出す
+    var none = !hasResult && !seatSizes().length;
+    $('hw-pick-hint').hidden = !none;
+    $('hw-edit-hint').hidden = none;
     updateRowGroups();
     updateSteps();
   }
@@ -711,6 +723,7 @@
     info.classList.remove('is-warn');
     var caps = seatSizes(), sum = seatSum(caps);
     $('hw-group-count').textContent = caps.length + '班';
+    if (!caps.length) { info.textContent = '班の数と1班の人数を選んでください'; return; }
     info.textContent = (customSizes ? caps.length + '班・合わせて' : caps.length + '班 × ' + caps[0] + '人 ＝ ') + sum + '席' +
       (n ? '（名簿 ' + n + '人' + (sum < n ? '・' + (n - sum) + '席たりません' : sum > n ? '・あき ' + (sum - n) + '席' : '') + '）' : '');
     if (sum < n) info.classList.add('is-warn');
@@ -1131,16 +1144,16 @@
    * 班の数 × 1班の人数 が席の数。班ごとに変えたいときは、空の班の枠で 班・席 を足し引きする
    */
   function rebuildNums() {
-    [['hw-num', '班', '6'], ['hw-per', '人', '5']].forEach(function (x) {
+    [['hw-num', '班'], ['hw-per', '人']].forEach(function (x) {
       var sel = $(x[0]), keep = sel.value;
-      sel.innerHTML = '';
+      sel.innerHTML = '<option value="">---</option>';
       for (var i = 1; i <= 12; i++) {
         var o = document.createElement('option');
         o.value = i;
         o.textContent = i + x[1];
         sel.appendChild(o);
       }
-      sel.value = keep || x[2];
+      sel.value = keep || '';
     });
   }
 
@@ -1304,6 +1317,7 @@
     customSizes = null;
     $('hw-num').value = '6';
     $('hw-per').value = '5';
+    $('hw-gmode').value = 'even';
     touchedStep1 = true;
     loadRoster(SAMPLE.map(function (x) { return { name: x[0], label: x[1] }; }), SAMPLE_RULES);
     clearPrev();

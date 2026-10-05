@@ -144,9 +144,10 @@
         <span class="hw-ctl">
           <label for="hw-gmode" id="hw-gmode-lbl">男女比</label>
           <select id="hw-gmode">
+            <option value="" selected>---</option>
             <option value="even">均等</option>
             <option value="split">分ける</option>
-            <option value="">気にしない</option>
+            <option value="none">気にしない</option>
           </select>
         </span>
         <span class="hw-plan" id="hw-plan">—</span>
@@ -162,7 +163,8 @@
           </div>
         </div>
         <p class="hw-swap-hint">子をドラッグしてほかの子に重ねると入れかわり、班の空いた所に落とすとその班へ移ります（2人を順にタップしても入れかわります）。</p>
-        <p class="hw-empty-hint">班ごとに人数を変えたいときは「＋ 席」「✕」で足し引きできます。名簿を入れて「班分けする」を押すと、ここに班ができます。</p>
+        <p class="hw-empty-hint hw-pick-hint" id="hw-pick-hint">「班の数」と「1班の人数」を選ぶと、ここに空の班の枠が出ます。</p>
+        <p class="hw-empty-hint" id="hw-edit-hint">班ごとに人数を変えたいときは「＋ 席」「✕」で足し引きできます。名簿を入れて「班分けする」を押すと、ここに班ができます。</p>
         <div class="hw-board" id="hw-board"></div>
         <div class="hw-result-foot">
           <button type="button" class="hw-go" id="hw-again">再配置する</button>
