@@ -567,3 +567,6 @@ body{
   .sk-row-seat{text-align:center}
   .sk-row-seat:empty{display:block}
 }
+/* 3の見出しは、1・2の見出しと同じく左ずめ（ボタンは中央のまま）。下のお知らせは中央寄せ（2026-10-05） */
+.sk-controls .sk-go-lbl{align-self:flex-start}
+#sk-msg .sk-note{text-align:center}
