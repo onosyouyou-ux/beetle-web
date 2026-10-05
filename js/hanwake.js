@@ -1314,15 +1314,11 @@
     $('hw-labelset-name').value = '性別';
     $('hw-labelset-input').value = '女, 男';
     updateBalanceName();
-    customSizes = null;
-    $('hw-num').value = '6';
-    $('hw-per').value = '5';
-    $('hw-gmode').value = 'even';
-    touchedStep1 = true;
+    // 見本は名簿（名前・性別・配慮）だけ。班の数などは触らず、班分けもしない（押すのは先生。2026-10-05）
     loadRoster(SAMPLE.map(function (x) { return { name: x[0], label: x[1] }; }), SAMPLE_RULES);
     clearPrev();
-    rosterNote('');
-    run();
+    showMsgs([]);
+    rosterNote('見本の名簿（30人）を入れました。1で班の数などを選んで「班分けする」を押してください。', 'ok');
   });
   $('hw-prev-clear').addEventListener('click', clearPrev);
 
