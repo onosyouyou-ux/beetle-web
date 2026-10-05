@@ -5,7 +5,7 @@ canonical: "https://www.beetle-web.jp/tools/hanwake/landing.html"
 sitemap: false
 title_contains: "班分けメーカー"
 og_image: "/assets/images/OG.jpg"
-required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#hw-stepbar", "#hw-list", "#hw-add1", "#hw-add5", "#hw-add10", "#hw-labelset-name", "#hw-labelset-input", "#hw-mode", "#hw-num", "#hw-gen", "#hw-gen2", "#hw-again", "#hw-board", "#hw-msg", "#hw-out", "#howto", "#hw-csv", "#hw-csv-save", "#hw-csv-template", "#hw-download", "#hw-prev"]
+required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#hw-stepbar", "#hw-list", "#hw-add1", "#hw-add5", "#hw-add10", "#hw-labelset-name", "#hw-labelset-input", "#hw-num", "#hw-gen", "#hw-gen2", "#hw-again", "#hw-board", "#hw-msg", "#hw-out", "#howto", "#hw-csv", "#hw-csv-save", "#hw-csv-template", "#hw-download", "#hw-prev"]
 e2e: false
 ---
 
@@ -17,7 +17,7 @@ e2e: false
   新規ツールの中でいちばん安く出せる、という理由で 2026-08-24 に着手した
 - **レイアウト型**: 教育系の静的アプリ（[_common.md](_common.md) 参照）。紙面 `.app-paper` 1180px ＋ モザイクタイル背景。
   配色・トーンは `sekigae.css` に揃える（先生が職員室で使う画面）
-- **主要素**: `#hw-rows`（名簿の行）・`#hw-rules`（配慮の行）・`#hw-num`（班の数）・`#hw-per`（1班の人数。最後にさわったほうで決め、もう一方は名簿の人数から合わせる。決めたほうは隠し入力 `#hw-mode`）・
+- **主要素**: `#hw-rows`（名簿の行）・`#hw-rules`（配慮の行）・`#hw-num`（班の数）・`#hw-per`（1班の人数）。**名簿の人数とは切りはなして自由に選ぶ**（班の数 × 1班の人数 ＝ 席の数）。空の班の枠で「＋ 席」「✕」「＋ 班を足す」により班ごとに席を変えられる（プルダウンを選び直すと戻る）。名簿が席より少なければ、なるべく同じ人数になるよう配る。多ければ「席が足りません」・
   `#hw-count`・`#hw-plan`・`#hw-sample`・`#hw-gen`／`#hw-again`・`#hw-board`（班カード）・`#hw-msg`・
   `#hw-info`・`#hw-out`（TSV。画面には出さず「表をコピー」で渡す）・`#hw-copy`・`#hw-download`・`#hw-print`
 
@@ -30,7 +30,8 @@ e2e: false
 - **名簿は1人1行**（`#hw-list`）：番｜なまえ｜そろえる項目のボタン｜配慮（配慮の列の「＋ 追加」から 別々・同じ・ちらす・リーダー。1人に何個でも）｜結果の班｜✕。
   最初は10行、`＋1人／＋5人／＋10人`。複数行を貼るとその行から下へ流し込む。Enter で次の行。空欄は「3番」
   - 別々・同じ：相手をプルダウンで選ぶ（2人1組）。ちらす：記号 A〜E を選び、同じ記号の子を1班に1人ずつ
-  - **リーダー**（2026-10-04 ユーザー要望）：リーダーにした子を各班に1人ずつ配り、班のいちばん上に「リーダー」と出す（印刷にも出す）。
+  - **固定**（2026-10-05）：「固定」で班を指定するとその班に必ず入れる（`固定3` のようにCSVに書く）。手直しの入れ替え候補からも外す。ない班・入りきらないときはエラー
+- **リーダー**（2026-10-04 ユーザー要望）：リーダーにした子を各班に1人ずつ配り、班のいちばん上に「リーダー」と出す（印刷にも出す）。
     班の数以下なら「1班に1人まで」を必ず守る（別々の組として解く）。多いときは「そろえる」で各班に均等に配り、その中から1人をリーダーにする。
     少ないときは、その班はいちばん上の子をリーダーにして「リーダーにした子がいない班が○班」とお知らせ。
     **班のいちばん上の子がリーダー**（2026-10-05）。手直しで上に来た子がその班のリーダーになる。空の班の枠も、いちばん上を「リーダー」の席として見せる

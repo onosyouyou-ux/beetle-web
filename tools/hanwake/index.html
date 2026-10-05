@@ -51,7 +51,7 @@
   "@type": "HowTo",
   "name": "班分けメーカーでグループ分けを作る手順",
   "step": [
-    { "@type": "HowToStep", "name": "班の数を決める", "text": "「6班に分ける」か「1班4人ずつ」を選びます。割り切れないぶんは自動で1人ずつ調整します。" },
+    { "@type": "HowToStep", "name": "班の数を決める", "text": "「班の数」と「1班の人数」を選びます（6班×5人なら30席）。班ごとに人数を変えたいときは、下の班の枠で席や班を足し引きできます。名簿が席より少なければ、なるべく同じ人数になるよう配ります。" },
     { "@type": "HowToStep", "name": "名簿と配慮を入れる", "text": "名前を1マスに1人ずつ入れ、性別などのボタンを押します。配慮は配慮の列の「＋ 追加」から 別々・同じ・ちらす・リーダー を選びます。1人に何個でも付けられます。" },
     { "@type": "HowToStep", "name": "班分けする", "text": "「班分けする」を押すと配慮を守った班ができます。気に入らなければ何度でも分け直せます。" },
     { "@type": "HowToStep", "name": "手直しして印刷", "text": "子をドラッグか2人を順にタップして入れかえ、「印刷する」で班の表だけを印刷します。" }
@@ -133,8 +133,6 @@
           <span class="hw-lbl"><span class="hw-step-no">1</span>班の数を決める</span>
           <span class="hw-count" id="hw-group-count">0班</span>
         </div>
-        <!-- 分け方：班の数か1班の人数のどちらかを選ぶと、もう一方は名簿の人数から合わせる -->
-        <input type="hidden" id="hw-mode" value="groups">
         <span class="hw-ctl">
           <label for="hw-num">班の数</label>
           <select id="hw-num"></select>
@@ -164,7 +162,7 @@
           </div>
         </div>
         <p class="hw-swap-hint">子をドラッグしてほかの子に重ねると入れかわり、班の空いた所に落とすとその班へ移ります（2人を順にタップしても入れかわります）。</p>
-        <p class="hw-empty-hint">名簿を入れて「班分けする」を押すと、ここに班ができます。</p>
+        <p class="hw-empty-hint">班ごとに人数を変えたいときは「＋ 席」「✕」で足し引きできます。名簿を入れて「班分けする」を押すと、ここに班ができます。</p>
         <div class="hw-board" id="hw-board"></div>
         <div class="hw-result-foot">
           <button type="button" class="hw-go" id="hw-again">再配置する</button>
@@ -243,7 +241,7 @@
         <div class="hw-step">
           <span class="hw-step-n">1</span>
           <h3>班の数を決める</h3>
-          <p>「6班に分ける」か「1班4人ずつ」を選びます。割り切れないぶんは自動で1人ずつ調整します。</p>
+          <p>「班の数」と「1班の人数」を選びます（6班×5人なら30席）。班ごとに人数を変えたいときは、下の班の枠で席や班を足し引きできます。名簿が席より少なければ、なるべく同じ人数になるよう配ります。</p>
         </div>
         <div class="hw-step">
           <span class="hw-step-n">2</span>

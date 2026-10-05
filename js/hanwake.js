@@ -26,8 +26,8 @@
   var START_ROWS = 10;       // 最初に出しておく行の数
   var SCATTER_SETS = ['A', 'B', 'C', 'D', 'E'];   // 「ちらす」のまとまりの記号
 
-  var KIND_LABEL = { '': '配慮をえらぶ', apart: '別々', together: '同じ', scatter: 'ちらす', leader: 'リーダー' };
-  var KIND_ORDER = ['', 'apart', 'together', 'scatter', 'leader'];
+  var KIND_LABEL = { '': '配慮をえらぶ', apart: '別々', together: '同じ', scatter: 'ちらす', leader: 'リーダー', fixed: '固定' };
+  var KIND_ORDER = ['', 'apart', 'together', 'scatter', 'leader', 'fixed'];   // 固定＝この班に入れる（2026-10-05）
 
   var SAMPLE = [
     ['佐藤 みゆき', '女'], ['鈴木 けんた', '男'], ['高橋 あおい', '女'], ['田中 そうた', '男'],
@@ -113,7 +113,7 @@
     var idx = {};
     students.forEach(function (s, i) { idx[s.id] = i; });
 
-    var out = { apart: [], together: [], scatter: {}, leaders: [], labelOf: {} };
+    var out = { apart: [], together: [], scatter: {}, leaders: [], labelOf: {}, fixed: {} };
     var errors = [];
     var seen = { apart: {}, together: {} };
 
@@ -124,6 +124,10 @@
         var k = rule.kind;
         if (k === 'leader') {
           if (out.leaders.indexOf(me) < 0) out.leaders.push(me);
+        } else if (k === 'fixed') {
+          var fg = rule.g || 0;
+          if (out.fixed[me] !== undefined && out.fixed[me] !== fg) { errors.push('「' + me + '」に固定の班が2つ指定されています。'); return; }
+          out.fixed[me] = fg;
         } else if (k === 'scatter') {
           var key = String(rule.set || 1);
           (out.scatter[key] = out.scatter[key] || []);
@@ -178,7 +182,7 @@
       if (r.leaders.length <= count) apart.push(r.leaders.slice());
       else balance.push({ label: 'リーダー', names: r.leaders.slice() });
     }
-    return { apart: apart, together: r.together, balance: balance, split: split };
+    return { apart: apart, together: r.together, balance: balance, split: split, fixed: r.fixed || {} };
   }
 
   /* ---------- 班を決める（2026-08-24 版の計算をそのまま使う） ---------- */
@@ -206,6 +210,41 @@
     return sizes;
   }
 
+  /*
+   * 班ごとの人数を手で決めたとき（2026-10-05）：customSizes[班] ＝ その班の席の数。
+   * 空の班の枠で 班を足す・消す／席を足す・消す をすると入る。班の数・1班の人数のプルダウンを変えると捨てる
+   */
+  var customSizes = null;
+
+  /** 班ごとの席の数。手で決めていればそれ、なければ「班の数 × 1班の人数」 */
+  function seatSizes() {
+    if (customSizes) return customSizes.slice();
+    var out = [], num = parseInt($('hw-num').value, 10) || 1, per = parseInt($('hw-per').value, 10) || 1;
+    for (var i = 0; i < num; i++) out.push(per);
+    return out;
+  }
+
+  /**
+   * 名簿の人数を、席の数を上限に班へ配る。席があまるときは、なるべく同じ人数になるよう1人ずつ順に入れる
+   * （30席に25人なら 5,4,4,4,4,4）。人数のほうが多いときは席の数をそのまま返す（diagnose が止める）
+   */
+  function plannedSizes(total) {
+    var caps = seatSizes();
+    if (total >= seatSum(caps)) return caps;
+    var sizes = caps.map(function () { return 0; }), left = total;
+    while (left > 0) {
+      var best = -1;
+      for (var i = 0; i < caps.length; i++) {
+        if (sizes[i] >= caps[i]) continue;
+        if (best < 0 || sizes[i] < sizes[best]) best = i;
+      }
+      sizes[best]++; left--;
+    }
+    return sizes;
+  }
+
+  function seatSum(sizes) { return sizes.reduce(function (a, b) { return a + b; }, 0); }
+
   function buildApartMap(apart) {
     var map = {};
     apart.forEach(function (g) {
@@ -225,17 +264,36 @@
     return true;
   }
 
+  /** かたまりごとの固定の班（なければ undefined）。1つのかたまりに別々の班が固定されていれば null */
+  function clusterPins(clusters, fixed) {
+    return clusters.map(function (cl) {
+      var pin;
+      for (var i = 0; i < cl.length; i++) {
+        var g = fixed[cl[i]];
+        if (g === undefined) continue;
+        if (pin !== undefined && pin !== g) return null;
+        pin = g;
+      }
+      return pin;
+    });
+  }
+
   /** 1回ぶんの割り当て。「どのかたまりを何班に入れたか」を返す */
-  function tryOnce(clusters, sizes, apartOf) {
+  function tryOnce(clusters, sizes, apartOf, pins) {
     var count = sizes.length, members = [], remain = sizes.slice();
     for (var i = 0; i < count; i++) members.push([]);
     var assign = new Array(clusters.length);
     // 大きいかたまりほど入る場所が少ないので先に置く。同じ大きさの中はランダム
     var order = clusters.map(function (cl, i) { return i; });
-    R.shuffle(order).sort(function (a, b) { return clusters[b].length - clusters[a].length; });
+    // 固定の班があるかたまりを先に置く（入れる場所が1つしかない）
+    R.shuffle(order).sort(function (a, b) {
+      var pa = pins[a] !== undefined ? 1 : 0, pb = pins[b] !== undefined ? 1 : 0;
+      return pb - pa || clusters[b].length - clusters[a].length;
+    });
     for (var o = 0; o < order.length; o++) {
       var ci = order[o], cl = clusters[ci], cand = [];
       for (var g = 0; g < count; g++) {
+        if (pins[ci] !== undefined && pins[ci] !== g) continue;
         if (remain[g] < cl.length || !clusterFits(members[g], cl, apartOf)) continue;
         cand.push(g);
       }
@@ -312,7 +370,7 @@
   }
 
   /** 同じ大きさのかたまりを入れ替えて、よくなったときだけ採用する（山登り） */
-  function improve(clusters, assign, count, rulesObj, prevPairs, apartOf, floorScore, rounds, forcedPairs) {
+  function improve(clusters, assign, count, rulesObj, prevPairs, apartOf, floorScore, rounds, forcedPairs, pins) {
     var groups = buildGroups(clusters, assign, count);
     var cur = scoreOf(groups, rulesObj.balance, prevPairs, forcedPairs, rulesObj.split);
     for (var r = 0; r < rounds; r++) {
@@ -320,6 +378,7 @@
       var a = Math.floor(Math.random() * clusters.length);
       var b = Math.floor(Math.random() * clusters.length);
       if (a === b || assign[a] === assign[b] || clusters[a].length !== clusters[b].length) continue;
+      if (pins[a] !== undefined || pins[b] !== undefined) continue;   // 固定の班は動かさない
       var ga = assign[a], gb = assign[b];
       assign[a] = gb; assign[b] = ga;
       var next = buildGroups(clusters, assign, count);
@@ -332,7 +391,8 @@
 
   function solve(names, count, rulesObj, prevPairs) {
     var clusters = buildClusters(names, rulesObj.together);
-    var sizes = groupSizes(names.length, count);
+    var sizes = plannedSizes(names.length);
+    var pins = clusterPins(clusters, rulesObj.fixed);
     var apartOf = buildApartMap(rulesObj.apart);
     var floorScore = minBias(rulesObj.balance, count) * 3;
     var forcedPairs = {};
@@ -341,9 +401,9 @@
     });
     var best = null, bestScore = Infinity;
     for (var t = 0; t < ATTEMPTS; t++) {
-      var assign = tryOnce(clusters, sizes, apartOf);
+      var assign = tryOnce(clusters, sizes, apartOf, pins);
       if (!assign) continue;
-      var got = improve(clusters, assign, count, rulesObj, prevPairs, apartOf, floorScore, IMPROVE_ROUNDS, forcedPairs);
+      var got = improve(clusters, assign, count, rulesObj, prevPairs, apartOf, floorScore, IMPROVE_ROUNDS, forcedPairs, pins);
       if (got.score.total < bestScore) {
         bestScore = got.score.total; best = got;
         if (bestScore <= floorScore + 0.001) break;
@@ -356,15 +416,30 @@
 
   function diagnose(names, count, rulesObj, raw) {
     var msgs = [];
+    if (seatSum(seatSizes()) < names.length) {
+      msgs.push({ text: '班の席が足りません。', sub: '名簿は' + names.length + '人ですが、班の席は合わせて' + seatSum(seatSizes()) + '席です。班の数・1班の人数を増やすか、班の枠で席を足してください。', error: true });
+    }
     if (count > names.length) {
       msgs.push({ text: '班の数が人数より多いです。', sub: '名簿は' + names.length + '人ですが、' + count + '班に分けようとしています。', error: true });
     }
     var clusters = buildClusters(names, rulesObj.together);
-    var maxSize = Math.max.apply(null, groupSizes(names.length, count));
+    var maxSize = Math.max.apply(null, plannedSizes(names.length));
     clusters.forEach(function (cl) {
       if (cl.length > maxSize) {
         msgs.push({ text: '「同じ」でまとめた人が、1つの班に入りきりません。', sub: '「' + cl.join('・') + '」の' + cl.length + '人ですが、1班は最大' + maxSize + '人です。班の数を減らすか、「同じ」を減らしてください。', error: true });
       }
+    });
+    Object.keys(rulesObj.fixed).forEach(function (n) {
+      if (rulesObj.fixed[n] >= count) msgs.push({ text: '「' + n + '」を固定した ' + (rulesObj.fixed[n] + 1) + '班 がありません。', sub: 'いまは' + count + '班です。', error: true });
+    });
+    var sizesNow = plannedSizes(names.length), pinCount = {};
+    clusterPins(clusters, rulesObj.fixed).forEach(function (pin, i) {
+      if (pin === null) msgs.push({ text: '「同じ」でまとめた人に、ちがう班が固定されています。', sub: '「' + clusters[i].join('・') + '」', error: true });
+      else if (pin !== undefined) pinCount[pin] = (pinCount[pin] || 0) + clusters[i].length;
+    });
+    Object.keys(pinCount).forEach(function (g) {
+      var cap = seatSizes()[g];
+      if (cap !== undefined && pinCount[g] > cap) msgs.push({ text: (Number(g) + 1) + '班に固定した人が入りきりません。', sub: pinCount[g] + '人を固定していますが、' + (Number(g) + 1) + '班は' + cap + '席です。', error: true });
     });
     var rootOf = {};
     clusters.forEach(function (cl, i) { cl.forEach(function (n) { rootOf[n] = i; }); });
@@ -395,10 +470,9 @@
     }).join('');
   }
 
-  /** 「班の数」で指定されたか「1班の人数」で指定されたかを、班の数に直す */
-  function groupCount(total) {
-    if ($('hw-mode').value === 'per') return Math.max(1, Math.ceil(total / parseInt($('hw-per').value, 10)));
-    return parseInt($('hw-num').value, 10);
+  /** 班の数（名簿の人数には左右されない） */
+  function groupCount() {
+    return seatSizes().length;
   }
 
   function run() {
@@ -410,7 +484,7 @@
     if (got.errors.length) { showMsgs(got.errors.map(function (t) { return { text: t, error: true }; })); return; }
 
     var names = got.names;
-    var count = groupCount(names.length);
+    var count = groupCount();
     var rulesObj = solverRules(got.rules, count);
     var problems = diagnose(names, count, rulesObj, got.rules);
     if (problems.length) { showMsgs(problems); return; }
@@ -482,6 +556,7 @@
     if (r.apart.some(function (p) { return p.indexOf(name) >= 0; })) tags.push('別々');
     if (r.together.some(function (p) { return p.indexOf(name) >= 0; })) tags.push('同じ');
     Object.keys(r.scatter).forEach(function (k) { if (r.scatter[k].indexOf(name) >= 0) tags.push('ちらす' + SCATTER_SETS[k - 1]); });
+    if (r.fixed && r.fixed[name] !== undefined) tags.push('固定');
     return tags;
   }
 
@@ -515,21 +590,27 @@
       });
     } else {
       // まだ班分けしていない：班の数と人数だけの空の枠。名前が1人も入っていないうちは枠ごと出さない
-      var n = students.length;
-      var count = groupCount(Math.max(n, 1));
+      // 枠の中で 班を足す・消す／席を足す・消す ができる（班ごとに人数を変えたいとき）
       var lead = students.some(function (s) { return s.rules.some(function (r) { return r.kind === 'leader'; }); });
-      if (n && count <= n) {
-        groupSizes(n, count).forEach(function (size, gi) {
+      var sizes = seatSizes();
+      {
+        sizes.forEach(function (size, gi) {
           var slots = '';
           // いちばん上の枠がリーダーの席
-          for (var k = 0; k < size; k++) slots += '<li class="hw-slot' + (lead && k === 0 ? ' is-leader' : '') + '">' + (lead && k === 0 ? 'リーダー' : '') + '</li>';
+          for (var k = 0; k < size; k++) {
+            slots += '<li class="hw-slot' + (lead && k === 0 ? ' is-leader' : '') + '">' + (lead && k === 0 ? 'リーダー' : '') +
+              (size > 1 ? '<button type="button" class="hw-slot-del" data-g="' + gi + '" aria-label="' + (gi + 1) + '班の席を1つ消す">✕</button>' : '') + '</li>';
+          }
+          slots += '<li class="hw-slot-add"><button type="button" class="hw-ghost-add" data-g="' + gi + '" aria-label="' + (gi + 1) + '班に席を足す">＋ 席</button></li>';
           html += '<div class="hw-group is-empty"><div class="hw-group-head"><span class="hw-group-n">' + (gi + 1) + '班</span>' +
-            '<span class="hw-group-size">' + size + '人</span></div><ul class="hw-members">' + slots + '</ul></div>';
+            '<span class="hw-group-size">' + size + '席</span>' +
+            (sizes.length > 1 ? '<button type="button" class="hw-group-del" data-g="' + gi + '" aria-label="' + (gi + 1) + '班を消す">✕</button>' : '') +
+            '</div><ul class="hw-members">' + slots + '</ul></div>';
         });
+        if (sizes.length < 12) html += '<button type="button" class="hw-group-add" aria-label="班を足す">＋ 班を足す</button>';
       }
     }
     board.innerHTML = html;
-    $('hw-board-wrap').hidden = !hasResult && !students.some(function (s) { return s.name.trim(); });
     updateRowGroups();
     updateSteps();
   }
@@ -598,7 +679,7 @@
       if (lc > 1) out.push((i + 1) + '班にリーダーが' + lc + '人います');
     });
     var sizes = state.groups.map(function (g) { return g.length; });
-    if (Math.max.apply(null, sizes) - Math.min.apply(null, sizes) >= 2) out.push('班の人数に2人以上の差があります');
+    if (!customSizes && Math.max.apply(null, sizes) - Math.min.apply(null, sizes) >= 2) out.push('班の人数に2人以上の差があります');
     return out;
   }
 
@@ -628,18 +709,11 @@
     $('hw-count').textContent = n + '人';
     var info = $('hw-plan');
     info.classList.remove('is-warn');
-    if (!n) { info.textContent = '—'; $('hw-group-count').textContent = '0班'; return; }
-    syncNums();
-    var count = groupCount(n);
-    $('hw-group-count').textContent = count + '班';
-    if (count > n) {
-      info.textContent = n + '人を' + count + '班には分けられません';
-      info.classList.add('is-warn');
-      return;
-    }
-    var sizes = groupSizes(n, count);
-    var min = Math.min.apply(null, sizes), max = Math.max.apply(null, sizes);
-    info.textContent = n + '人を' + count + '班に（1班 ' + (min === max ? min + '人' : min + '〜' + max + '人') + '）';
+    var caps = seatSizes(), sum = seatSum(caps);
+    $('hw-group-count').textContent = caps.length + '班';
+    info.textContent = (customSizes ? caps.length + '班・合わせて' : caps.length + '班 × ' + caps[0] + '人 ＝ ') + sum + '席' +
+      (n ? '（名簿 ' + n + '人' + (sum < n ? '・' + (n - sum) + '席たりません' : sum > n ? '・あき ' + (sum - n) + '席' : '') + '）' : '');
+    if (sum < n) info.classList.add('is-warn');
   }
 
   /* ============================================================
@@ -665,6 +739,10 @@
       options(KIND_ORDER.map(function (x) { return [x, KIND_LABEL[x]]; }), k) + '</select>';
     if (k === 'apart' || k === 'together') {
       html += '<select class="hw-to" aria-label="' + KIND_LABEL[k] + 'の相手">' + partnerOptions(s, rule.to, names) + '</select>';
+    } else if (k === 'fixed') {
+      var gl = [];
+      for (var gi = 0; gi < Math.max(seatSizes().length, (rule.g || 0) + 1); gi++) gl.push([gi, (gi + 1) + '班']);
+      html += '<select class="hw-fg" aria-label="固定する班">' + options(gl, rule.g || 0) + '</select>';
     } else if (k === 'scatter') {
       html += '<select class="hw-set" aria-label="ちらすまとまり">' +
         options(SCATTER_SETS.map(function (l, i) { return [i + 1, l + 'の子']; }), rule.set || 1) + '</select>';
@@ -780,6 +858,8 @@
         s.rules.push({ kind: 'scatter', set: x[2] || 1 });
       } else if (x[1] === 'leader') {
         s.rules.push({ kind: 'leader' });
+      } else if (x[1] === 'fixed') {
+        s.rules.push({ kind: 'fixed', g: x[2] || 0 });
       }
     });
     clearResult();
@@ -886,6 +966,8 @@
     return String(cell || '').split(/[;；,、，\/／\s　]+/).map(function (t) {
       t = t.trim();
       if (/^(リーダー|りーだー|班長)$/.test(t)) return { kind: 'leader' };
+      var fx = t.match(/^固定\s*(\d+)\s*班?$/);
+      if (fx) return { kind: 'fixed', g: Math.max(0, Number(fx[1]) - 1) };
       var m = t.match(/^(別々|同じ|ちらす)\s*([0-9A-Ea-e]*)$/);
       if (!m) return null;
       var kind = m[1] === '同じ' ? 'together' : (m[1] === 'ちらす' ? 'scatter' : 'apart');
@@ -933,6 +1015,7 @@
     ruleCells.forEach(function (cell, i) {
       parseRuleCell(cell).forEach(function (t) {
         if (t.kind === 'leader') { ruleList.push([list[i].name, 'leader']); return; }
+        if (t.kind === 'fixed') { ruleList.push([list[i].name, 'fixed', t.g]); return; }
         var key = t.kind + t.no;
         (buckets[key] = buckets[key] || { kind: t.kind, no: t.no, names: [] }).names.push(list[i].name);
       });
@@ -1005,6 +1088,7 @@
     r.together.forEach(function (p, i) { add(p[0], '同じ' + (i + 1)); add(p[1], '同じ' + (i + 1)); });
     Object.keys(r.scatter).forEach(function (k) { r.scatter[k].forEach(function (n) { add(n, 'ちらす' + k); }); });
     r.leaders.forEach(function (n) { add(n, 'リーダー'); });
+    Object.keys(r.fixed || {}).forEach(function (n) { add(n, '固定' + (r.fixed[n] + 1)); });
     return cells;
   }
 
@@ -1043,14 +1127,14 @@
      ============================================================ */
 
   /*
-   * 分け方（2026-10-05）：「班の数」と「1班の人数」のプルダウンを両方出す。
-   * 最後にさわったほうで決め（hw-mode）、もう一方は名簿の人数から合わせて見せる
+   * 分け方（2026-10-05）：「班の数」と「1班の人数」を名簿と切りはなして自由に選ぶ。
+   * 班の数 × 1班の人数 が席の数。班ごとに変えたいときは、空の班の枠で 班・席 を足し引きする
    */
   function rebuildNums() {
     [['hw-num', '班', '6'], ['hw-per', '人', '5']].forEach(function (x) {
       var sel = $(x[0]), keep = sel.value;
       sel.innerHTML = '';
-      for (var i = 2; i <= 12; i++) {
+      for (var i = 1; i <= 12; i++) {
         var o = document.createElement('option');
         o.value = i;
         o.textContent = i + x[1];
@@ -1060,23 +1144,32 @@
     });
   }
 
-  function clampNum(v) { return String(Math.min(12, Math.max(2, v))); }
-
-  /** 決めたほうに合わせて、もう一方のプルダウンを名簿の人数から直す */
-  function syncNums() {
-    var n = students.length;
-    if (!n) return;
-    if ($('hw-mode').value === 'per') $('hw-num').value = clampNum(groupCount(n));
-    else $('hw-per').value = clampNum(Math.floor(n / parseInt($('hw-num').value, 10)));
-  }
-
   var onSizeChange = function () {
     touchedStep1 = true;
     clearResult();
     updateCount();
   };
-  $('hw-num').addEventListener('change', function () { $('hw-mode').value = 'groups'; onSizeChange(); });
-  $('hw-per').addEventListener('change', function () { $('hw-mode').value = 'per'; onSizeChange(); });
+  // プルダウンを選び直したら、班ごとに足し引きした席は捨てて「班の数 × 1班の人数」に戻す
+  $('hw-num').addEventListener('change', function () { customSizes = null; onSizeChange(); renderList(); });
+  $('hw-per').addEventListener('change', function () { customSizes = null; onSizeChange(); });
+
+  /* 空の班の枠で、班ごとに 班・席 を足す／消す（2026-10-05） */
+  function editSizes(fn) {
+    if (!customSizes) customSizes = seatSizes();
+    fn(customSizes);
+    onSizeChange();
+    renderList();   // 「固定」の班のプルダウンを班の数に合わせる
+  }
+  $('hw-board').addEventListener('click', function (e) {
+    if (state.groups) return;
+    var t = e.target.closest('button');
+    if (!t) return;
+    var g = Number(t.getAttribute('data-g'));
+    if (t.classList.contains('hw-ghost-add')) editSizes(function (a) { a[g]++; });
+    else if (t.classList.contains('hw-slot-del')) editSizes(function (a) { if (a[g] > 1) a[g]--; });
+    else if (t.classList.contains('hw-group-del')) editSizes(function (a) { if (a.length > 1) a.splice(g, 1); });
+    else if (t.classList.contains('hw-group-add')) editSizes(function (a) { a.push(Math.min.apply(null, a)); });
+  });
 
   var list = $('hw-list');
 
@@ -1086,7 +1179,6 @@
     if (!s) return;
     s.name = e.target.value;
     refreshPartnerLabels();
-    if (!state.groups) renderBoard();   // 名前が入ったら空の班の枠を出す
     updateSteps();
   });
 
@@ -1114,18 +1206,22 @@
     if (!rule) return;
     if (t.classList.contains('hw-kind')) {
       rule.kind = t.value;
-      delete rule.to; delete rule.set;
+      delete rule.to; delete rule.set; delete rule.g;
       if (rule.kind === 'scatter') rule.set = 1;
+      if (rule.kind === 'fixed') rule.g = 0;
       clearResult();
       renderList();
       var box = list.querySelector('.hw-row[data-id="' + s.id + '"] .hw-rule[data-ri="' + s.rules.indexOf(rule) + '"]');
-      var nextSel = box && box.querySelector('.hw-to, .hw-set');
+      var nextSel = box && box.querySelector('.hw-to, .hw-set, .hw-fg');
       (nextSel || (box && box.querySelector('.hw-kind')) || document.body).focus();
     } else if (t.classList.contains('hw-to')) {
       rule.to = t.value ? Number(t.value) : null;
       clearResult();
     } else if (t.classList.contains('hw-set')) {
       rule.set = Number(t.value);
+      clearResult();
+    } else if (t.classList.contains('hw-fg')) {
+      rule.g = Number(t.value);
       clearResult();
     }
   });
@@ -1205,8 +1301,9 @@
     $('hw-labelset-name').value = '性別';
     $('hw-labelset-input').value = '女, 男';
     updateBalanceName();
-    $('hw-mode').value = 'groups';
+    customSizes = null;
     $('hw-num').value = '6';
+    $('hw-per').value = '5';
     touchedStep1 = true;
     loadRoster(SAMPLE.map(function (x) { return { name: x[0], label: x[1] }; }), SAMPLE_RULES);
     clearPrev();
