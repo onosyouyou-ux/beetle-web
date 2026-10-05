@@ -1675,17 +1675,12 @@
     loadRoster(SAMPLE_NAMES, SAMPLE_RULES);
     students.forEach(function (s, i) { s.gender = SAMPLE_GENDERS[i] || ''; });
     renderList();
-    // 見本は30人ぶん。いまの座席で足りるなら形はそのまま（足した席・消した席を残す）。
-    // 足りないときだけ既定の6×5に戻す
-    if (seatTotal(seatMap) < SAMPLE_NAMES.length) {
-      $('sk-cols').value = '6';
-      $('sk-rows').value = '5';
-      onSizeChange();
-    }
+    // 見本は名簿（名前・性別・配慮）だけ。座席の形は触らず、配置もしない（押すのは先生。2026-10-05）
+    invalidateResult();
     clearPrev();
-    rosterNote('');
+    showMsgs([]);
+    rosterNote('見本の名簿（30人）を入れました。座席の形を決めて「配置する」を押してください。', 'ok');
     updateCount();
-    run();
   });
 
   /* 前回の席 */
