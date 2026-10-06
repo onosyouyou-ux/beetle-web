@@ -5,7 +5,7 @@ canonical: "https://www.beetle-web.jp/tools/kurasuwake/landing.html"
 sitemap: false
 title_contains: "クラス分けメーカー"
 og_image: "/assets/images/OG.jpg"
-required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#kw-stepbar", "#kw-num", "#kw-bal-gender", "#kw-bal-prev", "#kw-bal-score", "#kw-bal-support", "#kw-bal-leader", "#kw-list", "#kw-add1", "#kw-sample", "#kw-gen", "#kw-gen2", "#kw-again", "#kw-board", "#kw-balance", "#kw-msg", "#kw-out", "#howto", "#kw-csv", "#kw-csv-save", "#kw-csv-template", "#kw-csv-dummy", "#kw-download"]
+required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#kw-stepbar", "#kw-total", "#kw-num", "#kw-bal-gender", "#kw-bal-prev", "#kw-bal-score", "#kw-bal-support", "#kw-bal-leader", "#kw-list", "#kw-add1", "#kw-sample", "#kw-gen", "#kw-gen2", "#kw-again", "#kw-board", "#kw-balance", "#kw-msg", "#kw-out", "#howto", "#kw-csv", "#kw-csv-save", "#kw-csv-template", "#kw-csv-dummy", "#kw-download"]
 e2e: false
 ---
 
@@ -15,8 +15,8 @@ e2e: false
 - **条件（ユーザーが選んだもの）**: 各クラスで **男女の人数／前のクラスの子の人数（前のクラスをばらす）／点数の平均／支援の子の人数／リーダーの人数** をそろえる。
   「別々・同じ・固定」は入れていない（着手時に聞いて、選ばれなかった）
 - **レイアウト型**: 教育系の静的アプリ（[_common.md](_common.md) 参照）。班分けメーカーと同じ型で、CSSは `hanwake.css` の `hw-` を `kw-` にしたものが土台（`css/kurasuwake.css` の末尾にクラス分け用を足す）
-- **操作の順番**: 手順バー `#kw-stepbar`（1 クラスの数を決める → 2 名簿を入れる → 3 クラス分けする → 4 手直しして印刷）
-- **1**: `#kw-num`（2〜8クラス。初期値「---」）と、そろえるもののチェック5つ（初期はすべてオン）。
+- **操作の順番**: 手順バー `#kw-stepbar`（見出し「つくる順番」と「いま 2／4：…」の進み具合つき。いまの手順はオレンジの塗り、終わった手順は緑の✓。1 生徒数とクラスの数を決める → 2 名簿を入れる → 3 クラス分けする → 4 手直しして印刷）
+- **1**: `#kw-total`（生徒数・1〜200人の数値入力。決めると名簿の行をその人数ぶんに合わせ、名前の入った行は消さない。CSV・見本で名簿を入れ直すと名前の数に合わせる。2026-10-06）・`#kw-num`（2〜8クラス。初期値「---」）と、そろえるもののチェック5つ（初期はすべてオン）。
   クラスの数を選ぶと空のクラスの枠が出る（名簿があれば「ここに35人が入ります」）
 - **2 名簿**（`#kw-list`、1人1行・枠の中でスクロール）: NO｜名前｜性別（— 女 男）｜前のクラス（文字）｜点数（数字）｜支援・リーダー（押すとオン）｜結果のクラス｜削除
 - **見本と ダミー名簿**: 100人を超える名簿を手で打つのは大変なので、`#kw-sample` で架空の140人（前のクラス4つ・点数・支援・リーダーつき）を名簿に入れる。

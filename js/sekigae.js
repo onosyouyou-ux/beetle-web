@@ -840,6 +840,9 @@
       li.classList.toggle('is-on', n === now);
       if (n === now) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
     });
+    // 見出しの横に「いま 2／4：名簿を入れる」
+    var cur = bar.children[now - 1];
+    if ($('sk-flow-now') && cur) $('sk-flow-now').textContent = 'いま ' + now + '／' + bar.children.length + '：' + cur.textContent.replace(/^\d+/, '');
   }
 
   /** 座席欄のタブを切り替える（'shape'＝座席の形／'result'＝席替えの結果） */

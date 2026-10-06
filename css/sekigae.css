@@ -462,24 +462,42 @@ body{
   .sk-rules{grid-column:2 / 5}
 }
 
-/* ====== 操作の順番（2026-10-04）：迷子にならないよう、手順バー＋見出しの番号＋塗りボタンは手順ごとに1つ ====== */
-.sk-stepbar{
-  list-style:none;margin:0 0 18px;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
+/* ====== 操作の順番（2026-10-04。2026-10-06 に見出し・進み具合を足し、いまの手順を塗りに） ======
+   迷子にならないよう、手順バー＋見出しの番号＋塗りボタンは手順ごとに1つ。
+   終わった手順＝緑の✓、いまの手順＝オレンジの塗り、まだの手順＝薄いグレー */
+.sk-flow{
+  margin:0 0 18px;padding:12px 16px 14px;background:#fff;border:1px solid var(--sk-line2);border-radius:12px;
 }
+.sk-flow-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;margin:0 0 10px}
+.sk-flow-title{font-size:14px;font-weight:900;color:var(--sk-ink)}
+.sk-flow-now{font-size:12.5px;font-weight:800;color:var(--sk-orange-dk)}
+.sk-stepbar{
+  list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+}
+.sk-stepbar li{position:relative}
+/* 手順のあいだの矢印 */
+.sk-stepbar li+li::before{
+  content:"";position:absolute;left:-14px;top:50%;margin-top:-5px;
+  border:5px solid transparent;border-left:7px solid var(--sk-line2);border-right:0;
+}
+.sk-stepbar li.is-done+li::before{border-left-color:var(--sk-green)}
 .sk-stepbar li a{
   display:flex;align-items:center;gap:8px;height:100%;box-sizing:border-box;padding:10px 12px;border-radius:8px;
-  background:#fff;border:1px solid var(--sk-line);color:var(--sk-ink3);font-size:12.5px;font-weight:800;text-decoration:none;
+  background:var(--sk-cream2);border:2px solid transparent;color:var(--sk-ink3);font-size:13px;font-weight:800;text-decoration:none;
 }
 .sk-stepbar-n{
   flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
-  background:var(--sk-cream2);color:var(--sk-ink3);font-size:12px;font-weight:900;
+  background:#fff;color:var(--sk-ink3);font-size:12px;font-weight:900;
 }
-.sk-stepbar li.is-on a{border:2px solid var(--sk-orange);color:var(--sk-orange-dk);background:var(--sk-orange-bg)}
-.sk-stepbar li.is-on .sk-stepbar-n{background:var(--sk-orange);color:#fff}
-.sk-stepbar li.is-done a{color:var(--sk-ink2)}
+.sk-stepbar li.is-on a{background:var(--sk-orange);color:#fff;box-shadow:0 2px 8px rgba(224,138,60,.35)}
+.sk-stepbar li.is-on .sk-stepbar-n{color:var(--sk-orange-dk)}
+.sk-stepbar li.is-done a{background:var(--sk-green-bg);color:var(--sk-green)}
 .sk-stepbar li.is-done .sk-stepbar-n{background:var(--sk-green);color:#fff;font-size:0}
 .sk-stepbar li.is-done .sk-stepbar-n::after{content:"✓";font-size:12px}
-@media (hover:hover){ .sk-stepbar li a:hover{border-color:var(--sk-orange)} }
+@media (hover:hover){
+  .sk-stepbar li a:hover{border-color:var(--sk-orange)}
+  .sk-stepbar li.is-on a:hover{border-color:var(--sk-orange-dk)}
+}
 
 /* 枠の見出しの番号 */
 .sk-step-no{
@@ -496,11 +514,12 @@ body{
 .sk-sub.sk-gen-sub{margin-left:auto;padding:6px 16px;font-size:12px;border-color:var(--sk-orange);color:var(--sk-orange-dk)}
 
 @media(max-width:767px){
-  .sk-stepbar{grid-template-columns:repeat(2,1fr)}
+  .sk-stepbar{grid-template-columns:repeat(2,1fr);gap:8px 20px}
+  .sk-stepbar li:nth-child(3)::before{display:none}
   .sk-stepbar li a{font-size:11.5px;padding:8px}
   .sk-sub.sk-gen-sub{margin-left:0}
 }
-@media print{ .sk-stepbar{display:none !important} }
+@media print{ .sk-flow{display:none !important} }
 
 /* 使い方の下の補足（次回の続き・基準変更の注意） */
 .sk-doc-note{font-size:12.5px;line-height:1.9;color:var(--sk-ink2);background:#fff;border:1px solid var(--sk-line);border-radius:10px;padding:12px 16px;margin:14px 0 0}

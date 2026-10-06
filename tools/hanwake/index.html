@@ -51,7 +51,7 @@
   "@type": "HowTo",
   "name": "班分けメーカーでグループ分けを作る手順",
   "step": [
-    { "@type": "HowToStep", "name": "班の数を決める", "text": "「班の数」と「1班の人数」を選びます（6班×5人なら30人）。班ごとに人数を変えたいときは、下の班の枠でメンバーや班を足し引きできます。名簿が席より少なければ、なるべく同じ人数になるよう配ります。" },
+    { "@type": "HowToStep", "name": "人数と班の数を決める", "text": "「クラスの人数」と「班の数」を選びます（30人・6班なら1班5人）。名簿の欄がクラスの人数ぶん出ます。班ごとに人数を変えたいときは、下の班の枠でメンバーや班を足し引きできます。" },
     { "@type": "HowToStep", "name": "名簿と配慮を入れる", "text": "名前を1マスに1人ずつ入れ、性別などのボタンを押します。配慮は配慮の列の「＋ 追加」から 別々・同じ・リーダー・固定 を選びます。1人に何個でも付けられます。" },
     { "@type": "HowToStep", "name": "班分けする", "text": "「班分けする」を押すと配慮を守った班ができます。気に入らなければ何度でも分け直せます。" },
     { "@type": "HowToStep", "name": "手直しして印刷", "text": "子をドラッグか2人を順にタップして入れかえ、「印刷する」で班の表だけを印刷します。" }
@@ -96,7 +96,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="/css/hanwake.css?v=20261005">
+<link rel="stylesheet" href="/css/hanwake.css?v=20261006">
 </head>
 <body>
 
@@ -115,26 +115,29 @@
 
   <main class="hw-main">
 
-    <ol class="hw-stepbar" id="hw-stepbar" aria-label="操作の順番">
-      <li data-step="1"><a href="#tool"><span class="hw-stepbar-n">1</span>班の数を決める</a></li>
-      <li data-step="2"><a href="#hw-roster"><span class="hw-stepbar-n">2</span>名簿と配慮を入れる</a></li>
-      <li data-step="3"><a href="#hw-go-area"><span class="hw-stepbar-n">3</span>班分けする</a></li>
-      <li data-step="4"><a href="#tool"><span class="hw-stepbar-n">4</span>手直しして印刷</a></li>
-    </ol>
+    <nav class="hw-flow" aria-label="操作の順番">
+      <p class="hw-flow-head"><span class="hw-flow-title">つくる順番</span><span class="hw-flow-now" id="hw-flow-now" aria-live="polite"></span></p>
+      <ol class="hw-stepbar" id="hw-stepbar">
+        <li data-step="1"><a href="#tool"><span class="hw-stepbar-n">1</span>人数と班の数を決める</a></li>
+        <li data-step="2"><a href="#hw-roster"><span class="hw-stepbar-n">2</span>名簿と配慮を入れる</a></li>
+        <li data-step="3"><a href="#hw-go-area"><span class="hw-stepbar-n">3</span>班分けする</a></li>
+        <li data-step="4"><a href="#tool"><span class="hw-stepbar-n">4</span>手直しして印刷</a></li>
+      </ol>
+    </nav>
 
     <section class="hw-panel" id="tool">
       <div class="hw-groupsize">
         <div class="hw-panel-head">
-          <span class="hw-lbl"><span class="hw-step-no">1</span>班の数を決める</span>
+          <span class="hw-lbl"><span class="hw-step-no">1</span>人数と班の数を決める</span>
           <span class="hw-count" id="hw-group-count">0班</span>
         </div>
         <span class="hw-ctl">
-          <label for="hw-num">班の数</label>
-          <select id="hw-num"></select>
+          <label for="hw-total">クラスの人数</label>
+          <select id="hw-total"></select>
         </span>
         <span class="hw-ctl">
-          <label for="hw-per">1班の人数</label>
-          <select id="hw-per"></select>
+          <label for="hw-num">班の数</label>
+          <select id="hw-num"></select>
         </span>
         <span class="hw-ctl">
           <label for="hw-gmode" id="hw-gmode-lbl">男女比</label>
@@ -241,8 +244,8 @@
       <div class="hw-steps">
         <div class="hw-step">
           <span class="hw-step-n">1</span>
-          <h3>班の数を決める</h3>
-          <p>「班の数」と「1班の人数」を選びます（6班×5人なら30人）。班ごとに人数を変えたいときは、下の班の枠でメンバーや班を足し引きできます。名簿が席より少なければ、なるべく同じ人数になるよう配ります。</p>
+          <h3>人数と班の数を決める</h3>
+          <p>「クラスの人数」と「班の数」を選びます（30人・6班なら1班5人）。名簿の欄がクラスの人数ぶん出ます。班ごとに人数を変えたいときは、下の班の枠でメンバーや班を足し引きできます。</p>
         </div>
         <div class="hw-step">
           <span class="hw-step-n">2</span>
@@ -325,6 +328,6 @@
 <script src="/js/contact-track.js"></script>
 <script src="/js/app-reference.js"></script>
 <script src="/js/class-roster.js?v=20261004"></script>
-<script src="/js/hanwake.js?v=20261005"></script>
+<script src="/js/hanwake.js?v=20261006"></script>
 </body>
 </html>

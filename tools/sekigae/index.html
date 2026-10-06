@@ -109,7 +109,7 @@
 <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 <link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/css/app-reference.css">
-<link rel="stylesheet" href="/css/sekigae.css?v=20261005">
+<link rel="stylesheet" href="/css/sekigae.css?v=20261006">
 </head>
 <body>
 
@@ -128,12 +128,15 @@
 
   <main class="sk-main">
 
-    <ol class="sk-stepbar" id="sk-stepbar" aria-label="操作の順番">
-      <li data-step="1"><a href="#tool"><span class="sk-stepbar-n">1</span>座席の形を決める</a></li>
-      <li data-step="2"><a href="#sk-roster"><span class="sk-stepbar-n">2</span>名簿と配慮を入れる</a></li>
-      <li data-step="3"><a href="#sk-go-area"><span class="sk-stepbar-n">3</span>配置する</a></li>
-      <li data-step="4"><a href="#tool"><span class="sk-stepbar-n">4</span>手直しして印刷</a></li>
-    </ol>
+    <nav class="sk-flow" aria-label="操作の順番">
+      <p class="sk-flow-head"><span class="sk-flow-title">つくる順番</span><span class="sk-flow-now" id="sk-flow-now" aria-live="polite"></span></p>
+      <ol class="sk-stepbar" id="sk-stepbar">
+        <li data-step="1"><a href="#tool"><span class="sk-stepbar-n">1</span>座席の形を決める</a></li>
+        <li data-step="2"><a href="#sk-roster"><span class="sk-stepbar-n">2</span>名簿と配慮を入れる</a></li>
+        <li data-step="3"><a href="#sk-go-area"><span class="sk-stepbar-n">3</span>配置する</a></li>
+        <li data-step="4"><a href="#tool"><span class="sk-stepbar-n">4</span>手直しして印刷</a></li>
+      </ol>
+    </nav>
 
     <section class="sk-panel" id="tool">
       <div class="sk-seatsize">
@@ -352,6 +355,6 @@
 <script src="/js/contact-track.js"></script>
 <script src="/js/app-reference.js"></script>
 <script src="/js/class-roster.js?v=20261004"></script>
-<script src="/js/sekigae.js?v=20261005"></script>
+<script src="/js/sekigae.js?v=20261006"></script>
 </body>
 </html>

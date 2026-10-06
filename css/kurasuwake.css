@@ -147,7 +147,9 @@ body{
 .kw-controls{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:18px;padding-top:18px;border-top:1px solid var(--kw-line)}
 .kw-ctl{display:flex;align-items:center;gap:7px}
 .kw-ctl label{font-size:13px;font-weight:800;color:var(--kw-ink2)}
-.kw-ctl select{border:1px solid var(--kw-line2);border-radius:6px;padding:8px 12px;font-size:14px;font-family:inherit;color:var(--kw-ink);background:#fff}
+.kw-ctl select,.kw-ctl input{border:1px solid var(--kw-line2);border-radius:6px;padding:8px 12px;font-size:14px;font-family:inherit;color:var(--kw-ink);background:#fff}
+.kw-ctl input{width:5.5em;box-sizing:border-box}
+.kw-unit{font-size:13px;font-weight:800;color:var(--kw-ink2);margin-left:-3px}
 .kw-seats{font-size:12.5px;color:var(--kw-ink3)}
 .kw-go{
   margin-left:auto;background:var(--kw-orange);color:#fff;border:none;border-radius:6px;
@@ -463,24 +465,42 @@ body{
   .kw-rules{grid-column:2 / 5}
 }
 
-/* ====== 操作の順番（2026-10-04）：迷子にならないよう、手順バー＋見出しの番号＋塗りボタンは手順ごとに1つ ====== */
-.kw-stepbar{
-  list-style:none;margin:0 0 18px;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
+/* ====== 操作の順番（2026-10-04。2026-10-06 に見出し・進み具合を足し、いまの手順を塗りに） ======
+   迷子にならないよう、手順バー＋見出しの番号＋塗りボタンは手順ごとに1つ。
+   終わった手順＝緑の✓、いまの手順＝オレンジの塗り、まだの手順＝薄いグレー */
+.kw-flow{
+  margin:0 0 18px;padding:12px 16px 14px;background:#fff;border:1px solid var(--kw-line2);border-radius:12px;
 }
+.kw-flow-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;margin:0 0 10px}
+.kw-flow-title{font-size:14px;font-weight:900;color:var(--kw-ink)}
+.kw-flow-now{font-size:12.5px;font-weight:800;color:var(--kw-orange-dk)}
+.kw-stepbar{
+  list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+}
+.kw-stepbar li{position:relative}
+/* 手順のあいだの矢印 */
+.kw-stepbar li+li::before{
+  content:"";position:absolute;left:-14px;top:50%;margin-top:-5px;
+  border:5px solid transparent;border-left:7px solid var(--kw-line2);border-right:0;
+}
+.kw-stepbar li.is-done+li::before{border-left-color:var(--kw-green)}
 .kw-stepbar li a{
   display:flex;align-items:center;gap:8px;height:100%;box-sizing:border-box;padding:10px 12px;border-radius:8px;
-  background:#fff;border:1px solid var(--kw-line);color:var(--kw-ink3);font-size:12.5px;font-weight:800;text-decoration:none;
+  background:var(--kw-cream2);border:2px solid transparent;color:var(--kw-ink3);font-size:13px;font-weight:800;text-decoration:none;
 }
 .kw-stepbar-n{
   flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
-  background:var(--kw-cream2);color:var(--kw-ink3);font-size:12px;font-weight:900;
+  background:#fff;color:var(--kw-ink3);font-size:12px;font-weight:900;
 }
-.kw-stepbar li.is-on a{border:2px solid var(--kw-orange);color:var(--kw-orange-dk);background:var(--kw-orange-bg)}
-.kw-stepbar li.is-on .kw-stepbar-n{background:var(--kw-orange);color:#fff}
-.kw-stepbar li.is-done a{color:var(--kw-ink2)}
+.kw-stepbar li.is-on a{background:var(--kw-orange);color:#fff;box-shadow:0 2px 8px rgba(224,138,60,.35)}
+.kw-stepbar li.is-on .kw-stepbar-n{color:var(--kw-orange-dk)}
+.kw-stepbar li.is-done a{background:var(--kw-green-bg);color:var(--kw-green)}
 .kw-stepbar li.is-done .kw-stepbar-n{background:var(--kw-green);color:#fff;font-size:0}
 .kw-stepbar li.is-done .kw-stepbar-n::after{content:"✓";font-size:12px}
-@media (hover:hover){ .kw-stepbar li a:hover{border-color:var(--kw-orange)} }
+@media (hover:hover){
+  .kw-stepbar li a:hover{border-color:var(--kw-orange)}
+  .kw-stepbar li.is-on a:hover{border-color:var(--kw-orange-dk)}
+}
 
 /* 枠の見出しの番号 */
 .kw-step-no{
@@ -497,11 +517,12 @@ body{
 .kw-sub.kw-gen-sub{margin-left:auto;padding:6px 16px;font-size:12px;border-color:var(--kw-orange);color:var(--kw-orange-dk)}
 
 @media(max-width:767px){
-  .kw-stepbar{grid-template-columns:repeat(2,1fr)}
+  .kw-stepbar{grid-template-columns:repeat(2,1fr);gap:8px 20px}
+  .kw-stepbar li:nth-child(3)::before{display:none}
   .kw-stepbar li a{font-size:11.5px;padding:8px}
   .kw-sub.kw-gen-sub{margin-left:0}
 }
-@media print{ .kw-stepbar{display:none !important} }
+@media print{ .kw-flow{display:none !important} }
 
 /* 使い方の下の補足（次回の続き・基準変更の注意） */
 .kw-doc-note{font-size:12.5px;line-height:1.9;color:var(--kw-ink2);background:#fff;border:1px solid var(--kw-line);border-radius:10px;padding:12px 16px;margin:14px 0 0}
@@ -624,7 +645,7 @@ body{
 
 /* 印刷：班の表だけ。掲示に使うので、リーダー以外の配慮の札は出さない */
 @media print{
-  .kw-stepbar,.kw-groupsize,.kw-empty-hint,.kw-result-top,.kw-swap-hint,.kw-result-foot,.kw-out,
+  .kw-flow,.kw-groupsize,.kw-empty-hint,.kw-result-top,.kw-swap-hint,.kw-result-foot,.kw-out,
   .kw-panel-roster,.kw-doc,.kw-msg,.kw-tag{display:none !important}
   .kw-panel,.kw-board-wrap{border:none !important;padding:0 !important;background:none !important;margin:0 !important}
   .kw-board{grid-template-columns:repeat(3,1fr);gap:8px}

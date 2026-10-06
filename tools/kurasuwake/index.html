@@ -51,7 +51,7 @@
   "@type": "HowTo",
   "name": "クラス分けメーカーでクラス編成を作る手順",
   "step": [
-    { "@type": "HowToStep", "name": "クラスの数を決める", "text": "「クラスの数」を選び、そろえたいもの（男女・前のクラス・点数・支援・リーダー）にチェックを入れます。" },
+    { "@type": "HowToStep", "name": "生徒数とクラスの数を決める", "text": "「生徒数」と「クラスの数」を決め、そろえたいもの（男女・前のクラス・点数・支援・リーダー）にチェックを入れます。" },
     { "@type": "HowToStep", "name": "名簿を入れる", "text": "学年の名簿をCSVで読み込みます。名前・性別・前のクラス・点数・支援・リーダーを1人1行で入れます。" },
     { "@type": "HowToStep", "name": "クラス分けする", "text": "「クラス分けする」を押すと、そろえたいものが各クラスでなるべく同じになるクラス分けができます。気に入らなければ「再配置する」で何度でも作り直せます。" },
     { "@type": "HowToStep", "name": "手直しして印刷", "text": "子をドラッグか2人を順にタップして入れかえ、「印刷する」でクラスごとの名簿を印刷します。" }
@@ -96,7 +96,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="/css/kurasuwake.css?v=20261005">
+<link rel="stylesheet" href="/css/kurasuwake.css?v=20261006">
 </head>
 <body>
 
@@ -115,19 +115,27 @@
 
   <main class="kw-main">
 
-    <ol class="kw-stepbar" id="kw-stepbar" aria-label="操作の順番">
-      <li data-step="1"><a href="#tool"><span class="kw-stepbar-n">1</span>クラスの数を決める</a></li>
-      <li data-step="2"><a href="#kw-roster"><span class="kw-stepbar-n">2</span>名簿を入れる</a></li>
-      <li data-step="3"><a href="#kw-go-area"><span class="kw-stepbar-n">3</span>クラス分けする</a></li>
-      <li data-step="4"><a href="#tool"><span class="kw-stepbar-n">4</span>手直しして印刷</a></li>
-    </ol>
+    <nav class="kw-flow" aria-label="操作の順番">
+      <p class="kw-flow-head"><span class="kw-flow-title">つくる順番</span><span class="kw-flow-now" id="kw-flow-now" aria-live="polite"></span></p>
+      <ol class="kw-stepbar" id="kw-stepbar">
+        <li data-step="1"><a href="#tool"><span class="kw-stepbar-n">1</span>生徒数とクラスの数を決める</a></li>
+        <li data-step="2"><a href="#kw-roster"><span class="kw-stepbar-n">2</span>名簿を入れる</a></li>
+        <li data-step="3"><a href="#kw-go-area"><span class="kw-stepbar-n">3</span>クラス分けする</a></li>
+        <li data-step="4"><a href="#tool"><span class="kw-stepbar-n">4</span>手直しして印刷</a></li>
+      </ol>
+    </nav>
 
     <section class="kw-panel" id="tool">
       <div class="kw-groupsize">
         <div class="kw-panel-head">
-          <span class="kw-lbl"><span class="kw-step-no">1</span>クラスの数を決める</span>
+          <span class="kw-lbl"><span class="kw-step-no">1</span>生徒数とクラスの数を決める</span>
           <span class="kw-count" id="kw-group-count">0クラス</span>
         </div>
+        <span class="kw-ctl">
+          <label for="kw-total">生徒数</label>
+          <input type="number" id="kw-total" min="1" max="200" step="1" inputmode="numeric" placeholder="---">
+          <span class="kw-unit">人</span>
+        </span>
         <span class="kw-ctl">
           <label for="kw-num">クラスの数</label>
           <select id="kw-num"></select>
@@ -216,8 +224,8 @@
       <div class="kw-steps">
         <div class="kw-step">
           <span class="kw-step-n">1</span>
-          <h3>クラスの数を決める</h3>
-          <p>「クラスの数」を選び、そろえたいものにチェックを入れます。名簿に入っていない項目（点数がない、など）は自動で使いません。</p>
+          <h3>生徒数とクラスの数を決める</h3>
+          <p>「生徒数」と「クラスの数」を決めます。名簿の欄が生徒数ぶん出ます。そろえたいものにチェックを入れます。名簿に入っていない項目（点数がない、など）は自動で使いません。</p>
         </div>
         <div class="kw-step">
           <span class="kw-step-n">2</span>
@@ -301,6 +309,6 @@
 <script src="/js/contact-track.js"></script>
 <script src="/js/app-reference.js"></script>
 <script src="/js/class-roster.js?v=20261004"></script>
-<script src="/js/kurasuwake.js?v=20261005"></script>
+<script src="/js/kurasuwake.js?v=20261006"></script>
 </body>
 </html>

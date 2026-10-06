@@ -79,6 +79,11 @@
   function className(c) { return (c + 1) + '組'; }
 
   function classCount() { return parseInt($('kw-num').value, 10) || 0; }
+  var TOTAL_MAX = 200;   // 生徒数の上限
+  function classTotal() {
+    var n = parseInt($('kw-total').value, 10) || 0;
+    return n > 0 ? Math.min(n, TOTAL_MAX) : 0;
+  }
 
   /** 人数をクラスに振り分ける（141人4クラスなら 36,35,35,35） */
   function classSizes(total, count) {
@@ -422,13 +427,17 @@
     var bar = $('kw-stepbar');
     if (!bar) return;
     var named = students.some(function (s) { return s.name.trim(); });
-    var now = state.classes ? 4 : !classCount() ? 1 : named ? 3 : 2;
+    // 1 で生徒数とクラスの数を両方決めてはじめて 2（名簿）へ進む
+    var now = state.classes ? 4 : !classCount() || !classTotal() ? 1 : named ? 3 : 2;
     Array.prototype.forEach.call(bar.children, function (li) {
       var n = Number(li.getAttribute('data-step'));
       li.classList.toggle('is-done', n < now);
       li.classList.toggle('is-on', n === now);
       if (n === now) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
     });
+    // 見出しの横に「いま 2／4：名簿を入れる」
+    var cur = bar.children[now - 1];
+    if ($('kw-flow-now') && cur) $('kw-flow-now').textContent = 'いま ' + now + '／' + bar.children.length + '：' + cur.textContent.replace(/^\d+/, '');
   }
 
   function updateCount() {
@@ -437,11 +446,13 @@
     var count = classCount();
     $('kw-group-count').textContent = count + 'クラス';
     var info = $('kw-plan');
-    if (!count) { info.textContent = 'クラスの数を選んでください'; return; }
-    if (!n) { info.textContent = count + 'クラス'; return; }
-    var sizes = classSizes(n, count);
+    var total = classTotal();
+    if (!count || !total) { info.textContent = '生徒数とクラスの数を決めてください'; return; }
+    // 名前を入れたぶんで分ける。まだ入れていなければ生徒数で見込みを出す
+    var sizes = classSizes(n || total, count);
     var min = Math.min.apply(null, sizes), max = Math.max.apply(null, sizes);
-    info.textContent = count + 'クラス（名簿 ' + n + '人・1クラス ' + (min === max ? min : min + '〜' + max) + '人）';
+    info.textContent = count + 'クラス・1クラス ' + (min === max ? min : min + '〜' + max) + '人' +
+      (n && n !== total ? '（名簿 ' + n + '人・生徒数 ' + total + '人）' : '');
   }
 
   /* ============================================================
@@ -509,6 +520,8 @@
       if (!students[at + i]) students.push(newStudent());
       students[at + i].name = name;
     });
+    // 決めた生徒数より多く貼られたときだけ、生徒数を増やす
+    if (students.filter(function (x) { return x.name.trim(); }).length > classTotal()) totalFromRoster();
     clearResult();
     renderList();
     rosterNote(list.length + '人ぶん貼り付けました。', 'ok');
@@ -518,8 +531,30 @@
   function loadRoster(list) {
     nextId = 1;
     students = list.map(newStudent);
+    totalFromRoster();
     clearResult();
     renderList();
+  }
+
+  /**
+   * 名簿の行の数を生徒数にそろえる（2026-10-06）。
+   * 足りなければ空の行を足し、多ければ下から空の行だけ消す。名前の入った行は消さない
+   */
+  function syncRows(total) {
+    if (!total) return;
+    if (students.length < total) addRows(total - students.length);
+    for (var i = students.length - 1; i >= 0 && students.length > total; i--) {
+      if (!students[i].name.trim()) students.splice(i, 1);
+    }
+  }
+
+  /** 名簿を入れ直したら（CSV・見本・貼り付け）、生徒数を名前の数に合わせる */
+  function totalFromRoster() {
+    var n = students.filter(function (s) { return s.name.trim(); }).length;
+    if (!n || n > TOTAL_MAX || n === classTotal()) return;
+    $('kw-total').value = String(n);
+    updateCount();
+    updateSteps();
   }
 
   /* ============================================================
@@ -768,6 +803,15 @@
   })();
 
   $('kw-num').addEventListener('change', function () { clearResult(); updateCount(); });
+  // 生徒数を決めたら、名簿の欄をその人数ぶん出す
+  $('kw-total').addEventListener('change', function () {
+    if (classTotal()) this.value = String(classTotal());
+    syncRows(classTotal());
+    clearResult();
+    renderList();
+    updateCount();
+    updateSteps();
+  });
   ['kw-bal-gender', 'kw-bal-prev', 'kw-bal-score', 'kw-bal-support', 'kw-bal-leader'].forEach(function (id) {
     // そろえるものを変えたら、次の「再配置する」から効く（いまの結果は消さない）
     $(id).addEventListener('change', function () {
