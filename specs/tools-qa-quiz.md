@@ -4,7 +4,7 @@ urls: ["/tools/qa-quiz/"]
 canonical: self
 sitemap: true
 title_contains: "QA用語クイズ"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-qa-quiz.jpg"
 required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#tool", "#qq-app", "#howto", "#about", "#faq"]
 ---
 

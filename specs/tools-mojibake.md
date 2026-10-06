@@ -4,7 +4,7 @@ urls: ["/tools/mojibake/"]
 canonical: self
 sitemap: true
 title_contains: "文字化け再現ビューア"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-mojibake.jpg"
 required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#tool", "#mb-in", "#mb-results", "#mb-bytes", "#mb-warn", "#reverse", "#mb-rev-in", "#mb-rev-out", "#why", "#faq"]
 e2e: true
 ---

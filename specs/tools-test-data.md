@@ -4,7 +4,7 @@ urls: ["/tools/test-data/"]
 canonical: self
 sitemap: true
 title_contains: "意地悪テストデータ生成器"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-test-data.jpg"
 required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#catalog", "#td-len-out", "#td-dummy-out", "#td-fields", "#td-count-in", "#td-flags"]
 e2e: true
 ---

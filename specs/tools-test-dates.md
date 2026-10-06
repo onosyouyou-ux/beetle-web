@@ -4,7 +4,7 @@ urls: ["/tools/test-dates/"]
 canonical: self
 sitemap: true
 title_contains: "意地悪な日付ジェネレーター"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-test-dates.jpg"
 required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#tool", "#dt-base", "#dt-fy", "#dt-format", "#dt-list", "#dt-out", "#dt-diff", "#why", "#faq"]
 e2e: true
 ---

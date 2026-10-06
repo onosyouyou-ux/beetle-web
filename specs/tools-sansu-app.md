@@ -4,7 +4,7 @@ urls: ["/tools/sansu-app/"]
 canonical: https://www.beetle-web.jp/tools/sansu-app/landing.html
 sitemap: false
 title_contains: "さんすう"
-og_image: "none"
+og_image: "/assets/images/ogp/nk-sansu.jpg"
 required_selectors: ["#site-header", "#app", ".app-paper", ".paper-release"]
 e2e: false
 ---

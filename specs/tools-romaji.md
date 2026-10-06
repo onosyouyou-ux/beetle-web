@@ -4,7 +4,7 @@ urls: ["/tools/romaji/"]
 canonical: "https://www.beetle-web.jp/tools/romaji/landing.html"
 sitemap: false
 title_contains: "ローマ字修行"
-og_image: "/assets/images/ninja/romaji-cipher-og.jpg"
+og_image: "/assets/images/ogp/nk-romaji.jpg"
 required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#rj-app", "#howto", ".paper-release"]
 ---
 

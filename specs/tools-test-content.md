@@ -4,7 +4,7 @@ urls: ["/tools/test-content/"]
 canonical: self
 sitemap: true
 title_contains: "ダミーファイル"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-test-content.jpg"
 required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", ".faq-item", ".site-description"]
 ---
 

@@ -4,7 +4,7 @@ urls: ["/tools/pairwise/"]
 canonical: self
 sitemap: true
 title_contains: "ペアワイズ法テストケース生成ツール"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-pairwise.jpg"
 required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#tool", "#pw-factors", "#pw-forbid", "#pw-strength", "#pw-table", "#pw-out", "#pw-stats", "#howto", "#faq"]
 e2e: true
 ---

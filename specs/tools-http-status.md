@@ -4,7 +4,7 @@ urls: ["/tools/http-status/"]
 canonical: self
 sitemap: true
 title_contains: "HTTPステータスコード"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-http-status.jpg"
 required_selectors: ["#site-header", "#site-footer"]
 ---
 

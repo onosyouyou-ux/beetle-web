@@ -4,7 +4,7 @@ urls: ["/tools/phonics/landing.html"]
 canonical: self
 sitemap: true
 title_contains: "フォニックス修行"
-og_image: "/assets/images/ninja/phonics-listen-og.jpg"
+og_image: "/assets/images/ogp/nk-phonics.jpg"
 required_selectors: ["#site-header", ".eal-hero", "#howto", "#for-family", "#faq", ".eal-final", ".eal-footer"]
 ---
 

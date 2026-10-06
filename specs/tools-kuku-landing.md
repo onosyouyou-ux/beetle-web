@@ -4,7 +4,7 @@ urls: ["/tools/kuku/landing.html"]
 canonical: self
 sitemap: true
 title_contains: "かけざん修行"
-og_image: "/assets/images/kuku-lp-hero-og.jpg"
+og_image: "/assets/images/ogp/nk-kuku.jpg"
 required_selectors: ["#site-header", ".eal-hero", "#howto", "#for-family", "#faq", ".eal-final", ".eal-footer"]
 ---
 

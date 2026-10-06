@@ -4,7 +4,7 @@ urls: ["/tools/technique-drill/"]
 canonical: self
 sitemap: true
 title_contains: "テスト技法ドリル"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-technique-drill.jpg"
 required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#tool", "#td-app", "#howto", "#about", "#faq"]
 ---
 

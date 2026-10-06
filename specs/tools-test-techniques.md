@@ -4,7 +4,7 @@ urls: ["/tools/test-techniques/"]
 canonical: self
 sitemap: true
 title_contains: "テスト技法"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-test-techniques.jpg"
 required_selectors: ["#site-header", "#site-footer"]
 ---
 
