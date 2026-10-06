@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Segment {
   text: string;
@@ -27,6 +27,17 @@ export default function Home() {
   const [filename, setFilename] = useState('');
   const [error, setError] = useState('');
   const [toast, setToast] = useState('');
+  // ページヘッダーのたたみ（学級通信メーカーと同じ。状態はこの端末にだけ覚える）
+  const [heroCollapsed, setHeroCollapsed] = useState(false);
+  useEffect(() => {
+    try { if (localStorage.getItem('rs_hero_collapsed') === '1') setHeroCollapsed(true); } catch {}
+  }, []);
+  function toggleHero() {
+    setHeroCollapsed((c) => {
+      try { localStorage.setItem('rs_hero_collapsed', c ? '0' : '1'); } catch {}
+      return !c;
+    });
+  }
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -126,167 +137,195 @@ export default function Home() {
   }
 
   return (
-    <div className="app">
-      <div className="header-row">
-        <svg className="mascot" width="48" height="48" viewBox="0 0 46 46" fill="none">
-          <rect x="10" y="4" width="14" height="30" rx="6" fill="#FFC93C" transform="rotate(8 17 19)" />
-          <path d="M12 30 L22 32 L16 40 Z" fill="#F4A65B" transform="rotate(8 17 19)" />
-          <circle cx="30" cy="26" r="13" fill="#FFFFFF" stroke="#DFF1FC" strokeWidth="2" />
-          <circle cx="26" cy="24" r="1.8" fill="#3A3A3A" />
-          <circle cx="34" cy="24" r="1.8" fill="#3A3A3A" />
-          <circle cx="24.5" cy="29" r="2.2" fill="#BEE6FF" opacity="0.9" />
-          <circle cx="35.5" cy="29" r="2.2" fill="#BEE6FF" opacity="0.9" />
-          <path d="M27 30 Q30 33 33 30" stroke="#3A3A3A" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-        </svg>
-        <div>
-          <p className="eyebrow">かんじに ふりがなを つけよう！</p>
-          <h1 className="title">ルビメーカー</h1>
-        </div>
-      </div>
-      <p className="lead">
-        ぶんしょうを はりつけると、かんじに ふりがなが つくよ。がぞうから ぶんしょうを よみこむこともできるよ。
-      </p>
-      {/* リファレンス（ランディングへ）。ヘッダーから移設（2026-07-15） */}
-      <a className="ph-ref" href="https://www.beetle-web.jp/tools/rubi-shokunin/" target="_blank" rel="noopener">リファレンス</a>
-
-      {/* LPメインビジュアル */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="header-visual" src="/hero-lp.jpg" alt="" aria-hidden="true" width="960" height="720" />
-
-      <div className="card">
-        <div className="image-row">
-          <button
-            type="button"
-            className={`upload-btn${ocrLoading ? ' loading' : ''}`}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="5" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <path d="M21 15l-5-5L5 21" />
-            </svg>
-            がぞうから よみこむ
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) handleImage(file);
-              e.target.value = '';
-            }}
-          />
-          <span className="filename">{filename}</span>
-        </div>
-
-        <div className="options">
-          <label className={level === 'all' ? 'active' : ''}>
-            <input type="radio" name="level" checked={level === 'all'} onChange={() => setLevel('all')} />
-            すべてのかんじ
-          </label>
-          <label className={level === 'hard' ? 'active' : ''}>
-            <input type="radio" name="level" checked={level === 'hard'} onChange={() => setLevel('hard')} />
-            むずかしいかんじだけ
-          </label>
-        </div>
-
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="ここに ぶんしょうを はりつけてね"
-        />
-        <p className="hint">いちどに できるのは 400〜500じ くらいだよ。ながい ぶんしょうは わけて はりつけてね。</p>
-
-        <button type="button" className="run-btn" onClick={annotate} disabled={running}>
-          {running ? (
-            'かんがえちゅう…'
-          ) : (
-            <>
-              {PEN_ICON} ふりがなを つける
-            </>
-          )}
-        </button>
-
-        {segments && (
-          <div className="output-wrap">
-            <div className="seal">できた！</div>
-            <div className="output">
-              {segments.map((seg, i) =>
-                seg.ruby.trim() ? (
-                  <ruby key={i}>
-                    {seg.text}
-                    <rt>{seg.ruby}</rt>
-                  </ruby>
-                ) : (
-                  <span key={i}>{seg.text}</span>
-                ),
-              )}
-            </div>
-            <div className="output-actions">
-              <button type="button" onClick={copyHtml}>HTMLでコピー</button>
-              <button type="button" onClick={copyText}>かんじ(よみ)でコピー</button>
-              <button type="button" onClick={() => window.print()}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="6 9 6 2 18 2 18 9" />
-                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-                  <rect x="6" y="14" width="12" height="8" />
-                </svg>
-                いんさつする
+    <>
+      {/* ── ページヘッダー（たためる）。学級通信メーカー・bug-checker の page-header と同型（2026-10-06）
+           紙面の幅いっぱいの帯に、左＝タイトル・説明・リファレンス、右＝メインビジュアル ── */}
+      <section className="hero-band">
+        {heroCollapsed ? (
+          <div className="ph-collapsed">
+            <span className="ph-collapsed-title">ルビメーカー</span>
+            <button type="button" className="ph-toggle" onClick={toggleHero} aria-expanded={false}>
+              ▼ ひらく
+            </button>
+          </div>
+        ) : (
+          <>
+            {/* たたむトグルは独立した1列（タイトル群はその下） */}
+            <div className="ph-toggle-row">
+              <button type="button" className="ph-toggle" onClick={toggleHero} aria-expanded={true}>
+                ▲ たたむ
               </button>
             </div>
-          </div>
+            <div className="hero-inner">
+              <div className="hero-copy">
+                <div className="header-row">
+                  <svg className="mascot" width="48" height="48" viewBox="0 0 46 46" fill="none">
+                    <rect x="10" y="4" width="14" height="30" rx="6" fill="#FFC93C" transform="rotate(8 17 19)" />
+                    <path d="M12 30 L22 32 L16 40 Z" fill="#F4A65B" transform="rotate(8 17 19)" />
+                    <circle cx="30" cy="26" r="13" fill="#FFFFFF" stroke="#DFF1FC" strokeWidth="2" />
+                    <circle cx="26" cy="24" r="1.8" fill="#3A3A3A" />
+                    <circle cx="34" cy="24" r="1.8" fill="#3A3A3A" />
+                    <circle cx="24.5" cy="29" r="2.2" fill="#BEE6FF" opacity="0.9" />
+                    <circle cx="35.5" cy="29" r="2.2" fill="#BEE6FF" opacity="0.9" />
+                    <path d="M27 30 Q30 33 33 30" stroke="#3A3A3A" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+                  </svg>
+                  <div>
+                    <p className="eyebrow">かんじに ふりがなを つけよう！</p>
+                    <h1 className="title">ルビメーカー</h1>
+                  </div>
+                </div>
+                <p className="lead">
+                  ぶんしょうを はりつけると、かんじに ふりがなが つくよ。がぞうから ぶんしょうを よみこむこともできるよ。
+                </p>
+                {/* リファレンス（ランディングへ）。タイトル・注釈の直下（2026-07-15） */}
+                <a className="ph-ref" href="https://www.beetle-web.jp/tools/rubi-shokunin/" target="_blank" rel="noopener">リファレンス</a>
+              </div>
+              {/* LPメインビジュアル */}
+              <div className="hero-visual" aria-hidden="true">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className="hero-img" src="/hero-lp.jpg" alt="" width="960" height="720" />
+              </div>
+            </div>
+          </>
         )}
+      </section>
 
-        {error && <div className="error">{error}</div>}
+      <div className="app">
+        <div className="card">
+          <div className="image-row">
+            <button
+              type="button"
+              className={`upload-btn${ocrLoading ? ' loading' : ''}`}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="M21 15l-5-5L5 21" />
+              </svg>
+              がぞうから よみこむ
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleImage(file);
+                e.target.value = '';
+              }}
+            />
+            <span className="filename">{filename}</span>
+          </div>
+
+          <div className="options">
+            <label className={level === 'all' ? 'active' : ''}>
+              <input type="radio" name="level" checked={level === 'all'} onChange={() => setLevel('all')} />
+              すべてのかんじ
+            </label>
+            <label className={level === 'hard' ? 'active' : ''}>
+              <input type="radio" name="level" checked={level === 'hard'} onChange={() => setLevel('hard')} />
+              むずかしいかんじだけ
+            </label>
+          </div>
+
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="ここに ぶんしょうを はりつけてね"
+          />
+          <p className="hint">いちどに できるのは 400〜500じ くらいだよ。ながい ぶんしょうは わけて はりつけてね。</p>
+
+          <button type="button" className="run-btn" onClick={annotate} disabled={running}>
+            {running ? (
+              'かんがえちゅう…'
+            ) : (
+              <>
+                {PEN_ICON} ふりがなを つける
+              </>
+            )}
+          </button>
+
+          {segments && (
+            <div className="output-wrap">
+              <div className="seal">できた！</div>
+              <div className="output">
+                {segments.map((seg, i) =>
+                  seg.ruby.trim() ? (
+                    <ruby key={i}>
+                      {seg.text}
+                      <rt>{seg.ruby}</rt>
+                    </ruby>
+                  ) : (
+                    <span key={i}>{seg.text}</span>
+                  ),
+                )}
+              </div>
+              <div className="output-actions">
+                <button type="button" onClick={copyHtml}>HTMLでコピー</button>
+                <button type="button" onClick={copyText}>かんじ(よみ)でコピー</button>
+                <button type="button" onClick={() => window.print()}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="6 9 6 2 18 2 18 9" />
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                    <rect x="6" y="14" width="12" height="8" />
+                  </svg>
+                  いんさつする
+                </button>
+              </div>
+            </div>
+          )}
+
+          {error && <div className="error">{error}</div>}
+        </div>
+
+        {/* ── ランディング準拠の使い方3ステップ ── */}
+        <section className="app-section">
+          <p className="app-eyebrow">使い方</p>
+          <h2 className="app-h2">3ステップですぐ完成。</h2>
+          <div className="app-steps">
+            <article className="app-step-card">
+              <div className="app-step-no">1</div>
+              <h3>文章を入力</h3>
+              <p>ルビを入れたい文章を貼りつけるか、画像から読み込みます。</p>
+            </article>
+            <article className="app-step-card">
+              <div className="app-step-no">2</div>
+              <h3>範囲を選ぶ</h3>
+              <p>すべての漢字、またはむずかしい漢字だけを選びます。</p>
+            </article>
+            <article className="app-step-card">
+              <div className="app-step-no">3</div>
+              <h3>コピーして使う</h3>
+              <p>教材、プリント、Webページなどに貼りつけます。</p>
+            </article>
+          </div>
+        </section>
+
+        {/* ── ランディング準拠のFAQ ── */}
+        <section className="app-section">
+          <p className="app-eyebrow">FAQ</p>
+          <h2 className="app-h2">よくある質問</h2>
+          <div className="app-faq-grid">
+            <article className="app-faq-card">
+              <h3>Q. 無料で使えますか？</h3>
+              <p>A. はい、登録不要・無料でお使いいただけます。</p>
+            </article>
+            <article className="app-faq-card">
+              <h3>Q. 一度にどのくらいの文章を処理できますか？</h3>
+              <p>A. 一度に400〜500字程度が目安です。長い文章は分けて貼りつけてください。</p>
+            </article>
+            <article className="app-faq-card">
+              <h3>Q. 入力した文章は保存されますか？</h3>
+              <p>A. 入力した文章はふりがなの生成にのみ使用し、サーバーに保存しません。</p>
+            </article>
+          </div>
+        </section>
+
+        <div className={`toast${toast ? ' show' : ''}`}>{toast}</div>
       </div>
-
-      {/* ── ランディング準拠の使い方3ステップ ── */}
-      <section className="app-section">
-        <p className="app-eyebrow">使い方</p>
-        <h2 className="app-h2">3ステップですぐ完成。</h2>
-        <div className="app-steps">
-          <article className="app-step-card">
-            <div className="app-step-no">1</div>
-            <h3>文章を入力</h3>
-            <p>ルビを入れたい文章を貼りつけるか、画像から読み込みます。</p>
-          </article>
-          <article className="app-step-card">
-            <div className="app-step-no">2</div>
-            <h3>範囲を選ぶ</h3>
-            <p>すべての漢字、またはむずかしい漢字だけを選びます。</p>
-          </article>
-          <article className="app-step-card">
-            <div className="app-step-no">3</div>
-            <h3>コピーして使う</h3>
-            <p>教材、プリント、Webページなどに貼りつけます。</p>
-          </article>
-        </div>
-      </section>
-
-      {/* ── ランディング準拠のFAQ ── */}
-      <section className="app-section">
-        <p className="app-eyebrow">FAQ</p>
-        <h2 className="app-h2">よくある質問</h2>
-        <div className="app-faq-grid">
-          <article className="app-faq-card">
-            <h3>Q. 無料で使えますか？</h3>
-            <p>A. はい、登録不要・無料でお使いいただけます。</p>
-          </article>
-          <article className="app-faq-card">
-            <h3>Q. 一度にどのくらいの文章を処理できますか？</h3>
-            <p>A. 一度に400〜500字程度が目安です。長い文章は分けて貼りつけてください。</p>
-          </article>
-          <article className="app-faq-card">
-            <h3>Q. 入力した文章は保存されますか？</h3>
-            <p>A. 入力した文章はふりがなの生成にのみ使用し、サーバーに保存しません。</p>
-          </article>
-        </div>
-      </section>
-
-      <div className={`toast${toast ? ' show' : ''}`}>{toast}</div>
-    </div>
+    </>
   );
 }
 
