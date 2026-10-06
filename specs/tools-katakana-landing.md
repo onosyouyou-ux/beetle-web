@@ -4,7 +4,7 @@ urls: ["/tools/katakana/landing.html"]
 canonical: self
 sitemap: true
 title_contains: "カタカナ修行"
-og_image: "/assets/images/ninja/katakana-infiltration-og.jpg"
+og_image: "/assets/images/ogp/nk-katakana.jpg"
 required_selectors: ["#site-header", ".eal-hero", "#howto", "#for-family", "#faq", ".eal-final", ".eal-footer"]
 ---
 

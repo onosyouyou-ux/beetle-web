@@ -179,3 +179,7 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 
 .tool-icon { background: var(--sec-bg, var(--tp-cream2)); color: var(--sec, var(--tp-orange)); }
 .tool-card:hover { border-color: var(--sec, var(--tp-orange-bd)); }
+
+/* QA系の新しいサムネ（qa-thumbs-v2。2026-10-06）は左にツール名の文字がある。
+   スマホの4:3で切り抜くとき、文字の頭が切れないよう左寄せにする（アプリ一覧・QA支援の両方） */
+@media (max-width:600px){ .tool-thumb img[src*="qa-thumbs-v2"]{object-position:left center} }

@@ -4,7 +4,7 @@ urls: ["/tools/release-checklist/"]
 canonical: self
 sitemap: true
 title_contains: "リリース前チェックリスト"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-release-checklist.jpg"
 required_selectors: ["#site-header", "#site-footer"]
 ---
 

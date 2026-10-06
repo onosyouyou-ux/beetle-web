@@ -4,7 +4,7 @@ urls: ["/tools/glossary/"]
 canonical: self
 sitemap: true
 title_contains: "用語"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-glossary.jpg"
 required_selectors: ["#site-header", "#site-footer"]
 ---
 

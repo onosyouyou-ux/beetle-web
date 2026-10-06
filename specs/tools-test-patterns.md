@@ -4,7 +4,7 @@ urls: ["/tools/test-patterns/", "/tools/test-patterns/about/"]
 canonical: self
 sitemap: true
 title_contains: "テスト"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-test-patterns.jpg"
 required_selectors: ["#site-header", "#site-footer"]
 ---
 

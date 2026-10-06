@@ -4,7 +4,7 @@ urls: ["/tools/sansu-app/landing.html"]
 canonical: self
 sitemap: true
 title_contains: "さんすう うちゅうたんけん"
-og_image: "/assets/images/sansu/lp/og-sansu.jpg"
+og_image: "/assets/images/ogp/nk-sansu.jpg"
 required_selectors: ["#site-header", ".footer-skyline-bar", ".footer-link-bar"]
 ---
 

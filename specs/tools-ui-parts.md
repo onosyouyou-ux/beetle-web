@@ -4,7 +4,7 @@ urls: ["/tools/ui-parts/"]
 canonical: self
 sitemap: true
 title_contains: "UIコンポーネント"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-ui-parts.jpg"
 required_selectors: ["#site-header", "#site-footer"]
 ---
 

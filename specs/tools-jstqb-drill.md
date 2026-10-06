@@ -4,7 +4,7 @@ urls: ["/tools/jstqb-drill/"]
 canonical: self
 sitemap: true
 title_contains: "Foundation Level"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-jstqb-drill.jpg"
 required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#tool", "#jq-app", ".jq-disclaimer", "#howto", "#about", "#faq"]
 ---
 

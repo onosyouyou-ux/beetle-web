@@ -4,7 +4,7 @@ urls: ["/tools/contrast/"]
 canonical: self
 sitemap: true
 title_contains: "コントラスト比チェッカー"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-contrast.jpg"
 required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#tool", "#ct-bg", "#ct-fg", "#ct-bg-hex", "#ct-fg-hex", "#ct-ratio", "#ct-judge", "#ct-preview", "#ct-fix", "#cvd", "#ct-cvd", "#about", "#faq"]
 e2e: true
 ---

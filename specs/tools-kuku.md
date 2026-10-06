@@ -4,7 +4,7 @@ urls: ["/tools/kuku/"]
 canonical: "https://www.beetle-web.jp/tools/kuku/landing.html"
 sitemap: false
 title_contains: "かけざん修行"
-og_image: "/assets/images/kuku-lp-hero-og.jpg"
+og_image: "/assets/images/ogp/nk-kuku.jpg"
 required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#kk-app", "#howto", ".paper-release"]
 ---
 

@@ -4,7 +4,7 @@ urls: ["/tools/regex-tester/"]
 canonical: self
 sitemap: true
 title_contains: "正規表現テスター"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-regex-tester.jpg"
 required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#rt-pattern", "#rt-string", "#rt-output"]
 e2e: true
 ---
