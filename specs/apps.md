@@ -37,7 +37,7 @@ required_selectors: ["#site-header", "#site-footer", ".brand-hero", ".apps-tabs"
     - **例外：こども向けの修行8本は `assets/images/ninja/nk-link-*.webp`（アプリの中のバナー絵）**。
       `.tool-thumb.is-banner` で下地なし・カード幅いっぱいに絵の比率（960x380）のまま置く。
       edu-thumbs の絵は明るい絵と暗い絵が混ざり、並べると まだらに見えたため（2026-09-30）
-  - 03の検証ツール11本・04の検証資料6本 → `assets/images/qa-thumbs-v2/*.webp`（2026-10-06差し替え）。和紙色・濃紺・朱色の浮世絵調で、
+  - 03の検証ツール14本（2026-10-06に境界値テスト表・CSV Excel崩れ・環境情報コピーを追加）・04の検証資料6本 → `assets/images/qa-thumbs-v2/*.webp`（2026-10-06差し替え）。和紙色・濃紺・朱色の浮世絵調で、
     左にツール名・右に機能のモチーフ。720x405・WebP。スマホの4:3切り抜きでは文字が切れないよう左寄せ（`object-position:left`）
   - 旧 `assets/images/qa-thumbs/` は**既存のヒーロー画像から16:9で切り出した**もの
     （元は `qa-hero-banner.jpg` と `bug-checker-lp/` の7枚。新規生成はしていない）。640x360・JPG

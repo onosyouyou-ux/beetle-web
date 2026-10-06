@@ -4,7 +4,7 @@ urls: ["/tools/boundary-table/"]
 canonical: self
 sitemap: true
 title_contains: "境界値テスト表メーカー"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-boundary-table.jpg"
 required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#tool", "#bt-items", "#bt-add", "#bt-odd", "#bt-lines", "#bt-rows", "#bt-format", "#bt-out", "#bt-copy", "#bt-dl", "#why", "#faq"]
 ---
 
