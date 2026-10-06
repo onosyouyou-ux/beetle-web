@@ -4,7 +4,7 @@ urls: ["/tools/csv-excel/"]
 canonical: self
 sitemap: true
 title_contains: "CSV Excel崩れチェッカー"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-csv-excel.jpg"
 required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#tool", "#cx-file", "#cx-sample", "#cx-input", "#cx-paste-enc", "#cx-year", "#cx-result", "#fix", "#why", "#faq"]
 ---
 

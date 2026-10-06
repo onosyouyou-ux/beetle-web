@@ -4,7 +4,7 @@ urls: ["/tools/env-info/"]
 canonical: self
 sitemap: true
 title_contains: "バグ報告の環境情報コピー"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/qa-env-info.jpg"
 required_selectors: ["#site-header", ".site-footer-app", ".footer-heroes", "#tool", "#ei-format", "#ei-template", "#ei-url", "#ei-rows", "#ei-out", "#ei-copy", "#share", "#why", "#faq"]
 ---
 

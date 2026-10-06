@@ -16,7 +16,7 @@ required_selectors: ["#site-header", ".footer-skyline-bar", ".footer-link-bar", 
 - **固定ルール**:
   - テスト検証用ツールのカードはアプリ本体（*.vercel.app）へ直リンク（target="_blank" rel="noopener"）。ランディングを挟まない
   - 教育系ツールカードは置かない
-  - **カードのサムネ（2026-10-06）**：アプリ一覧と同じ `assets/images/qa-thumbs-v2/*.webp`・同じalt。サムネのあるカードはアイコンを外す。境界値テスト表・CSV Excel崩れ・環境情報コピーの3本は絵がまだ無く、アイコンのまま
+  - **カードのサムネ（2026-10-06）**：アプリ一覧と同じ `assets/images/qa-thumbs-v2/*.webp`・同じalt。サムネのあるカードはアイコンを外す（2026-10-06に20本すべてそろった）
   - ヒーロー右端に浮世絵QAキャラ（assets/images/qa-support-hero.jpg、SP非表示）
   - カードのリンク表示・SPアコーディオン・見出し色は [_common.md](_common.md)「カード・リンク共通ルール」に従う
 - **手動確認観点**: 各ツールカードのリンク先が生きているか／コラム3本の選定が古くなっていないか／SPで▼開閉が動き、▼タップでページ遷移しないか
