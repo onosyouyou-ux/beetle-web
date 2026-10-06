@@ -703,3 +703,7 @@ select:focus {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* グローバルメニューは本体と同じ5リンク（トップ・QA支援・教育支援・アプリ・コラム。2026-10-06に「アプリ」を追加）。
+   スマホ（480px以下）は本体の共通ヘッダーと同じく「QA」「教育」に縮めて1行に収める */
+@media (max-width: 480px) { .site-nav-links .nav-trim { display: none; } .site-nav-links { gap: 4px 8px; } }

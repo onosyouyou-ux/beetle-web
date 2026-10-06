@@ -47,11 +47,12 @@ body {
 .app-main {
   flex: 1 0 auto;
   display: flex;
-  justify-content: center;
-  padding: 40px 18px 20px;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 20px;   /* 上はページヘッダーの帯が紙面の端まで届くよう0 */
   width: 100%;
 }
-.app { width: 100%; max-width: 620px; }
+.app { width: 100%; max-width: 656px; padding: 28px 18px 0; box-sizing: border-box; }  /* 中身は620px＋左右18pxの余白 */
 /* 紙面（ボディ）の一番右下に置く更新日 */
 .paper-release {
   margin-top: auto;
@@ -166,16 +167,65 @@ body {
 h1.title { font-size: 32px; font-weight: 800; margin: 0; color: var(--ink); }
 .lead { font-size: 15px; color: var(--ink-soft); margin: 14px 0 26px; line-height: 1.9; font-weight: 500; }
 
-/* LPメインビジュアル（親子イラスト）のバナー */
-.header-visual {
+/* ── ページヘッダー（たためる）。学級通信メーカーの hero-band と同型（2026-10-06）
+   紙面の幅いっぱいの帯に、左＝タイトル・説明・リファレンス、右＝メインビジュアル ── */
+.hero-band {
+  width: 100%;
+  background: linear-gradient(155deg, #dcf0fd 0%, #f4fbff 65%);
+  border-bottom: 1px solid var(--line);
+}
+.hero-inner {
+  max-width: 1180px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 4px 40px 28px;   /* 上はたたむトグル行が確保するので詰める */
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 36px;
+  align-items: center;
+}
+.hero-copy { min-width: 0; }
+.hero-copy .lead { margin: 14px 0 18px; max-width: 520px; }
+.hero-visual { pointer-events: none; user-select: none; }
+.hero-img {
   display: block;
   width: 100%;
-  height: 170px;
-  object-fit: cover;
-  object-position: center 30%;
-  border-radius: 26px;
-  margin: 0 0 26px;
-  box-shadow: 0 6px 0 var(--blue-soft), 0 10px 24px rgba(63, 169, 224, 0.14);
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 6px 0 var(--blue-soft), 0 10px 24px rgba(63, 169, 224, 0.16);
+}
+.ph-toggle {
+  font-size: 11px;
+  color: var(--ink-soft);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  font-family: inherit;
+}
+.ph-toggle-row {
+  max-width: 1180px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 24px 0;
+}
+.ph-collapsed {
+  max-width: 1180px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 24px;
+}
+.ph-collapsed .ph-toggle { margin-left: auto; }
+.ph-collapsed-title { font-weight: 800; font-size: 15px; color: var(--ink); }
+@media (hover: hover) { .ph-toggle:hover { color: var(--ink); } }
+@media (max-width: 860px) {
+  .hero-inner { grid-template-columns: 1fr; padding: 4px 18px 22px; }
+  .hero-visual { display: none; }
 }
 
 .card {
@@ -409,9 +459,7 @@ rt { font-size: 11px; color: var(--blue-dark); letter-spacing: 0; font-weight: 7
   body { background: #fff; display: block; }
   .site-nav,
   .site-footer-app,
-  .header-row,
-  .header-visual,
-  .lead,
+  .hero-band,
   .image-row,
   .options,
   textarea,
@@ -432,3 +480,7 @@ rt { font-size: 11px; color: var(--blue-dark); letter-spacing: 0; font-weight: 7
   .output { font-size: 18px; line-height: 3; color: #000; }
   rt { color: #000; font-weight: 500; }
 }
+
+/* グローバルメニューは本体と同じ5リンク（トップ・QA支援・教育支援・アプリ・コラム。2026-10-06に「アプリ」を追加）。
+   スマホ（480px以下）は本体の共通ヘッダーと同じく「QA」「教育」に縮めて1行に収める */
+@media (max-width: 480px) { .site-nav-links .nav-trim { display: none; } .site-nav-links { gap: 4px 8px; } }
