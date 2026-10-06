@@ -214,19 +214,26 @@
 
   /*
    * 班ごとの人数を手で決めたとき（2026-10-05）：customSizes[班] ＝ その班の席の数。
-   * 空の班の枠で 班を足す・消す／席を足す・消す をすると入る。班の数・1班の人数のプルダウンを変えると捨てる
+   * 空の班の枠で 班を足す・消す／席を足す・消す をすると入る。クラスの人数・班の数のプルダウンを変えると捨てる
    */
   var customSizes = null;
+  var TOTAL_MAX = 50;   // クラスの人数の上限
 
-  /** 班ごとの席の数。手で決めていればそれ、なければ「班の数 × 1班の人数」 */
+  function classTotal() { return parseInt($('hw-total').value, 10) || 0; }
+
+  /**
+   * 班ごとの席の数。手で決めていればそれ、なければ「クラスの人数」を班の数で均等に割る（2026-10-06）
+   * 1班の人数は選ばせない（35人・6班なら 6,6,6,6,6,5）
+   */
   function seatSizes() {
     if (customSizes) return customSizes.slice();
-    // 最初は「---」（何も選んでいない）。両方そろうまで班の枠は出さない
-    // 班の数だけ選んだら、席なしの枠だけ出す（1班の人数を選ぶか「＋ 席」で足す）
-    var num = parseInt($('hw-num').value, 10), per = parseInt($('hw-per').value, 10) || 0;
+    // 最初は「---」（何も選んでいない）。班の数を選ぶまで班の枠は出さない
+    // 班の数だけ選んだら、席なしの枠だけ出す（クラスの人数を選ぶか「＋ メンバー」で足す）
+    var num = parseInt($('hw-num').value, 10), total = classTotal();
     if (!num) return [];
+    if (total) return groupSizes(total, num);
     var out = [];
-    for (var i = 0; i < num; i++) out.push(per);
+    for (var i = 0; i < num; i++) out.push(0);
     return out;
   }
 
@@ -482,7 +489,7 @@
   function diagnose(names, count, rulesObj, raw) {
     var msgs = [];
     if (seatSum(seatSizes()) < names.length) {
-      msgs.push({ text: '班のメンバーの枠が足りません。', sub: '名簿は' + names.length + '人ですが、班の枠は合わせて' + seatSum(seatSizes()) + '人ぶんです。班の数・1班の人数を増やすか、班の枠の「＋ メンバー」で足してください。', error: true });
+      msgs.push({ text: '班のメンバーの枠が足りません。', sub: '名簿は' + names.length + '人ですが、班の枠は合わせて' + seatSum(seatSizes()) + '人ぶんです。1の「クラスの人数」を名簿に合わせるか、班の枠の「＋ メンバー」で足してください。', error: true });
     }
     if (count > names.length) {
       msgs.push({ text: '班の数が人数より多いです。', sub: '名簿は' + names.length + '人ですが、' + count + '班に分けようとしています。', error: true });
@@ -582,7 +589,7 @@
     var names = got.names;
     var count = groupCount();
     if (!count || !seatSum(seatSizes())) {
-      showMsgs([{ text: '班の数と1班の人数を選んでください。', sub: !count ? '1の「班の数」「1班の人数」が未設定です。' : '1の「1班の人数」が未設定です（班の枠の「＋ メンバー」で足すこともできます）。', error: true }]);
+      showMsgs([{ text: 'クラスの人数と班の数を選んでください。', sub: !count ? '1の「班の数」が未設定です。' : '1の「クラスの人数」が未設定です（班の枠の「＋ メンバー」で足すこともできます）。', error: true }]);
       $('tool').scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
     }
@@ -652,7 +659,7 @@
       notes.push({ text: '人数に偏りが残りました。', sub: '「同じ」や「別々」を優先したためです。班ごとの内訳は班の見出しで確認してください。' });
     }
     if (rulesObj.split && score.mix > 0) {
-      notes.push({ text: balanceWord() + 'が混ざった班が ' + score.mixedGroups + '班 あります。', sub: '1班の人数に対して班の数が足りないか、「同じ」「固定」の指定で混ざることがあります。班の数か1班の人数を増やすと分けきれます。' });
+      notes.push({ text: balanceWord() + 'が混ざった班が ' + score.mixedGroups + '班 あります。', sub: '班の数が少ないか、「同じ」「固定」の指定で混ざることがあります。班の数を増やすと分けきれます。' });
     }
     return notes;
   }
@@ -724,7 +731,7 @@
       }
     }
     board.innerHTML = html;
-    // 班の数・1班の人数が「---」のうちは、枠のかわりに案内だけ出す
+    // 班の数が「---」のうちは、枠のかわりに案内だけ出す
     var none = !hasResult && !seatSizes().length;
     $('hw-pick-hint').hidden = !none;
     $('hw-edit-hint').hidden = none;
@@ -812,7 +819,7 @@
     var bar = $('hw-stepbar');
     if (!bar) return;
     var named = students.some(function (s) { return s.name.trim(); });
-    // 1 で班の数と1班の人数を両方選んではじめて 2（名簿と配慮）へ進む
+    // 1 でクラスの人数と班の数を両方選んではじめて 2（名簿と配慮）へ進む
     var now = state.groups ? 4 : !seatSum(seatSizes()) ? 1 : named ? 3 : 2;
     Array.prototype.forEach.call(bar.children, function (li) {
       var n = Number(li.getAttribute('data-step'));
@@ -820,6 +827,9 @@
       li.classList.toggle('is-on', n === now);
       if (n === now) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
     });
+    // 見出しの横に「いま 2／4：名簿を入れる」
+    var cur = bar.children[now - 1];
+    if ($('hw-flow-now') && cur) $('hw-flow-now').textContent = 'いま ' + now + '／' + bar.children.length + '：' + cur.textContent.replace(/^\d+/, '');
   }
 
   function updateCount() {
@@ -830,9 +840,10 @@
     info.classList.remove('is-warn');
     var caps = seatSizes(), sum = seatSum(caps);
     $('hw-group-count').textContent = caps.length + '班';
-    if (!caps.length) { info.textContent = '班の数と1班の人数を選んでください'; updateFit(n, caps); return; }
-    if (!sum) { info.textContent = caps.length + '班（1班の人数を選ぶか、班の枠の「＋ メンバー」で足してください）'; updateFit(n, caps); return; }
-    info.textContent = (customSizes ? caps.length + '班・合わせて' : caps.length + '班 × ' + caps[0] + '人 ＝ ') + sum + '人' +
+    if (!caps.length) { info.textContent = 'クラスの人数と班の数を選んでください'; updateFit(n, caps); return; }
+    if (!sum) { info.textContent = caps.length + '班（クラスの人数を選ぶか、班の枠の「＋ メンバー」で足してください）'; updateFit(n, caps); return; }
+    var lo = Math.min.apply(null, caps), hi = Math.max.apply(null, caps);
+    info.textContent = caps.length + '班・1班 ' + (lo === hi ? lo : lo + '〜' + hi) + '人・合わせて' + sum + '人' +
       (n ? '（名簿 ' + n + '人' + (sum < n ? '・' + (n - sum) + '人たりません' : sum > n ? '・あと ' + (sum - n) + '人入れます' : '') + '）' : '');
     if (sum < n) info.classList.add('is-warn');
     updateFit(n, caps);
@@ -842,11 +853,9 @@
    * おすすめ（2026-10-05）：名簿の人数と席の数が合わないとき、いまの班の数のまま
    * 名簿の人数を各班へ均等に配った席の数にするボタンを出す（32人・5班 → 7,7,6,6,6）
    */
-  // いま選んでいる値を生かす：班の数を選んでいればその班の数のまま、1班の人数だけならその人数を超えない班の数で
+  // いま選んでいる班の数のまま配る
   function fitSizes(n) {
-    var num = customSizes ? customSizes.length : parseInt($('hw-num').value, 10) || 0;
-    var per = parseInt($('hw-per').value, 10) || 0;
-    var count = num || (per ? Math.ceil(n / per) : 0);
+    var count = customSizes ? customSizes.length : parseInt($('hw-num').value, 10) || 0;
     return n && count && count <= n ? groupSizes(n, count) : null;
   }
 
@@ -982,6 +991,8 @@
       if (!students[at + i]) students.push(newStudent());
       students[at + i].name = name;
     });
+    // 選んだクラスの人数より多く貼られたときだけ、クラスの人数を増やす
+    if (students.filter(function (x) { return x.name.trim(); }).length > classTotal()) totalFromRoster();
     clearResult();
     renderList();
     rosterNote(list.length + '人ぶん貼り付けました。', 'ok');
@@ -1010,6 +1021,7 @@
         s.rules.push({ kind: 'fixed', g: x[2] || 0 });
       }
     });
+    totalFromRoster();
     clearResult();
     renderList();
   }
@@ -1270,14 +1282,14 @@
      ============================================================ */
 
   /*
-   * 分け方（2026-10-05）：「班の数」と「1班の人数」を名簿と切りはなして自由に選ぶ。
-   * 班の数 × 1班の人数 が席の数。班ごとに変えたいときは、空の班の枠で 班・席 を足し引きする
+   * 分け方（2026-10-06）：「クラスの人数」と「班の数」だけ選ぶ。1班の人数はそこから均等に決まる。
+   * 班ごとに変えたいときは、空の班の枠で 班・席 を足し引きする
    */
   function rebuildNums() {
-    [['hw-num', '班'], ['hw-per', '人']].forEach(function (x) {
+    [['hw-num', '班', 12], ['hw-total', '人', TOTAL_MAX]].forEach(function (x) {
       var sel = $(x[0]), keep = sel.value;
       sel.innerHTML = '<option value="">---</option>';
-      for (var i = 1; i <= 12; i++) {
+      for (var i = 1; i <= x[2]; i++) {
         var o = document.createElement('option');
         o.value = i;
         o.textContent = i + x[1];
@@ -1292,9 +1304,37 @@
     clearResult();
     updateCount();
   };
-  // プルダウンを選び直したら、班ごとに足し引きした席は捨てて「班の数 × 1班の人数」に戻す
+  /**
+   * 名簿の行の数をクラスの人数にそろえる（2026-10-06）。
+   * 足りなければ空の行を足し、多ければ下から空の行（名前も配慮もない）だけ消す。名前の入った行は消さない
+   */
+  function syncRows(total) {
+    if (!total) return;
+    if (students.length < total) addRows(total - students.length);
+    for (var i = students.length - 1; i >= 0 && students.length > total; i--) {
+      var s = students[i];
+      if (!s.name.trim() && !s.rules.length) students.splice(i, 1);
+    }
+  }
+
+  /** 名簿を入れ直したら（CSV・見本・貼り付け）、クラスの人数を名前の数に合わせる */
+  function totalFromRoster() {
+    var n = students.filter(function (s) { return s.name.trim(); }).length;
+    if (!n || n > TOTAL_MAX || n === classTotal()) return;
+    $('hw-total').value = String(n);
+    customSizes = null;
+    updateCount();
+    updateSteps();
+  }
+
+  // プルダウンを選び直したら、班ごとに足し引きした席は捨てて「クラスの人数 ÷ 班の数」に戻す
   $('hw-num').addEventListener('change', function () { customSizes = null; onSizeChange(); renderList(); });
-  $('hw-per').addEventListener('change', function () { customSizes = null; onSizeChange(); });
+  $('hw-total').addEventListener('change', function () {
+    customSizes = null;
+    syncRows(classTotal());
+    onSizeChange();
+    renderList();
+  });
 
   /* 空の班の枠で、班ごとに 班・席 を足す／消す（2026-10-05） */
   function editSizes(fn) {
@@ -1308,12 +1348,10 @@
     var n = students.filter(function (s) { return s.name.trim(); }).length;
     var fit = fitSizes(n);
     if (!fit) return;
-    var min = Math.min.apply(null, fit), max = Math.max.apply(null, fit);
     $('hw-num').value = String(fit.length);
-    // 割り切れて、1班の人数がプルダウン（12人まで）に入るならプルダウンだけで表す。
-    // そうでなければ班ごとの人数（7,7,6,6,6 や 15,15）として持つ（15人を入れようとして「未設定」になっていた）
-    var fitsSelect = min === max && max <= 12;
-    $('hw-per').value = max <= 12 ? String(max) : '';
+    // クラスの人数を名簿の人数にする。プルダウン（50人まで）に入らなければ班ごとの人数として持つ
+    var fitsSelect = n <= TOTAL_MAX;
+    $('hw-total').value = fitsSelect ? String(n) : '';
     customSizes = fitsSelect ? null : fit;
     onSizeChange();
     renderList();

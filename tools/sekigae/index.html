@@ -96,7 +96,7 @@
     {
       "@type": "Question",
       "name": "班分けメーカーと同じCSVを使えますか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "使えます。席替えメーカーと班分けメーカーは同じ形のCSVを読み書きします。1つのファイルに「席の配慮」「席」「班の配慮」「班」のように列が分かれていて、それぞれ自分の列だけを読みます。ほかのメーカーの列は消さずにそのまま残して保存するので、1つの名簿ファイルを使い回せます。" }
+      "acceptedAnswer": { "@type": "Answer", "text": "使えます。席替えメーカー・班分けメーカー・クラス分けメーカーは同じ形のCSVを読み書きします。1つのファイルに「席の配慮」「席」「班の配慮」「班」のように列が分かれていて、それぞれ自分の列だけを読みます。ほかのメーカーの列は消さずにそのまま残して保存するので、1つの名簿ファイルを使い回せます。" }
     },
     {
       "@type": "Question",
@@ -109,7 +109,7 @@
 <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 <link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/css/app-reference.css">
-<link rel="stylesheet" href="/css/sekigae.css?v=20261005">
+<link rel="stylesheet" href="/css/sekigae.css?v=20261006">
 </head>
 <body>
 
@@ -128,12 +128,15 @@
 
   <main class="sk-main">
 
-    <ol class="sk-stepbar" id="sk-stepbar" aria-label="操作の順番">
-      <li data-step="1"><a href="#tool"><span class="sk-stepbar-n">1</span>座席の形を決める</a></li>
-      <li data-step="2"><a href="#sk-roster"><span class="sk-stepbar-n">2</span>名簿と配慮を入れる</a></li>
-      <li data-step="3"><a href="#sk-go-area"><span class="sk-stepbar-n">3</span>配置する</a></li>
-      <li data-step="4"><a href="#tool"><span class="sk-stepbar-n">4</span>手直しして印刷</a></li>
-    </ol>
+    <nav class="sk-flow" aria-label="操作の順番">
+      <p class="sk-flow-head"><span class="sk-flow-title">つくる順番</span><span class="sk-flow-now" id="sk-flow-now" aria-live="polite"></span></p>
+      <ol class="sk-stepbar" id="sk-stepbar">
+        <li data-step="1"><a href="#tool"><span class="sk-stepbar-n">1</span>座席の形を決める</a></li>
+        <li data-step="2"><a href="#sk-roster"><span class="sk-stepbar-n">2</span>名簿と配慮を入れる</a></li>
+        <li data-step="3"><a href="#sk-go-area"><span class="sk-stepbar-n">3</span>配置する</a></li>
+        <li data-step="4"><a href="#tool"><span class="sk-stepbar-n">4</span>手直しして印刷</a></li>
+      </ol>
+    </nav>
 
     <section class="sk-panel" id="tool">
       <div class="sk-seatsize">
@@ -223,7 +226,7 @@
         <button type="button" class="sk-mini2" id="sk-add5">＋5人</button>
         <button type="button" class="sk-mini2" id="sk-add10">＋10人</button>
       </div>
-      <p class="sk-hint">Excelの名前の列をコピーして1行目に貼ると、下へ1人ずつ入ります。空欄の行は「3番」のように番号で作ります。<br>CSVは席替えメーカー・班分けメーカーで共通です。1つの名簿ファイルを使い回せます（ほかのメーカーの列はそのまま残ります）。</p>
+      <p class="sk-hint">Excelの名前の列をコピーして1行目に貼ると、下へ1人ずつ入ります。空欄の行は「3番」のように番号で作ります。<br>CSVは席替えメーカー・班分けメーカー・クラス分けメーカーで共通です。1つの名簿ファイルを使い回せます（ほかのメーカーの列はそのまま残ります）。</p>
 
       <div class="sk-prev" id="sk-prev" hidden>
         <span class="sk-prev-lbl" id="sk-prev-lbl">前回の席</span>
@@ -275,7 +278,7 @@
           <p>席は、ドラッグか2つを順にタップすると入れかわります。「印刷する」で座席表だけを印刷できます（配慮の札は出ません）。</p>
         </div>
       </div>
-      <p class="sk-doc-note"><b>次回の続き：</b>「この席ごとCSVで保存」したファイルを「CSVを読む」から読み込むと、名簿・配慮・座席の形・前回の席が戻り、「前回と同じ席・同じ隣にしない」が選べます。CSVは席替えメーカー・班分けメーカーで共通です。1つの名簿ファイルを使い回せます（ほかのメーカーの列はそのまま残ります）。<br>※2026年10月から「前列・後列」は各列の一番前・一番後ろの席、「離す」は斜めも含めた周りの1マスになりました。それより前のCSVで「作れません」と出たときは、前列・後列の人数や「離す」の数を見直してください。</p>
+      <p class="sk-doc-note"><b>次回の続き：</b>「この席ごとCSVで保存」したファイルを「CSVを読む」から読み込むと、名簿・配慮・座席の形・前回の席が戻り、「前回と同じ席・同じ隣にしない」が選べます。CSVは席替えメーカー・班分けメーカー・クラス分けメーカーで共通です。1つの名簿ファイルを使い回せます（ほかのメーカーの列はそのまま残ります）。<br>※2026年10月から「前列・後列」は各列の一番前・一番後ろの席、「離す」は斜めも含めた周りの1マスになりました。それより前のCSVで「作れません」と出たときは、前列・後列の人数や「離す」の数を見直してください。</p>
 
       <h2>配慮の種類</h2>
       <table class="sk-table">
@@ -316,14 +319,14 @@
       </details>
       <details class="sk-faq">
         <summary>班分けメーカーと同じCSVを使えますか？<span>+</span></summary>
-        <div>使えます。席替えメーカーと班分けメーカーは同じ形のCSVを読み書きします。1つのファイルに「席の配慮」「席」「班の配慮」「班」のように列が分かれていて、それぞれ自分の列だけを読みます。ほかのメーカーの列は消さずにそのまま残して保存するので、1つの名簿ファイルを使い回せます。</div>
+        <div>使えます。席替えメーカー・班分けメーカー・クラス分けメーカーは同じ形のCSVを読み書きします。1つのファイルに「席の配慮」「席」「班の配慮」「班」のように列が分かれていて、それぞれ自分の列だけを読みます。ほかのメーカーの列は消さずにそのまま残して保存するので、1つの名簿ファイルを使い回せます。</div>
       </details>
       <details class="sk-faq">
         <summary>班（グループ）の形の席にはできますか？<span>+</span></summary>
         <div>このツールは縦横に並んだ座席表のみに対応しています。誰と誰を同じ班にするかを決めたいときは、姉妹ツールの <a href="/tools/hanwake/">班分けメーカー</a> をお使いください。「この2人は別々に」「世話役は各班に1人ずつ」「男女はそろえる」を守ってグループ分けができ、名簿もこのツールと共通です。</div>
       </details>
 
-      <p class="sk-more">班（グループ）を決めるなら <a href="/tools/hanwake/">班分けメーカー</a>、クラスだよりを書くときは <a href="/tools/gakkyu-tsushin/">学級通信メーカー</a>、配布プリントに ふりがな をつけるなら <a href="/tools/rubi-shokunin/">ルビメーカー</a> もどうぞ。</p>
+      <p class="sk-more">班（グループ）を決めるなら <a href="/tools/hanwake/">班分けメーカー</a>、学年のクラス分けには <a href="/tools/kurasuwake/">クラス分けメーカー</a>、クラスだよりを書くときは <a href="/tools/gakkyu-tsushin/">学級通信メーカー</a>、配布プリントに ふりがな をつけるなら <a href="/tools/rubi-shokunin/">ルビメーカー</a> もどうぞ。</p>
     </section>
 
   </main>
@@ -352,6 +355,6 @@
 <script src="/js/contact-track.js"></script>
 <script src="/js/app-reference.js"></script>
 <script src="/js/class-roster.js?v=20261004"></script>
-<script src="/js/sekigae.js?v=20261005"></script>
+<script src="/js/sekigae.js?v=20261006"></script>
 </body>
 </html>
