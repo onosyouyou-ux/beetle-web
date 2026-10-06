@@ -159,16 +159,6 @@ export default function Home() {
             <div className="hero-inner">
               <div className="hero-copy">
                 <div className="header-row">
-                  <svg className="mascot" width="48" height="48" viewBox="0 0 46 46" fill="none">
-                    <rect x="10" y="4" width="14" height="30" rx="6" fill="#FFC93C" transform="rotate(8 17 19)" />
-                    <path d="M12 30 L22 32 L16 40 Z" fill="#F4A65B" transform="rotate(8 17 19)" />
-                    <circle cx="30" cy="26" r="13" fill="#FFFFFF" stroke="#DFF1FC" strokeWidth="2" />
-                    <circle cx="26" cy="24" r="1.8" fill="#3A3A3A" />
-                    <circle cx="34" cy="24" r="1.8" fill="#3A3A3A" />
-                    <circle cx="24.5" cy="29" r="2.2" fill="#BEE6FF" opacity="0.9" />
-                    <circle cx="35.5" cy="29" r="2.2" fill="#BEE6FF" opacity="0.9" />
-                    <path d="M27 30 Q30 33 33 30" stroke="#3A3A3A" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-                  </svg>
                   <div>
                     <p className="eyebrow">かんじに ふりがなを つけよう！</p>
                     <h1 className="title">ルビメーカー</h1>
@@ -183,7 +173,7 @@ export default function Home() {
               {/* LPメインビジュアル */}
               <div className="hero-visual" aria-hidden="true">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="hero-img" src="/hero-lp.jpg" alt="" width="960" height="720" />
+                <img className="hero-img" src="/hero-app.webp" alt="" width="800" height="450" />
               </div>
             </div>
           </>
