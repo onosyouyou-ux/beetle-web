@@ -162,7 +162,6 @@ body {
 .sfa-copy a:hover { color: #fff; }
 
 .header-row { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; }
-.mascot { flex-shrink: 0; }
 .eyebrow { font-size: 14px; font-weight: 700; color: var(--blue-dark); margin: 0 0 4px; }
 h1.title { font-size: 32px; font-weight: 800; margin: 0; color: var(--ink); }
 .lead { font-size: 15px; color: var(--ink-soft); margin: 14px 0 26px; line-height: 1.9; font-weight: 500; }
@@ -180,19 +179,18 @@ h1.title { font-size: 32px; font-weight: 800; margin: 0; color: var(--ink); }
   margin: 0 auto;
   padding: 4px 40px 28px;   /* 上はたたむトグル行が確保するので詰める */
   display: grid;
-  grid-template-columns: 1fr 360px;
+  grid-template-columns: 1fr 420px;
   gap: 36px;
   align-items: center;
 }
 .hero-copy { min-width: 0; }
 .hero-copy .lead { margin: 14px 0 18px; max-width: 520px; }
 .hero-visual { pointer-events: none; user-select: none; }
+/* 絵は端がぼかしで透けている（2026-10-06 差し替え）。帯の水色になじませるので枠・影は付けない */
 .hero-img {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 20px;
-  box-shadow: 0 6px 0 var(--blue-soft), 0 10px 24px rgba(63, 169, 224, 0.16);
 }
 .ph-toggle {
   font-size: 11px;
