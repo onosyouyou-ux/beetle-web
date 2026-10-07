@@ -1163,11 +1163,16 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
   min-height:0;
 }
 .ninja-kids .rj-quiz:has(.rj-answer.is-on)>.rj-type { display:none; }
+/* こたえるボタンは入力欄の下に置く（2026-10-07）。横に並べると入力欄が左に寄り、
+   「ローマ字で うってね」が問題の ことば の真下からずれて見えた */
 .ninja-kids .rj-type {
   display:flex;
-  gap:12px;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
 }
-.ninja-kids .rj-type .rj-input { flex:1; min-width:0; }
+.ninja-kids .rj-type .rj-input { flex:none; width:100%; min-width:0; }
+.ninja-kids .rj-type .rj-next { min-width:200px; }
 /* スマホは横に並べると入力欄が細いので縦に積む */
 @media (max-width:767px) {
   .ninja-kids .rj-type { flex-direction:column; }

@@ -311,8 +311,11 @@
             (q.parts ? ' aria-label="' + esc(q.show) + '">' + q.parts.map(function (p) {
               return '<span class="rj-mora" aria-hidden="true">' + esc(p) + '</span>';
             }).join('') : '>' + esc(q.show)) + '</p>' +
-          // 「キーボードで うつ」のヒントは置かない（2026-09-27）。押すと答えがそのまま出るだけで、
-          // 問題の欄も縦に伸びて見出しと ことば が重なっていた
+          // 「キーボードで うつ」のヒント（2026-10-07 復活）。押すと うつ ローマ字を出し、見ながら打つ。
+          // 前回（9/27に撤去）は出すと欄が縦に伸びて重なったので、ボタンと答えを同じ高さの枠で入れかえる
+          (q.type === 'utsu'
+            ? '<div class="rj-hint-slot"><button type="button" class="rj-hint-btn" id="rj-hint-btn">ヒント</button></div>'
+            : '') +
         '</div>' +
         body +
         (q.type === 'kaku'
@@ -339,6 +342,11 @@
         if (e.key === 'Enter') { e.preventDefault(); answerTyped(); }
       });
       document.getElementById('rj-send').addEventListener('click', answerTyped);
+      document.getElementById('rj-hint-btn').addEventListener('click', function () {
+        var slot = this.parentNode;
+        slot.innerHTML = '<p class="rj-hint">' + esc(q.word) + '</p>';
+        input.focus();
+      });
       input.focus();
     } else {
       Array.prototype.forEach.call(root.querySelectorAll('.rj-choice'), function (btn) {
