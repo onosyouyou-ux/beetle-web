@@ -466,3 +466,36 @@ body.ninja-lp-phonics .eal-card-num { display:none; }
 .ninja-lp-sakuranbo .slp-hero-visual {
   background-image:url('/assets/images/ninja/sakuranbo-hero.webp');
 }
+
+/* ============================================================
+   先生向けページへの導線（2026-10-07。8本の紹介ページで共用）
+   - .nk-teacher      …「おうちのかたへ」の直後に置く案内ブロック（さんすう・さくらんぼざん は最後の呼びかけの前）
+   - .nk-teacher-mini … ファーストビューの小さなテキストリンク
+   ============================================================ */
+.nk-teacher { padding:28px 20px; }
+.nk-teacher-inner {
+  max-width:960px; margin:0 auto; padding:22px 26px;
+  display:flex; align-items:center; justify-content:space-between; gap:18px 28px; flex-wrap:wrap;
+  background:#fff; border:2px solid var(--nl-accent,#df8435); border-radius:16px;
+  box-shadow:0 10px 26px rgba(60,40,20,.10);
+}
+.nk-teacher-copy { flex:1 1 360px; min-width:0; }
+.nk-teacher h2 { margin:0 0 6px; font-size:20px; line-height:1.4; color:#2f2a24; }
+.nk-teacher p { margin:0; font-size:14.5px; line-height:1.8; color:#5c5448; }
+.nk-teacher-btn {
+  flex:none; display:inline-block; padding:12px 22px; border-radius:2px;
+  background:var(--nl-accent,#df8435); color:#fff; font-weight:800; font-size:15px; text-decoration:none;
+}
+@media (hover:hover) { .nk-teacher-btn:hover { background:var(--nl-dark,#bd6823); } }
+.nk-teacher-mini {
+  display:inline-block; margin-top:12px; font-size:13.5px; font-weight:700;
+  color:var(--nl-accent,#bd6823); text-decoration:underline; text-underline-offset:4px;
+}
+@media (max-width:767px) {
+  .nk-teacher { padding:20px 16px; }
+  .nk-teacher-inner { padding:18px 16px; }
+  .nk-teacher h2 { font-size:18px; }
+  .nk-teacher-btn { width:100%; text-align:center; }
+}
+/* さんすう・さくらんぼざん の紹介ページは ヒーローが濃い紺なので、小さなリンクを 明るい色にする */
+.slp-hero .nk-teacher-mini { color:#ffd36b; }

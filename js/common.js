@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
       : path === '/test-tools.html' ? '/test-tools.html'
       : path === '/edu-tools.html' ? '/edu-tools.html'
       : path === '/apps.html' ? '/apps.html'
+      : path === '/for-teachers.html' ? '/for-teachers.html'
       : null;
     if (currentHref) {
       const link = document.querySelector(`.nav-links a[href="${currentHref}"]`);
@@ -194,4 +195,19 @@ document.addEventListener('DOMContentLoaded', () => {
       card.classList.add('peek-static');
     });
   }
+})();
+
+// 先生向けページへの導線の計測（GA4イベント: teacher_link_click。2026-10-07）
+// data-track="teacher_link" の付いたリンクだけを拾う。data-from は置いた場所（landing / app / header / footer / top）。
+// ヘッダー・フッターは fetch で後から差し込まれるので、document で まとめて受ける（contact-track.js と同じ書き方）
+(function () {
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[data-track="teacher_link"]');
+    if (!a) return;
+    if (typeof window.gtag !== 'function') return;
+    window.gtag('event', 'teacher_link_click', {
+      link_from: a.getAttribute('data-from') || '',
+      page_path: location.pathname
+    });
+  }, true);
 })();
