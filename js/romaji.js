@@ -148,7 +148,10 @@
         parts: renderParts(x.k, style),
         word: x.k,
         hint: x.hint,
-        cat: style === 'hepburn' ? 'ヘボンしき（いま がっこうで ならう かきかた）' : 'くんれいしき（まえの きょうかしょの かきかた）',
+        // ねこ・いぬ のように 2つの 書き方が 同じ ことばに「くんれいしき」と 出すと、
+        // inu は 訓令式だ と 覚えてしまう。同じときは「どちらでも おなじ」と出す（2026-10-07）
+        cat: render(x.k, 'kunrei') === render(x.k, 'hepburn') ? 'ヘボンしき・くんれいしき どちらでも おなじ'
+          : style === 'hepburn' ? 'ヘボンしき（いま がっこうで ならう かきかた）' : 'くんれいしき（まえの きょうかしょの かきかた）',
         choices: choices,
       };
     });
@@ -386,7 +389,8 @@
     }
 
     root.innerHTML =
-      '<div class="rj-quiz">' +
+      // よむ は 問題を 上・えらぶ を 下に 積む（is-yomu。2026-10-07）
+      '<div class="rj-quiz' + (q.type === 'yomu' ? ' is-yomu' : '') + '">' +
         '<div class="rj-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok, state.lv ? MODES[state.kind].label + '・レベル' + state.lv : MODES[state.mode].label) + '</div>' +
         '<div class="rj-q">' +
           '<p class="rj-q-lead">' + esc(q.lead || questionLead(q)) + '</p>' +
