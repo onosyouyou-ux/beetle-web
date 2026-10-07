@@ -19,6 +19,9 @@
   var VOWEL_HEAD = 'aiueoy'; // 「ん」のあとが この音で 始まると n だけでは 区切れない
 
   var state = null;
+  // よむ・うつ・かく は もとからの 32語だけで出す（2026-10-07。レベル しゅぎょう用に 100語へ ふやしたが、
+  // 実際に使われているので いままでの しゅぎょうの 手ざわりは 変えない）
+  var STD = D.words.filter(function (w) { return w.std; });
 
   /* ---------- ちいさな どうぐ ---------- */
 
@@ -127,10 +130,18 @@
 
   /* ---------- 出題づくり ---------- */
 
-  function buildYomu() {
-    return pick(D.words, QUESTIONS).map(function (x) {
-      var style = Math.random() < 0.5 ? 'kunrei' : 'hepburn';
-      var wrongs = pick(D.words.filter(function (y) { return y.k !== x.k; }), 3).map(function (y) { return y.k; });
+  // list を わたすと レベル しゅぎょう用（2026-10-07）。ランダムを使わず、
+  // 書き方（ヘボン式／訓令式を1問ごとに交互）・まちがいの選択肢（同じレベルの ことば）・選択肢の並びも 固定する
+  function buildYomu(list) {
+    var fixed = !!list;
+    return (list || pick(STD, QUESTIONS)).map(function (x, i) {
+      var style = fixed ? (i % 2 ? 'kunrei' : 'hepburn') : (Math.random() < 0.5 ? 'kunrei' : 'hepburn');
+      var wrongs = fixed
+        ? [1, 3, 6].map(function (d) { return list[(i + d) % list.length].k; })
+        : pick(STD.filter(function (y) { return y.k !== x.k; }), 3).map(function (y) { return y.k; });
+      var choices = [x.k].concat(wrongs);
+      if (fixed) choices = choices.slice(4 - i % 4).concat(choices.slice(0, 4 - i % 4));  // 正解の位置を 1問ごとに ずらす
+      else shuffle(choices);
       return {
         type: 'yomu',
         show: render(x.k, style),
@@ -138,13 +149,13 @@
         word: x.k,
         hint: x.hint,
         cat: style === 'hepburn' ? 'ヘボンしき（いま がっこうで ならう かきかた）' : 'くんれいしき（まえの きょうかしょの かきかた）',
-        choices: shuffle([x.k].concat(wrongs)),
+        choices: choices,
       };
     });
   }
 
-  function buildUtsu() {
-    return pick(D.words, QUESTIONS).map(function (x) {
+  function buildUtsu(list) {
+    return (list || pick(STD, QUESTIONS)).map(function (x) {
       var kunrei = render(x.k, 'kunrei');
       var hepburn = render(x.k, 'hepburn');
       // 「やさい」のように shi/chi/tsu を ふくまない ことばは 2つの 書き方が 同じになる。
@@ -190,8 +201,16 @@
 
   // かくモードは「うつ」と同じ出題（ことば・正解・解説）を そのまま使う。
   // ちがうのは 答えかた（キーボード か 手書き）だけ。
-  function buildKaku() {
-    return buildUtsu().map(function (q) { q.type = 'kaku'; return q; });
+  function buildKaku(list) {
+    return buildUtsu(list).map(function (q) { q.type = 'kaku'; return q; });
+  }
+
+  // レベル しゅぎょう（2026-10-07）。えらんだ レベルの 10語を データの並びのまま 出す。
+  // シャッフルしないので、おなじ レベルを えらべば クラス全員が おなじ問題を おなじ順番で とける。
+  // 答えかたは よむ・うつ・かく から えらぶ（LEVEL_KINDS）
+  var LEVEL_KINDS = ['yomu', 'utsu', 'kaku'];
+  function buildLevel(lv, kind) {
+    return MODES[kind].build(D.words.filter(function (w) { return w.lv === lv; }));
   }
 
   var MODES = {
@@ -199,6 +218,7 @@
     utsu:    { label: 'キーボードで うつ', sub: 'ひらがなを ローマ字で うつ',  build: buildUtsu },
     kaku:    { label: 'ローマ字を かく',   sub: 'ひらがなを ローマ字で かいて まるつけ', build: buildKaku },
     futatsu: { label: 'ふたつの かきかた',   sub: 'shi と si、どちらも ただしい',      build: buildFutatsu },
+    level:   { label: 'レベル しゅぎょう',   sub: 'レベル1〜10。おなじ レベルなら みんな おなじ もんだい', build: buildLevel },
   };
 
   /* ---------- 画面 ---------- */
@@ -218,27 +238,106 @@
       '<p class="rj-rules-note">2025年12月22日に くにの きまり（内閣告示）が 70年ぶりに かわり、いま がっこうで ならうのは ヘボン式が 基本です。まえの きょうかしょの 訓令式も まちがいでは ありません。キーボードで うつときは どちらでも おなじ ひらがなが 出ます。</p>';
   }
 
+  function modeButtons(ids, cls) {
+    return '<div class="rj-modes' + (cls ? ' ' + cls : '') + '">' +
+      ids.map(function (id) {
+        return '<button type="button" class="rj-mode" data-mode="' + id + '">' +
+          '<span class="rj-mode-t">' + esc(MODES[id].label) + '</span>' +
+          '<span class="rj-mode-s">' + esc(MODES[id].sub) + '</span>' +
+        '</button>';
+      }).join('') +
+    '</div>';
+  }
+
   function renderMenu() {
     NkModal.close();
     root.innerHTML =
       '<div class="rj-menu">' +
         '<p class="rj-menu-lead">やりたい しゅぎょうを えらんでね！</p>' +
-        '<div class="rj-modes">' +
-          Object.keys(MODES).map(function (id) {
-            return '<button type="button" class="rj-mode" data-mode="' + id + '">' +
-              '<span class="rj-mode-t">' + esc(MODES[id].label) + '</span>' +
-              '<span class="rj-mode-s">' + esc(MODES[id].sub) + '</span>' +
-            '</button>';
-          }).join('') +
-        '</div>' +
+        // 2026-10-07：いままでの4つは「ランダム しゅぎょう」として そのまま。下に「レベル しゅぎょう」を足した
+        '<p class="rj-menu-group">ランダム しゅぎょう（いままで どおり）</p>' +
+        modeButtons(['yomu', 'utsu', 'kaku', 'futatsu']) +
+        '<p class="rj-menu-group">レベル しゅぎょう（みんなで おなじ もんだい）</p>' +
+        modeButtons(['level'], 'is-level') +
         // アプリ一覧へ もどるリンク（2026-09-24。ヒーローの「アプリ一覧」ボタンから移した）
         '<a class="rj-back nk-applist" href="/edu-tools.html#kids">← アプリいちらんに もどる</a>' +
       '</div>' +
       NinjaLinks.html('romaji');
 
     Array.prototype.forEach.call(root.querySelectorAll('.rj-mode'), function (btn) {
-      btn.addEventListener('click', function () { start(btn.getAttribute('data-mode')); });
+      btn.addEventListener('click', function () {
+        var mode = btn.getAttribute('data-mode');
+        if (mode === 'level') {
+          history.pushState({ nkStep: 'lvkind' }, '');
+          renderLevelKinds();
+        } else {
+          start(mode);
+        }
+      });
     });
+  }
+
+  /* レベル しゅぎょう の2まいめ。よむ・うつ・かく を えらぶと そのまま 3まいめ（レベル）へ */
+  var levelKind = null;
+  function renderLevelKinds() {
+    NkModal.close();
+    root.innerHTML =
+      '<div class="rj-menu">' +
+        '<p class="rj-menu-lead">レベル しゅぎょう：やりかたを えらんでね！</p>' +
+        '<div class="rj-modes">' +
+          LEVEL_KINDS.map(function (id) {
+            // data-mode を つけると ランダム しゅぎょう と おなじ 絵が 出る
+            return '<button type="button" class="rj-mode rj-kind" data-mode="' + id + '" data-kind="' + id + '">' +
+              '<span class="rj-mode-t">' + esc(MODES[id].label) + '</span>' +
+              '<span class="rj-mode-s">' + esc(MODES[id].sub) + '</span>' +
+            '</button>';
+          }).join('') +
+        '</div>' +
+        '<button type="button" class="rj-back">← しゅぎょうを えらびなおす</button>' +
+      '</div>';
+    Array.prototype.forEach.call(root.querySelectorAll('.rj-kind'), function (btn) {
+      btn.addEventListener('click', function () {
+        levelKind = btn.getAttribute('data-kind');
+        history.pushState({ nkStep: 'level', kind: levelKind }, '');
+        renderLevels();
+      });
+    });
+    root.querySelector('.rj-back').addEventListener('click', function () { history.back(); });
+  }
+
+  /* レベル しゅぎょう の3まいめ。レベルを えらんで「スタート」。
+     画面に来たときは 何も えらんでいない。えらぶまで スタートは おせない */
+  function renderLevels() {
+    NkModal.close();
+    if (!levelKind) levelKind = (history.state && history.state.kind) || 'utsu';
+    root.innerHTML =
+      '<div class="rj-menu">' +
+        '<p class="rj-menu-lead">' + esc(MODES[levelKind].label) + '：レベルを えらんでね！</p>' +
+        '<div class="rj-levels">' +
+          D.levels.map(function (name, i) {
+            return '<button type="button" class="rj-level" data-lv="' + (i + 1) + '">' +
+              '<span class="rj-level-t">レベル' + (i + 1) + '</span>' +
+              '<span class="rj-level-s">' + esc(name) + '</span>' +
+            '</button>';
+          }).join('') +
+        '</div>' +
+        '<p class="rj-level-note">おなじ レベルなら、みんな おなじ もんだいが おなじ じゅんばんで でるよ。せーので はじめよう！</p>' +
+        '<button type="button" class="rj-next rj-start" id="rj-start" disabled>スタート</button>' +
+        '<button type="button" class="rj-back">← やりかたを えらびなおす</button>' +
+      '</div>';
+
+    var lv = 0;
+    var startBtn = document.getElementById('rj-start');
+    Array.prototype.forEach.call(root.querySelectorAll('.rj-level'), function (btn) {
+      btn.addEventListener('click', function () {
+        Array.prototype.forEach.call(root.querySelectorAll('.rj-level'), function (b) { b.classList.remove('is-on'); });
+        btn.classList.add('is-on');
+        lv = Number(btn.getAttribute('data-lv'));
+        startBtn.disabled = false;
+      });
+    });
+    startBtn.addEventListener('click', function () { if (lv) start('level', lv, levelKind); });
+    root.querySelector('.rj-back').addEventListener('click', function () { history.back(); });
   }
 
   // ブラウザ・スマホの「戻る」でメニューへ戻れるようにする（2026-09-27）。
@@ -257,12 +356,15 @@
   window.addEventListener('popstate', function () {
     // ページ内リンク（#faq など）の履歴は state を持たないので、画面はそのままにする
     if (history.state && history.state.nkStep === 'menu') renderMenu();
+    else if (history.state && history.state.nkStep === 'lvkind') renderLevelKinds();
+    else if (history.state && history.state.nkStep === 'level') { levelKind = history.state.kind; renderLevels(); }
   });
 
-  function start(mode) {
+  function start(mode, lv, kind) {
     pushPlay();
-    state = { mode: mode, qs: MODES[mode].build(), i: 0, ok: 0, missed: [] };
-    if (window.NkTrack) NkTrack('mode_select', { app: 'romaji', mode: mode, level: 'none' });
+    state = { mode: mode, lv: lv || 0, kind: kind, qs: lv ? buildLevel(lv, kind) : MODES[mode].build(), i: 0, ok: 0, missed: [] };
+    // レベル しゅぎょう は mode を level:よむ のように わける
+    if (window.NkTrack) NkTrack('mode_select', { app: 'romaji', mode: lv ? 'level:' + kind : mode, level: lv ? 'lv' + lv : 'none' });
     renderQuestion();
   }
 
@@ -304,7 +406,7 @@
 
     root.innerHTML =
       '<div class="rj-quiz">' +
-        '<div class="rj-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok, MODES[state.mode].label) + '</div>' +
+        '<div class="rj-bar nk-head">' + NinjaHead.inner(state.i, QUESTIONS, state.ok, state.lv ? MODES[state.kind].label + '・レベル' + state.lv : MODES[state.mode].label) + '</div>' +
         '<div class="rj-q">' +
           '<p class="rj-q-lead">' + esc(q.lead || questionLead(q)) + '</p>' +
           '<p class="rj-q-word' + (q.type === 'futatsu' ? ' is-big' : '') + '"' +
@@ -525,7 +627,7 @@
 
   function renderResult() {
     var missed = state.missed;
-    if (window.NkTrack) NkTrack('set_complete', { app: 'romaji', mode: state.mode, level: 'none', score: state.ok, total: QUESTIONS });
+    if (window.NkTrack) NkTrack('set_complete', { app: 'romaji', mode: state.lv ? 'level:' + state.kind : state.mode, level: state.lv ? 'lv' + state.lv : 'none', score: state.ok, total: QUESTIONS });
     root.innerHTML =
       '<div class="rj-result' + (state.ok === QUESTIONS ? ' is-perfect' : '') + '">' +
         '<p class="rj-result-score">' + QUESTIONS + 'もん ちゅう <b>' + state.ok + 'もん</b> せいかい</p>' +
@@ -545,7 +647,7 @@
         '</div>' +
       '</div>';
 
-    document.getElementById('rj-again').addEventListener('click', function () { start(state.mode); });
+    document.getElementById('rj-again').addEventListener('click', function () { start(state.mode, state.lv, state.kind); });
     document.getElementById('rj-menu').addEventListener('click', backToMenu);
   }
 
