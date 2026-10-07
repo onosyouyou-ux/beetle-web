@@ -489,8 +489,9 @@ body.ninja-lp-phonics .eal-card-num { display:none; }
 @media (hover:hover) { .nk-teacher-btn:hover { background:var(--nl-dark,#bd6823); } }
 .nk-teacher-mini {
   display:inline-block; margin-top:12px; font-size:13.5px; font-weight:700;
-  color:var(--nl-accent,#bd6823); text-decoration:underline; text-underline-offset:4px;
+  color:#fff; text-decoration:underline; text-underline-offset:4px;
 }
+/* 紹介ページの ヒーローは 濃い紺なので、アクセント色（紫など）だと 読みにくかった。白で出す（2026-10-07） */
 @media (max-width:767px) {
   .nk-teacher { padding:20px 16px; }
   .nk-teacher-inner { padding:18px 16px; }

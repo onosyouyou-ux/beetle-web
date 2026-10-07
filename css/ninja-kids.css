@@ -4468,3 +4468,9 @@ body.ninja-space .sa-track-label .sa-combo { margin:0; padding:0 8px; font-size:
 .ninja-kids .nk-teacher-ref { margin:14px 0 0; font-size:12.5px; text-align:center; }
 .ninja-kids .nk-teacher-ref a { color:#6b6357; text-decoration:underline; text-underline-offset:3px; }
 @media (hover:hover) { .ninja-kids .nk-teacher-ref a:hover { color:var(--nk-accent); } }
+/* メニュー（問題をえらぶ画面）の 先生向けリンク（2026-10-07）。ninja-links.js が差しこむ */
+.ninja-kids .nk-teacher-menu { margin:10px 0 0; text-align:center; font-size:13px; }
+.ninja-kids .nk-teacher-menu a { color:#6b6357; font-weight:700; text-decoration:underline; text-underline-offset:3px; }
+@media (hover:hover) { .ninja-kids .nk-teacher-menu a:hover { color:var(--nk-accent); } }
+/* さんすう・さくらんぼざん は 紺の背景の上に出るので 明るい色 */
+.ninja-space .nk-teacher-menu a { color:#ffd36b; }
