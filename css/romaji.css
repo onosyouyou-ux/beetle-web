@@ -466,3 +466,26 @@ body.ninja-kids.ninja-romaji .rj-modes+.rj-menu-group{margin-top:22px}
   body.ninja-kids.ninja-romaji .rj-menu-group{margin:2px 0 4px}
   body.ninja-kids.ninja-romaji .rj-modes+.rj-menu-group{margin-top:12px}
 }
+
+/* ============================================================
+   よむ しゅぎょう は 問題を 上・えらぶ を 下に 積む（2026-10-07）
+   左右2カラムだと 問題の欄が半分しかなく、長い ことば（kyoushitsu など。レベル8〜10）が
+   2行に折れて、どこまでが 1つの ことば か 分かりにくかった。うつ・かく と 同じ 縦の並びにそろえる。
+   えらぶ 4つは 横1列（スマホは 2×2）。こたえあわせは えらぶ の場所に出す
+   ============================================================ */
+body.ninja-kids .rj-quiz.is-yomu{grid-template-columns:minmax(0,1fr);grid-template-rows:auto}
+body.ninja-kids .rj-quiz.is-yomu>*{grid-column:1;grid-row:auto}
+body.ninja-kids .rj-quiz.is-yomu>.rj-q{min-height:0;padding-block:18px}
+body.ninja-kids .rj-quiz.is-yomu>.rj-choices{
+  grid-template-columns:repeat(4,minmax(0,1fr));align-self:auto;align-content:start;min-height:0;margin:0;
+}
+body.ninja-kids .rj-quiz.is-yomu>.rj-choices>.rj-choice{min-height:var(--nk-tap,64px)}
+body.ninja-kids .rj-quiz.is-yomu>.rj-answer.is-on{grid-column:1;grid-row:auto;min-height:0}
+body.ninja-kids .rj-quiz.is-yomu:has(.rj-answer.is-on)>.rj-choices{display:none}
+@media (max-width:767px){
+  body.ninja-kids .rj-quiz.is-yomu>.rj-choices{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+/* スマホ縦は「なんと よむ？」の札が上に重なって出るので、うつ と同じだけ 上を あける */
+@media (max-width:767px) and (orientation:portrait){
+  body.ninja-kids .rj-quiz.is-yomu>.rj-q{min-height:150px;padding-top:58px;padding-bottom:18px}
+}
