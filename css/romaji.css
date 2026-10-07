@@ -432,3 +432,7 @@ body.ninja-kids.ninja-romaji .rj-menu>button.rj-back{align-self:center;margin:12
   .rj-level{min-height:52px;padding:6px}
   .rj-level-t{font-size:16px}
 }
+/* レベル しゅぎょう の やりかた（よむ・うつ・かく）は レベル用の絵（LEVEL の巻物つき。2026-10-07） */
+body.ninja-kids.ninja-romaji .rj-kind[data-kind="yomu"]{ --nk-mode-img:url('/assets/images/ninja/modes/romaji-level-yomu.png'); }
+body.ninja-kids.ninja-romaji .rj-kind[data-kind="utsu"]{ --nk-mode-img:url('/assets/images/ninja/modes/romaji-level-utsu.png'); }
+body.ninja-kids.ninja-romaji .rj-kind[data-kind="kaku"]{ --nk-mode-img:url('/assets/images/ninja/modes/romaji-level-kaku.png'); }
