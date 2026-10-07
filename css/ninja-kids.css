@@ -4463,3 +4463,8 @@ body.ninja-space .sa-track-label .sa-combo { margin:0; padding:0 8px; font-size:
 }
 /* はんてい後は けしゴムが消えるので、右上の角へ寄せる */
 .ninja-kids :is(.kj-pad,.kt-pad):not(:has(:is(.kj-eraser,.kt-eraser)))>.nk-zoom{right:6px}
+
+/* 先生向けページへの小さなリンク（2026-10-07）。紙面のいちばん下（更新日の上）に置き、盤面には出さない */
+.ninja-kids .nk-teacher-ref { margin:14px 0 0; font-size:12.5px; text-align:center; }
+.ninja-kids .nk-teacher-ref a { color:#6b6357; text-decoration:underline; text-underline-offset:3px; }
+@media (hover:hover) { .ninja-kids .nk-teacher-ref a:hover { color:var(--nk-accent); } }

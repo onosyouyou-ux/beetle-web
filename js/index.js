@@ -82,3 +82,17 @@
       card.classList.add('peek-static');
     });
   }
+
+// 先生向けページへの導線の計測（GA4イベント: teacher_link_click。2026-10-07）
+// トップは common.js を読み込まないので、common.js と同じ受け口をここにも置く（ヘッダー・教育の入口バナー・フッター）
+(function () {
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[data-track="teacher_link"]');
+    if (!a) return;
+    if (typeof window.gtag !== 'function') return;
+    window.gtag('event', 'teacher_link_click', {
+      link_from: a.getAttribute('data-from') || '',
+      page_path: location.pathname
+    });
+  }, true);
+})();

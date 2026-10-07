@@ -486,3 +486,29 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-accent); 
   .btn-sub,
   .back-to-top { transition: none; }
 }
+
+/* トップ：QAの内容のあとに置く 教育側の入口バナー（2026-10-07） */
+.edu-entry { padding:8px 20px 48px; }
+.edu-entry-inner {
+  max-width:960px; margin:0 auto; padding:24px 28px;
+  display:flex; align-items:center; justify-content:space-between; gap:16px 28px; flex-wrap:wrap;
+  background:#fff8ec; border:2px solid var(--color-accent); border-radius:4px;
+}
+.edu-entry-copy { flex:1 1 380px; min-width:0; }
+.edu-entry-tag { margin:0 0 4px; font-size:12px; font-weight:800; letter-spacing:.08em; color:var(--color-accent); }
+.edu-entry h2 { margin:0 0 6px; font-size:21px; line-height:1.45; }
+.edu-entry p.edu-entry-desc { margin:0; font-size:14px; line-height:1.8; color:#555; }
+.edu-entry-actions { display:flex; gap:10px; flex-wrap:wrap; }
+.edu-entry-btn {
+  display:inline-block; padding:11px 20px; border-radius:2px; font-weight:800; font-size:14.5px; text-decoration:none;
+  background:var(--color-accent); color:#fff;
+}
+.edu-entry-btn.is-sub { background:#fff; color:var(--color-accent); border:2px solid var(--color-accent); padding:9px 18px; }
+@media (hover:hover) { .edu-entry-btn:hover { filter:brightness(1.08); } }
+@media (max-width:600px) {
+  .edu-entry-inner { padding:20px 16px; }
+  .edu-entry-actions { width:100%; }
+  .edu-entry-btn { flex:1 1 100%; text-align:center; }
+}
+.edu-entry h2 .edu-entry-part { display:inline-block; }
+@media (max-width:600px) { .edu-entry h2 { font-size:17px; } }
