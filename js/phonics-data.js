@@ -41,7 +41,7 @@ window.PHONICS_DATA = {
     { l: 'u', oto: 'ア',   name: 'ユー',   ex: 'umbrella', ja: 'かさ' },
     { l: 'v', oto: 'ヴ',   name: 'ブイ',   ex: 'van',    ja: 'バン' },
     { l: 'w', oto: 'ウ',   name: 'ダブリュー', ex: 'water', ja: 'みず' },
-    { l: 'x', oto: 'クス', name: 'エックス', ex: 'box',   ja: 'はこ' },
+    { l: 'x', oto: 'クス', name: 'エックス', ex: 'box',   ja: 'はこ', end: true },  // x の 音は ことばの おわりに 出る
     { l: 'y', oto: 'ユ',   name: 'ワイ',   ex: 'yellow', ja: 'きいろ' },
     { l: 'z', oto: 'ズ',   name: 'ゼット', ex: 'zebra',  ja: 'しまうま' },
   ],

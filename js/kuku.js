@@ -100,7 +100,7 @@
   /* 1セットで出す九九を、はじめに まとめて決める。
      - じゅんばんに とく：えらんだ だんを ×1 から ×9 まで順に
      - ランダムに こたえる：えらんだ だんを まぜて、同じ九九が2回 出ないように出す
-     - おとだけ：いままでどおり、範囲から毎回くじ引き */
+     - おとだけ：範囲を まぜて 順に出す。範囲が 10問より 少ないときだけ、ひとまわり してから 2回目を出す（2026-10-07。前は毎回くじ引きで 同じ九九が 2回 出た） */
   function buildList(pool) {
     if (state.modeId === 'junban') {
       return pool.slice().sort(function (x, y) { return x.b - y.b; });
@@ -109,8 +109,8 @@
       return shuffle(pool.slice()).slice(0, SET_LENGTH);
     }
     var list = [];
-    for (var i = 0; i < SET_LENGTH; i++) list.push(pick(pool));
-    return list;
+    while (list.length < SET_LENGTH) list = list.concat(shuffle(pool.slice()));
+    return list.slice(0, SET_LENGTH);
   }
 
   /* ---------- 画面 ---------- */

@@ -119,7 +119,8 @@
   /* ---------- 出題づくり ---------- */
 
   function buildDotchi() {
-    var half = Math.round(QUESTIONS / 2);
+    // 5問ずつに 固定すると、数えていれば 最後の方は 読まなくても 分かってしまう。3〜7問で ゆらす（2026-10-07）
+    var half = 3 + Math.floor(Math.random() * 5);
     var kata = pick(D.words, half).map(function (x) {
       return { type: 'dotchi', show: x.k, ex: x.ex, answer: 'kata', word: x.w, hint: x.hint, cat: D.cats[x.c] ? D.cats[x.c].label : '' };
     });
