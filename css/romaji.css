@@ -391,12 +391,29 @@ body.ninja-kids .rj-quiz:has(.rj-write):has(.rj-answer.is-on)>:is(.rj-write,.rj-
 body.ninja-kids.ninja-romaji .rj-menu-group{
   margin:4px 0 8px;font-size:14px;font-weight:800;color:var(--nk-accent-dark);letter-spacing:.04em;
 }
-body.ninja-kids.ninja-romaji .rj-modes.is-level{flex:none;grid-template-columns:1fr}
-body.ninja-kids.ninja-romaji .rj-modes.is-level>.rj-mode{
-  min-height:0;height:auto;padding:14px 18px;
-  flex-direction:row;align-items:baseline;justify-content:center;gap:14px;flex-wrap:wrap;
+/* レベル しゅぎょう の3まい（よむ・うつ・かく）。上の ランダム と見分けがつくように
+   金色の下地・枠にする。絵は左、文字は右の横長（ランダムの4まいと同じ並び） */
+body.ninja-kids.ninja-romaji .rj-modes.is-level{
+  flex:none;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;
+  --nk-mode-img-h:76px;--nk-mode-t:19px;--nk-mode-s:13px;--nk-mode-pad:12px;
 }
-body.ninja-kids.ninja-romaji .rj-modes.is-level>.rj-mode::before{content:none}
+body.ninja-kids.ninja-romaji .rj-modes.is-level>.rj-kind{
+  height:auto;min-height:0;padding:12px 12px 12px calc(var(--nk-mode-pad) + var(--nk-mode-img-h) + 10px);
+  justify-content:center;align-items:flex-start;gap:2px;text-align:left;
+  background:linear-gradient(180deg,#fff8e4,#fbe9b8);
+  border-color:#e0b94f;
+}
+/* 3まい並びの共通ルール（ninja-kids.css）は 背の低い札だと 絵の高さを 0 にしてしまうので、大きさを 明示する */
+body.ninja-kids.ninja-romaji .rj-modes.is-level>.rj-kind::before{
+  left:var(--nk-mode-pad);top:50%;translate:0 -50%;
+  width:var(--nk-mode-img-h);height:var(--nk-mode-img-h);aspect-ratio:auto;
+}
+body.ninja-kids.ninja-romaji .rj-modes.is-level>.rj-kind{min-height:calc(var(--nk-mode-img-h) + 16px)}
+body.ninja-kids.ninja-romaji .rj-modes.is-level .rj-mode-s{color:#8a6412;font-weight:700}
+@media (hover:hover){body.ninja-kids.ninja-romaji .rj-modes.is-level>.rj-kind:hover{border-color:#c99a1e}}
+@media (max-width:767px){
+  body.ninja-kids.ninja-romaji .rj-modes.is-level{grid-template-columns:1fr;gap:8px}
+}
 
 body.ninja-kids.ninja-romaji .rj-levels{
   display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;
@@ -436,3 +453,16 @@ body.ninja-kids.ninja-romaji .rj-menu>button.rj-back{align-self:center;margin:12
 body.ninja-kids.ninja-romaji .rj-kind[data-kind="yomu"]{ --nk-mode-img:url('/assets/images/ninja/modes/romaji-level-yomu.png'); }
 body.ninja-kids.ninja-romaji .rj-kind[data-kind="utsu"]{ --nk-mode-img:url('/assets/images/ninja/modes/romaji-level-utsu.png'); }
 body.ninja-kids.ninja-romaji .rj-kind[data-kind="kaku"]{ --nk-mode-img:url('/assets/images/ninja/modes/romaji-level-kaku.png'); }
+/* 2つめの見出し（レベル しゅぎょう）の上を あける */
+body.ninja-kids.ninja-romaji .rj-modes+.rj-menu-group{margin-top:22px}
+/* 学校のノートPC（高さ640px以下の横長）：レベル しゅぎょう の札まで 1画面に 入るよう、札を 詰める（2026-10-07） */
+@media (min-width:768px) and (min-height:501px) and (max-height:640px){
+  body.ninja-kids.ninja-romaji .rj-modes:not(.is-level){
+    --nk-mode-img-h:60px;--nk-mode-t:19px;--nk-mode-s:12.5px;--nk-mode-pad:12px;gap:8px;
+  }
+  body.ninja-kids.ninja-romaji .rj-modes:not(.is-level)>.rj-mode{min-height:0;padding-block:6px}
+  body.ninja-kids.ninja-romaji .rj-modes.is-level{--nk-mode-img-h:52px;gap:8px}
+  body.ninja-kids.ninja-romaji .rj-modes.is-level>.rj-kind{padding-block:6px}
+  body.ninja-kids.ninja-romaji .rj-menu-group{margin:2px 0 4px}
+  body.ninja-kids.ninja-romaji .rj-modes+.rj-menu-group{margin-top:12px}
+}

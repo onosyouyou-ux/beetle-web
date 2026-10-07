@@ -218,7 +218,6 @@
     utsu:    { label: 'キーボードで うつ', sub: 'ひらがなを ローマ字で うつ',  build: buildUtsu },
     kaku:    { label: 'ローマ字を かく',   sub: 'ひらがなを ローマ字で かいて まるつけ', build: buildKaku },
     futatsu: { label: 'ふたつの かきかた',   sub: 'shi と si、どちらも ただしい',      build: buildFutatsu },
-    level:   { label: 'レベル しゅぎょう',   sub: 'レベル1〜10。おなじ レベルなら みんな おなじ もんだい', build: buildLevel },
   };
 
   /* ---------- 画面 ---------- */
@@ -258,7 +257,15 @@
         '<p class="rj-menu-group">ランダム しゅぎょう（いままで どおり）</p>' +
         modeButtons(['yomu', 'utsu', 'kaku', 'futatsu']) +
         '<p class="rj-menu-group">レベル しゅぎょう（みんなで おなじ もんだい）</p>' +
-        modeButtons(['level'], 'is-level') +
+        // よむ・うつ・かく を そのまま カードで ならべる（2026-10-07。1まい はさむと 1手 ふえるので）
+        '<div class="rj-modes is-level">' +
+          LEVEL_KINDS.map(function (id) {
+            return '<button type="button" class="rj-mode rj-kind" data-kind="' + id + '">' +
+              '<span class="rj-mode-t">' + esc(MODES[id].label) + '</span>' +
+              '<span class="rj-mode-s">レベル1〜10</span>' +
+            '</button>';
+          }).join('') +
+        '</div>' +
         // アプリ一覧へ もどるリンク（2026-09-24。ヒーローの「アプリ一覧」ボタンから移した）
         '<a class="rj-back nk-applist" href="/edu-tools.html#kids">← アプリいちらんに もどる</a>' +
       '</div>' +
@@ -266,46 +273,21 @@
 
     Array.prototype.forEach.call(root.querySelectorAll('.rj-mode'), function (btn) {
       btn.addEventListener('click', function () {
-        var mode = btn.getAttribute('data-mode');
-        if (mode === 'level') {
-          history.pushState({ nkStep: 'lvkind' }, '');
-          renderLevelKinds();
+        var kind = btn.getAttribute('data-kind');
+        if (kind) {
+          levelKind = kind;
+          history.pushState({ nkStep: 'level', kind: kind }, '');
+          renderLevels();
         } else {
-          start(mode);
+          start(btn.getAttribute('data-mode'));
         }
       });
     });
   }
 
-  /* レベル しゅぎょう の2まいめ。よむ・うつ・かく を えらぶと そのまま 3まいめ（レベル）へ */
   var levelKind = null;
-  function renderLevelKinds() {
-    NkModal.close();
-    root.innerHTML =
-      '<div class="rj-menu">' +
-        '<p class="rj-menu-lead">レベル しゅぎょう：やりかたを えらんでね！</p>' +
-        '<div class="rj-modes">' +
-          LEVEL_KINDS.map(function (id) {
-            // data-mode を つけると ランダム しゅぎょう と おなじ 絵が 出る
-            return '<button type="button" class="rj-mode rj-kind" data-mode="' + id + '" data-kind="' + id + '">' +
-              '<span class="rj-mode-t">' + esc(MODES[id].label) + '</span>' +
-              '<span class="rj-mode-s">' + esc(MODES[id].sub) + '</span>' +
-            '</button>';
-          }).join('') +
-        '</div>' +
-        '<button type="button" class="rj-back">← しゅぎょうを えらびなおす</button>' +
-      '</div>';
-    Array.prototype.forEach.call(root.querySelectorAll('.rj-kind'), function (btn) {
-      btn.addEventListener('click', function () {
-        levelKind = btn.getAttribute('data-kind');
-        history.pushState({ nkStep: 'level', kind: levelKind }, '');
-        renderLevels();
-      });
-    });
-    root.querySelector('.rj-back').addEventListener('click', function () { history.back(); });
-  }
 
-  /* レベル しゅぎょう の3まいめ。レベルを えらんで「スタート」。
+  /* レベル しゅぎょう の2まいめ。レベルを えらんで「スタート」。
      画面に来たときは 何も えらんでいない。えらぶまで スタートは おせない */
   function renderLevels() {
     NkModal.close();
@@ -323,7 +305,7 @@
         '</div>' +
         '<p class="rj-level-note">おなじ レベルなら、みんな おなじ もんだいが おなじ じゅんばんで でるよ。せーので はじめよう！</p>' +
         '<button type="button" class="rj-next rj-start" id="rj-start" disabled>スタート</button>' +
-        '<button type="button" class="rj-back">← やりかたを えらびなおす</button>' +
+        '<button type="button" class="rj-back">← しゅぎょうを えらびなおす</button>' +
       '</div>';
 
     var lv = 0;
@@ -356,7 +338,6 @@
   window.addEventListener('popstate', function () {
     // ページ内リンク（#faq など）の履歴は state を持たないので、画面はそのままにする
     if (history.state && history.state.nkStep === 'menu') renderMenu();
-    else if (history.state && history.state.nkStep === 'lvkind') renderLevelKinds();
     else if (history.state && history.state.nkStep === 'level') { levelKind = history.state.kind; renderLevels(); }
   });
 
