@@ -1138,3 +1138,6 @@ body[data-sansu-mode="sakuranbo"] .sa-feedback { min-height: 2.7em; line-height:
   .sa-explain-steps { margin-bottom: 8px; font-size: 16px; line-height: 1.4; }
   .sa-explain-next { padding-block: 8px; }
 }
+
+/* まちがえたときの「つぎへ」（2026-10-07）。こたえの文の よこに おく */
+.sa-wrong-next { display: inline-block; margin-left: 12px; padding: 6px 18px; font-size: 16px; vertical-align: middle; }

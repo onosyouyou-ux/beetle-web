@@ -135,7 +135,9 @@
     const pair = (x) => (left ? x + ' と ' + (split - x) : (split - x) + ' と ' + x);
     const correct = pair(q.need);
     const others = [];
-    for (let x = 1; x < split; x++) if (x !== q.need) others.push(x);
+    // 正解を 左右 入れかえただけの 分け方（8 を 7と1 に対して 1と7）は 出さない。
+    // どちらも 8 の 分け方としては 合っているので、まちがい扱いに すると 1年生が「なんで？」となる（2026-10-07）
+    for (let x = 1; x < split; x++) if (x !== q.need && x !== split - q.need) others.push(x);
     const near = shuffle(others.filter((x) => Math.abs(x - q.need) <= 2));
     const far = shuffle(others.filter((x) => Math.abs(x - q.need) > 2));
     const opts = [correct].concat(near.concat(far).slice(0, 3).map(pair));
@@ -1152,7 +1154,15 @@
     }
     saveProgress();
 
-    if (!cherry) setTimeout(() => { if (session) nextQuestion(); }, 1200);
+    // まちがえたときは「こたえは 33」を 読みきれるよう、「つぎへ」を おすまで 待つ（2026-10-07。前は 1.2秒で 次へ進んでいた）
+    if (!cherry && ok) setTimeout(() => { if (session) nextQuestion(); }, 1200);
+    if (!cherry && !ok) {
+      const nx = el('button', 'sa-btn sa-btn-primary sa-wrong-next', 'つぎへ →');
+      nx.type = 'button';
+      nx.addEventListener('click', () => { if (session) nextQuestion(); });
+      feedback.appendChild(nx);
+      nx.focus({ preventScroll: true });
+    }
   }
 
   // 押したボタンに ○／× の色、まちがえたときは正しいボタンにも ○ の色を付ける
