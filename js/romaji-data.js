@@ -53,7 +53,7 @@ window.ROMAJI_DATA = {
          hint には「その語で つまずく ところ」を書く。書けないことばは入れない ---- */
   levels: [
     '2もじ・ちいさい字なし',
-    '3もじ・にごる音',
+    '3〜4もじ・ちいさい字なし',
     'shi・chi・tsu・fu・ji',
     'ん',
     'のばす音',
@@ -76,7 +76,7 @@ window.ROMAJI_DATA = {
     { lv: 1, k: 'あめ', hint: 'a-me。「あ」は a だけで かきます' },
     { lv: 1, k: 'ゆき', hint: 'yu-ki。「ゆ」は yu' },
     { lv: 1, k: 'とり', hint: 'to-ri。「り」は ri' },
-    // レベル2：3もじ・にごる音
+    // レベル2：3〜4もじ・ちいさい字なし（2026-10-07。にごる音のない語が半分あったので名前を合わせた）
     { lv: 2, k: 'さかな', hint: 'sa-ka-na。1つの かなが 1つの まとまりです', std: 1 },
     { lv: 2, k: 'たまご', hint: 'ta-ma-go。にごる 音は g で かきます', std: 1 },
     { lv: 2, k: 'すいか', hint: 'su-i-ka。「い」も 1つの かな として かきます', std: 1 },
@@ -86,7 +86,7 @@ window.ROMAJI_DATA = {
     { lv: 2, k: 'めだか', hint: 'me-da-ka。にごる 音は d で かきます' },
     { lv: 2, k: 'くるま', hint: 'ku-ru-ma。「る」は ru' },
     { lv: 2, k: 'たぬき', hint: 'ta-nu-ki。「ぬ」は nu' },
-    { lv: 2, k: 'さくら', hint: 'sa-ku-ra。「ら」は ra' },
+    { lv: 2, k: 'たいいく', hint: 'ta-i-i-ku。i が 2つ つづきます', std: 1 },  // のばす音ではないので レベル5 から移した
     // レベル3：shi・chi・tsu・fu・ji
     { lv: 3, k: 'しお', hint: '「し」は shi（いま ならう かきかた）。まえは si でした', std: 1 },
     { lv: 3, k: 'つくえ', hint: '「つ」は tsu（いま ならう かきかた）。まえは tu でした', std: 1 },
@@ -114,7 +114,7 @@ window.ROMAJI_DATA = {
     { lv: 5, k: 'ふうせん', hint: 'のばす 音は かなの とおり u。fuusen（いま）・huusen（まえ）', std: 1 },
     { lv: 5, k: 'おとうと', hint: 'のばす 音の 「う」も u と かきます', std: 1 },
     { lv: 5, k: 'ひこうき', hint: 'hikouki。のばす 音の 「う」も u', std: 1 },
-    { lv: 5, k: 'たいいく', hint: 'ta-i-i-ku。i が 2つ つづきます', std: 1 },
+    { lv: 5, k: 'ろうか', hint: 'のばす 音の 「う」は u。rouka' },
     { lv: 5, k: 'おかあさん', hint: 'のばす 音の 「あ」は a。okaasan' },
     { lv: 5, k: 'おにいさん', hint: 'のばす 音の 「い」は i。oniisan' },
     { lv: 5, k: 'くうき', hint: 'のばす 音の 「う」は u。kuuki' },
@@ -152,7 +152,7 @@ window.ROMAJI_DATA = {
     { lv: 8, k: 'びょういん', hint: '「びょ」は byo。byouin' },
     { lv: 8, k: 'きょうりゅう', hint: '「きょ」は kyo、「りゅ」は ryu。kyouryuu' },
     { lv: 8, k: 'ちゅうしゃ', hint: '「ちゅ」は chu、「しゃ」は sha。chuusha・tyuusya' },
-    { lv: 8, k: 'としょかん', hint: '「しょ」は sho（いま ならう かきかた）。toshokan・tosyokan' },
+    { lv: 8, k: 'きゅうしょく', hint: '「きゅ」は kyu、「しょ」は sho。kyuushoku・kyuusyoku' },  // としょかん は のばす音が ないので 入れかえ
     // レベル9：ん の あとに あ行・や行
     { lv: 9, k: 'ほんや', hint: '「ん」の あとが 「や」だと n だけでは 区切れない。honnya か hon\'ya', std: 1 },
     { lv: 9, k: 'きんようび', hint: '「ん」の あとが 「よ」だと n だけでは 区切れない。kinnyoubi か kin\'youbi', std: 1 },

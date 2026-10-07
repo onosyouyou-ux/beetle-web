@@ -41,6 +41,25 @@
 
   function pick(arr, n) { return shuffle(arr.slice()).slice(0, n); }
 
+  /* きまった たねから 毎回 同じ 並びを つくる 乱数（レベル しゅぎょう用。2026-10-07）。
+     正解の位置を 1問ごとに 順に ずらすと、慣れた子は 問題を 読まずに 当てられた。
+     レベルと 問題の 番号を たねに すれば、クラス全員 同じ並びのまま 位置は ばらばらになる */
+  function seeded(seed) {
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function seededShuffle(a, rnd) {
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rnd() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
   /* ---------- かな → モーラ（拗音は2文字で1つ、っ は そのまま） ---------- */
 
   function toMora(kana) {
@@ -130,17 +149,18 @@
 
   /* ---------- 出題づくり ---------- */
 
-  // list を わたすと レベル しゅぎょう用（2026-10-07）。ランダムを使わず、
-  // 書き方（ヘボン式／訓令式を1問ごとに交互）・まちがいの選択肢（同じレベルの ことば）・選択肢の並びも 固定する
+  // list を わたすと レベル しゅぎょう用（2026-10-07）。Math.random を使わず、
+  // 書き方（ヘボン式／訓令式）・まちがいの選択肢（同じレベルの ことば）・選択肢の並びを たね つきの乱数で 固定する
   function buildYomu(list) {
     var fixed = !!list;
     return (list || pick(STD, QUESTIONS)).map(function (x, i) {
-      var style = fixed ? (i % 2 ? 'kunrei' : 'hepburn') : (Math.random() < 0.5 ? 'kunrei' : 'hepburn');
+      var rnd = fixed ? seeded(x.lv * 1000 + i) : Math.random;
+      var style = rnd() < 0.5 ? 'kunrei' : 'hepburn';
       var wrongs = fixed
         ? [1, 3, 6].map(function (d) { return list[(i + d) % list.length].k; })
         : pick(STD.filter(function (y) { return y.k !== x.k; }), 3).map(function (y) { return y.k; });
       var choices = [x.k].concat(wrongs);
-      if (fixed) choices = choices.slice(4 - i % 4).concat(choices.slice(0, 4 - i % 4));  // 正解の位置を 1問ごとに ずらす
+      if (fixed) seededShuffle(choices, rnd);
       else shuffle(choices);
       return {
         type: 'yomu',

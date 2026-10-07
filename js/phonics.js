@@ -87,7 +87,7 @@
         speak: x.ex,
         word: x.oto,
         cat: 'もじの おと',
-        hint: '「' + x.l + '」の 名前は ' + x.name + '。でも 音は ' + x.oto + '。' + x.ex + '（' + x.ja + '）の はじめの 音です。',
+        hint: '「' + x.l + '」の 名前は ' + x.name + '。でも 音は ' + x.oto + '。' + x.ex + '（' + x.ja + '）の ' + (x.end ? 'おわり' : 'はじめ') + 'の 音です。',
         choices: shuffle(uniq([x.oto, x.name].concat(wrongs))),
       };
     });

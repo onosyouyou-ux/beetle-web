@@ -21,7 +21,7 @@
     { id: 'hand-h', level: 1, pair: 'hand', name: 'みじかい はりだけ', note: 'なんじ？', step: 60, hands: 'hour' },
     { id: 'hand-m', level: 1, pair: 'hand', name: 'ながい はりだけ', note: 'なんぷん？', step: 5, hands: 'minute' },
     { id: 'hour', level: 2, name: 'ちょうどの じかん', note: '3じ・8じ など', step: 60, hands: 'both' },
-    { id: 'half', level: 3, name: '30ぷんきざみ', note: '〇じはん も', step: 30, hands: 'both' },
+    { id: 'half', level: 3, name: '30ぷんきざみ', note: 'ちょうど と 30ぷん', step: 30, hands: 'both' },
     { id: 'five', level: 4, name: '5ふんきざみ', note: '5・10・15…', step: 5, hands: 'both' },
     { id: 'one', level: 5, name: '1ぷんきざみ', note: 'ぜんぶの ぷん', step: 1, hands: 'both' }
   ];
@@ -60,7 +60,8 @@
   // はりを1本だけ見る段では、答えも「じ」だけ／「ぷん」だけになる
   function answerText(o, hands) {
     if (hands === 'hour') return o.h + 'じ';
-    if (hands === 'minute') return o.m + punOf(o.m);
+    // ながい はりだけ で 12 を さす ときは「0ぷん」ではなく「ちょうど」（2026-10-07）
+    if (hands === 'minute') return o.m === 0 ? 'ちょうど' : o.m + punOf(o.m);
     return timeText(o.h, o.m);
   }
 
@@ -173,8 +174,8 @@
      ちょうどの位置しか出さないと、本物の時計を読むときに役に立たない。 */
   function makeHourHandQuestion() {
     var h = randInt(1, 12);
-    // 57分以降は短針が次の数字に重なって見分けがつかないので、55分までにする
-    var m = randInt(0, 55);
+    // 50分を すぎると 短針が 次の数字に ほぼ重なり、子どもには 読み分けが むずかしいので 45分までにする（2026-10-07。前は55分）
+    var m = randInt(0, 45);
     var answer = { h: h, m: m };
     var next = h % 12 + 1;
     var prev = (h + 10) % 12 + 1;
