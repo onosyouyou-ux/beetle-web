@@ -1141,3 +1141,27 @@ body[data-sansu-mode="sakuranbo"] .sa-feedback { min-height: 2.7em; line-height:
 
 /* まちがえたときの「つぎへ」（2026-10-07）。こたえの文の よこに おく */
 .sa-wrong-next { display: inline-block; margin-left: 12px; padding: 6px 18px; font-size: 16px; vertical-align: middle; }
+
+/* むずかしさを えらんだら すぐ はじまる（2026-10-08）。スタートが ひかってから うつる */
+.sa-start.is-go { filter: brightness(1.15); transform: scale(1.03); transition: transform .2s, filter .2s; }
+
+/* さくらんぼざん：① すうじを わける → ② けいさん する（2026-10-08）
+   いまの だんを 塗りつぶし、ボタンの色も だんごとに 変える（① さくらんぼの赤／② 空の青） */
+.sa-cherry-steps { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.sa-cstep {
+  padding: 3px 12px; border-radius: 999px; border: 2px solid #c9bdf0; color: #8a80b0; background: #fff;
+  font-size: 14px; font-weight: 800; line-height: 1.5;
+}
+.sa-cstep-arrow { color: #8a80b0; font-weight: 900; }
+.sa-cstep.is-now:first-child { background: #e8424f; border-color: #e8424f; color: #fff; }
+.sa-cstep.is-now:last-child { background: #2f7fd6; border-color: #2f7fd6; color: #fff; }
+.sa-cstep.is-done { background: #fde3e6; border-color: #f2a7b0; color: #c13a48; }
+.sa-cstep.is-done::after { content: ' ✓'; }
+body.ninja-space .sa-options.is-cstep1 .sa-opt,
+body.ninja-space .sa-options.is-cstep1 .sa-opt:not(.is-correct):not(.is-wrong) {
+  background: linear-gradient(180deg, #ffe4e7, #ffcfd5); border-color: #f08a9a; color: #8a1f2b; box-shadow: 0 3px 0 #e07282;
+}
+body.ninja-space .sa-options.is-cstep2 .sa-opt,
+body.ninja-space .sa-options.is-cstep2 .sa-opt:not(.is-correct):not(.is-wrong) {
+  background: linear-gradient(180deg, #e2efff, #cfe3ff); border-color: #7fb4f0; color: #143e75; box-shadow: 0 3px 0 #6a9edb;
+}
