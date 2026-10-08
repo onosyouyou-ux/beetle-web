@@ -468,35 +468,47 @@ body.ninja-lp-phonics .eal-card-num { display:none; }
 }
 
 /* ============================================================
-   先生向けページへの導線（2026-10-07。8本の紹介ページで共用）
-   - .nk-teacher      …「おうちのかたへ」の直後に置く案内ブロック（さんすう・さくらんぼざん は最後の呼びかけの前）
+   先生向けの節（2026-10-08。8本の紹介ページで共用）
+   「おうちのかたへ」と同じ組み方（見出し＋カード3枚）で、配りかたを先に見せる。
+   さんすう・さくらんぼざん は edu-app-landing.css を読まないので、ここだけで完結させる
+   - .nk-teacher      … 節（「おうちのかたへ」の直後。さんすう・さくらんぼざんは最後の呼びかけの前）
    - .nk-teacher-mini … ファーストビューの小さなテキストリンク
    ============================================================ */
-.nk-teacher { padding:28px 20px; }
-.nk-teacher-inner {
-  max-width:960px; margin:0 auto; padding:22px 26px;
-  display:flex; align-items:center; justify-content:space-between; gap:18px 28px; flex-wrap:wrap;
-  background:#fff; border:2px solid var(--nl-accent,#df8435); border-radius:16px;
-  box-shadow:0 10px 26px rgba(60,40,20,.10);
+.nk-teacher { padding:72px 20px; background:#fff; }
+.nk-teacher-wrap { max-width:1120px; margin:0 auto; text-align:center; }
+.nk-teacher-eyebrow { margin:0 0 10px; font-size:12px; font-weight:800; letter-spacing:.12em; color:var(--nl-accent,#bd6823); }
+.nk-teacher h2 { margin:0; font-size:clamp(24px,3.2vw,32px); line-height:1.35; color:#2f2a24; }
+.nk-teacher h2::after { content:''; display:block; width:68px; height:4px; margin:16px auto 0; border-radius:2px; background:var(--nl-accent,#bd6823); }
+.nk-teacher-lead { margin:18px 0 0; font-size:15px; line-height:1.8; color:#6b6357; }
+.nk-teacher-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin:32px 0 0; text-align:left; }
+.nk-teacher-card { padding:22px 24px; background:#faf6ef; border-radius:16px; box-shadow:0 8px 22px rgba(60,40,20,.08); }
+.nk-teacher-num {
+  display:inline-grid; place-items:center; width:30px; height:30px; margin-right:10px; border-radius:50%;
+  background:var(--nl-accent,#bd6823); color:#fff; font-size:15px; font-weight:800; vertical-align:middle;
 }
-.nk-teacher-copy { flex:1 1 360px; min-width:0; }
-.nk-teacher h2 { margin:0 0 6px; font-size:20px; line-height:1.4; color:#2f2a24; }
-.nk-teacher p { margin:0; font-size:14.5px; line-height:1.8; color:#5c5448; }
+.nk-teacher-card h3 { display:inline; font-size:17px; line-height:1.5; color:#2f2a24; vertical-align:middle; }
+.nk-teacher-card p { margin:12px 0 0; font-size:14px; line-height:1.85; color:#5c5448; }
+.nk-teacher-card code { display:block; margin-top:8px; padding:6px 8px; border-radius:6px; background:#fff; font-size:12px; color:#3a342c; word-break:break-all; }
+.nk-teacher-actions { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:30px 0 0; }
 .nk-teacher-btn {
-  flex:none; display:inline-block; padding:12px 22px; border-radius:2px;
+  display:inline-block; padding:13px 26px; border-radius:2px; border:2px solid var(--nl-accent,#df8435);
   background:var(--nl-accent,#df8435); color:#fff; font-weight:800; font-size:15px; text-decoration:none;
 }
-@media (hover:hover) { .nk-teacher-btn:hover { background:var(--nl-dark,#bd6823); } }
+.nk-teacher-btn.is-sub { background:#fff; color:var(--nl-accent,#bd6823); }
+@media (hover:hover) {
+  .nk-teacher-btn:hover { background:var(--nl-dark,#bd6823); border-color:var(--nl-dark,#bd6823); }
+  .nk-teacher-btn.is-sub:hover { background:#fff7ee; color:var(--nl-dark,#bd6823); }
+}
 .nk-teacher-mini {
   display:inline-block; margin-top:12px; font-size:13.5px; font-weight:700;
   color:#fff; text-decoration:underline; text-underline-offset:4px;
 }
 /* 紹介ページの ヒーローは 濃い紺なので、アクセント色（紫など）だと 読みにくかった。白で出す（2026-10-07） */
+/* さんすう・さくらんぼざん の紹介ページは 小さなリンクを 明るい黄色にする */
+.slp-hero .nk-teacher-mini { color:#ffd36b; }
 @media (max-width:767px) {
-  .nk-teacher { padding:20px 16px; }
-  .nk-teacher-inner { padding:18px 16px; }
-  .nk-teacher h2 { font-size:18px; }
+  .nk-teacher { padding:48px 16px; }
+  .nk-teacher-cards { grid-template-columns:1fr; gap:12px; }
+  .nk-teacher-card { padding:18px 18px; }
   .nk-teacher-btn { width:100%; text-align:center; }
 }
-/* さんすう・さくらんぼざん の紹介ページは ヒーローが濃い紺なので、小さなリンクを 明るい色にする */
-.slp-hero .nk-teacher-mini { color:#ffd36b; }
