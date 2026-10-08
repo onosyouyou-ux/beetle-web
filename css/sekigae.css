@@ -592,3 +592,12 @@ body{
 /* 名簿の上の「配置する」も下と同じオレンジの塗り（班分けメーカーとそろえる。2026-10-05） */
 .sk-sub.sk-gen-sub{background:var(--sk-orange);color:#fff;border-color:var(--sk-orange);box-shadow:0 2px 0 #a85d1e}
 @media (hover:hover){ .sk-sub.sk-gen-sub:hover{background:var(--sk-orange-dk);color:#fff} }
+
+/* 配慮を かくす（2026-10-08）：札・固定の色・男女の色を消し、ふつうの席と同じ見た目にする */
+.sk-hide-care{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--sk-ink2);cursor:pointer;margin-right:4px}
+.sk-hide-care input{width:16px;height:16px;accent-color:var(--sk-orange)}
+#sk-board.is-hide-care .sk-seat-tag{display:none}
+#sk-board.is-hide-care .sk-seat.is-fixed:not(.is-picked){background:#fff;border-color:var(--sk-seat-line)}
+#sk-board.is-hide-care .sk-seat.is-f,#sk-board.is-hide-care .sk-seat.is-m{box-shadow:none}
+.sk-more-kids{margin-top:6px}
+@media print{ .sk-hide-care{display:none} }
