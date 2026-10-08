@@ -521,7 +521,14 @@
     const diffs = group('むずかしさ', DIFFS.filter((d) => chosenMode.levels.indexOf(d.id) !== -1), 'diffId', (d) => ({
       label: d.name,
       note: chosenMode.diffNote[d.id]
-    }), null, () => renderMenu(2, true));
+    }), null, () => {
+      // むずかしさを えらんだら、スタートが ひかって すぐ はじまる（2026-10-08 ユーザー指示。押す手間を1つ へらす）
+      renderMenu(2, true);
+      const go = app.querySelector('.sa-start');
+      if (go) go.classList.add('is-go');
+      const picked = selection.diffId;
+      setTimeout(() => { if (menuStep === 2 && selection.diffId === picked && !session) startSession(); }, 380);
+    });
     diffs.classList.add('sa-group-diff');
     app.appendChild(diffs);
 
@@ -836,8 +843,18 @@
     card.appendChild(built.node);
 
     // 選択肢の上に「こたえを えらぼう」を出す（2026-09-28 ユーザー指示）。問題の枠と こたえの枠の役目を分けて見せる
-    card.appendChild(el('p', 'sa-options-label', 'こたえを えらぼう'));
+    const optLabel = el('p', 'sa-options-label', 'こたえを えらぼう');
+    // さくらんぼざん は 1もん2だん。いま どちらの だんか を、ラベルと ボタンの色で 見せる（2026-10-08 ユーザー指示）
+    if (s.current.layout === 'cherry') {
+      optLabel.textContent = '';
+      optLabel.classList.add('sa-cherry-steps');
+      optLabel.appendChild(el('span', 'sa-cstep is-now', '① すうじを わける'));
+      optLabel.appendChild(el('span', 'sa-cstep-arrow', '→'));
+      optLabel.appendChild(el('span', 'sa-cstep', '② けいさん する'));
+    }
+    card.appendChild(optLabel);
     const options = el('div', 'sa-options');
+    if (s.current.layout === 'cherry') options.classList.add('is-cstep1');
     const feedback = el('div', 'sa-feedback');
     feedback.innerHTML = '&nbsp;';
 
@@ -1072,6 +1089,10 @@
       setTimeout(() => {
         if (!session || session.current !== q) return;
         built.prompt.textContent = 'こたえは どれ?';
+        const steps = app.querySelectorAll('.sa-cstep');
+        if (steps.length === 2) { steps[0].classList.remove('is-now'); steps[0].classList.add('is-done'); steps[1].classList.add('is-now'); }
+        options.classList.remove('is-cstep1');
+        options.classList.add('is-cstep2');
         feedback.classList.remove('is-ok', 'is-ng');
         feedback.innerHTML = '&nbsp;';
         fillOptions(options, q.sumOptions, feedback, built);
