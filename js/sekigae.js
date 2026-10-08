@@ -1667,6 +1667,19 @@
   $('sk-again').addEventListener('click', run);
   $('sk-copy').addEventListener('click', function () { copyText($('sk-out').value, this); });
   $('sk-print').addEventListener('click', function () { window.print(); });
+  // 配慮を かくす（2026-10-08）。電子黒板に うつして 発表するとき、固定・前列・後列の札と 男女の色を 子どもに 見せない。
+  // 印刷には はじめから 出していない。えらんだ状態は この端末に おぼえておく
+  (function () {
+    var cb = $('sk-hide-care');
+    if (!cb) return;
+    var apply = function () { $('sk-board').classList.toggle('is-hide-care', cb.checked); };
+    try { cb.checked = localStorage.getItem('sk-hide-care') === '1'; } catch (e) {}
+    apply();
+    cb.addEventListener('change', function () {
+      apply();
+      try { localStorage.setItem('sk-hide-care', cb.checked ? '1' : '0'); } catch (e) {}
+    });
+  })();
   // ブラウザのメニューから印刷しても、結果があれば座席表を出す（形のタブを開いたままだと白紙になっていた）
   window.addEventListener('beforeprint', function () {
     if (state.grid && !$('sk-result').classList.contains('is-on')) showTab('result');
