@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { annotate, type Level } from '@/lib/claude';
 
-export const maxDuration = 30;
+// 1回に送るのは 画面側で分けた 250字ほど（2026-10-08）。500字を1回で送ると 30秒の時間切れで落ちていた
+export const maxDuration = 60;
 
-const MAX_CHARS = 800;
+const MAX_CHARS = 600;
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,7 +17,7 @@ export async function POST(request: NextRequest) {
     }
     if (text.length > MAX_CHARS) {
       return NextResponse.json(
-        { error: `ながすぎるよ。${MAX_CHARS}じ いないに わけて はりつけてね。` },
+        { error: `ながすぎるよ。${MAX_CHARS}じ いないに してね。` },
         { status: 400 },
       );
     }

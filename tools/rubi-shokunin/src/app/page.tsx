@@ -9,6 +9,33 @@ interface Segment {
 
 type Level = 'all' | 'hard';
 
+// 1回に送る大きさと、ぜんぶの上限（2026-10-08）。
+// 500字を1回で送ると サーバーの時間切れ（30秒）で落ちていたので、「。」や改行で 250字ほどに分けて 4つずつ並べて送り、
+// もとの順番で つなげて見せる。失敗した かたまりは 1回だけ 自動で送りなおす
+const CHUNK = 250;
+const MAX_TOTAL = 2000;
+const PARALLEL = 4;
+
+function splitText(t: string): string[] {
+  const parts = t.match(/[^。！？!?\n]*(?:[。！？!?]+|\n+|$)/g)?.filter((p) => p) ?? [t];
+  const out: string[] = [];
+  let cur = '';
+  for (const p of parts) {
+    if (cur && cur.length + p.length > CHUNK) { out.push(cur); cur = ''; }
+    // 句点の無い長い文は そのまま切る
+    if (p.length > CHUNK) { for (let i = 0; i < p.length; i += CHUNK) out.push(p.slice(i, i + CHUNK)); continue; }
+    cur += p;
+  }
+  if (cur) out.push(cur);
+  return out;
+}
+
+// サーバーが時間切れなどで JSON ではない文を返しても、そのまま画面に出さない
+async function readJson(res: Response): Promise<{ error?: string; segments?: Segment[]; text?: string }> {
+  const raw = await res.text();
+  try { return JSON.parse(raw); } catch { return { error: 'じかんが かかりすぎたよ。もういちど おしてね。' }; }
+}
+
 const PEN_ICON = (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 19l7-7 3 3-7 7-3-3z" />
@@ -23,6 +50,7 @@ export default function Home() {
   const [level, setLevel] = useState<Level>('all');
   const [segments, setSegments] = useState<Segment[] | null>(null);
   const [running, setRunning] = useState(false);
+  const [progress, setProgress] = useState('');
   const [ocrLoading, setOcrLoading] = useState(false);
   const [filename, setFilename] = useState('');
   const [error, setError] = useState('');
@@ -52,22 +80,53 @@ export default function Home() {
       setError('ぶんしょうを いれてね。');
       return;
     }
+    const all = text.trim();
+    if (all.length > MAX_TOTAL) {
+      setError(`ながすぎるよ。${MAX_TOTAL}じ いないに してね。`);
+      return;
+    }
     setError('');
     setSegments(null);
     setRunning(true);
+    const chunks = splitText(all);
+    const results: Segment[][] = new Array(chunks.length);
+    let done = 0;
+    setProgress(chunks.length > 1 ? `0 / ${chunks.length}` : '');
     try {
-      const res = await fetch('/api/annotate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: text.trim(), level }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'うまく できなかったよ。もういちど ためしてね。');
-      setSegments(data.segments as Segment[]);
+      let next = 0;
+      const worker = async () => {
+        while (next < chunks.length) {
+          const i = next++;
+          let data: { error?: string; segments?: Segment[] } = {};
+          let ok = false;
+          for (let tryNo = 0; tryNo < 2 && !ok; tryNo++) {
+            try {
+              const res = await fetch('/api/annotate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: chunks[i], level }),
+              });
+              data = await readJson(res);
+              ok = res.ok && !!data.segments;
+            } catch {
+              data = { error: 'つながらなかったよ。もういちど おしてね。' };
+            }
+          }
+          if (!ok || !data.segments) throw new Error(data.error || 'じかんが かかりすぎたよ。もういちど おしてね。');
+          // つなげて もとの文に ならないときは、その かたまりは ふりがな なしで 出す（文が消えるのを防ぐ）
+          const joined = data.segments.map((s) => s.text).join('');
+          results[i] = joined === chunks[i] ? data.segments : [{ text: chunks[i], ruby: '' }];
+          done++;
+          if (chunks.length > 1) setProgress(`${done} / ${chunks.length} できた`);
+        }
+      };
+      await Promise.all(Array.from({ length: Math.min(PARALLEL, chunks.length) }, worker));
+      setSegments(results.flat());
     } catch (e) {
       setError(e instanceof Error ? e.message : 'こまったことが おきたよ。');
     } finally {
       setRunning(false);
+      setProgress('');
     }
   }
 
@@ -93,7 +152,7 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mediaType: file.type, data: base64 }),
       });
-      const data = await res.json();
+      const data = await readJson(res);
       if (!res.ok) throw new Error(data.error || 'がぞうの よみこみで こまったことが おきたよ。');
 
       setText(data.text as string);
@@ -225,11 +284,14 @@ export default function Home() {
             onChange={(e) => setText(e.target.value)}
             placeholder="ここに ぶんしょうを はりつけてね"
           />
-          <p className="hint">いちどに できるのは 400〜500じ くらいだよ。ながい ぶんしょうは わけて はりつけてね。</p>
+          <p className={'hint' + (text.trim().length > MAX_TOTAL ? ' is-over' : '')}>
+            <span className="char-count">{text.trim().length} / {MAX_TOTAL}じ</span>
+            {MAX_TOTAL}じ まで いちどに はりつけて だいじょうぶ。ながい ときは すこし じかんが かかるよ。
+          </p>
 
           <button type="button" className="run-btn" onClick={annotate} disabled={running}>
             {running ? (
-              'かんがえちゅう…'
+              `かんがえちゅう…${progress ? ' ' + progress : ''}`
             ) : (
               <>
                 {PEN_ICON} ふりがなを つける
@@ -283,7 +345,7 @@ export default function Home() {
             <article className="app-step-card">
               <div className="app-step-no">2</div>
               <h3>範囲を選ぶ</h3>
-              <p>すべての漢字、またはむずかしい漢字だけを選びます。</p>
+              <p>すべての漢字、またはむずかしい漢字だけ（小学1・2年で習う漢字は外す）を選びます。</p>
             </article>
             <article className="app-step-card">
               <div className="app-step-no">3</div>
@@ -304,7 +366,7 @@ export default function Home() {
             </article>
             <article className="app-faq-card">
               <h3>Q. 一度にどのくらいの文章を処理できますか？</h3>
-              <p>A. 一度に400〜500字程度が目安です。長い文章は分けて貼りつけてください。</p>
+              <p>A. 一度に2000字まで貼りつけられます。長い文章は自動で分けて処理するので、プリント数枚分でもそのまま使えます（長いほど少し時間がかかります）。</p>
             </article>
             <article className="app-faq-card">
               <h3>Q. 入力した文章は保存されますか？</h3>

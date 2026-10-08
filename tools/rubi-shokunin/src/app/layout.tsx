@@ -49,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">トップ</a>
               <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">QA<span className="nav-trim">支援</span></a>
               <a href="https://www.beetle-web.jp/edu-tools.html" target="_blank" rel="noopener">教育<span className="nav-trim">支援</span></a>
+              <a href="https://www.beetle-web.jp/for-teachers.html" target="_blank" rel="noopener">先生<span className="nav-trim">の方へ</span></a>
               <a href="https://www.beetle-web.jp/apps.html" target="_blank" rel="noopener">アプリ</a>
               <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
             </div>
@@ -72,6 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href="https://www.beetle-web.jp/" target="_blank" rel="noopener">トップ</a>
               <a href="https://www.beetle-web.jp/test-tools.html" target="_blank" rel="noopener">QA支援</a>
               <a href="https://www.beetle-web.jp/edu-tools.html" target="_blank" rel="noopener">教育支援</a>
+              <a href="https://www.beetle-web.jp/for-teachers.html" target="_blank" rel="noopener">先生の方へ</a>
               <a href="https://www.beetle-web.jp/blog/" target="_blank" rel="noopener">コラム</a>
               <a href="https://www.beetle-web.jp/#contact" target="_blank" rel="noopener">お問い合わせ</a>
             </nav>

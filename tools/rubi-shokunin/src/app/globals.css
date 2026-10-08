@@ -299,6 +299,9 @@ textarea:focus { border-color: var(--blue); }
 textarea::placeholder { color: #B7C7D1; }
 
 .hint { font-size: 12.5px; color: #A9B6BF; margin: 10px 4px 22px; font-weight: 500; }
+/* 字数カウンター（2026-10-08）。2000字を こえたら 赤 */
+.char-count { display: inline-block; margin-right: 10px; font-weight: 800; color: #6b7a85; }
+.hint.is-over .char-count { color: #d04a3a; }
 
 button.run-btn {
   display: flex;
