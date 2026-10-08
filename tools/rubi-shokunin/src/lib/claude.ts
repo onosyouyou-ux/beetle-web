@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { EASY_KANJI, SPECIAL_READING } from './easy-kanji';
 
 let _client: Anthropic | null = null;
 function getClient(): Anthropic {
@@ -46,10 +47,9 @@ const SYSTEM_PROMPT = `あなたは日本語の文章にふりがな（ルビ）
 - 一つの ruby は対応する text 全体の読み（ひらがな）にすること。送り仮名を含む場合は読み全体を入れる`;
 
 export async function annotate(text: string, level: Level): Promise<Segment[]> {
-  const levelRule =
-    level === 'hard'
-      ? '小学校低学年で習うようなやさしい漢字にはふりがなを付けず、読みにくい漢字・人名・専門用語・当て字にのみふりがなを付けてください。'
-      : '漢字を含む語には基本的にすべてふりがなを付けてください。';
+  // むずかしい だけ でも、AIには いつも ぜんぶ 付けてもらい、外すのは あとで 表を見て行う（2026-10-08）。
+  // AIに「やさしい漢字には付けない」と頼むと、「人々」に付いて「販売」に付かないなど ぶれていた
+  const levelRule = '漢字を含む語には基本的にすべてふりがなを付けてください。';
 
   const response = await getClient().messages.create({
     model: MODEL,
@@ -72,7 +72,16 @@ export async function annotate(text: string, level: Level): Promise<Segment[]> {
 
   const parsed = JSON.parse(block.text) as { segments: Segment[] };
   if (!Array.isArray(parsed.segments)) throw new Error('Invalid segments');
+  if (level === 'hard') return parsed.segments.map((s) => (isEasy(s.text) ? { text: s.text, ruby: '' } : s));
   return parsed.segments;
+}
+
+// 漢字が 1・2年で習う字（と 々）だけで できている語か。漢字が1つも無い語は ここに来ても ruby が空
+function isEasy(text: string): boolean {
+  if (Array.from(SPECIAL_READING).some((w) => text.includes(w))) return false;
+  const kanji = text.match(/[\u3400-\u9fff\uf900-\ufaff々]/g);
+  if (!kanji) return true;
+  return kanji.every((k) => k === '々' || EASY_KANJI.has(k));
 }
 
 const OCR_MEDIA_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'] as const;
