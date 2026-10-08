@@ -65,7 +65,7 @@
 
   const PLAYSTYLES = [
     { id: 'challenge', name: '10もん チャレンジ', note: 'といて けっかを みる', icon: 'stopwatch' },
-    { id: 'endless', name: 'とことん', note: '10もんで つぎの ほしへ', icon: 'orbit-loop' }
+    { id: 'endless', name: 'とことんチャレンジ', note: '10もんで つぎの ほしへ', icon: 'orbit-loop' }
   ];
 
   // ---- けいさんの しゅるい ----

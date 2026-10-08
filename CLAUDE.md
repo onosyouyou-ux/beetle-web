@@ -331,7 +331,7 @@ Vercelアプリは「**紙面固定＋余白は背景**」で作る。レイア�
 
 - **先生向けページ（`/for-teachers.html`）への導線（2026-10-07）**：ヘッダー（共通パーシャル＋トップLP）・全フッター（共通パーシャル／LP型2段／`.eal-footer`／`.site-footer-app` の4系統に直書き）に「先生の方へ」、
   修行アプリ8本の紹介ページに先生向けの節 `.nk-teacher`（FOR TEACHERS「授業・宿題で配りたいとき」＋カード3枚〔リンク・QRプリント・登録不要〕＋「配りかたを見る」「プリント（PDF）をひらく」。「おうちのかたへ」の直後。さんすう・さくらんぼざんは最後の呼びかけの前）とファーストビューの小リンク `.nk-teacher-mini`（CSSは `ninja-landing.css`）、
-  アプリ本体は紙面の一番下（更新日の上）に `.nk-teacher-ref`「おうちの方・先生へ」（`ninja-kids.css`）、メニュー（問題をえらぶ画面）には `ninja-links.js` が `.nk-teacher-menu` を差しこむ（data-from="menu"）、トップはQAの内容（検証ツール）のあとに教育の入口バナー `.edu-entry`（`lp.css`）。
+  アプリ本体は紙面の一番下（更新日の上）に `.nk-teacher-ref`「おうちの方・先生へ」（`ninja-kids.css`）、ヘッダーの「紹介ページ」の隣に「おうちの方・先生へ →」（`app-reference.js`。data-from="app-hero"。さんすう・さくらんぼざんはヘッダーに紹介ページボタンが無いので紙面下だけ）。**問題をえらぶ画面（メニュー）にはリンクを置かない**（2026-10-08 ユーザー指示）、トップはQAの内容（検証ツール）のあとに教育の入口バナー `.edu-entry`（`lp.css`）。
   リンクには `data-track="teacher_link" data-from="landing|app|header|footer|top"` を付け、`common.js`（トップは `index.js`）が GA4 `teacher_link_click`（`link_from`・`page_path`）を送る。**新しいページ・フッターを作ったら同じ属性で入れる**
 
 - **アプリLPのヘッダー**：共通パーシャル（`<div id="site-header">`＋`common.css` のライトナビ）で固定。LP独自ヘッダーは作らない

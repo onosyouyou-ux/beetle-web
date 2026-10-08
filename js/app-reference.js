@@ -3,12 +3,12 @@
 var path=location.pathname.replace(/index\.html$/,'');
 var data={
 '/tools/sekigae/':{hero:'.sk-hero',img:'/assets/images/sekigae-hero-people.jpg',alt:'座席表を並べる小学校の先生のイラスト',landing:'/tools/sekigae/landing.html',list:'/edu-tools.html#teacher'},
-'/tools/kanji/':{hero:'.kj-hero',img:'/assets/images/kanji-hero-people.jpg',alt:'親子で絵カードと空白ノートを使って学ぶイラスト',landing:'/tools/kanji/landing.html'},
-'/tools/tokei/':{hero:'.tk-hero',img:'/assets/images/tokei-hero-people.jpg',alt:'親子でアナログ時計を学ぶイラスト',landing:'/tools/tokei/landing.html'},
-'/tools/katakana/':{hero:'.kt-hero',landing:'/tools/katakana/landing.html'},
-'/tools/romaji/':{hero:'.rj-hero',landing:'/tools/romaji/landing.html'},
-'/tools/phonics/':{hero:'.pn-hero',landing:'/tools/phonics/landing.html'},
-'/tools/kuku/':{hero:'.kk-hero',landing:'/tools/kuku/landing.html'}
+'/tools/kanji/':{hero:'.kj-hero',img:'/assets/images/kanji-hero-people.jpg',alt:'親子で絵カードと空白ノートを使って学ぶイラスト',landing:'/tools/kanji/landing.html',teacher:'app-kanji'},
+'/tools/tokei/':{hero:'.tk-hero',img:'/assets/images/tokei-hero-people.jpg',alt:'親子でアナログ時計を学ぶイラスト',landing:'/tools/tokei/landing.html',teacher:'app-tokei'},
+'/tools/katakana/':{hero:'.kt-hero',landing:'/tools/katakana/landing.html',teacher:'app-katakana'},
+'/tools/romaji/':{hero:'.rj-hero',landing:'/tools/romaji/landing.html',teacher:'app-romaji'},
+'/tools/phonics/':{hero:'.pn-hero',landing:'/tools/phonics/landing.html',teacher:'app-phonics'},
+'/tools/kuku/':{hero:'.kk-hero',landing:'/tools/kuku/landing.html',teacher:'app-kuku'}
 };
 var c=data[path];if(!c)return;
 var hero=document.querySelector(c.hero);
@@ -28,6 +28,13 @@ if(hero){
   var link=document.createElement('a');link.className='app-ref-button';link.href=c.landing;
   link.textContent=c.label||'紹介ページ';
   actions.appendChild(link);
+  // 先生向けページへの入口は 紹介ページの となりに置く（2026-10-08。問題をえらぶ画面には リンクを ふやさない）
+  if(c.teacher){
+    var tl=document.createElement('a');tl.className='app-ref-button is-sub is-teacher';
+    tl.href='/for-teachers.html#'+c.teacher;tl.textContent='おうちの方・先生へ →';
+    tl.setAttribute('data-track','teacher_link');tl.setAttribute('data-from','app-hero');
+    actions.appendChild(tl);
+  }
   copy.appendChild(actions);hero.appendChild(copy);
   var visual=document.createElement('div');visual.className='app-ref-visual';
   if(mascot){

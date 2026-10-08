@@ -77,34 +77,6 @@
 
   global.NinjaLinks = { html: html, el: el, APPS: APPS, ORDER: ORDER };
 
-  /* メニュー（問題をえらぶ画面）に 先生向けページへの 小さなリンクを置く（2026-10-07）。
-     8本の アプリは メニューの組み立て方が ばらばら（innerHTML／appendChild）なので、
-     各アプリを さわらず ここで まとめて差しこむ：「← アプリいちらんに もどる」の すぐ下、
-     それが無い アプリ（さんすう・さくらんぼざん）は「しゅぎょう いちらん」の すぐ上。
-     メニューにしか .nk-links は出ないので、問題の窓には 出ない */
-  var TEACHER_ANCHOR = { sansu: 'app-sansu', sakuranbo: 'app-sakuranbo', kuku: 'app-kuku', tokei: 'app-tokei',
-    kanji: 'app-kanji', katakana: 'app-katakana', romaji: 'app-romaji', phonics: 'app-phonics' };
-  function placeTeacherLink() {
-    var links = document.querySelector('.nk-links');
-    if (!links || document.querySelector('.nk-teacher-menu')) return;
-    var here = links.querySelector('.nk-link[aria-current="page"]');
-    var id = here ? ORDER.filter(function (k) { return APPS[k] && APPS[k].href === here.getAttribute('href'); })[0] : null;
-    var p = document.createElement('p');
-    p.className = 'nk-teacher-menu';
-    p.innerHTML = '<a href="/for-teachers.html' + (TEACHER_ANCHOR[id] ? '#' + TEACHER_ANCHOR[id] : '') +
-      '" data-track="teacher_link" data-from="menu">おうちの方・先生へ →</a>';
-    var back = document.querySelector('.nk-applist');
-    if (back) back.insertAdjacentElement('afterend', p);
-    else links.insertAdjacentElement('beforebegin', p);
-  }
-  if (typeof MutationObserver === 'function') {
-    var start = function () {
-      new MutationObserver(placeTeacherLink).observe(document.body, { childList: true, subtree: true });
-      placeTeacherLink();
-    };
-    if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
-  }
-
   /* プレイ中の見出し：「第○問 / 全○問」「できた！ ○問」と 進みぐあいの目盛り。
      とけい修行の形を 全修行アプリで そろえる（2026-09-23）。
      外側の箱（.kj-play-head / .kt-bar など）は各アプリが持ち、中身だけを返す */
