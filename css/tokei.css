@@ -213,3 +213,40 @@ body{
   .tk-choices-level .tk-choice-label{grid-column:1;grid-row:2}
   .tk-choices-level .tk-choice-note{grid-column:1;grid-row:3}
 }
+
+/* ============================================================
+   時間の けいさん（なんぷん あと？。2026-10-08）
+   ============================================================ */
+/* メニュー1まいめ：カードが3まいに なったので 3れつ。スマホは ninja-kids.css の 1カラムのまま */
+@media (min-width:768px){
+  body.ninja-kids.ninja-tokei .tk-menu.is-step .tk-choices-mode{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+/* すすめる学年のリボン（カードの名前の上） */
+.tk-ribbon{
+  display:inline-block; align-self:center; padding:2px 12px; border-radius:999px;
+  background:var(--nk-accent,#d47b1f); color:#fff; font-size:11.5px; font-weight:800; letter-spacing:.06em; line-height:1.6;
+  box-shadow:0 2px 0 rgba(0,0,0,.12);
+}
+/* 絵が できるまでの 仮の とけい（SVG） */
+.tk-choice-img.is-svg{ display:flex; align-items:center; justify-content:center; }
+.tk-choice-img.is-svg .tk-clock{ width:auto; height:100%; max-height:120px; }
+
+/* なんぷん たった？ は とけいを 2つ ならべる */
+body.ninja-kids.ninja-tokei .tk-play>.tk-stage.is-two{ gap:10px; }
+body.ninja-kids.ninja-tokei .tk-play>.tk-stage.is-two .tk-pair-clock{ display:flex; flex-direction:column; align-items:center; gap:2px; min-width:0; }
+body.ninja-kids.ninja-tokei .tk-play>.tk-stage.is-two .tk-clock{ width:auto; height:clamp(90px,19dvh,170px); }
+.tk-clock-cap{ font-size:13px; font-weight:800; color:#fff; letter-spacing:.08em; }
+.tk-arrow{ font-size:26px; font-weight:900; color:var(--nk-accent,#d47b1f); }
+
+/* こたえあわせ：かぞえかた と「つぎへ」。2つを 1つの かたまりにして、つぎへ は 説明の 下・まん中 */
+.tk-explain-wrap{ display:flex; flex-direction:column; align-items:center; flex-basis:100%; }
+.tk-explain{
+  display:block; flex-basis:100%; max-width:640px; margin:8px auto 0; padding:10px 16px; border-radius:12px;
+  background:rgba(255,255,255,.94); color:#3a2f22; font-size:clamp(15px,2.4dvh,19px); font-weight:800; line-height:1.6;
+  text-align:center; white-space:normal; text-shadow:none;
+}
+.tk-next-btn{
+  margin-top:10px; padding:10px 26px; border:0; border-radius:12px; cursor:pointer;
+  background:var(--nk-accent,#d47b1f); color:#fff; font:inherit; font-size:16px; font-weight:800;
+  box-shadow:0 3px 0 var(--nk-accent-dark,#81470d); pointer-events:auto;
+}

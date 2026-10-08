@@ -28,9 +28,22 @@
 
   // ラベルは「なにを聞かれるか」を そのまま問いの形で書く（2026-09-12）。
   // 「とけいを よむ／さがす」では、どちらも時計の話に見えて違いが伝わらなかった。
+  // grade は カードの上に出す すすめる学年のリボン（2026-10-08）
   var MODES = [
-    { id: 'read', name: 'いま なんじ？', note: 'とけいを みて じこくを こたえる', img: '/assets/images/ninja/modes/tokei-read.webp' },
-    { id: 'find', name: 'とけいは どれ？', note: 'じこくを みて とけいを えらぶ', img: '/assets/images/ninja/modes/tokei-find.webp' }
+    { id: 'read', name: 'いま なんじ？', note: 'とけいを みて じこくを こたえる', img: '/assets/images/ninja/modes/tokei-read.webp', grade: '1・2ねん' },
+    { id: 'find', name: 'とけいは どれ？', note: 'じこくを みて とけいを えらぶ', img: '/assets/images/ninja/modes/tokei-find.webp', grade: '1・2ねん' },
+    // 時間の たしざん・ひきざん（3年で習う。2026-10-08）。絵は あとで 描く（それまでは とけいの SVG を仮に出す）
+    { id: 'calc', name: 'なんぷん あと？', note: 'じかんの たしざん・ひきざん', img: null, grade: '3ねん' }
+  ];
+
+  /* 時間の けいさん の だん（2026-10-08）。1セットの中で「○ぷん あと／○ぷん まえ／なんぷん たった」を まぜて出す
+     - c-in   … 5ふんきざみ・ちょうどの じこく を またがない（3:10 の 20ぷん あと → 3:30）
+     - c-over … 5ふんきざみ・ちょうどの じこく を またぐ（3:50 の 20ぷん あと → 4:10）。いちばん つまずく ところ
+     - c-long … 1ぷんきざみ・1じかんを こえる（2:45 の 1じかん20ぷん あと） */
+  var CALC_STEPS = [
+    { id: 'c-in', name: '5ふん・またがない', note: '3じ10ぷん の 20ぷん あと', hands: 'both' },
+    { id: 'c-over', name: '5ふん・またぐ', note: '3じ50ぷん の 20ぷん あと', hands: 'both' },
+    { id: 'c-long', name: '1ぷん・1じかんを こえる', note: '2じ45ふん の 1じかん20ぷん あと', hands: 'both' }
   ];
 
   var state = {
@@ -41,7 +54,8 @@
   };
 
   function stepOf(id) {
-    for (var i = 0; i < STEPS.length; i++) if (STEPS[i].id === id) return STEPS[i];
+    var all = STEPS.concat(CALC_STEPS);
+    for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i];
     return STEPS[2];
   }
 
@@ -235,6 +249,127 @@
     return pick4(answer, wrongs, function () {
       return { h: randInt(1, 12), m: step === 60 ? 0 : (randInt(0, 59 / step | 0) * step) };
     });
+  }
+
+  /* ---------- 時間の けいさん（2026-10-08） ----------
+     時刻は 0〜719（12じかん を 分で）で計算し、出すときに 1〜12じ に もどす */
+
+  function toMin(h, m) { return (h % 12) * 60 + m; }
+  function fromMin(t) {
+    t = ((t % 720) + 720) % 720;
+    var h = Math.floor(t / 60);
+    return { h: h === 0 ? 12 : h, m: t % 60 };
+  }
+  // かかった時間の ことば（35ふん／1じかん／1じかん20ぷん）
+  function durText(d) {
+    var hh = Math.floor(d / 60), mm = d % 60;
+    if (!hh) return mm + punOf(mm);
+    return hh + 'じかん' + (mm ? mm + punOf(mm) : '');
+  }
+  function pick5(a, b) { return randInt(a / 5, b / 5) * 5; }
+
+  // kind: 'after'（○ぷん あと）／'before'（○ぷん まえ）／'elapsed'（なんぷん たった）
+  function makeCalcQuestion(stepId, kind) {
+    var h = randInt(1, 12), m, d;
+    if (stepId === 'c-in') {
+      if (kind === 'before') { m = pick5(10, 55); d = pick5(5, m); }
+      else { m = pick5(0, 45); d = pick5(5, 55 - m); }
+    } else if (stepId === 'c-over') {
+      if (kind === 'before') { m = pick5(0, 25); d = pick5(m + 5, 55); }
+      else { m = pick5(30, 55); d = pick5(65 - m, 55); }
+    } else {
+      m = randInt(0, 59); d = randInt(61, 150);
+    }
+    var t0 = toMin(h, m);
+    var start = { h: h, m: m };
+    if (kind === 'elapsed') {
+      var end = fromMin(t0 + d);
+      return { kind: kind, start: start, end: end, d: d, answer: { d: d }, options: durOptions(d, start, end, stepId) };
+    }
+    var sign = kind === 'after' ? 1 : -1;
+    var ans = fromMin(t0 + sign * d);
+    var wrongs = [];
+    // ちょうどの じこく を またいだのに「じ」を すすめない／もどさない（3:50 の 20ぷん あと → 3:10）
+    if (ans.h !== h) wrongs.push({ h: h, m: ans.m, why: '「じ」を ' + (kind === 'after' ? 'すすめ' : 'もどし') + 'わすれた' });
+    var flip = fromMin(t0 - sign * d);
+    flip.why = (kind === 'after' ? 'まえ' : 'あと') + 'に かぞえた';
+    wrongs.push(flip);
+    var unit = stepId === 'c-long' ? 1 : 5;
+    wrongs.push(fromMin(t0 + sign * (d + unit)), fromMin(t0 + sign * (d - unit)), fromMin(t0 + sign * (d + 10)), fromMin(t0 + sign * (d + 60)));
+    var q = pick4(ans, wrongs, function () { return fromMin(t0 + sign * (d + (randInt(-3, 3) || 1) * unit)); });
+    q.kind = kind; q.start = start; q.d = d;
+    return q;
+  }
+
+  // なんぷん たった の えらぶ もの：ちょうどを またぐとき ぷんを そのまま ひいた（50ぷん→10ぷん で 40ぷん）などを まぜる
+  function durOptions(d, start, end, stepId) {
+    var unit = stepId === 'c-long' ? 1 : 5;
+    var cand = [];
+    if (end.m < start.m) cand.push({ d: start.m - end.m, why: 'ぷんを そのまま ひいた' });
+    cand.push({ d: d + unit * 2 }, { d: d - unit * 2 }, { d: d + 10 }, { d: d - 10 }, { d: d + 60 }, { d: d - 60 });
+    var seen = {}; seen[d] = true;
+    var opts = [{ d: d }];
+    shuffle(cand).forEach(function (c) {
+      if (opts.length >= 4 || c.d <= 0 || seen[c.d]) return;
+      seen[c.d] = true; opts.push(c);
+    });
+    var guard = 0;
+    while (opts.length < 4 && guard++ < 100) {
+      var x = d + (randInt(-4, 4) || 1) * unit;
+      if (x > 0 && !seen[x]) { seen[x] = true; opts.push({ d: x }); }
+    }
+    return shuffle(opts);
+  }
+
+  function calcAsk(q) {
+    if (q.kind === 'elapsed') return q.d >= 60 ? 'どれだけ たった?' : 'なんぷん たった?';
+    return durText(q.d) + (q.kind === 'after' ? ' あとは' : ' まえは') + ' なんじ なんぷん?';
+  }
+  function calcLabel(q, o) { return q.kind === 'elapsed' ? durText(o.d) : timeText(o.h, o.m); }
+  function calcSame(q, o) { return q.kind === 'elapsed' ? o.d === q.answer.d : o.h === q.answer.h && o.m === q.answer.m; }
+
+  /* こたえあわせで 毎回 見せる かぞえかた。ちょうどの じこく で 区切って かぞえる（教科書の 数直線と 同じ考え） */
+  function calcExplain(q) {
+    var s = q.start, d = q.d;
+    if (q.kind === 'elapsed') {
+      var e = q.end;
+      if (s.m + d < 60) return timeText(s.h, s.m) + ' から ' + timeText(e.h, e.m) + ' まで ' + durText(d);
+      var toNext = 60 - s.m, nh = s.h % 12 + 1;
+      var hours = Math.round((d - toNext - e.m) / 60);
+      var parts = [];
+      if (s.m) parts.push(timeText(s.h, s.m) + ' → ' + nh + 'じ で ' + durText(toNext));
+      else hours += 1;
+      if (hours > 0) parts.push((s.m ? nh : s.h) + 'じ → ' + e.h + 'じ で ' + hours + 'じかん');
+      if (e.m) parts.push(e.h + 'じ → ' + timeText(e.h, e.m) + ' で ' + durText(e.m));
+      return parts.join('、') + '。あわせて ' + durText(d);
+    }
+    var after = q.kind === 'after';
+    var ans = q.answer;
+    var hh = Math.floor(d / 60), mm = d % 60;
+    var verb = after ? 'すすめて' : 'もどして';
+    var lines = [];
+    var cur = { h: s.h, m: s.m };
+    if (hh) {
+      cur = fromMin(toMin(s.h, s.m) + (after ? 60 : -60) * hh);
+      lines.push('まず ' + hh + 'じかん ' + verb + ' ' + timeText(cur.h, cur.m));
+    }
+    if (mm) {
+      var cross = after ? cur.m + mm > 60 : cur.m - mm < 0;
+      if (cross && cur.m !== 0) {
+        var first = after ? 60 - cur.m : cur.m;
+        var edgeH = after ? cur.h % 12 + 1 : cur.h;
+        lines.push(timeText(cur.h, cur.m) + ' → ' + edgeH + 'じ で ' + durText(first) + '、のこり ' + durText(mm - first) + ' ' + verb + ' ' + timeText(ans.h, ans.m));
+      } else {
+        lines.push(timeText(cur.h, cur.m) + ' から ' + durText(mm) + ' ' + verb + ' ' + timeText(ans.h, ans.m));
+      }
+    }
+    return lines.join('。');
+  }
+
+  function calcHint(q) {
+    if (q.kind === 'elapsed') return ['はじめの とけいから、ちょうどの じこく（「○じ」）まで なんぷん あるか かぞえよう。', 'そこから おわりの とけいまでを たすと、ぜんぶの じかんに なるよ。'];
+    if (q.kind === 'after') return ['ながい はり（あおいはり）を ' + durText(q.d) + ' ぶん すすめるよ。', '「12」を こえたら、「じ」が 1つ ふえるよ。ちょうどの じこくで 区切って かぞえよう。'];
+    return ['ながい はり（あおいはり）を ' + durText(q.d) + ' ぶん もどすよ。', '「12」を こえて もどったら、「じ」が 1つ へるよ。ちょうどの じこくで 区切って かぞえよう。'];
   }
 
   /* ---------- ヒント ----------
@@ -454,7 +589,14 @@
       img.width = 160;
       img.height = 160;
       btn.appendChild(img);
+    } else if (stateKey === 'modeId') {
+      // 絵が できるまでの 仮：とけいを SVG で描く
+      var ph = el('span', 'tk-choice-img is-svg');
+      ph.setAttribute('aria-hidden', 'true');
+      ph.innerHTML = clockSvg(3, 50, 120, false, 'both');
+      btn.appendChild(ph);
     }
+    if (item.grade) btn.appendChild(el('span', 'tk-ribbon', item.grade));
     btn.appendChild(el('span', 'tk-choice-label', item.name));
     btn.appendChild(el('span', 'tk-choice-note', item.note));
     if (picked && picked.key === stateKey && picked.id === item.id) btn.classList.add('is-on');
@@ -485,7 +627,7 @@
     if (title) sec.appendChild(el('h2', 'tk-group-title', title));
     var grid = el('div', 'tk-choices tk-choices-level');
     var pairs = {};
-    STEPS.forEach(function (item) {
+    (state.modeId === 'calc' ? CALC_STEPS : STEPS).forEach(function (item) {
       var btn = choiceBtn(item, 'stepId', item.level);
       if (item.pair) {
         var row = pairs[item.pair];
@@ -510,6 +652,11 @@
       hands: step.hands || 'both',
       index: 0, correct: 0, locked: false, q: null
     };
+    if (state.modeId === 'calc') {
+      // 3つの といかた を まぜる（あと4・まえ3・たった3）
+      state.session.calc = true;
+      state.session.kinds = shuffle(['after', 'after', 'after', 'after', 'before', 'before', 'before', 'elapsed', 'elapsed', 'elapsed']);
+    }
     if (window.NkTrack) NkTrack('mode_select', { app: 'tokei', mode: state.modeId, level: state.stepId });
     nextQuestion();
   }
@@ -517,7 +664,7 @@
   function nextQuestion() {
     var s = state.session;
     if (s.index >= SET_LENGTH) return renderResult();
-    s.q = makeQuestion(s.step, s.hands);
+    s.q = s.calc ? makeCalcQuestion(state.stepId, s.kinds[s.index]) : makeQuestion(s.step, s.hands);
     s.locked = false;
     renderPlay();
   }
@@ -559,7 +706,26 @@
 
     var options = el('div', 'tk-options');
 
-    if (state.modeId === 'read') {
+    if (s.calc) {
+      wrap.appendChild(el('p', 'tk-ask', calcAsk(q)));
+      var cstage = el('div', 'tk-stage' + (q.kind === 'elapsed' ? ' is-two' : ''));
+      if (q.kind === 'elapsed') {
+        cstage.innerHTML = '<div class="tk-pair-clock"><span class="tk-clock-cap">はじめ</span>' + clockSvg(q.start.h, q.start.m, 170, state.showMinutes, 'both') + '</div>' +
+          '<span class="tk-arrow" aria-hidden="true">→</span>' +
+          '<div class="tk-pair-clock"><span class="tk-clock-cap">おわり</span>' + clockSvg(q.end.h, q.end.m, 170, state.showMinutes, 'both') + '</div>';
+      } else {
+        cstage.innerHTML = clockSvg(q.start.h, q.start.m, 240, state.showMinutes, 'both');
+      }
+      wrap.appendChild(cstage);
+      options.classList.add('is-text');
+      q.options.forEach(function (o) {
+        var b = el('button', 'tk-opt');
+        b.appendChild(el('span', 'tk-answer-label', calcLabel(q, o)));
+        b.type = 'button';
+        b.addEventListener('click', function () { choose(o, b, options); });
+        options.appendChild(b);
+      });
+    } else if (state.modeId === 'read') {
       wrap.appendChild(el('p', 'tk-ask', askText(hands)));
       var stage = el('div', 'tk-stage');
       stage.innerHTML = clockSvg(q.answer.h, q.answer.m, 240, state.showMinutes, hands);
@@ -590,7 +756,7 @@
     hintBtn.setAttribute('aria-expanded', 'false');
     var hint = el('div', 'tk-hint');
     hint.hidden = true;
-    hintLines(state.modeId, q.answer, hands).forEach(function (line) {
+    (s.calc ? calcHint(q) : hintLines(state.modeId, q.answer, hands)).forEach(function (line) {
       hint.appendChild(el('p', null, line));
     });
     hintBtn.addEventListener('click', function () {
@@ -619,7 +785,9 @@
     s.locked = true;
     var q = s.q;
     var hands = s.hands;
-    var ok = chosen.h === q.answer.h && chosen.m === q.answer.m;
+    var same = function (o) { return s.calc ? calcSame(q, o) : o.h === q.answer.h && o.m === q.answer.m; };
+    var label = function (o) { return s.calc ? calcLabel(q, o) : answerText(o, hands); };
+    var ok = same(chosen);
     if (ok) {
       s.correct++;
       app.querySelector('.tk-score-text').textContent = 'できた！ ' + s.correct + '問';
@@ -629,21 +797,38 @@
     Array.prototype.forEach.call(options.querySelectorAll('.tk-opt'), function (b, i) {
       b.disabled = true;
       var o = q.options[i];
-      if (o.h === q.answer.h && o.m === q.answer.m) b.classList.add('is-correct');
+      if (same(o)) b.classList.add('is-correct');
     });
     if (!ok) btn.classList.add('is-wrong');
 
     var fb = app.querySelector('.tk-feedback');
     fb.className = 'tk-feedback ' + (ok ? 'is-ok' : 'is-ng');
     fb.textContent = ok
-      ? 'せいかい! ' + answerText(q.answer, hands)
-      : 'こたえは ' + answerText(q.answer, hands) + (chosen.why ? '\n（' + chosen.why + '）' : '');
+      ? 'せいかい! ' + label(q.answer)
+      : 'こたえは ' + label(q.answer) + (chosen.why ? '\n（' + chosen.why + '）' : '');
 
-    setTimeout(function () {
+    var go = function () {
       if (state.session !== s) return;
       s.index++;
       nextQuestion();
-    }, ok ? 1100 : 2000);
+    };
+    // 時間の けいさん は かぞえかた を 毎回 見せる。まちがえたときは 読みきれるよう「つぎへ」を おすまで 待つ
+    if (s.calc) {
+      var ex = el('span', 'tk-explain-wrap');
+      ex.appendChild(el('span', 'tk-explain', calcExplain(q)));
+      fb.appendChild(ex);
+      if (!ok) {
+        var nx = el('button', 'tk-next-btn', 'つぎへ →');
+        nx.type = 'button';
+        nx.addEventListener('click', go);
+        ex.appendChild(nx);
+        nx.focus({ preventScroll: true });
+        return;
+      }
+      setTimeout(go, 2400);
+      return;
+    }
+    setTimeout(go, ok ? 1100 : 2000);
   }
 
   function renderResult() {
