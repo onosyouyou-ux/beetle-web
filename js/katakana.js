@@ -454,7 +454,7 @@
   }
 
   function questionLead(q) {
-    if (q.type === 'dotchi') return 'オレンジの ことばは どっちで 書く？';
+    if (q.type === 'dotchi') return 'カタカナ・ひらがな どっちで かく？';  // 2026-10-08 ユーザー指示（前は「オレンジの ことばは どっちで 書く？」）
     if (q.type === 'naosu') return 'カタカナで 書くと どれ？';
     return 'この 字は どっち？';
   }
