@@ -503,3 +503,11 @@ body.ninja-kids .rj-quiz.is-yomu>.rj-choices>.rj-choice{min-height:clamp(56px,10
   body.ninja-kids .rj-quiz.is-yomu .rj-q-word{font-size:clamp(24px,7dvh,30px)}
   body.ninja-kids .rj-quiz.is-yomu>.rj-choices>.rj-choice{min-height:var(--nk-tap,56px)}
 }
+
+/* ローマ字の文字は Andika（2026-10-08）。文字を習いはじめた子ども向けの書体で、
+   a・g が 手で書く形（ɑ・ɡ）、I・l・1 も 見分けやすい。「かく」で 子どもが 書く形と 画面の形を そろえる。
+   ひらがな は Andika に無いので、そのまま Noto Sans JP で出る */
+body.ninja-kids.ninja-romaji :is(.rj-q-word,.rj-hint,.rj-input,.rj-model,.rj-choice,.rj-a-head b,.rj-table td,.rj-missed-item span){
+  font-family:'Andika','Noto Sans JP',sans-serif;
+}
+body.ninja-kids.ninja-romaji .rj-q-word{letter-spacing:.04em}
