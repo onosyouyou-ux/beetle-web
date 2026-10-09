@@ -199,3 +199,36 @@ document.addEventListener('DOMContentLoaded', function () {
     } catch (e) { /* 計測の失敗で アプリを止めない */ }
   };
 })(window);
+
+/* まちがえたときの「つぎへ」（2026-10-09 レビュー対応）。
+   ✕の忍者は 0.8秒だけ出して消し、問題（★の図・時計）は見せたまま、
+   こたえの欄の上に「こたえ＋せつめい＋つぎへ」を重ねて、子どもが押すまで待つ。
+   自動で進めると、★の図や時計の せつめいを 見る前に 次の問題になっていた */
+(function (global) {
+  'use strict';
+  global.NkWrongNext = function (o) {
+    setTimeout(function () {
+      if (!o.options || !o.options.isConnected) return;
+      o.fb.classList.remove('is-ng');
+      o.fb.textContent = '';
+      var p = document.createElement('div');
+      p.className = 'nk-next-panel';
+      o.lines.forEach(function (t, i) {
+        if (!t) return;
+        var line = document.createElement('p');
+        line.className = i === 0 ? 'nk-next-answer' : 'nk-next-why';
+        line.textContent = t;
+        p.appendChild(line);
+      });
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'nk-next-btn';
+      b.textContent = 'つぎへ →';
+      b.addEventListener('click', o.go, { once: true });
+      p.appendChild(b);
+      o.options.classList.add('has-next');
+      o.options.appendChild(p);
+      b.focus({ preventScroll: true });
+    }, 800);
+  };
+})(window);

@@ -427,7 +427,13 @@
       ? 'せいかい! ' + (q.askKind === 'word' ? q.ask + ' → ' + q.answer : q.answer)
       : 'こたえは ' + q.answer + (chosen.why ? '\n（' + chosen.why + '）' : '');
 
-    setTimeout(function () { if (state.session !== s) return; s.index++; nextQuestion(); }, chosen.ok ? 1000 : 1900);
+    var go = function () { if (state.session !== s) return; s.index++; nextQuestion(); };
+    // まちがえたら「つぎへ」を おすまで待つ（2026-10-09。シリーズで そろえる）
+    if (!chosen.ok) {
+      NkWrongNext({ fb: fb, options: options, go: go, lines: ['こたえは ' + q.answer, chosen.why || ''] });
+      return;
+    }
+    setTimeout(go, 1000);
   }
 
   /* ---------- かく しゅぎょう ----------

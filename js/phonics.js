@@ -204,7 +204,10 @@
                 return '<span class="pn-blend-cell" aria-hidden="true"><span class="pn-blend-l">' + esc(x.l) + '</span>' +
                   '<span class="pn-blend-oto">' + esc(x.oto) + '</span></span>';
               }).join('<span class="pn-blend-dash" aria-hidden="true">-</span>') + '</p>'
-            : '<p class="pn-q-word">' + esc(q.show) + '</p>') +
+            // 1もじの もんだいは 大きく、大文字と 小文字を ならべる（2026-10-09。小文字1もじだと 小さく見えた）
+            : q.type === 'oto'
+              ? '<p class="pn-q-word is-big">' + esc(q.show.toUpperCase() + ' ' + q.show.toLowerCase()) + '</p>'
+              : '<p class="pn-q-word">' + esc(q.show) + '</p>') +
         '</div>' +
         '<div class="pn-choices">' +
           q.choices.map(function (c) {
