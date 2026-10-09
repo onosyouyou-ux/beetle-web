@@ -1,12 +1,5 @@
 /* apps.html — アプリ・ツールの全部入り一覧（2026-09-10）
    カードとグリッドは test-tools.css を流用し、ここでは差分だけ持つ。 */
-.apps-foot {
-  text-align: center;
-  font-size: 14px;
-  color: #55555f;
-  line-height: 2;
-}
-.apps-foot a { color: var(--color-accent); font-weight: 700; }
 
 /* ページ内タブ（2026-09-12追加）
    共通ヘッダー（.nav）は fetch で後から差し込まれるため高さが確定しない。
@@ -152,3 +145,21 @@
 /* 先生向けのご案内（/for-teachers.html）への入口（#96） */
 .teacher-guide-link{display:inline-block;margin:-12px 0 20px;font-size:14px;font-weight:700;color:var(--tp-orange);text-decoration:none;border-bottom:2px solid var(--tp-orange-bd);padding-bottom:2px}
 @media (hover:hover){.teacher-guide-link:hover{border-bottom-color:var(--tp-orange)}}
+
+/* 作者紹介（2026-10-09）。トップの「代表について」を ひと回り小さくした 横長カード */
+.apps-author{display:grid;grid-template-columns:120px 1fr;gap:28px;align-items:start;max-width:860px;margin:0 auto;padding:28px 32px;background:#fff;border:1px solid #e4ddcf;border-radius:12px}
+.apps-author-face{width:120px;height:120px;border-radius:50%;object-fit:cover}
+.apps-author-tag{margin:0 0 4px;font-family:var(--font-en,'Syne',sans-serif);font-size:12px;font-weight:700;letter-spacing:.2em;color:var(--color-accent)}
+.apps-author-title{margin:0 0 6px;font-size:20px;font-weight:800;color:#1c1c2e}
+.apps-author-name{margin:0 0 12px;font-size:14px;font-weight:700;color:#55555f}
+.apps-author-text,.apps-author-thanks{margin:0 0 10px;font-size:15px;line-height:1.9;color:#33333d}
+.apps-author-thanks{padding:10px 14px;background:#fbf4e8;border-radius:8px;font-weight:700}
+.apps-author-links{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:6px}
+.apps-author-links a{font-size:14px;font-weight:700;color:var(--color-accent);text-decoration:none}
+@media (hover:hover){.apps-author-links a:hover{text-decoration:underline;text-underline-offset:4px}}
+@media (max-width:767px){
+  .apps-author{grid-template-columns:1fr;justify-items:center;text-align:center;padding:24px 18px;gap:14px}
+  .apps-author-face{width:96px;height:96px}
+  .apps-author-text{text-align:left}
+  .apps-author-links{justify-content:center}
+}
