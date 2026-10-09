@@ -812,23 +812,21 @@
       s.index++;
       nextQuestion();
     };
-    // 時間の けいさん は かぞえかた を 毎回 見せる。まちがえたときは 読みきれるよう「つぎへ」を おすまで 待つ
+    // まちがえたら 時計を見せたまま「つぎへ」を おすまで 待つ（2026-10-09。せつめいの あいだ 時計が かくれていた）
+    if (!ok) {
+      NkWrongNext({ fb: fb, options: options, go: go,
+        lines: ['こたえは ' + label(q.answer), s.calc ? calcExplain(q) : (chosen.why || '')] });
+      return;
+    }
+    // 時間の けいさん は かぞえかた を 毎回 見せる
     if (s.calc) {
       var ex = el('span', 'tk-explain-wrap');
       ex.appendChild(el('span', 'tk-explain', calcExplain(q)));
       fb.appendChild(ex);
-      if (!ok) {
-        var nx = el('button', 'tk-next-btn', 'つぎへ →');
-        nx.type = 'button';
-        nx.addEventListener('click', go);
-        ex.appendChild(nx);
-        nx.focus({ preventScroll: true });
-        return;
-      }
       setTimeout(go, 2400);
       return;
     }
-    setTimeout(go, ok ? 1100 : 2000);
+    setTimeout(go, 1100);
   }
 
   function renderResult() {

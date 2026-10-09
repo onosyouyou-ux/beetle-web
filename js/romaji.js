@@ -395,7 +395,7 @@
     } else if (q.type === 'utsu') {
       body =
         '<div class="rj-type">' +
-          '<input type="text" id="rj-input" class="rj-input" autocomplete="off" autocapitalize="off" ' +
+          '<input type="text" id="rj-input" class="rj-input" inputmode="latin" lang="en" autocomplete="off" autocapitalize="off" ' +
             'autocorrect="off" spellcheck="false" placeholder="ローマ字で うってね" aria-label="ローマ字を入力">' +
           '<button type="button" class="rj-next" id="rj-send">こたえる</button>' +
         '</div>';
@@ -446,7 +446,8 @@
     if (q.type === 'utsu') {
       var input = document.getElementById('rj-input');
       input.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') { e.preventDefault(); answerTyped(); }
+        // 日本語入力で 変換を決める Enter は こたえに しない（2026-10-09）
+        if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); answerTyped(); }
       });
       document.getElementById('rj-send').addEventListener('click', answerTyped);
       document.getElementById('rj-hint-btn').addEventListener('click', function () {
@@ -591,8 +592,16 @@
     var q = state.qs[state.i];
     var input = document.getElementById('rj-input');
     if (!input) return;
-    var typed = input.value.trim().toLowerCase().replace(/[\s　]/g, '').replace(/[‘’´`]/g, "'");
+    // 全角の「ｉｎｕ」も inu として見る。キッズ用の端末は 日本語入力の全角に なりがち（2026-10-09）
+    var typed = input.value.normalize('NFKC').trim().toLowerCase().replace(/[\s　]/g, '').replace(/[‘’´`]/g, "'");
     if (!typed) { input.focus(); return; }
+    // ひらがなで 入っていたら まちがい に しない。入力を abc に かえてもらう
+    if (/[぀-ヿ]/.test(typed)) {
+      input.value = '';
+      input.placeholder = 'abc に きりかえて うってね';
+      input.focus();
+      return;
+    }
 
     var ok = q.answers.indexOf(typed) >= 0;
     input.disabled = true;

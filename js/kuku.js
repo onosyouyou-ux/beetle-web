@@ -338,7 +338,13 @@
     fb.className = 'kk-feedback ' + (chosen.ok ? 'is-ok' : 'is-ng');
     fb.textContent = (chosen.ok ? 'せいかい! ' : 'こたえは ') + e.q + ' ' + e.y + '\n（' + shiki(e) + ' = ' + e.ans + '）';
 
-    setTimeout(function () { if (state.session !== s) return; s.index++; nextQuestion(); }, chosen.ok ? 1400 : 2600);
+    var go = function () { if (state.session !== s) return; s.index++; nextQuestion(); };
+    // まちがえたら ★の図を見せたまま「つぎへ」を待つ（2026-10-09。自動で進むと図が見えなかった）
+    if (!chosen.ok) {
+      NkWrongNext({ fb: fb, options: options, go: go, lines: ['こたえは ' + e.q + ' ' + e.y, shiki(e) + ' = ' + e.ans] });
+      return;
+    }
+    setTimeout(go, 1400);
   }
 
   function renderResult() {

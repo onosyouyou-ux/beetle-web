@@ -4468,3 +4468,49 @@ body.ninja-space .sa-track-label .sa-combo { margin:0; padding:0 8px; font-size:
 .ninja-kids .nk-teacher-ref { margin:14px 0 0; font-size:12.5px; text-align:center; }
 .ninja-kids .nk-teacher-ref a { color:#6b6357; text-decoration:underline; text-underline-offset:3px; }
 @media (hover:hover) { .ninja-kids .nk-teacher-ref a:hover { color:var(--nk-accent); } }
+
+/* ===== まちがえたときの「つぎへ」（2026-10-09 レビュー対応・js/ninja-links.js の NkWrongNext）=====
+   ✕の忍者は 0.8秒で消し、こたえの欄の上にだけ「こたえ＋せつめい＋つぎへ」を重ねる。
+   問題の欄（★の図・時計）は かくさない。ボタンの色は変えない約束（9/28）のまま、正解は文で伝える */
+body.ninja-kids :is(.kk-options,.tk-options,.kj-options).has-next { position:relative; }
+body.ninja-kids .nk-next-panel {
+  position:absolute; inset:0; z-index:15;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+  padding:10px 14px; overflow:auto;
+  border-radius:16px; background:rgba(5,19,27,.9); color:#fff; text-align:center;
+  animation:ninjaFeedbackVeil .22s ease-out both;
+}
+body.ninja-kids .nk-next-panel p { margin:0; }
+body.ninja-kids .nk-next-answer { font-size:clamp(18px,2.6vw,26px); font-weight:900; line-height:1.35; color:#ffd36b; }
+body.ninja-kids .nk-next-why { font-size:clamp(13px,1.7vw,16px); font-weight:700; line-height:1.6; white-space:pre-line; }
+body.ninja-kids .nk-next-btn {
+  margin-top:4px; min-height:44px; padding:8px 28px; border:0; border-radius:999px;
+  background:var(--nk-accent,#ef8a3c); color:#fff; font:inherit; font-size:17px; font-weight:900; cursor:pointer;
+  box-shadow:0 3px 0 rgba(0,0,0,.25);
+}
+body.ninja-kids .nk-next-btn:focus-visible { outline:3px solid #ffd36b; outline-offset:2px; }
+
+/* とけい：スマホ縦の1枚目で 3枚目の「なんぷん あと？」が盤面から はみ出し、
+   「← アプリいちらんに もどる」が カードの下に かくれていた（2026-10-09 レビュー）。
+   絵つきカードの上限 300px（:has で詳細度が高い）が、スマホ用の max-height:none に勝っていた */
+@media (max-width:767px) and (orientation:portrait) {
+  body.ninja-kids.ninja-tokei .tk-menu.is-step .tk-choices-mode:has(.tk-choice-img){ max-height:none; }
+  body.ninja-kids.ninja-tokei .tk-menu.is-step .tk-choices-mode .tk-choice:has(.tk-choice-img){ min-height:96px; }
+}
+
+/* かけざん：問題の枠の右下の道具の絵は、枠で 中途半端に切れて ミスに見えた（2026-10-09 レビュー）。
+   問題画面に 飾りは入れない方針（2026-10-01）なので、かけざんでは出さない */
+body.ninja-kids .kk-ask::after { content:none; }
+
+/* ことばの とちゅうで 折り返さない（2026-10-09 レビュー。「10もん チャレ／ンジ」「さくらん／ぼざん」）。
+   修行アプリは わかち書き なので、ボタン・見出し・札は 空白でだけ 折り返す。入りきらない ときだけ 字の間で折る */
+body:is(.ninja-kids,.ninja-space) :is(h1,h2,h3,button,label,.nk-answer-label,[class*="-label"],[class*="-name"],[class*="-title"]) {
+  word-break:keep-all; overflow-wrap:anywhere;
+}
+
+/* さんすう：むずかしさ 6まいは、スマホ縦では 1れつ（2026-10-09 レビュー）。
+   2れつ（たて じゅん）だと 左から読んだとき やさしい・むずかしい が こうごに 見えた。
+   えらぶと すぐ はじまるので、スタートが下に のびても こまらない */
+@media (max-width:767px) and (orientation:portrait) {
+  body.ninja-space .sa-group-diff .sa-choices { grid-template-columns:1fr; grid-template-rows:none; grid-auto-flow:row; }
+}
