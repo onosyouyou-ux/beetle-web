@@ -31,7 +31,7 @@ if(hero){
   // 先生向けページへの入口は 紹介ページの となりに置く（2026-10-08。問題をえらぶ画面には リンクを ふやさない）
   if(c.teacher){
     var tl=document.createElement('a');tl.className='app-ref-button is-sub is-teacher';
-    tl.href='/for-teachers.html#'+c.teacher;tl.textContent='おうちの方・先生へ →';
+    tl.href='/for-teachers.html#'+c.teacher;tl.textContent='配布用ページ →';
     tl.setAttribute('data-track','teacher_link');tl.setAttribute('data-from','app-hero');
     actions.appendChild(tl);
   }
