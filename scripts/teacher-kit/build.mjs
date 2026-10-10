@@ -38,12 +38,19 @@ for (const a of apps) {
 }
 
 // ---- 2. ページのカードを差し込む ----
+// 練習の種類・1回の量・使いどころ（#107。紙からも中身が分かるように）。項目が無いアプリは出さない
+const DETAIL = [['modes', 'れんしゅう'], ['set', '1回の量'], ['use', '使いどころ']];
+const detailDl = (a) => DETAIL.some(([k]) => a[k])
+  ? '          <dl class="ft-app-detail">' + DETAIL.filter(([k]) => a[k]).map(([k, label]) =>
+      `<div><dt>${label}</dt><dd>${esc(a[k])}</dd></div>`).join('') + '</dl>'
+  : '';
 const cards = apps.map((a) => `      <article class="ft-app" id="app-${a.id}">
         <a class="ft-app-thumb" href="${a.path}" target="_blank" rel="noopener"><img src="${a.thumb}" alt="${esc(a.name)}" width="960" height="380" loading="lazy"></a>
         <div class="ft-app-body">
           <h3>${esc(a.name)}</h3>
           <p class="ft-app-grade">対象：${esc(a.grade)}</p>
           <p class="ft-app-desc">${esc(a.teacher)}</p>
+${detailDl(a)}
           <code class="ft-app-url">${esc(site + a.path)}</code>
           <div class="ft-app-actions">
             <button type="button" class="ft-copy" data-url="${esc(site + a.path)}">リンクをコピー</button>
@@ -85,6 +92,7 @@ const listHtml = `<!doctype html><html lang="ja"><head><meta charset="utf-8"><st
   .cell h2 { font-size: 12pt; margin: 0 0 1.5mm; letter-spacing: -0.02em; }
   .grade { display: inline-block; font-size: 8.5pt; background: #e6e6e6; padding: 0.6mm 2mm; border-radius: 1mm; margin-bottom: 1.5mm; }
   .desc { font-size: 8.5pt; line-height: 1.55; margin: 0 0 1.5mm; }
+  .meta { font-size: 8pt; font-weight: bold; line-height: 1.45; margin: 0 0 1.5mm; }
   .url { font-size: 7pt; word-break: break-all; color: #333; }
 </style></head><body>
   <h1>こども向け 学習アプリ ${apps.length}本</h1>
@@ -92,7 +100,7 @@ const listHtml = `<!doctype html><html lang="ja"><head><meta charset="utf-8"><st
   <div class="grid">
 ${apps.map((a) => `    <div class="cell"><div class="qr">${printQrs[a.id]}</div><div>
       <h2>${esc(a.name)}</h2><span class="grade">${esc(a.grade)}</span>
-      <p class="desc">${esc(a.teacher)}</p><div class="url">${esc(site + a.path)}</div></div></div>`).join('\n')}
+      <p class="desc">${esc(a.teacher)}</p>${a.set ? `<p class="meta">${esc(a.set)}</p>` : ''}<div class="url">${esc(site + a.path)}</div></div></div>`).join('\n')}
   </div>
   <div class="foot">${promiseLine}<br>先生向けのご案内：${site}/for-teachers.html ／ BEETLE合同会社</div>
 </body></html>`;
@@ -104,6 +112,8 @@ const singlePage = (a) => `<section class="page">
   <div class="qr">${printQrs[a.id]}</div>
   <p class="how">タブレットや スマートフォンの カメラで よみとってね</p>
   <p class="url">${esc(site + a.path)}</p>
+  ${DETAIL.some(([k]) => a[k]) ? `<table class="detail">${DETAIL.filter(([k]) => a[k]).map(([k, label]) =>
+    `<tr><th>${label}</th><td>${esc(a[k])}</td></tr>`).join('')}</table>` : ''}
   <div class="foot"><b>おうちのかた・先生へ</b>　${esc(a.teacher)}<br>${promiseLine}</div>
 </section>`;
 const singleCss = `${baseCss}
@@ -115,6 +125,9 @@ const singleCss = `${baseCss}
   .qr { width: 90mm; }
   .how { font-size: 14pt; margin: 6mm 0 2mm; }
   .url { font-size: 9pt; color: #333; margin: 0; }
+  .detail { margin: 9mm 0 0; width: 100%; border-collapse: collapse; text-align: left; font-size: 10.5pt; line-height: 1.6; }
+  .detail th { width: 26mm; padding: 2mm 3mm; border: 0.3mm solid #000; background: #e6e6e6; font-weight: bold; white-space: nowrap; vertical-align: top; }
+  .detail td { padding: 2mm 3mm; border: 0.3mm solid #000; }
   .foot { margin-top: auto; text-align: left; width: 100%; }
 `;
 const singleHtml = (list) => `<!doctype html><html lang="ja"><head><meta charset="utf-8"><style>${singleCss}</style></head><body>${list.map(singlePage).join('\n')}</body></html>`;
