@@ -4563,3 +4563,11 @@ body:is(.ninja-kids,.ninja-space) :is(h1,h2,h3,button,label,.nk-answer-label,[cl
 /* いま開いている修行は うすくするが、バッジは そのまま見せる */
 .nk-link[aria-current].has-badge{ opacity:1; }
 .nk-link[aria-current].has-badge .nk-link-img{ opacity:.5; }
+
+/* #140：ローマ字・カタカナ・とけい は 頭の上に余白のある絵に描きなおした（10/10）。
+   上の 0.9倍は 余白のない絵のためなので、この3本は かんじ など と大きさが そろうよう 少し大きくする */
+.ninja-kids:is(.ninja-romaji,.ninja-katakana,.ninja-tokei) :is(.rj-hero,.kt-hero,.tk-hero,.app-ref-visual.is-ninja) > .ninja-mascot {
+  transform:scale(1.1);
+}
+/* さくらんぼざん の絵も 余白のある絵に描きなおした（#140）。さんすう の絵と 見た目の大きさを そろえる */
+.ninja-space .sa-head-badge[src*="sakuranbo-space"] { transform:scale(1.25); }
