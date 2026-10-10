@@ -125,7 +125,7 @@
       return { type: 'dotchi', show: x.k, ex: x.ex, answer: 'kata', word: x.w, hint: x.hint, cat: D.cats[x.c] ? D.cats[x.c].label : '' };
     });
     var hira = pick(D.wago, QUESTIONS - half).map(function (x) {
-      return { type: 'dotchi', show: x.k, ex: x.ex, answer: 'hira', word: x.k, hint: x.hint, cat: 'ひらがな（かんじ）で 書くことば' };
+      return { type: 'dotchi', show: x.k, ex: x.ex, answer: 'hira', word: x.k, hint: x.hint, cat: 'ひらがな（かんじ）で かくことば' };
     });
     return shuffle(kata.concat(hira));
   }
@@ -175,8 +175,8 @@
       var p = D.nigata[i];
       if (p.a === m.k || p.b === m.k) return p.hint;
     }
-    if (m.g === 'small') return 'ちいさく 書く字。大きく 書くと ちがう字に なります（コップ → コツプ）。';
-    if (m.g === 'daku') return '右上に 点を 2つ つけます。';
+    if (m.g === 'small') return 'ちいさく かく字。大きく かくと ちがう字に なります（コップ → コツプ）。';
+    if (m.g === 'daku') return '右上に てんを 2つ つけます。';
     if (m.g === 'handaku') return '右上に まるを つけます。';
     return 'ひらがなの「' + m.h + '」と おなじ おとの 字です。';
   }
@@ -232,6 +232,12 @@
     var model = document.getElementById('kt-model');
     model.textContent = q.word;
     model.classList.add('is-on');
+    // 2カラムの段と「おおきく かく」では、お手本が紙の左上に重なり 子どもの書いた字に かぶっていた（レビュー10/9）。
+    // 重ねる配置（absolute）のときは、問題の欄（ひらがなの下）へ移して 書いた字と横に並べて見くらべる
+    if (getComputedStyle(model).position === 'absolute') {
+      model.classList.add('is-inq');
+      root.querySelector('.kt-q').appendChild(model);
+    }
 
     // まるつけは「はんてい」と同じ行に置きかえる（行を足すと盤面からはみ出す）
     var tools = document.getElementById('kt-tools');
@@ -349,8 +355,8 @@
 
   var MODES = {
     dotchi: { label: 'どっちで かく？', sub: 'カタカナか ひらがなか を えらぶ', build: buildDotchi },
-    naosu:  { label: 'カタカナに なおす', sub: 'ひらがなを カタカナに 書きかえる', build: buildNaosu },
-    nigata: { label: 'にた字 みつけ',   sub: 'シとツ、ソとン を 見分ける',     build: buildNigata },
+    naosu:  { label: 'カタカナに なおす', sub: 'ひらがなを カタカナに かきかえる', build: buildNaosu },
+    nigata: { label: 'にた字 みつけ',   sub: 'シとツ、ソとン を みわける',     build: buildNigata },
     kaku:   { label: 'カタカナを かく', sub: 'ひらがなを 見て カタカナを かく',  build: buildKaku },
   };
 
@@ -455,7 +461,7 @@
 
   function questionLead(q) {
     if (q.type === 'dotchi') return 'カタカナ・ひらがな どっちで かく？';  // 2026-10-08 ユーザー指示（前は「オレンジの ことばは どっちで 書く？」）
-    if (q.type === 'naosu') return 'カタカナで 書くと どれ？';
+    if (q.type === 'naosu') return 'カタカナで かくと どれ？';
     return 'この 字は どっち？';
   }
 

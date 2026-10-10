@@ -4516,13 +4516,50 @@ body:is(.ninja-kids,.ninja-space) :is(h1,h2,h3,button,label,.nk-answer-label,[cl
 }
 
 
-/* #140：忍者の頭頂部に余白を残す。元画像の毛先ぎりぎりまで表示領域を使っていたため、共通ヒーロー内で少し縮小する */
-.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero,.kk-hero) > .ninja-mascot {
+/* #140：忍者の頭頂部に余白を残す。キャラは読み込み後に .app-ref-visual へ移されるので、移った先にも当てる（10/10。ヒーロー直下だけだと効いていなかった）。元画像の毛先ぎりぎりまで表示領域を使っていたため、共通ヒーロー内で少し縮小する */
+.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero,.kk-hero) > .ninja-mascot,
+.ninja-kids .app-ref-visual.is-ninja > .ninja-mascot {
   transform:scale(.9) translateY(5px);
   transform-origin:center center;
 }
 @media (max-width:767px) {
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero,.kk-hero) > .ninja-mascot {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero,.kk-hero) > .ninja-mascot,
+.ninja-kids .app-ref-visual.is-ninja > .ninja-mascot {
     transform:scale(.88) translateY(4px);
   }
 }
+/* ↑ボタンが バナー・更新日に かぶる間は消す（判定は ninja-links.js。レビュー10/9） */
+.scroll-top-float.nk-top-hide { opacity:0; pointer-events:none; }
+/* 紙面が画面の右端まで来る幅では、いちばん下まで来たとき ↑ボタン（右下）が 右寄せの更新日に重なる。
+   更新日を中央に寄せて、ボタンの置き場所を空けておく */
+@media (max-width:1279px) {
+  :is(.ninja-kids,.ninja-space) .paper-release { text-align:center; }
+}
+
+/* まきもの（修行をまたぐ ごほうび）と きょうの しゅぎょう（判定は ninja-links.js。レビュー10/9） */
+.nk-scrolls-sum{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:4px 8px;
+  margin:-4px auto 14px; font-size:14px; font-weight:800; color:#dfe7ec; text-align:center;
+}
+.nk-scrolls-sum img{ width:24px; height:24px; }
+.nk-scrolls-sum b{ font-size:20px; color:#ffd76a; }
+.nk-scrolls-sum span{ flex-basis:100%; font-size:11.5px; font-weight:700; opacity:.75; }
+.nk-scrolls-sum.is-all{ color:#ffd76a; }
+.nk-link.has-badge{ position:relative; }
+.nk-link-scroll{
+  position:absolute; right:8px; bottom:8px;
+  display:inline-flex; align-items:center; gap:2px; padding:3px 8px 3px 4px; border-radius:99px;
+  background:#fff; color:#5b3a12; font-size:13px; font-weight:900; line-height:1;
+  box-shadow:0 2px 6px rgba(0,0,0,.25);
+}
+.nk-link-scroll img{ width:22px; height:22px; }
+.nk-link-scroll.is-gold{ background:linear-gradient(150deg,#ffe38a,#f2b632); }
+.nk-link-today{
+  position:absolute; left:8px; top:-8px;
+  padding:4px 10px; border-radius:6px;
+  background:#e8424f; color:#fff; font-size:12px; font-weight:900; line-height:1.2; white-space:nowrap;
+  box-shadow:0 2px 6px rgba(0,0,0,.25);
+}
+/* いま開いている修行は うすくするが、バッジは そのまま見せる */
+.nk-link[aria-current].has-badge{ opacity:1; }
+.nk-link[aria-current].has-badge .nk-link-img{ opacity:.5; }

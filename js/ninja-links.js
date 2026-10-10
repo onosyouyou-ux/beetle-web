@@ -49,24 +49,75 @@
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
+  /* まきもの（修行をまたぐ ごほうび）と きょうの しゅぎょう（レビュー10/9）。
+     どの修行でも 1セット おわる（けっか を出す）と、その修行の まきもの が1本もらえる。8本 あつめると 免許皆伝。
+     きろくは この端末の localStorage だけ（サーバーには送らない）。使えないときは 何も出さない。
+     きょうの しゅぎょう は 日づけで決まる おすすめ1本（いま開いている修行は えらばない） */
+  var SCROLL_KEY = 'nk-scrolls';
+  function today() { return new Date().toLocaleDateString('sv-SE'); }
+  function loadScrolls() {
+    try { return JSON.parse(localStorage.getItem(SCROLL_KEY) || '{}') || {}; } catch (e) { return null; }
+  }
+  function addScroll(app, perfect) {
+    var r = loadScrolls();
+    if (!r || !APPS[app]) return;
+    var x = r[app] || { sets: 0 };
+    x.sets += 1;
+    if (perfect) x.perfect = true;
+    x.last = today();
+    r[app] = x;
+    try { localStorage.setItem(SCROLL_KEY, JSON.stringify(r)); } catch (e) {}
+  }
+  function todayPick(currentId) {
+    var list = ORDER.filter(function (id) { return id !== currentId; });
+    var d = today(), h = 0;
+    for (var i = 0; i < d.length; i++) h = (h * 31 + d.charCodeAt(i)) % 9973;
+    return list[h % list.length];
+  }
+
   /* HTML文字列を返す（innerHTML で組み立てているアプリ用） */
   function html(currentId) {
+    var r = loadScrolls();
+    var got = r ? ORDER.filter(function (id) { return r[id] && r[id].sets > 0; }).length : 0;
+    var pick = r ? todayPick(currentId) : null;
+    var head = '';
+    if (r) {
+      head = '<p class="nk-scrolls-sum' + (got === ORDER.length ? ' is-all' : '') + '">' +
+        '<img src="' + IMG_BASE + 'tokei-ui/scroll.webp" width="28" height="28" alt="">' +
+        (got === ORDER.length
+          ? 'まきもの ' + got + 'ほん ぜんぶ あつめた！ めんきょかいでん！'
+          : 'あつめた まきもの <b>' + got + '</b> / ' + ORDER.length + 'ほん') +
+        '<span>どの しゅぎょうでも 1かい さいごまで やると 1ほん もらえるよ</span></p>';
+    }
     return '<section class="nk-links">' +
       '<h2 class="nk-links-title">' + esc(TITLE) + '</h2>' +
+      head +
       '<div class="nk-links-list">' +
         ORDER.map(function (id) {
           var a = APPS[id];
           if (!a) return '';
           var here = id === currentId ? ' aria-current="page"' : '';
-          return '<a class="nk-link" href="' + esc(a.href) + '"' + here + '>' +
+          var s = r && r[id];
+          var badge = '';
+          if (id === pick) {
+            badge += '<span class="nk-link-today">' + (s && s.last === today() ? '✓ きょうの しゅぎょう できた！' : 'きょうの しゅぎょう') + '</span>';
+          }
+          if (s && s.sets > 0) {
+            badge += '<span class="nk-link-scroll' + (s.perfect ? ' is-gold' : '') + '" title="まきもの">' +
+              '<img src="' + IMG_BASE + 'tokei-ui/scroll.webp" width="28" height="28" alt="">' +
+              (s.sets > 1 ? '×' + Math.min(s.sets, 99) : '') + '</span>';
+          }
+          return '<a class="nk-link' + (badge ? ' has-badge' : '') + '" href="' + esc(a.href) + '"' + here + '>' +
             '<img class="nk-link-img" src="' + esc(IMG_BASE + a.img) + '"' +
               ' width="' + IMG_W + '" height="' + IMG_H + '"' +
-              ' alt="' + esc(a.name + '（' + a.note + '）') + '">' +
+              ' alt="' + esc(a.name + '（' + a.note + '）' + (s && s.sets > 0 ? '・まきもの あり' : '') + (id === pick ? '・きょうの しゅぎょう' : '')) + '">' +
+            badge +
           '</a>';
         }).join('') +
       '</div>' +
     '</section>';
   }
+  global.NkScrolls = { add: addScroll };
 
   /* DOM要素を返す（appendChild で組み立てているアプリ用） */
   function el(currentId) {
@@ -194,6 +245,10 @@ document.addEventListener('DOMContentLoaded', function () {
 (function (global) {
   'use strict';
   global.NkTrack = function (event, params) {
+    // けっか を出したら その修行の まきもの を1本（GA が無くても きろくする。端末の中だけ）
+    if (event === 'set_complete' && params && global.NkScrolls) {
+      try { global.NkScrolls.add(params.app, params.total > 0 && params.score >= params.total); } catch (e) {}
+    }
     try {
       if (typeof global.gtag === 'function') global.gtag('event', event, params);
     } catch (e) { /* 計測の失敗で アプリを止めない */ }
@@ -232,3 +287,38 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 800);
   };
 })(window);
+
+/* 上に戻る ↑ ボタンが しゅぎょう いちらん のバナー（右端の矢印）や 更新日・案内リンクに かぶる（レビュー10/9）。
+   ボタンの真下に それらが来ている間だけ ボタンを消す。通りすぎたら また出る。
+   位置（bottom）は common.js が scroll のたびに決めるので、その後（次のフレーム）で判定する */
+(function () {
+  'use strict';
+  var SEL = '.nk-link, .paper-release, .paper-about, .nk-teacher-ref, .nk-doc-ref, .nk-acc-sum';
+  var queued = false;
+  function check() {
+    queued = false;
+    var btn = document.getElementById('scrollTopBtn');
+    if (!btn) return;
+    var b = btn.getBoundingClientRect();
+    var pad = 6;
+    var over = function (r) {
+      return r.width && r.left < b.right + pad && r.right > b.left - pad && r.top < b.bottom + pad && r.bottom > b.top - pad;
+    };
+    var hit = Array.prototype.some.call(document.querySelectorAll(SEL), function (e) {
+      if (!over(e.getBoundingClientRect())) return false;
+      // 文字の行（更新日・案内）は 箱が全幅なので、字の あるところだけで 見る
+      if (!/^(P|DIV)$/.test(e.tagName)) return true;
+      var range = document.createRange();
+      range.selectNodeContents(e);
+      return Array.prototype.some.call(range.getClientRects(), over);
+    });
+    btn.classList.toggle('nk-top-hide', hit);
+  }
+  function queue() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(check);
+  }
+  window.addEventListener('scroll', queue, { passive: true });
+  window.addEventListener('resize', queue);
+})();

@@ -192,6 +192,7 @@
       text: a + ' + ' + b,
       side: side, needLeft: !front,
       a: a, b: b, split: small, need: need, rest: small - need, total: a + b,
+      mid: (front ? need + ' + ' + big : big + ' + ' + need) + ' = ' + target + '、' + target + ' と ' + (small - need) + ' で',
       okText: (front ? need + ' + ' + big : big + ' + ' + need) + ' = ' + target + '、'
         + target + ' + ' + (small - need) + ' = ' + (a + b) + '!'
     });
@@ -232,6 +233,7 @@
         text: a + ' − ' + b,
         side: 'back', needLeft: true,
         a: a, b: b, split: b, need: need, rest: b - need, total: a - b,
+        mid: a + ' − ' + need + ' = ' + base + '、' + base + ' − ' + (b - need) + ' =',
         okText: a + ' − ' + need + ' = ' + base + '、' + base + ' − ' + (b - need) + ' = ' + (a - b) + '!'
       });
     }
@@ -250,6 +252,7 @@
       text: a + ' − ' + b,
       side: 'front', needLeft: true,
       a: a, b: b, split: a, need: block, rest: a - block, total: a - b,
+      mid: block + ' − ' + b + ' = ' + diff + '、' + diff + ' と ' + (a - block) + ' で',
       okText: block + ' − ' + b + ' = ' + diff + '、' + diff + ' + ' + (a - block) + ' = ' + (a - b) + '!'
     });
   }
@@ -267,12 +270,13 @@
       make: (d) => makeCherryAdd(d.id, ONE_DIGIT[d.id] && Math.random() < 0.5 ? 'front' : 'back'),
       diffNote: { vs: '9 ＋ 1けた（9 + 4）', s: '8・7 ＋ 1けた（8 + 5）', m: '1けた ＋ 1けた（6 + 5・4 + 8）',
         h: '2けた ＋ 1けた（28 + 5）', h2: '2けた ＋ 2けた（38 + 25）', l: '100を つくる（79 + 39）' } },
-    { id: 'sub-front', name: 'ひきざん', note: 'まえの すうじを わける', ready: true,
+    // ひきざん2枚は名前が同じで見分けにくかった（レビュー10/9）。授業での よびかた（げんかほう・げんげんほう）を札で添える
+    { id: 'sub-front', name: 'ひきざん', tag: 'げんかほう', note: 'まえの すうじを わける', ready: true,
       demo: { a: 13, b: 8, op: '−', side: 'front' }, levels: CHERRY_LEVELS,
       make: (d) => makeCherrySub(d.id, 'front'),
       diffNote: { vs: '9 を ひく（15 − 9）', s: '8・7 を ひく（14 − 8）', m: '10と いくつ − 1けた（13 − 6）',
         h: '2けた − 1けた（43 − 8）', h2: '2けた − 2けた（62 − 25）', l: '100から ひく（132 − 94）' } },
-    { id: 'sub-back', name: 'ひきざん', note: 'うしろの すうじを わける', ready: true,
+    { id: 'sub-back', name: 'ひきざん', tag: 'げんげんほう', note:'うしろの すうじを わける', ready: true,
       demo: { a: 13, b: 4, op: '−', side: 'back' }, levels: CHERRY_LEVELS,
       make: (d) => makeCherrySub(d.id, 'back'),
       diffNote: { vs: '11 から ひく（11 − 4）', s: '12・13 から ひく（13 − 5）', m: '10と いくつ − 1けた（16 − 7）',
@@ -482,6 +486,7 @@
     // しゅるいは押したら次の画面へ進む
     const kinds = group('もんだいを えらぼう', MODES, 'modeId', (m) => ({
       label: m.name,
+      tag: m.tag,
       note: m.note,
       disabled: !m.ready
     }), null, goMenu2);
@@ -605,7 +610,9 @@
         btn.appendChild(art);
       }
       const body = el('span', 'sa-choice-body');
-      body.appendChild(el('span', 'sa-choice-label', info.label));
+      const label = el('span', 'sa-choice-label', info.label);
+      if (info.tag) label.appendChild(el('span', 'sa-choice-tag', info.tag));
+      body.appendChild(label);
       // さくらんぼざん の小さな式は「たしざん」と「まえの すうじを わける」の あいだに置く（2026-10-02 ユーザー指示）
       if (item.demo) body.appendChild(cherryDemo(item.demo));
       if (info.note) body.appendChild(el('span', 'sa-choice-note', info.note));
@@ -768,6 +775,7 @@
       mode: mode, diff: diff, style: style,
       index: 0, correct: 0, locked: false, current: null,
       marks: [],   // 1もんごとの せいかい（true）／まちがい（false）。けっかの ★☆ に使う
+      missed: [],  // まちがえた もんだい（「8 + 5 = 13」の形）。けっかの一覧に使う（レビュー10/9）
       recent: [],   // 直近の問題文。連続で同じ問題を出さないため
       asked: {},    // この一巡で出した問題文（まだ出していない問題を先に出す。#109）
       combo: 0, bestCombo: 0,   // 連続正解（COMBO）
@@ -1088,7 +1096,8 @@
       feedback.classList.add(q.splitOk ? 'is-ok' : 'is-ng');
       setTimeout(() => {
         if (!session || session.current !== q) return;
-        built.prompt.textContent = 'こたえは どれ?';
+        // ②では わけたあとの途中式（8 + 2 = 10、10 と 1 で）を問いかけに出す（レビュー10/9）
+        built.prompt.textContent = q.mid ? q.mid + ' いくつ?' : 'こたえは どれ?';
         const steps = app.querySelectorAll('.sa-cstep');
         if (steps.length === 2) { steps[0].classList.remove('is-now'); steps[0].classList.add('is-done'); steps[1].classList.add('is-now'); }
         options.classList.remove('is-cstep1');
@@ -1106,6 +1115,7 @@
     // さくらんぼざん は ①わける と ②こたえ の両方が合って せいかい
     const ok = val === expected && (q.layout !== 'cherry' || q.splitOk);
     s.marks.push(ok);
+    if (!ok && s.missed.indexOf(q.text + ' = ' + expected) === -1) s.missed.push(q.text + ' = ' + expected);
     // さくらんぼざん は 選択肢の場所に 解説を出し、「つぎへ」を押すまで待つ（2026-10-02 ユーザー指示）。
     // 1.2秒で次へ進むと読む前に消えていた。絵に重ねると問題が見えなくなるので、選択肢と入れかえる。
     // まちがいの「おしい!」は出さない（解説で こたえが わかるため。ユーザー指示）
@@ -1288,6 +1298,14 @@
           : stars === 2 ? 'すごい! もうすこしで ぜんもん せいかい!'
             : stars === 1 ? 'いいちょうし! もういっかい やってみよう!'
               : 'あきらめないで! れんしゅうすれば できるよ!'));
+    }
+
+    // まちがえた もんだい の一覧（かんじ・かけざん と同じ形。とことん は数が多くなるので 10もん チャレンジ だけ）
+    if (!complete && s.missed.length) {
+      card.appendChild(el('p', 'sa-result-misslabel', 'まちがえた もんだい'));
+      const list = el('div', 'sa-missed');
+      s.missed.forEach((m) => list.appendChild(el('span', 'sa-missed-item', m)));
+      card.appendChild(list);
     }
 
     if (s.bestCombo >= 2) {
