@@ -4514,3 +4514,15 @@ body:is(.ninja-kids,.ninja-space) :is(h1,h2,h3,button,label,.nk-answer-label,[cl
 @media (max-width:767px) and (orientation:portrait) {
   body.ninja-space .sa-group-diff .sa-choices { grid-template-columns:1fr; grid-template-rows:none; grid-auto-flow:row; }
 }
+
+
+/* #140：忍者の頭頂部に余白を残す。元画像の毛先ぎりぎりまで表示領域を使っていたため、共通ヒーロー内で少し縮小する */
+.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero,.kk-hero) > .ninja-mascot {
+  transform:scale(.9) translateY(5px);
+  transform-origin:center center;
+}
+@media (max-width:767px) {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero,.kk-hero) > .ninja-mascot {
+    transform:scale(.88) translateY(4px);
+  }
+}
