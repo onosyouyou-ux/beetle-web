@@ -108,6 +108,36 @@
     return y;
   }
 
+  // まぎらわしい よみ を作る（レビュー10/9）。子どもが じっさいに まちがえる形だけにする：
+  //   にごる／にごらない（がわ ↔ かわ・ぷん ↔ ふん）、小さい っ の あり／なし、のばす う・い の あり／なし。
+  // 1か所だけ変えた形を まぜて返す
+  var VOICE = { 'か':'が','き':'ぎ','く':'ぐ','け':'げ','こ':'ご','さ':'ざ','し':'じ','す':'ず','せ':'ぜ','そ':'ぞ',
+    'た':'だ','ち':'ぢ','つ':'づ','て':'で','と':'ど','は':'ば','ひ':'び','ふ':'ぶ','へ':'べ','ほ':'ぼ' };
+  var UNVOICE = {};
+  Object.keys(VOICE).forEach(function (k) { UNVOICE[VOICE[k]] = k; });
+  'ぱぴぷぺぽ'.split('').forEach(function (c, i) { UNVOICE[c] = 'はひふへほ'.charAt(i); });
+  var SMALL = 'ゃゅょぁぃぅぇぉ';
+  function nearYomi(y) {
+    var c = Array.from(y), out = [];
+    var add = function (arr) {
+      var v = arr.join('');
+      if (v !== y && SMALL.indexOf(arr[0]) < 0 && arr[0] !== 'っ' && arr[0] !== 'ん' && out.indexOf(v) < 0) out.push(v);
+    };
+    c.forEach(function (ch, i) {
+      // ぢ・づ は めったに 使わないので 作らない
+      var vo = VOICE[ch] && VOICE[ch] !== 'ぢ' && VOICE[ch] !== 'づ' ? VOICE[ch] : UNVOICE[ch];
+      if (vo) { var a = c.slice(); a[i] = vo; add(a); }
+      if (ch === 'っ') { var b = c.slice(); b.splice(i, 1); add(b); }
+      // 小さい っ を たす（がこう → がっこう の 逆）。か・さ・た・ぱ行の まえだけ。のばす音・ん・小さい字の あと と「つ」・さいごの字の まえには 入れない（おうっさま・じっつ・たっけ に なる）
+      if (i > 0 && i < c.length - 1 && 'っんうい'.indexOf(c[i - 1]) < 0 && SMALL.indexOf(c[i - 1]) < 0 && /[かきくけこさしすせそたちてとぱぴぷぺぽ]/.test(ch)) {
+        var d = c.slice(); d.splice(i, 0, 'っ'); add(d);
+      }
+      // のばす音：こう → こ・きゅう → きゅ（ぬく）
+      if ((ch === 'う' || ch === 'い') && i > 0) { var e = c.slice(); e.splice(i, 1); add(e); }
+    });
+    return shuffle(out);
+  }
+
   function makeQuestion(pool) {
     var entry = pick(pool);
     var wi = randInt(0, entry.w.length - 1);
@@ -138,6 +168,13 @@
       var opts = [{ v: yomiPart, ok: true }];
       var seen = {};
       seen[yomiPart] = true;
+      // ⓪ まぎらわしい よみ（にごる／にごらない・小さい っ・のばす音。あまのがわ → あまのかわ）を2つまで。
+      // ほかの ことばの よみ（たいぼく など）だけだと かんたんに消せて 練習に ならなかった（レビュー10/9）
+      nearYomi(yomiPart).slice(0, 2).forEach(function (v) {
+        if (seen[v]) return;
+        seen[v] = true;
+        opts.push({ v: v, ok: false });
+      });
       // ① 同じ漢字の別のことばの よみ（音と訓の取りちがえ）
       entry.w.forEach(function (pair, i) {
         var v = kanjiYomi(pair[0], pair[1]);
@@ -145,12 +182,16 @@
         seen[v] = true;
         opts.push({ v: v, ok: false, why: 'おなじ かんじの べつの よみ' });
       });
-      // ② おなじ長さの よみ（あてずっぽうで消せないようにする）
+      // ② おなじ長さの よみ（あてずっぽうで消せないようにする）。
+      // おくりがなを けずった よみ（六つ → むっ・学ぶ → まな）は、こたえも けずった よみの ときだけ まぜる。
+      // こたえが ことば全体の よみ（あまのがわ）なのに「むっ」が並ぶと 不自然だった（レビュー10/9）
+      var answerCut = yomiPart !== yomi;
       var others = [];
       pool.forEach(function (e) {
         if (e.k === entry.k) return;
         e.w.forEach(function (pair) {
           var v = kanjiYomi(pair[0], pair[1]);
+          if (!answerCut && v !== pair[1]) return;
           if (!seen[v] && Math.abs(v.length - yomiPart.length) <= 1) others.push(v);
         });
       });

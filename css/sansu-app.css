@@ -1165,3 +1165,20 @@ body.ninja-space .sa-options.is-cstep2 .sa-opt,
 body.ninja-space .sa-options.is-cstep2 .sa-opt:not(.is-correct):not(.is-wrong) {
   background: linear-gradient(180deg, #e2efff, #cfe3ff); border-color: #7fb4f0; color: #143e75; box-shadow: 0 3px 0 #6a9edb;
 }
+
+/* ひきざん2枚の見分け札（げんかほう・げんげんほう。レビュー10/9） */
+.sa-choice-tag {
+  display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 4px;
+  font-size: 12px; font-weight: 800; vertical-align: 2px;
+  background: #ffe7a3; color: #6a4a00; white-space: nowrap;
+}
+/* けっかの「まちがえた もんだい」（かんじ・かけざん と同じ形。レビュー10/9） */
+.sa-result-misslabel { margin: 14px 0 8px; font-size: 14px; font-weight: 800; color: #6f6a90; }
+.sa-missed { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 0 18px; }
+.sa-missed-item {
+  font-size: 15px; font-weight: 800; padding: 6px 14px; border-radius: 99px;
+  background: #ffe3e6; color: #b3263a; white-space: nowrap;
+}
+.nk-modal-body .sa-result { display: flex; flex-direction: column; min-height: 0; }
+.nk-modal-body .sa-result > * { flex: none; }
+.nk-modal-body .sa-result > .sa-missed { flex: 0 1 auto; min-height: 40px; overflow: auto; overscroll-behavior: contain; }

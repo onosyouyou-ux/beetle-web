@@ -41,6 +41,25 @@
     { id: 'tonae', name: 'おとだけで とく', note: '「にしが」→ こたえを えらぶ', img: '/assets/images/ninja/modes/kuku-oto.webp' }
   ];
 
+  // にがてな もんだい だけを とく（レビュー10/9）。メニューの1枚目から だん を えらばずに はじめる
+  var NIGATE = { id: 'nigate', name: 'にがてを とく' };
+  function modeOf(id) { return id === NIGATE.id ? NIGATE : MODES.filter(function (m) { return m.id === id; })[0]; }
+
+  /* ---------- きろく（この端末の中だけ。localStorage が使えないときは きろくしない） ----------
+     weak … まちがえた九九。まちがえると +2、せいかいで -1。0 で にがて から はずれる（2回 つづけて できたら卒業）
+     table … 1回でも せいかいした九九。九九ひょう を うめる ごほうびに使う（81こ） */
+  var STORE = 'nk-kuku-record';
+  var rec = (function () {
+    try {
+      var r = JSON.parse(localStorage.getItem(STORE) || '{}');
+      return { weak: r.weak || {}, table: r.table || {} };
+    } catch (e) { return { weak: {}, table: {} }; }
+  })();
+  function saveRec() { try { localStorage.setItem(STORE, JSON.stringify(rec)); } catch (e) {} }
+  var keyOf = function (e) { return e.a + 'x' + e.b; };
+  function weakList() { return DATA.filter(function (e) { return rec.weak[keyOf(e)] > 0; }); }
+  function tableCount() { return DATA.filter(function (e) { return rec.table[keyOf(e)]; }).length; }
+
   var state = { danId: DANS[0].id, modeId: 'tonae', session: null };
 
   var randInt = function (a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; };
@@ -103,6 +122,9 @@
      - ランダムに とく：えらんだ だんを まぜて、同じ九九が2回 出ないように出す
      - おとだけで とく：範囲を まぜて 順に出す。範囲が 10問より 少ないときだけ、ひとまわり してから 2回目を出す（2026-10-07。前は毎回くじ引きで 同じ九九が 2回 出た） */
   function buildList(pool) {
+    if (state.modeId === NIGATE.id) {
+      return shuffle(weakList()).slice(0, SET_LENGTH);
+    }
     if (state.modeId === 'junban') {
       return pool.slice().sort(function (x, y) { return x.b - y.b; });
     }
@@ -164,12 +186,19 @@
     var btn;
     if (step === 1) {
       wrap.appendChild(group('やりたい しゅぎょうを えらんでね！', MODES, 'modeId', 'kk-choices-column kk-choices-mode', 1));
-      // スタートの場所だけ見えない形で取っておく
-      btn = el('button', 'kk-start is-placeholder', 'スタート');
-      btn.tabIndex = -1;
-      btn.setAttribute('aria-hidden', 'true');
+      var weak = weakList().length;
+      if (weak) {
+        // まちがえた九九が あるときは、スタートの場所に「にがてを とく」を出す（盤面の高さは変わらない）
+        btn = el('button', 'kk-start kk-nigate', 'にがてを とく（' + weak + 'こ）');
+        btn.addEventListener('click', function () { state.modeId = NIGATE.id; startSession(); });
+      } else {
+        // スタートの場所だけ見えない形で取っておく
+        btn = el('button', 'kk-start is-placeholder', 'スタート');
+        btn.tabIndex = -1;
+        btn.setAttribute('aria-hidden', 'true');
+      }
     } else {
-      var mode = MODES.filter(function (m) { return m.id === state.modeId; })[0];
+      var mode = modeOf(state.modeId);
       wrap.appendChild(el('p', 'kk-menu-picked', mode.name));
       wrap.appendChild(group(null, DANS, 'danId', 'kk-choices-dan', 2));
       btn = el('button', 'kk-start', 'スタート');
@@ -192,7 +221,32 @@
     wrap.appendChild(back);
 
     app.appendChild(wrap);
+    if (step === 1) app.appendChild(tableEl());
     if (window.NinjaLinks) app.appendChild(NinjaLinks.el('kuku'));
+  }
+
+  /* 九九ひょう（ごほうび。レビュー10/9）。1回でも せいかいした九九の こたえが うまっていく。
+     メニューの下（読みものの段）に置き、盤面の1画面には入れない */
+  function tableEl() {
+    var n = tableCount();
+    var sec = el('section', 'kk-table' + (n === DATA.length ? ' is-complete' : ''));
+    sec.appendChild(el('h2', 'kk-table-title', n === DATA.length
+      ? 'くくひょう コンプリート！ くく めいじん！'
+      : 'くくひょう（' + n + ' / ' + DATA.length + ' こ うまった）'));
+    sec.appendChild(el('p', 'kk-table-note', 'せいかいした くくの こたえが うまっていくよ。ぜんぶ うめよう！'));
+    var grid = el('div', 'kk-table-grid');
+    grid.setAttribute('role', 'table');
+    grid.appendChild(el('span', 'kk-table-h is-corner', '×'));
+    for (var b = 1; b <= 9; b++) grid.appendChild(el('span', 'kk-table-h', String(b)));
+    for (var a = 1; a <= 9; a++) {
+      grid.appendChild(el('span', 'kk-table-h', a + 'の だん'));
+      for (b = 1; b <= 9; b++) {
+        var done = rec.table[a + 'x' + b];
+        grid.appendChild(el('span', 'kk-table-c' + (done ? ' is-done' : ''), done ? String(a * b) : ''));
+      }
+    }
+    sec.appendChild(grid);
+    return sec;
   }
 
   function group(title, items, key, gridCls, step) {
@@ -229,7 +283,10 @@
   function startSession() {
     pushPlay();
     var list = buildList(poolOf(state.danId));
-    state.session = { list: list, total: list.length, index: 0, correct: 0, locked: false, q: null, missed: [] };
+    // にがてを ぜんぶ 卒業したあとの「もういちど」は、メニューへ もどす
+    if (!list.length) { state.modeId = 'tonae'; return renderMenu(); }
+    state.session = { list: list, total: list.length, index: 0, correct: 0, locked: false, q: null, missed: [],
+      tableBefore: tableCount() };
     if (window.NkTrack) NkTrack('mode_select', { app: 'kuku', mode: state.modeId, level: state.danId });
     nextQuestion();
   }
@@ -249,7 +306,15 @@
     var grid = el('div', 'kk-dots-grid');
     grid.style.setProperty('--kk-cols', e.a);
     grid.style.setProperty('--kk-rows', e.b);
-    for (var i = 0; i < e.a * e.b; i++) grid.appendChild(el('span', 'kk-dot'));
+    // 5こずつの かたまりに 分ける（6こめの列・6こめの行の まえに すきま）。9×9 の81こを 1こずつ数えずに すむ（レビュー10/9）
+    grid.classList.toggle('has-c5', e.a > 5);
+    grid.classList.toggle('has-r5', e.b > 5);
+    for (var i = 0; i < e.a * e.b; i++) {
+      var d = el('span', 'kk-dot');
+      if (e.a > 5 && i % e.a === 5) d.classList.add('is-c5');
+      if (e.b > 5 && Math.floor(i / e.a) === 5) d.classList.add('is-r5');
+      grid.appendChild(d);
+    }
     box.appendChild(grid);
     // こたえは書かない。まとまりを数えるところまでを見せ、答えは子どもに出させる（2026-09-16）
     box.appendChild(el('p', 'kk-dots-note', e.a + 'の まとまりが ' + e.b + 'こ あるから…'));
@@ -262,8 +327,8 @@
     var wrap = el('div', 'kk-play');
 
     var head = el('div', 'kk-play-head nk-head');
-    var mode = MODES.filter(function (m) { return m.id === state.modeId; })[0];
-    var dan = DANS.filter(function (d) { return d.id === state.danId; })[0];
+    var mode = modeOf(state.modeId);
+    var dan = state.modeId === NIGATE.id ? null : DANS.filter(function (d) { return d.id === state.danId; })[0];
     head.innerHTML = NinjaHead.inner(s.index, s.total, s.correct, mode.name + (dan ? '・' + dan.name : ''));
     wrap.appendChild(head);
 
@@ -319,6 +384,14 @@
     var q = s.q, e = q.entry;
     if (chosen.ok) s.correct++;
     else s.missed.push(shiki(e) + ' = ' + e.ans);
+    var k = keyOf(e);
+    if (chosen.ok) {
+      rec.table[k] = 1;
+      if (rec.weak[k] > 0 && --rec.weak[k] <= 0) delete rec.weak[k];
+    } else {
+      rec.weak[k] = (rec.weak[k] || 0) + 2;
+    }
+    saveRec();
 
     Array.prototype.forEach.call(options.querySelectorAll('.kk-opt'), function (b, i) {
       b.disabled = true;
@@ -364,6 +437,10 @@
       wrap.appendChild(list);
     } else {
       wrap.appendChild(el('p', 'kk-result-msg', 'ぜんもん せいかい! くく めいじん!'));
+    }
+    var gained = tableCount() - s.tableBefore;
+    if (gained > 0) {
+      wrap.appendChild(el('p', 'kk-result-table', 'くくひょうが ' + gained + 'こ うまった!（' + tableCount() + ' / ' + DATA.length + '）'));
     }
 
     var again = el('button', 'kk-start', 'もういちど');

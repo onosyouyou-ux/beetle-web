@@ -250,3 +250,37 @@ body{margin:0;color:var(--kk-ink)}
 @media (orientation:landscape) and (max-height:500px){
   .ninja-kids .kk-play>.kk-ask.is-hint{padding-top:calc(6px + var(--nk-fs-label) * 2 + 4px)}
 }
+
+/* ●を5こずつの かたまりに（レビュー10/9）。6こめの列・行の まえに すきまを足す。
+   すきまのぶん（●の .6こ）を 大きさの割り算に入れて、9×9 でも といの箱から はみ出さないようにする */
+.kk-dots-grid{--kk-xc:0;--kk-xr:0;--kk-dot:min(
+    calc(var(--kk-dots-w) / (var(--kk-cols) * 1.22 + var(--kk-xc) * .6)),
+    calc(var(--kk-dots-h) / (var(--kk-rows) * 1.22 + var(--kk-xr) * .6)),
+    var(--kk-dot-max))}
+.kk-dots-grid.has-c5{--kk-xc:1}
+.kk-dots-grid.has-r5{--kk-xr:1}
+.kk-dot.is-c5{margin-left:calc(var(--kk-dot) * .6)}
+.kk-dot.is-r5{margin-top:calc(var(--kk-dot) * .6)}
+
+/* にがてを とく（メニュー1枚目の スタートの場所。レビュー10/9） */
+.kk-start.kk-nigate{background:#fff;color:var(--kk-red);border:2px solid var(--kk-red);box-shadow:0 3px 0 rgba(192,80,59,.35)}
+@media (hover:hover){.kk-start.kk-nigate:hover{background:var(--kk-red-bg)}}
+
+/* けっかの「くくひょうが うまった」 */
+.kk-result-table{font-size:14px;font-weight:800;color:var(--kk-blue-dk);margin:0 0 14px}
+
+/* くくひょう（ごほうび。レビュー10/9） */
+.kk-table{width:min(100%,520px);margin:26px auto 0;padding:18px 16px 20px;background:#fff;border:1px solid var(--kk-line);border-radius:14px;text-align:center}
+.kk-table-title{font-size:17px;font-weight:900;margin:0 0 4px;color:var(--kk-ink)}
+.kk-table.is-complete .kk-table-title{color:#b07800}
+.kk-table-note{font-size:12.5px;color:var(--kk-ink2);margin:0 0 12px}
+.kk-table-grid{display:grid;grid-template-columns:auto repeat(9,minmax(0,1fr));gap:3px}
+.kk-table-h{display:grid;place-items:center;font-size:11px;font-weight:800;color:var(--kk-ink2);white-space:nowrap;padding:0 4px}
+.kk-table-c{display:grid;place-items:center;aspect-ratio:1;border-radius:6px;background:var(--kk-cream2);font-size:14px;font-weight:900;color:#fff}
+.kk-table-c.is-done{background:var(--kk-blue)}
+.kk-table.is-complete .kk-table-c.is-done{background:linear-gradient(150deg,#f2b632,#d68f00)}
+@media (max-width:767px){
+  .kk-table{padding:14px 8px 16px}
+  .kk-table-c{font-size:12px;border-radius:4px}
+  .kk-table-h{font-size:10px;padding:0 2px}
+}
