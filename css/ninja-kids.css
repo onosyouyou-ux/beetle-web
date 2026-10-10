@@ -4516,13 +4516,15 @@ body:is(.ninja-kids,.ninja-space) :is(h1,h2,h3,button,label,.nk-answer-label,[cl
 }
 
 
-/* #140：忍者の頭頂部に余白を残す。元画像の毛先ぎりぎりまで表示領域を使っていたため、共通ヒーロー内で少し縮小する */
-.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero,.kk-hero) > .ninja-mascot {
+/* #140：忍者の頭頂部に余白を残す。キャラは読み込み後に .app-ref-visual へ移されるので、移った先にも当てる（10/10。ヒーロー直下だけだと効いていなかった）。元画像の毛先ぎりぎりまで表示領域を使っていたため、共通ヒーロー内で少し縮小する */
+.ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero,.kk-hero) > .ninja-mascot,
+.ninja-kids .app-ref-visual.is-ninja > .ninja-mascot {
   transform:scale(.9) translateY(5px);
   transform-origin:center center;
 }
 @media (max-width:767px) {
-  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero,.kk-hero) > .ninja-mascot {
+  .ninja-kids :is(.tk-hero,.kj-hero,.kt-hero,.rj-hero,.pn-hero,.kk-hero) > .ninja-mascot,
+.ninja-kids .app-ref-visual.is-ninja > .ninja-mascot {
     transform:scale(.88) translateY(4px);
   }
 }
