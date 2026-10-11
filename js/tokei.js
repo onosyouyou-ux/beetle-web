@@ -32,8 +32,8 @@
   var MODES = [
     { id: 'read', name: 'いま なんじ？', note: 'とけいを みて じこくを こたえる', img: '/assets/images/ninja/modes/tokei-read.webp', grade: '1・2ねん' },
     { id: 'find', name: 'とけいは どれ？', note: 'じこくを みて とけいを えらぶ', img: '/assets/images/ninja/modes/tokei-find.webp', grade: '1・2ねん' },
-    // 時間の たしざん・ひきざん（3年で習う。2026-10-08）。絵は あとで 描く（それまでは とけいの SVG を仮に出す）
-    { id: 'calc', name: 'なんぷん あと？', note: 'じかんの たしざん・ひきざん', img: null, grade: '3ねん' }
+    // 時間の たしざん・ひきざん（3年で習う。2026-10-11）。
+    { id: 'calc', name: 'なんぷん あと？', note: 'じかんの たしざん・ひきざん', img: '/assets/images/ninja/modes/tokei-calc.webp', grade: '3ねん' }
   ];
 
   /* 時間の けいさん の だん（2026-10-08）。1セットの中で「○ぷん あと／○ぷん まえ／なんぷん たった」を まぜて出す
@@ -589,12 +589,6 @@
       img.width = 160;
       img.height = 160;
       btn.appendChild(img);
-    } else if (stateKey === 'modeId') {
-      // 絵が できるまでの 仮：とけいを SVG で描く
-      var ph = el('span', 'tk-choice-img is-svg');
-      ph.setAttribute('aria-hidden', 'true');
-      ph.innerHTML = clockSvg(3, 50, 120, false, 'both');
-      btn.appendChild(ph);
     }
     if (item.grade) btn.appendChild(el('span', 'tk-ribbon', item.grade));
     btn.appendChild(el('span', 'tk-choice-label', item.name));
