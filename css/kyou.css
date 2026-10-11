@@ -1,0 +1,52 @@
+/* きょうの しゅぎょう（tools/kyou/。#143）
+   盤面・けっか は かけざん修行の部品（kk-。kuku.css と ninja-kids.css）を借りる。ここには この画面だけの差分を置く */
+
+/* 色：8本と かぶらない 赤むらさき（330°）。しゅぎょう いちらん の入口ボタン（#e8424f）とも 別の色 */
+body.ninja-kyou{
+  --nk-accent:#b0407a; --nk-accent-dark:#76234f; --nk-hero-a:#f8e4ef; --nk-hero-b:#e3aecb;
+}
+
+/* メニュー：きょうの 5本の ならび */
+.ky-menu{ text-align:center; }
+.ky-lineup{
+  list-style:none; margin:4px auto 14px; padding:0; max-width:620px;
+  display:grid; gap:8px;
+}
+.ky-lineup-item{
+  display:grid; grid-template-columns:44px 1fr auto; align-items:center; gap:10px;
+  padding:10px 14px; border-radius:10px; background:#fff; color:#2a2a35; text-align:left;
+  box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--nk-accent) 30%,#fff);
+}
+.ky-lineup-n{
+  display:grid; place-items:center; width:36px; height:36px; border-radius:50%;
+  background:var(--nk-accent); color:#fff; font-weight:900; font-size:18px;
+}
+.ky-lineup-name{ font-size:18px; font-weight:900; }
+.ky-lineup-note{ font-size:13px; font-weight:700; color:#6b6b78; }
+.ky-status{ margin:0 auto 10px; font-size:15px; font-weight:900; color:var(--nk-accent-dark); }
+.ky-status.is-done{ color:#2c7a47; }
+.ky-menu > .kk-start{ display:block; margin:6px auto 0; }
+.ky-menu > .kk-back{ display:inline-block; margin-top:14px; }
+
+/* 問い：ことばが長いとき（あいすくりーむ など）は 字を小さく */
+.ky-ask .kk-ask-main{ font-size:clamp(30px,calc(var(--nk-qh) * .2),64px); letter-spacing:.06em; }
+.ky-ask .kk-ask-main.is-long{ font-size:clamp(22px,calc(var(--nk-qh) * .12),40px); letter-spacing:.02em; }
+.ky-ask-phonics .kk-ask-main{ font-family:'Syne','Arial Rounded MT Bold',sans-serif; letter-spacing:.12em; }
+.kk-opt .nk-answer-label.is-long{ font-size:clamp(16px,calc(var(--nk-qh) * .07),26px); }
+
+/* とけいの絵：問題エリアの高さに あわせる */
+.ky-ask-clock{ display:grid; place-items:center; height:100%; }
+.ky-clock{ width:auto; height:min(calc(var(--nk-qh) - 40px),220px); min-height:120px; }
+.ky-clock .ky-num{ font-size:19px; font-weight:800; fill:#4a4438; font-family:inherit; }
+
+@media (max-width:767px){
+  .ky-lineup-item{ grid-template-columns:36px 1fr; padding:8px 12px; }
+  .ky-lineup-n{ width:30px; height:30px; font-size:16px; }
+  .ky-lineup-note{ grid-column:2; }
+  .ky-clock{ height:clamp(110px,24dvh,170px); min-height:0; }
+}
+@media (min-width:768px) and (max-height:640px){
+  .ky-lineup{ gap:5px; margin-bottom:8px; }
+  .ky-lineup-item{ padding:6px 12px; }
+  .ky-clock{ height:clamp(100px,26dvh,170px); min-height:0; }
+}

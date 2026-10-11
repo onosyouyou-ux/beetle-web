@@ -52,7 +52,9 @@
   /* まきもの（修行をまたぐ ごほうび）と きょうの しゅぎょう（レビュー10/9）。
      どの修行でも 1セット おわる（けっか を出す）と、その修行の まきもの が1本もらえる。8本 あつめると 免許皆伝。
      きろくは この端末の localStorage だけ（サーバーには送らない）。使えないときは 何も出さない。
-     きょうの しゅぎょう は 日づけで決まる おすすめ1本（いま開いている修行は えらばない） */
+     きょうの おすすめ は 日づけだけで決まる1本。どの修行の いちらん でも 同じ1本に札が付く
+     （前は いま開いている修行を のぞいて えらんでいたので、開くページごとに札の場所が変わっていた。#150 の確認で発覚）。
+     8本を またいで 5もん とく「きょうの しゅぎょう」は /tools/kyou/（#143） */
   var SCROLL_KEY = 'nk-scrolls';
   function today() { return new Date().toLocaleDateString('sv-SE'); }
   function loadScrolls() {
@@ -68,18 +70,20 @@
     r[app] = x;
     try { localStorage.setItem(SCROLL_KEY, JSON.stringify(r)); } catch (e) {}
   }
-  function todayPick(currentId) {
-    var list = ORDER.filter(function (id) { return id !== currentId; });
+  function todayPick() {
     var d = today(), h = 0;
     for (var i = 0; i < d.length; i++) h = (h * 31 + d.charCodeAt(i)) % 9973;
-    return list[h % list.length];
+    return ORDER[h % ORDER.length];
+  }
+  function kyouDone() {
+    try { var r = JSON.parse(localStorage.getItem('nk-kyou') || '{}'); return !!(r.done && r.done[today()] != null); } catch (e) { return false; }
   }
 
   /* HTML文字列を返す（innerHTML で組み立てているアプリ用） */
   function html(currentId) {
     var r = loadScrolls();
     var got = r ? ORDER.filter(function (id) { return r[id] && r[id].sets > 0; }).length : 0;
-    var pick = r ? todayPick(currentId) : null;
+    var pick = r ? todayPick() : null;
     var head = '';
     if (r) {
       head = '<p class="nk-scrolls-sum' + (got === ORDER.length ? ' is-all' : '') + '">' +
@@ -88,6 +92,13 @@
           ? 'まきもの ' + got + 'ほん ぜんぶ あつめた！ めんきょかいでん！'
           : 'あつめた まきもの <b>' + got + '</b> / ' + ORDER.length + 'ほん') +
         '<span>どの しゅぎょうでも 1かい さいごまで やると 1ほん もらえるよ</span></p>';
+    }
+    // きょうの しゅぎょう（8本またぎ 5もん）への入口。その ページ自身では 出さない
+    if (currentId !== 'kyou') {
+      var kd = kyouDone();
+      head += '<a class="nk-kyou-link' + (kd ? ' is-done' : '') + '" href="/tools/kyou/">' +
+        '<span class="nk-kyou-link-title">' + (kd ? '✓ きょうの しゅぎょう できた！' : 'きょうの しゅぎょう') + '</span>' +
+        '<span class="nk-kyou-link-note">いろんな しゅぎょうから 5もん。まいにち かわるよ →</span></a>';
     }
     return '<section class="nk-links">' +
       '<h2 class="nk-links-title">' + esc(TITLE) + '</h2>' +
@@ -100,7 +111,7 @@
           var s = r && r[id];
           var badge = '';
           if (id === pick) {
-            badge += '<span class="nk-link-today">' + (s && s.last === today() ? '✓ きょうの しゅぎょう できた！' : 'きょうの しゅぎょう') + '</span>';
+            badge += '<span class="nk-link-today">' + (s && s.last === today() ? '✓ きょうの おすすめ できた！' : 'きょうの おすすめ') + '</span>';
           }
           if (s && s.sets > 0) {
             badge += '<span class="nk-link-scroll' + (s.perfect ? ' is-gold' : '') + '" title="まきもの">' +
@@ -110,7 +121,7 @@
           return '<a class="nk-link' + (badge ? ' has-badge' : '') + '" href="' + esc(a.href) + '"' + here + '>' +
             '<img class="nk-link-img" src="' + esc(IMG_BASE + a.img) + '"' +
               ' width="' + IMG_W + '" height="' + IMG_H + '"' +
-              ' alt="' + esc(a.name + '（' + a.note + '）' + (s && s.sets > 0 ? '・まきもの あり' : '') + (id === pick ? '・きょうの しゅぎょう' : '')) + '">' +
+              ' alt="' + esc(a.name + '（' + a.note + '）' + (s && s.sets > 0 ? '・まきもの あり' : '') + (id === pick ? '・きょうの おすすめ' : '')) + '">' +
             badge +
           '</a>';
         }).join('') +
