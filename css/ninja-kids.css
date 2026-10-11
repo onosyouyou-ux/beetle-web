@@ -45,13 +45,15 @@ body.ninja-phonics {
   background-image:linear-gradient(rgba(2,20,22,.14),rgba(2,20,22,.14)),var(--nk-bg-img);
 }
 /* かけざん修行。色は6アプリと重ならない青（既存は橙33°・赤12°・青緑179°・紫264°・緑113°）。
-   背景の1枚絵（kuku-bg-v1.webp）はまだ無いので、下の cover 指定の仲間には入れない。
-   絵ができたら --nk-bg-img を足して、そのリストにも .ninja-kuku を加える。 */
+   背景の1枚絵は そろばん・点のカード・碁石の部屋（kuku-bg-v1.webp。2026-10-11） */
 body.ninja-kuku {
   --nk-accent:#2f6ea8; --nk-accent-dark:#1b4670; --nk-hero-a:#e2edf8; --nk-hero-b:#a9c7e4;
+  --nk-bg-img:url('/assets/images/ninja/backgrounds/kuku-bg-v1.webp');
   --nk-mascot:url('/assets/images/ninja/kuku-groups.webp');
+  background-color:#0b1426;
+  background-image:linear-gradient(rgba(4,10,24,.16),rgba(4,10,24,.16)),var(--nk-bg-img);
 }
-body:is(.ninja-tokei,.ninja-kanji,.ninja-katakana,.ninja-romaji,.ninja-phonics) {
+body:is(.ninja-tokei,.ninja-kanji,.ninja-katakana,.ninja-romaji,.ninja-phonics,.ninja-kuku) {
   background-position:center top;
   background-size:cover;
   background-attachment:fixed;
@@ -62,7 +64,7 @@ body.ninja-space {
   background:#071329 url('/assets/images/ninja/space-village-bg.webp') center top / cover fixed no-repeat;
 }
 @media (max-width:767px) {
-  body:is(.ninja-tokei,.ninja-kanji,.ninja-katakana,.ninja-romaji,.ninja-phonics) { background-attachment:scroll; }
+  body:is(.ninja-tokei,.ninja-kanji,.ninja-katakana,.ninja-romaji,.ninja-phonics,.ninja-kuku) { background-attachment:scroll; }
 }
 .ninja-kids:not(.ninja-space) .app-paper {
   position:relative;

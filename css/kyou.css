@@ -3,6 +3,7 @@
 
 /* 色：8本と かぶらない 赤むらさき（330°）。しゅぎょう いちらん の入口ボタン（#e8424f）とも 別の色 */
 body.ninja-kyou{
+  --nk-mascot:url('/assets/images/ninja/zenmon-seikai.webp');
   --nk-accent:#b0407a; --nk-accent-dark:#76234f; --nk-hero-a:#f8e4ef; --nk-hero-b:#e3aecb;
 }
 
