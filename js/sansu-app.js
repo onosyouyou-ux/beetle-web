@@ -1096,8 +1096,18 @@
       feedback.classList.add(q.splitOk ? 'is-ok' : 'is-ng');
       setTimeout(() => {
         if (!session || session.current !== q) return;
-        // ②では わけたあとの途中式（8 + 2 = 10、10 と 1 で）を問いかけに出す（レビュー10/9）
-        built.prompt.textContent = q.mid ? q.mid + ' いくつ?' : 'こたえは どれ?';
+        // ②では わけたあとの途中式（8 + 2 = 10、10 と 1 で）を問いかけに出す（レビュー10/9）。
+        // 1行の小さな字では ナビに ならなかったので、済んだ式（✓）→ いま とく式 の2つの札に分ける（2026-10-11 ユーザー指示）
+        if (q.mid && q.mid.indexOf('、') > 0) {
+          const [done, now] = q.mid.split('、');
+          built.prompt.textContent = '';
+          built.prompt.classList.add('is-step2');
+          built.prompt.appendChild(el('span', 'sa-mid-done', done + ' ✓'));
+          built.prompt.appendChild(el('span', 'sa-mid-arrow', '→'));
+          built.prompt.appendChild(el('span', 'sa-mid-now', now + ' いくつ?'));
+        } else {
+          built.prompt.textContent = q.mid ? q.mid + ' いくつ?' : 'こたえは どれ?';
+        }
         const steps = app.querySelectorAll('.sa-cstep');
         if (steps.length === 2) { steps[0].classList.remove('is-now'); steps[0].classList.add('is-done'); steps[1].classList.add('is-now'); }
         options.classList.remove('is-cstep1');

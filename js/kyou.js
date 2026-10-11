@@ -386,12 +386,15 @@
     }
     wrap.appendChild(ask);
 
-    var options = el('div', 'kk-options');
+    // 数字の修行（さんすう・かけざん・さくらんぼざん）は かけざん修行と同じ 大きな字。
+    // ことばの修行は字を ひとまわり小さくし、ながい選択肢が1つでも あれば 4つとも そろえて小さくする
+    if (!/^\d+$/.test(q.answer)) wrap.classList.add('is-text');
+    var longest = Math.max.apply(null, q.options.map(function (o) { return Array.from(o.v).length; }));
+    var options = el('div', 'kk-options' + (longest > 5 ? ' is-long' : ''));
     q.options.forEach(function (o) {
       var b = el('button', 'kk-opt');
       b.type = 'button';
       var label = el('span', 'nk-answer-label', o.v);
-      if (Array.from(o.v).length > 4) label.classList.add('is-long');
       b.appendChild(label);
       b.addEventListener('click', function () { choose(o, b, options, q); });
       options.appendChild(b);
