@@ -79,13 +79,36 @@
   }
 
   // Shift_JIS（CP932）換算。ブラウザに変換機能がないため文字幅ルールからの推定
+  // CP932 にある2バイト文字の表。ブラウザの shift_jis デコーダ（CP932 相当）で全コードを一度だけ読んで作る。
+  // 前は BMP の文字をすべて2バイトと数えていたので、結合文字（U+3099）・数学のマイナス（U+2212）・
+  // ダッシュ・ゼロ幅スペースのような Shift_JIS に無い文字まで「変換できる」扱いになっていた
+  var sjisSet = null;
+  function sjisTable() {
+    if (sjisSet) return sjisSet;
+    sjisSet = {};
+    try {
+      var dec = new TextDecoder('shift_jis'), buf = new Uint8Array(2);
+      for (var hi = 0x81; hi <= 0xFC; hi++) {
+        if (hi > 0x9F && hi < 0xE0) continue;
+        for (var lo = 0x40; lo <= 0xFC; lo++) {
+          if (lo === 0x7F) continue;
+          buf[0] = hi; buf[1] = lo;
+          var c = dec.decode(buf);
+          if (c.length === 1 && c.charCodeAt(0) !== 0xFFFD) sjisSet[c] = true;
+        }
+      }
+    } catch (e) { sjisSet = null; }
+    return sjisSet;
+  }
+
   function sjisBytes(str) {
-    var bytes = 0, ng = 0;
+    var bytes = 0, ng = 0, table = sjisTable();
     cps(str).forEach(function (ch) {
       var cp = ch.codePointAt(0);
       if (cp > 0xFFFF) { ng++; return; }              // サロゲートペアはCP932に無い
       if (cp < 0x80) { bytes += 1; return; }           // ASCII
       if (cp >= 0xFF61 && cp <= 0xFF9F) { bytes += 1; return; } // 半角カナ
+      if (table && !table[ch]) { ng++; return; }       // CP932 に無い文字
       bytes += 2;
     });
     return { bytes: bytes, ng: ng };

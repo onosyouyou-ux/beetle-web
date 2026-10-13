@@ -114,7 +114,7 @@
 
     // ---- 指数表記 ----
     var m;
-    if ((m = s.match(/^(\d+(?:\.\d+)?)[eE]([+-]?\d+)$/))) {
+    if ((m = s.match(/^\+?(\d+(?:\.\d+)?)[eE]([+-]?\d+)$/))) { // +3E5 も実測で 3.00E+05
       var ev = Number(m[1] + 'e' + m[2]);
       if (!isFinite(ev) || ev > 9.99e307) return same(raw);
       var sf = sciFixed(ev);
@@ -145,6 +145,13 @@
       var fr = (m[1] === '0' ? ' ' : m[1] + ' ') + m[2] + '/' + m[3];
       return fr === raw ? result('number', raw, raw, '見た目は同じですが、中身は ' + general(+m[1] + m[2] / m[3], 11) + ' の数値になります', { quiet: true })
         : result('number', fr, fr, '分数の数値として読まれます');
+    }
+    // ---- + - で始まる、数値でも計算式でもない値 ----
+    // 実測：+A1 → 10（A1 の値）、-SUM(1,2) → -3、-abc・- item → #NAME?。数式として実行される
+    // 式として成り立たないもの（記号だけ、末尾が演算子・「:」「(」、+81 90 のような数字と空白、-12:00）は文字のまま残った
+    if (/^[+-]/.test(raw) && !isFinite(Number(s)) && !/^[+-]+$/.test(raw) && !/[+\-*/^&:(,]$/.test(raw.trim()) &&
+      !/^[+-]\d+( +\d+)+$/.test(raw) && !/^[+-]\d+:\d/.test(raw)) {
+      return result('formula', '（数式の計算結果）', '（数式の計算結果）', '「+」「-」で始まるので数式として実行されます。セルの参照（+A1）や関数（-SUM(…)）も動き、名前として読めない文字は #NAME? になります', { formula: true });
     }
     return same(raw);
   }

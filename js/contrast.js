@@ -52,6 +52,8 @@
   function luminance(rgb) {
     return 0.2126 * lin(rgb[0]) + 0.7152 * lin(rgb[1]) + 0.0722 * lin(rgb[2]);
   }
+  // 比率は切り捨てで表示する。四捨五入だと 4.497 が「4.50」と出て、合格に見えるのに判定は不足になる
+  function fmtR(r) { return (Math.floor(r * 100) / 100).toFixed(2); }
   function ratio(a, b) {
     var la = luminance(a), lb = luminance(b);
     return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
@@ -136,8 +138,8 @@
     }
 
     var r = ratio(fg, bg);
-    var shown = Math.round(r * 100) / 100;
-    $('ct-ratio').textContent = shown.toFixed(2);
+    var shown = fmtR(r);
+    $('ct-ratio').textContent = shown;
     $('ct-ratio').className = 'ct-ratio ' + (r >= 4.5 ? 'is-pass' : r >= 3 ? 'is-warn' : 'is-fail');
 
     $('ct-judge').innerHTML = LEVELS.map(function (lv) {
@@ -163,7 +165,7 @@
       if (sFg) cards.push(fixCard('文字色を変える', toHex(fg), toHex(sFg.rgb), toHex(bg), ratio(sFg.rgb, bg), sFg.dir));
       if (sBg) cards.push(fixCard('背景色を変える', toHex(bg), toHex(sBg.rgb), toHex(fg), ratio(sBg.rgb, fg), sBg.dir, true));
       $('ct-fix').innerHTML =
-        '<div class="ct-note is-error">通常サイズの文字に必要な 4.5:1 に届いていません（現在 ' + shown.toFixed(2) + '）。</div>' +
+        '<div class="ct-note is-error">通常サイズの文字に必要な 4.5:1 に届いていません（現在 ' + shown + '）。</div>' +
         (cards.length
           ? '<h3 class="ct-fix-hd">色みを保ったまま通す</h3><div class="ct-fix-cards">' + cards.join('') + '</div>'
           : '<div class="ct-note">明度を動かすだけでは 4.5:1 に届きません。色相か彩度も変える必要があります。</div>');
@@ -177,7 +179,7 @@
       return '<div class="ct-cvd-card"><div class="ct-cvd-name">' + esc(name) + '</div>' +
         '<div class="ct-cvd-pv" style="background:' + toHex(sbg) + ';color:' + toHex(sfg) + '">あア亜 Aa123</div>' +
         '<div class="ct-cvd-hex"><span>' + esc(toHex(sbg)) + '</span><span>' + esc(toHex(sfg)) + '</span></div>' +
-        '<div class="ct-cvd-r">コントラスト比 ' + ratio(sfg, sbg).toFixed(2) + '</div></div>';
+        '<div class="ct-cvd-r">コントラスト比 ' + fmtR(ratio(sfg, sbg)) + '</div></div>';
     }).join('');
   }
 
@@ -186,7 +188,7 @@
       '<div class="ct-fix-t">' + esc(title) + '<span>' + (dir < 0 ? '暗く' : '明るく') + 'する</span></div>' +
       '<div class="ct-fix-swap"><code>' + esc(from) + '</code><span>→</span><code>' + esc(to) + '</code></div>' +
       '<div class="ct-fix-pv" style="background:' + (isBg ? to : against) + ';color:' + (isBg ? against : to) + '">この色なら読めます</div>' +
-      '<div class="ct-fix-r">新しい比率 ' + newRatio.toFixed(2) + ' : 1</div>' +
+      '<div class="ct-fix-r">新しい比率 ' + fmtR(newRatio) + ' : 1</div>' +
       '<button type="button" class="ct-apply" data-target="' + (isBg ? 'bg' : 'fg') + '" data-v="' + esc(to) + '">この色にする</button>' +
       '</div>';
   }
