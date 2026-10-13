@@ -196,7 +196,13 @@
         assign[fi] = best;
       }
 
-      // 禁則が絡んで1件も作れない組み合わせは「到達不能」として諦める
+      // 貪欲に埋めて行き詰まったら、種の組み合わせを残したまま総当たりで探し直す。
+      // 前は行き詰まった時点で「禁則が矛盾している」と数えていたので、作れる組み合わせまで警告に出ていた
+      if (stuck) {
+        var found = complete(seedAssign(seed, F), factors, rules);
+        if (found) { assign = found; stuck = false; }
+      }
+      // 総当たりでも作れない組み合わせだけを「到達不能」として諦める
       if (stuck) { uncovered.delete(tupleKey(seed.c, seedAssign(seed, F))); unreachable++; continue; }
 
       var removed = 0;
@@ -215,6 +221,23 @@
       skippedByRule: skippedByRule,
       capped: uncovered.size > 0 && tests.length >= MAX_TESTS
     };
+  }
+
+  // 禁則に触れない埋め方を深さ優先で1つ探す（見つからなければ null）。探す手数には上限を設ける
+  function complete(assign, factors, rules) {
+    var budget = 200000;
+    function dfs(fi) {
+      if (fi === factors.length) return true;
+      if (assign[fi] >= 0) return dfs(fi + 1);
+      for (var li = 0; li < factors[fi].levels.length; li++) {
+        if (--budget < 0) return false;
+        assign[fi] = li;
+        if (!violates(assign, rules) && dfs(fi + 1)) return true;
+      }
+      assign[fi] = -1;
+      return false;
+    }
+    return dfs(0) ? assign : null;
   }
 
   function seedAssign(seed, F) {
@@ -326,7 +349,7 @@
       msgs.push({ text: '禁則により ' + res.skippedByRule.toLocaleString() + ' 通りの組み合わせを網羅対象から除きました。', sub: '禁則欄に書いた組み合わせは、生成された表にも現れません。' });
     }
     if (res.unreachable) {
-      msgs.push({ text: res.unreachable.toLocaleString() + ' 通りは、禁則が重なって成立するテストケースを作れませんでした。', sub: '別の禁則と矛盾している可能性があります。禁則の書きすぎを見直してください。' });
+      msgs.push({ text: res.unreachable.toLocaleString() + ' 通りは、禁則が重なって成立するテストケースを作れませんでした。', sub: 'どの水準を選んでも、ほかの禁則に触れてしまう組み合わせです。禁則どうしが矛盾していないか見直してください。' });
     }
     if (res.capped) {
       msgs.push({ text: '件数が上限（' + MAX_TESTS.toLocaleString() + '件）に達したため打ち切りました。', sub: '因子か水準を減らしてください。', error: true });

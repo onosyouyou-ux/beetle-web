@@ -127,16 +127,27 @@ function mPdf(b, t) {
   const o4 = `4 0 obj\n<</Length ${cLen}>>\nstream\n${cStr}\nendstream\nendobj\n`;
   const o5 = '5 0 obj\n<</Type /Font /Subtype /Type1 /BaseFont /Helvetica>>\nendobj\n';
   const objs = [o1, o2, o3, o4, o5];
-  let pos = enc.encode(hdr).length;
-  const offs = [];
-  for (const o of objs) { offs.push(pos); pos += enc.encode(o).length; }
-  const xref = `xref\n0 6\n0000000000 65535 f \n${offs.map(p => p.toString().padStart(10,'0') + ' 00000 n \n').join('')}trailer\n<</Size 6 /Root 1 0 R>>\nstartxref\n${pos}\n%%EOF\n`;
-  const validParts = [hdr, ...objs, xref];
-  const validSize = pos + enc.encode(xref).length;
-  if (b <= validSize) return new Blob(validParts, { type: 'application/pdf' });
-  const pad = new Uint8Array(b - validSize);
+  const hLen = enc.encode(hdr).length;
+  // 足りないぶんはヘッダー直後のコメント行で埋める。末尾は必ず %%EOF で終わらせる（前は %%EOF の後ろに乱数を足していた）
+  const make = padLen => {
+    let pos = hLen + padLen;
+    const offs = [];
+    for (const o of objs) { offs.push(pos); pos += enc.encode(o).length; }
+    const xref = `xref\n0 6\n0000000000 65535 f \n${offs.map(p => p.toString().padStart(10,'0') + ' 00000 n \n').join('')}trailer\n<</Size 6 /Root 1 0 R>>\nstartxref\n${pos}\n%%EOF\n`;
+    return { xref, size: pos + xref.length };
+  };
+  let padLen = 0, m = make(0);
+  // startxref の桁数がパディングで変わることがあるので、合うまで詰め直す
+  for (let i = 0; i < 4 && m.size !== b && b > make(0).size; i++) { padLen = Math.max(0, padLen + b - m.size); m = make(padLen); }
+  if (padLen === 0) return new Blob([hdr, ...objs, m.xref], { type: 'application/pdf' });
+  const pad = new Uint8Array(padLen);
   fillRandom(pad);
-  return new Blob([...validParts, pad], { type: 'application/pdf' });
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  for (let i = 0; i < padLen; i++) pad[i] = chars.charCodeAt(pad[i] & 63);
+  // 1000バイトごとに「%…改行」のコメント行にする（1バイトだけ余ったら改行1つ）
+  for (let i = 0; i < padLen; i += 1000) { pad[i] = 0x25; pad[Math.min(i + 999, padLen - 1)] = 0x0A; }
+  if (padLen % 1000 === 1) pad[padLen - 1] = 0x0A;
+  return new Blob([hdr, pad, ...objs, m.xref], { type: 'application/pdf' });
 }
 // ZIP：ランダムな中身のファイルを1つ入れた、解凍できるZIP。中身を少し少なめに作り、端数は fitZip のコメント欄で合わせる
 async function mZip(b) {
@@ -180,27 +191,40 @@ async function mDocx(b, t) {
   zip.file('[Content_Types].xml',ct,{compression:'STORE'}); zip.file('_rels/.rels',rl,{compression:'STORE'}); zip.file('word/document.xml',dHdr+paras.join('')+dFtr,{compression:'STORE'}); zip.file('word/_rels/document.xml.rels',wdrl,{compression:'STORE'}); zip.file('word/styles.xml',st,{compression:'STORE'});
   return fitZip(zip, b, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 }
-function mTxt(b, t) {
+// 行を足していき、入りきらない最後の1行は作らない。余ったバイトは最後の行に「x」を足して合わせる
+// （前は最後の行を途中で切っていたので、行が欠けたり、日本語のラベルだと文字が壊れたりした）
+// 行を足していき、入りきらない最後の1行は作らない。余ったバイトは最後の行に「x」を足して合わせる
+// （前は最後の行を途中で切っていたので、行が欠けたり、日本語のラベルだと文字が壊れたりした）
+// 見出しすら入らない小さいサイズは、fill で作る ASCII だけの中身にする
+function fitLines(b, head, rowOf, pad, fill, type) {
   const enc = new TextEncoder();
+  const hdr = enc.encode(head);
+  if (b <= 0) return new Blob([], { type });
+  if (b < hdr.length) return new Blob([fill(b)], { type });
+  const rows = []; let total = hdr.length;
+  for (let i = 1; ; i++) { const r = rowOf(i); const n = enc.encode(r).length; if (total + n > b) break; rows.push(r); total += n; }
+  const rest = b - total;
+  if (rest > 0) {
+    if (rows.length) rows[rows.length - 1] = pad(rows[rows.length - 1], rest);
+    else rows.push(fill(rest));
+  }
+  return new Blob([hdr, rows.join('')], { type });
+}
+function mTxt(b, t) {
   const lb = lbl(t);
-  const hdr = enc.encode(`${lb} - BEETLE QA Tool\n${new Date().toISOString()}\n${'='.repeat(40)}\n\n`);
-  if (b <= hdr.length) return new Blob([hdr.slice(0, b)], { type: 'text/plain' });
-  const parts = [hdr]; let total = hdr.length;
-  for (let i = 1; total < b; i++) { const r = enc.encode(`Line ${i}: ${lb} ${(Math.random()*99999).toFixed(2)} ${Math.random().toString(36).slice(2)}\n`); parts.push(r); total += r.length; }
-  const out = new Uint8Array(b); let off = 0;
-  for (const p of parts) { const c = p.slice(0, Math.min(p.length, b - off)); out.set(c, off); off += c.length; if (off >= b) break; }
-  return new Blob([out], { type: 'text/plain' });
+  return fitLines(b, `${lb} - BEETLE QA Tool\n${new Date().toISOString()}\n${'='.repeat(40)}\n\n`,
+    i => `Line ${i}: ${lb} ${(Math.random()*99999).toFixed(2)} ${Math.random().toString(36).slice(2)}\n`,
+    (r, n) => r.slice(0, -1) + 'x'.repeat(n) + '\n',
+    n => 'x'.repeat(n - 1) + '\n', 'text/plain');
 }
 function mCsv(b, t) {
-  const enc = new TextEncoder();
   const lb = lbl(t);
-  const hdr = enc.encode(`id,name,value,timestamp\n`);
-  if (b <= hdr.length) return new Blob([hdr.slice(0, b)], { type: 'text/csv' });
-  const parts = [hdr]; let total = hdr.length;
-  for (let i = 1; total < b; i++) { const r = enc.encode(`${i},${lb},${(Math.random()*10000).toFixed(2)},${new Date().toISOString()}\n`); parts.push(r); total += r.length; }
-  const out = new Uint8Array(b); let off = 0;
-  for (const p of parts) { const c = p.slice(0, Math.min(p.length, b - off)); out.set(c, off); off += c.length; if (off >= b) break; }
-  return new Blob([out], { type: 'text/csv' });
+  const ts = () => new Date().toISOString();
+  // 足すのは name 列の後ろ（列の数は変えない）
+  return fitLines(b, `id,name,value,timestamp\n`,
+    i => `${i},${lb},${(Math.random()*10000).toFixed(2)},${ts()}\n`,
+    (r, n) => { const c = r.split(','); c[1] += 'x'.repeat(n); return c.join(','); },
+    n => n >= 4 ? 'x'.repeat(n - 4) + ',,,\n' : '\n'.repeat(n), 'text/csv');
 }
 function mSvg(b, t) {
   const enc = new TextEncoder();

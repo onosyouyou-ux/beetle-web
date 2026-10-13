@@ -77,6 +77,10 @@
       it.lo = toInt(it.loRaw, '下限');
       it.hi = toInt(it.hiRaw, '上限');
       it.step = Math.round(Number(step) * it.scale) || 1;
+      // 上下限が刻みの目盛りに乗っていないと、「1つ手前」「1つ先」が刻みの外の値になる（刻み 0.1 で下限 0.05 など）
+      if (type === 'dec' && !err.length && [it.lo, it.hi].some(function (v) { return v !== null && v % it.step !== 0; })) {
+        err.push('下限・上限は刻み（' + step + '）の倍数にしてください');
+      }
     }
     if (it.lo === null && it.hi === null && !err.length) err.push('下限か上限のどちらかを入れてください');
     if (it.lo !== null && it.hi !== null && !err.length) {
@@ -144,7 +148,9 @@
       push('同値クラス', mid, '有効な範囲のまん中');
     } else if (it.lo !== null) push('同値クラス', it.lo + s10, '有効な範囲（下限から離れた値）');
     else push('同値クラス', it.hi - s10, '有効な範囲（上限から離れた値）');
-    if (it.lo !== null) push('同値クラス', it.type === 'len' ? Math.max(0, it.lo - s10) : it.lo - s10, '下限より小さい範囲');
+    // 文字数は0より小さくできない。下限が0なら「下限より小さい範囲」は無く、下限が1なら0文字は境界値の行と同じになる
+    var below = it.type === 'len' ? Math.max(0, it.lo - s10) : it.lo - s10;
+    if (it.lo !== null && below < it.lo - it.step) push('同値クラス', below, '下限より小さい範囲');
     if (it.hi !== null) push('同値クラス', it.hi + s10, '上限より大きい範囲');
     out.sort(function (a, b) { return a.kind === b.kind ? a.sort - b.sort : (a.kind === '境界値' ? -1 : 1); });
 
