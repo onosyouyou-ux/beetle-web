@@ -270,7 +270,8 @@
       city: area[1],
       street: street,
       address: area[0] + area[1] + street,
-      tel: area[3] + '-' + pad(rand(10000), 4) + '-' + pad(rand(10000), 4),
+      // 固定電話は市外局番＋市内局番で6桁（03-XXXX、052-XXX）。市内局番は0・1で始めない
+      tel: area[3] + '-' + (rand(8) + 2) + pad(rand(Math.pow(10, 5 - area[3].length)), 5 - area[3].length) + '-' + pad(rand(10000), 4),
       mobile: pick(['090', '080', '070']) + '-' + pad(rand(10000), 4) + '-' + pad(rand(10000), 4),
       email: sei[3] + '.' + mei[3] + (rand(90) + 10) + '@example.com',
       company: (Math.random() < 0.8 ? '株式会社' : '有限会社') + pick(CORP_W) + pick(CORP_S),

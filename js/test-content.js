@@ -138,7 +138,13 @@ function mPdf(b, t) {
   fillRandom(pad);
   return new Blob([...validParts, pad], { type: 'application/pdf' });
 }
-function mZip(b) { const a = new Uint8Array(b); a[0] = 0x50; a[1] = 0x4B; a[2] = 0x03; a[3] = 0x04; for (let i = 4; i < b; i++) a[i] = Math.floor(Math.random() * 256); return new Blob([a], { type: 'application/zip' }); }
+// ZIP：ランダムな中身のファイルを1つ入れた、解凍できるZIP。中身を少し少なめに作り、端数は fitZip のコメント欄で合わせる
+async function mZip(b) {
+  const a = new Uint8Array(Math.max(0, b - 200)); fillRandom(a);
+  const zip = new JSZip();
+  zip.file('testdata.bin', a, { compression: 'STORE' });
+  return fitZip(zip, b, 'application/zip');
+}
 async function mXlsx(b, t) {
   const enc = new TextEncoder(); const P = 'http://schemas.openxmlformats.org/package/2006'; const O = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'; const X = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
   const ct = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="${P}/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`;
@@ -297,8 +303,66 @@ function mJpeg(b, t) {
   });
 }
 
-// GIF: ブラウザAPIではPNGデータで代用（同じパディング処理）
-function mGif(b, t) { return mPng(b, t).then(blob => new Blob([blob], { type: 'image/gif' })); }
+// GIF: ブラウザはGIFを書き出せないので自前で組む。
+// 絵は16色に減らし、LZW は圧縮せず（14画素ごとに clear を入れて符号長を5ビットに固定）並べる。
+// 指定バイト数との差はコメント拡張ブロックで埋める
+const GIF_PAL = [
+  [0, 0, 0], [255, 255, 255], [28, 28, 46], [192, 99, 76], [128, 128, 128], [64, 64, 64], [192, 192, 192], [255, 0, 0],
+  [0, 255, 0], [0, 0, 255], [255, 255, 0], [255, 0, 255], [0, 255, 255], [128, 0, 0], [0, 128, 0], [0, 0, 128],
+];
+function gifPixels(c) {
+  const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+  const out = new Uint8Array(c.width * c.height);
+  for (let i = 0, p = 0; p < out.length; i += 4, p++) {
+    let best = 0, bd = Infinity;
+    for (let k = 0; k < 16; k++) {
+      const q = GIF_PAL[k], dr = d[i] - q[0], dg = d[i + 1] - q[1], db = d[i + 2] - q[2], dd = dr * dr + dg * dg + db * db;
+      if (dd < bd) { bd = dd; best = k; }
+    }
+    out[p] = best;
+  }
+  return out;
+}
+function gifLzw(px) {
+  const bytes = []; let acc = 0, nb = 0;
+  const put = code => { acc |= code << nb; nb += 5; while (nb >= 8) { bytes.push(acc & 255); acc >>= 8; nb -= 8; } };
+  for (let i = 0; i < px.length; i++) { if (i % 14 === 0) put(16); put(px[i]); }
+  put(17);
+  if (nb > 0) bytes.push(acc & 255);
+  return bytes;
+}
+function gifSubBlocks(data) {
+  const out = [];
+  for (let i = 0; i < data.length; i += 255) { const n = Math.min(255, data.length - i); out.push(n); for (let j = 0; j < n; j++) out.push(data[i + j]); }
+  out.push(0);
+  return out;
+}
+// ちょうど n バイトのコメント拡張（21 FE …サブブロック… 00）
+// 中身 L バイト＋長さ k 個で n-3 になる組を探す。n-3 を256で割って1余るときだけ組が無いので、空のコメント（3バイト）を足して逃がす
+function gifComment(n) {
+  const T = n - 3;
+  if (T % 256 === 1) { const a = gifComment(n - 3), o = new Uint8Array(n); o.set(a); o.set([0x21, 0xFE, 0], n - 3); return o; }
+  const k = Math.ceil(T / 256), L = T - k;
+  const out = new Uint8Array(n);
+  fillRandom(out);
+  out[0] = 0x21; out[1] = 0xFE;
+  let p = 2;
+  for (let i = 0; i < L; i += 255) { const m = Math.min(255, L - i); out[p] = m; for (let j = 1; j <= m; j++) out[p + j] = 0x41 + (out[p + j] % 26); p += m + 1; }
+  out[p] = 0;
+  return out;
+}
+function mGif(b, t) {
+  const px = Math.min(Math.floor(Math.max(0, b - 160) * 8 / 5.5), 200 * 150);
+  const sc = Math.sqrt(Math.max(px, 16) / (200 * 150));
+  const w = Math.max(4, Math.round(200 * sc)), h = Math.max(4, Math.round(150 * sc));
+  const head = [0x47, 0x49, 0x46, 0x38, 0x39, 0x61, w & 255, w >> 8, h & 255, h >> 8, 0xF3, 0, 0, ...GIF_PAL.flat(),
+    0x2C, 0, 0, 0, 0, w & 255, w >> 8, h & 255, h >> 8, 0, 4, ...gifSubBlocks(gifLzw(gifPixels(mCanvas(w, h, t))))];
+  const pad = b - head.length - 1;
+  // 3バイト未満（と4バイトちょうど）はコメントにできないので、末尾（3B の後ろ）に足す。主要なデコーダーは読み飛ばす
+  const parts = pad >= 3 && pad !== 4 ?[new Uint8Array(head), gifComment(pad), new Uint8Array([0x3B])]
+    : [new Uint8Array(head), new Uint8Array([0x3B]), new Uint8Array(Math.max(0, pad))];
+  return Promise.resolve(new Blob(parts, { type: 'image/gif' }));
+}
 function mAudio() { return new Promise((res, rej) => { if (!('speechSynthesis' in window)) { rej(new Error('TTSに対応していません')); return; } const ctx = new (window.AudioContext || window.webkitAudioContext)(); const dest = ctx.createMediaStreamDestination(); const rec = new MediaRecorder(dest.stream, { mimeType: 'audio/webm' }); const chunks = []; rec.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); }; rec.onstop = () => { ctx.close(); res(new Blob(chunks, { type: 'audio/webm' })); }; rec.start(); const osc = ctx.createOscillator(); osc.frequency.value = 440; osc.connect(dest); osc.start(); const u = new SpeechSynthesisUtterance('これはテストです。本日は晴天なり。これはテストです。'); u.lang = 'ja-JP'; u.rate = 0.9; u.onend = () => { osc.stop(); rec.stop(); }; u.onerror = () => { osc.stop(); rec.stop(); }; setTimeout(() => speechSynthesis.speak(u), 200); }); }
 function mVideo() { return new Promise(res => { const w = 640, h = 360; const canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h; const ctx = canvas.getContext('2d'); const stream = canvas.captureStream(15); const rec = new MediaRecorder(stream, { mimeType: 'video/webm' }); const chunks = []; rec.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); }; rec.onstop = () => res(new Blob(chunks, { type: 'video/webm' })); rec.start(); const dur = 5000; const start = Date.now(); const txt = document.getElementById('fileText').value || 'TEST DATA'; function draw() { const el = Date.now() - start; if (el > dur) { rec.stop(); return; } ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, w, h); for (let i = 0; i < 40; i++) { ctx.fillStyle = `rgba(${Math.random() * 60},${Math.random() * 60},${Math.random() * 60},0.7)`; const x = Math.floor(Math.random() * w / 4) * 4; const y = Math.floor(Math.random() * h / 4) * 4; ctx.fillRect(x, y, 4, 4); } ctx.fillStyle = '#C0634C'; ctx.font = 'bold 48px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(txt, w / 2, h / 2 - 20); ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '20px sans-serif'; ctx.fillText('BEETLE QA Tool', w / 2, h / 2 + 18); ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = '13px monospace'; ctx.fillText(new Date().toISOString(), w / 2, h / 2 + 46); requestAnimationFrame(draw); } draw(); setTimeout(() => { if (rec.state !== 'inactive') rec.stop(); }, dur + 500); }); }
 
@@ -313,7 +377,7 @@ async function build(fmt, bytes, t) {
     case 'pdf_d': return [mPdf(bytes, t), 'pdf'];
     case 'txt': return [mTxt(bytes, t), 'txt'];
     case 'csv': return [mCsv(bytes, t), 'csv'];
-    case 'zip_d': return [mZip(bytes), 'zip'];
+    case 'zip_d': return [await mZip(bytes), 'zip'];
     case 'bin': return [mBin(bytes), 'bin'];
     case 'audio': return [await mAudio(), 'webm'];
     case 'video': return [await mVideo(), 'webm'];

@@ -67,13 +67,16 @@
       return kind === 'unix' ? String(Math.floor(item.d.getTime() / 1000)) : item.fixedIso;
     }
     var dt = item.d;
+    // 日付はローカルの0時で持っているので、UTC表記ではその日付の UTC 0時に置き直す
+    // （そのまま toISOString すると日本では前日の15時になり、1日・9時間ずれる）
+    var utc = Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate());
     switch (kind) {
       case 'slash': return dt.getFullYear() + '/' + p2(dt.getMonth() + 1) + '/' + p2(dt.getDate());
       case 'compact': return '' + dt.getFullYear() + p2(dt.getMonth() + 1) + p2(dt.getDate());
       case 'ja': return dt.getFullYear() + '年' + (dt.getMonth() + 1) + '月' + dt.getDate() + '日';
       case 'wareki': return wareki(dt);
-      case 'datetime': return dt.toISOString();
-      case 'unix': return String(Math.floor(dt.getTime() / 1000));
+      case 'datetime': return new Date(utc).toISOString();
+      case 'unix': return String(Math.floor(utc / 1000));
       default: return iso(dt);
     }
   }
