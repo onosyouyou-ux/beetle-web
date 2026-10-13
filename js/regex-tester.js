@@ -23,8 +23,8 @@
 
     let re;
     try {
-      const globalFlags = flags.includes('g') ? flags : flags + 'g';
-      re = new RegExp(pattern, globalFlags);
+      // 全件を順に拾うため内部では g を付けるが、g が無いときは最初の1件で止める（JavaScript の素の挙動に合わせる）
+      re = new RegExp(pattern, flags.includes('g') ? flags : flags + 'g');
     } catch (e) {
       statusEl.textContent = '正規表現が不正: ' + e.message;
       statusEl.className = 'rt-status rt-status-error';
@@ -45,6 +45,7 @@
       if (match[0].length === 0) {
         re.lastIndex++;
       }
+      if (!flags.includes('g')) break;
       if (count > 5000) break; // 暴走防止
     }
     html += escapeHtml(text.slice(lastIndex));

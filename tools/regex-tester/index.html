@@ -63,7 +63,7 @@
     {
       "@type": "Question",
       "name": "フラグ欄には何を入れればいいですか？",
-      "acceptedAnswer": { "@type": "Answer", "text": "gは全マッチ検出、iは大文字小文字を区別しない、mは複数行モードです。空欄でもマッチ確認はできます。" }
+      "acceptedAnswer": { "@type": "Answer", "text": "gは全マッチ検出、iは大文字小文字を区別しない、mは複数行モードです。空欄でもマッチ確認はできますが、そのときは最初の1件だけを数えます。" }
     }
   ]
 }
@@ -109,7 +109,7 @@
         <label for="rt-pattern">パターン</label>
         <div class="rt-pattern-wrap">
           <span class="rt-slash">/</span>
-          <input type="text" id="rt-pattern" placeholder="例: ^[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}$" autocomplete="off" spellcheck="false">
+          <input type="text" id="rt-pattern" placeholder="例: ^[\w.+-]+@[\w-]+(\.[\w-]+)*\.[a-zA-Z]{2,}$" autocomplete="off" spellcheck="false">
           <span class="rt-slash">/</span>
           <input type="text" id="rt-flags" class="rt-flags" placeholder="gi" maxlength="6" autocomplete="off" spellcheck="false">
         </div>
@@ -131,44 +131,44 @@
 
       <div class="ref-card rt-card">
         <div class="rt-card-name">メールアドレス</div>
-        <code class="rt-card-code">^[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}$</code>
-        <button type="button" class="rt-use-btn" data-pattern="^[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}$" data-flags="m" data-sample="taro@example.com&#10;bad-email@&#10;info+test@beetle-web.jp">使ってみる →</button>
+        <code class="rt-card-code">^[\w.+-]+@[\w-]+(\.[\w-]+)*\.[a-zA-Z]{2,}$</code>
+        <button type="button" class="rt-use-btn" data-pattern="^[\w.+-]+@[\w-]+(\.[\w-]+)*\.[a-zA-Z]{2,}$" data-flags="gm" data-sample="taro@example.com&#10;bad-email@&#10;info+test@beetle-web.jp&#10;hanako@mail.co.jp">使ってみる →</button>
       </div>
 
       <div class="ref-card rt-card">
         <div class="rt-card-name">電話番号（日本・ハイフン任意）</div>
         <code class="rt-card-code">^0\d{1,4}-?\d{1,4}-?\d{4}$</code>
-        <button type="button" class="rt-use-btn" data-pattern="^0\d{1,4}-?\d{1,4}-?\d{4}$" data-flags="m" data-sample="03-1234-5678&#10;09012345678&#10;123-4567">使ってみる →</button>
+        <button type="button" class="rt-use-btn" data-pattern="^0\d{1,4}-?\d{1,4}-?\d{4}$" data-flags="gm" data-sample="03-1234-5678&#10;09012345678&#10;123-4567">使ってみる →</button>
       </div>
 
       <div class="ref-card rt-card">
         <div class="rt-card-name">郵便番号</div>
         <code class="rt-card-code">^\d{3}-?\d{4}$</code>
-        <button type="button" class="rt-use-btn" data-pattern="^\d{3}-?\d{4}$" data-flags="m" data-sample="150-0001&#10;1500001&#10;150-01">使ってみる →</button>
+        <button type="button" class="rt-use-btn" data-pattern="^\d{3}-?\d{4}$" data-flags="gm" data-sample="150-0001&#10;1500001&#10;150-01">使ってみる →</button>
       </div>
 
       <div class="ref-card rt-card">
         <div class="rt-card-name">URL（http/https）</div>
         <code class="rt-card-code">^https?:\/\/[\w\-.~:/?#[\]@!$&amp;'()*+,;=%]+$</code>
-        <button type="button" class="rt-use-btn" data-pattern="^https?:\/\/[\w\-.~:/?#[\]@!$&'()*+,;=%]+$" data-flags="m" data-sample="https://www.beetle-web.jp&#10;ftp://example.com&#10;www.example.com">使ってみる →</button>
+        <button type="button" class="rt-use-btn" data-pattern="^https?:\/\/[\w\-.~:/?#[\]@!$&'()*+,;=%]+$" data-flags="gm" data-sample="https://www.beetle-web.jp&#10;ftp://example.com&#10;www.example.com">使ってみる →</button>
       </div>
 
       <div class="ref-card rt-card">
         <div class="rt-card-name">ひらがなのみ</div>
         <code class="rt-card-code">^[ぁ-んー]+$</code>
-        <button type="button" class="rt-use-btn" data-pattern="^[ぁ-んー]+$" data-flags="m" data-sample="ふりがな&#10;カタカナ&#10;ひらがなmix123">使ってみる →</button>
+        <button type="button" class="rt-use-btn" data-pattern="^[ぁ-んー]+$" data-flags="gm" data-sample="ふりがな&#10;カタカナ&#10;ひらがなmix123">使ってみる →</button>
       </div>
 
       <div class="ref-card rt-card">
         <div class="rt-card-name">カタカナのみ</div>
         <code class="rt-card-code">^[ァ-ヶー]+$</code>
-        <button type="button" class="rt-use-btn" data-pattern="^[ァ-ヶー]+$" data-flags="m" data-sample="タロウ&#10;ひらがな&#10;タロウ123">使ってみる →</button>
+        <button type="button" class="rt-use-btn" data-pattern="^[ァ-ヶー]+$" data-flags="gm" data-sample="タロウ&#10;ひらがな&#10;タロウ123">使ってみる →</button>
       </div>
 
       <div class="ref-card rt-card">
         <div class="rt-card-name">半角英数字のみ</div>
         <code class="rt-card-code">^[A-Za-z0-9]+$</code>
-        <button type="button" class="rt-use-btn" data-pattern="^[A-Za-z0-9]+$" data-flags="m" data-sample="abc123&#10;ＡＢＣ123&#10;abc-123">使ってみる →</button>
+        <button type="button" class="rt-use-btn" data-pattern="^[A-Za-z0-9]+$" data-flags="gm" data-sample="abc123&#10;ＡＢＣ123&#10;abc-123">使ってみる →</button>
       </div>
 
       <div class="ref-card rt-card">
@@ -198,7 +198,7 @@
     </details>
     <details class="faq-item">
       <summary class="faq-q"><span>フラグ欄には何を入れればいいですか？</span><span class="faq-icon">+</span></summary>
-      <div class="faq-a">gは全マッチ検出、iは大文字小文字を区別しない、mは複数行モードです。空欄でもマッチ確認はできます。</div>
+      <div class="faq-a">gは全マッチ検出、iは大文字小文字を区別しない、mは複数行モードです。空欄でもマッチ確認はできますが、そのときは最初の1件だけを数えます。</div>
     </details>
   </section>
 

@@ -119,7 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(r => r.json())
       .then(d => {
         const el = document.getElementById('site-version');
-        if (el) el.textContent = `v${d.v} · ${d.sha}`;
+        // 作業名（sha）は利用者には意味がないので出さない。本番反映の確認用に version.json には残す
+        if (el) el.textContent = `v${d.v}`;
       })
       .catch(() => {});
   });
