@@ -2,6 +2,7 @@
 //   cd scripts/teacher-kit && npm install   （qrcode。WSL 側で入れてよい）
 //   node scripts/teacher-kit/build.mjs      （PDF を出すので Windows の node から。WSL の Chromium は共有ライブラリが足りず起動しない）
 // playwright は tests/node_modules のものを使う（なければ NODE_PATH で指す）。ブラウザは Chrome（TEACHER_KIT_BROWSER で変更可）
+//   --cards-only: ページのカードだけ更新（QR・PDFは変更しない）
 // アプリを足すときは data/teacher-apps.json に1件足して、これを実行するだけ。
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
@@ -21,6 +22,7 @@ function loadPlaywright() {
   return require('playwright');   // NODE_PATH
 }
 
+const cardsOnly = process.argv.includes('--cards-only');
 const data = JSON.parse(await readFile(resolve(root, 'data/teacher-apps.json'), 'utf8'));
 const site = data.site;
 const apps = data.apps;
@@ -31,10 +33,12 @@ const withUtm = (path, source, medium, campaign) =>
 const qrSvg = (url) => QRCode.toString(url, { type: 'svg', errorCorrectionLevel: 'M', margin: 2, color: { dark: '#000000', light: '#ffffff' } });
 
 // ---- 1. ページ用のQR（電子黒板に映す用） ----
-await mkdir(resolve(root, 'assets/images/qr'), { recursive: true });
-for (const a of apps) {
-  const svg = await qrSvg(withUtm(a.path, 'teacher_page', 'qr', 'for_teachers'));
-  await writeFile(resolve(root, 'assets/images/qr', a.id + '.svg'), svg);
+if (!cardsOnly) {
+  await mkdir(resolve(root, 'assets/images/qr'), { recursive: true });
+  for (const a of apps) {
+    const svg = await qrSvg(withUtm(a.path, 'teacher_page', 'qr', 'for_teachers'));
+    await writeFile(resolve(root, 'assets/images/qr', a.id + '.svg'), svg);
+  }
 }
 
 // ---- 2. ページのカードを差し込む ----
@@ -45,7 +49,7 @@ const detailDl = (a) => DETAIL.some(([k]) => a[k])
       `<div><dt>${label}</dt><dd>${esc(a[k])}</dd></div>`).join('') + '</dl>'
   : '';
 const cards = apps.map((a) => `      <article class="ft-app" id="app-${a.id}">
-        <a class="ft-app-thumb" href="${a.path}" target="_blank" rel="noopener"><img src="${a.thumb}" alt="${esc(a.name)}" width="960" height="380" loading="lazy"></a>
+        <a class="ft-app-thumb" href="${a.path}" target="_blank" rel="noopener"><img src="${a.thumb}" alt="${esc(a.name)}" width="${a.thumbWidth || 960}" height="${a.thumbHeight || 380}" loading="lazy"></a>
         <div class="ft-app-body">
           <h3>${esc(a.name)}</h3>
           <p class="ft-app-grade">対象：${esc(a.grade)}</p>
@@ -69,6 +73,11 @@ const end = page.indexOf(endTag);
 if (start < 0 || end < 0) throw new Error('for-teachers.html に teacher-apps の目印がない');
 const startLineEnd = page.indexOf('\n', start) + 1;
 await writeFile(pagePath, page.slice(0, startLineEnd) + cards + '\n' + page.slice(end));
+
+if (cardsOnly) {
+  console.log('cards updated:', apps.length, 'apps (QR/PDF unchanged)');
+  process.exit(0);
+}
 
 // ---- 3. 配布用PDF（A4・白黒） ----
 const baseCss = `

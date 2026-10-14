@@ -32,3 +32,10 @@ required_selectors: ["#site-header", ".brand-hero", "#promise", "#apps", ".ft-ap
   一覧版＝8本を1枚（QR 32mm）／個別版＝1アプリ1枚（QR 90mm・子ども向けのひとこと・おうちのかた向けの説明）
 - **入口**: `edu-tools.html` の 03 こども向け・04 先生向け の見出しの下、`apps.html` の 02 先生向け の見出しの下（`.teacher-guide-link`）。グローバルメニューには足さない
 - **手動確認観点**: PDF のQRをスマホのカメラで読んで、utm 付きのアプリURLが開くか／「リンクをコピー」で素のURLがコピーされるか／アプリを足したら8→9本の文言（title・description・PDFの見出し）も直したか
+
+## サムネイル（#167・2026-10-14）
+- 8本とも縦長4:5、上にアプリ名・下に忍者。ユーザーの最終指定により、画像のタイトルには「修行」を付けない。
+- 配信用は assets/images/teacher-thumbs/{id}-portrait-v1.webp（400×500px）。
+- PCは200×250px。コピー操作の少し上に画像下端を置き、QRを右に保つ。
+- 768px以上は画像・説明・QRの3列。スマホ（767px以下）は画像とQRの下に説明・操作を置く。画像幅は最大200px。
+- データの thumbWidth / thumbHeight をカードのwidth/heightに使う。画像だけの更新は node scripts/teacher-kit/build.mjs --cards-only で行い、QR/PDFは再生成しない。
