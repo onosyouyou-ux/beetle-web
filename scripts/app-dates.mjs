@@ -15,7 +15,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const APPS = ['sansu-app', 'sakuranbo', 'kuku', 'tokei', 'kanji', 'katakana', 'romaji', 'phonics'];
+const APPS = ['sansu-app', 'sakuranbo', 'kuku', 'tokei', 'kanji', 'katakana', 'romaji', 'phonics', 'nenpyo'];
 const SITE_WIDE = /^\/(js|css)\/(common|contact-track|app-reference|ninja-links)\.(js|css)$/;
 const RELEASE = /<p class="paper-release">更新日：\d{4}-\d{2}-\d{2}<\/p>/;
 const check = process.argv.includes('--check');
