@@ -1,8 +1,8 @@
 ---
 page: 年表修行（アプリ）
 urls: ["/tools/nenpyo/"]
-canonical: self
-sitemap: true
+canonical: "https://www.beetle-web.jp/tools/nenpyo/landing.html"
+sitemap: false
 title_contains: "年表修行"
 og_image: "/assets/images/OG.jpg"
 required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#kk-app", "#howto", ".paper-release"]
@@ -27,5 +27,6 @@ required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#kk-app"
 - **GA4**: `app: 'nenpyo'`・`mode: year|event|mix`・`level: sho|chu:じだい`（例 `chu:bushi`）
 - **レスポンシブ**: [_common.md](_common.md) の共通ルール。2まいめは PC で とき方3つ・じだい4つを 横1列、スマホは とき方3つ横・じだい2×2。
   1440x900・1366x657・1093x520・768x1024・852x393・390x660 で スタートが1画面に入り、窓が中でスクロールしないことを実測（2026-10-14）
-- **まだ**: ランディング（`landing.html`）・忍者の絵（いまは 全員集合の絵を借りている）・OGP画像・修行いちらん／きょうの修行／app-dates への追加
+- **ランディング**: `tools/nenpyo/landing.html`（[tools-nenpyo-landing.md](tools-nenpyo-landing.md)）。アプリの canonical / og:url はランディングを指す
+- **まだ**: 忍者の絵（いまは 全員集合の絵を借りている）・OGP画像・修行いちらん／きょうの修行／app-dates への追加
 - **手動確認観点**: 年号が いまの教科書と合っているか／選択肢の できごとが 4つとも ちがう年か／長い できごと名が ボタンから はみ出さないか
