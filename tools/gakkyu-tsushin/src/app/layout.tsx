@@ -10,6 +10,7 @@ const LANDING_URL = 'https://www.beetle-web.jp/tools/gakkyu-tsushin/';
 const TITLE = '学級通信メーカー';
 const DESC = '記事の素材を入力するだけ。AIが学級通信に整えます。写真ではなくイラストで、子どもの顔出しの心配なし。';
 const OG_IMAGE = 'https://www.beetle-web.jp/assets/images/og-gakkyu-tsushin.jpg';
+const OG_ALT = '学級通信メーカー — メモを入れるだけで、学級通信がすぐ完成。';
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
     description: DESC,
     url: LANDING_URL,
     locale: 'ja_JP',
-    images: [{ url: OG_IMAGE, width: 1200, height: 630 }],
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: OG_ALT }],
   },
   twitter: {
     card: 'summary_large_image',
