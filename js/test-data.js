@@ -102,16 +102,40 @@
   }
 
   function sjisBytes(str) {
-    var bytes = 0, ng = 0, table = sjisTable();
+    var bytes = 0, ng = 0, ngChars = [], table = sjisTable();
+    function miss(ch) { ng++; if (ngChars.indexOf(ch) < 0) ngChars.push(ch); }
     cps(str).forEach(function (ch) {
       var cp = ch.codePointAt(0);
-      if (cp > 0xFFFF) { ng++; return; }              // サロゲートペアはCP932に無い
+      if (cp > 0xFFFF) { miss(ch); return; }           // サロゲートペアはCP932に無い
       if (cp < 0x80) { bytes += 1; return; }           // ASCII
       if (cp >= 0xFF61 && cp <= 0xFF9F) { bytes += 1; return; } // 半角カナ
-      if (table && !table[ch]) { ng++; return; }       // CP932 に無い文字
+      if (table && !table[ch]) { miss(ch); return; }   // CP932 に無い文字
       bytes += 2;
     });
-    return { bytes: bytes, ng: ng };
+    return { bytes: bytes, ng: ng, ngChars: ngChars };
+  }
+
+  // CP932 に無いが、見た目の近い文字に置き換えれば通るもの（波ダッシュ問題など）
+  // [元の文字の名前, 置き換え先, 置き換え先の名前]。見た目がほぼ同じなので名前とコードも出す
+  var SJIS_ALT = {
+    '〜': ['波ダッシュ', '～', '全角チルダ'], '−': ['マイナス', '－', '全角ハイフンマイナス'],
+    '‖': ['二重縦線', '∥', '平行記号'], '—': ['EMダッシュ', '―', 'ホリゾンタルバー'],
+    '¢': ['セント', '￠', '全角セント'], '£': ['ポンド', '￡', '全角ポンド'],
+    '¬': ['否定', '￢', '全角否定']
+  };
+
+  function uplus(ch) { return 'U+' + ch.codePointAt(0).toString(16).toUpperCase().padStart(4, '0'); }
+
+  function sjisNgText(chars) {
+    var names = [], alts = [];
+    chars.slice(0, 8).forEach(function (ch) {
+      var a = SJIS_ALT[ch];
+      names.push(ch + '（' + uplus(ch) + (a ? ' ' + a[0] : '') + '）');
+      if (a) alts.push(a[1] + '（' + uplus(a[1]) + ' ' + a[2] + '）');
+    });
+    var t = names.join('、') + (chars.length > 8 ? ' ほか' : '');
+    if (alts.length) t += '。CP932 では ' + alts.join('・') + ' に置き換えると通る';
+    return t;
   }
 
   function graphemes(str) {
@@ -522,7 +546,13 @@
     setStat('td-c-cp', cps(s).length, cps(s).length !== s.length);
     setStat('td-c-graph', graphemes(s), false);
     setStat('td-c-utf8', utf8Bytes(s), false);
-    setStat('td-c-sjis', sj.ng ? '変換不可' : sj.bytes, sj.ng > 0);
+    setStat('td-c-sjis', sj.bytes, sj.ng > 0);
+    if (sj.ng) {
+      // 変換できた分のバイト数は残し、変換不可の文字数を下に添える
+      var ngNote = document.createElement('small');
+      ngNote.textContent = '変換不可 ' + sj.ng + '文字';
+      document.getElementById('td-c-sjis').appendChild(ngNote);
+    }
     setStat('td-c-lines', s === '' ? 0 : s.split(/\r\n|\r|\n/).length, false);
 
     var box = document.getElementById('td-flags');
@@ -537,6 +567,7 @@
     // 正規化で変わる文字列（NFC/NFKC）も拾う
     if (s.normalize('NFC') !== s) hits.push([null, '正規化で変わる（NFC）', '保存時に正規化されると別文字列になる', true]);
     if (s.normalize('NFKC') !== s) hits.push([null, '正規化で変わる（NFKC）', '全角→半角・丸数字→数字などに変換される', false]);
+    if (sj.ng) hits.push([null, 'CP932 で変換できない文字', sjisNgText(sj.ngChars), true]);
 
     if (!hits.length) {
       box.innerHTML = '<span class="td-flag-none">目立った危険要素はありません。長さの境界値も試してみてください。</span>';
