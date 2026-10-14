@@ -4,7 +4,7 @@ urls: ["/tools/hanwake/"]
 canonical: "https://www.beetle-web.jp/tools/hanwake/landing.html"
 sitemap: false
 title_contains: "班分けメーカー"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/og-hanwake-v2.jpg"
 required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#hw-stepbar", "#hw-list", "#hw-add1", "#hw-add5", "#hw-add10", "#hw-labelset-name", "#hw-labelset-input", "#hw-total", "#hw-num", "#hw-gen", "#hw-gen2", "#hw-again", "#hw-board", "#hw-msg", "#hw-out", "#howto", "#hw-csv", "#hw-csv-save", "#hw-csv-template", "#hw-download", "#hw-prev"]
 e2e: false
 ---

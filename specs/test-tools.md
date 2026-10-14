@@ -4,7 +4,7 @@ urls: ["/test-tools.html"]
 canonical: self
 sitemap: true
 title_contains: "QA支援"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/og-test-tools-v2.jpg"
 required_selectors: ["#site-header", ".footer-skyline-bar", ".footer-link-bar", "#contact"]
 ---
 

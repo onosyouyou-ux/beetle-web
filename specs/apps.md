@@ -4,7 +4,7 @@ urls: ["/apps.html"]
 canonical: self
 sitemap: true
 title_contains: "アプリ一覧"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/og-apps-v2.jpg"
 required_selectors: ["#site-header", "#site-footer", ".brand-hero", ".apps-tabs", ".tools-grid", "#kids", "#teacher", "#qa-apps", "#qa-ref"]
 ---
 

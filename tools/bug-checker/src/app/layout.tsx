@@ -7,7 +7,7 @@ const SITE_URL = 'https://bug-checker.vercel.app';
 const TITLE = 'これってバグなの？';
 const DESC = '画像を貼るだけで判定 → バグなら起票内容を自動生成';
 const LANDING_URL = 'https://www.beetle-web.jp/tools/bug-checker/landing.html';
-const OG_IMAGE = 'https://www.beetle-web.jp/assets/images/og-bug-checker.png';
+const OG_IMAGE = 'https://www.beetle-web.jp/assets/images/ogp/og-bug-checker-v2.jpg';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     description: DESC,
     url: LANDING_URL,
     locale: 'ja_JP',
-    images: [{ url: OG_IMAGE, width: 1200, height: 630 }],
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: TITLE }],
   },
   twitter: {
     card: 'summary_large_image',

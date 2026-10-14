@@ -4,7 +4,7 @@ urls: ["/tools/kyou/"]
 canonical: self
 sitemap: true
 title_contains: "きょうの修行"
-og_image: "/assets/images/ogp/nk-kuku.jpg"
+og_image: "/assets/images/ogp/og-kyou-v2.jpg"
 required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#ky-app", "#howto", ".paper-release"]
 ---
 

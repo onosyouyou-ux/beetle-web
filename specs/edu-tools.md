@@ -4,7 +4,7 @@ urls: ["/edu-tools.html"]
 canonical: self
 sitemap: true
 title_contains: "教育"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/og-edu-tools-v2.jpg"
 required_selectors: ["#site-header", ".footer-skyline-bar", ".footer-link-bar", "#contact"]
 ---
 

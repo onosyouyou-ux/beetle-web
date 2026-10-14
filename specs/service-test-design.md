@@ -4,7 +4,7 @@ urls: ["/service-test-design.html"]
 canonical: self
 sitemap: true
 title_contains: "テスト設計パック"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/og-service-test-design-v2.jpg"
 required_selectors: ["#site-header", ".footer-skyline-bar", ".footer-link-bar"]
 ---
 

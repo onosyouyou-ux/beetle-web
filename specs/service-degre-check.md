@@ -4,7 +4,7 @@ urls: ["/service-degre-check.html"]
 canonical: self
 sitemap: true
 title_contains: "デグレ確認パック"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/og-service-degre-check-v2.jpg"
 required_selectors: ["#site-header", ".footer-skyline-bar", ".footer-link-bar"]
 ---
 

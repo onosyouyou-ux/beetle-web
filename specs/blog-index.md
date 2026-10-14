@@ -4,7 +4,7 @@ urls: ["/blog/"]
 canonical: self
 sitemap: true
 title_contains: "コラム"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/og-blog-index-v2.jpg"
 required_selectors: ["#site-header", "#site-footer"]
 ---
 

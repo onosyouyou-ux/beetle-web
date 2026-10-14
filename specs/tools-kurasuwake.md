@@ -4,7 +4,7 @@ urls: ["/tools/kurasuwake/"]
 canonical: "https://www.beetle-web.jp/tools/kurasuwake/landing.html"
 sitemap: false
 title_contains: "クラス分けメーカー"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/og-kurasuwake-v2.jpg"
 required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#kw-stepbar", "#kw-total", "#kw-num", "#kw-bal-gender", "#kw-bal-prev", "#kw-bal-score", "#kw-bal-support", "#kw-bal-leader", "#kw-list", "#kw-add1", "#kw-sample", "#kw-gen", "#kw-gen2", "#kw-again", "#kw-board", "#kw-balance", "#kw-msg", "#kw-out", "#howto", "#kw-csv", "#kw-csv-save", "#kw-csv-template", "#kw-csv-dummy", "#kw-download"]
 e2e: false
 ---
