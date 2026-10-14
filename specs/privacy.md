@@ -4,7 +4,7 @@ urls: ["/privacy"]
 canonical: self
 sitemap: true
 title_contains: "プライバシーポリシー"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/og-privacy-v2.jpg"
 required_selectors: ["#site-header", "#site-footer"]
 ---
 

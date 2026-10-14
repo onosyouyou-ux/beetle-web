@@ -4,7 +4,7 @@ urls: ["/tools/hanwake/landing.html"]
 canonical: self
 sitemap: true
 title_contains: "班分けメーカー"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/og-hanwake-v2.jpg"
 required_selectors: ["#site-header", ".eal-hero", "#howto", "#faq", ".eal-final", ".eal-footer"]
 ---
 

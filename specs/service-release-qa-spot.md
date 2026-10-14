@@ -4,7 +4,7 @@ urls: ["/service-release-qa-spot.html"]
 canonical: self
 sitemap: true
 title_contains: "リリース前QAスポット診断"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/og-service-release-qa-spot-v2.jpg"
 required_selectors: ["#site-header", ".footer-skyline-bar", ".footer-link-bar"]
 ---
 

@@ -4,7 +4,7 @@ urls: ["/tools/sekigae/"]
 canonical: "https://www.beetle-web.jp/tools/sekigae/landing.html"
 sitemap: false
 title_contains: "席替えメーカー"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/og-sekigae-v2.jpg"
 required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#tool", "#sk-list", "#sk-add1", "#sk-add5", "#sk-add10", "#sk-cols", "#sk-rows", "#sk-gen", "#sk-gen2", "#sk-layout-board", "#sk-tab-shape", "#sk-tab-result", "#sk-confirm", "#sk-board", "#sk-msg", "#sk-out", "#howto", "#sk-csv", "#sk-csv-save", "#sk-csv-template", "#sk-download", "#sk-prev"]
 e2e: true
 ---

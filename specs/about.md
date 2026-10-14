@@ -4,7 +4,7 @@ urls: ["/about.html"]
 canonical: self
 sitemap: true
 title_contains: "プロフィール"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/og-about-v2.jpg"
 required_selectors: ["#site-header", "#site-footer"]
 ---
 

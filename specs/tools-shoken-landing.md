@@ -4,7 +4,7 @@ urls: ["/tools/shoken/"]
 canonical: self
 sitemap: true
 title_contains: "所見メーカー"
-og_image: "/assets/images/shoken-hero-people.jpg"
+og_image: "/assets/images/ogp/og-shoken-v2.jpg"
 required_selectors: ["#site-header", ".sl-hero-visual", ".footer-skyline-bar", ".footer-link-bar"]
 ---
 

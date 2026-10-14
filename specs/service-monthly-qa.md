@@ -4,7 +4,7 @@ urls: ["/service-monthly-qa.html"]
 canonical: self
 sitemap: true
 title_contains: "月額QA伴走プラン"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/og-service-monthly-qa-v2.jpg"
 required_selectors: ["#site-header", ".footer-skyline-bar", ".footer-link-bar"]
 ---
 

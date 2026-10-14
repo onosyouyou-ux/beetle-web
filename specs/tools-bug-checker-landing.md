@@ -4,7 +4,7 @@ urls: ["/tools/bug-checker/landing.html"]
 canonical: self
 sitemap: true
 title_contains: "バグ"
-og_image: "/assets/images/og-bug-checker.png"
+og_image: "/assets/images/ogp/og-bug-checker-v2.jpg"
 required_selectors: ["#site-header", "#site-footer"]
 ---
 

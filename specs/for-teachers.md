@@ -4,7 +4,7 @@ urls: ["/for-teachers.html"]
 canonical: self
 sitemap: true
 title_contains: "先生向け"
-og_image: "/assets/images/OG.jpg"
+og_image: "/assets/images/ogp/og-for-teachers-v2.jpg"
 required_selectors: ["#site-header", ".brand-hero", "#promise", "#apps", ".ft-app", ".ft-copy", "#print", "#contact", ".footer-link-bar"]
 ---
 
