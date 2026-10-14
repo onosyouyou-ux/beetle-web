@@ -5,7 +5,7 @@ canonical: self
 sitemap: true
 title_contains: "きょうの修行"
 og_image: "/assets/images/ogp/og-kyou-v2.jpg"
-required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#ky-app", "#howto", ".paper-release"]
+required_selectors: ["#site-header", ".app-paper", ".site-footer-app", "#kk-app", "#howto", ".paper-release"]
 ---
 
 # きょうの しゅぎょう（`tools/kyou/`。#143・2026-10-11）

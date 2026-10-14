@@ -14,7 +14,7 @@
 (function () {
   'use strict';
 
-  var app = document.getElementById('ky-app');
+  var app = document.getElementById('kk-app');
   if (!app || !window.NinjaLinks) return;
 
   var COUNT = 5;
