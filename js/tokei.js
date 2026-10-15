@@ -652,6 +652,7 @@
       state.session.kinds = shuffle(['after', 'after', 'after', 'after', 'before', 'before', 'before', 'elapsed', 'elapsed', 'elapsed']);
     }
     if (window.NkTrack) NkTrack('mode_select', { app: 'tokei', mode: state.modeId, level: state.stepId });
+    NinjaRank.begin();
     nextQuestion();
   }
 
@@ -668,6 +669,7 @@
     var q = s.q;
     var hands = s.hands;
     app.innerHTML = '';
+    NinjaRank.ask();
     var wrap = el('div', 'tk-play');
 
     var head = el('div', 'tk-play-head nk-head');
@@ -777,6 +779,7 @@
     var s = state.session;
     if (s.locked) return;
     s.locked = true;
+    NinjaRank.answered();
     var q = s.q;
     var hands = s.hands;
     var same = function (o) { return s.calc ? calcSame(q, o) : o.h === q.answer.h && o.m === q.answer.m; };
@@ -833,6 +836,7 @@
     var stars = s.correct >= 10 ? 3 : s.correct >= 8 ? 2 : s.correct >= 5 ? 1 : 0;
     wrap.appendChild(el('p', 'tk-result-stars', '★★★☆☆☆'.slice(3 - stars, 6 - stars)));
     wrap.appendChild(el('p', 'tk-result-score', SET_LENGTH + 'もんちゅう ' + s.correct + 'もん せいかい!'));
+    wrap.appendChild(NinjaRank.finish('tokei', s.correct, SET_LENGTH));
     wrap.appendChild(el('p', 'tk-result-msg',
       stars === 3 ? 'ぜんもん せいかい! とけいマスター!'
         : stars === 2 ? 'あと すこし! もういちど やってみよう。'
@@ -852,6 +856,7 @@
     app.appendChild(wrap);
   }
 
+  NinjaRank.mount('tokei', app);
   history.replaceState({ nkStep: 1 }, '');
   renderMenuStep(1);
 })();

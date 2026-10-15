@@ -374,6 +374,7 @@
     pushPlay();
     state.session = { pool: poolOf(state.gradeId, state.termId), index: 0, correct: 0, locked: false, q: null, missed: [] };
     if (window.NkTrack) NkTrack('mode_select', { app: 'kanji', mode: state.modeId, level: kanjiLevel() });
+    NinjaRank.begin();
     nextQuestion();
   }
 
@@ -394,6 +395,7 @@
   function renderPlay() {
     var s = state.session, q = s.q;
     app.innerHTML = '';
+    NinjaRank.ask();
     var wrap = el('div', 'kj-play');
 
     var head = el('div', 'kj-play-head nk-head');
@@ -452,6 +454,7 @@
     var s = state.session;
     if (s.locked) return;
     s.locked = true;
+    NinjaRank.answered();
     var q = s.q;
     if (chosen.ok) s.correct++;
     else s.missed.push(q.askKind === 'word' ? q.ask + '（' + q.answer + '）' : q.answer + '（' + q.ask + '）');
@@ -541,6 +544,7 @@
     var s = state.session;
     if (s.locked) return;
     s.locked = true;
+    NinjaRank.answered();
     pen.lock();                 // 書いた字はそのまま残す（正解と見くらべるため）
     var eraser = app.querySelector('.kj-eraser');
     if (eraser) eraser.remove();
@@ -662,6 +666,7 @@
     var stars = s.correct >= 10 ? 3 : s.correct >= 8 ? 2 : s.correct >= 5 ? 1 : 0;
     wrap.appendChild(el('p', 'kj-result-stars', '★★★☆☆☆'.slice(3 - stars, 6 - stars)));
     wrap.appendChild(el('p', 'kj-result-score', SET_LENGTH + 'もんちゅう ' + s.correct + 'もん せいかい!'));
+    wrap.appendChild(NinjaRank.finish('kanji', s.correct, SET_LENGTH));
     if (s.missed.length) {
       wrap.appendChild(el('p', 'kj-result-msg', 'まちがえた ことば'));
       var list = el('div', 'kj-missed');
@@ -683,6 +688,7 @@
     app.appendChild(wrap);
   }
 
+  NinjaRank.mount('kanji', app);
   history.replaceState({ nkStep: 1 }, '');
   renderMenuStep(1);
 })();

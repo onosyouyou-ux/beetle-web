@@ -288,6 +288,7 @@
     state.session = { list: list, total: list.length, index: 0, correct: 0, locked: false, q: null, missed: [],
       tableBefore: tableCount() };
     if (window.NkTrack) NkTrack('mode_select', { app: 'kuku', mode: state.modeId, level: state.danId });
+    NinjaRank.begin();
     nextQuestion();
   }
 
@@ -324,6 +325,7 @@
   function renderPlay() {
     var s = state.session, q = s.q;
     app.innerHTML = '';
+    NinjaRank.ask();
     var wrap = el('div', 'kk-play');
 
     var head = el('div', 'kk-play-head nk-head');
@@ -381,6 +383,7 @@
     var s = state.session;
     if (s.locked) return;
     s.locked = true;
+    NinjaRank.answered();
     var q = s.q, e = q.entry;
     if (chosen.ok) s.correct++;
     else s.missed.push(shiki(e) + ' = ' + e.ans);
@@ -430,6 +433,7 @@
     var stars = rate >= 1 ? 3 : rate >= .8 ? 2 : rate >= .5 ? 1 : 0;
     wrap.appendChild(el('p', 'kk-result-stars', '★★★☆☆☆'.slice(3 - stars, 6 - stars)));
     wrap.appendChild(el('p', 'kk-result-score', s.total + 'もんちゅう ' + s.correct + 'もん せいかい!'));
+    wrap.appendChild(NinjaRank.finish('kuku', s.correct, s.total));
     if (s.missed.length) {
       wrap.appendChild(el('p', 'kk-result-msg', 'まちがえた かけざん'));
       var list = el('div', 'kk-missed');
@@ -455,6 +459,7 @@
     app.appendChild(wrap);
   }
 
+  NinjaRank.mount('kuku', app);
   history.replaceState({ nkStep: 1 }, '');
   renderMenuStep(1);
 })();

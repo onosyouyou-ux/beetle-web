@@ -187,12 +187,14 @@
     // 音声合成は 1回 使っておかないと 声の 一覧が 読み込まれない ブラウザがある
     if (window.speechSynthesis) window.speechSynthesis.getVoices();
     state = { mode: mode, qs: MODES[mode].build(), i: 0, ok: 0, missed: [] };
+    NinjaRank.begin();
     if (window.NkTrack) NkTrack('mode_select', { app: 'phonics', mode: mode, level: 'none' });
     renderQuestion();
   }
 
   function renderQuestion() {
     var q = state.qs[state.i];
+    NinjaRank.ask();
 
     root.innerHTML =
       '<div class="pn-quiz">' +
@@ -233,6 +235,7 @@
 
   function answer(key, btn) {
     var q = state.qs[state.i];
+    NinjaRank.answered();
     var ok = key === q.word;
 
     Array.prototype.forEach.call(root.querySelectorAll('.pn-choice'), function (b) {
@@ -297,10 +300,12 @@
         '</div>' +
       '</div>';
 
+    root.querySelector('.pn-result-score').after(NinjaRank.finish('phonics', state.ok, QUESTIONS));
     document.getElementById('pn-again').addEventListener('click', function () { start(state.mode); });
     document.getElementById('pn-menu').addEventListener('click', backToMenu);
   }
 
+  NinjaRank.mount('phonics', root);
   history.replaceState({ nkStep: 'menu' }, '');
   renderMenu();
 })();

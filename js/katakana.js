@@ -225,6 +225,7 @@
   }
 
   function revealKaku(q, pen) {
+    NinjaRank.answered();  // かいた じかん だけ数える（お手本と見くらべる間は数えない）
     pen.lock();                 // 書いた字は 残す（お手本と 見くらべるため）
     var eraser = root.querySelector('.kt-eraser');
     if (eraser) eraser.remove();
@@ -406,12 +407,14 @@
   function start(mode) {
     pushPlay();
     state = { mode: mode, qs: MODES[mode].build(), i: 0, ok: 0, missed: [] };
+    NinjaRank.begin();
     if (window.NkTrack) NkTrack('mode_select', { app: 'katakana', mode: mode, level: 'none' });
     renderQuestion();
   }
 
   function renderQuestion() {
     var q = state.qs[state.i];
+    NinjaRank.ask();
     // かくモードは 選択肢が なく 画面の作りが ちがうので 別に組む
     if (q.type === 'kaku') { renderKaku(q); return; }
     var choices;
@@ -472,6 +475,7 @@
 
   function answer(key, btn) {
     var q = state.qs[state.i];
+    NinjaRank.answered();
     var ok = key === correctKey(q);
 
     Array.prototype.forEach.call(root.querySelectorAll('.kt-choice'), function (b) {
@@ -533,10 +537,12 @@
         '</div>' +
       '</div>';
 
+    root.querySelector('.kt-result-score').after(NinjaRank.finish('katakana', state.ok, QUESTIONS));
     document.getElementById('kt-again').addEventListener('click', function () { start(state.mode); });
     document.getElementById('kt-menu').addEventListener('click', backToMenu);
   }
 
+  NinjaRank.mount('katakana', root);
   history.replaceState({ nkStep: 'menu' }, '');
   renderMenu();
 })();

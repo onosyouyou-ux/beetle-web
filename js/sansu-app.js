@@ -782,6 +782,7 @@
       arrivedStage: null   // 直前に到着した天体のステージ番号（アイコン上に「到着!」を出す）
     };
     if (window.NkTrack) NkTrack('mode_select', trackParams());
+    NinjaRank.begin();
     nextQuestion();
   }
 
@@ -830,6 +831,7 @@
   function renderPlay() {
     const s = session;
     app.innerHTML = '';
+    NinjaRank.ask();
 
     // 選択中のモード表示（もどるは一番下に配置）＋COMBOバッジ
     const head = el('div', 'sa-play-head');
@@ -1120,6 +1122,8 @@
       return;
     }
 
+    // ①わける と ②こたえ の あいだの 1秒も ふくめて、2だん とも こたえた ところで 1もん とする
+    NinjaRank.answered();
     if (built.reveal) built.reveal();   // 式のこたえを埋める
     const expected = q.layout === 'cherry' ? q.total : q.answer;
     // さくらんぼざん は ①わける と ②こたえ の両方が合って せいかい
@@ -1293,6 +1297,8 @@
       const score = el('p', 'sa-result-score');
       score.innerHTML = CHALLENGE_LENGTH + 'もん ちゅう <strong>' + s.correct + '</strong> もん せいかい!';
       card.appendChild(score);
+      // 忍者ランクは 10もん チャレンジ だけ（とことん は 正解数で進むので はやさ を くらべられない）
+      card.appendChild(NinjaRank.finish(SAKURANBO ? 'sakuranbo' : 'sansu', s.correct, CHALLENGE_LENGTH));
       // 1もんずつ、せいかいは ★・まちがいは ☆ で10こ ならべる（2026-09-23。3段階の星から変更）
       const row = el('div', 'sa-result-marks');
       row.setAttribute('aria-label', CHALLENGE_LENGTH + 'もん ちゅう ' + s.correct + 'もん せいかい');
@@ -1337,6 +1343,7 @@
     app.appendChild(card);
   }
 
+  NinjaRank.mount(SAKURANBO ? 'sakuranbo' : 'sansu', app);
   history.replaceState({ nkStep: 1 }, '');
   renderMenu(1);
 })();

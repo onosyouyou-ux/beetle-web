@@ -367,6 +367,7 @@
   function start(mode, lv, kind) {
     pushPlay();
     state = { mode: mode, lv: lv || 0, kind: kind, qs: lv ? buildLevel(lv, kind) : MODES[mode].build(), i: 0, ok: 0, missed: [] };
+    NinjaRank.begin();
     // レベル しゅぎょう は mode を level:よむ のように わける
     if (window.NkTrack) NkTrack('mode_select', { app: 'romaji', mode: lv ? 'level:' + kind : mode, level: lv ? 'lv' + lv : 'none' });
     renderQuestion();
@@ -435,6 +436,7 @@
       '</div>';
 
     root.querySelector('.rj-back').addEventListener('click', backToMenu);
+    NinjaRank.ask();
 
     if (q.type === 'kaku') {
       var pen = setupCanvas(root.querySelector('.rj-canvas'));
@@ -475,6 +477,7 @@
      まるをつけたあとは ほかのモードと同じ こたえあわせパネル（なぜ2とおりあるか）に合流する。 */
 
   function revealKaku(q, pen) {
+    NinjaRank.answered();  // かいた じかん だけ数える（見本を見て じぶんで まるを つける間は数えない）
     pen.lock();                 // 書いた字は残す（正解と見くらべるため）
     var eraser = root.querySelector('.rj-eraser');
     if (eraser) eraser.remove();
@@ -613,6 +616,7 @@
 
   /* 正解でも まちがいでも「なぜ そう書くのか」を かならず出す */
   function finish(ok, q, shownAnswer) {
+    NinjaRank.answered();
     if (ok) state.ok++;
     else state.missed.push(q);
 
@@ -661,11 +665,13 @@
         '</div>' +
       '</div>';
 
+    root.querySelector('.rj-result-score').after(NinjaRank.finish('romaji', state.ok, QUESTIONS));
     document.getElementById('rj-again').addEventListener('click', function () { start(state.mode, state.lv, state.kind); });
     document.getElementById('rj-menu').addEventListener('click', backToMenu);
   }
 
   renderRules();
+  NinjaRank.mount('romaji', root);
   history.replaceState({ nkStep: 'menu' }, '');
   renderMenu();
 })();

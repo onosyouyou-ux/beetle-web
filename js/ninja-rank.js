@@ -1,5 +1,7 @@
 /* 修行アプリの「忍者ランク」（#173。2026-10-15）。
    正解と とく はやさ から 1000点満点のスコアを出し、24段階のランクにする。
+   配点は 正確さ400点＋はやさ600点。全問正解なら どれだけ時間がかかっても 400点＝上忍・初段、
+   そこから上は はやさ で決まる（2026-10-15 ユーザー決定）。
    アプリごとに「とうたつした いちばん上のランク」だけを この端末に のこし、修行画面に バッジで出す。
    バッジを押すと、そのランクの絵だけを大きく出す（スコアなどの数字は出さない。ユーザー決定）。
 
@@ -28,7 +30,7 @@
   var DEFAULT_BASE = 5;
   var MAX_SEC = 60;  // 1もんで数える時間の上限。席を立ったまま放っておいた分で こわれないように
 
-  // 24段階。min は そのランクに必要なスコア、need は 追加の条件（acc90＝正解率90%以上／perfect＝全問正解／god＝全問正解＋はやさ点390以上）
+  // 24段階。min は そのランクに必要なスコア、need は 追加の条件（acc90＝正解率90%以上／perfect＝全問正解／god＝全問正解＋はやさ点585以上）
   var RANKS = [
     { name: '村人', kana: 'むらびと', min: 0 },
     { name: '忍者見習い', kana: 'にんじゃみならい', min: 25 },
@@ -61,10 +63,11 @@
   // ok: 正解数、total: 問題数、avgSec: 1もんの平均秒数、baseSec: 基準の秒数
   function score(ok, total, avgSec, baseSec) {
     var rate = total > 0 ? Math.max(0, Math.min(1, ok / total)) : 0;
-    var accuracy = Math.round(rate * 600);
+    var accuracy = Math.round(rate * 400);
     var quick = avgSec > 0 ? Math.min(1, baseSec / avgSec) : 0;
-    // 正解率を掛けて、でたらめに はやく押しただけでは点が入らないようにする
-    var speed = Math.round(400 * quick * rate);
+    // 正解率を2回掛けて、でたらめに はやく押しただけでは点が入らないようにする
+    // （1回だと 3もん正解でも はやければ 中忍になっていた）
+    var speed = Math.round(600 * quick * rate * rate);
     return { rate: rate, accuracy: accuracy, speed: speed, total: accuracy + speed };
   }
 
@@ -72,7 +75,7 @@
     if (!need) return true;
     if (need === 'acc90') return s.rate >= 0.9;
     if (need === 'perfect') return s.rate >= 1;
-    if (need === 'god') return s.rate >= 1 && s.speed >= 390;
+    if (need === 'god') return s.rate >= 1 && s.speed >= 585;
     return false;
   }
 
@@ -128,7 +131,9 @@
   function art(n, big) {
     var r = RANKS[n - 1];
     if (IMAGES_READY) {
-      return '<img class="nr-art' + (big ? ' is-big' : '') + '" src="' + IMAGE_DIR + 'rank-' + pad(n) + '.webp" alt="' + r.name + '">';
+      // 絵の中の ランク名は漢字なので、大きく出すときは 下に よみがなを そえる
+      return '<img class="nr-art' + (big ? ' is-big' : '') + '" src="' + IMAGE_DIR + 'rank-' + pad(n) + '.webp" alt="' + r.name + '" width="960" height="960">' +
+        (big ? '<p class="nr-art-kana">' + r.kana + '</p>' : '');
     }
     return '<div class="nr-card' + (big ? ' is-big' : '') + (n >= 19 ? ' is-gold' : '') + '" role="img" aria-label="' + r.name + '">' +
       '<span class="nr-card-name">' + rubyName(r) + '</span>' +
