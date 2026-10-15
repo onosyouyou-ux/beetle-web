@@ -1,0 +1,81 @@
+/* 修行アプリの「忍者ランク」（#173。js/ninja-rank.js が描く） */
+
+/* ---- 修行画面の バッジ（アプリの箱の上。1行の札） ---- */
+.nr-badge {
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  margin:0 auto 12px; padding:6px 18px 6px 14px;
+  border:2px solid #b8913f; border-radius:999px;
+  background:linear-gradient(#1f2f47,#14223a); color:#f6ead0;
+  font:inherit; font-weight:800; cursor:pointer;
+  box-shadow:0 2px 0 rgba(0,0,0,.25);
+}
+.nr-badge-label { font-size:13px; color:#e8c879; letter-spacing:.04em; }
+.nr-badge-name { font-size:18px; line-height:1.2; }
+.nr-badge-name rt { font-size:10px; color:#e8c879; }
+.nr-badge-name.is-none { font-size:15px; color:#cdbf9f; }
+.nr-badge:focus-visible { outline:3px solid #e8c879; outline-offset:2px; }
+@media (hover:hover) {
+  .nr-badge:hover { filter:brightness(1.12); }
+}
+
+/* ---- けっか画面 ---- */
+.nr-result {
+  display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:6px 12px;
+  width:100%; max-width:420px; margin:10px auto; padding:8px 14px;
+  border:2px solid #b8913f; border-radius:12px;
+  background:#fbf3e1; color:#2a1f14; font:inherit; font-weight:800; cursor:pointer;
+}
+.nr-result-label { font-size:13px; color:#7a5a20; }
+.nr-result-name { font-size:22px; line-height:1.25; }
+.nr-result-name rt { font-size:11px; color:#7a5a20; }
+.nr-result-up {
+  padding:2px 10px; border-radius:6px; background:#b2261c; color:#fff; font-size:14px;
+  animation:nr-pop .5s ease-out both;
+}
+@keyframes nr-pop { 0% { transform:scale(.4); opacity:0; } 70% { transform:scale(1.15); opacity:1; } 100% { transform:scale(1); } }
+@media (prefers-reduced-motion:reduce) { .nr-result-up { animation:none; } }
+
+/* ---- 絵だけを大きく出す窓 ---- */
+.nr-view {
+  border:0; padding:0; background:transparent; max-width:min(92vw,520px); overflow:visible;
+}
+.nr-view::backdrop { background:rgba(10,18,30,.72); }
+.nr-view[open] { display:flex; flex-direction:column; align-items:center; gap:14px; }
+.nr-art { display:block; width:100%; height:auto; border-radius:16px; }
+.nr-art.is-big { width:min(88vw,480px, 70dvh); }
+.nr-view-close {
+  padding:8px 22px; border:0; border-radius:999px; background:#f6ead0; color:#2a1f14;
+  font:inherit; font-size:15px; font-weight:800; cursor:pointer;
+}
+.nr-view-empty {
+  margin:0; padding:28px 32px; border-radius:16px; background:#fbf3e1; color:#2a1f14;
+  font-size:20px; font-weight:800; line-height:1.7; text-align:center;
+}
+
+/* 絵が そろうまでの 札（和紙に 墨の ランク名と 認定の はんこ） */
+.nr-card {
+  position:relative; display:flex; align-items:center; justify-content:center;
+  width:160px; aspect-ratio:3 / 4; border:3px solid #1d2b45; border-radius:12px;
+  background:radial-gradient(circle at 30% 20%,#fffaf0,#efe1c2); color:#1d140c;
+  font-family:'Klee One','Yu Mincho','YuMincho','Hiragino Mincho ProN','Noto Serif JP',serif;
+}
+.nr-card.is-big { width:min(78vw,340px,52dvh); }
+.nr-card.is-gold { border-color:#b8913f; box-shadow:0 0 0 4px #1d2b45, 0 0 28px rgba(232,200,121,.7); }
+.nr-card-name {
+  writing-mode:vertical-rl; font-size:44px; font-weight:700; letter-spacing:.08em; line-height:1.3;
+}
+.nr-card:not(.is-big) .nr-card-name { font-size:26px; }
+.nr-card-name rt { font-size:.32em; letter-spacing:0; }
+.nr-card-stamp {
+  position:absolute; right:10%; bottom:8%; padding:4px 6px; border:2px solid #b2261c; border-radius:4px;
+  color:#b2261c; font-size:16px; font-weight:700; writing-mode:vertical-rl; transform:rotate(-6deg);
+}
+.nr-card:not(.is-big) .nr-card-stamp { font-size:11px; }
+
+/* 学校のノートPC（高さ640px以下）と寝かせたスマホは、バッジを小さく */
+@media (max-height:640px) {
+  .nr-badge { margin-bottom:6px; padding:3px 14px 3px 10px; }
+  .nr-badge-name { font-size:15px; }
+  .nr-result { margin:6px auto; padding:4px 12px; }
+  .nr-result-name { font-size:18px; }
+}
