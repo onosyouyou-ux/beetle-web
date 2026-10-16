@@ -20,6 +20,15 @@ body.ninja-kyou .kk-hero:not(.app-ref-hero)>.ninja-mascot{
 @media (max-width:767px){
   body.ninja-kyou .kk-hero{ grid-template-columns:minmax(0,1fr) 128px!important; }
 }
+/* スマホ縦：右の列に置くと 128x40px（1人16px）で 顔も印も見えない（#165 指摘）。
+   1カラムにして、絵は タイトルの下に 紙面の幅いっぱいで置く（約340x105px・1人40px強） */
+@media (max-width:767px) and (orientation:portrait){
+  body.ninja-kyou .kk-hero{ grid-template-columns:minmax(0,1fr)!important; row-gap:0; }
+  body.ninja-kyou .kk-hero:not(.app-ref-hero)>.ninja-mascot{
+    grid-column:1; grid-row:auto; order:1; justify-self:center;
+    width:100%; max-width:420px; height:auto; margin:6px 0 0;
+  }
+}
 
 /* メニュー：きょうの 5本の ならび。かけざん修行の2カラム（.kk-menu の grid）は使わず、上から 見出し → 5本 → スタート */
 body.ninja-kyou .kk-menu.ky-menu{ display:flex; flex-direction:column; align-items:center; text-align:center; }
