@@ -197,7 +197,7 @@
     txt.className = 'nk-rank-result-text';
     var head = document.createElement('p');
     head.className = 'nk-rank-result-head';
-    head.textContent = res.passed ? (res.skip ? 'とびきゅう ごうかく！' : 'ごうかく！') : 'もう すこし！';
+    head.textContent = res.passed ? (res.skip ? 'とびきゅう ごうかく！' : 'ごうかく！') : res.from >= MAX ? 'さいこうランク！' : 'もう すこし！';
     txt.appendChild(head);
     var line = document.createElement('p');
     line.className = 'nk-rank-result-name';
@@ -207,7 +207,7 @@
     rt.textContent = yomi(res.to);
     rb.appendChild(rt);
     line.appendChild(rb);
-    line.appendChild(document.createTextNode(res.passed ? ' に なった！' : ' のまま'));
+    line.appendChild(document.createTextNode(res.passed ? ' に なった！' : res.from >= MAX ? ' を まもった！' : ' のまま'));
     txt.appendChild(line);
     if (!res.passed && res.to < MAX) {
       var nx = document.createElement('p');
@@ -224,7 +224,7 @@
       var dt = document.createElement('dt');
       dt.textContent = BANDS[i];
       var dd = document.createElement('dd');
-      dd.textContent = x[1] + 'もん中 ' + x[0] + 'もん せいかい';
+      dd.textContent = x[1] + 'もん中 ' + x[0] + 'もん';
       dl.appendChild(dt);
       dl.appendChild(dd);
     });

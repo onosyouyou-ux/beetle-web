@@ -2,8 +2,9 @@
    メニューの「あなたのランク：○○」、けっか画面の ランクの欄、ランクの絵の窓、しゅぎょう いちらん の ランク表示 */
 
 /* ---------- メニュー：ランクに ちょうせん と あなたのランク ---------- */
-.ninja-kids .tk-rank-row{ margin-top:10px; }
+.ninja-kids .tk-rank-row{ margin-top:10px; grid-auto-rows:auto!important; align-items:center!important; }
 .ninja-kids .tk-rank-row>.tk-choice{
+  height:auto!important; min-height:0!important; align-self:center;
   box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--nk-accent) 55%,#fff);
   background:linear-gradient(150deg,#fff8e6,#ffe7b8);
 }
@@ -51,6 +52,8 @@
 @media (hover:hover){ .ninja-kids .tk-result-btns>.tk-start.is-sub:hover{ background:#f5efe3; } }
 
 @media (max-width:767px){
+  .ninja-kids .tk-rank-row{ margin-top:4px; }
+  .ninja-kids .tk-rank-row>.tk-choice{ padding-block:6px!important; }
   .nk-rank-result{ grid-template-columns:minmax(0,120px) minmax(0,1fr); gap:4px 12px; }
   .nk-rank-result-head{ font-size:19px; }
   .nk-rank-result-name{ font-size:16px; }
@@ -58,13 +61,15 @@
 }
 /* 高さの低い画面（学校のノートPC・寝かせたスマホ）は 絵を高さから決める */
 @media (min-width:768px) and (max-height:640px), (orientation:landscape) and (max-height:500px){
-  .nk-rank-result{ grid-template-columns:minmax(0,clamp(110px,30dvh,180px)) minmax(0,1fr); }
+  .nk-rank-result{ grid-template-columns:minmax(0,clamp(96px,26dvh,180px)) minmax(0,1fr); }
+  .ninja-kids .tk-result.is-rank>.tk-result-score{ margin-bottom:4px; }
+  .ninja-kids .tk-result-btns{ margin-top:10px; }
   .nk-rank-result-stats{ margin-top:6px; padding:6px 10px; font-size:13px; }
 }
 
 /* ---------- ランクの絵の窓 ---------- */
 .nk-rank-dlg{
-  width:min(92vw,520px); max-height:94dvh; padding:14px; border:0; border-radius:14px;
+  width:min(92vw,520px); max-height:94dvh; margin:auto; padding:14px; border:0; border-radius:14px;
   background:#f7f1e3; box-shadow:0 20px 60px rgba(0,0,0,.45); overflow:auto;
 }
 .nk-rank-dlg::backdrop{ background:rgba(20,16,10,.62); }
