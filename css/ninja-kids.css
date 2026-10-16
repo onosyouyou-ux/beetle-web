@@ -2704,11 +2704,11 @@ body.ninja-kuku { --nk-items:url('/assets/images/ninja/items/kuku-items.webp'); 
     gap:12px 14px;
     width:100%;
   }
-  .nk-link { grid-column:span 2; }
+  .nk-link-cell { grid-column:span 2; }
   /* 3列で割り切れず余ったら、左詰めではなく段の中央に寄せる。
      1枚だけ余ったら真ん中の列（7本になった 2026-09-16）、2枚余ったら半列ずつ内側へ（8本になった 2026-09-29） */
-  .nk-link:last-child:nth-child(3n+1) { grid-column:3 / span 2; }
-  .nk-link:nth-last-child(2):nth-child(3n+1) { grid-column:2 / span 2; }
+  .nk-link-cell:last-child:nth-child(3n+1) { grid-column:3 / span 2; }
+  .nk-link-cell:nth-last-child(2):nth-child(3n+1) { grid-column:2 / span 2; }
 }
 .nk-link {
   display:block;

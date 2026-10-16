@@ -46,6 +46,16 @@
     { id: 'c-long', name: '1ぷん・1じかんを こえる', note: '2じ45ふん の 1じかん20ぷん あと', hands: 'both' }
   ];
 
+  /* ランクに ちょうせん（#173・2026-10-16）。むずかしさ の さいごに置く。
+     10問は いまのランクで決まる段から出す（段の表は 6段。くわしくは js/ninja-rank.js）。
+     FAST_SEC は 1問あたりの こたえるまでの 平均秒。これより はやく 全問せいかい なら とびきゅう（忍神も これが条件） */
+  var RANK_STEP = { id: 'rank', name: 'ランクに ちょうせん', note: 'ごうかくで ランクアップ', step: 5, hands: 'both' };
+  var RANK_TIERS = {
+    clock: [['hand-h', 'hand-m', 'hour'], ['hour', 'half'], ['half', 'five'], ['five'], ['five', 'one'], ['one']],
+    calc: [['c-in'], ['c-in'], ['c-in', 'c-over'], ['c-over'], ['c-over', 'c-long'], ['c-long']]
+  };
+  var FAST_SEC = { read: 5, find: 6, calc: 9 };
+
   var state = {
     stepId: 'hour',
     modeId: 'read',
@@ -54,6 +64,7 @@
   };
 
   function stepOf(id) {
+    if (id === 'rank') return RANK_STEP;
     var all = STEPS.concat(CALC_STEPS);
     for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i];
     return STEPS[2];
@@ -635,6 +646,13 @@
       }
     });
     sec.appendChild(grid);
+    // ランクに ちょうせん と、その下に「あなたのランク：○○」（押すと 絵の窓）
+    if (window.NkRank) {
+      var rank = el('div', 'tk-choices tk-choices-level tk-rank-row');
+      rank.appendChild(choiceBtn(RANK_STEP, 'stepId', 0));
+      rank.appendChild(NkRank.link('tokei', function () { renderMenuStep(2, true); }));
+      sec.appendChild(rank);
+    }
     return sec;
   }
 
@@ -651,6 +669,12 @@
       state.session.calc = true;
       state.session.kinds = shuffle(['after', 'after', 'after', 'after', 'before', 'before', 'before', 'elapsed', 'elapsed', 'elapsed']);
     }
+    if (state.stepId === 'rank' && window.NkRank) {
+      state.session.rank = {
+        plan: NkRank.plan('tokei', RANK_TIERS[state.modeId === 'calc' ? 'calc' : 'clock']),
+        ok: [[0, 4], [0, 4], [0, 2]], ans: 0, t0: Date.now()
+      };
+    }
     if (window.NkTrack) NkTrack('mode_select', { app: 'tokei', mode: state.modeId, level: state.stepId });
     nextQuestion();
   }
@@ -658,9 +682,18 @@
   function nextQuestion() {
     var s = state.session;
     if (s.index >= SET_LENGTH) return renderResult();
-    s.q = s.calc ? makeCalcQuestion(state.stepId, s.kinds[s.index]) : makeQuestion(s.step, s.hands);
+    var stepId = state.stepId;
+    if (s.rank) {
+      // ランクに ちょうせん は 1問ごとに 段が かわる
+      stepId = s.rank.plan[s.index].pick;
+      var st = stepOf(stepId);
+      s.step = st.step;
+      s.hands = st.hands || 'both';
+    }
+    s.q = s.calc ? makeCalcQuestion(stepId, s.kinds[s.index]) : makeQuestion(s.step, s.hands);
     s.locked = false;
     renderPlay();
+    s.shownAt = Date.now();
   }
 
   function renderPlay() {
@@ -782,6 +815,10 @@
     var same = function (o) { return s.calc ? calcSame(q, o) : o.h === q.answer.h && o.m === q.answer.m; };
     var label = function (o) { return s.calc ? calcLabel(q, o) : answerText(o, hands); };
     var ok = same(chosen);
+    if (s.rank) {
+      s.rank.ans += Date.now() - s.shownAt;
+      if (ok) s.rank.ok[s.rank.plan[s.index].band][0]++;
+    }
     if (ok) {
       s.correct++;
       app.querySelector('.tk-score-text').textContent = 'できた！ ' + s.correct + '問';
@@ -828,6 +865,7 @@
     app.innerHTML = '';
     if (window.NkTrack) NkTrack('set_complete', { app: 'tokei', mode: state.modeId, level: state.stepId, score: s.correct, total: SET_LENGTH });
     var wrap = el('div', 'tk-result');
+    if (s.rank) return renderRankResult(s, wrap);
     // 全問正解のときだけ、お祝いの絵に差し替える（2026-09-03）
     if (s.correct === SET_LENGTH) wrap.classList.add('is-perfect');
     var stars = s.correct >= 10 ? 3 : s.correct >= 8 ? 2 : s.correct >= 5 ? 1 : 0;
@@ -849,6 +887,28 @@
     back.addEventListener('click', renderMenu);
     wrap.appendChild(back);
 
+    app.appendChild(wrap);
+  }
+
+  // ランクに ちょうせん の けっか：忍者の絵・ごうかく／もう すこし・段ごとの せいかい・かかった じかん。ボタンは2つ
+  function renderRankResult(s, wrap) {
+    var sec = (Date.now() - s.rank.t0) / 1000;
+    var fast = s.rank.ans / SET_LENGTH / 1000 <= FAST_SEC[state.modeId];
+    var res = NkRank.exam('tokei', { correct: s.correct, total: SET_LENGTH, fast: fast });
+    wrap.classList.add('is-rank');
+    wrap.appendChild(el('p', 'tk-result-score', SET_LENGTH + 'もんちゅう ' + s.correct + 'もん せいかい!'));
+    wrap.appendChild(NkRank.result(res, s.rank.ok, sec));
+
+    var row = el('div', 'tk-result-btns');
+    var again = el('button', 'tk-start', 'もういちど');
+    again.type = 'button';
+    again.addEventListener('click', startSession);
+    row.appendChild(again);
+    var close = el('button', 'tk-start is-sub', 'とじる');
+    close.type = 'button';
+    close.addEventListener('click', renderMenu);
+    row.appendChild(close);
+    wrap.appendChild(row);
     app.appendChild(wrap);
   }
 

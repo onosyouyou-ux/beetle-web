@@ -100,9 +100,19 @@
         '<span class="nk-kyou-link-title">' + (kd ? '✓ きょうの しゅぎょう できた！' : 'きょうの しゅぎょう') + '</span>' +
         '<span class="nk-kyou-link-note">いろんな しゅぎょうから 5もん。まいにち かわるよ →</span></a>';
     }
+    // 忍者ランク（#173）：いちばん上に さいこうランク。押すと 絵の窓（js/ninja-rank.js が読まれているときだけ）
+    var RK = global.NkRank;
+    var top = '';
+    if (RK) {
+      var b = RK.best();
+      top = b
+        ? '<p class="nk-rank-best">さいこうランク：<button type="button" class="nk-rank-link" data-rank="' + b.r + '">' + esc(RK.name(b.r)) + '</button>' +
+          '<span class="nk-rank-best-app">（' + esc(APPS[b.app] ? APPS[b.app].name : b.app) + 'で とった）</span></p>'
+        : '<p class="nk-rank-best">さいこうランク：まだ なし<span class="nk-rank-best-app">（しゅぎょうの「ランクに ちょうせん」で もらえるよ）</span></p>';
+    }
     return '<section class="nk-links">' +
       '<h2 class="nk-links-title">' + esc(TITLE) + '</h2>' +
-      head +
+      top + head +
       '<div class="nk-links-list">' +
         ORDER.map(function (id) {
           var a = APPS[id];
@@ -118,12 +128,21 @@
               '<img src="' + IMG_BASE + 'tokei-ui/scroll.webp" width="28" height="28" alt="">' +
               (s.sets > 1 ? '×' + Math.min(s.sets, 99) : '') + '</span>';
           }
-          return '<a class="nk-link' + (badge ? ' has-badge' : '') + '" href="' + esc(a.href) + '"' + here + '>' +
+          // 絵の下に「ランク：○○」。絵はリンクなので、ランクは 別の行に置く（押すと 絵の窓）
+          var rk = '';
+          if (RK) {
+            var rn = RK.get(id);
+            rk = '<p class="nk-rank-mine">ランク：' + (rn
+              ? '<button type="button" class="nk-rank-link" data-rank="' + rn + '">' + esc(RK.name(rn)) + '</button>'
+              : 'まだ なし') + '</p>';
+          }
+          return '<div class="nk-link-cell">' +
+            '<a class="nk-link' + (badge ? ' has-badge' : '') + '" href="' + esc(a.href) + '"' + here + '>' +
             '<img class="nk-link-img" src="' + esc(IMG_BASE + a.img) + '"' +
               ' width="' + IMG_W + '" height="' + IMG_H + '"' +
               ' alt="' + esc(a.name + '（' + a.note + '）' + (s && s.sets > 0 ? '・まきもの あり' : '') + (id === pick ? '・きょうの おすすめ' : '')) + '">' +
             badge +
-          '</a>';
+          '</a>' + rk + '</div>';
         }).join('') +
       '</div>' +
     '</section>';
@@ -136,6 +155,11 @@
     wrap.innerHTML = html(currentId);
     return wrap.firstChild;
   }
+  // ランクの文字を押したら 絵の窓（innerHTML で入れるアプリもあるので、ページ全体で1つだけ受ける）
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('.nk-links .nk-rank-link[data-rank]');
+    if (t && global.NkRank) global.NkRank.show(+t.getAttribute('data-rank'));
+  });
 
   global.NinjaLinks = { html: html, el: el, APPS: APPS, ORDER: ORDER };
 
