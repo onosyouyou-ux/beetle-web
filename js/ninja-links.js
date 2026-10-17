@@ -296,19 +296,32 @@ document.addEventListener('DOMContentLoaded', function () {
    自動で進めると、★の図や時計の せつめいを 見る前に 次の問題になっていた */
 (function (global) {
   'use strict';
+  // まちがえたときは 全面の✕を出さず、はじめから この札1まいに まとめる（2026-10-17 ユーザー指示）。
+  // 前は 全面の✕（こたえ＋せつめい）を0.8秒 → 同じ文の札 の順に出していて、判定が2回 出るように見えた（#177）
   global.NkWrongNext = function (o) {
-    setTimeout(function () {
+    o.fb.classList.remove('is-ng');
+    o.fb.textContent = '';
+    (function () {
       if (!o.options || !o.options.isConnected) return;
-      o.fb.classList.remove('is-ng');
-      o.fb.textContent = '';
       var p = document.createElement('div');
       p.className = 'nk-next-panel';
+      var mark = document.createElement('img');
+      mark.className = 'nk-next-mark';
+      mark.src = '/assets/images/ninja/feedback/ninja-batsu.webp';
+      mark.width = 120;
+      mark.height = 120;
+      mark.alt = 'まちがい';
+      // ✕の忍者は こたえの よこ（上に積むと 低い画面で つぎへ が 札の外に出た）
+      var head = document.createElement('div');
+      head.className = 'nk-next-head';
+      head.appendChild(mark);
+      p.appendChild(head);
       o.lines.forEach(function (t, i) {
         if (!t) return;
         var line = document.createElement('p');
         line.className = i === 0 ? 'nk-next-answer' : 'nk-next-why';
         line.textContent = t;
-        p.appendChild(line);
+        (i === 0 ? head : p).appendChild(line);
       });
       var b = document.createElement('button');
       b.type = 'button';
@@ -319,7 +332,7 @@ document.addEventListener('DOMContentLoaded', function () {
       o.options.classList.add('has-next');
       o.options.appendChild(p);
       b.focus({ preventScroll: true });
-    }, 800);
+    })();
   };
 })(window);
 
