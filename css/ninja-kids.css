@@ -4472,7 +4472,7 @@ body.ninja-space .sa-track-label .sa-combo { margin:0; padding:0 8px; font-size:
 @media (hover:hover) { .ninja-kids .nk-teacher-ref a:hover { color:var(--nk-accent); } }
 
 /* ===== まちがえたときの「つぎへ」（2026-10-09 レビュー対応・js/ninja-links.js の NkWrongNext）=====
-   ✕の忍者は 0.8秒で消し、こたえの欄の上にだけ「こたえ＋せつめい＋つぎへ」を重ねる。
+   全面の✕は出さず、こたえの欄の上にだけ「✕の忍者＋こたえ＋せつめい＋つぎへ」を重ねる（2026-10-17 に1まいへ まとめた）。
    問題の欄（★の図・時計）は かくさない。ボタンの色は変えない約束（9/28）のまま、正解は文で伝える */
 body.ninja-kids :is(.kk-options,.tk-options,.kj-options).has-next { position:relative; }
 body.ninja-kids .nk-next-panel {
@@ -4483,6 +4483,18 @@ body.ninja-kids .nk-next-panel {
   animation:ninjaFeedbackVeil .22s ease-out both;
 }
 body.ninja-kids .nk-next-panel p { margin:0; }
+/* ✕の忍者も この札の中に（全面の✕は出さない。2026-10-17）。高さの低い画面でも つぎへ が入るよう 画面の高さから決める */
+body.ninja-kids .nk-next-head { display:flex; align-items:center; justify-content:center; gap:8px; max-width:100%; }
+body.ninja-kids .nk-next-head .nk-next-answer { text-align:left; }
+body.ninja-kids .nk-next-mark { display:block; width:auto; height:clamp(40px,9dvh,80px); flex:none; object-fit:contain; }
+/* 寝かせたスマホは こたえの欄が低い。忍者を小さくし、すきまを詰めて つぎへ を札の中に入れる */
+@media (orientation:landscape) and (max-height:500px) {
+  body.ninja-kids .nk-next-panel { gap:0; padding-block:2px; }
+  body.ninja-kids .nk-next-mark { height:28px; }
+  body.ninja-kids .nk-next-answer { font-size:16px; line-height:1.25; }
+  body.ninja-kids .nk-next-why { font-size:12px; line-height:1.3; }
+  body.ninja-kids .nk-next-btn { min-height:34px; padding-block:2px; margin-top:3px; }
+}
 body.ninja-kids .nk-next-answer { font-size:clamp(18px,2.6vw,26px); font-weight:900; line-height:1.35; color:#ffd36b; }
 body.ninja-kids .nk-next-why { font-size:clamp(13px,1.7vw,16px); font-weight:700; line-height:1.6; white-space:pre-line; }
 body.ninja-kids .nk-next-btn {
