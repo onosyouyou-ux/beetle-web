@@ -123,7 +123,8 @@
         row.innerHTML = '';
         var q = document.createElement('p');
         q.className = 'nk-rank-ask';
-        q.textContent = 'ランクを けして 村人から やりなおす？';
+        // けすと「まだ なし」に もどる（村人 では ない。#177）
+        q.textContent = 'ランクを けして さいしょから やりなおす？';
         var yes = document.createElement('button');
         yes.type = 'button';
         yes.className = 'nk-rank-reset is-yes';
@@ -207,7 +208,8 @@
     rt.textContent = yomi(res.to);
     rb.appendChild(rt);
     line.appendChild(rb);
-    line.appendChild(document.createTextNode(res.passed ? ' に なった！' : res.from >= MAX ? ' を まもった！' : ' のまま'));
+    // はじめての ちょうせんで 不合格でも 村人には なる（まだ なし → 村人）。そのときは「のまま」ではない（#177）
+    line.appendChild(document.createTextNode(res.to > res.from ? ' に なった！' : res.from >= MAX ? ' を まもった！' : ' のまま'));
     txt.appendChild(line);
     if (!res.passed && res.to < MAX) {
       var nx = document.createElement('p');
