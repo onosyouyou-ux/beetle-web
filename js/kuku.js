@@ -45,6 +45,14 @@
   var NIGATE = { id: 'nigate', name: 'にがてを とく' };
   function modeOf(id) { return id === NIGATE.id ? NIGATE : MODES.filter(function (m) { return m.id === id; })[0]; }
 
+  /* ランクに ちょうせん（#173・2026-10-17。とけい修行と同じ しくみ。くわしくは js/ninja-rank.js）。
+     だん の下に置く。10問は いまのランクで決まる段から出す。段は だん の くみあわせ（やさしい順。仮。つかってみて直す）。
+     とき方は 1まいめで えらんだもの（おと／しき。じゅんばん は ばらばらに出す）。
+     FAST_SEC は 1問あたりの こたえるまでの 平均秒。これより はやく 全問せいかい なら とびきゅう */
+  var RANK_DAN = { id: 'rank', name: 'ランクに ちょうせん' };
+  var RANK_TIERS = [['d1', 'd2', 'd5'], ['d2', 'd3', 'd5'], ['d3', 'd4'], ['d4', 'd9'], ['d6', 'd8'], ['d6', 'd7', 'd8']];
+  var FAST_SEC = { tonae: 4, shiki: 3 };
+
   /* ---------- きろく（この端末の中だけ。localStorage が使えないときは きろくしない） ----------
      weak … まちがえた九九。まちがえると +2、せいかいで -1。0 で にがて から はずれる（2回 つづけて できたら卒業）
      table … 1回でも せいかいした九九。九九ひょう を うめる ごほうびに使う（81こ） */
@@ -201,6 +209,23 @@
       var mode = modeOf(state.modeId);
       wrap.appendChild(el('p', 'kk-menu-picked', mode.name));
       wrap.appendChild(group(null, DANS, 'danId', 'kk-choices-dan', 2));
+      // ランクに ちょうせん と「あなたのランク：○○」（押すと 絵の窓）。だん と同じく 選んでから スタート
+      if (window.NkRank) {
+        var rank = el('div', 'nk-rank-row');
+        var rb = el('button', 'kk-choice nk-rank-start');
+        rb.type = 'button';
+        rb.appendChild(el('span', 'kk-choice-label', RANK_DAN.name));
+        rb.appendChild(el('span', 'kk-choice-note', 'ごうかくで ランクアップ'));
+        if (picked && picked.id === 'rank') rb.classList.add('is-on');
+        rb.addEventListener('click', function () {
+          state.danId = 'rank';
+          picked = { key: 'danId', id: 'rank' };
+          renderMenuStep(2, true);
+        });
+        rank.appendChild(rb);
+        rank.appendChild(NkRank.link('kuku', function () { renderMenuStep(2, true); }));
+        wrap.appendChild(rank);
+      }
       btn = el('button', 'kk-start', 'スタート');
       btn.addEventListener('click', startSession);
       if (!picked) btn.disabled = true;
@@ -280,13 +305,28 @@
     return sec;
   }
 
+  // ランクに ちょうせん の10問。段ごとに えらんだ だん から、同じ九九が 2回 出ないように 1つずつ
+  function rankList(plan) {
+    var used = {};
+    return plan.map(function (p) {
+      var pool = poolOf(p.pick).filter(function (e) { return !used[keyOf(e)]; });
+      var e = pick(pool.length ? pool : poolOf(p.pick));
+      used[keyOf(e)] = 1;
+      return e;
+    });
+  }
+
   function startSession() {
     pushPlay();
-    var list = buildList(poolOf(state.danId));
+    var rk = null;
+    if (state.danId === 'rank' && state.modeId !== NIGATE.id && window.NkRank) {
+      rk = { plan: NkRank.plan('kuku', RANK_TIERS), ok: [[0, 4], [0, 4], [0, 2]], ans: 0, t0: Date.now() };
+    }
+    var list = rk ? rankList(rk.plan) : buildList(poolOf(state.danId));
     // にがてを ぜんぶ 卒業したあとの「もういちど」は、メニューへ もどす
     if (!list.length) { state.modeId = 'tonae'; return renderMenu(); }
     state.session = { list: list, total: list.length, index: 0, correct: 0, locked: false, q: null, missed: [],
-      tableBefore: tableCount() };
+      tableBefore: tableCount(), rank: rk };
     if (window.NkTrack) NkTrack('mode_select', { app: 'kuku', mode: state.modeId, level: state.danId });
     nextQuestion();
   }
@@ -297,6 +337,7 @@
     s.q = makeQuestion(s.list[s.index]);
     s.locked = false;
     renderPlay();
+    s.shownAt = Date.now();
   }
 
   /* ●のアレイ図。a が「1つ分の数」＝1行の●の数、b が「いくつ分」＝行の数。
@@ -328,7 +369,7 @@
 
     var head = el('div', 'kk-play-head nk-head');
     var mode = modeOf(state.modeId);
-    var dan = state.modeId === NIGATE.id ? null : DANS.filter(function (d) { return d.id === state.danId; })[0];
+    var dan = state.modeId === NIGATE.id ? null : s.rank ? RANK_DAN : DANS.filter(function (d) { return d.id === state.danId; })[0];
     head.innerHTML = NinjaHead.inner(s.index, s.total, s.correct, mode.name + (dan ? '・' + dan.name : ''));
     wrap.appendChild(head);
 
@@ -382,6 +423,10 @@
     if (s.locked) return;
     s.locked = true;
     var q = s.q, e = q.entry;
+    if (s.rank) {
+      s.rank.ans += Date.now() - s.shownAt;
+      if (chosen.ok) s.rank.ok[s.rank.plan[s.index].band][0]++;
+    }
     if (chosen.ok) s.correct++;
     else s.missed.push(shiki(e) + ' = ' + e.ans);
     var k = keyOf(e);
@@ -425,6 +470,7 @@
     app.innerHTML = '';
     if (window.NkTrack) NkTrack('set_complete', { app: 'kuku', mode: state.modeId, level: state.danId, score: s.correct, total: s.total });
     var wrap = el('div', 'kk-result');
+    if (s.rank) return renderRankResult(s, wrap);
     if (s.correct === s.total) wrap.classList.add('is-perfect');
     var rate = s.correct / s.total;  // じゅんばんは9もんなので、数ではなく割合で星を決める
     var stars = rate >= 1 ? 3 : rate >= .8 ? 2 : rate >= .5 ? 1 : 0;
@@ -452,6 +498,29 @@
     back.type = 'button';
     back.addEventListener('click', renderMenu);
     wrap.appendChild(back);
+    app.appendChild(wrap);
+  }
+
+  // ランクに ちょうせん の けっか：忍者の絵・ごうかく／もう すこし・段ごとの せいかい・かかった じかん（とけい修行と同じ）
+  function renderRankResult(s, wrap) {
+    var sec = (Date.now() - s.rank.t0) / 1000;
+    var kind = state.modeId === 'tonae' ? 'tonae' : 'shiki';
+    var fast = s.rank.ans / s.total / 1000 <= FAST_SEC[kind];
+    var res = NkRank.exam('kuku', { correct: s.correct, total: s.total, fast: fast });
+    wrap.classList.add('is-rank');
+    wrap.appendChild(el('p', 'kk-result-score', s.total + 'もんちゅう ' + s.correct + 'もん せいかい!'));
+    wrap.appendChild(NkRank.result(res, s.rank.ok, sec));
+
+    var row = el('div', 'nk-rank-btns');
+    var again = el('button', 'kk-start', 'もういちど');
+    again.type = 'button';
+    again.addEventListener('click', startSession);
+    row.appendChild(again);
+    var close = el('button', 'kk-start is-sub', 'とじる');
+    close.type = 'button';
+    close.addEventListener('click', renderMenu);
+    row.appendChild(close);
+    wrap.appendChild(row);
     app.appendChild(wrap);
   }
 
