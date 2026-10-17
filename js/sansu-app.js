@@ -63,6 +63,15 @@
     { id: 'l', name: 'ちょうなんもん', icon: 'black-hole' }
   ];
 
+  /* ランクに ちょうせん（#173・2026-10-17。とけい修行と同じ しくみ。くわしくは js/ninja-rank.js）。
+     むずかしさ の下に置く。10問は いまのランクで決まる段から出す。6段は むずかしさ の6つと そのまま対応する。
+     FAST_SEC は 1問あたりの こたえるまでの 平均秒。これより はやく 全問せいかい なら とびきゅう。
+     さくらんぼざん は 1もん2だん（わける → こたえ。あいだに 1びょう まつ）なので 長め */
+  const RANK_APP = SAKURANBO ? 'sakuranbo' : 'sansu';
+  const RANK_DIFF = { id: 'rank', name: 'ランクに ちょうせん' };
+  const RANK_TIERS = [['vs'], ['s'], ['m'], ['h'], ['h2'], ['l']];
+  const FAST_SEC = SAKURANBO ? 9 : 4;
+
   const PLAYSTYLES = [
     { id: 'challenge', name: '10もん チャレンジ', note: 'といて けっかを みる', icon: 'stopwatch' },
     { id: 'endless', name: 'とことんチャレンジ', note: '10もんで つぎの ほしへ', icon: 'orbit-loop' }
@@ -436,7 +445,7 @@
   }
 
   const findMode = (id) => MODES.find((m) => m.id === id);
-  const findDiff = (id) => DIFFS.find((d) => d.id === id);
+  const findDiff = (id) => (id === 'rank' ? RANK_DIFF : DIFFS.find((d) => d.id === id));
   const findStyle = (id) => PLAYSTYLES.find((s) => s.id === id);
 
   // ---- メニュー ----
@@ -536,6 +545,28 @@
     });
     diffs.classList.add('sa-group-diff');
     app.appendChild(diffs);
+
+    // ランクに ちょうせん と「あなたのランク：○○」（押すと 絵の窓）。むずかしさ と同じく 押したら すぐ はじまる
+    if (window.NkRank) {
+      const row = el('div', 'nk-rank-row');
+      const rb = el('button', 'sa-choice nk-rank-start');
+      rb.type = 'button';
+      const body = el('span', 'sa-choice-body');
+      body.appendChild(el('span', 'sa-choice-label', RANK_DIFF.name));
+      body.appendChild(el('span', 'sa-choice-note', 'ごうかくで ランクアップ'));
+      rb.appendChild(body);
+      if (selection.diffId === 'rank') rb.classList.add('is-on');
+      rb.addEventListener('click', () => {
+        selection.diffId = 'rank';
+        renderMenu(2, true);
+        const go = app.querySelector('.sa-start');
+        if (go) go.classList.add('is-go');
+        setTimeout(() => { if (menuStep === 2 && selection.diffId === 'rank' && !session) startSession(); }, 380);
+      });
+      row.appendChild(rb);
+      row.appendChild(NkRank.link(RANK_APP, () => renderMenu(2, true)));
+      app.appendChild(row);
+    }
 
     const start = el('button', 'sa-start');
     start.type = 'button';
@@ -770,7 +801,8 @@
     NkModal.open(app, { onClose: backFromPlay });
     const mode = findMode(selection.modeId);
     const diff = findDiff(selection.diffId);
-    const style = findStyle(selection.styleId);
+    // ランクに ちょうせん は いつも 10もん（とことん を えらんでいても）
+    const style = findStyle(diff.id === 'rank' ? 'challenge' : selection.styleId);
     session = {
       mode: mode, diff: diff, style: style,
       index: 0, correct: 0, locked: false, current: null,
@@ -781,6 +813,9 @@
       combo: 0, bestCombo: 0,   // 連続正解（COMBO）
       arrivedStage: null   // 直前に到着した天体のステージ番号（アイコン上に「到着!」を出す）
     };
+    if (diff.id === 'rank' && window.NkRank) {
+      session.rank = { plan: NkRank.plan(RANK_APP, RANK_TIERS), ok: [[0, 4], [0, 4], [0, 2]], ans: 0, t0: Date.now() };
+    }
     if (window.NkTrack) NkTrack('mode_select', trackParams());
     nextQuestion();
   }
@@ -798,9 +833,12 @@
     if (session.style.id === 'challenge' && session.index >= CHALLENGE_LENGTH) return renderResult(false);
     // とことんは「正解数」で進む（毎回0スタート・地球→…→ほし の1回の旅）
     if (session.style.id === 'endless' && session.correct >= ENDLESS_MAX) return renderResult(true);
+    // ランクに ちょうせん は 1もんごとに むずかしさ が かわる
+    if (session.rank) session.qdiff = findDiff(session.rank.plan[session.index].pick);
     session.current = makeUniqueQuestion();
     session.locked = false;
     renderPlay();
+    session.shownAt = Date.now();
   }
 
   // まだ出していない問題を先に出す（2026-10-03・#109）。さくらんぼざん の ちょうかんたん は7〜12種類しかなく、
@@ -808,16 +846,17 @@
   // それでも直近3問とは重ねない（プールが小さい難易度でも止まらないよう試行回数に上限）
   function makeUniqueQuestion() {
     const s = session;
+    const d = s.qdiff || s.diff;
     let q, tries = 0;
     do {
-      q = s.mode.make(s.diff);
+      q = s.mode.make(d);
       tries++;
     } while (s.asked[q.text] && tries < 80);
     if (s.asked[q.text]) {
       s.asked = {};
       tries = 0;
       do {
-        q = s.mode.make(s.diff);
+        q = s.mode.make(d);
         tries++;
       } while (s.recent.indexOf(q.text) !== -1 && tries < 25);
     }
@@ -834,7 +873,7 @@
     // 選択中のモード表示（もどるは一番下に配置）＋COMBOバッジ
     const head = el('div', 'sa-play-head');
     // さんすうは「たしざん・ふつう」で足りるので、わけかた の説明は さくらんぼざん だけ
-    head.appendChild(el('span', 'sa-play-mode', modeTitle(s.mode) + '・' + s.diff.name + '・' + s.style.name));
+    head.appendChild(el('span', 'sa-play-mode', modeTitle(s.mode) + '・' + s.diff.name + (s.rank ? '' : '・' + s.style.name)));
     head.appendChild(soundButton());
     app.appendChild(head);
 
@@ -1125,6 +1164,10 @@
     // さくらんぼざん は ①わける と ②こたえ の両方が合って せいかい
     const ok = val === expected && (q.layout !== 'cherry' || q.splitOk);
     s.marks.push(ok);
+    if (s.rank) {
+      s.rank.ans += Date.now() - s.shownAt;
+      if (ok) s.rank.ok[s.rank.plan[s.index].band][0]++;
+    }
     if (!ok && s.missed.indexOf(q.text + ' = ' + expected) === -1) s.missed.push(q.text + ' = ' + expected);
     // さくらんぼざん は 選択肢の場所に 解説を出し、「つぎへ」を押すまで待つ（2026-10-02 ユーザー指示）。
     // 1.2秒で次へ進むと読む前に消えていた。絵に重ねると問題が見えなくなるので、選択肢と入れかえる。
@@ -1277,6 +1320,7 @@
     }
 
     const card = el('div', 'sa-card sa-result');
+    if (s.rank) return renderRankResult(s, card);
 
     if (complete) {
       const goal = JOURNEY[JOURNEY.length - 1];
@@ -1333,6 +1377,30 @@
     menu.addEventListener('click', () => { session = null; backFromPlay(); });
     actions.appendChild(menu);
 
+    card.appendChild(actions);
+    app.appendChild(card);
+  }
+
+  // ランクに ちょうせん の けっか：忍者の絵・ごうかく／もう すこし・段ごとの せいかい・かかった じかん（とけい修行と同じ）
+  function renderRankResult(s, card) {
+    const sec = (Date.now() - s.rank.t0) / 1000;
+    const fast = s.rank.ans / CHALLENGE_LENGTH / 1000 <= FAST_SEC;
+    const res = NkRank.exam(RANK_APP, { correct: s.correct, total: CHALLENGE_LENGTH, fast: fast });
+    card.classList.add('is-rank');
+    const score = el('p', 'sa-result-score');
+    score.innerHTML = CHALLENGE_LENGTH + 'もん ちゅう <strong>' + s.correct + '</strong> もん せいかい!';
+    card.appendChild(score);
+    card.appendChild(NkRank.result(res, s.rank.ok, sec));
+
+    const actions = el('div', 'sa-actions');
+    const again = el('button', 'sa-btn sa-btn-primary', 'もういちど');
+    again.type = 'button';
+    again.addEventListener('click', startSession);
+    actions.appendChild(again);
+    const menu = el('button', 'sa-btn', 'とじる');
+    menu.type = 'button';
+    menu.addEventListener('click', () => { session = null; backFromPlay(); });
+    actions.appendChild(menu);
     card.appendChild(actions);
     app.appendChild(card);
   }
