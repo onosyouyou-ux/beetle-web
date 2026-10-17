@@ -71,7 +71,17 @@
   }
   var pick = function (a) { return a[randInt(0, a.length - 1)]; };
 
+  /* ランクに ちょうせん（#173・2026-10-17。とけい修行と同じ しくみ。くわしくは js/ninja-rank.js）。
+     学年の下に置く。10問は いまのランクで決まる段から出す。6段は 小1〜小6 と そのまま対応する。
+     かく しゅぎょう には置かない（まるつけを 自分で するので、ごうかく が 自己申告に なる）。
+     FAST_SEC は 1問あたりの こたえるまでの 平均秒。これより はやく 全問せいかい なら とびきゅう */
+  var RANK_GRADE = { id: 'rank', name: 'ランクに ちょうせん', grades: [], terms: null };
+  var RANK_TIERS = [['g1'], ['g2'], ['g3'], ['g4'], ['g5'], ['g6']];
+  var FAST_SEC = 4;
+  var rankOk = function () { return window.NkRank && state.modeId !== 'kaki'; };
+
   function gradeOf(gradeId) {
+    if (gradeId === 'rank') return RANK_GRADE;
     return GRADES.filter(function (x) { return x.id === gradeId; })[0] || GRADES[0];
   }
 
@@ -285,6 +295,24 @@
       wrap.appendChild(el('p', 'kj-menu-picked', modeName()));
       // 見出しは出さない（縦が足りないため。2026-09-22）。並びは 小1〜3／小4〜6／ぜんぶ・とっくん の3段
       wrap.appendChild(group(null, GRADES, 'gradeId', 'kj-choices-grade', 2));
+      // ランクに ちょうせん と「あなたのランク：○○」（押すと 絵の窓）。学年と同じく 選んでから スタート
+      if (rankOk()) {
+        var rank = el('div', 'nk-rank-row');
+        var rb = el('button', 'kj-choice nk-rank-start');
+        rb.type = 'button';
+        rb.appendChild(el('span', 'kj-choice-label', RANK_GRADE.name));
+        rb.appendChild(el('span', 'kj-choice-note', 'ごうかくで ランクアップ'));
+        if (picked && picked.id === 'rank') rb.classList.add('is-on');
+        rb.addEventListener('click', function () {
+          state.gradeId = 'rank';
+          state.termId = 'all';
+          picked = { key: 'gradeId', id: 'rank' };
+          renderMenuStep(2, true);
+        });
+        rank.appendChild(rb);
+        rank.appendChild(NkRank.link('kanji', function () { renderMenuStep(2, true); }));
+        wrap.appendChild(rank);
+      }
       // 学期の区切りがある学年は、押すと がっき の画面へ進むのでスタートは押せない
       btn = el('button', 'kj-start', 'スタート');
       btn.addEventListener('click', startSession);
@@ -372,7 +400,11 @@
 
   function startSession() {
     pushPlay();
-    state.session = { pool: poolOf(state.gradeId, state.termId), index: 0, correct: 0, locked: false, q: null, missed: [] };
+    var rk = null;
+    if (state.gradeId === 'rank' && rankOk()) {
+      rk = { plan: NkRank.plan('kanji', RANK_TIERS), ok: [[0, 4], [0, 4], [0, 2]], ans: 0, t0: Date.now() };
+    }
+    state.session = { pool: rk ? null : poolOf(state.gradeId, state.termId), index: 0, correct: 0, locked: false, q: null, missed: [], rank: rk };
     if (window.NkTrack) NkTrack('mode_select', { app: 'kanji', mode: state.modeId, level: kanjiLevel() });
     nextQuestion();
   }
@@ -385,10 +417,12 @@
   function nextQuestion() {
     var s = state.session;
     if (s.index >= SET_LENGTH) return renderResult();
-    s.q = makeQuestion(s.pool);
+    // ランクに ちょうせん は 1もんごとに 学年が かわる（まちがいの選択肢も その学年の ことばから作る）
+    s.q = makeQuestion(s.rank ? poolOf(s.rank.plan[s.index].pick, 'all') : s.pool);
     s.locked = false;
     s.marked = false;
     renderPlay();
+    s.shownAt = Date.now();
   }
 
   function renderPlay() {
@@ -453,6 +487,10 @@
     if (s.locked) return;
     s.locked = true;
     var q = s.q;
+    if (s.rank) {
+      s.rank.ans += Date.now() - s.shownAt;
+      if (chosen.ok) s.rank.ok[s.rank.plan[s.index].band][0]++;
+    }
     if (chosen.ok) s.correct++;
     else s.missed.push(q.askKind === 'word' ? q.ask + '（' + q.answer + '）' : q.answer + '（' + q.ask + '）');
 
@@ -657,6 +695,7 @@
     app.innerHTML = '';
     if (window.NkTrack) NkTrack('set_complete', { app: 'kanji', mode: state.modeId, level: kanjiLevel(), score: s.correct, total: SET_LENGTH });
     var wrap = el('div', 'kj-result');
+    if (s.rank) return renderRankResult(s, wrap);
     // 全問正解のときだけ、お祝いの絵に差し替える（2026-09-03）
     if (s.correct === SET_LENGTH) wrap.classList.add('is-perfect');
     var stars = s.correct >= 10 ? 3 : s.correct >= 8 ? 2 : s.correct >= 5 ? 1 : 0;
@@ -680,6 +719,28 @@
     back.type = 'button';
     back.addEventListener('click', renderMenu);
     wrap.appendChild(back);
+    app.appendChild(wrap);
+  }
+
+  // ランクに ちょうせん の けっか：忍者の絵・ごうかく／もう すこし・段ごとの せいかい・かかった じかん（とけい修行と同じ）
+  function renderRankResult(s, wrap) {
+    var sec = (Date.now() - s.rank.t0) / 1000;
+    var fast = s.rank.ans / SET_LENGTH / 1000 <= FAST_SEC;
+    var res = NkRank.exam('kanji', { correct: s.correct, total: SET_LENGTH, fast: fast });
+    wrap.classList.add('is-rank');
+    wrap.appendChild(el('p', 'kj-result-score', SET_LENGTH + 'もんちゅう ' + s.correct + 'もん せいかい!'));
+    wrap.appendChild(NkRank.result(res, s.rank.ok, sec));
+
+    var row = el('div', 'nk-rank-btns');
+    var again = el('button', 'kj-start', 'もういちど');
+    again.type = 'button';
+    again.addEventListener('click', startSession);
+    row.appendChild(again);
+    var close = el('button', 'kj-start is-sub', 'とじる');
+    close.type = 'button';
+    close.addEventListener('click', renderMenu);
+    row.appendChild(close);
+    wrap.appendChild(row);
     app.appendChild(wrap);
   }
 

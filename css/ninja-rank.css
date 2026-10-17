@@ -33,6 +33,7 @@
    だん の下の「2×1〜2×9」は ラベルの くりかえしなので かくし、ランクのボタンも 1行にする */
 @media (min-width:768px) and (max-height:820px), (orientation:landscape) and (max-height:500px){
   .ninja-kids .kk-menu.is-step:has(>.nk-rank-row) .kk-choices-dan .kk-choice-note,
+  .ninja-kids .kj-menu.is-step:has(>.nk-rank-row) .kj-choices-grade .kj-choice-note,
   .ninja-kids :is(.kk-menu,.kj-menu).is-step>.nk-rank-row>.nk-rank-start :is(.kk-choice-note,.kj-choice-note){ display:none; }
   .ninja-kids :is(.kk-menu,.kj-menu).is-step>.nk-rank-row{ margin-top:8px; }
 }
