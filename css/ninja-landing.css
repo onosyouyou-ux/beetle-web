@@ -13,6 +13,8 @@ body.ninja-lp-katakana { --nl-accent:#168c8b;--nl-dark:#0c5960;--nl-soft:#b9dfd3
 body.ninja-lp-romaji { --nl-accent:#7652b8;--nl-dark:#452b79;--nl-soft:#d3c0ee;--nl-art:url('/assets/images/ninja/romaji-cipher.webp'); }
 body.ninja-lp-phonics { --nl-accent:#4b8e42;--nl-dark:#285d25;--nl-soft:#c5dba2;--nl-art:url('/assets/images/ninja/phonics-listen.webp'); }
 body.ninja-lp-kuku { --nl-accent:#2f6ea8;--nl-dark:#1b4670;--nl-soft:#bcd8ef;--nl-art:url('/assets/images/ninja/kuku-groups.webp'); }
+/* 年表修行（#168）。忍者の絵は発注中なので、それまでは 全員集合の絵を借りる */
+body.ninja-lp-nenpyo { --nl-accent:#9a5a2c;--nl-dark:#64381a;--nl-soft:#ecd2b4;--nl-art:url('/assets/images/ninja/zenmon-seikai.webp'); }
 .ninja-landing main {
   overflow:hidden;
   background:#fffaf0;
