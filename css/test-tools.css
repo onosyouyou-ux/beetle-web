@@ -186,19 +186,8 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
    スマホの4:3で切り抜くとき、文字の頭が切れないよう左寄せにする（アプリ一覧・QA支援の両方） */
 @media (max-width:600px){ .tool-thumb img[src*="qa-thumbs-v2"]{object-position:left center} }
 
-/* QA支援のカード右下の白丸に「→」を常時表示（#190・2026-10-21。トップの lp.css と同じ）。
-   本文の「詳しく見る」から → を外した。教育支援（edu-tools）は白丸を出していないので対象外 */
-.page-qa .tool-card .service-peek-circle::after{content:"→";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:var(--color-accent);transition:transform .2s ease,color .2s ease}
-.page-qa .tool-card .service-peek-circle{transition:background .2s ease,border-color .2s ease}
-.page-qa .tool-card .service-peek-img{z-index:1}
-@media (hover:hover){
-  .page-qa .tool-card:hover .service-peek-circle{background:var(--color-accent);border-color:var(--color-accent)}
-  .page-qa .tool-card:hover .service-peek-circle::after{color:#fff;transform:translateX(3px)}
-}
-@media (hover:none){ .page-qa .tool-card .service-peek-img{display:none} }
-@media (max-width:600px){
-  .page-qa .tool-card .service-peek,
-  .page-qa .tool-card:has(.tool-thumb) .service-peek{display:block;bottom:10px;right:10px;width:32px}
-  .page-qa .tool-card .service-peek-circle{width:32px;height:32px}
-}
-.page-qa #column .tool-card .service-peek{display:none}
+/* QA支援のカード右下の丸は、普段は出さず PC でマウスを乗せたときだけ キャラごと出す（#190・2026-10-21。トップの lp.css と同じ） */
+.page-qa .tool-card .service-peek{opacity:0;transform:scale(.6);transition:opacity .2s ease,transform .25s ease}
+.page-qa .tool-card.peek-on .service-peek{opacity:1;transform:none}
+.page-qa .tool-card .service-peek{width:72px}
+.page-qa .tool-card .service-peek-circle{width:72px;height:72px}
