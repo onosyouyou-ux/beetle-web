@@ -161,12 +161,16 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-accent); 
 
 /* ─── FIT ─── */
 .fit-section { background: var(--bg); border-top: 1px solid var(--gray-lt); padding: 56px 40px; }
-.fit-list { display: flex; flex-direction: column; margin-top: 56px; max-width: 640px; }
+/* 左に見出し＋相談ボタン、右にチェックリストの2カラム（2026-10-21。左寄せ500px幅で右が空いていた） */
+.fit-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); grid-template-areas: "head list" "foot list"; grid-template-rows: auto 1fr; column-gap: 64px; }
+.fit-head { grid-area: head; }
+.fit-list { grid-area: list; display: flex; flex-direction: column; }
+.fit-foot { grid-area: foot; align-self: end; margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--gray-lt); }
 .fit-item { display: flex; align-items: center; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--gray-lt); }
 .fit-item:first-child { border-top: 1px solid var(--gray-lt); }
 .fit-check { font-family: var(--font-en); font-size: 1.2rem; font-weight: 800; color: var(--color-accent); flex-shrink: 0; width: 28px; }
 .fit-text { font-family: var(--font-ja); font-size: 1.05rem; font-weight: 700; color: var(--navy); }
-.fit-cta { margin-top: 40px; font-size: 0.95rem; font-weight: 700; color: var(--gray); }
+.fit-cta { font-size: 0.95rem; font-weight: 700; color: var(--gray); }
 .fit-btn { display: inline-block; margin-top: 20px; }
 
 /* ─── SERVICES ─── */
@@ -221,7 +225,9 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-accent); 
 
 /* ─── FLOW ─── */
 .flow-section { background: var(--white); border-top: 1px solid var(--gray-lt); padding: 60px 40px; }
-.flow-list { margin-top: 48px; max-width: 640px; display: flex; flex-direction: column; }
+/* 「こんな会社に向いています」と同じ2カラム：左に見出し、右に5ステップ（2026-10-21） */
+.flow-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 64px; align-items: start; }
+.flow-list { display: flex; flex-direction: column; }
 .flow-item { display: flex; gap: 28px; align-items: flex-start; }
 .flow-num { font-family: var(--font-en); font-size: 1.5rem; font-weight: 800; color: var(--color-accent); flex-shrink: 0; width: 48px; line-height: 1; padding-top: 2px; }
 /* ぶら下げ：番号の横に「見出し＋説明」を1つの段落として続け、折り返しは番号の右端に揃う */
@@ -360,8 +366,12 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-accent); 
   .hero-btns .btn-main, .hero-btns .btn-sub { flex: 1; text-align: center; padding: 14px 10px; font-size: 0.85rem; white-space: nowrap; }
   .problem-text br { display: none; }
   .fit-btn { display: block; text-align: center; width: fit-content; margin: 20px auto 0; }
+  .fit-grid { grid-template-columns: 1fr; grid-template-areas: "head" "list" "foot"; grid-template-rows: auto; }
+  .fit-list { margin-top: 32px; }
+  .fit-foot { margin-top: 0; padding-top: 32px; border-top: 0; }
   .section { padding: 56px 20px; }
   .supported-inner { flex-wrap: wrap; gap: 16px; }
+  .flow-grid { grid-template-columns: 1fr; }
   .flow-list { margin-top: 28px; }
   .flow-arrow { padding: 2px 0 2px 20px; }
   .flow-desc { font-size: 0.82rem; }
