@@ -447,10 +447,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-accent); 
 .column-tag.essay { background: #ef8a3c; }
 
 /* セクション別の黒丸サイズ（サービス=大きめ、ツール=小さめ、コラム=標準56px） */
-.service-card .service-peek { width: 64px; }
-.service-card .service-peek-circle { width: 64px; height: 64px; }
-/* 丸は右下（2026-09-24）。右寄せの「詳しく見る →」にかぶらないよう、タグの行の右に丸のぶん空ける */
-.service-card .service-tags { padding-right: 76px; }
+/* サービスカードは のぞき顔を出さない（2026-10-21 ユーザー指示）。タグの行の右の逃げ幅も不要 */
 .tool-card .service-peek { width: 44px; }
 .tool-card .service-peek-circle { width: 44px; height: 44px; }
 /* コラムカードは顔アイコンなし（2026-07-13決定） */
@@ -531,8 +528,6 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-accent); 
 .service-card.peek-on .service-peek,
 .tool-card.peek-on .service-peek { opacity: 1; transform: none; }
 /* ホバーで出す丸は大きめに（44px・64px では顔が小さくて分からなかった） */
-.service-card .service-peek { width: 88px; }
-.service-card .service-peek-circle { width: 88px; height: 88px; }
 .tool-card .service-peek { width: 72px; }
 .tool-card .service-peek-circle { width: 72px; height: 72px; }
 
