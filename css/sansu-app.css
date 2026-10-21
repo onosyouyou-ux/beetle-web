@@ -442,12 +442,11 @@ body::after {
   gap: 12px;
   margin-bottom: 16px;
 }
-/* 効果音の ON／OFF。見出しの右（ロケットの手前）に小さな丸ボタン */
+/* 効果音の ON／OFF。窓の帯の「✕ とじる」の手前に置く丸ボタン（2026-10-21） */
 .sa-sound {
   flex: none;
-  margin-left: auto;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border: 2px solid #a08ef0;
   border-radius: 50%;
   background: #fff;
@@ -1140,7 +1139,6 @@ body[data-sansu-mode="sakuranbo"] .sa-feedback { min-height: 2.7em; line-height:
 }
 
 /* まちがえたときの「つぎへ」（2026-10-07）。こたえの文の よこに おく */
-.sa-wrong-next { display: inline-block; margin-left: 12px; padding: 6px 18px; font-size: 16px; vertical-align: middle; }
 
 /* むずかしさを えらんだら すぐ はじまる（2026-10-08）。スタートが ひかってから うつる */
 .sa-start.is-go { filter: brightness(1.15); transform: scale(1.03); transition: transform .2s, filter .2s; }
@@ -1182,3 +1180,7 @@ body.ninja-space .sa-options.is-cstep2 .sa-opt:not(.is-correct):not(.is-wrong) {
 .nk-modal-body .sa-result { display: flex; flex-direction: column; min-height: 0; }
 .nk-modal-body .sa-result > * { flex: none; }
 .nk-modal-body .sa-result > .sa-missed { flex: 0 1 auto; min-height: 40px; overflow: auto; overscroll-behavior: contain; }
+/* スマホ・寝かせた画面は帯の「とじる」が 40px なので そろえる */
+@media (max-width:767px), (orientation:landscape) and (max-height:500px) {
+  .sa-sound { width: 40px; height: 40px; font-size: 17px; }
+}

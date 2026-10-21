@@ -356,7 +356,7 @@
   let soundOn = true;
   try { soundOn = localStorage.getItem(SOUND_KEY) !== 'off'; } catch (e) { /* 読めなければ ON */ }
 
-  // 問題画面の見出しの右に置く 🔊／🔇 ボタン
+  // 🔊／🔇 ボタン。窓の帯の「✕ とじる」の手前に置く（2026-10-21。前は問題画面の見出しの右）
   function soundButton() {
     const btn = el('button', 'sa-sound');
     btn.type = 'button';
@@ -874,8 +874,8 @@
     const head = el('div', 'sa-play-head');
     // さんすうは「たしざん・ふつう」で足りるので、わけかた の説明は さくらんぼざん だけ
     head.appendChild(el('span', 'sa-play-mode', modeTitle(s.mode) + '・' + s.diff.name + (s.rank ? '' : '・' + s.style.name)));
-    head.appendChild(soundButton());
     app.appendChild(head);
+    NkModal.setTool(soundButton());
 
     app.appendChild(progressBar());
 
@@ -1173,7 +1173,9 @@
     // 1.2秒で次へ進むと読む前に消えていた。絵に重ねると問題が見えなくなるので、選択肢と入れかえる。
     // まちがいの「おしい!」は出さない（解説で こたえが わかるため。ユーザー指示）
     const cherry = q.layout === 'cherry';
-    showAnswerEffect(ok, cherry && !ok);
+    // さんすうの まちがいは 全面の✕を出さず、こたえの欄の札（NkWrongNext）1まいだけにする。
+    // ✕のあとに札が出ると 判定が2回に見える（ほかの修行で #177 で直したのと同じ。2026-10-21）
+    if (ok || cherry) showAnswerEffect(ok, cherry && !ok);
     if (cherry) {
       setTimeout(() => {
         if (!session || session.current !== q) return;
@@ -1240,12 +1242,11 @@
 
     // まちがえたときは「こたえは 33」を 読みきれるよう、「つぎへ」を おすまで 待つ（2026-10-07。前は 1.2秒で 次へ進んでいた）
     if (!cherry && ok) setTimeout(() => { if (session) nextQuestion(); }, 1200);
+    // 札は ほかの修行と同じ NkWrongNext（✕の忍者＋こたえ＋式＋つぎへ を こたえの欄に重ねる。2026-10-21。
+    // 前は 下の行に 小さな文と つぎへ を出していて、どこを押すのか 分かりにくかった）
     if (!cherry && !ok) {
-      const nx = el('button', 'sa-btn sa-btn-primary sa-wrong-next', 'つぎへ →');
-      nx.type = 'button';
-      nx.addEventListener('click', () => { if (session) nextQuestion(); });
-      feedback.appendChild(nx);
-      nx.focus({ preventScroll: true });
+      NkWrongNext({ fb: feedback, options: options, go: () => { if (session) nextQuestion(); },
+        lines: ['こたえは ' + q.answer, q.text ? q.text + ' = ' + q.answer : ''] });
     }
   }
 
