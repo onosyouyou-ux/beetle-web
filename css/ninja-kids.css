@@ -4052,6 +4052,8 @@ html.nk-modal-open { overflow:hidden; }
   font-family:'M PLUS 1p',sans-serif; font-weight:800; font-size:17px; line-height:1.3;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
+.nk-modal-tools { flex:none; display:flex; align-items:center; gap:8px; margin-left:auto; }
+.nk-modal-tools:empty { display:none; }
 .nk-modal-close {
   flex:none;
   min-height:44px; padding:0 16px;
@@ -4474,7 +4476,16 @@ body.ninja-space .sa-track-label .sa-combo { margin:0; padding:0 8px; font-size:
 /* ===== まちがえたときの「つぎへ」（2026-10-09 レビュー対応・js/ninja-links.js の NkWrongNext）=====
    全面の✕は出さず、こたえの欄の上にだけ「✕の忍者＋こたえ＋せつめい＋つぎへ」を重ねる（2026-10-17 に1まいへ まとめた）。
    問題の欄（★の図・時計）は かくさない。ボタンの色は変えない約束（9/28）のまま、正解は文で伝える */
-body.ninja-kids :is(.kk-options,.tk-options,.kj-options).has-next { position:relative; }
+body.ninja-kids :is(.kk-options,.tk-options,.kj-options,.sa-options).has-next { position:relative; }
+/* さんすうは 宇宙の色に（2026-10-21） */
+body.ninja-kids.ninja-space .nk-next-panel { background:rgba(20,12,52,.92); }
+body.ninja-kids.ninja-space .nk-next-btn { background:#8b5cf6; }
+/* さんすうの こたえの欄は スマホで低い（4つのボタンで 130px ほど）。忍者とすきまを小さくして つぎへ を札に入れる */
+@media (max-width:767px) {
+  body.ninja-kids.ninja-space .nk-next-panel { gap:2px; padding-block:4px; }
+  body.ninja-kids.ninja-space .nk-next-mark { height:40px; }
+  body.ninja-kids.ninja-space .nk-next-btn { min-height:40px; margin-top:2px; padding-block:4px; }
+}
 body.ninja-kids .nk-next-panel {
   position:absolute; inset:0; z-index:15;
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;

@@ -15,6 +15,7 @@
 
   var dlg = null;
   var titleEl = null;
+  var toolsEl = null;
   var bodyEl = null;
   var app = null;
   var holder = null;
@@ -38,7 +39,11 @@
     close.className = 'nk-modal-close';
     close.innerHTML = '<span aria-hidden="true">✕</span> とじる';
     close.addEventListener('click', requestClose);
+    // 「とじる」の手前に置く道具（さんすうの 🔊 など）。setTool で入れる（2026-10-21）
+    toolsEl = document.createElement('div');
+    toolsEl.className = 'nk-modal-tools';
     bar.appendChild(titleEl);
+    bar.appendChild(toolsEl);
     bar.appendChild(close);
 
     bodyEl = document.createElement('div');
@@ -88,11 +93,20 @@
     holder = null;
     if (dlg.open) dlg.close();
     document.documentElement.classList.remove('nk-modal-open');
+    toolsEl.innerHTML = '';
+  }
+
+  // 帯の「とじる」の手前に道具を置く（null で空にする）。描きなおしのたびに呼んでよい
+  function setTool(el) {
+    if (!dlg) build();
+    toolsEl.innerHTML = '';
+    if (el) toolsEl.appendChild(el);
   }
 
   global.NkModal = {
     open: open,
     close: close,
+    setTool: setTool,
     isOpen: function () { return !!app; }
   };
 })(window);
