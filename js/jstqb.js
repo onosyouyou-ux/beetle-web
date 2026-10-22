@@ -2,9 +2,14 @@
    jstqb.js — テスト技術者資格 練習問題
 
    2つのモードを持つ。
-   - 章別モード：章を選んで10問。1問ごとに解説を出す（覚えるための使い方）
-   - 模試モード：40問・60分。途中では答えを見せず、最後にまとめて採点する
-     （本番と同じ体裁にしないと、時間配分の練習にならないため）
+   - 模試モード：全章から出題。出題数（10問／40問）と「1問ごとに答え合わせ」を選ぶ
+     - 答え合わせ OFF：本番と同じ体裁。時間制限つきで、途中では答えを見せず最後にまとめて採点する
+       （本番と同じ体裁にしないと、時間配分の練習にならないため）
+     - 答え合わせ ON：時間制限なし。答えるたびに正誤と解説を出す（短く区切って覚える使い方）
+   - 章別モード：章を選んで10問。1問ごとに解説を出す（弱い章を潰す使い方）
+
+   問題と結果は全画面の窓（<dialog>）で出す。ページ本文に埋め込むと、
+   スクロールで残り時間が見えなくなり、解くことに集中できなかったため（#195）。
 
    出題データは jstqb-data.js。採点も計時もブラウザ内で完結する。
    ============================================================ */
@@ -15,11 +20,15 @@
   if (!app || typeof JSTQB_Q === 'undefined') return;
 
   var EXAM_TOTAL = 40;        // 本番と同じ問題数
-  var EXAM_PASS = 26;         // 合格ライン（65%）
   var EXAM_MINUTES = 60;      // 本番と同じ試験時間
+  var PASS_RATE = 0.65;       // 合格ライン（40問中26問）
+  var COUNTS = [10, 40];      // 模試モードで選べる出題数
   var CHAPTER_SET = 10;       // 章別モードの1セット
 
-  var state = { session: null, timerId: null };
+  var state = {
+    session: null, timerId: null,
+    opts: { count: EXAM_TOTAL, check: false }   // 模試モードの選択。メニューに戻っても覚えておく
+  };
 
   /* ---------- 小道具 ---------- */
 
@@ -38,6 +47,13 @@
     return e;
   }
 
+  function button(cls, text, onClick) {
+    var b = el('button', cls, text);
+    b.type = 'button';
+    b.addEventListener('click', onClick);
+    return b;
+  }
+
   function chapterOf(n) {
     for (var i = 0; i < JSTQB_CHAPTERS.length; i++) {
       if (JSTQB_CHAPTERS[i].n === n) return JSTQB_CHAPTERS[i];
@@ -53,8 +69,67 @@
     return { src: q, ch: q.ch, q: q.q, o: opts, a: opts.indexOf(correctText), why: q.why };
   }
 
+  // 本番の時間配分（1問1分半）と合格ライン（65%）を、出題数に合わせて縮める
+  function minutesFor(count) { return Math.round(count * EXAM_MINUTES / EXAM_TOTAL); }
+  function passFor(count) { return Math.ceil(count * PASS_RATE); }
+
   function stopTimer() {
     if (state.timerId) { clearInterval(state.timerId); state.timerId = null; }
+  }
+
+  /* ---------- 窓（全画面） ---------- */
+
+  var modal = el('dialog', 'jq-modal');
+  modal.setAttribute('aria-label', '練習問題');
+  var modalBar = el('div', 'jq-modal-bar');
+  var modalTitle = el('span', 'jq-modal-title');
+  var modalTimer = el('span', 'jq-timer');
+  var modalClose = button('jq-modal-close', '✕ とじる', requestClose);
+  modalBar.appendChild(modalTitle);
+  modalBar.appendChild(modalTimer);
+  modalBar.appendChild(modalClose);
+  var view = el('div', 'jq-modal-body');
+  modal.appendChild(modalBar);
+  modal.appendChild(view);
+  document.body.appendChild(modal);
+
+  // Esc でいきなり閉じず、とじるボタンと同じ確認を通す
+  modal.addEventListener('cancel', function (e) { e.preventDefault(); requestClose(); });
+
+  function openModal(title, withTimer) {
+    modalTitle.textContent = title;
+    modalTimer.hidden = !withTimer;
+    modalTimer.textContent = '';
+    if (!modal.open) {
+      modal.showModal();
+      document.documentElement.classList.add('jq-locked');
+    }
+  }
+
+  function closeModal() {
+    stopTimer();
+    if (modal.open) modal.close();
+    document.documentElement.classList.remove('jq-locked');
+    state.session = null;
+  }
+
+  // 解いている途中だけ確認を挟む。結果画面からはそのまま閉じる
+  function requestClose() {
+    var s = state.session;
+    if (s && !s.finished) {
+      var started = s.mode === 'exam' || s.answers.length > 0;
+      var msg = s.mode === 'exam'
+        ? '模試を中断します。ここまでの回答は破棄されます。よろしいですか？'
+        : '途中でやめます。ここまでの回答は破棄されます。よろしいですか？';
+      if (started && !window.confirm(msg)) return;
+    }
+    closeModal();
+    renderMenu();
+  }
+
+  function clearView() {
+    view.innerHTML = '';
+    view.scrollTop = 0;
   }
 
   /* ---------- メニュー ---------- */
@@ -64,16 +139,58 @@
     app.innerHTML = '';
     var wrap = el('div', 'jq-menu');
 
-    // 模試モード
+    // 模試モード（全章から出題）
     var examBox = el('section', 'jq-mode-box');
     examBox.appendChild(el('h3', 'jq-mode-title', '模試モード'));
     examBox.appendChild(el('p', 'jq-mode-desc',
-      EXAM_TOTAL + '問・' + EXAM_MINUTES + '分。本番と同じ問題数と時間で、章ごとの出題数も本番の配分に寄せています。' +
-      '途中では答えを出さず、最後にまとめて採点します（' + EXAM_PASS + '問正解で合格ラインです）。'));
-    var examBtn = el('button', 'jq-start', '模試を始める');
-    examBtn.type = 'button';
-    examBtn.addEventListener('click', startExam);
+      '全章から出題します。章ごとの出題数は本番の配分に寄せています。'));
+
+    var countRow = el('div', 'jq-setting');
+    countRow.appendChild(el('span', 'jq-setting-label', '出題数'));
+    var seg = el('div', 'jq-seg');
+    seg.setAttribute('role', 'radiogroup');
+    seg.setAttribute('aria-label', '出題数');
+    COUNTS.forEach(function (n) {
+      var lab = el('label', 'jq-seg-item');
+      var r = el('input');
+      r.type = 'radio';
+      r.name = 'jq-count';
+      r.value = String(n);
+      r.checked = state.opts.count === n;
+      r.addEventListener('change', function () { state.opts.count = n; updateHint(); });
+      lab.appendChild(r);
+      lab.appendChild(el('span', null, n + '問'));
+      seg.appendChild(lab);
+    });
+    countRow.appendChild(seg);
+    examBox.appendChild(countRow);
+
+    var checkLab = el('label', 'jq-check');
+    var check = el('input');
+    check.type = 'checkbox';
+    check.checked = state.opts.check;
+    check.addEventListener('change', function () { state.opts.check = check.checked; updateHint(); });
+    checkLab.appendChild(check);
+    checkLab.appendChild(el('span', null, '1問ごとに答え合わせを表示する'));
+    examBox.appendChild(checkLab);
+
+    var hint = el('p', 'jq-mode-hint');
+    examBox.appendChild(hint);
+    var examBtn = button('jq-start', '', function () { startRandom(state.opts.count, state.opts.check); });
     examBox.appendChild(examBtn);
+
+    function updateHint() {
+      var n = state.opts.count;
+      if (state.opts.check) {
+        hint.textContent = n + '問・時間制限なし。答えるたびに正誤と解説が出て、「次へ」で進みます。';
+        examBtn.textContent = n + '問 解き始める';
+      } else {
+        hint.textContent = n + '問・' + minutesFor(n) + '分。途中では答えを出さず、最後にまとめて採点します（' +
+          passFor(n) + '問正解で合格ライン）。' + (n === EXAM_TOTAL ? '本番と同じ問題数と時間です。' : '');
+        examBtn.textContent = '模試を始める（' + n + '問・' + minutesFor(n) + '分）';
+      }
+    }
+    updateHint();
     wrap.appendChild(examBox);
 
     // 章別モード
@@ -84,12 +201,10 @@
     var grid = el('div', 'jq-chapters');
     JSTQB_CHAPTERS.forEach(function (c) {
       var n = JSTQB_Q.filter(function (q) { return q.ch === c.n; }).length;
-      var btn = el('button', 'jq-chapter');
-      btn.type = 'button';
+      var btn = button('jq-chapter', null, function () { startChapter(c.n); });
       btn.appendChild(el('span', 'jq-chapter-n', '第' + c.n + '章'));
       btn.appendChild(el('span', 'jq-chapter-name', c.name));
       btn.appendChild(el('span', 'jq-chapter-note', c.note + '／' + n + '問'));
-      btn.addEventListener('click', function () { startChapter(c.n); });
       grid.appendChild(btn);
     });
     chBox.appendChild(grid);
@@ -102,20 +217,55 @@
     app.appendChild(wrap);
   }
 
-  /* ---------- 章別モード ---------- */
+  /* ---------- 出題の組み立て ---------- */
+
+  // 章ごとの出題数は JSTQB_CHAPTERS の exam（合計40）に従う。
+  // 10問のときは、配分どおりに組んだ40問から先頭を取る（並べ替え済みなので章の比率はおおむね保たれる）
+  function buildExamSet(count) {
+    var qs = [];
+    JSTQB_CHAPTERS.forEach(function (c) {
+      var pool = shuffle(JSTQB_Q.filter(function (q) { return q.ch === c.n; }));
+      qs = qs.concat(pool.slice(0, c.exam));
+    });
+    // 章の配分より収録数が少ない場合の保険（残りは全体から補う）
+    if (qs.length < EXAM_TOTAL) {
+      var rest = shuffle(JSTQB_Q.filter(function (q) { return qs.indexOf(q) < 0; }));
+      qs = qs.concat(rest.slice(0, EXAM_TOTAL - qs.length));
+    }
+    return shuffle(qs.slice(0, EXAM_TOTAL)).slice(0, count).map(prepare);
+  }
+
+  function startRandom(count, check) {
+    if (check) startDrill({ kind: 'random', qs: buildExamSet(count), title: '模試 ' + count + '問（答え合わせつき）',
+      retry: function () { startRandom(count, true); }, retryLabel: 'もう一度 模試を解く' });
+    else startExam(count);
+  }
 
   function startChapter(chN) {
     var pool = JSTQB_Q.filter(function (q) { return q.ch === chN; });
     var picked = shuffle(pool.slice()).slice(0, Math.min(CHAPTER_SET, pool.length)).map(prepare);
-    state.session = { mode: 'chapter', ch: chN, qs: picked, index: 0, correct: 0, locked: false, answers: [] };
-    renderChapterPlay();
+    startDrill({ kind: 'chapter', ch: chN, qs: picked, title: '第' + chN + '章 ' + chapterOf(chN).name,
+      retry: function () { startChapter(chN); }, retryLabel: 'もう一度この章を解く' });
   }
 
-  function renderChapterPlay() {
+  /* ---------- 1問ごとに答え合わせ（章別・答え合わせつき模試） ---------- */
+
+  function startDrill(opt) {
+    stopTimer();
+    state.session = {
+      mode: 'drill', kind: opt.kind, ch: opt.ch, title: opt.title, qs: opt.qs,
+      retry: opt.retry, retryLabel: opt.retryLabel,
+      index: 0, correct: 0, locked: false, answers: [], finished: false
+    };
+    openModal(opt.title, false);
+    renderDrillPlay();
+  }
+
+  function renderDrillPlay() {
     var s = state.session;
     var q = s.qs[s.index];
     s.locked = false;   // 問題を出すたびに解除する
-    app.innerHTML = '';
+    clearView();
     var wrap = el('div', 'jq-play');
 
     var head = el('div', 'jq-play-head');
@@ -134,25 +284,19 @@
 
     var options = el('div', 'jq-options');
     q.o.forEach(function (text, i) {
-      var b = el('button', 'jq-opt');
-      b.type = 'button';
+      var b = button('jq-opt', null, function () { answerDrill(i, b, options); });
       b.appendChild(el('span', 'jq-opt-mark', String.fromCharCode(65 + i)));
       b.appendChild(el('span', 'jq-opt-text', text));
-      b.addEventListener('click', function () { answerChapter(i, b, options); });
       options.appendChild(b);
     });
     wrap.appendChild(options);
     wrap.appendChild(el('div', 'jq-feedback'));
 
-    var back = el('button', 'jq-back', '← メニューに もどる');
-    back.type = 'button';
-    back.addEventListener('click', renderMenu);
-    wrap.appendChild(back);
-
-    app.appendChild(wrap);
+    wrap.appendChild(button('jq-back', '← メニューに もどる', requestClose));
+    view.appendChild(wrap);
   }
 
-  function answerChapter(chosen, btn, options) {
+  function answerDrill(chosen, btn, options) {
     var s = state.session;
     if (s.locked) return;
     s.locked = true;
@@ -167,78 +311,64 @@
     });
     if (!ok) btn.classList.add('is-wrong');
 
-    var fb = app.querySelector('.jq-feedback');
+    var fb = view.querySelector('.jq-feedback');
     fb.className = 'jq-feedback ' + (ok ? 'is-ok' : 'is-ng');
     fb.appendChild(el('p', 'jq-fb-head', ok ? '正解' : '不正解 — 正解は ' + String.fromCharCode(65 + q.a)));
     fb.appendChild(el('p', 'jq-fb-why', q.why));
 
-    var next = el('button', 'jq-next', s.index + 1 >= s.qs.length ? '結果を見る →' : '次の問題 →');
-    next.type = 'button';
-    next.addEventListener('click', function () {
+    var next = button('jq-next', s.index + 1 >= s.qs.length ? '結果を見る →' : '次の問題 →', function () {
       s.index++;
-      if (s.index >= s.qs.length) renderChapterResult(); else renderChapterPlay();
+      if (s.index >= s.qs.length) renderDrillResult(); else renderDrillPlay();
     });
     fb.appendChild(next);
     next.focus();
   }
 
-  function renderChapterResult() {
+  function renderDrillResult() {
     var s = state.session;
-    app.innerHTML = '';
+    s.finished = true;
+    clearView();
     var wrap = el('div', 'jq-result');
     var pct = Math.round(s.correct / s.qs.length * 100);
 
-    wrap.appendChild(el('p', 'jq-result-lead', '第' + s.ch + '章 ' + chapterOf(s.ch).name));
+    wrap.appendChild(el('p', 'jq-result-lead', s.title));
     wrap.appendChild(el('p', 'jq-result-score', s.qs.length + '問中 ' + s.correct + '問 正解（' + pct + '%）'));
+    wrap.appendChild(resultActions(s));
     wrap.appendChild(el('p', 'jq-result-msg',
-      pct >= 90 ? 'この章は仕上がっています。ほかの章か模試へ進んでください。'
-        : pct >= 65 ? '合格ラインの水準です。落とした問題の解説だけ読み返しておきましょう。'
-          : 'この章はもう何周かしたほうが得です。解説を読んでから、続けて回してみてください。'));
+      s.kind === 'chapter'
+        ? (pct >= 90 ? 'この章は仕上がっています。ほかの章か模試へ進んでください。'
+          : pct >= 65 ? '合格ラインの水準です。落とした問題の解説だけ読み返しておきましょう。'
+            : 'この章はもう何周かしたほうが得です。解説を読んでから、続けて回してみてください。')
+        : (pct >= 65 ? '合格ラインの水準です。仕上げは答え合わせなしの模試で、時間配分も試してみてください。'
+          : '65%を切った章から章別モードで潰すと、次の回で効いてきます。')));
+
+    var answers = s.qs.map(function (_, i) { return s.answers[i]; });
+    if (s.kind === 'random') wrap.appendChild(byChapterBox(s.qs, answers));
 
     var missed = [];
-    s.qs.forEach(function (q, i) { if (s.answers[i] !== q.a) missed.push({ q: q, chosen: s.answers[i] }); });
+    s.qs.forEach(function (q, i) { if (answers[i] !== q.a) missed.push({ q: q, chosen: answers[i] }); });
     if (missed.length) wrap.appendChild(reviewBox('まちがえた問題（' + missed.length + '問）', missed));
 
-    var again = el('button', 'jq-start', 'もう一度この章を解く');
-    again.type = 'button';
-    again.addEventListener('click', function () { startChapter(s.ch); });
-    wrap.appendChild(again);
-
-    var back = el('button', 'jq-back', '← メニューに もどる');
-    back.type = 'button';
-    back.addEventListener('click', renderMenu);
-    wrap.appendChild(back);
-
-    app.appendChild(wrap);
+    wrap.appendChild(resultActions(s));
+    view.appendChild(wrap);
   }
 
-  /* ---------- 模試モード ---------- */
+  /* ---------- 模試（答え合わせなし・時間制限つき） ---------- */
 
-  // 章ごとの出題数は JSTQB_CHAPTERS の exam（合計40）に従う
-  function buildExamSet() {
-    var qs = [];
-    JSTQB_CHAPTERS.forEach(function (c) {
-      var pool = shuffle(JSTQB_Q.filter(function (q) { return q.ch === c.n; }));
-      qs = qs.concat(pool.slice(0, c.exam));
-    });
-    // 章の配分より収録数が少ない場合の保険（残りは全体から補う）
-    if (qs.length < EXAM_TOTAL) {
-      var rest = shuffle(JSTQB_Q.filter(function (q) { return qs.indexOf(q) < 0; }));
-      qs = qs.concat(rest.slice(0, EXAM_TOTAL - qs.length));
-    }
-    return shuffle(qs.slice(0, EXAM_TOTAL)).map(prepare);
-  }
-
-  function startExam() {
+  function startExam(count) {
     stopTimer();
-    var qs = buildExamSet();
+    var qs = buildExamSet(count);
+    var minutes = minutesFor(count);
     state.session = {
-      mode: 'exam', qs: qs, index: 0,
+      mode: 'exam', count: count, pass: passFor(count), qs: qs, index: 0,
+      title: '模試 ' + count + '問・' + minutes + '分',
+      retry: function () { startExam(count); }, retryLabel: 'もう一度 模試を解く',
       answers: qs.map(function () { return null; }),
       flags: qs.map(function () { return false; }),
-      endAt: Date.now() + EXAM_MINUTES * 60 * 1000,
+      endAt: Date.now() + minutes * 60 * 1000,
       finished: false
     };
+    openModal(state.session.title, true);
     state.timerId = setInterval(tickExam, 1000);
     renderExamPlay();
   }
@@ -248,27 +378,24 @@
     if (!s || s.mode !== 'exam' || s.finished) { stopTimer(); return; }
     var left = s.endAt - Date.now();
     if (left <= 0) { stopTimer(); finishExam(true); return; }
-    var t = app.querySelector('.jq-timer');
-    if (t) {
-      var sec = Math.floor(left / 1000);
-      var mm = Math.floor(sec / 60), ss = sec % 60;
-      t.textContent = '残り ' + mm + ':' + (ss < 10 ? '0' : '') + ss;
-      t.className = 'jq-timer' + (left < 5 * 60 * 1000 ? ' is-low' : '');
-    }
+    var sec = Math.floor(left / 1000);
+    var mm = Math.floor(sec / 60), ss = sec % 60;
+    modalTimer.textContent = '残り ' + mm + ':' + (ss < 10 ? '0' : '') + ss;
+    modalTimer.className = 'jq-timer' + (left < 5 * 60 * 1000 ? ' is-low' : '');
   }
 
   function renderExamPlay() {
     var s = state.session;
     var q = s.qs[s.index];
-    app.innerHTML = '';
+    clearView();
     var wrap = el('div', 'jq-play jq-exam');
 
+    var answered = s.answers.filter(function (a) { return a !== null; }).length;
     var head = el('div', 'jq-play-head');
     head.appendChild(el('span', 'jq-play-count', (s.index + 1) + ' / ' + s.qs.length));
-    head.appendChild(el('span', 'jq-timer', '残り --:--'));
+    head.appendChild(el('span', 'jq-play-score', '回答済み ' + answered));
     wrap.appendChild(head);
 
-    var answered = s.answers.filter(function (a) { return a !== null; }).length;
     var bar = el('div', 'jq-bar');
     var fill = el('div', 'jq-bar-fill');
     fill.style.width = (answered / s.qs.length * 100) + '%';
@@ -280,74 +407,54 @@
 
     var options = el('div', 'jq-options');
     q.o.forEach(function (text, i) {
-      var b = el('button', 'jq-opt');
-      b.type = 'button';
-      b.appendChild(el('span', 'jq-opt-mark', String.fromCharCode(65 + i)));
-      b.appendChild(el('span', 'jq-opt-text', text));
-      if (s.answers[s.index] === i) b.classList.add('is-picked');
       // 模試では正誤を出さない。選び直しも自由にできる
-      b.addEventListener('click', function () {
+      var b = button('jq-opt', null, function () {
         s.answers[s.index] = i;
         renderExamPlay();
       });
+      b.appendChild(el('span', 'jq-opt-mark', String.fromCharCode(65 + i)));
+      b.appendChild(el('span', 'jq-opt-text', text));
+      if (s.answers[s.index] === i) b.classList.add('is-picked');
       options.appendChild(b);
     });
     wrap.appendChild(options);
 
     var navRow = el('div', 'jq-exam-nav');
-    var prev = el('button', 'jq-sub', '← 前へ');
-    prev.type = 'button';
+    var prev = button('jq-sub', '← 前へ', function () { s.index--; renderExamPlay(); });
     prev.disabled = s.index === 0;
-    prev.addEventListener('click', function () { s.index--; renderExamPlay(); });
     navRow.appendChild(prev);
-
-    var flag = el('button', 'jq-sub' + (s.flags[s.index] ? ' is-flagged' : ''),
-      s.flags[s.index] ? '見直す印を外す' : 'あとで見直す');
-    flag.type = 'button';
-    flag.addEventListener('click', function () { s.flags[s.index] = !s.flags[s.index]; renderExamPlay(); });
-    navRow.appendChild(flag);
-
-    var next = el('button', 'jq-sub', '次へ →');
-    next.type = 'button';
+    navRow.appendChild(button('jq-sub' + (s.flags[s.index] ? ' is-flagged' : ''),
+      s.flags[s.index] ? '見直す印を外す' : 'あとで見直す',
+      function () { s.flags[s.index] = !s.flags[s.index]; renderExamPlay(); }));
+    var next = button('jq-sub', '次へ →', function () { s.index++; renderExamPlay(); });
     next.disabled = s.index === s.qs.length - 1;
-    next.addEventListener('click', function () { s.index++; renderExamPlay(); });
     navRow.appendChild(next);
     wrap.appendChild(navRow);
 
     // 問題番号の一覧。答えたもの・見直し印をひと目で分かるようにする
     var map = el('div', 'jq-map');
     s.qs.forEach(function (_, i) {
-      var cell = el('button', 'jq-map-cell', String(i + 1));
-      cell.type = 'button';
+      var cell = button('jq-map-cell', String(i + 1), function () { s.index = i; renderExamPlay(); });
       if (s.answers[i] !== null) cell.classList.add('is-done');
       if (s.flags[i]) cell.classList.add('is-flagged');
       if (i === s.index) cell.classList.add('is-now');
-      cell.addEventListener('click', function () { s.index = i; renderExamPlay(); });
       map.appendChild(cell);
     });
     wrap.appendChild(map);
 
-    var status = el('p', 'jq-exam-status', '回答済み ' + answered + ' / ' + s.qs.length +
-      (s.flags.filter(Boolean).length ? '　見直し ' + s.flags.filter(Boolean).length : ''));
-    wrap.appendChild(status);
+    var flagged = s.flags.filter(Boolean).length;
+    wrap.appendChild(el('p', 'jq-exam-status', '回答済み ' + answered + ' / ' + s.qs.length +
+      (flagged ? '　見直し ' + flagged : '')));
 
-    var submit = el('button', 'jq-start', '採点する');
-    submit.type = 'button';
-    submit.addEventListener('click', function () {
+    wrap.appendChild(button('jq-start', '採点する', function () {
       var left = s.qs.length - answered;
       if (left > 0 && !window.confirm('未回答が ' + left + '問あります。このまま採点しますか？')) return;
       finishExam(false);
-    });
-    wrap.appendChild(submit);
+    }));
 
-    var quit = el('button', 'jq-back', '← 中断してメニューにもどる');
-    quit.type = 'button';
-    quit.addEventListener('click', function () {
-      if (window.confirm('模試を中断します。ここまでの回答は破棄されます。よろしいですか？')) renderMenu();
-    });
-    wrap.appendChild(quit);
+    wrap.appendChild(button('jq-back', '← 中断してメニューにもどる', requestClose));
 
-    app.appendChild(wrap);
+    view.appendChild(wrap);
     tickExam();
   }
 
@@ -355,31 +462,56 @@
     var s = state.session;
     stopTimer();
     s.finished = true;
+    modalTimer.hidden = true;
 
     var correct = 0;
-    var byCh = {};
-    s.qs.forEach(function (q, i) {
-      byCh[q.ch] = byCh[q.ch] || { n: 0, ok: 0 };
-      byCh[q.ch].n++;
-      if (s.answers[i] === q.a) { correct++; byCh[q.ch].ok++; }
-    });
+    s.qs.forEach(function (q, i) { if (s.answers[i] === q.a) correct++; });
 
-    app.innerHTML = '';
+    clearView();
     var wrap = el('div', 'jq-result');
-    var passed = correct >= EXAM_PASS;
+    var passed = correct >= s.pass;
 
     if (timeUp) wrap.appendChild(el('p', 'jq-timeup', '時間切れです。ここまでの回答で採点しました。'));
 
-    var badge = el('p', 'jq-verdict ' + (passed ? 'is-pass' : 'is-fail'),
-      passed ? '合格ライン到達' : '合格ラインまで あと ' + (EXAM_PASS - correct) + '問');
-    wrap.appendChild(badge);
+    wrap.appendChild(el('p', 'jq-verdict ' + (passed ? 'is-pass' : 'is-fail'),
+      passed ? '合格ライン到達' : '合格ラインまで あと ' + (s.pass - correct) + '問'));
     wrap.appendChild(el('p', 'jq-result-score',
       s.qs.length + '問中 ' + correct + '問 正解（' + Math.round(correct / s.qs.length * 100) + '%）'));
+    wrap.appendChild(resultActions(s));
     wrap.appendChild(el('p', 'jq-result-msg',
-      '本番の合格ラインは ' + EXAM_TOTAL + '問中 ' + EXAM_PASS + '問（65%）です。' +
+      '本番の合格ラインは ' + EXAM_TOTAL + '問中 ' + passFor(EXAM_TOTAL) + '問（65%）です' +
+      (s.count !== EXAM_TOTAL ? '（この回は ' + s.count + '問中 ' + s.pass + '問で判定）' : '') + '。' +
       'この模試は当サイトが独自に作った問題なので、点数はあくまで目安として使ってください。'));
 
     // 章別の正答率。どこが弱いかはここで分かる
+    wrap.appendChild(byChapterBox(s.qs, s.answers));
+
+    var missed = [];
+    s.qs.forEach(function (q, i) { if (s.answers[i] !== q.a) missed.push({ q: q, chosen: s.answers[i] }); });
+    if (missed.length) wrap.appendChild(reviewBox('まちがえた問題・未回答（' + missed.length + '問）', missed));
+
+    wrap.appendChild(resultActions(s));
+    view.appendChild(wrap);
+  }
+
+  /* ---------- 結果画面の部品 ---------- */
+
+  // 「もう一度」と「メニューへ」。スコアの直下と一番下の2か所に置く
+  // （まちがえた問題の一覧が長いと、下まで行かないと次に進めなかったため）
+  function resultActions(s) {
+    var row = el('div', 'jq-result-actions');
+    row.appendChild(button('jq-start', s.retryLabel, s.retry));
+    row.appendChild(button('jq-sub', 'メニューへ', requestClose));
+    return row;
+  }
+
+  function byChapterBox(qs, answers) {
+    var byCh = {};
+    qs.forEach(function (q, i) {
+      byCh[q.ch] = byCh[q.ch] || { n: 0, ok: 0 };
+      byCh[q.ch].n++;
+      if (answers[i] === q.a) byCh[q.ch].ok++;
+    });
     var table = el('div', 'jq-bych');
     table.appendChild(el('h3', null, '章ごとの正答'));
     JSTQB_CHAPTERS.forEach(function (c) {
@@ -390,33 +522,14 @@
       var meter = el('span', 'jq-bych-meter');
       var m = el('span', 'jq-bych-fill');
       m.style.width = (d.ok / d.n * 100) + '%';
-      if (d.ok / d.n < 0.65) m.classList.add('is-low');
+      if (d.ok / d.n < PASS_RATE) m.classList.add('is-low');
       meter.appendChild(m);
       row.appendChild(meter);
       row.appendChild(el('span', 'jq-bych-num', d.ok + '/' + d.n));
       table.appendChild(row);
     });
-    wrap.appendChild(table);
-
-    var missed = [];
-    s.qs.forEach(function (q, i) { if (s.answers[i] !== q.a) missed.push({ q: q, chosen: s.answers[i] }); });
-    if (missed.length) wrap.appendChild(reviewBox('まちがえた問題・未回答（' + missed.length + '問）', missed));
-
-    var again = el('button', 'jq-start', 'もう一度 模試を解く');
-    again.type = 'button';
-    again.addEventListener('click', startExam);
-    wrap.appendChild(again);
-
-    var back = el('button', 'jq-back', '← メニューに もどる');
-    back.type = 'button';
-    back.addEventListener('click', renderMenu);
-    wrap.appendChild(back);
-
-    app.appendChild(wrap);
-    window.scrollTo({ top: app.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+    return table;
   }
-
-  /* ---------- 見直し ---------- */
 
   function reviewBox(title, list) {
     var box = el('div', 'jq-review');
