@@ -96,6 +96,33 @@
   // Esc でいきなり閉じず、とじるボタンと同じ確認を通す
   modal.addEventListener('cancel', function (e) { e.preventDefault(); requestClose(); });
 
+  // 確認は窓の中に出す小さなポップアップ。ブラウザ標準の confirm は画面の上端に出て、
+  // 解いている窓から目が離れてしまうため
+  var ask = el('dialog', 'jq-ask');
+  var askMsg = el('p', 'jq-ask-msg');
+  var askRow = el('div', 'jq-ask-row');
+  var askDone = null;
+  var askNo = button('jq-sub', '', function () { askDone = null; ask.close(); });
+  var askYes = button('jq-ask-yes', '', function () {
+    var fn = askDone; askDone = null;
+    ask.close();
+    if (fn) fn();
+  });
+  askRow.appendChild(askNo);
+  askRow.appendChild(askYes);
+  ask.appendChild(askMsg);
+  ask.appendChild(askRow);
+  document.body.appendChild(ask);
+
+  function confirmThen(msg, yesLabel, noLabel, fn) {
+    askMsg.textContent = msg;
+    askYes.textContent = yesLabel;
+    askNo.textContent = noLabel;
+    askDone = fn;
+    ask.showModal();
+    askNo.focus();   // うっかり Enter で破棄しないよう、残るほうを選んでおく
+  }
+
   function openModal(title, withTimer) {
     modalTitle.textContent = title;
     modalTimer.hidden = !withTimer;
@@ -118,11 +145,17 @@
     var s = state.session;
     if (s && !s.finished) {
       var started = s.mode === 'exam' || s.answers.length > 0;
-      var msg = s.mode === 'exam'
-        ? '模試を中断します。ここまでの回答は破棄されます。よろしいですか？'
-        : '途中でやめます。ここまでの回答は破棄されます。よろしいですか？';
-      if (started && !window.confirm(msg)) return;
+      if (started) {
+        confirmThen(
+          (s.mode === 'exam' ? '模試を中断しますか？' : '途中でやめますか？') + '\nここまでの回答は破棄されます。',
+          'やめる', 'つづける', leave);
+        return;
+      }
     }
+    leave();
+  }
+
+  function leave() {
     closeModal();
     renderMenu();
   }
@@ -448,7 +481,11 @@
 
     wrap.appendChild(button('jq-start', '採点する', function () {
       var left = s.qs.length - answered;
-      if (left > 0 && !window.confirm('未回答が ' + left + '問あります。このまま採点しますか？')) return;
+      if (left > 0) {
+        confirmThen('未回答が ' + left + '問あります。\nこのまま採点しますか？', '採点する', 'もどって解く',
+          function () { finishExam(false); });
+        return;
+      }
       finishExam(false);
     }));
 
