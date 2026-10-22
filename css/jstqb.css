@@ -3,18 +3,46 @@
    共通変数は /style/common.css の --tp-* を流用
    ============================================================ */
 
-.jq-panel{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:22px}
+/* ヒーローはこのページだけ薄くする（問題をファーストビューに入れるため） */
+.jq-hero{padding-top:26px;padding-bottom:24px;z-index:2;box-shadow:0 6px 18px rgba(28,28,46,.22)}
+/* TOOL の札は見出しと同じ行に置く（札だけで1行使うと間延びするため） */
+.jq-hero-title{position:relative;z-index:1;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:6px 14px;margin-bottom:8px}
+.jq-hero .hero-badge{margin:0}
+.jq-hero h1{font-size:30px;margin:0}
+.jq-hero p{max-width:none;font-size:13px}
 
-/* 非公式であることの注記。目立たせすぎず、見落とさせない */
+/* 「このツールについて」と非公式の注記は、メニュー下の「収録200問。…」の一文の幅（約786px）にそろえる */
+.jq-panel{--jq-note-w:790px;background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:32px 44px 36px}
+
+/* 非公式であることの注記。目立たせすぎず、見落とさせない（問題のメニューの下に置く） */
 .jq-disclaimer{
   background:var(--tp-cream2);border:1px solid var(--tp-border2);border-radius:8px;
-  padding:12px 16px;margin:0 0 20px;font-size:12px;line-height:1.85;color:var(--tp-text2);
+  padding:12px 16px;margin:12px auto 0;max-width:var(--jq-note-w);font-size:12px;line-height:1.85;color:var(--tp-text2);
 }
 .jq-disclaimer b{color:var(--tp-text)}
 
+/* 「このツールについて」。問題を先に見せたいので、メニューの下にたたんで置く */
+.jq-about{max-width:var(--jq-note-w);margin:20px auto 0;border:1px solid var(--tp-border);border-radius:8px;background:#fff}
+.jq-about summary{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;list-style:none;cursor:pointer;
+  padding:11px 16px;font-size:13px;font-weight:800;color:var(--tp-text);
+}
+.jq-about summary::-webkit-details-marker{display:none}
+.jq-about-icon{font-size:16px;font-weight:700;color:var(--tp-orange);transition:transform .15s}
+.jq-about[open] .jq-about-icon{transform:rotate(45deg)}
+.jq-about p{margin:0;padding:0 16px 14px;font-size:13px;line-height:1.9;color:var(--tp-text2)}
+.jq-about p strong{color:var(--tp-text)}
+
 /* ====== メニュー ====== */
-.jq-menu{max-width:680px;margin:0 auto}
+.jq-menu{max-width:1000px;margin:0 auto}
 .jq-mode-box{border:1px solid var(--tp-border);border-radius:12px;padding:18px 20px;margin-bottom:16px;background:var(--tp-cream)}
+/* PC は模試と章別を横に並べる。開始ボタンは箱の下にそろえる */
+@media (min-width:900px){
+  .jq-menu{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
+  .jq-menu .jq-mode-box{margin-bottom:0;display:flex;flex-direction:column}
+  .jq-menu .jq-chapters{grid-template-columns:1fr 1fr}
+  .jq-menu-note{grid-column:1 / -1}
+}
 .jq-mode-title{font-size:15px;font-weight:800;margin:0 0 6px;color:var(--tp-text)}
 .jq-mode-desc{font-size:12.5px;line-height:1.9;color:var(--tp-text2);margin:0 0 14px}
 .jq-chapters{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
@@ -29,12 +57,92 @@
 .jq-chapter-note{font-size:11px;color:var(--tp-text3)}
 .jq-menu-note{font-size:11.5px;line-height:1.85;color:var(--tp-text3);margin:14px 0 0;text-align:center}
 
+/* 前に解いた問題を後回しにする（両モード共通の設定） */
+.jq-fresh{display:flex;align-items:center;flex-wrap:wrap;gap:6px 16px;margin:0 0 14px;padding:10px 14px;background:var(--tp-cream);border:1px solid var(--tp-border);border-radius:8px}
+.jq-fresh .jq-check{margin:0}
+.jq-fresh-note{font-size:12px;color:var(--tp-text3)}
+.jq-fresh-reset{margin-left:auto;background:none;border:none;padding:2px 0;font-family:inherit;font-size:12px;font-weight:700;color:var(--tp-text3);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+@media (hover:hover){.jq-fresh-reset:hover{color:var(--tp-orange)}}
+@media (min-width:900px){.jq-fresh{grid-column:1 / -1;margin:0}}
+
+/* 模試モードの設定（出題数・答え合わせ） */
+.jq-setting{display:flex;align-items:center;gap:12px;margin:4px 0 14px}
+.jq-setting-label{font-size:12.5px;font-weight:800;color:var(--tp-text)}
+.jq-seg{display:inline-flex;border:1px solid var(--tp-border2);border-radius:2px;overflow:hidden;background:#fff}
+.jq-seg-item{position:relative;cursor:pointer}
+.jq-seg-item input{position:absolute;opacity:0;pointer-events:none}
+.jq-seg-item span{display:block;padding:7px 18px;font-size:13px;font-weight:700;color:var(--tp-text2)}
+.jq-seg-item+.jq-seg-item span{border-left:1px solid var(--tp-border2)}
+.jq-seg-item input:checked+span{background:var(--tp-dark);color:#fff}
+.jq-seg-item input:focus-visible+span{outline:2px solid var(--tp-orange);outline-offset:-2px}
+.jq-check{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--tp-text);cursor:pointer;margin:0 0 14px}
+.jq-check input{width:18px;height:18px;margin:0;accent-color:var(--tp-orange);cursor:pointer}
+.jq-mode-hint{font-size:12px;line-height:1.85;color:var(--tp-text2);margin:0 0 22px;background:#fff;border-radius:8px;padding:9px 12px}
+
 .jq-start{
   display:block;width:100%;background:var(--tp-orange);color:#fff;border:none;border-radius:2px;
   padding:13px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:inherit;
 }
 .jq-start:hover{background:#a9543f}
-.jq-result .jq-start{margin-top:18px}
+/* メニューの開始ボタンは、押せるものだと分かるよう幅を絞って影を付ける */
+.jq-menu .jq-start{
+  width:auto;min-width:280px;margin:0 auto;padding:13px 36px;border-radius:4px;
+  box-shadow:0 4px 0 #9c4a37,0 8px 18px rgba(28,28,46,.18);transition:transform .08s,box-shadow .08s,background .12s;
+}
+.jq-menu .jq-start:active{transform:translateY(3px);box-shadow:0 1px 0 #9c4a37,0 3px 8px rgba(28,28,46,.18)}
+.jq-play .jq-start{margin-top:4px}
+
+/* ====== 窓（問題・結果を出すポップアップ） ======
+   修行アプリと同じ考え方：PC・タブレットは後ろのページが透ける「浮かぶ窓」、
+   スマホと高さの低い画面（学校のノートPCなど）は全面の窓 */
+html.jq-locked{overflow:hidden}
+.jq-modal{
+  width:min(860px,calc(100% - 48px));height:calc(100dvh - 48px);max-width:none;max-height:none;
+  margin:auto;padding:0;border:none;border-radius:14px;overflow:hidden;
+  background:var(--tp-cream,#f7f5f0);color:var(--tp-text);
+  box-shadow:0 24px 64px rgba(28,28,46,.35);
+}
+.jq-modal[open]{display:flex;flex-direction:column;animation:jq-pop .18s ease-out}
+.jq-modal::backdrop{background:rgba(28,28,46,.6)}
+@keyframes jq-pop{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.jq-modal[open]{animation:none}}
+.jq-modal-bar{
+  flex-shrink:0;display:flex;align-items:center;gap:14px;
+  background:#fff;border-bottom:1px solid var(--tp-border);
+  padding:10px 20px;
+}
+.jq-modal-title{flex:1;min-width:0;font-size:13px;font-weight:800;color:var(--tp-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jq-modal-bar .jq-timer{font-size:15px;background:var(--tp-cream2);border-radius:2px;padding:4px 10px}
+.jq-modal-bar .jq-timer.is-low{background:#fdf0ec}
+.jq-modal-close{
+  flex-shrink:0;background:#fff;border:1px solid var(--tp-border2);border-radius:2px;padding:6px 12px;
+  font-size:12.5px;font-weight:700;color:var(--tp-text2);cursor:pointer;font-family:inherit;
+}
+.jq-modal-close:hover{border-color:var(--tp-orange);color:var(--tp-orange)}
+.jq-modal-body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:22px 16px 40px}
+
+/* 確認のポップアップ（中断・未回答のまま採点） */
+.jq-ask{
+  width:min(380px,calc(100% - 32px));margin:auto;padding:24px 22px 20px;border:none;border-radius:12px;
+  background:#fff;color:var(--tp-text);box-shadow:0 20px 50px rgba(28,28,46,.35);text-align:center;
+}
+.jq-ask::backdrop{background:rgba(28,28,46,.35)}
+.jq-ask-msg{white-space:pre-line;font-size:14px;font-weight:700;line-height:1.85;margin:0 0 18px}
+.jq-ask-row{display:flex;gap:10px;justify-content:center}
+.jq-ask-row>button{flex:1;padding:11px 12px;font-size:13.5px}
+.jq-ask-yes{background:var(--tp-orange);color:#fff;border:none;border-radius:2px;font-weight:800;cursor:pointer;font-family:inherit}
+@media (hover:hover){.jq-ask-yes:hover{background:#a9543f}}
+
+/* 結果画面の「もう一度」「メニューへ」。スコア直下と一番下に同じものを置く */
+.jq-result-actions{display:flex;gap:10px;justify-content:center;align-items:stretch;margin:6px 0 18px}
+.jq-result-actions .jq-start{width:auto;flex:0 1 280px}
+.jq-result-actions .jq-sub{flex:0 0 auto;padding:8px 22px}
+.jq-result>.jq-result-actions:last-child{margin:18px 0 0}
+
+/* スマホ・高さの低い画面は全面の窓にする（浮かせると問題文の入る高さが足りない） */
+@media (max-width:767px),(max-height:640px){
+  .jq-modal{width:100%;height:100%;border-radius:0;box-shadow:none}
+}
 
 .jq-back{
   display:block;margin:18px auto 0;background:none;border:none;
@@ -142,9 +250,67 @@
 .jq-review-ok{font-size:12.5px;color:var(--tp-green,#2f7d55);font-weight:700}
 .jq-review-why{font-size:12.5px;line-height:1.85;color:var(--tp-text2);margin:0}
 
+/* ====== 使い方・試験の形式・FAQ（読み物の部分） ======
+   本文が黒一色だと読む気にならないので、見出しに色、本文は一段薄く、要点だけ太字で拾えるようにする */
+.jq-cards .ref-card{border-top:3px solid var(--tp-orange);display:flex;flex-direction:column;gap:6px}
+.jq-cards .ref-card h3{font-size:15px;font-weight:800;color:var(--tp-text);line-height:1.6;margin:0}
+.jq-cards .ref-card p{font-size:13px;line-height:1.95;color:var(--tp-text2);margin:0}
+.jq-cards .ref-card strong{color:var(--tp-text);font-weight:800;background:linear-gradient(transparent 62%,#fbe1d3 62%)}
+.jq-step{align-self:flex-start;font-size:10.5px;font-weight:800;letter-spacing:.12em;color:#fff;background:var(--tp-orange);border-radius:2px;padding:3px 9px}
+.jq-facts .ref-card{border-top-color:var(--tp-dark)}
+
+.jq-faq .faq-item{background:#fff;border:1px solid var(--tp-border);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.jq-faq .faq-q{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;list-style:none;font-size:14px;font-weight:700;color:var(--tp-text)}
+.jq-faq .faq-q::-webkit-details-marker{display:none}
+.jq-faq .faq-q>span:first-child{flex:1}
+.jq-faq .faq-q>span:first-child::before{content:'Q';display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;margin-right:10px;border-radius:50%;background:var(--tp-orange);color:#fff;font-size:11px;font-weight:800;vertical-align:1px}
+.jq-faq .faq-icon{flex-shrink:0;font-size:18px;font-weight:700;color:var(--tp-orange);transition:transform .15s}
+.jq-faq details[open] .faq-icon{transform:rotate(45deg)}
+.jq-faq .faq-a{padding:0 18px 16px 50px;font-size:13px;line-height:1.95;color:var(--tp-text2)}
+@media (hover:hover){.jq-faq .faq-q:hover{color:var(--tp-orange)}}
+
 @media (max-width:640px){
+  .jq-faq .faq-a{padding-left:18px}
+  .jq-hero h1{font-size:22px}
+  .jq-hero .hero-badge{display:none}
   .jq-panel{padding:16px}
   .jq-q{font-size:14px;padding:15px 16px}
   .jq-bych-name{width:120px;font-size:11px}
   .jq-map-cell{width:26px;height:26px}
+  .jq-modal-bar{gap:8px;padding:8px 12px}
+  .jq-modal-title{font-size:12px}
+  .jq-modal-bar .jq-timer{font-size:14px;padding:3px 8px}
+  .jq-modal-body{padding:16px 12px 32px}
+  .jq-result-actions{flex-direction:column;gap:8px}
+  .jq-result-actions .jq-start,.jq-result-actions .jq-sub{flex:none;width:100%}
+  .jq-result-actions .jq-sub{padding:11px 14px}
+}
+
+/* ====== 結果の印刷・PDF ====== */
+.jq-print-row{margin:14px 0 0;text-align:center}
+.jq-print-btn{
+  background:none;border:none;padding:6px 4px;font-family:inherit;cursor:pointer;
+  font-size:12.5px;font-weight:700;color:var(--tp-text2);text-decoration:underline;text-underline-offset:4px;
+}
+@media (hover:hover){.jq-print-btn:hover{color:var(--tp-orange)}}
+.jq-print{display:none}
+
+@media print{
+  @page{margin:14mm 12mm}
+  html,body{overflow:visible !important;height:auto !important;background:#fff !important}
+  body>*:not(#jq-print){display:none !important}
+  .jq-print{display:block;color:#1c1c2e;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .jq-print-head{border-bottom:2px solid #1c1c2e;padding-bottom:8px;margin-bottom:16px}
+  .jq-print-site{font-size:10pt;font-weight:700;margin:0;color:#555}
+  .jq-print-title{font-size:16pt;font-weight:800;margin:4px 0 2px}
+  .jq-print-meta{font-size:9pt;color:#666;margin:0}
+  .jq-print .jq-result{max-width:none;text-align:left}
+  .jq-print .jq-verdict{margin-bottom:6px}
+  .jq-print .jq-result-score{font-size:15pt;margin:2px 0 6px}
+  .jq-print .jq-result-msg{font-size:9.5pt;margin-bottom:12px}
+  .jq-print .jq-bych,.jq-print .jq-review{background:#fff;border:1px solid #ccc;padding:12px 14px}
+  .jq-print .jq-bych-row{break-inside:avoid}
+  .jq-print .jq-review-item{break-inside:avoid}
+  .jq-print .jq-review h3,.jq-print .jq-bych h3{break-after:avoid}
+  .jq-print-foot{font-size:8.5pt;color:#777;margin:14px 0 0;border-top:1px solid #ccc;padding-top:6px}
 }
