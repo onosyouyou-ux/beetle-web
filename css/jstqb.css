@@ -3,6 +3,12 @@
    共通変数は /style/common.css の --tp-* を流用
    ============================================================ */
 
+/* ヒーローはこのページだけ薄くする（問題をファーストビューに入れるため） */
+.jq-hero{padding-top:26px;padding-bottom:24px}
+.jq-hero .hero-badge{margin-bottom:10px}
+.jq-hero h1{font-size:30px;margin-bottom:8px}
+.jq-hero p{max-width:none;font-size:13px}
+
 .jq-panel{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:22px}
 
 /* 非公式であることの注記。目立たせすぎず、見落とさせない（問題のメニューの下に置く） */
@@ -209,6 +215,7 @@ html.jq-locked{overflow:hidden}
 .jq-review-why{font-size:12.5px;line-height:1.85;color:var(--tp-text2);margin:0}
 
 @media (max-width:640px){
+  .jq-hero h1{font-size:22px}
   .jq-panel{padding:16px}
   .jq-q{font-size:14px;padding:15px 16px}
   .jq-bych-name{width:120px;font-size:11px}
