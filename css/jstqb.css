@@ -50,18 +50,24 @@
 .jq-start:hover{background:#a9543f}
 .jq-play .jq-start{margin-top:4px}
 
-/* ====== 窓（問題・結果を全画面で出す） ====== */
+/* ====== 窓（問題・結果を出すポップアップ） ======
+   修行アプリと同じ考え方：PC・タブレットは後ろのページが透ける「浮かぶ窓」、
+   スマホと高さの低い画面（学校のノートPCなど）は全面の窓 */
 html.jq-locked{overflow:hidden}
 .jq-modal{
-  width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:none;
+  width:min(860px,calc(100% - 48px));height:calc(100dvh - 48px);max-width:none;max-height:none;
+  margin:auto;padding:0;border:none;border-radius:14px;overflow:hidden;
   background:var(--tp-cream,#f7f5f0);color:var(--tp-text);
+  box-shadow:0 24px 64px rgba(28,28,46,.35);
 }
-.jq-modal[open]{display:flex;flex-direction:column}
-.jq-modal::backdrop{background:rgba(28,28,46,.55)}
+.jq-modal[open]{display:flex;flex-direction:column;animation:jq-pop .18s ease-out}
+.jq-modal::backdrop{background:rgba(28,28,46,.6)}
+@keyframes jq-pop{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.jq-modal[open]{animation:none}}
 .jq-modal-bar{
   flex-shrink:0;display:flex;align-items:center;gap:14px;
   background:#fff;border-bottom:1px solid var(--tp-border);
-  padding:10px max(16px,calc((100% - 760px) / 2));
+  padding:10px 20px;
 }
 .jq-modal-title{flex:1;min-width:0;font-size:13px;font-weight:800;color:var(--tp-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .jq-modal-bar .jq-timer{font-size:15px;background:var(--tp-cream2);border-radius:2px;padding:4px 10px}
@@ -78,6 +84,11 @@ html.jq-locked{overflow:hidden}
 .jq-result-actions .jq-start{width:auto;flex:0 1 280px}
 .jq-result-actions .jq-sub{flex:0 0 auto;padding:8px 22px}
 .jq-result>.jq-result-actions:last-child{margin:18px 0 0}
+
+/* スマホ・高さの低い画面は全面の窓にする（浮かせると問題文の入る高さが足りない） */
+@media (max-width:767px),(max-height:640px){
+  .jq-modal{width:100%;height:100%;border-radius:0;box-shadow:none}
+}
 
 .jq-back{
   display:block;margin:18px auto 0;background:none;border:none;
