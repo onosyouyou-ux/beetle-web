@@ -5,10 +5,10 @@
 
 .jq-panel{background:#fff;border:1px solid var(--tp-border);border-radius:12px;padding:22px}
 
-/* 非公式であることの注記。目立たせすぎず、見落とさせない */
+/* 非公式であることの注記。目立たせすぎず、見落とさせない（問題のメニューの下に置く） */
 .jq-disclaimer{
   background:var(--tp-cream2);border:1px solid var(--tp-border2);border-radius:8px;
-  padding:12px 16px;margin:0 0 20px;font-size:12px;line-height:1.85;color:var(--tp-text2);
+  padding:12px 16px;margin:20px 0 0;font-size:12px;line-height:1.85;color:var(--tp-text2);
 }
 .jq-disclaimer b{color:var(--tp-text)}
 
