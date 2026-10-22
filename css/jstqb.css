@@ -4,7 +4,7 @@
    ============================================================ */
 
 /* ヒーローはこのページだけ薄くする（問題をファーストビューに入れるため） */
-.jq-hero{padding-top:26px;padding-bottom:24px}
+.jq-hero{padding-top:26px;padding-bottom:24px;z-index:2;box-shadow:0 6px 18px rgba(28,28,46,.22)}
 .jq-hero .hero-badge{margin-bottom:10px}
 .jq-hero h1{font-size:30px;margin-bottom:8px}
 .jq-hero p{max-width:none;font-size:13px}
