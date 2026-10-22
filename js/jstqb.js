@@ -144,13 +144,11 @@
   function requestClose() {
     var s = state.session;
     if (s && !s.finished) {
-      var started = s.mode === 'exam' || s.answers.length > 0;
-      if (started) {
-        confirmThen(
-          (s.mode === 'exam' ? '模試を中断しますか？' : '途中でやめますか？') + '\nここまでの回答は破棄されます。',
-          'やめる', 'つづける', leave);
-        return;
-      }
+      // まだ1問も答えていなくても確認する（モードによって出たり出なかったりすると迷うため）
+      confirmThen(
+        (s.mode === 'exam' ? '模試を中断しますか？' : '途中でやめますか？') + '\nここまでの回答は破棄されます。',
+        'やめる', 'つづける', leave);
+      return;
     }
     leave();
   }
