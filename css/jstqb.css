@@ -5,8 +5,10 @@
 
 /* ヒーローはこのページだけ薄くする（問題をファーストビューに入れるため） */
 .jq-hero{padding-top:26px;padding-bottom:24px;z-index:2;box-shadow:0 6px 18px rgba(28,28,46,.22)}
-.jq-hero .hero-badge{margin-bottom:10px}
-.jq-hero h1{font-size:30px;margin-bottom:8px}
+/* TOOL の札は見出しと同じ行に置く（札だけで1行使うと間延びするため） */
+.jq-hero-title{position:relative;z-index:1;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:6px 14px;margin-bottom:8px}
+.jq-hero .hero-badge{margin:0}
+.jq-hero h1{font-size:30px;margin:0}
 .jq-hero p{max-width:none;font-size:13px}
 
 /* 「このツールについて」と非公式の注記は、メニュー下の「収録200問。…」の一文の幅（約786px）にそろえる */
@@ -250,6 +252,7 @@ html.jq-locked{overflow:hidden}
 @media (max-width:640px){
   .jq-faq .faq-a{padding-left:18px}
   .jq-hero h1{font-size:22px}
+  .jq-hero .hero-badge{display:none}
   .jq-panel{padding:16px}
   .jq-q{font-size:14px;padding:15px 16px}
   .jq-bych-name{width:120px;font-size:11px}
