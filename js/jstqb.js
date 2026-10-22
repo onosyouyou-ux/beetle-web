@@ -381,6 +381,7 @@
     if (missed.length) wrap.appendChild(reviewBox('まちがえた問題（' + missed.length + '問）', missed));
 
     wrap.appendChild(resultActions(s));
+    wrap.appendChild(printButton(s));
     view.appendChild(wrap);
   }
 
@@ -526,6 +527,7 @@
     if (missed.length) wrap.appendChild(reviewBox('まちがえた問題・未回答（' + missed.length + '問）', missed));
 
     wrap.appendChild(resultActions(s));
+    wrap.appendChild(printButton(s));
     view.appendChild(wrap);
   }
 
@@ -538,6 +540,41 @@
     row.appendChild(button('jq-start', s.retryLabel, s.retry));
     row.appendChild(button('jq-sub', 'メニューへ', requestClose));
     return row;
+  }
+
+  // 結果を印刷する（印刷画面で「PDFに保存」を選べば PDF になる）。
+  // 成績は保存しないので、手元に残したい人向け。窓とページ本体は隠し、結果だけを白地で出す
+  function printButton(s) {
+    var row = el('div', 'jq-print-row');
+    row.appendChild(button('jq-print-btn', '結果を印刷・PDFで保存', function () { printResult(s); }));
+    return row;
+  }
+
+  function printResult(s) {
+    var src = view.querySelector('.jq-result');
+    if (!src) return;
+    var old = document.getElementById('jq-print');
+    if (old) old.remove();
+
+    var box = el('div', 'jq-print');
+    box.id = 'jq-print';
+    var head = el('div', 'jq-print-head');
+    head.appendChild(el('p', 'jq-print-site', 'JSTQB Foundation Level 練習問題（非公式）｜BEETLE'));
+    head.appendChild(el('h1', 'jq-print-title', s.title));
+    head.appendChild(el('p', 'jq-print-meta',
+      new Date().toLocaleString('ja-JP', { dateStyle: 'medium', timeStyle: 'short' }) + '　' + location.origin + location.pathname));
+    box.appendChild(head);
+
+    var body = src.cloneNode(true);
+    Array.prototype.forEach.call(body.querySelectorAll('.jq-result-actions, .jq-print-row'), function (n) { n.remove(); });
+    box.appendChild(body);
+    box.appendChild(el('p', 'jq-print-foot',
+      '問題・選択肢・解説はすべて当サイトが独自に作成したものです。資格認定団体（JSTQB／ISTQB）とは関係ありません。'));
+    document.body.appendChild(box);
+
+    var done = function () { box.remove(); window.removeEventListener('afterprint', done); };
+    window.addEventListener('afterprint', done);
+    window.print();
   }
 
   function byChapterBox(qs, answers) {

@@ -277,3 +277,32 @@ html.jq-locked{overflow:hidden}
   .jq-result-actions .jq-start,.jq-result-actions .jq-sub{flex:none;width:100%}
   .jq-result-actions .jq-sub{padding:11px 14px}
 }
+
+/* ====== 結果の印刷・PDF ====== */
+.jq-print-row{margin:14px 0 0;text-align:center}
+.jq-print-btn{
+  background:none;border:none;padding:6px 4px;font-family:inherit;cursor:pointer;
+  font-size:12.5px;font-weight:700;color:var(--tp-text2);text-decoration:underline;text-underline-offset:4px;
+}
+@media (hover:hover){.jq-print-btn:hover{color:var(--tp-orange)}}
+.jq-print{display:none}
+
+@media print{
+  @page{margin:14mm 12mm}
+  html,body{overflow:visible !important;height:auto !important;background:#fff !important}
+  body>*:not(#jq-print){display:none !important}
+  .jq-print{display:block;color:#1c1c2e;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .jq-print-head{border-bottom:2px solid #1c1c2e;padding-bottom:8px;margin-bottom:16px}
+  .jq-print-site{font-size:10pt;font-weight:700;margin:0;color:#555}
+  .jq-print-title{font-size:16pt;font-weight:800;margin:4px 0 2px}
+  .jq-print-meta{font-size:9pt;color:#666;margin:0}
+  .jq-print .jq-result{max-width:none;text-align:left}
+  .jq-print .jq-verdict{margin-bottom:6px}
+  .jq-print .jq-result-score{font-size:15pt;margin:2px 0 6px}
+  .jq-print .jq-result-msg{font-size:9.5pt;margin-bottom:12px}
+  .jq-print .jq-bych,.jq-print .jq-review{background:#fff;border:1px solid #ccc;padding:12px 14px}
+  .jq-print .jq-bych-row{break-inside:avoid}
+  .jq-print .jq-review-item{break-inside:avoid}
+  .jq-print .jq-review h3,.jq-print .jq-bych h3{break-after:avoid}
+  .jq-print-foot{font-size:8.5pt;color:#777;margin:14px 0 0;border-top:1px solid #ccc;padding-top:6px}
+}
