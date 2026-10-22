@@ -30,6 +30,57 @@
     opts: { count: EXAM_TOTAL, check: false }   // 模試モードの選択。メニューに戻っても覚えておく
   };
 
+  /* ---------- 解いた問題の記録（このブラウザの中だけ） ----------
+     「前に解いた問題を後回しにする」ための印。問題文から作った短い ID だけを
+     localStorage に置く。答えや点数は記録しない。サーバーにも送らない。
+     使えない環境（プライベートモードなど）では記録なしで普通に動く */
+
+  var SEEN_KEY = 'jstqb-seen';
+  var FRESH_KEY = 'jstqb-fresh';
+
+  function qid(q) {
+    // FNV-1a（32bit）。問題文が同じなら同じ ID になる
+    var h = 0x811c9dc5;
+    for (var i = 0; i < q.q.length; i++) {
+      h ^= q.q.charCodeAt(i);
+      h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    return h.toString(36);
+  }
+
+  function loadSeen() {
+    try { return JSON.parse(localStorage.getItem(SEEN_KEY) || '[]'); } catch (e) { return []; }
+  }
+  var seen = {};
+  loadSeen().forEach(function (id) { seen[id] = true; });
+
+  function saveSeen() {
+    try { localStorage.setItem(SEEN_KEY, JSON.stringify(Object.keys(seen))); } catch (e) {}
+  }
+
+  function markSeen(list) {
+    if (!state.fresh) return;
+    list.forEach(function (q) { seen[qid(q)] = true; });
+    saveSeen();
+  }
+
+  function seenCount() {
+    return JSTQB_Q.filter(function (q) { return seen[qid(q)]; }).length;
+  }
+
+  state.fresh = (function () {
+    try { return localStorage.getItem(FRESH_KEY) !== '0'; } catch (e) { return true; }
+  })();
+
+  // まだ解いていない問題を先に、解いた問題を後ろに並べる（どちらの中もランダム）。
+  // 外すのではなく後回しにするだけなので、全部解き終えても問題切れにはならない
+  function arrange(pool) {
+    if (!state.fresh) return shuffle(pool.slice());
+    var fresh = [], old = [];
+    pool.forEach(function (q) { (seen[qid(q)] ? old : fresh).push(q); });
+    return shuffle(fresh).concat(shuffle(old));
+  }
+
   /* ---------- 小道具 ---------- */
 
   function shuffle(a) {
@@ -170,6 +221,33 @@
     app.innerHTML = '';
     var wrap = el('div', 'jq-menu');
 
+    // 解いた問題の扱い（両方のモードに効く）
+    var freshRow = el('div', 'jq-fresh');
+    var freshLab = el('label', 'jq-check');
+    var freshBox = el('input');
+    freshBox.type = 'checkbox';
+    freshBox.checked = state.fresh;
+    freshBox.addEventListener('change', function () {
+      state.fresh = freshBox.checked;
+      try { localStorage.setItem(FRESH_KEY, state.fresh ? '1' : '0'); } catch (e) {}
+    });
+    freshLab.appendChild(freshBox);
+    freshLab.appendChild(el('span', null, '前に解いた問題を後回しにする'));
+    freshRow.appendChild(freshLab);
+    var done = seenCount();
+    var freshNote = el('span', 'jq-fresh-note', 'これまでに解いた問題 ' + done + ' / ' + JSTQB_Q.length);
+    freshRow.appendChild(freshNote);
+    if (done) {
+      freshRow.appendChild(button('jq-fresh-reset', '記録を消す', function () {
+        confirmThen('解いた問題の記録を消しますか？\nすべて「まだ解いていない」扱いに戻ります。', '消す', 'やめておく', function () {
+          seen = {};
+          try { localStorage.removeItem(SEEN_KEY); } catch (e) {}
+          renderMenu();
+        });
+      }));
+    }
+    wrap.appendChild(freshRow);
+
     // 模試モード（全章から出題）
     var examBox = el('section', 'jq-mode-box');
     examBox.appendChild(el('h3', 'jq-mode-title', '模試モード'));
@@ -255,15 +333,16 @@
   function buildExamSet(count) {
     var qs = [];
     JSTQB_CHAPTERS.forEach(function (c) {
-      var pool = shuffle(JSTQB_Q.filter(function (q) { return q.ch === c.n; }));
+      var pool = arrange(JSTQB_Q.filter(function (q) { return q.ch === c.n; }));
       qs = qs.concat(pool.slice(0, c.exam));
     });
     // 章の配分より収録数が少ない場合の保険（残りは全体から補う）
     if (qs.length < EXAM_TOTAL) {
-      var rest = shuffle(JSTQB_Q.filter(function (q) { return qs.indexOf(q) < 0; }));
+      var rest = arrange(JSTQB_Q.filter(function (q) { return qs.indexOf(q) < 0; }));
       qs = qs.concat(rest.slice(0, EXAM_TOTAL - qs.length));
     }
-    return shuffle(qs.slice(0, EXAM_TOTAL)).slice(0, count).map(prepare);
+    // 10問のときも、まだ解いていない問題から先に取る
+    return arrange(qs.slice(0, EXAM_TOTAL)).slice(0, count).map(prepare);
   }
 
   function startRandom(count, check) {
@@ -274,7 +353,7 @@
 
   function startChapter(chN) {
     var pool = JSTQB_Q.filter(function (q) { return q.ch === chN; });
-    var picked = shuffle(pool.slice()).slice(0, Math.min(CHAPTER_SET, pool.length)).map(prepare);
+    var picked = arrange(pool).slice(0, Math.min(CHAPTER_SET, pool.length)).map(prepare);
     startDrill({ kind: 'chapter', ch: chN, qs: picked, title: '第' + chN + '章 ' + chapterOf(chN).name,
       retry: function () { startChapter(chN); }, retryLabel: 'もう一度この章を解く' });
   }
@@ -335,6 +414,7 @@
     var ok = chosen === q.a;
     if (ok) s.correct++;
     s.answers.push(chosen);
+    markSeen([q.src]);
 
     Array.prototype.forEach.call(options.querySelectorAll('.jq-opt'), function (b, i) {
       b.disabled = true;
@@ -502,6 +582,8 @@
 
     var correct = 0;
     s.qs.forEach(function (q, i) { if (s.answers[i] === q.a) correct++; });
+    // 答えた問題だけを「解いた」に数える（未回答は次の回でも先に出す）
+    markSeen(s.qs.filter(function (_, i) { return s.answers[i] !== null; }).map(function (q) { return q.src; }));
 
     clearView();
     var wrap = el('div', 'jq-result');
