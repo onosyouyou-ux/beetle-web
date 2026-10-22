@@ -1,0 +1,100 @@
+[
+  {
+    "slug": "bug-checker",
+    "title": "これってバグなの？",
+    "color": "blue",
+    "name": "淡い水色",
+    "hex": "#E5F0F7"
+  },
+  {
+    "slug": "test-content",
+    "title": "ダミーファイル生成ツール",
+    "color": "pink",
+    "name": "薄桃",
+    "hex": "#F7E6E8"
+  },
+  {
+    "slug": "regex-tester",
+    "title": "正規表現テスター",
+    "color": "mint",
+    "name": "ミント",
+    "hex": "#E7F2E8"
+  },
+  {
+    "slug": "test-data",
+    "title": "意地悪テストデータ生成器",
+    "color": "lavender",
+    "name": "ラベンダー",
+    "hex": "#EEE8F7"
+  },
+  {
+    "slug": "pairwise",
+    "title": "ペアワイズ生成器",
+    "color": "cream",
+    "name": "クリーム",
+    "hex": "#FBF2D9"
+  },
+  {
+    "slug": "boundary-table",
+    "title": "境界値テスト表メーカー",
+    "color": "blue",
+    "name": "淡い水色",
+    "hex": "#E5F0F7"
+  },
+  {
+    "slug": "test-dates",
+    "title": "意地悪な日付ジェネレーター",
+    "color": "pink",
+    "name": "薄桃",
+    "hex": "#F7E6E8"
+  },
+  {
+    "slug": "mojibake",
+    "title": "文字化け再現ビューア",
+    "color": "mint",
+    "name": "ミント",
+    "hex": "#E7F2E8"
+  },
+  {
+    "slug": "csv-excel",
+    "title": "CSV Excel崩れチェッカー",
+    "color": "lavender",
+    "name": "ラベンダー",
+    "hex": "#EEE8F7"
+  },
+  {
+    "slug": "env-info",
+    "title": "バグ報告の環境情報コピー",
+    "color": "cream",
+    "name": "クリーム",
+    "hex": "#FBF2D9"
+  },
+  {
+    "slug": "contrast",
+    "title": "コントラスト比チェッカー",
+    "color": "blue",
+    "name": "淡い水色",
+    "hex": "#E5F0F7"
+  },
+  {
+    "slug": "qa-quiz",
+    "title": "QA用語クイズ",
+    "color": "pink",
+    "name": "薄桃",
+    "hex": "#F7E6E8"
+  },
+  {
+    "slug": "technique-drill",
+    "title": "テスト技法ドリル",
+    "color": "mint",
+    "name": "ミント",
+    "hex": "#E7F2E8"
+  },
+  {
+    "slug": "jstqb-drill",
+    "title": "JSTQB練習問題（非公式）",
+    "color": "lavender",
+    "name": "ラベンダー",
+    "hex": "#EEE8F7"
+  }
+]
