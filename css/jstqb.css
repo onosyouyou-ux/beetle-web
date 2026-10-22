@@ -214,7 +214,27 @@ html.jq-locked{overflow:hidden}
 .jq-review-ok{font-size:12.5px;color:var(--tp-green,#2f7d55);font-weight:700}
 .jq-review-why{font-size:12.5px;line-height:1.85;color:var(--tp-text2);margin:0}
 
+/* ====== 使い方・試験の形式・FAQ（読み物の部分） ======
+   本文が黒一色だと読む気にならないので、見出しに色、本文は一段薄く、要点だけ太字で拾えるようにする */
+.jq-cards .ref-card{border-top:3px solid var(--tp-orange);display:flex;flex-direction:column;gap:6px}
+.jq-cards .ref-card h3{font-size:15px;font-weight:800;color:var(--tp-text);line-height:1.6;margin:0}
+.jq-cards .ref-card p{font-size:13px;line-height:1.95;color:var(--tp-text2);margin:0}
+.jq-cards .ref-card strong{color:var(--tp-text);font-weight:800;background:linear-gradient(transparent 62%,#fbe1d3 62%)}
+.jq-step{align-self:flex-start;font-size:10.5px;font-weight:800;letter-spacing:.12em;color:#fff;background:var(--tp-orange);border-radius:2px;padding:3px 9px}
+.jq-facts .ref-card{border-top-color:var(--tp-dark)}
+
+.jq-faq .faq-item{background:#fff;border:1px solid var(--tp-border);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.jq-faq .faq-q{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;list-style:none;font-size:14px;font-weight:700;color:var(--tp-text)}
+.jq-faq .faq-q::-webkit-details-marker{display:none}
+.jq-faq .faq-q>span:first-child{flex:1}
+.jq-faq .faq-q>span:first-child::before{content:'Q';display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;margin-right:10px;border-radius:50%;background:var(--tp-orange);color:#fff;font-size:11px;font-weight:800;vertical-align:1px}
+.jq-faq .faq-icon{flex-shrink:0;font-size:18px;font-weight:700;color:var(--tp-orange);transition:transform .15s}
+.jq-faq details[open] .faq-icon{transform:rotate(45deg)}
+.jq-faq .faq-a{padding:0 18px 16px 50px;font-size:13px;line-height:1.95;color:var(--tp-text2)}
+@media (hover:hover){.jq-faq .faq-q:hover{color:var(--tp-orange)}}
+
 @media (max-width:640px){
+  .jq-faq .faq-a{padding-left:18px}
   .jq-hero h1{font-size:22px}
   .jq-panel{padding:16px}
   .jq-q{font-size:14px;padding:15px 16px}
