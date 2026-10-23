@@ -101,28 +101,13 @@
 
 <div id="site-header"></div>
 
-<div class="bc">
-  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" class="bc-logo"></a>
-  <span>›</span>
-  <a href="/test-tools.html">ツール一覧</a>
-  <span>›</span>
-  <span class="bc-current">ペアワイズ法テストケース生成</span>
+<div class="hero tool-hero">
+  <div class="tool-hero-title">
+    <div class="hero-badge">TOOL</div>
+    <h1>ペアワイズ<em>生成器</em></h1>
+  </div>
+  <p>OS × ブラウザ × 会員種別 × 決済手段。掛け算で膨らんだ組み合わせを、最小限の表に畳む。</p>
 </div>
-
-<div class="hero">
-  <div class="hero-badge">TOOL</div>
-  <h1>ペアワイズ<em>生成器</em></h1>
-  <p>OS × ブラウザ × 会員種別 × 決済手段。<br>掛け算で膨らんだ組み合わせを、最小限の表に畳む。</p>
-</div>
-
-<div class="ref-nav">
-  <a href="#tool">生成する</a>
-  <a href="#howto">使い方</a>
-  <a href="#about">ペアワイズとは</a>
-  <a href="#faq">よくある質問</a>
-</div>
-
-<p class="ref-lead">「OS4種 × ブラウザ3種 × 会員3種 × 決済3種」を全部試すと<strong>108件</strong>。現実には回しきれないので勘で間引いて、そこを漏らす——組み合わせテストの事故はここで起きます。ペアワイズ法は「<strong>どの2つの組み合わせも必ず1回は試す</strong>」という条件だけを守って件数を削る考え方です。因子と水準を書けば、その表をこの場で作ります。入力した内容はブラウザの外に出ません。</p>
 
 <div class="sw">
 
@@ -181,6 +166,10 @@
         <button type="button" class="pw-copy" id="pw-copy">コピー</button>
       </div>
     </div>
+    <details class="tool-about">
+      <summary><span>このツールについて</span><span class="tool-about-icon" aria-hidden="true">+</span></summary>
+      <p>「OS4種 × ブラウザ3種 × 会員3種 × 決済3種」を全部試すと<strong>108件</strong>。現実には回しきれないので勘で間引いて、そこを漏らす——組み合わせテストの事故はここで起きます。ペアワイズ法は「<strong>どの2つの組み合わせも必ず1回は試す</strong>」という条件だけを守って件数を削る考え方です。因子と水準を書けば、その表をこの場で作ります。入力した内容はブラウザの外に出ません。</p>
+    </details>
   </section>
 
   <section id="howto" class="ref-section">
@@ -214,7 +203,7 @@
     </div>
   </section>
 
-  <section id="faq" class="ref-section">
+  <section id="faq" class="ref-section tool-faq">
     <div class="ref-sec-hd"><h2>よくある質問</h2></div>
     <details class="faq-item">
       <summary class="faq-q"><span>入力した内容はサーバーに送られますか？</span><span class="faq-icon">+</span></summary>

@@ -89,28 +89,13 @@
 
 <div id="site-header"></div>
 
-<div class="bc">
-  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" class="bc-logo"></a>
-  <span>›</span>
-  <a href="/test-tools.html">ツール一覧</a>
-  <span>›</span>
-  <span class="bc-current">コントラスト比チェッカー</span>
+<div class="hero tool-hero">
+  <div class="tool-hero-title">
+    <div class="hero-badge">TOOL</div>
+    <h1>コントラスト<em>チェッカー</em></h1>
+  </div>
+  <p>その薄いグレーの注釈、屋外では読めていない。数字で確かめて、通る色まで提案する。</p>
 </div>
-
-<div class="hero">
-  <div class="hero-badge">TOOL</div>
-  <h1>コントラスト<em>チェッカー</em></h1>
-  <p>その薄いグレーの注釈、屋外では読めていない。<br>数字で確かめて、通る色まで提案する。</p>
-</div>
-
-<div class="ref-nav">
-  <a href="#tool">調べる</a>
-  <a href="#cvd">色覚シミュレーション</a>
-  <a href="#about">基準の読み方</a>
-  <a href="#faq">よくある質問</a>
-</div>
-
-<p class="ref-lead">コントラスト不足は、レビューで指摘しづらいバグです。指摘する側も「なんとなく薄い」としか言えず、直す側も「デザインの意図です」と返せてしまう。<strong>数字にすれば話が終わります。</strong>WCAGは通常サイズの文字に4.5対1を求めていて、満たすか満たさないかのどちらかです。ここでは判定に加えて、落ちたときに<strong>元の色みを保ったまま基準を通る色</strong>を提案します。計算はすべてブラウザ内で行っています。</p>
 
 <div class="sw">
 
@@ -154,6 +139,10 @@
 
       <div class="ct-fix" id="ct-fix"></div>
     </div>
+    <details class="tool-about">
+      <summary><span>このツールについて</span><span class="tool-about-icon" aria-hidden="true">+</span></summary>
+      <p>コントラスト不足は、レビューで指摘しづらいバグです。指摘する側も「なんとなく薄い」としか言えず、直す側も「デザインの意図です」と返せてしまう。<strong>数字にすれば話が終わります。</strong>WCAGは通常サイズの文字に4.5対1を求めていて、満たすか満たさないかのどちらかです。ここでは判定に加えて、落ちたときに<strong>元の色みを保ったまま基準を通る色</strong>を提案します。計算はすべてブラウザ内で行っています。</p>
+    </details>
   </section>
 
   <section id="cvd" class="ref-section">
@@ -180,7 +169,7 @@
     </div>
   </section>
 
-  <section id="faq" class="ref-section">
+  <section id="faq" class="ref-section tool-faq">
     <div class="ref-sec-hd"><h2>よくある質問</h2></div>
     <details class="faq-item">
       <summary class="faq-q"><span>コントラスト比はいくつあればいいですか？</span><span class="faq-icon">+</span></summary>

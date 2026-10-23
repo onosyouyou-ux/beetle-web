@@ -79,27 +79,13 @@
 
 <div id="site-header"></div>
 
-<div class="bc">
-  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" class="bc-logo"></a>
-  <span>›</span>
-  <a href="/test-tools.html">ツール一覧</a>
-  <span>›</span>
-  <span class="bc-current">正規表現テスター</span>
+<div class="hero tool-hero">
+  <div class="tool-hero-title">
+    <div class="hero-badge">TOOL</div>
+    <h1>正規表現<em>テスター</em></h1>
+  </div>
+  <p>「多分マッチする」を「確実にマッチする」に。日本向けのパターン集つき、その場で試せる正規表現チェッカー。</p>
 </div>
-
-<div class="hero">
-  <div class="hero-badge">TOOL</div>
-  <h1>正規表現<em>テスター</em></h1>
-  <p>「多分マッチする」を「確実にマッチする」に。<br>日本向けのパターン集つき、その場で試せる正規表現チェッカー。</p>
-</div>
-
-<div class="ref-nav">
-  <a href="#tester">その場で試す</a>
-  <a href="#patterns">よく使うパターン</a>
-  <a href="#faq">よくある質問</a>
-</div>
-
-<p class="ref-lead">「たぶんこの正規表現でマッチするはず」で実装を進めて、本番で漏れが見つかる——というのはQAでもよくある事故。ここでパターンと文字列を入れて、実際にマッチするかその場で確認してから使ってください。</p>
 
 <div class="sw">
 
@@ -124,6 +110,10 @@
         <div id="rt-output" class="rt-output"></div>
       </div>
     </div>
+    <details class="tool-about">
+      <summary><span>このツールについて</span><span class="tool-about-icon" aria-hidden="true">+</span></summary>
+      <p>「たぶんこの正規表現でマッチするはず」で実装を進めて、本番で漏れが見つかる——というのはQAでもよくある事故。ここでパターンと文字列を入れて、実際にマッチするかその場で確認してから使ってください。</p>
+    </details>
   </section>
 
   <section id="patterns" class="ref-section">
@@ -187,7 +177,7 @@
     </div>
   </section>
 
-  <section id="faq" class="ref-section">
+  <section id="faq" class="ref-section tool-faq">
     <div class="ref-sec-hd"><h2>よくある質問</h2></div>
     <details class="faq-item">
       <summary class="faq-q"><span>入力した文字列は保存されますか？</span><span class="faq-icon">+</span></summary>

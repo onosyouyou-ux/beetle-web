@@ -94,28 +94,13 @@
 
 <div id="site-header"></div>
 
-<div class="bc">
-  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" class="bc-logo"></a>
-  <span>›</span>
-  <a href="/test-tools.html">ツール一覧</a>
-  <span>›</span>
-  <span class="bc-current">バグ報告の環境情報コピー</span>
+<div class="hero tool-hero">
+  <div class="tool-hero-title">
+    <div class="hero-badge">TOOL</div>
+    <h1>バグ報告の<em>環境情報</em></h1>
+  </div>
+  <p>「ブラウザは何ですか？」と聞き返す往復を、なくす。開いてコピーするだけで、バグ票に貼れる形になります。</p>
 </div>
-
-<div class="hero">
-  <div class="hero-badge">TOOL</div>
-  <h1>バグ報告の<em>環境情報</em></h1>
-  <p>「ブラウザは何ですか？」と聞き返す往復を、なくす。<br>開いてコピーするだけで、バグ票に貼れる形になります。</p>
-</div>
-
-<div class="ref-nav">
-  <a href="#tool">環境情報をコピー</a>
-  <a href="#share">お客さまに開いてもらう</a>
-  <a href="#why">分からないこともある</a>
-  <a href="#faq">よくある質問</a>
-</div>
-
-<p class="ref-lead">バグ報告に「Chromeです」とだけ書いてあると、開発する側はバージョンを聞き返し、画面の大きさを聞き返し、ようやく再現を試せます。このページは、開いた端末のブラウザ・OS・画面サイズ・拡大率・言語・タイムゾーンを読み取り、<strong>Markdown・Backlog・Jira・Redmine</strong> のどれかの記法でまとめてコピーします。再現手順のひな形も一緒に付けられます。読み取りも整形もブラウザ内だけで行い、どこにも送りません。</p>
 
 <div class="sw">
 
@@ -152,6 +137,10 @@
         </div>
       </div>
     </div>
+    <details class="tool-about">
+      <summary><span>このツールについて</span><span class="tool-about-icon" aria-hidden="true">+</span></summary>
+      <p>バグ報告に「Chromeです」とだけ書いてあると、開発する側はバージョンを聞き返し、画面の大きさを聞き返し、ようやく再現を試せます。このページは、開いた端末のブラウザ・OS・画面サイズ・拡大率・言語・タイムゾーンを読み取り、<strong>Markdown・Backlog・Jira・Redmine</strong> のどれかの記法でまとめてコピーします。再現手順のひな形も一緒に付けられます。読み取りも整形もブラウザ内だけで行い、どこにも送りません。</p>
+    </details>
   </section>
 
   <section id="share" class="ref-section">
@@ -175,7 +164,7 @@
     </div>
   </section>
 
-  <section id="faq" class="ref-section">
+  <section id="faq" class="ref-section tool-faq">
     <div class="ref-sec-hd"><h2>よくある質問</h2></div>
     <details class="faq-item">
       <summary class="faq-q"><span>Windows 11 なのに「Windows 10 または 11」と出るのはなぜですか？</span><span class="faq-icon">+</span></summary>

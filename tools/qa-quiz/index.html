@@ -89,28 +89,13 @@
 
 <div id="site-header"></div>
 
-<div class="bc">
-  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" class="bc-logo"></a>
-  <span>›</span>
-  <a href="/test-tools.html">ツール一覧</a>
-  <span>›</span>
-  <span class="bc-current">QA用語クイズ</span>
+<div class="hero tool-hero">
+  <div class="tool-hero-title">
+    <div class="hero-badge">TOOL</div>
+    <h1>QA用語<em>クイズ</em></h1>
+  </div>
+  <p>「回帰テストって、スモークと何が違うんだっけ」　会議で流してきた言葉を、4択で確かめる。</p>
 </div>
-
-<div class="hero">
-  <div class="hero-badge">TOOL</div>
-  <h1>QA用語<em>クイズ</em></h1>
-  <p>「回帰テストって、スモークと何が違うんだっけ」<br>会議で流してきた言葉を、4択で確かめる。</p>
-</div>
-
-<div class="ref-nav">
-  <a href="#tool">クイズを解く</a>
-  <a href="#howto">使い方</a>
-  <a href="#about">用語がわかると何が変わるか</a>
-  <a href="#faq">よくある質問</a>
-</div>
-
-<p class="ref-lead">テストの現場では、意味を半分だけ知っている言葉のまま会話が進みます。「それ、回帰テストでやりました」と言われて<strong>スモークテストのつもりで聞いていた</strong>——ここでズレると、確認したはずの範囲が誰も見ていない範囲になります。<a href="/tools/glossary/">QA・バグ用語辞典</a>に載せた85語を、そのまま4択にしました。読むだけでは残らないので、出して、まちがえて、覚えるほうへ。入力した内容も成績もブラウザの外に出ません。</p>
 
 <div class="sw">
 
@@ -119,21 +104,28 @@
     <div class="qq-panel">
       <div id="qq-app"></div>
     </div>
+    <details class="tool-about">
+      <summary><span>このツールについて</span><span class="tool-about-icon" aria-hidden="true">+</span></summary>
+      <p>テストの現場では、意味を半分だけ知っている言葉のまま会話が進みます。「それ、回帰テストでやりました」と言われて<strong>スモークテストのつもりで聞いていた</strong>——ここでズレると、確認したはずの範囲が誰も見ていない範囲になります。<a href="/tools/glossary/">QA・バグ用語辞典</a>に載せた85語を、そのまま4択にしました。読むだけでは残らないので、出して、まちがえて、覚えるほうへ。入力した内容も成績もブラウザの外に出ません。</p>
+    </details>
   </section>
 
   <section id="howto" class="ref-section">
     <div class="ref-sec-hd"><h2>使い方</h2><span class="d">3ステップ</span></div>
-    <div class="ref-grid">
+    <div class="ref-grid tool-cards">
       <div class="ref-card">
-        <h3>1. といかたを選ぶ</h3>
+        <span class="tool-step">STEP 1</span>
+        <h3>といかたを選ぶ</h3>
         <p>「用語 → 意味」は言葉を見て意味を選びます。「意味 → 用語」は逆に、説明を読んで言葉を当てます。読めるけれど自分では言えない、という状態はこの2つ目で見つかります。</p>
       </div>
       <div class="ref-card">
-        <h3>2. 範囲を選ぶ</h3>
+        <span class="tool-step">STEP 2</span>
+        <h3>範囲を選ぶ</h3>
         <p>用語辞典と同じ4つの章（テストの基本／バグ・起票まわり／環境・リリース／品質・進め方）か、85語ぜんぶから選べます。はじめは「テストの基本」だけを繰り返すのが早いです。</p>
       </div>
       <div class="ref-card">
-        <h3>3. まちがえた語だけ読み直す</h3>
+        <span class="tool-step">STEP 3</span>
+        <h3>まちがえた語だけ読み直す</h3>
         <p>10問終わると、まちがえた用語と意味が一覧で残ります。そこから用語辞典へ移動して読み直してください。成績は保存していません。</p>
       </div>
     </div>
@@ -141,7 +133,7 @@
 
   <section id="about" class="ref-section">
     <div class="ref-sec-hd"><h2>用語がわかると何が変わるか</h2><span class="d">言葉のズレは、そのまま抜け漏れになる</span></div>
-    <div class="ref-grid">
+    <div class="ref-grid tool-cards tool-facts">
       <div class="ref-card">
         <h3>確認範囲がズレなくなる</h3>
         <p>「回帰テスト」を「主要機能をざっと見ること」だと思っている人と、「修正で既存が壊れていないか確認すること」だと思っている人が同じ会議にいると、確認したつもりの範囲に穴が空きます。用語は、範囲の合意そのものです。</p>
@@ -157,7 +149,7 @@
     </div>
   </section>
 
-  <section id="faq" class="ref-section">
+  <section id="faq" class="ref-section tool-faq">
     <div class="ref-sec-hd"><h2>よくある質問</h2></div>
 
     <details class="faq-item">

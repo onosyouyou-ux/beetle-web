@@ -89,28 +89,13 @@
 
 <div id="site-header"></div>
 
-<div class="bc">
-  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" class="bc-logo"></a>
-  <span>›</span>
-  <a href="/test-tools.html">ツール一覧</a>
-  <span>›</span>
-  <span class="bc-current">テスト技法ドリル</span>
+<div class="hero tool-hero">
+  <div class="tool-hero-title">
+    <div class="hero-badge">TOOL</div>
+    <h1>テスト技法<em>ドリル</em></h1>
+  </div>
+  <p>「1以上100以下」の境界値は、何件とる？読んで知っている技法を、手が動く技法にする。</p>
 </div>
-
-<div class="hero">
-  <div class="hero-badge">TOOL</div>
-  <h1>テスト技法<em>ドリル</em></h1>
-  <p>「1以上100以下」の境界値は、何件とる？<br>読んで知っている技法を、手が動く技法にする。</p>
-</div>
-
-<div class="ref-nav">
-  <a href="#tool">ドリルを解く</a>
-  <a href="#howto">使い方</a>
-  <a href="#about">4つの技法</a>
-  <a href="#faq">よくある質問</a>
-</div>
-
-<p class="ref-lead">技法の説明は読めば分かります。困るのは、目の前の仕様を渡されたときに<strong>「で、何件とればいいんだっけ」</strong>で止まることのほうです。このドリルは仕様をその場で組み立てて出題します。数値の範囲も、条件の数も、因子と水準も毎回変わるので、答えを覚えることができません。1問ごとに「なぜその数になるか」を出すので、まちがえたところから埋められます。<a href="/tools/test-techniques/">テスト技法カタログ</a>が「読む」側、こちらが「使う」側です。入力も成績もブラウザの外に出ません。</p>
 
 <div class="sw">
 
@@ -119,21 +104,28 @@
     <div class="td-panel">
       <div id="td-app"></div>
     </div>
+    <details class="tool-about">
+      <summary><span>このツールについて</span><span class="tool-about-icon" aria-hidden="true">+</span></summary>
+      <p>技法の説明は読めば分かります。困るのは、目の前の仕様を渡されたときに<strong>「で、何件とればいいんだっけ」</strong>で止まることのほうです。このドリルは仕様をその場で組み立てて出題します。数値の範囲も、条件の数も、因子と水準も毎回変わるので、答えを覚えることができません。1問ごとに「なぜその数になるか」を出すので、まちがえたところから埋められます。<a href="/tools/test-techniques/">テスト技法カタログ</a>が「読む」側、こちらが「使う」側です。入力も成績もブラウザの外に出ません。</p>
+    </details>
   </section>
 
   <section id="howto" class="ref-section">
     <div class="ref-sec-hd"><h2>使い方</h2><span class="d">3ステップ</span></div>
-    <div class="ref-grid">
+    <div class="ref-grid tool-cards">
       <div class="ref-card">
-        <h3>1. 技法を選ぶ</h3>
+        <span class="tool-step">STEP 1</span>
+        <h3>技法を選ぶ</h3>
         <p>「ぜんぶ」なら4技法から順に出ます。苦手が分かっているなら、境界値分析だけ・デシジョンテーブルだけ、と絞って繰り返すほうが早く固まります。</p>
       </div>
       <div class="ref-card">
-        <h3>2. 仕様を読んで答える</h3>
+        <span class="tool-step">STEP 2</span>
+        <h3>仕様を読んで答える</h3>
         <p>問題文の仕様は毎回その場で作られます。「2値」「3値」「全網羅」「下限」など、答えが変わる言葉は問題文で必ず明示しているので、そこを読んでから選んでください。</p>
       </div>
       <div class="ref-card">
-        <h3>3. 解説を読む</h3>
+        <span class="tool-step">STEP 3</span>
+        <h3>解説を読む</h3>
         <p>答えた直後に、なぜその数になるかが出ます。まちがえた問題は解説ごと結果画面に残るので、そこだけ読み返してもう一度回してください。成績は保存していません。</p>
       </div>
     </div>
@@ -141,7 +133,7 @@
 
   <section id="about" class="ref-section">
     <div class="ref-sec-hd"><h2>4つの技法</h2><span class="d">このドリルで出るもの</span></div>
-    <div class="ref-grid">
+    <div class="ref-grid tool-cards tool-facts">
       <div class="ref-card">
         <h3>境界値分析</h3>
         <p>バグは範囲の境目に集まります。「1以上100以下」なら、2値で 0・1・100・101 の4件、3値なら 2 と 99 も足して6件。下限が0のときに外側が -1 になる、といった引っかけも出ます。</p>
@@ -161,7 +153,7 @@
     </div>
   </section>
 
-  <section id="faq" class="ref-section">
+  <section id="faq" class="ref-section tool-faq">
     <div class="ref-sec-hd"><h2>よくある質問</h2></div>
 
     <details class="faq-item">

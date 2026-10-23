@@ -89,29 +89,13 @@
 
 <div id="site-header"></div>
 
-<div class="bc">
-  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" class="bc-logo"></a>
-  <span>›</span>
-  <a href="/test-tools.html">ツール一覧</a>
-  <span>›</span>
-  <span class="bc-current">意地悪テストデータ生成器</span>
+<div class="hero tool-hero">
+  <div class="tool-hero-title">
+    <div class="hero-badge">TOOL</div>
+    <h1>意地悪<em>テストデータ</em></h1>
+  </div>
+  <p>機種依存文字、絵文字、サロゲートペア、ゼロ幅スペース。入力欄を壊しにいくデータを、ワンクリックでコピー。</p>
 </div>
-
-<div class="hero">
-  <div class="hero-badge">TOOL</div>
-  <h1>意地悪<em>テストデータ</em></h1>
-  <p>機種依存文字、絵文字、サロゲートペア、ゼロ幅スペース。<br>入力欄を壊しにいくデータを、ワンクリックでコピー。</p>
-</div>
-
-<div class="ref-nav">
-  <a href="#catalog">意地悪データ集</a>
-  <a href="#length">長さ・境界値</a>
-  <a href="#dummy">ダミーデータ生成</a>
-  <a href="#counter">文字数・バイト数</a>
-  <a href="#faq">よくある質問</a>
-</div>
-
-<p class="ref-lead">「氏名欄に𠮷野さんを入れたら保存できなかった」「コピペした住所にゼロ幅スペースが混ざっていて重複チェックをすり抜けた」——入力欄まわりの事故は、たいてい<strong>ちゃんとしたデータでテストしていた</strong>から起きます。ここのデータをコピーして、あなたの入力欄に順番に流し込んでみてください。すべてブラウザ内で処理していて、貼り付けたデータがどこかに送られることはありません。</p>
 
 <div class="sw">
 
@@ -279,6 +263,10 @@
       </div>
 
     </div>
+    <details class="tool-about">
+      <summary><span>このツールについて</span><span class="tool-about-icon" aria-hidden="true">+</span></summary>
+      <p>「氏名欄に𠮷野さんを入れたら保存できなかった」「コピペした住所にゼロ幅スペースが混ざっていて重複チェックをすり抜けた」——入力欄まわりの事故は、たいてい<strong>ちゃんとしたデータでテストしていた</strong>から起きます。ここのデータをコピーして、あなたの入力欄に順番に流し込んでみてください。すべてブラウザ内で処理していて、貼り付けたデータがどこかに送られることはありません。</p>
+    </details>
   </section>
 
   <section id="length" class="ref-section">
@@ -379,7 +367,7 @@
     </div>
   </section>
 
-  <section id="faq" class="ref-section">
+  <section id="faq" class="ref-section tool-faq">
     <div class="ref-sec-hd"><h2>よくある質問</h2></div>
     <details class="faq-item">
       <summary class="faq-q"><span>入力したデータはサーバーに送られますか？</span><span class="faq-icon">+</span></summary>
