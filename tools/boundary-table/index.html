@@ -94,27 +94,13 @@
 
 <div id="site-header"></div>
 
-<div class="bc">
-  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" class="bc-logo"></a>
-  <span>›</span>
-  <a href="/test-tools.html">ツール一覧</a>
-  <span>›</span>
-  <span class="bc-current">境界値テスト表メーカー</span>
+<div class="hero tool-hero">
+  <div class="tool-hero-title">
+    <div class="hero-badge">TOOL</div>
+    <h1>境界値の<em>テスト表</em></h1>
+  </div>
+  <p>「18以上」と「18より大きい」で、テストする値は変わる。条件を入れるだけで、境界値と同値クラスの表になります。</p>
 </div>
-
-<div class="hero">
-  <div class="hero-badge">TOOL</div>
-  <h1>境界値の<em>テスト表</em></h1>
-  <p>「18以上」と「18より大きい」で、テストする値は変わる。<br>条件を入れるだけで、境界値と同値クラスの表になります。</p>
-</div>
-
-<div class="ref-nav">
-  <a href="#tool">テスト表を作る</a>
-  <a href="#why">境目でまちがえる理由</a>
-  <a href="#faq">よくある質問</a>
-</div>
-
-<p class="ref-lead">入力チェックのテストで見るべき値は、だいたい決まっています。下限と上限のちょうど、その1つ手前と1つ先、範囲の中と外の代表値。それでも毎回手で書くと、「以上」と「より大きい」を取りちがえたり、全角数字の扱いを決めないままテストが始まったりします。このツールは条件から<strong>境界値分析（2値・3値）と同値分割</strong>のテストケースを作り、数直線で有効と無効の切れ目を見せます。すべてブラウザ内で計算しています。</p>
 
 <div class="sw">
 
@@ -188,6 +174,10 @@
         <p class="bt-item-err" hidden></p>
       </div>
     </template>
+    <details class="tool-about">
+      <summary><span>このツールについて</span><span class="tool-about-icon" aria-hidden="true">+</span></summary>
+      <p>入力チェックのテストで見るべき値は、だいたい決まっています。下限と上限のちょうど、その1つ手前と1つ先、範囲の中と外の代表値。それでも毎回手で書くと、「以上」と「より大きい」を取りちがえたり、全角数字の扱いを決めないままテストが始まったりします。このツールは条件から<strong>境界値分析（2値・3値）と同値分割</strong>のテストケースを作り、数直線で有効と無効の切れ目を見せます。すべてブラウザ内で計算しています。</p>
+    </details>
   </section>
 
   <section id="why" class="ref-section">
@@ -199,7 +189,7 @@
     </div>
   </section>
 
-  <section id="faq" class="ref-section">
+  <section id="faq" class="ref-section tool-faq">
     <div class="ref-sec-hd"><h2>よくある質問</h2></div>
     <details class="faq-item">
       <summary class="faq-q"><span>境界値の「2値」と「3値」はどう違いますか？</span><span class="faq-icon">+</span></summary>

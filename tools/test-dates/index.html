@@ -89,28 +89,13 @@
 
 <div id="site-header"></div>
 
-<div class="bc">
-  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" class="bc-logo"></a>
-  <span>›</span>
-  <a href="/test-tools.html">ツール一覧</a>
-  <span>›</span>
-  <span class="bc-current">意地悪な日付ジェネレーター</span>
+<div class="hero tool-hero">
+  <div class="tool-hero-title">
+    <div class="hero-badge">TOOL</div>
+    <h1>意地悪な<em>日付</em></h1>
+  </div>
+  <p>うるう年、月末、年度またぎ、改元日、2038年。今日の日付では絶対に出ないバグを、狙って踏みにいく。</p>
 </div>
-
-<div class="hero">
-  <div class="hero-badge">TOOL</div>
-  <h1>意地悪な<em>日付</em></h1>
-  <p>うるう年、月末、年度またぎ、改元日、2038年。<br>今日の日付では絶対に出ないバグを、狙って踏みにいく。</p>
-</div>
-
-<div class="ref-nav">
-  <a href="#tool">日付を出す</a>
-  <a href="#diff">実装差分が出る計算</a>
-  <a href="#why">なぜ日付で事故るのか</a>
-  <a href="#faq">よくある質問</a>
-</div>
-
-<p class="ref-lead">日付のバグは、開発中には絶対に顔を出しません。作っている最中に使うのはいつも「今日」で、今日はたいてい月の途中だからです。事故が起きるのは決まって<strong>2月29日・月末・年度末・改元日</strong>。このツールは基準日を1つ決めるだけで、その周辺の意地悪な日付をまとめて並べます。クリックでコピーして、そのまま入力欄に流し込んでください。すべてブラウザ内で計算しています。</p>
 
 <div class="sw">
 
@@ -149,6 +134,10 @@
         </div>
       </div>
     </div>
+    <details class="tool-about">
+      <summary><span>このツールについて</span><span class="tool-about-icon" aria-hidden="true">+</span></summary>
+      <p>日付のバグは、開発中には絶対に顔を出しません。作っている最中に使うのはいつも「今日」で、今日はたいてい月の途中だからです。事故が起きるのは決まって<strong>2月29日・月末・年度末・改元日</strong>。このツールは基準日を1つ決めるだけで、その周辺の意地悪な日付をまとめて並べます。クリックでコピーして、そのまま入力欄に流し込んでください。すべてブラウザ内で計算しています。</p>
+    </details>
   </section>
 
   <section id="diff" class="ref-section">
@@ -166,7 +155,7 @@
     </div>
   </section>
 
-  <section id="faq" class="ref-section">
+  <section id="faq" class="ref-section tool-faq">
     <div class="ref-sec-hd"><h2>よくある質問</h2></div>
     <details class="faq-item">
       <summary class="faq-q"><span>なぜ日付のバグはこんなに多いのですか？</span><span class="faq-icon">+</span></summary>

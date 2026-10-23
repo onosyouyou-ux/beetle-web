@@ -35,6 +35,17 @@
 
 共通ヘッダー＋共通パーシャルフッター。背景 `#f7f5f0`・フォント Syne＋M PLUS 1p・page-header コンポーネント・CSSは `/css/xxxx.css` に外出し
 
+### テスト検証用ツールの外枠（JSTQB型・2026-10-23・#198）
+
+`/tools/` の静的QAツール12本（正規表現テスター・意地悪テストデータ・ペアワイズ・境界値テスト表・意地悪な日付・文字化け・CSV Excel崩れ・環境情報コピー・コントラスト比・QA用語クイズ・テスト技法ドリル・JSTQB練習問題）は同じ外枠。スタイルは `css/reference.css` の `.tool-*` に一元化
+
+- ヒーローは `.hero.tool-hero`：TOOL の札と h1 を `.tool-hero-title` で1行に並べる（h1 30px／640px以下は22px・札は非表示）。ヒーローの下に影
+- パンくず（`.bc`）とページ内リンク（`.ref-nav`）は置かない。JSON-LD の BreadcrumbList は残す
+- リード文は最初のセクション（ツール本体）の下に、たたんだ `details.tool-about`「このツールについて」で置く
+- 使い方のカードは `.ref-grid.tool-cards`＋`.tool-step`（STEP n）、解説のカードは `.tool-cards.tool-facts`
+- FAQ は `section#faq.tool-faq`（白いカード＋Q の丸）
+- 新しいテスト検証用ツールもこの外枠で作る。bug-checker（Vercelアプリ）とダミーファイル生成（`page-header` 型）は対象外
+
 ### LP型（トップ・メイン2ページ・サービスページ）
 
 共通ヘッダー（トップのみ独自2段）＋LP型2段フッター。末尾はお問い合わせCTA（`#contact`、「メールで相談する」mailtoボタン＋Googleフォーム＋アドレス直書きの補足行 `.cta-mail-note`）。QAサービス4ページのブランドヒーローには共通QAイラストを表示する

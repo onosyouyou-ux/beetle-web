@@ -109,3 +109,50 @@ body{font-family:'M PLUS 1p','Noto Sans JP',sans-serif;font-size:14px;background
 
 /* スマホではパンくずバー非表示（2026-07-13決定：ヘッダー2段化で混雑するため） */
 @media(max-width:600px){.bc{display:none}}
+
+/* ====== ツールページの外枠（JSTQB練習問題で作った型。テスト検証用ツールで共通・#198） ====== */
+/* ヒーローは薄くしてツールをファーストビューに入れる。TOOL の札は見出しと同じ行 */
+.tool-hero{padding-top:26px;padding-bottom:24px;z-index:2;box-shadow:0 6px 18px rgba(28,28,46,.22)}
+.tool-hero-title{position:relative;z-index:1;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:6px 14px;margin-bottom:8px}
+.tool-hero .hero-badge{margin:0}
+.tool-hero h1{font-size:30px;margin:0}
+.tool-hero p{max-width:none;font-size:13px}
+/* body が flex の縦並びなので、margin:auto の .sw は中身の最小幅まで広がる（スマホで横スクロールが出ていた）。幅を画面に固定する */
+.tool-hero ~ .sw{width:100%}
+
+/* 「このツールについて」。ツールを先に見せたいので、リード文はツールの下にたたんで置く */
+.tool-about{max-width:790px;margin:20px auto 0;border:1px solid var(--tp-border);border-radius:8px;background:#fff}
+.tool-about summary{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;list-style:none;cursor:pointer;
+  padding:11px 16px;font-size:13px;font-weight:800;color:var(--tp-text);
+}
+.tool-about summary::-webkit-details-marker{display:none}
+.tool-about-icon{font-size:16px;font-weight:700;color:var(--tp-orange);transition:transform .15s}
+.tool-about[open] .tool-about-icon{transform:rotate(45deg)}
+.tool-about p{margin:0;padding:0 16px 14px;font-size:13px;line-height:1.9;color:var(--tp-text2)}
+.tool-about p strong{color:var(--tp-text)}
+
+/* 使い方・解説のカード。見出しに色、本文は一段薄く、要点だけ太字で拾えるようにする */
+.tool-cards .ref-card{border-top:3px solid var(--tp-orange);display:flex;flex-direction:column;gap:6px}
+.tool-cards .ref-card h3{font-size:15px;font-weight:800;color:var(--tp-text);line-height:1.6;margin:0}
+.tool-cards .ref-card p{font-size:13px;line-height:1.95;color:var(--tp-text2);margin:0}
+.tool-cards .ref-card strong{color:var(--tp-text);font-weight:800;background:linear-gradient(transparent 62%,#fbe1d3 62%)}
+.tool-step{align-self:flex-start;font-size:10.5px;font-weight:800;letter-spacing:.12em;color:#fff;background:var(--tp-orange);border-radius:2px;padding:3px 9px}
+.tool-facts .ref-card{border-top-color:var(--tp-dark)}
+
+/* FAQ は白いカード＋Q の丸 */
+.tool-faq .faq-item{background:#fff;border:1px solid var(--tp-border);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.tool-faq .faq-q{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;list-style:none;font-size:14px;font-weight:700;color:var(--tp-text)}
+.tool-faq .faq-q::-webkit-details-marker{display:none}
+.tool-faq .faq-q>span:first-child{flex:1}
+.tool-faq .faq-q>span:first-child::before{content:'Q';display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;margin-right:10px;border-radius:50%;background:var(--tp-orange);color:#fff;font-size:11px;font-weight:800;vertical-align:1px}
+.tool-faq .faq-icon{flex-shrink:0;font-size:18px;font-weight:700;color:var(--tp-orange);transition:transform .15s}
+.tool-faq details[open] .faq-icon{transform:rotate(45deg)}
+.tool-faq .faq-a{padding:0 18px 16px 50px;font-size:13px;line-height:1.95;color:var(--tp-text2)}
+@media (hover:hover){.tool-faq .faq-q:hover{color:var(--tp-orange)}}
+
+@media (max-width:640px){
+  .tool-faq .faq-a{padding-left:18px}
+  .tool-hero h1{font-size:22px}
+  .tool-hero .hero-badge{display:none}
+}

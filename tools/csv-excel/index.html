@@ -94,28 +94,13 @@
 
 <div id="site-header"></div>
 
-<div class="bc">
-  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" class="bc-logo"></a>
-  <span>›</span>
-  <a href="/test-tools.html">ツール一覧</a>
-  <span>›</span>
-  <span class="bc-current">CSV Excel崩れチェッカー</span>
+<div class="hero tool-hero">
+  <div class="tool-hero-title">
+    <div class="hero-badge">TOOL</div>
+    <h1>Excelで<em>CSV</em>が壊れる</h1>
+  </div>
+  <p>先頭の0が消える、1-2 が1月2日になる、16桁の番号が丸まる。ダブルクリックする前に、変わるセルを洗い出します。</p>
 </div>
-
-<div class="hero">
-  <div class="hero-badge">TOOL</div>
-  <h1>Excelで<em>CSV</em>が壊れる</h1>
-  <p>先頭の0が消える、1-2 が1月2日になる、16桁の番号が丸まる。<br>ダブルクリックする前に、変わるセルを洗い出します。</p>
-</div>
-
-<div class="ref-nav">
-  <a href="#tool">CSVを確かめる</a>
-  <a href="#fix">壊さない渡し方</a>
-  <a href="#why">なぜ壊れるのか</a>
-  <a href="#faq">よくある質問</a>
-</div>
-
-<p class="ref-lead">CSVをExcelでダブルクリックして開くと、Excelは「数字に見えるもの」を数値に、「日付に見えるもの」を日付に変えてしまいます。会員番号の先頭の0、郵便番号、型番の「SEPT2」、16桁のカード番号。しかもそのまま上書き保存すると、変わったあとの値でCSVが書き戻されます。このツールは、<strong>日本語版のExcelで実測した規則</strong>でセルを1つずつ判定し、開いたときの見え方と、保存したときに書き戻される文字を並べます。ファイルの中身はどこにも送りません。</p>
 
 <div class="sw">
 
@@ -160,6 +145,10 @@
         </div>
       </div>
     </div>
+    <details class="tool-about">
+      <summary><span>このツールについて</span><span class="tool-about-icon" aria-hidden="true">+</span></summary>
+      <p>CSVをExcelでダブルクリックして開くと、Excelは「数字に見えるもの」を数値に、「日付に見えるもの」を日付に変えてしまいます。会員番号の先頭の0、郵便番号、型番の「SEPT2」、16桁のカード番号。しかもそのまま上書き保存すると、変わったあとの値でCSVが書き戻されます。このツールは、<strong>日本語版のExcelで実測した規則</strong>でセルを1つずつ判定し、開いたときの見え方と、保存したときに書き戻される文字を並べます。ファイルの中身はどこにも送りません。</p>
+    </details>
   </section>
 
   <section id="fix" class="ref-section">
@@ -185,7 +174,7 @@
     </div>
   </section>
 
-  <section id="faq" class="ref-section">
+  <section id="faq" class="ref-section tool-faq">
     <div class="ref-sec-hd"><h2>よくある質問</h2></div>
     <details class="faq-item">
       <summary class="faq-q"><span>"00123" のようにダブルクォートで囲めば、先頭の0は残りますか？</span><span class="faq-icon">+</span></summary>

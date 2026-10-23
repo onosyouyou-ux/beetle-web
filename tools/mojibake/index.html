@@ -89,28 +89,13 @@
 
 <div id="site-header"></div>
 
-<div class="bc">
-  <a href="/"><img src="/assets/icons/beetle-icon.svg" alt="BEETLE" width="28" height="28" class="bc-logo"></a>
-  <span>›</span>
-  <a href="/test-tools.html">ツール一覧</a>
-  <span>›</span>
-  <span class="bc-current">文字化け再現ビューア</span>
+<div class="hero tool-hero">
+  <div class="tool-hero-title">
+    <div class="hero-badge">TOOL</div>
+    <h1>文字化け<em>ビューア</em></h1>
+  </div>
+  <p>その化け方には、名前がある。どの文字コードを、どう読み違えたのか。</p>
 </div>
-
-<div class="hero">
-  <div class="hero-badge">TOOL</div>
-  <h1>文字化け<em>ビューア</em></h1>
-  <p>その化け方には、名前がある。<br>どの文字コードを、どう読み違えたのか。</p>
-</div>
-
-<div class="ref-nav">
-  <a href="#tool">化け方を見る</a>
-  <a href="#reverse">原因を逆引き</a>
-  <a href="#why">なぜ化けるのか</a>
-  <a href="#faq">よくある質問</a>
-</div>
-
-<p class="ref-lead">文字化けは、ランダムに壊れているわけではありません。<strong>どの文字コードで書かれたバイト列を、どの文字コードだと思って読んだか</strong>——その組み合わせごとに、決まった見た目になります。見慣れれば、化けた文字を見ただけで原因の見当がつきます。ここでは正しい文字列から化け方を再現し、逆に化けた文字列から原因を推定して復元します。すべてブラウザ内で処理しています。</p>
 
 <div class="sw">
 
@@ -132,6 +117,10 @@
       <h3 class="mb-sub">バイト列</h3>
       <div class="mb-bytes" id="mb-bytes"></div>
     </div>
+    <details class="tool-about">
+      <summary><span>このツールについて</span><span class="tool-about-icon" aria-hidden="true">+</span></summary>
+      <p>文字化けは、ランダムに壊れているわけではありません。<strong>どの文字コードで書かれたバイト列を、どの文字コードだと思って読んだか</strong>——その組み合わせごとに、決まった見た目になります。見慣れれば、化けた文字を見ただけで原因の見当がつきます。ここでは正しい文字列から化け方を再現し、逆に化けた文字列から原因を推定して復元します。すべてブラウザ内で処理しています。</p>
+    </details>
   </section>
 
   <section id="reverse" class="ref-section">
@@ -153,7 +142,7 @@
     </div>
   </section>
 
-  <section id="faq" class="ref-section">
+  <section id="faq" class="ref-section tool-faq">
     <div class="ref-sec-hd"><h2>よくある質問</h2></div>
     <details class="faq-item">
       <summary class="faq-q"><span>入力した文字列はサーバーに送られますか？</span><span class="faq-icon">+</span></summary>
