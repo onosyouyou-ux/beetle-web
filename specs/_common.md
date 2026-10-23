@@ -44,6 +44,7 @@
 - リード文は最初のセクション（ツール本体）の下に、たたんだ `details.tool-about`「このツールについて」で置く
 - 使い方のカードは `.ref-grid.tool-cards`＋`.tool-step`（STEP n）、解説のカードは `.tool-cards.tool-facts`
 - FAQ は `section#faq.tool-faq`（白いカード＋Q の丸）
+- クイズ型（QA用語クイズ・テスト技法ドリル）は問題と結果を窓で出す：共通部品 `js/tool-modal.js`（`ToolModal({ label, onRequestClose })`）＋ `reference.css` の `.tool-modal`／`.tool-ask`／`.tool-result-actions`。JSTQB は同じ作りを `jstqb.js` 内に持つ
 - 新しいテスト検証用ツールもこの外枠で作る。bug-checker（Vercelアプリ）とダミーファイル生成（`page-header` 型）は対象外
 
 ### LP型（トップ・メイン2ページ・サービスページ）

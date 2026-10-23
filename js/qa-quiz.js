@@ -29,6 +29,19 @@
 
   var state = { modeId: 'term2def', sectionId: 'all', session: null };
 
+  // 問題と結果は窓で出す（JSTQB練習問題と同じ。js/tool-modal.js）
+  var win = ToolModal({ label: 'QA用語クイズ', onRequestClose: requestClose });
+
+  // 解いている途中だけ確認を挟む。結果画面からはそのまま閉じる
+  function requestClose() {
+    var s = state.session;
+    if (s && !s.finished) {
+      win.confirm('途中でやめますか？\nここまでの回答は破棄されます。','やめる', 'つづける', renderMenu);
+      return;
+    }
+    renderMenu();
+  }
+
   /* ---------- 出題 ---------- */
 
   function shuffle(a) {
@@ -92,6 +105,8 @@
   }
 
   function renderMenu() {
+    win.close();
+    state.session = null;
     app.innerHTML = '';
     var wrap = el('div', 'qq-menu');
     wrap.appendChild(group('といかた', MODES, 'modeId'));
@@ -113,6 +128,12 @@
     renderPlay();
   }
 
+  function sessionTitle() {
+    var mode = MODES.filter(function (m) { return m.id === state.modeId; })[0];
+    var sec = SECTIONS.filter(function (x) { return x.id === state.sectionId; })[0];
+    return 'QA用語クイズ　' + mode.name + '（' + sec.name + '）';
+  }
+
   function optionText(t) {
     return state.modeId === 'term2def' ? t.d : t.t;
   }
@@ -121,7 +142,8 @@
     var s = state.session;
     var q = s.qs[s.index];
     s.locked = false;   // 次の問題を出すたびに解除する（忘れると2問目以降が押せない）
-    app.innerHTML = '';
+    win.open(sessionTitle());
+    win.body.innerHTML = '';
     var wrap = el('div', 'qq-play');
 
     var head = el('div', 'qq-play-head');
@@ -161,10 +183,10 @@
 
     var back = el('button', 'qq-back', '← メニューに もどる');
     back.type = 'button';
-    back.addEventListener('click', renderMenu);
+    back.addEventListener('click', requestClose);
     wrap.appendChild(back);
 
-    app.appendChild(wrap);
+    win.body.appendChild(wrap);
   }
 
   function choose(chosen, btn, options) {
@@ -181,7 +203,7 @@
     });
     if (!ok) btn.classList.add('is-wrong');
 
-    var fb = app.querySelector('.qq-feedback');
+    var fb = win.body.querySelector('.qq-feedback');
     fb.className = 'qq-feedback ' + (ok ? 'is-ok' : 'is-ng');
     fb.textContent = ok
       ? '正解 — ' + q.answer.t
@@ -199,7 +221,9 @@
 
   function renderResult() {
     var s = state.session;
-    app.innerHTML = '';
+    s.finished = true;
+    win.open(sessionTitle() + '　結果');
+    win.body.innerHTML = '';
     var wrap = el('div', 'qq-result');
 
     var pct = Math.round(s.correct / s.qs.length * 100);
@@ -209,6 +233,7 @@
         : pct >= 80 ? 'あと少し。取りこぼした言葉だけ辞典で読み直すと固まります。'
           : pct >= 50 ? '半分は入っています。まちがえた言葉から埋めていきましょう。'
             : 'まずは「テストの基本」の範囲だけを繰り返すのがおすすめです。'));
+    wrap.appendChild(resultActions());
 
     if (s.missed.length) {
       var box = el('div', 'qq-missed');
@@ -229,17 +254,23 @@
       wrap.appendChild(p);
     }
 
+    wrap.appendChild(resultActions());
+    win.body.appendChild(wrap);
+  }
+
+  // 「もう一度」と「メニューへ」。スコアの直下と一番下の2か所に置く
+  // （まちがえた用語の一覧が長いと、下まで行かないと次に進めないため）
+  function resultActions() {
+    var row = el('div', 'tool-result-actions');
     var again = el('button', 'qq-start', 'もう一度');
     again.type = 'button';
     again.addEventListener('click', startSession);
-    wrap.appendChild(again);
-
-    var back = el('button', 'qq-back', '← メニューに もどる');
+    row.appendChild(again);
+    var back = el('button', 'tool-sub', 'メニューへ');
     back.type = 'button';
-    back.addEventListener('click', renderMenu);
-    wrap.appendChild(back);
-
-    app.appendChild(wrap);
+    back.addEventListener('click', requestClose);
+    row.appendChild(back);
+    return row;
   }
 
   renderMenu();

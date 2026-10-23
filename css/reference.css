@@ -156,3 +156,65 @@ body{font-family:'M PLUS 1p','Noto Sans JP',sans-serif;font-size:14px;background
   .tool-hero h1{font-size:22px}
   .tool-hero .hero-badge{display:none}
 }
+
+/* ====== クイズの窓（問題・結果を出すポップアップ。js/tool-modal.js・#200） ======
+   JSTQB練習問題の .jq-modal と同じ考え方：PC・タブレットは後ろのページが透ける「浮かぶ窓」、
+   スマホと高さの低い画面（学校のノートPCなど）は全面の窓。中身はもとのパネルと同じ白地 */
+html.tool-locked{overflow:hidden}
+.tool-modal{
+  width:min(860px,calc(100% - 48px));height:calc(100dvh - 48px);max-width:none;max-height:none;
+  margin:auto;padding:0;border:none;border-radius:14px;overflow:hidden;
+  background:#fff;color:var(--tp-text);
+  box-shadow:0 24px 64px rgba(28,28,46,.35);
+}
+.tool-modal[open]{display:flex;flex-direction:column;animation:tool-pop .18s ease-out}
+.tool-modal::backdrop{background:rgba(28,28,46,.6)}
+@keyframes tool-pop{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.tool-modal[open]{animation:none}}
+.tool-modal-bar{
+  flex-shrink:0;display:flex;align-items:center;gap:14px;
+  background:var(--tp-cream);border-bottom:1px solid var(--tp-border);padding:10px 20px;
+}
+.tool-modal-title{flex:1;min-width:0;font-size:13px;font-weight:800;color:var(--tp-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tool-modal-close{
+  flex-shrink:0;background:#fff;border:1px solid var(--tp-border2);border-radius:2px;padding:6px 12px;
+  font-size:12.5px;font-weight:700;color:var(--tp-text2);cursor:pointer;font-family:inherit;
+}
+.tool-modal-body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:22px 16px 40px}
+
+/* 確認のポップアップ（途中でやめる） */
+.tool-ask{
+  width:min(380px,calc(100% - 32px));margin:auto;padding:24px 22px 20px;border:none;border-radius:12px;
+  background:#fff;color:var(--tp-text);box-shadow:0 20px 50px rgba(28,28,46,.35);text-align:center;
+}
+.tool-ask::backdrop{background:rgba(28,28,46,.35)}
+.tool-ask-msg{white-space:pre-line;font-size:14px;font-weight:700;line-height:1.85;margin:0 0 18px}
+.tool-ask-row{display:flex;gap:10px;justify-content:center}
+.tool-ask-row>button{flex:1;padding:11px 12px;font-size:13.5px;border-radius:2px;font-weight:800;cursor:pointer;font-family:inherit}
+.tool-ask-no{background:#fff;border:1px solid var(--tp-border2);color:var(--tp-text2)}
+.tool-ask-yes{background:var(--tp-orange);color:#fff;border:none}
+
+/* 結果画面の「もう一度」「メニューへ」。スコア直下と一番下に同じものを置く */
+.tool-result-actions{display:flex;gap:10px;justify-content:center;align-items:stretch;margin:6px 0 18px}
+.tool-result-actions>button:first-child{width:auto;flex:0 1 280px}
+.tool-result-actions:last-child{margin:18px 0 0}
+.tool-sub{
+  flex:0 0 auto;background:#fff;border:1px solid var(--tp-border2);border-radius:2px;padding:8px 22px;
+  font-size:12.5px;font-weight:700;color:var(--tp-text2);cursor:pointer;font-family:inherit;
+}
+@media (hover:hover){
+  .tool-modal-close:hover,.tool-sub:hover,.tool-ask-no:hover{border-color:var(--tp-orange);color:var(--tp-orange)}
+  .tool-ask-yes:hover{background:#a9543f}
+}
+
+@media (max-width:767px),(max-height:640px){
+  .tool-modal{width:100%;height:100%;border-radius:0;box-shadow:none}
+}
+@media (max-width:640px){
+  .tool-modal-bar{gap:8px;padding:8px 12px}
+  .tool-modal-title{font-size:12px}
+  .tool-modal-body{padding:16px 12px 32px}
+  .tool-result-actions{flex-direction:column;gap:8px}
+  .tool-result-actions>button,.tool-result-actions>button:first-child{flex:none;width:100%}
+  .tool-sub{padding:11px 14px}
+}
