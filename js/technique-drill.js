@@ -22,6 +22,19 @@
 
   var state = { modeId: 'all', session: null };
 
+  // 問題と結果は窓で出す（JSTQB練習問題と同じ。js/tool-modal.js）
+  var win = ToolModal({ label: 'テスト技法ドリル', onRequestClose: requestClose });
+
+  // 解いている途中だけ確認を挟む。結果画面からはそのまま閉じる
+  function requestClose() {
+    var s = state.session;
+    if (s && !s.finished) {
+      win.confirm('途中でやめますか？\nここまでの回答は破棄されます。','やめる', 'つづける', renderMenu);
+      return;
+    }
+    renderMenu();
+  }
+
   /* ---------- 小道具 ---------- */
 
   function randInt(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
@@ -322,6 +335,8 @@
   }
 
   function renderMenu() {
+    win.close();
+    state.session = null;
     app.innerHTML = '';
     var wrap = el('div', 'td-menu');
 
@@ -355,11 +370,17 @@
     renderPlay();
   }
 
+  function sessionTitle() {
+    var mode = MODES.filter(function (m) { return m.id === state.modeId; })[0];
+    return 'テスト技法ドリル　' + mode.name;
+  }
+
   function renderPlay() {
     var s = state.session;
     var q = s.qs[s.index];
     s.locked = false;   // 問題を出すたびに解除する（忘れると2問目以降が押せない）
-    app.innerHTML = '';
+    win.open(sessionTitle());
+    win.body.innerHTML = '';
     var wrap = el('div', 'td-play');
 
     var head = el('div', 'td-play-head');
@@ -393,10 +414,10 @@
 
     var back = el('button', 'td-back', '← メニューに もどる');
     back.type = 'button';
-    back.addEventListener('click', renderMenu);
+    back.addEventListener('click', requestClose);
     wrap.appendChild(back);
 
-    app.appendChild(wrap);
+    win.body.appendChild(wrap);
   }
 
   function choose(chosen, btn, options) {
@@ -413,7 +434,7 @@
     });
     if (!ok) btn.classList.add('is-wrong');
 
-    var fb = app.querySelector('.td-feedback');
+    var fb = win.body.querySelector('.td-feedback');
     fb.className = 'td-feedback ' + (ok ? 'is-ok' : 'is-ng');
     var head = el('p', 'td-fb-head', ok ? '正解' : '不正解 — 正解は ' +
       q.options.filter(function (o) { return o.key === q.answerKey; })[0].text);
@@ -432,7 +453,9 @@
 
   function renderResult() {
     var s = state.session;
-    app.innerHTML = '';
+    s.finished = true;
+    win.open(sessionTitle() + '　結果');
+    win.body.innerHTML = '';
     var wrap = el('div', 'td-result');
     var pct = Math.round(s.correct / s.qs.length * 100);
 
@@ -442,6 +465,7 @@
         : pct >= 80 ? 'あと少し。落とした技法だけカタログで読み直すと固まります。'
           : pct >= 50 ? '半分は入っています。技法ごとに絞って繰り返すのが早いです。'
             : 'まずは1技法だけを選んで、解説を読みながら回してみてください。'));
+    wrap.appendChild(resultActions());
 
     if (s.missed.length) {
       var box = el('div', 'td-missed');
@@ -463,17 +487,23 @@
       'ペアワイズの表をその場で作るなら <a href="/tools/pairwise/">ペアワイズ生成器</a> をどうぞ。';
     wrap.appendChild(link);
 
+    wrap.appendChild(resultActions());
+    win.body.appendChild(wrap);
+  }
+
+  // 「もう一度」と「メニューへ」。スコアの直下と一番下の2か所に置く
+  // （まちがえた問題の一覧が長いと、下まで行かないと次に進めないため）
+  function resultActions() {
+    var row = el('div', 'tool-result-actions');
     var again = el('button', 'td-start', 'もう一度');
     again.type = 'button';
     again.addEventListener('click', startSession);
-    wrap.appendChild(again);
-
-    var back = el('button', 'td-back', '← メニューに もどる');
+    row.appendChild(again);
+    var back = el('button', 'tool-sub', 'メニューへ');
     back.type = 'button';
-    back.addEventListener('click', renderMenu);
-    wrap.appendChild(back);
-
-    app.appendChild(wrap);
+    back.addEventListener('click', requestClose);
+    row.appendChild(back);
+    return row;
   }
 
   renderMenu();
