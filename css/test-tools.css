@@ -191,3 +191,9 @@ body{font-family:'Noto Sans JP',sans-serif;font-size:14px;background:var(--tp-cr
 .page-qa .tool-card.peek-on .service-peek{opacity:1;transform:none}
 .page-qa .tool-card .service-peek{width:72px}
 .page-qa .tool-card .service-peek-circle{width:72px;height:72px}
+/* サムネ付きのカードは、丸を絵の右下に出す（絵から顔を出す）。下の「詳しく見る」の行では72pxの丸が説明文に重なっていた（#190 の【バグ】・2026-10-23）
+   絵の高さは カードの幅×9/16。100cqw はカードの内容幅なので、左右の余白40pxを足して絵の幅にする */
+@media (min-width:601px){
+  .page-qa .tool-card:has(.tool-thumb){container-type:inline-size}
+  .page-qa .tool-card:has(.tool-thumb) .service-peek{top:calc((100cqw + 40px) * 9 / 16 - 82px);bottom:auto;right:10px}
+}
