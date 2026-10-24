@@ -4525,8 +4525,16 @@ body:is(.ninja-kids,.ninja-space) :is(h1,h2,h3,button,label,.nk-answer-label,[cl
 /* さんすう：むずかしさ 6まいは、スマホ縦では 1れつ（2026-10-09 レビュー）。
    2れつ（たて じゅん）だと 左から読んだとき やさしい・むずかしい が こうごに 見えた。
    えらぶと すぐ はじまるので、スタートが下に のびても こまらない */
+/* → 2026-10-24（#206）：1れつ だと ぎゅうぎゅうで 長いので 2れつに もどす。ただし ならびは「よこ じゅん」
+   （ちょうかんたん・かんたん／ふつう・すこしむずかしい／…）にして、左から 読んでも やさしい順になるように */
 @media (max-width:767px) and (orientation:portrait) {
-  body.ninja-space .sa-group-diff .sa-choices { grid-template-columns:1fr; grid-template-rows:none; grid-auto-flow:row; }
+  body.ninja-space .sa-group-diff .sa-choices { grid-template-columns:1fr 1fr; grid-template-rows:none; grid-auto-flow:row; }
+  body.ninja-space .sa-group-diff .sa-choice { align-items:flex-start; padding:7px 20px 7px 7px; }
+  body.ninja-space .sa-group-diff .sa-choice-label { font-size:min(13.5px,3.5vw); }
+  body.ninja-space .sa-group-diff .sa-choice-note { font-size:11px; line-height:1.35; white-space:nowrap; }
+  /* 1まいが せまいので 説明は かくし、例（8 + 5）だけ 出す。折れて 3行に なっていた */
+  body.ninja-space .sa-group-diff .sa-note-text { display:none; }
+  body.ninja-space .sa-group-diff .sa-note-ex { margin-left:-.5em; }
 }
 
 
