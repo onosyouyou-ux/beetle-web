@@ -535,18 +535,11 @@
     const diffs = group('むずかしさ', DIFFS.filter((d) => chosenMode.levels.indexOf(d.id) !== -1), 'diffId', (d) => ({
       label: d.name,
       note: chosenMode.diffNote[d.id]
-    }), null, () => {
-      // むずかしさを えらんだら、スタートが ひかって すぐ はじまる（2026-10-08 ユーザー指示。押す手間を1つ へらす）
-      renderMenu(2, true);
-      const go = app.querySelector('.sa-start');
-      if (go) go.classList.add('is-go');
-      const picked = selection.diffId;
-      setTimeout(() => { if (menuStep === 2 && selection.diffId === picked && !session) startSession(); }, 380);
-    });
+    }), null, launch);
     diffs.classList.add('sa-group-diff');
     app.appendChild(diffs);
 
-    // ランクに ちょうせん と「あなたのランク：○○」（押すと 絵の窓）。むずかしさ と同じく 押したら すぐ はじまる
+    // ランクに ちょうせん と、その下に「あなたのランク：○○」（押すと 絵の窓）。むずかしさ と同じく 押したら すぐ はじまる
     if (window.NkRank) {
       const row = el('div', 'nk-rank-row');
       const rb = el('button', 'sa-choice nk-rank-start');
@@ -557,30 +550,47 @@
       rb.appendChild(body);
       if (selection.diffId === 'rank') rb.classList.add('is-on');
       rb.addEventListener('click', () => {
+        if (launching) return;
         selection.diffId = 'rank';
-        renderMenu(2, true);
-        const go = app.querySelector('.sa-start');
-        if (go) go.classList.add('is-go');
-        setTimeout(() => { if (menuStep === 2 && selection.diffId === 'rank' && !session) startSession(); }, 380);
+        launch();
       });
       row.appendChild(rb);
       row.appendChild(NkRank.link(RANK_APP, () => renderMenu(2, true)));
       app.appendChild(row);
     }
 
-    const start = el('button', 'sa-start');
-    start.type = 'button';
-    start.appendChild(icon('rocket-simple', 'sa-start-icon'));
-    start.appendChild(el('span', null, 'スタート'));
-    start.addEventListener('click', startSession);
-    // むずかしさを押すまでスタートは押せない
-    if (!selection.diffId) start.disabled = true;
-    app.appendChild(start);
+    // スタートは置かない。むずかしさ・ランクを押したら ロケットで出発する（#206）
 
     const back = el('button', 'sa-step-back', SAKURANBO ? '← もんだいの しゅるいに もどる' : '← たしざん・ひきざん に もどる');
     back.type = 'button';
     back.addEventListener('click', () => history.back());
     app.appendChild(back);
+  }
+
+  // むずかしさ・ランクを えらんだら、ロケットにまたがった忍者が 左から右へ飛んでいき、それから問題の窓を出す（#206）。
+  // 飛んでいるあいだに ほかを押しても 二重に始めない。動きを減らす設定の端末は 飛ばさずに すぐ始める
+  let launching = false;
+  const LAUNCH_MS = 1100;
+  function launch() {
+    renderMenu(2, true);
+    const picked = selection.diffId;
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let fly = null;
+    if (!reduce) {
+      fly = el('div', 'sa-launch');
+      fly.setAttribute('aria-hidden', 'true');
+      const ninja = el('img', 'sa-launch-ninja');
+      ninja.src = '/assets/images/ninja/sansu-space.webp?v=20260824b';
+      ninja.alt = '';
+      fly.appendChild(ninja);
+      document.body.appendChild(fly);
+    }
+    launching = true;
+    setTimeout(() => {
+      launching = false;
+      if (fly) fly.remove();
+      if (menuStep === 2 && selection.diffId === picked && !session) startSession();
+    }, reduce ? 200 : LAUNCH_MS);
   }
 
   // さくらんぼざん の ひきざん は2枚あるので、わけかた まで短く言う（「ひきざん（まえを わける）」）。
@@ -646,7 +656,16 @@
       body.appendChild(label);
       // さくらんぼざん の小さな式は「たしざん」と「まえの すうじを わける」の あいだに置く（2026-10-02 ユーザー指示）
       if (item.demo) body.appendChild(cherryDemo(item.demo));
-      if (info.note) body.appendChild(el('span', 'sa-choice-note', info.note));
+      if (info.note) {
+        // 「くり上がり あり（8 + 5）」は 説明と 例 に分けておく。スマホの2れつ では 例だけ出す（#206）
+        const note = el('span', 'sa-choice-note');
+        const m = info.note.match(/^(.+?)(（.+）)$/);
+        if (m) {
+          note.appendChild(el('span', 'sa-note-text', m[1]));
+          note.appendChild(el('span', 'sa-note-ex', m[2]));
+        } else note.textContent = info.note;
+        body.appendChild(note);
+      }
       btn.appendChild(body);
       if (info.disabled) {
         btn.classList.add('is-disabled');
@@ -659,6 +678,7 @@
           btn.appendChild(icon('check-badge', 'sa-choice-check'));
         }
         btn.addEventListener('click', () => {
+          if (launching) return;
           selection[key] = item.id;
           if (onPick) onPick(item); else renderMenu();
         });

@@ -20,9 +20,15 @@
   box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--nk-accent) 55%,#fff);
   background:linear-gradient(150deg,#fff8e6,#ffe7b8);
 }
-/* とけい 以外の修行：むずかしさ の下に「ランクに ちょうせん」＋「あなたのランク」を 横に ならべる */
+/* とけい：「ランクに ちょうせん」を中央に、「あなたのランク」は その下（#206。ほかの修行と同じ形） */
+.ninja-kids.ninja-tokei .tk-menu.is-step .tk-choices.tk-choices-level.tk-rank-row{
+  grid-template-columns:min(100%,300px); justify-content:center; justify-items:stretch; gap:4px;
+}
+.ninja-kids .tk-rank-row>.nk-rank-mine{ margin:0; }
+/* とけい 以外の修行：むずかしさ の下に「ランクに ちょうせん」を中央に置き、「あなたのランク」は その下（#206・2026-10-24。
+   それまでは 横ならびで、ボタンが 左に よって見えた） */
 .nk-rank-row{
-  display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px 16px;
+  display:flex; flex-direction:column; align-items:center; gap:4px;
   width:min(100%,560px); margin:10px auto 0;
 }
 .nk-rank-row>.nk-rank-mine{ margin:0; }
@@ -44,7 +50,7 @@
   .ninja-kids .kk-menu.is-step:has(>.nk-rank-row)>.kk-menu-picked{ padding-block:2px; margin-bottom:6px; }
 }
 .ninja-kids .nk-rank-row>.nk-rank-start{
-  flex:0 1 260px; min-height:0; margin:0;
+  flex:none; width:min(100%,300px); min-height:0; margin:0;
   box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--nk-accent) 55%,#fff);
   background:linear-gradient(150deg,#fff8e6,#ffe7b8);
 }
@@ -70,12 +76,12 @@ body.ninja-space .nk-rank-row>.nk-rank-start.is-on{ border-image:none; box-shado
 body.ninja-space .nk-rank-row>.nk-rank-start .sa-choice-note{ color:#6b5520; }
 body.ninja-space .nk-rank-row .nk-rank-mine{ color:#efe8ff; }
 body.ninja-space .nk-rank-row .nk-rank-link{ color:#ffd76a; }
-/* スマホ・寝かせた画面：ボタンと「あなたのランク」を1行に。むずかしさ を押すと すぐ始まるが、スタートも画面に入れる */
+/* スマホ・寝かせた画面：ボタンを低く、「あなたのランク」は小さい字で */
 @media (max-width:767px), (orientation:landscape) and (max-height:500px){
-  .nk-rank-row{ flex-wrap:nowrap; gap:10px; margin-top:8px; }
-  .ninja-kids .nk-rank-row>.nk-rank-start{ flex:1 1 0; padding-block:6px; }
+  .nk-rank-row{ gap:2px; margin-top:8px; }
+  .ninja-kids .nk-rank-row>.nk-rank-start{ padding-block:6px; }
   .ninja-kids .nk-rank-row>.nk-rank-start .sa-choice-note{ display:none; }
-  .nk-rank-row>.nk-rank-mine{ flex:0 1 auto; font-size:12px; text-align:left; }
+  .nk-rank-row>.nk-rank-mine{ font-size:12px; }
 }
 .nk-rank-mine{
   margin:6px 0 0; font-size:14px; font-weight:800; color:#5b4a36; text-align:center; line-height:1.5;
@@ -175,6 +181,43 @@ body.ninja-space .nk-rank-row .nk-rank-link{ color:#ffd76a; }
 }
 .nk-rank-best .nk-rank-link{ color:#ffd76a; font-size:18px; }
 .nk-rank-best-app{ font-size:13px; font-weight:700; opacity:.85; }
+/* スマホは「（…もらえるよ）」と まきもの の説明が 最後の1〜2字だけ 次の行に こぼれていた。1行に収める（#206） */
+@media (max-width:767px){
+  .nk-rank-best-app{ flex-basis:100%; text-align:center; white-space:nowrap; font-size:min(13px,3.2vw); }
+  .nk-scrolls-sum span{ white-space:nowrap; font-size:min(11.5px,2.9vw); }
+}
 .nk-link-cell{ display:flex; flex-direction:column; gap:4px; min-width:0; }
 .nk-link-cell>.nk-rank-mine{ margin:0; font-size:13px; color:#e6d7bd; }
 .nk-link-cell>.nk-rank-mine .nk-rank-link{ color:#ffd76a; }
+
+/* ---------- 「ランクに ちょうせん」は 全修行 BEETLE赤＋白い字（#206・2026-10-24 ユーザー決定） ----------
+   むずかしさ・だん・学年 の えらぶボタンと ひと目で 見分けがつくように。
+   修行ごとの 模様の皮（ninja-kids.css の .kk-menu .kk-choice など）が 強いので !important で 上書きする */
+:is(.nk-rank-row>.nk-rank-start,.tk-rank-row>.tk-choice){
+  border:0!important; border-image:none!important; border-radius:14px!important;
+  background:var(--color-accent)!important; box-shadow:0 4px 0 #8f4434!important; color:#fff!important;
+}
+:is(.nk-rank-row>.nk-rank-start,.tk-rank-row>.tk-choice)::before,
+:is(.nk-rank-row>.nk-rank-start,.tk-rank-row>.tk-choice)::after{ display:none!important; }
+:is(.nk-rank-row>.nk-rank-start,.tk-rank-row>.tk-choice) :is([class*="-label"],[class*="-note"]){ color:#fff!important; text-shadow:none!important; }
+:is(.nk-rank-row>.nk-rank-start,.tk-rank-row>.tk-choice) [class*="-note"]{ opacity:.9; }
+body.ninja-space .nk-rank-row>.nk-rank-start{ justify-content:center; text-align:center; }
+@media (hover:hover){
+  :is(.nk-rank-row>.nk-rank-start,.tk-rank-row>.tk-choice):hover{ background:#cf7560!important; }
+}
+/* 選んだとき（かけざん・かんじ・とけい は 選んでから スタート）：白と赤の 二重の わく */
+:is(.nk-rank-row>.nk-rank-start,.tk-rank-row>.tk-choice).is-on{
+  box-shadow:0 0 0 3px #fff, 0 0 0 6px var(--color-accent), 0 4px 0 6px #8f4434!important;
+}
+
+/* 高さの決まった箱（かけざん・かんじ・とけい の2まいめ）で 高さの低い画面：「あなたのランク」を 下に回したぶん
+   だん・学年 の ボタンが つぶれて ランクの行と 重なった（1366x657）。ボタンと 字を 低くして 横ならびの ころと 同じ高さに収める */
+@media (min-width:768px) and (max-height:820px){
+  .ninja-kids :is(.kk-menu,.kj-menu).is-step>.nk-rank-row{ gap:0; }
+  .ninja-kids :is(.kk-menu,.kj-menu).is-step>.nk-rank-row>.nk-rank-start{ padding-block:3px!important; min-height:0!important; }
+  .ninja-kids :is(.kk-menu,.kj-menu).is-step>.nk-rank-row>.nk-rank-start :is(.kk-choice-label,.kj-choice-label){ font-size:15px; line-height:1.3; }
+  .ninja-kids :is(.kk-menu,.kj-menu).is-step>.nk-rank-row>.nk-rank-mine{ font-size:12px; line-height:1.3; }
+  .ninja-kids.ninja-tokei .tk-menu.is-step .tk-choices.tk-rank-row{ gap:0; }
+  .ninja-kids.ninja-tokei .tk-menu.is-step .tk-rank-row>.tk-choice{ padding-block:3px!important; }
+  .ninja-kids.ninja-tokei .tk-menu.is-step .tk-rank-row>.nk-rank-mine{ font-size:12px; line-height:1.3; }
+}
